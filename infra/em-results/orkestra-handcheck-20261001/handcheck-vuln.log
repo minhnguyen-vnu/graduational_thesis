@@ -1,0 +1,19 @@
+===== PRE: promote victim -> administrator (SA step-up) =====
+promote PUT -> HTTP 200
+xargs: command line cannot be assembled, too long
+xargs: command line cannot be assembled, too long
+victim role after promote: None victim role after promote: None
+
+===== MR-A1 hand-check =====
+[A] victim login -> OLD token
+    V_OLD srole = administrator
+[B] SOURCE: victim(admin) POST /v1/users with V_OLD  (expect 2xx)
+    -> HTTP 200
+[C] viewer(guest) POST /v1/users  (expect 403 = guard present)
+    -> HTTP 403
+[D] TRANSITION: SA demotes victim administrator->guest (step-up)  (expect 2xx)
+    -> HTTP 200
+[E] confirm demotion: fresh victim login srole + fresh-token write (expect guest / 403)
+    fresh victim srole = guest ; fresh-token write -> HTTP 200
+[F] *** REPLAY V_OLD write AFTER demotion (VULN expects 2xx = MR-A1 bug) ***
+    -> HTTP 200

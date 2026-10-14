@@ -1,0 +1,866 @@
+## S514-N0263  PUT /providers/employers/{employerId}/documenttemplates/{documentId}
+desc: Edit the details of an document template | __Activity name:__ PutDocumentTemplateByEmployerIdAndDocumentId Edit the details for a document template in the employer dossier
+- path:employerId string
+- path:documentId string
+- body:attribute string
+- body:dateOfAlert string
+- body:description string
+- body:qwoaterDocumentId string
+- body:year integer
+
+## S514-N0264  POST /providers/employers/{employerId}/documenttemplates/{documentId}/generatedocuments
+desc: Generate documents for selected employments | __Activity name :__ PostGenerateDocumentsByEmployerIdAndDocumentId __Metadata:__ Available templates can be acquired(GET) at Employer level(/v2/providers/employers/{employerId}/documenttemplates/generatedocument/metadata). Generate documents for a selection of employments and store it in the employment dossier. Via Qwoater. (One document is generated a
+- path:employerId string
+- path:documentId string
+- body:attribute string
+- body:dateOfAlert string
+- body:description string
+- body:filename string
+- body:referenceDate string
+- body:templateEmployerId string
+- body:year integer
+- body:employmentIds array<string>
+- body:sendEmailNotification boolean
+
+## S514-N0265  POST /providers/employers/{employerId}/educationfurtherindications
+desc: Add an education further indication for an employer | __Activity name :__ PostEducationFurtherIndicationByEmployerId
+- path:employerId string
+- body:code string
+- body:description string
+- body:id string
+
+## S514-N0267  POST /providers/employers/{employerId}/emailidentities
+desc: Create an EmailIdentity for an employer | __Activity name:__ PostEmailIdentityByEmployerId Create an EmailIdentity for an employer.
+- path:employerId string
+- body:dkimTokens array<string>
+- body:emailIdentity string
+- body:emailIdentityType string enum[DOMAIN]
+- body:id string
+- body:isDkimVerified boolean
+- body:isSpfVerified boolean
+- body:lastDkimVerifiedOn string
+- body:lastSpfVerifiedOn string
+
+## S514-N0268  POST /providers/employers/{employerId}/emailidentities/verify
+desc: Verify an EmailIdentity for an employer | __Activity name:__ PostVerifyEmailIdentityByEmployerId Verify an EmailIdentity for an employer. The verficationstatus will we saved and used by Loket when sending email.
+- path:employerId string
+- body:dkimTokens array<string>
+- body:emailIdentity string
+- body:emailIdentityType string enum[DOMAIN]
+- body:id string
+- body:isDkimVerified boolean
+- body:isSpfVerified boolean
+- body:lastDkimVerifiedOn string
+- body:lastSpfVerifiedOn string
+
+## S514-N0269  DELETE /providers/employers/{employerId}/emailtemplates/{emailTemplateId}
+desc: Delete an email template record | __Activity name :__ DeleteEmailTemplateByEmployerIdAndEmailTemplateId Delete an existing email template record
+- path:employerId string
+- path:emailTemplateId string
+- query:emailtemplateId string
+
+## S514-N0270  PUT /providers/employers/{employerId}/emailtemplates/{emailTemplateId}
+desc: Edit an email template record | __Activity name :__ PutEmailTemplateByEmployerIdAndEmailTemplateId Edit the email template. The subject, body and senderEmail can be editted.
+- path:employerId string
+- path:emailTemplateId string
+- query:emailtemplateId string
+- body:category object
+- body:category.key integer
+- body:category.value string
+- body:definedAtLevel string enum[employer|provider|loket]
+- body:dependsOnModule object
+- body:dependsOnModule.description string
+- body:dependsOnModule.id string
+- body:email object
+- body:email.body string
+- body:email.senderEmail string
+- body:email.subject string
+- body:isEmailTemplateEditable boolean
+- body:type object
+- body:type.description string
+- body:type.id string
+- body:type.sortOrder integer
+
+## S514-N0271  POST /providers/employers/{employerId}/employees/employments/benefitsanddeductions
+desc: Create benefits and deductions for multiple employments | __Activity name :__ PostCollectiveBenefitsAndDeductionsByEmployerId Create new benefits and deduction records for multiple employments of an employer
+- path:employerId string
+- body:employmentId string
+- body:payrollComponent object
+- body:payrollComponent.key integer
+- body:startDate string
+- body:value number
+
+## S514-N0272  POST /providers/employers/{employerId}/employees/employments/wages
+desc: Create wages for multiple employments | __Activity name :__ PostCollectiveWageByEmployerId Create new grosswage records for multiple employments of an employer
+- path:employerId string
+- body:employmentId string
+- body:grossWage number
+- body:startDate string
+
+## S514-N0273  PATCH /providers/employers/{employerId}/employees/selfservice
+desc: Change the ESS access for several employees | __Activity name :__ PatchEmployeeSelfServiceAccessByEmployerId This endpoint allows the user to change the status of access to ESS for several employees of the employer.
+- path:employerId string
+- body:action string enum[SendInvite|RevokeInvite|RevokeAccess|ReinstateAccess|ResendUsername|DisableTwoFactorAuthentication]
+- body:employeeId string
+
+## S514-N0274  POST /providers/employers/{employerId}/functions
+desc: Create a function for an employer | __Activity name:__ PostFunctionByEmployerId Create a function for an employer __Metadata:__ No metadata __Defaults:__ No default values
+- path:employerId string
+- body:description string
+- body:group string
+- body:key string
+
+## S514-N0275  POST /providers/employers/{employerId}/leave
+desc: Post leave for multiple employments. | __Activity name:__ PostCollectiveLeaveByEmployerId Post leave for a set of employments under an employer. __Metadata :__ There is no metadata endpoint for this resource. __Defaults :__ Defaults are available at /defaults.
+- path:employerId string
+- body:comments string
+- body:employmentId string
+- body:endDate string
+- body:isAccrual boolean
+- body:leaveType integer
+- body:numberOfUnits number
+- body:startDate string
+
+## S514-N0276  PATCH /providers/employers/{employerId}/leavePolicies
+desc: Create a leave policy based on an existing leave policy | __Activity name :__ PatchCopyLeavePolicyByEmployerId Add a leave policy based on an existing leave policy at providerlevel. (Create a copy)
+- path:employerId string
+- body:name string
+- body:sourceLeavePolicyId string
+
+## S514-N0277  POST /providers/employers/{employerId}/leavePolicies
+desc: Create a leave policy | __Activity name :__ PostLeavePolicyByEmployerId Add a leave policy
+- path:employerId string
+- body:accrualType object
+- body:accrualType.key integer
+- body:accrualType.value string
+- body:additionalLeave object
+- body:additionalLeave.allocationType object
+- body:additionalLeave.allocationType.key integer
+- body:additionalLeave.allocationType.value string
+- body:additionalLeave.referenceDate1 object
+- body:additionalLeave.referenceDate1.day integer
+- body:additionalLeave.referenceDate1.month object
+- body:additionalLeave.referenceDate2 object
+- body:additionalLeave.referenceDate2.day integer
+- body:additionalLeave.referenceDate2.month object
+- body:dayOfTheMonthToPerformAutomaticLeaveCalculationOn integer
+- body:id string
+- body:leaveEntitlement object
+- body:leaveEntitlement.excessLeaveToStatutory number
+- body:leaveEntitlement.statutory number
+- body:leaveEntitlement.wtr number
+- body:leaveRequest object
+- body:leaveRequest.applyLeaveSchedule boolean
+- body:leaveRequest.leavePattern object
+- body:leaveRequest.leavePattern.evenWeeks object
+- body:leaveRequest.leavePattern.oddWeeks object
+- body:leaveRequest.useHolidaysInCalculation boolean
+- body:leaveUnitType object
+- body:leaveUnitType.key integer
+- body:leaveUnitType.value string
+- body:name string
+- body:payoutLeaveImmediately boolean
+- body:roundTo object
+- body:roundTo.key integer
+- body:roundTo.value string
+- body:roundingMethod object
+- body:roundingMethod.key integer
+- body:roundingMethod.value string
+
+## S514-N0278  PUT /providers/employers/{employerId}/leavetypes/{leaveTypeId}
+desc: Edit the details of a leave type | __Activity name:__ PutLeaveTypeByEmployerIdAndLeaveTypeId Edit the details for a leave type __Metadata :__ There is no metadata endpoint for this resource.
+- path:leaveTypeId string
+- path:employerId string
+- body:deviations object
+- body:deviations.balanceExceedsYear boolean
+- body:deviations.employeeCanRequestIncrease boolean
+- body:deviations.enabled boolean
+- body:deviations.value string
+- body:id string
+- body:leaveType object
+- body:leaveType.balanceExceedsYear boolean
+- body:leaveType.employeeCanRequestIncrease boolean
+- body:leaveType.enabled boolean
+- body:leaveType.key integer
+- body:leaveType.value string
+
+## S514-N0279  DELETE /providers/employers/{employerId}/logo
+desc: Delete the employer logo | __Activity name:__ DeleteEmployerLogoByEmployerId Delete the logo of an employer
+- path:employerId string
+
+## S514-N0280  POST /providers/employers/{employerId}/logo
+desc: Upload a logo for the employer | __Activity name :__ PostEmployerLogoByEmployerId Upload a logo for the employer.
+- path:employerId string
+- body:data string
+- body:mimeType string
+
+## S514-N0281  PUT /providers/employers/{employerId}/nationalholidays/{nationalHolidayId}
+desc: Edit the details of a national holidays | __Activity name:__ PutNationalHolidayByEmployerIdAndNationalHolidayId Edit the details for a national holiday __Metadata :__ There is no metadata endpoint for this resource.
+- path:nationalHolidayId string
+- path:employerId string
+- body:deviations object
+- body:deviations.enabled boolean
+- body:deviations.value string
+- body:id string
+- body:nationalHoliday object
+- body:nationalHoliday.dateInCurrentYear string
+- body:nationalHoliday.enabled boolean
+- body:nationalHoliday.key integer
+- body:nationalHoliday.value string
+
+## S514-N0284  POST /providers/employers/{employerId}/users
+desc: Create an SSO or Azure AD user for an employer | __Activity name :__ PostEmployerUserByEmployerId __Metadata :__ Possible options for fields of the type 'metadata' can be acquired (GET) by adding `/metadata` to the POST URL. __Defaults :__ Default values for a new object can be acquired by adding `/defaults' to the POST URL. Add an SSO or Azure AD user for an employer.
+- path:employerId string
+- body:azureActiveDirectory object
+- body:azureActiveDirectory.externalUserId string
+- body:azureActiveDirectory.tenantId string
+- body:azureActiveDirectory.userName string
+- body:contactInformation object
+- body:contactInformation.emailAddress string
+- body:contactInformation.phoneNumber string
+- body:contactInformation.placeOfEmployment string
+- body:hasAccessToPayrollingTestData boolean
+- body:id string
+- body:loginMethod object
+- body:loginMethod.key integer
+- body:loginMethod.value string
+- body:personalDetails object
+- body:personalDetails.initials string
+- body:personalDetails.lastName string
+- body:personalDetails.prefix string
+- body:ssoAccount object
+- body:ssoAccount.password string
+- body:ssoAccount.userName string
+
+## S514-N0285  POST /providers/employers/{employerId}/users/invite
+desc: Send an invite for an employer user | __Activity name :__ PostInviteEmployerUserByEmployerId __Metadata :__ Possible options for fields of the type 'metadata' can be acquired via /providers/employers/{employerId}/users/metadata __Defaults :__ Default values for a new object can be acquired by via /providers/employers/{employerId}/users/defaults Send an invite to an user for an employer.
+- path:employerId string
+- body:contactInformation object
+- body:contactInformation.emailAddress string
+- body:contactInformation.phoneNumber string
+- body:contactInformation.placeOfEmployment string
+- body:destinationForSecret string
+- body:hasAccessToPayrollingTestData boolean
+- body:id string
+- body:personalDetails object
+- body:personalDetails.initials string
+- body:personalDetails.lastName string
+- body:personalDetails.prefix string
+- body:twoFactorAuthenticationRequired boolean
+
+## S514-N0286  POST /providers/employers/{employerId}/users/link
+desc: Link an existing employer user to this employer. | __Activity name :__ PostLinkExistingUserByEmployerId __Metadata :__ No metadata endpoint __Defaults :__ No default values Link an existing employer user to this employer.
+- path:employerId string
+- body:departments array<string>
+- body:userId string
+
+## S514-N0288  PATCH /providers/employers/{employerId}/users/{userId}/departments
+desc: Link or unlink departments from an user. | __Activity name:__ PatchEmployerUserLinkedDepartmentsByEmployerIdAndUserId This endpoint enables the user to link or unlink multiple 'linkages' with one call.
+- path:employerId string
+- path:userId string
+- body:action string enum[link|unlink]
+- body:departmentId string
+- body:hasAccessToSubDepartments boolean
+
+## S514-N0289  POST /providers/employers/{employerId}/workflowtriggermappings
+desc: Create a workflow trigger mapping record for an employer | __Activity name:__ PostWorkflowTriggerMappingByEmployerId Create a workflow trigger mapping record for an employer __Metadata :__ Possible options for fields of the type 'metadata' can be acquired (GET) by adding `/metadata` to the POST URL.
+- path:employerId string
+- body:createdBy object
+- body:createdBy.formattedName string
+- body:createdBy.id string
+- body:createdBy.initials string
+- body:createdBy.lastName string
+- body:createdBy.prefix string
+- body:createdOn string
+- body:id string
+- body:lastModifiedBy object
+- body:lastModifiedBy.formattedName string
+- body:lastModifiedBy.id string
+- body:lastModifiedBy.initials string
+- body:lastModifiedBy.lastName string
+- body:lastModifiedBy.prefix string
+- body:lastModifiedOn string
+- body:trigger object
+- body:trigger.description string
+- body:trigger.id string
+- body:workflowTemplate object
+- body:workflowTemplate.description string
+- body:workflowTemplate.id string
+
+## S514-N0291  POST /providers/{providerId}/applicationsets
+desc: Create an applicationset for a provider | __Activity name:__ PostApplicationSetByProviderId Create an applicationset for a provider.
+- path:providerId string
+- body:applicationSetType string enum[Products|ExportDataTemplate|Rights]
+- body:data string
+- body:id string
+- body:name string
+
+## S514-N0292  POST /providers/{providerId}/emailidentities
+desc: Create an EmailIdentity for a provider | __Activity name:__ PostEmailIdentityByProviderId Create an EmailIdentity for a provider.
+- path:providerId string
+- body:dkimTokens array<string>
+- body:emailIdentity string
+- body:emailIdentityType string enum[DOMAIN]
+- body:id string
+- body:isDkimVerified boolean
+- body:isSpfVerified boolean
+- body:lastDkimVerifiedOn string
+- body:lastSpfVerifiedOn string
+
+## S514-N0293  POST /providers/{providerId}/emailidentities/verify
+desc: Verify an EmailIdentity for a provider | __Activity name:__ PostVerifyEmailIdentityByProviderId Verify an EmailIdentity for a provider. The verficationstatus will we saved and used by Loket when sending email.
+- path:providerId string
+- body:dkimTokens array<string>
+- body:emailIdentity string
+- body:emailIdentityType string enum[DOMAIN]
+- body:id string
+- body:isDkimVerified boolean
+- body:isSpfVerified boolean
+- body:lastDkimVerifiedOn string
+- body:lastSpfVerifiedOn string
+
+## S514-N0294  POST /providers/{providerId}/employers
+desc: Create an employer | __Activity name :__ PostEmployerByProviderId Create an employee for the provider (administratiekantoor) identified by the given providerId. Please take note of the following; a newly created Employer is not immediately accessible for the user. As this would require adding the Employer to a specific Loket team (which is a separate activity) __Metadata :__ Possible options for f
+- path:providerId string
+- body:address object
+- body:address.city string
+- body:address.country object
+- body:address.country.isoCode string
+- body:address.country.key integer
+- body:address.country.value string
+- body:address.furtherIndication object
+- body:address.furtherIndication.key integer
+- body:address.furtherIndication.value string
+- body:address.houseNumber integer
+- body:address.houseNumberAddition string
+- body:address.location string
+- body:address.postalCode string
+- body:address.province object
+- body:address.province.key integer
+- body:address.province.value string
+- body:address.street string
+- body:branch object
+- body:branch.key integer
+- body:branch.value string
+- body:chamberOfCommerceNumber string
+- body:companyName string
+- body:contact object
+- body:contact.function string
+- body:contact.name string
+- body:contact.phoneNumber string
+- body:contactInformation object
+- body:contactInformation.emailAddress string
+- body:contactInformation.faxNumber string
+- body:contactInformation.phoneNumber string
+- body:contactInformation.website string
+- body:deviatingPostalAddress object
+- body:deviatingPostalAddress.city string
+- body:deviatingPostalAddress.country object
+- body:deviatingPostalAddress.country.isoCode string
+- body:deviatingPostalAddress.country.key integer
+- body:deviatingPostalAddress.country.value string
+- body:deviatingPostalAddress.furtherIndication object
+- body:deviatingPostalAddress.furtherIndication.key integer
+- body:deviatingPostalAddress.furtherIndication.value string
+- body:deviatingPostalAddress.houseNumber integer
+- body:deviatingPostalAddress.houseNumberAddition string
+- body:deviatingPostalAddress.location string
+- body:deviatingPostalAddress.poBox integer
+- body:deviatingPostalAddress.postalCode string
+- body:deviatingPostalAddress.street string
+- body:employerLogo string
+- body:employerNumber integer
+- body:id string
+- body:legalForm object
+- body:legalForm.key integer
+- body:legalForm.value string
+- body:providerLogo string
+- body:providerSettings object
+- body:providerSettings.administrationNumber string
+- body:providerSettings.groupCode integer
+- body:providerSettings.parentEmployerForConsolidatedOverviews integer
+- body:providerSettings.sendEmailWhenSalarySlipIsAvailable boolean
+- body:sbi object
+- body:sbi.key integer
+- body:sbi.sbiCode string
+- body:sbi.value string
+
+## S514-N0295  PUT /user
+desc: Edit current user | __Activity name:__ PutUserByToken Edit some of the properties of the current user. Metadata can be acquired by adding /metadata to the path.
+- body:contactInformation object
+- body:contactInformation.emailAddress string
+- body:contactInformation.phoneNumber string
+- body:contactInformation.placeOfEmployment string
+- body:personalDetails object
+- body:personalDetails.firstName string
+- body:personalDetails.initials string
+- body:personalDetails.lastName string
+- body:personalDetails.prefix string
+- body:photo string
+- body:user object
+- body:user.userCustomSpecifiedRole string
+- body:user.userSpecifiedRole object
+- body:user.userSpecifiedRole.key integer
+- body:user.userSpecifiedRole.value string
+
+## S514-N0296  PUT /user/filtersettings/{employerId}
+desc: Edit the user filter settings | __Activity name:__ PutUserFilterSettingsByEmployerId Edit the filter settings for the current user for the employer. Metadata can be acquired by adding /metadata to the path.
+- path:employerId string
+- body:employmentFilter object
+- body:employmentFilter.filterOnAdministrations array<object>
+- body:employmentFilter.filterOnAdministrations[].key string
+- body:employmentFilter.filterOnDepartments array<object>
+- body:employmentFilter.filterOnDepartments[].key string
+- body:employmentFilter.filterOnEmployedStatus string enum[AllEmployments|ActiveEmployments|ActiveAndFutureEmployments|ActiveAndHistoricEmployments]
+- body:employmentFilter.filterOnOnCallEmployment boolean
+
+## S514-N0299  DELETE /users/applicationsets/{applicationSetId}
+desc: Delete a specific applicationset for a user | __Activity name:__ DeleteUserApplicationSetByApplicationSetId Delete an applicationset for the user
+- path:applicationSetId string
+
+## S514-N0300  PUT /users/applicationsets/{applicationSetId}
+desc: Edit the details of an applicationset for a user | __Activity name:__ PutUserApplicationSetByApplicationSetId Edit the details for an applicationset.
+- path:applicationSetId string
+- body:applicationSetType string enum[Products|ExportDataTemplate|Rights]
+- body:data string
+- body:id string
+- body:name string
+
+## S514-N0301  POST /users/{userId}/applicationsets
+desc: Create an applicationset for a user | __Activity name:__ PostApplicationSetByUserId Create an applicationset for a user.
+- path:userId string
+- body:applicationSetType string enum[Products|ExportDataTemplate|Rights]
+- body:data string
+- body:id string
+- body:name string
+
+## S107-N0003  PUT /classes/{class}
+desc: Update the class | Update the meta information of the class
+schema: ClassUpdate
+- path:class string
+- body:name string
+- body:section string
+
+## S107-N0006  POST /classes/{class}/archive
+desc: Archive the class | Mark the class as `archived`. When this course is synchronized with another app, like Google Classroom, this state will be automatically be updated.
+- path:class string
+
+## S107-N0008  DELETE /classes/{class}/assignments/{assignment}/archive
+desc: Unarchive the assignment. | Mark the assignment as `active`.
+- path:class string
+- path:assignment string
+
+## S107-N0011  PUT /classes/{class}/assignments/{assignment}/submissions
+desc: Create or edit a submission | Use this method as a student to create, update and submit a submission related to an assignment. Students can only set `attachments` and `submit`. Teachers can use `PUT /classes/{class}/assignments/{assignment}/submissions/{submission}` to update a submission by id.
+schema: AssignmentSubmissionUpdate
+- path:class string
+- path:assignment string
+- body:attachments array<object>
+- body:attachments[].googleDriveFileId string
+- body:attachments[].lockScoreTemplate boolean
+- body:attachments[].score string
+- body:attachments[].sharingMode string enum[read|write|copy|performance]
+- body:attachments[].type string enum[flat|link|googleDrive|worksheet]
+- body:attachments[].url string
+- body:attachments[].worksheet string
+- body:comments object
+- body:comments.total number
+- body:comments.unread number
+- body:draftGrade number
+- body:grade number
+- body:return boolean
+- body:submit boolean
+
+## S107-N0012  DELETE /classes/{class}/assignments/{assignment}/submissions/{submission}
+desc: Delete a submission | Use this method as a teacher to delete a submission and allow student to start over the assignment
+- path:class string
+- path:assignment string
+- path:submission string
+
+## S107-N0014  POST /classes/{class}/assignments/{assignment}/submissions/{submission}/comments
+desc: Add a feedback comment to a submission
+schema: AssignmentSubmissionCommentCreation
+- path:class string
+- path:assignment string
+- path:submission string
+- body:comment string
+
+## S107-N0016  PUT /classes/{class}/assignments/{assignment}/submissions/{submission}/comments/{comment}
+desc: Update a feedback comment to a submission
+schema: AssignmentSubmissionCommentCreation
+- path:class string
+- path:assignment string
+- path:submission string
+- path:comment string
+- body:comment string
+
+## S107-N0019  POST /collections
+desc: Create a new collection | This method will create a new collection and add it to your `root` collection.
+schema: CollectionCreation
+- body:privacy string enum[private]
+- body:title string
+
+## S107-N0020  DELETE /collections/{collection}
+desc: Delete the collection | This method will schedule the deletion of the collection. Until deleted, the collection will be available in the `trash`.
+- path:collection string
+
+## S107-N0021  PUT /collections/{collection}
+desc: Update a collection's metadata
+schema: CollectionModification
+- path:collection string
+- body:privacy string enum[private]
+- body:title string
+
+## S107-N0026  DELETE /organizations/invitations/{invitation}
+desc: Remove an organization invitation
+- path:invitation string
+
+## S107-N0032  POST /scores
+desc: Create a new score | Use this API method to **create a new music score in the current User account**. You will need a MusicXML 3 (`vnd.recordare.musicxml` or `vnd.recordare.musicxml+xml`), a MIDI (`audio/midi`), Guitar Pro (GP3, GP4, GP5, GPX, GP), PowerTab, TuxGuitar, or MuseScore file to create the new Flat document. This API call will automatically create the first revision of the document, the
+schema: ScoreCreation
+- body:collection string
+- body:data string
+- body:dataEncoding string enum[base64]
+- body:filename string
+- body:googleDriveFolder string
+- body:privacy string enum[public|private|organizationPublic|privateLink]
+- body:source object
+- body:source.googleDrive string
+- body:title string
+
+## S107-N0034  PUT /scores/{score}
+desc: Edit a score's metadata | This API method allows you to change the metadata of a score document (e.g. its `title` or `privacy`), all the properties are optional. To edit the file itself, create a new revision using the appropriate method (`POST /v2/scores/{score}/revisions/{revision}`). When editing the `title`, `subtitle`, `composer`, `lyricist`, `arranger` or `licenseText`, the metadatas will be
+schema: ScoreModification
+- path:score string
+- body:arranger string
+- body:composer string
+- body:creationType string enum[original|arrangement|other]
+- body:description string
+- body:license string enum[copyright|cc0|cc-by|cc-by-sa|cc-by-nd|cc-by-nc|cc-by-nc-sa|cc-by-nc-nd]
+- body:licenseText string
+- body:lyricist string
+- body:privacy string enum[public|private|organizationPublic|privateLink]
+- body:sharingKey string
+- body:subtitle string
+- body:tags array<string>
+- body:title string
+
+## S107-N0036  DELETE /scores/{score}/collaborators/{collaborator}
+desc: Delete a collaborator | Remove the specified collaborator from the score
+- path:score string
+- path:collaborator string
+
+## S107-N0038  DELETE /scores/{score}/comments/{comment}
+desc: Delete a comment
+- path:score string
+- path:comment string
+- query:sharingKey string
+
+## S107-N0039  PUT /scores/{score}/comments/{comment}
+desc: Update an existing comment
+schema: ScoreCommentUpdate
+- path:score string
+- path:comment string
+- query:sharingKey string
+- body:comment string
+- body:context object
+- body:context.measureUuids array<string>
+- body:context.partUuid string
+- body:context.staffIdx number
+- body:context.staffUuid string
+- body:context.startDpq number
+- body:context.startTimePos number
+- body:context.stopDpq number
+- body:context.stopTimePos number
+- body:rawComment string
+- body:revision string
+
+## S107-N0040  DELETE /scores/{score}/comments/{comment}/resolved
+desc: Mark the comment as unresolved
+- path:score string
+- path:comment string
+- query:sharingKey string
+
+## S107-N0041  PUT /scores/{score}/comments/{comment}/resolved
+desc: Mark the comment as resolved
+- path:score string
+- path:comment string
+- query:sharingKey string
+
+## S107-N0043  POST /scores/{score}/revisions
+desc: Create a new revision | Update a score by uploading a new revision for this one.
+schema: ScoreRevisionCreation
+- path:score string
+- body:autosave boolean
+- body:data string
+- body:dataEncoding string enum[base64]
+- body:description string
+
+## S107-N0044  POST /scores/{score}/tracks
+desc: Add a new video or audio track to the score | Use this method to add new track to the score. This track can then be played on flat.io or in an embedded score. This API method support medias hosted on SoundCloud, YouTube and Vimeo.
+schema: ScoreTrackCreation
+- path:score string
+- body:default boolean
+- body:state string enum[draft|completed|deleted]
+- body:synchronizationPoints array<object>
+- body:synchronizationPoints[].measureUuid string
+- body:synchronizationPoints[].time number
+- body:synchronizationPoints[].type string enum[measure|end]
+- body:title string
+- body:url string
+
+## S107-N0045  DELETE /scores/{score}/tracks/{track}
+desc: Remove an audio or video track linked to the score
+- path:score string
+- path:track string
+
+## S107-N0047  POST /scores/{score}/untrash
+desc: Untrash a score | This method will remove the score from the `trash` collection and from the deletion queue, and add it back to the original collections.
+- path:score string
+
+## S574-N0001  POST /circuits/circuit-terminations/
+schema: WritableCircuitTermination
+- body:cable object
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:circuit integer
+- body:connected_endpoint object
+- body:connected_endpoint_type string
+- body:connection_status boolean enum[False|True]
+- body:description string
+- body:id integer
+- body:port_speed integer
+- body:pp_info string
+- body:site integer
+- body:term_side string enum[A|Z]
+- body:upstream_speed integer
+- body:xconnect_id string
+
+## S574-N0002  DELETE /circuits/circuit-terminations/{id}/
+- path:id integer
+
+## S574-N0003  PATCH /circuits/circuit-terminations/{id}/
+schema: WritableCircuitTermination
+- path:id integer
+- body:cable object
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:circuit integer
+- body:connected_endpoint object
+- body:connected_endpoint_type string
+- body:connection_status boolean enum[False|True]
+- body:description string
+- body:id integer
+- body:port_speed integer
+- body:pp_info string
+- body:site integer
+- body:term_side string enum[A|Z]
+- body:upstream_speed integer
+- body:xconnect_id string
+
+## S574-N0004  PUT /circuits/circuit-terminations/{id}/
+schema: WritableCircuitTermination
+- path:id integer
+- body:cable object
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:circuit integer
+- body:connected_endpoint object
+- body:connected_endpoint_type string
+- body:connection_status boolean enum[False|True]
+- body:description string
+- body:id integer
+- body:port_speed integer
+- body:pp_info string
+- body:site integer
+- body:term_side string enum[A|Z]
+- body:upstream_speed integer
+- body:xconnect_id string
+
+## S574-N0005  POST /circuits/circuit-types/
+schema: CircuitType
+- body:circuit_count integer
+- body:description string
+- body:id integer
+- body:name string
+- body:slug string
+
+## S574-N0006  DELETE /circuits/circuit-types/{id}/
+- path:id integer
+
+## S574-N0007  PATCH /circuits/circuit-types/{id}/
+schema: CircuitType
+- path:id integer
+- body:circuit_count integer
+- body:description string
+- body:id integer
+- body:name string
+- body:slug string
+
+## S574-N0010  DELETE /circuits/circuits/{id}/
+- path:id integer
+
+## S574-N0011  PATCH /circuits/circuits/{id}/
+schema: WritableCircuit
+- path:id integer
+- body:cid string
+- body:comments string
+- body:commit_rate integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:id integer
+- body:install_date string
+- body:last_updated string
+- body:provider integer
+- body:status string enum[planned|provisioning|active|offline|deprovisioning|decommissioned]
+- body:tags array<string>
+- body:tenant integer
+- body:termination_a string
+- body:termination_z string
+- body:type integer
+
+## S574-N0012  PUT /circuits/circuits/{id}/
+schema: WritableCircuit
+- path:id integer
+- body:cid string
+- body:comments string
+- body:commit_rate integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:id integer
+- body:install_date string
+- body:last_updated string
+- body:provider integer
+- body:status string enum[planned|provisioning|active|offline|deprovisioning|decommissioned]
+- body:tags array<string>
+- body:tenant integer
+- body:termination_a string
+- body:termination_z string
+- body:type integer
+
+## S574-N0013  POST /circuits/providers/
+schema: Provider
+- body:account string
+- body:admin_contact string
+- body:asn integer
+- body:circuit_count integer
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:noc_contact string
+- body:portal_url string
+- body:slug string
+- body:tags array<string>
+
+## S574-N0014  DELETE /circuits/providers/{id}/
+- path:id integer
+
+## S574-N0015  PATCH /circuits/providers/{id}/
+schema: Provider
+- path:id integer
+- body:account string
+- body:admin_contact string
+- body:asn integer
+- body:circuit_count integer
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:noc_contact string
+- body:portal_url string
+- body:slug string
+- body:tags array<string>
+
+## S574-N0017  POST /dcim/cables/
+schema: WritableCable
+- body:color string
+- body:id integer
+- body:label string
+- body:length integer
+- body:length_unit string enum[m|cm|ft|in]
+- body:status string enum[connected|planned|decommissioning]
+- body:termination_a object
+- body:termination_a_id integer
+- body:termination_a_type string
+- body:termination_b object
+- body:termination_b_id integer
+- body:termination_b_type string
+- body:type string enum[cat3|cat5|cat5e|cat6|cat6a|cat7|dac-active|dac-passive|mrj21-trunk|coaxial|mmf|mmf-om1]
+
+## S574-N0018  DELETE /dcim/cables/{id}/
+- path:id integer
+
+## S574-N0019  PATCH /dcim/cables/{id}/
+schema: WritableCable
+- path:id integer
+- body:color string
+- body:id integer
+- body:label string
+- body:length integer
+- body:length_unit string enum[m|cm|ft|in]
+- body:status string enum[connected|planned|decommissioning]
+- body:termination_a object
+- body:termination_a_id integer
+- body:termination_a_type string
+- body:termination_b object
+- body:termination_b_id integer
+- body:termination_b_type string
+- body:type string enum[cat3|cat5|cat5e|cat6|cat6a|cat7|dac-active|dac-passive|mrj21-trunk|coaxial|mmf|mmf-om1]
+
+## S574-N0020  PUT /dcim/cables/{id}/
+schema: WritableCable
+- path:id integer
+- body:color string
+- body:id integer
+- body:label string
+- body:length integer
+- body:length_unit string enum[m|cm|ft|in]
+- body:status string enum[connected|planned|decommissioning]
+- body:termination_a object
+- body:termination_a_id integer
+- body:termination_a_type string
+- body:termination_b object
+- body:termination_b_id integer
+- body:termination_b_type string
+- body:type string enum[cat3|cat5|cat5e|cat6|cat6a|cat7|dac-active|dac-passive|mrj21-trunk|coaxial|mmf|mmf-om1]
+
+## S574-N0022  DELETE /dcim/console-port-templates/{id}/
+- path:id integer
+
+## S574-N0023  PATCH /dcim/console-port-templates/{id}/
+schema: WritableConsolePortTemplate
+- path:id integer
+- body:device_type integer
+- body:id integer
+- body:name string
+- body:type string enum[de-9|db-25|rj-11|rj-12|rj-45|usb-a|usb-b|usb-c|usb-mini-a|usb-mini-b|usb-micro-a|usb-micro-b]
+
+## S574-N0026  DELETE /dcim/console-ports/{id}/
+- path:id integer
+
+## S574-N0027  PATCH /dcim/console-ports/{id}/
+schema: WritableConsolePort
+- path:id integer
+- body:cable object
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:connected_endpoint object
+- body:connected_endpoint_type string
+- body:connection_status boolean enum[False|True]
+- body:description string
+- body:device integer
+- body:id integer
+- body:name string
+- body:tags array<string>
+- body:type string enum[de-9|db-25|rj-11|rj-12|rj-45|usb-a|usb-b|usb-c|usb-mini-a|usb-mini-b|usb-micro-a|usb-micro-b]

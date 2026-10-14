@@ -1,0 +1,1256 @@
+## S342-N0044  PUT /projects/{owner}/{projectId}/{specType}/{name}
+desc: Add an API or domain to a project | Use this operation to add a single API or domain to the specified project. To add multiple APIs or domains at once, use `PUT /projects/{owner}/{projectId}`.
+- path:owner string
+- path:projectId string
+- path:specType string enum[apis|domains]
+- path:name string
+
+## S342-N0045  DELETE /templates/{owner}/{templateId}
+desc: Delete a template
+- path:owner string
+- path:templateId string
+
+## S342-N0048  DELETE /templates/{owner}/{templateId}/{version}
+desc: Delete a particular version of a template
+- path:owner string
+- path:templateId string
+- path:version string
+
+## S342-N0050  POST /templates/{owner}/{templateId}/{version}/fork
+desc: Create a fork for a template
+schema: ForkVersion
+- path:owner string
+- path:templateId string
+- path:version string
+- body:name string
+- body:owner string
+- body:private boolean
+- body:project string
+- body:version string
+
+## S342-N0052  PUT /templates/{owner}/{templateId}/{version}/settings/private
+desc: Update visibility settings for a template
+schema: VisibilitySettings
+- path:owner string
+- path:templateId string
+- path:version string
+- body:private boolean
+
+## S304-N0001  POST /attachments
+desc: Upload an attachment | Upload an attachment. This method uploads an attachment on an object and returns the compact record for the created attachment object. This is possible by either: - Providing the URL of the external resource being attached, or - Downloading the file content first and then uploading it as any other attachment. Note that it is not possible to attach files from third party serv
+schema: AttachmentRequest
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:connect_to_app boolean
+- body:file string
+- body:name string
+- body:parent string
+- body:resource_subtype string enum[asana|dropbox|gdrive|onedrive|box|vimeo|external]
+- body:url string
+
+## S304-N0002  DELETE /attachments/{attachment_gid}
+desc: Delete an attachment | Deletes a specific, existing attachment. Returns an empty data record.
+- path:attachment_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+
+## S304-N0003  POST /batch
+desc: Submit parallel requests | Make multiple requests in parallel to Asana's API.
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:actions array<object>
+- body:actions[].data object
+- body:actions[].method string enum[get|post|put|delete|patch|head]
+- body:actions[].options object
+- body:actions[].options.fields array<string>
+- body:actions[].options.limit integer
+- body:actions[].options.offset integer
+- body:actions[].relative_path string
+
+## S304-N0004  POST /custom_fields
+desc: Create a custom field | Creates a new custom field in a workspace. Every custom field is required to be created in a specific workspace, and this workspace cannot be changed once set. A custom field’s name must be unique within a workspace and not conflict with names of existing task properties such as `Due Date` or `Assignee`. A custom field’s type must be one of `text`, `enum`, `multi_enum`, `nu
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- query:limit integer
+- query:offset string
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.date_value object
+- body:data.date_value.date string
+- body:data.date_value.date_time string
+- body:data.display_value string
+- body:data.enabled boolean
+- body:data.enum_options array<object>
+- body:data.enum_options[].gid string
+- body:data.enum_options[].resource_type string
+- body:data.enum_options[].color string
+- body:data.enum_options[].enabled boolean
+- body:data.enum_options[].name string
+- body:data.enum_value object
+- body:data.enum_value.gid string
+- body:data.enum_value.resource_type string
+- body:data.enum_value.color string
+- body:data.enum_value.enabled boolean
+- body:data.enum_value.name string
+- body:data.multi_enum_values array<object>
+- body:data.multi_enum_values[].gid string
+- body:data.multi_enum_values[].resource_type string
+- body:data.multi_enum_values[].color string
+- body:data.multi_enum_values[].enabled boolean
+- body:data.multi_enum_values[].name string
+- body:data.name string
+- body:data.number_value number
+- body:data.resource_subtype string enum[text|enum|multi_enum|number|date|people]
+- body:data.text_value string
+- body:data.type string enum[text|enum|multi_enum|number]
+- body:data.asana_created_field string enum[a_v_requirements|account_name|actionable|align_shipping_link|align_status|allotted_time|appointment|approval_stage|approved|article_series|board_committee|browser]
+- body:data.currency_code string
+- body:data.custom_label string
+- body:data.custom_label_position string enum[prefix|suffix]
+- body:data.description string
+- body:data.format string enum[currency|identifier|percentage|custom|none]
+- body:data.has_notifications_enabled boolean
+- body:data.is_global_to_workspace boolean
+- body:data.precision integer
+- body:data.people_value array<string>
+- body:data.workspace string
+
+## S304-N0006  PUT /custom_fields/{custom_field_gid}
+desc: Update a custom field | A specific, existing custom field can be updated by making a PUT request on the URL for that custom field. Only the fields provided in the `data` block will be updated; any unspecified fields will remain unchanged When using this method, it is best to specify only those fields you wish to change, or else you may overwrite changes made by another user since you last retrieve
+- path:custom_field_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.date_value object
+- body:data.date_value.date string
+- body:data.date_value.date_time string
+- body:data.display_value string
+- body:data.enabled boolean
+- body:data.enum_options array<object>
+- body:data.enum_options[].gid string
+- body:data.enum_options[].resource_type string
+- body:data.enum_options[].color string
+- body:data.enum_options[].enabled boolean
+- body:data.enum_options[].name string
+- body:data.enum_value object
+- body:data.enum_value.gid string
+- body:data.enum_value.resource_type string
+- body:data.enum_value.color string
+- body:data.enum_value.enabled boolean
+- body:data.enum_value.name string
+- body:data.multi_enum_values array<object>
+- body:data.multi_enum_values[].gid string
+- body:data.multi_enum_values[].resource_type string
+- body:data.multi_enum_values[].color string
+- body:data.multi_enum_values[].enabled boolean
+- body:data.multi_enum_values[].name string
+- body:data.name string
+- body:data.number_value number
+- body:data.resource_subtype string enum[text|enum|multi_enum|number|date|people]
+- body:data.text_value string
+- body:data.type string enum[text|enum|multi_enum|number]
+- body:data.asana_created_field string enum[a_v_requirements|account_name|actionable|align_shipping_link|align_status|allotted_time|appointment|approval_stage|approved|article_series|board_committee|browser]
+- body:data.currency_code string
+- body:data.custom_label string
+- body:data.custom_label_position string enum[prefix|suffix]
+- body:data.description string
+- body:data.format string enum[currency|identifier|percentage|custom|none]
+- body:data.has_notifications_enabled boolean
+- body:data.is_global_to_workspace boolean
+- body:data.precision integer
+- body:data.people_value array<string>
+- body:data.workspace string
+
+## S304-N0007  POST /custom_fields/{custom_field_gid}/enum_options
+desc: Create an enum option | Creates an enum option and adds it to this custom field’s list of enum options. A custom field can have at most 500 enum options (including disabled options). By default new enum options are inserted at the end of a custom field’s list. Locked custom fields can only have enum options added by the user who locked the field. Returns the full record of the newly created enum o
+- path:custom_field_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- query:limit integer
+- query:offset string
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.color string
+- body:data.enabled boolean
+- body:data.name string
+- body:data.insert_after string
+- body:data.insert_before string
+
+## S304-N0008  POST /custom_fields/{custom_field_gid}/enum_options/insert
+desc: Reorder a custom field's enum | Moves a particular enum option to be either before or after another specified enum option in the custom field. Locked custom fields can only be reordered by the user who locked the field.
+- path:custom_field_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:after_enum_option string
+- body:before_enum_option string
+- body:enum_option string
+
+## S304-N0011  POST /goals
+desc: Create a goal | Creates a new goal in a workspace or team. Returns the full record of the newly created goal.
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- query:limit integer
+- query:offset string
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.due_on string
+- body:data.html_notes string
+- body:data.is_workspace_level boolean
+- body:data.liked boolean
+- body:data.name string
+- body:data.notes string
+- body:data.start_on string
+- body:data.status string
+- body:data.followers array<string>
+- body:data.owner string
+- body:data.team string
+- body:data.time_period string
+- body:data.workspace string
+
+## S304-N0014  POST /goals/{goal_gid}/addFollowers
+desc: Add a collaborator to a goal | Adds followers to a goal. Returns the goal the followers were added to. Each goal can be associated with zero or more followers in the system. Requests to add/remove followers, if successful, will return the complete updated goal record, described above.
+- path:goal_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:followers array<string>
+
+## S304-N0015  POST /goals/{goal_gid}/addSupportingRelationship
+desc: Add a supporting goal relationship | Creates a goal relationship by adding a supporting resource to a given goal. Returns the newly created goal relationship record.
+- path:goal_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:contribution_weight number
+- body:insert_after string
+- body:insert_before string
+- body:supporting_resource string
+
+## S304-N0018  POST /goals/{goal_gid}/setMetric
+desc: Create a goal metric | Creates and adds a goal metric to a specified goal. Note that this replaces an existing goal metric if one already exists.
+- path:goal_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.currency_code string
+- body:data.current_display_value string
+- body:data.current_number_value number
+- body:data.initial_number_value number
+- body:data.precision integer
+- body:data.progress_source string enum[manual|subgoal_progress|project_task_completion|project_milestone_completion|external]
+- body:data.resource_subtype string enum[number]
+- body:data.target_number_value number
+- body:data.unit string enum[none|currency|percentage]
+
+## S304-N0019  POST /goals/{goal_gid}/setMetricCurrentValue
+desc: Update a goal metric | Updates a goal's existing metric's `current_number_value` if one exists, otherwise responds with a 400 status code. Returns the complete updated goal metric record.
+- path:goal_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.current_number_value number
+
+## S304-N0021  POST /portfolios
+desc: Create a portfolio | Creates a new portfolio in the given workspace with the supplied name. Note that portfolios created in the Asana UI may have some state (like the “Priority” custom field) which is automatically added to the portfolio when it is created. Portfolios created via our API will *not* be created with the same initial state to allow integrations to create their own starting state on a
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+- body:data.color string enum[dark-pink|dark-green|dark-blue|dark-red|dark-teal|dark-brown|dark-orange|dark-purple|dark-warm-gray|light-pink|light-green|light-blue]
+- body:data.members array<string>
+- body:data.public boolean
+- body:data.workspace string
+
+## S304-N0025  POST /portfolios/{portfolio_gid}/addItem
+desc: Add a portfolio item | Add an item to a portfolio. Returns an empty data block.
+- path:portfolio_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:insert_after string
+- body:insert_before string
+- body:item string
+
+## S304-N0027  POST /portfolios/{portfolio_gid}/removeCustomFieldSetting
+desc: Remove a custom field from a portfolio | Removes a custom field setting from a portfolio.
+- path:portfolio_gid string
+- query:opt_pretty boolean
+- body:custom_field string
+
+## S304-N0028  POST /portfolios/{portfolio_gid}/removeItem
+desc: Remove a portfolio item | Remove an item from a portfolio. Returns an empty data block.
+- path:portfolio_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:item string
+
+## S304-N0029  POST /portfolios/{portfolio_gid}/removeMembers
+desc: Remove users from a portfolio | Removes the specified list of users from members of the portfolio. Returns the updated portfolio record.
+- path:portfolio_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:members string
+
+## S304-N0032  DELETE /project_statuses/{project_status_gid}
+desc: Delete a project status | *Deprecated: new integrations should prefer the `/status_updates/{status_gid}` route.* Deletes a specific, existing project status update. Returns an empty data record.
+- path:project_status_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+
+## S304-N0033  POST /project_templates/{project_template_gid}/instantiateProject
+desc: Instantiate a project from a project template | Creates and returns a job that will asynchronously handle the project instantiation. To form this request, it is recommended to first make a request to [get a project template](/docs/get-a-project-template). Then, from the response, copy the `gid` from the object in the `requested_dates` array. This `gid` should be used in `requested_dates` to instan
+- path:project_template_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:is_strict boolean
+- body:name string
+- body:public boolean
+- body:requested_dates array<object>
+- body:requested_dates[].gid string
+- body:requested_dates[].value string
+- body:team string
+- body:workspace string
+
+## S304-N0036  PUT /projects/{project_gid}
+desc: Update a project | A specific, existing project can be updated by making a PUT request on the URL for that project. Only the fields provided in the `data` block will be updated; any unspecified fields will remain unchanged. When using this method, it is best to specify only those fields you wish to change, or else you may overwrite changes made by another user since you last retrieved the task. Re
+- path:project_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+- body:data.archived boolean
+- body:data.color string enum[dark-pink|dark-green|dark-blue|dark-red|dark-teal|dark-brown|dark-orange|dark-purple|dark-warm-gray|light-pink|light-green|light-blue]
+- body:data.created_at string
+- body:data.current_status object
+- body:data.current_status.gid string
+- body:data.current_status.resource_type string
+- body:data.current_status.title string
+- body:data.current_status.color string enum[green|yellow|red|blue]
+- body:data.current_status.html_text string
+- body:data.current_status.text string
+- body:data.current_status.author object
+- body:data.current_status.created_at string
+- body:data.current_status.created_by object
+- body:data.current_status.modified_at string
+- body:data.current_status_update object
+- body:data.current_status_update.gid string
+- body:data.current_status_update.resource_type string
+- body:data.current_status_update.resource_subtype string enum[project_status_update|portfolio_status_update|goal_status_update]
+- body:data.current_status_update.title string
+- body:data.custom_field_settings array<object>
+- body:data.custom_field_settings[].gid string
+- body:data.custom_field_settings[].resource_type string
+- body:data.custom_field_settings[].custom_field object
+- body:data.custom_field_settings[].is_important boolean
+- body:data.custom_field_settings[].parent object
+- body:data.custom_field_settings[].project object
+- body:data.default_view string enum[list|board|calendar|timeline]
+- body:data.due_date string
+- body:data.due_on string
+- body:data.html_notes string
+- body:data.is_template boolean
+- body:data.members array<object>
+- body:data.members[].gid string
+- body:data.members[].resource_type string
+- body:data.members[].name string
+- body:data.modified_at string
+- body:data.notes string
+- body:data.public boolean
+- body:data.start_on string
+- body:data.workspace object
+- body:data.workspace.gid string
+- body:data.workspace.resource_type string
+- body:data.workspace.name string
+- body:data.custom_fields object
+- body:data.followers string
+- body:data.owner string
+- body:data.team string
+
+## S304-N0038  POST /projects/{project_gid}/addFollowers
+desc: Add followers to a project | Adds the specified list of users as followers to the project. Followers are a subset of members who have opted in to receive "tasks added" notifications for a project. Therefore, if the users are not already members of the project, they will also become members as a result of this operation. Returns the updated project record.
+- path:project_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:followers string
+
+## S304-N0039  POST /projects/{project_gid}/addMembers
+desc: Add users to a project | Adds the specified list of users as members of the project. Note that a user being added as a member may also be added as a *follower* as a result of this operation. This is because the user's default notification settings (i.e., in the "Notifcations" tab of "My Profile Settings") will override this endpoint's default behavior of setting "Tasks added" notifications to `fal
+- path:project_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:members string
+
+## S304-N0040  POST /projects/{project_gid}/duplicate
+desc: Duplicate a project | Creates and returns a job that will asynchronously handle the duplication.
+- path:project_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:include string enum[members|notes|forms|task_notes|task_assignee|task_subtasks|task_attachments|task_dates|task_dependencies|task_followers|task_tags|task_projects]
+- body:name string
+- body:schedule_dates object
+- body:schedule_dates.due_on string
+- body:schedule_dates.should_skip_weekends boolean
+- body:schedule_dates.start_on string
+- body:team string
+
+## S304-N0042  POST /projects/{project_gid}/project_statuses
+desc: Create a project status | *Deprecated: new integrations should prefer the `/status_updates` route.* Creates a new status update on the project. Returns the full record of the newly created project status update.
+- path:project_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.title string
+- body:data.color string enum[green|yellow|red|blue]
+- body:data.html_text string
+- body:data.text string
+
+## S304-N0045  POST /projects/{project_gid}/removeMembers
+desc: Remove users from a project | Removes the specified list of users from members of the project. Returns the updated project record.
+- path:project_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:members string
+
+## S304-N0046  POST /projects/{project_gid}/saveAsTemplate
+desc: Create a project template from a project | Creates and returns a job that will asynchronously handle the project template creation. Note that while the resulting project template can be accessed with the API, it won't be visible in the Asana UI until Project Templates 2.0 is launched in the app. See more in [this forum post](https://forum.asana.com/t/a-new-api-for-project-templates/156432).
+- path:project_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:name string
+- body:public boolean
+- body:team string
+- body:workspace string
+
+## S304-N0047  POST /projects/{project_gid}/sections
+desc: Create a section in a project | Creates a new section in a project. Returns the full record of the newly created section.
+- path:project_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:insert_after string
+- body:insert_before string
+- body:name string
+
+## S304-N0048  POST /projects/{project_gid}/sections/insert
+desc: Move or Insert sections | Move sections relative to each other. One of `before_section` or `after_section` is required. Sections cannot be moved between projects. Returns an empty data block.
+- path:project_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:after_section string
+- body:before_section string
+- body:project string
+- body:section string
+
+## S304-N0050  PUT /sections/{section_gid}
+desc: Update a section | A specific, existing section can be updated by making a PUT request on the URL for that project. Only the fields provided in the `data` block will be updated; any unspecified fields will remain unchanged. (note that at this time, the only field that can be updated is the `name` field.) When using this method, it is best to specify only those fields you wish to change, or else yo
+- path:section_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:insert_after string
+- body:insert_before string
+- body:name string
+
+## S304-N0051  POST /sections/{section_gid}/addTask
+desc: Add task to section | Add a task to a specific, existing section. This will remove the task from other sections of the project. The task will be inserted at the top of a section unless an insert_before or insert_after parameter is declared. This does not work for separators (tasks with the resource_subtype of section).
+- path:section_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:insert_after string
+- body:insert_before string
+- body:task string
+
+## S304-N0053  DELETE /status_updates/{status_gid}
+desc: Delete a status update | Deletes a specific, existing status update. Returns an empty data record.
+- path:status_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+
+## S304-N0056  POST /tags
+desc: Create a tag | Creates a new tag in a workspace or organization. Every tag is required to be created in a specific workspace or organization, and this cannot be changed once set. Note that you can use the workspace parameter regardless of whether or not it is an organization. Returns the full record of the newly created tag.
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+- body:data.color string enum[dark-pink|dark-green|dark-blue|dark-red|dark-teal|dark-brown|dark-orange|dark-purple|dark-warm-gray|light-pink|light-green|light-blue]
+- body:data.notes string
+- body:data.followers array<string>
+- body:data.workspace string
+
+## S304-N0057  DELETE /tags/{tag_gid}
+desc: Delete a tag | A specific, existing tag can be deleted by making a DELETE request on the URL for that tag. Returns an empty data record.
+- path:tag_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- query:limit integer
+- query:offset string
+
+## S304-N0061  PUT /tasks/{task_gid}
+desc: Update a task | A specific, existing task can be updated by making a PUT request on the URL for that task. Only the fields provided in the `data` block will be updated; any unspecified fields will remain unchanged. When using this method, it is best to specify only those fields you wish to change, or else you may overwrite changes made by another user since you last retrieved the task. Returns the
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+- body:data.resource_subtype string enum[default_task|milestone|section|approval]
+- body:data.actual_time_minutes number
+- body:data.approval_status string enum[pending|approved|rejected|changes_requested]
+- body:data.assignee_status string enum[today|upcoming|later|new|inbox]
+- body:data.completed boolean
+- body:data.completed_at string
+- body:data.completed_by object
+- body:data.completed_by.gid string
+- body:data.completed_by.resource_type string
+- body:data.completed_by.name string
+- body:data.created_at string
+- body:data.dependencies array<object>
+- body:data.dependencies[].gid string
+- body:data.dependencies[].resource_type string
+- body:data.dependents array<object>
+- body:data.dependents[].gid string
+- body:data.dependents[].resource_type string
+- body:data.due_at string
+- body:data.due_on string
+- body:data.external object
+- body:data.external.data string
+- body:data.external.gid string
+- body:data.hearted boolean
+- body:data.hearts array<object>
+- body:data.hearts[].gid string
+- body:data.hearts[].user object
+- body:data.html_notes string
+- body:data.is_rendered_as_separator boolean
+- body:data.liked boolean
+- body:data.likes array<object>
+- body:data.likes[].gid string
+- body:data.likes[].user object
+- body:data.memberships array<object>
+- body:data.memberships[].project object
+- body:data.memberships[].section object
+- body:data.modified_at string
+- body:data.notes string
+- body:data.num_hearts integer
+- body:data.num_likes integer
+- body:data.num_subtasks integer
+- body:data.start_at string
+- body:data.start_on string
+- body:data.assignee string
+- body:data.assignee_section string
+- body:data.custom_fields object
+- body:data.followers array<string>
+- body:data.parent string
+- body:data.projects array<string>
+- body:data.tags array<string>
+- body:data.workspace string
+
+## S304-N0062  POST /tasks/{task_gid}/addDependencies
+desc: Set dependencies for a task | Marks a set of tasks as dependencies of this task, if they are not already dependencies. *A task can have at most 30 dependents and dependencies combined*.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:dependencies array<string>
+
+## S304-N0063  POST /tasks/{task_gid}/addDependents
+desc: Set dependents for a task | Marks a set of tasks as dependents of this task, if they are not already dependents. *A task can have at most 30 dependents and dependencies combined*.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:dependents array<string>
+
+## S304-N0064  POST /tasks/{task_gid}/addFollowers
+desc: Add followers to a task | Adds followers to a task. Returns an empty data block. Each task can be associated with zero or more followers in the system. Requests to add/remove followers, if successful, will return the complete updated task record, described above.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:followers array<string>
+
+## S304-N0065  POST /tasks/{task_gid}/addProject
+desc: Add a project to a task | Adds the task to the specified project, in the optional location specified. If no location arguments are given, the task will be added to the end of the project. `addProject` can also be used to reorder a task within a project or section that already contains it. At most one of `insert_before`, `insert_after`, or `section` should be specified. Inserting into a section in 
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:insert_after string
+- body:insert_before string
+- body:project string
+- body:section string
+
+## S304-N0066  POST /tasks/{task_gid}/addTag
+desc: Add a tag to a task | Adds a tag to a task. Returns an empty data block.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:tag string
+
+## S304-N0067  POST /tasks/{task_gid}/duplicate
+desc: Duplicate a task | Creates and returns a job that will asynchronously handle the duplication.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:include string enum[notes|assignee|subtasks|attachments|tags|followers|projects|dates|dependencies|parent]
+- body:name string
+
+## S304-N0074  POST /tasks/{task_gid}/stories
+desc: Create a story on a task | Adds a story to a task. This endpoint currently only allows for comment stories to be created. The comment will be authored by the currently authenticated user, and timestamped when the server receives the request. Returns the full record for the new story added to the task.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.created_at string
+- body:data.html_text string
+- body:data.is_pinned boolean
+- body:data.resource_subtype string
+- body:data.sticker_name string enum[green_checkmark|people_dancing|dancing_unicorn|heart|party_popper|people_waving_flags|splashing_narwhal|trophy|yeti_riding_unicorn|celebrating_people|determined_climbers|phoenix_spreading_love]
+- body:data.text string
+
+## S304-N0075  POST /tasks/{task_gid}/subtasks
+desc: Create a subtask | Creates a new subtask and adds it to the parent task. Returns the full record for the newly created subtask.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+- body:data.resource_subtype string enum[default_task|milestone|section|approval]
+- body:data.actual_time_minutes number
+- body:data.approval_status string enum[pending|approved|rejected|changes_requested]
+- body:data.assignee_status string enum[today|upcoming|later|new|inbox]
+- body:data.completed boolean
+- body:data.completed_at string
+- body:data.completed_by object
+- body:data.completed_by.gid string
+- body:data.completed_by.resource_type string
+- body:data.completed_by.name string
+- body:data.created_at string
+- body:data.dependencies array<object>
+- body:data.dependencies[].gid string
+- body:data.dependencies[].resource_type string
+- body:data.dependents array<object>
+- body:data.dependents[].gid string
+- body:data.dependents[].resource_type string
+- body:data.due_at string
+- body:data.due_on string
+- body:data.external object
+- body:data.external.data string
+- body:data.external.gid string
+- body:data.hearted boolean
+- body:data.hearts array<object>
+- body:data.hearts[].gid string
+- body:data.hearts[].user object
+- body:data.html_notes string
+- body:data.is_rendered_as_separator boolean
+- body:data.liked boolean
+- body:data.likes array<object>
+- body:data.likes[].gid string
+- body:data.likes[].user object
+- body:data.memberships array<object>
+- body:data.memberships[].project object
+- body:data.memberships[].section object
+- body:data.modified_at string
+- body:data.notes string
+- body:data.num_hearts integer
+- body:data.num_likes integer
+- body:data.num_subtasks integer
+- body:data.start_at string
+- body:data.start_on string
+- body:data.assignee string
+- body:data.assignee_section string
+- body:data.custom_fields object
+- body:data.followers array<string>
+- body:data.parent string
+- body:data.projects array<string>
+- body:data.tags array<string>
+- body:data.workspace string
+
+## S304-N0076  POST /teams
+desc: Create a team | Creates a team within the current workspace.
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- query:limit integer
+- query:offset string
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+- body:data.description string
+- body:data.html_description string
+- body:data.organization string
+- body:data.visibility string enum[secret|request_to_join|public]
+
+## S304-N0077  PUT /teams
+desc: Update a team | Updates a team within the current workspace.
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- query:limit integer
+- query:offset string
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+- body:data.description string
+- body:data.html_description string
+- body:data.organization string
+- body:data.visibility string enum[secret|request_to_join|public]
+
+## S304-N0079  POST /teams/{team_gid}/projects
+desc: Create a project in a team | Creates a project shared with the given team. Returns the full record of the newly created project.
+- path:team_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+- body:data.archived boolean
+- body:data.color string enum[dark-pink|dark-green|dark-blue|dark-red|dark-teal|dark-brown|dark-orange|dark-purple|dark-warm-gray|light-pink|light-green|light-blue]
+- body:data.created_at string
+- body:data.current_status object
+- body:data.current_status.gid string
+- body:data.current_status.resource_type string
+- body:data.current_status.title string
+- body:data.current_status.color string enum[green|yellow|red|blue]
+- body:data.current_status.html_text string
+- body:data.current_status.text string
+- body:data.current_status.author object
+- body:data.current_status.created_at string
+- body:data.current_status.created_by object
+- body:data.current_status.modified_at string
+- body:data.current_status_update object
+- body:data.current_status_update.gid string
+- body:data.current_status_update.resource_type string
+- body:data.current_status_update.resource_subtype string enum[project_status_update|portfolio_status_update|goal_status_update]
+- body:data.current_status_update.title string
+- body:data.custom_field_settings array<object>
+- body:data.custom_field_settings[].gid string
+- body:data.custom_field_settings[].resource_type string
+- body:data.custom_field_settings[].custom_field object
+- body:data.custom_field_settings[].is_important boolean
+- body:data.custom_field_settings[].parent object
+- body:data.custom_field_settings[].project object
+- body:data.default_view string enum[list|board|calendar|timeline]
+- body:data.due_date string
+- body:data.due_on string
+- body:data.html_notes string
+- body:data.is_template boolean
+- body:data.members array<object>
+- body:data.members[].gid string
+- body:data.members[].resource_type string
+- body:data.members[].name string
+- body:data.modified_at string
+- body:data.notes string
+- body:data.public boolean
+- body:data.start_on string
+- body:data.workspace object
+- body:data.workspace.gid string
+- body:data.workspace.resource_type string
+- body:data.workspace.name string
+- body:data.custom_fields object
+- body:data.followers string
+- body:data.owner string
+- body:data.team string
+
+## S304-N0080  POST /teams/{team_gid}/removeUser
+desc: Remove a user from a team | The user making this call must be a member of the team in order to remove themselves or others.
+- path:team_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:user string
+
+## S304-N0081  POST /webhooks
+desc: Establish a webhook | Establishing a webhook is a two-part process. First, a simple HTTP POST request initiates the creation similar to creating any other resource. Next, in the middle of this request comes the confirmation handshake. When a webhook is created, we will send a test POST to the target with an `X-Hook-Secret` header. The target must respond with a `200 OK` or `204 No Content` and a m
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:filters array<object>
+- body:filters[].action string
+- body:filters[].fields array<string>
+- body:filters[].resource_subtype string
+- body:filters[].resource_type string
+- body:resource string
+- body:target string
+
+## S304-N0084  PUT /workspaces/{workspace_gid}
+desc: Update a workspace | A specific, existing workspace can be updated by making a PUT request on the URL for that workspace. Only the fields provided in the data block will be updated; any unspecified fields will remain unchanged. Currently the only field that can be modified for a workspace is its name. Returns the complete, updated workspace record.
+- path:workspace_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+
+## S304-N0085  POST /workspaces/{workspace_gid}/addUser
+desc: Add a user to a workspace or organization | Add a user to a workspace or organization. The user can be referenced by their globally unique user ID or their email address. Returns the full user record for the invited user.
+- path:workspace_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:user string
+
+## S304-N0086  POST /workspaces/{workspace_gid}/projects
+desc: Create a project in a workspace | Returns the compact project records for all projects in the workspace. If the workspace for your project is an organization, you must also supply a team to share the project with. Returns the full record of the newly created project.
+- path:workspace_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+- body:data.archived boolean
+- body:data.color string enum[dark-pink|dark-green|dark-blue|dark-red|dark-teal|dark-brown|dark-orange|dark-purple|dark-warm-gray|light-pink|light-green|light-blue]
+- body:data.created_at string
+- body:data.current_status object
+- body:data.current_status.gid string
+- body:data.current_status.resource_type string
+- body:data.current_status.title string
+- body:data.current_status.color string enum[green|yellow|red|blue]
+- body:data.current_status.html_text string
+- body:data.current_status.text string
+- body:data.current_status.author object
+- body:data.current_status.created_at string
+- body:data.current_status.created_by object
+- body:data.current_status.modified_at string
+- body:data.current_status_update object
+- body:data.current_status_update.gid string
+- body:data.current_status_update.resource_type string
+- body:data.current_status_update.resource_subtype string enum[project_status_update|portfolio_status_update|goal_status_update]
+- body:data.current_status_update.title string
+- body:data.custom_field_settings array<object>
+- body:data.custom_field_settings[].gid string
+- body:data.custom_field_settings[].resource_type string
+- body:data.custom_field_settings[].custom_field object
+- body:data.custom_field_settings[].is_important boolean
+- body:data.custom_field_settings[].parent object
+- body:data.custom_field_settings[].project object
+- body:data.default_view string enum[list|board|calendar|timeline]
+- body:data.due_date string
+- body:data.due_on string
+- body:data.html_notes string
+- body:data.is_template boolean
+- body:data.members array<object>
+- body:data.members[].gid string
+- body:data.members[].resource_type string
+- body:data.members[].name string
+- body:data.modified_at string
+- body:data.notes string
+- body:data.public boolean
+- body:data.start_on string
+- body:data.workspace object
+- body:data.workspace.gid string
+- body:data.workspace.resource_type string
+- body:data.workspace.name string
+- body:data.custom_fields object
+- body:data.followers string
+- body:data.owner string
+- body:data.team string
+
+## S304-N0087  POST /workspaces/{workspace_gid}/removeUser
+desc: Remove a user from a workspace or organization | Remove a user from a workspace or organization. The user making this call must be an admin in the workspace. The user can be referenced by their globally unique user ID or their email address. Returns an empty data record.
+- path:workspace_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:user string
+
+## S304-N0088  POST /workspaces/{workspace_gid}/tags
+desc: Create a tag in a workspace | Creates a new tag in a workspace or organization. Every tag is required to be created in a specific workspace or organization, and this cannot be changed once set. Note that you can use the workspace parameter regardless of whether or not it is an organization. Returns the full record of the newly created tag.
+- path:workspace_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+- body:data.color string enum[dark-pink|dark-green|dark-blue|dark-red|dark-teal|dark-brown|dark-orange|dark-purple|dark-warm-gray|light-pink|light-green|light-blue]
+- body:data.notes string
+- body:data.created_at string
+- body:data.followers array<object>
+- body:data.followers[].gid string
+- body:data.followers[].resource_type string
+- body:data.followers[].name string
+- body:data.permalink_url string
+- body:data.workspace object
+- body:data.workspace.gid string
+- body:data.workspace.resource_type string
+- body:data.workspace.name string
+
+## S506-N0001  PUT /rest/api/3/announcementBanner
+desc: Update announcement banner configuration | Updates the announcement banner configuration. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: AnnouncementBannerConfigurationUpdate
+- body:isDismissible boolean
+- body:isEnabled boolean
+- body:message string
+- body:visibility string
+
+## S506-N0002  POST /rest/api/3/app/field/value
+desc: Update custom fields | Updates the value of one or more custom fields on one or more issues. Combinations of custom field and issue should be unique within the request. Custom fields can only be updated by the Forge app that created them. **[Permissions](#permissions) required:** Only the app that created the custom field can update its values with this operation.
+schema: MultipleCustomFieldValuesUpdateDetails
+- query:generateChangelog boolean
+- body:updates array<object>
+- body:updates[].customField string
+- body:updates[].issueIds array<integer>
+- body:updates[].value any
+
+## S506-N0003  PUT /rest/api/3/app/field/{fieldIdOrKey}/context/configuration
+desc: Update custom field configurations | Update the configuration for contexts of a custom field created by a [Forge app](https://developer.atlassian.com/platform/forge/). **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg). Jira permissions are not required for the Forge app that created the custom field.
+schema: CustomFieldConfigurations
+- path:fieldIdOrKey string
+- body:configurations array<object>
+- body:configurations[].configuration any
+- body:configurations[].fieldContextId string
+- body:configurations[].id string
+- body:configurations[].schema any
+
+## S506-N0004  PUT /rest/api/3/app/field/{fieldIdOrKey}/value
+desc: Update custom field value | Updates the value of a custom field on one or more issues. Custom fields can only be updated by the Forge app that created them. **[Permissions](#permissions) required:** Only the app that created the custom field can update its values with this operation.
+schema: CustomFieldValueUpdateDetails
+- path:fieldIdOrKey string
+- query:generateChangelog boolean
+- body:updates array<object>
+- body:updates[].issueIds array<integer>
+- body:updates[].value any
+
+## S506-N0005  PUT /rest/api/3/application-properties/{id}
+desc: Set application property | Changes the value of an application property. For example, you can change the value of the `jira.clone.prefix` from its default value of *CLONE -* to *Clone -* if you prefer sentence case capitalization. Editable properties are described below along with their default values. #### Advanced settings #### The advanced settings below are also accessible in [Jira](https://co
+schema: SimpleApplicationPropertyBean
+- path:id string
+- body:id string
+- body:value string
+
+## S506-N0006  DELETE /rest/api/3/attachment/{id}
+desc: Delete attachment | Deletes an attachment from an issue. This operation can be accessed anonymously. **[Permissions](#permissions) required:** For the project holding the issue containing the attachment: * *Delete own attachments* [project permission](https://confluence.atlassian.com/x/yodKLg) to delete an attachment created by the calling user. * *Delete all attachments* [project permission](http
+- path:id string
+
+## S506-N0009  PUT /rest/api/3/comment/{commentId}/properties/{propertyKey}
+desc: Set comment property | Creates or updates the value of a property for a comment. Use this resource to store custom data against a comment. The value of the request body must be a [valid](http://tools.ietf.org/html/rfc4627), non-empty JSON blob. The maximum length is 32768 characters. **[Permissions](#permissions) required:** either of: * *Edit All Comments* [project permission](https://confluence.
+- path:commentId string
+- path:propertyKey string
+
+## S506-N0010  POST /rest/api/3/component
+desc: Create component | Creates a component. Use components to provide containers for issues within a project. This operation can be accessed anonymously. **[Permissions](#permissions) required:** *Administer projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project in which the component is created or *Administer Jira* [global permission](https://confluence.atlassian.co
+schema: ProjectComponent
+- body:assignee object
+- body:assignee.accountId string
+- body:assignee.accountType string enum[atlassian|app|customer|unknown]
+- body:assignee.active boolean
+- body:assignee.applicationRoles object
+- body:assignee.applicationRoles.callback object
+- body:assignee.applicationRoles.items array<object>
+- body:assignee.applicationRoles.max-results integer
+- body:assignee.applicationRoles.pagingCallback object
+- body:assignee.applicationRoles.size integer
+- body:assignee.avatarUrls object
+- body:assignee.avatarUrls.16x16 string
+- body:assignee.avatarUrls.24x24 string
+- body:assignee.avatarUrls.32x32 string
+- body:assignee.avatarUrls.48x48 string
+- body:assignee.displayName string
+- body:assignee.emailAddress string
+- body:assignee.expand string
+- body:assignee.groups object
+- body:assignee.groups.callback object
+- body:assignee.groups.items array<object>
+- body:assignee.groups.max-results integer
+- body:assignee.groups.pagingCallback object
+- body:assignee.groups.size integer
+- body:assignee.key string
+- body:assignee.locale string
+- body:assignee.name string
+- body:assignee.self string
+- body:assignee.timeZone string
+- body:assigneeType string enum[PROJECT_DEFAULT|COMPONENT_LEAD|PROJECT_LEAD|UNASSIGNED]
+- body:description string
+- body:id string
+- body:isAssigneeTypeValid boolean
+- body:lead object
+- body:lead.accountId string
+- body:lead.accountType string enum[atlassian|app|customer|unknown]
+- body:lead.active boolean
+- body:lead.applicationRoles object
+- body:lead.applicationRoles.callback object
+- body:lead.applicationRoles.items array<object>
+- body:lead.applicationRoles.max-results integer
+- body:lead.applicationRoles.pagingCallback object
+- body:lead.applicationRoles.size integer
+- body:lead.avatarUrls object
+- body:lead.avatarUrls.16x16 string
+- body:lead.avatarUrls.24x24 string
+- body:lead.avatarUrls.32x32 string
+- body:lead.avatarUrls.48x48 string
+- body:lead.displayName string
+- body:lead.emailAddress string
+- body:lead.expand string
+- body:lead.groups object
+- body:lead.groups.callback object
+- body:lead.groups.items array<object>
+- body:lead.groups.max-results integer
+- body:lead.groups.pagingCallback object
+- body:lead.groups.size integer
+- body:lead.key string
+- body:lead.locale string
+- body:lead.name string
+- body:lead.self string
+- body:lead.timeZone string
+- body:leadAccountId string
+- body:leadUserName string
+- body:name string
+- body:project string
+- body:projectId integer
+- body:realAssignee object
+- body:realAssignee.accountId string
+- body:realAssignee.accountType string enum[atlassian|app|customer|unknown]
+- body:realAssignee.active boolean
+- body:realAssignee.applicationRoles object
+- body:realAssignee.applicationRoles.callback object
+- body:realAssignee.applicationRoles.items array<object>
+- body:realAssignee.applicationRoles.max-results integer
+- body:realAssignee.applicationRoles.pagingCallback object
+- body:realAssignee.applicationRoles.size integer
+- body:realAssignee.avatarUrls object
+- body:realAssignee.avatarUrls.16x16 string
+- body:realAssignee.avatarUrls.24x24 string
+(+18 fields cut)
+
+## S506-N0011  DELETE /rest/api/3/component/{id}
+desc: Delete component | Deletes a component. This operation can be accessed anonymously. **[Permissions](#permissions) required:** *Administer projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project containing the component or *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id string
+- query:moveIssuesTo string
+
+## S506-N0012  PUT /rest/api/3/component/{id}
+desc: Update component | Updates a component. Any fields included in the request are overwritten. If `leadAccountId` is an empty string ("") the component lead is removed. This operation can be accessed anonymously. **[Permissions](#permissions) required:** *Administer projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project containing the component or *Administer Jira* 
+schema: ProjectComponent
+- path:id string
+- body:assignee object
+- body:assignee.accountId string
+- body:assignee.accountType string enum[atlassian|app|customer|unknown]
+- body:assignee.active boolean
+- body:assignee.applicationRoles object
+- body:assignee.applicationRoles.callback object
+- body:assignee.applicationRoles.items array<object>
+- body:assignee.applicationRoles.max-results integer
+- body:assignee.applicationRoles.pagingCallback object
+- body:assignee.applicationRoles.size integer
+- body:assignee.avatarUrls object
+- body:assignee.avatarUrls.16x16 string
+- body:assignee.avatarUrls.24x24 string
+- body:assignee.avatarUrls.32x32 string
+- body:assignee.avatarUrls.48x48 string
+- body:assignee.displayName string
+- body:assignee.emailAddress string
+- body:assignee.expand string
+- body:assignee.groups object
+- body:assignee.groups.callback object
+- body:assignee.groups.items array<object>
+- body:assignee.groups.max-results integer
+- body:assignee.groups.pagingCallback object
+- body:assignee.groups.size integer
+- body:assignee.key string
+- body:assignee.locale string
+- body:assignee.name string
+- body:assignee.self string
+- body:assignee.timeZone string
+- body:assigneeType string enum[PROJECT_DEFAULT|COMPONENT_LEAD|PROJECT_LEAD|UNASSIGNED]
+- body:description string
+- body:id string
+- body:isAssigneeTypeValid boolean
+- body:lead object
+- body:lead.accountId string
+- body:lead.accountType string enum[atlassian|app|customer|unknown]
+- body:lead.active boolean
+- body:lead.applicationRoles object
+- body:lead.applicationRoles.callback object
+- body:lead.applicationRoles.items array<object>
+- body:lead.applicationRoles.max-results integer
+- body:lead.applicationRoles.pagingCallback object
+- body:lead.applicationRoles.size integer
+- body:lead.avatarUrls object
+- body:lead.avatarUrls.16x16 string
+- body:lead.avatarUrls.24x24 string
+- body:lead.avatarUrls.32x32 string
+- body:lead.avatarUrls.48x48 string
+- body:lead.displayName string
+- body:lead.emailAddress string
+- body:lead.expand string
+- body:lead.groups object
+- body:lead.groups.callback object
+- body:lead.groups.items array<object>
+- body:lead.groups.max-results integer
+- body:lead.groups.pagingCallback object
+- body:lead.groups.size integer
+- body:lead.key string
+- body:lead.locale string
+- body:lead.name string
+- body:lead.self string
+- body:lead.timeZone string
+- body:leadAccountId string
+- body:leadUserName string
+- body:name string
+- body:project string
+- body:projectId integer
+- body:realAssignee object
+- body:realAssignee.accountId string
+- body:realAssignee.accountType string enum[atlassian|app|customer|unknown]
+- body:realAssignee.active boolean
+- body:realAssignee.applicationRoles object
+- body:realAssignee.applicationRoles.callback object
+- body:realAssignee.applicationRoles.items array<object>
+- body:realAssignee.applicationRoles.max-results integer
+- body:realAssignee.applicationRoles.pagingCallback object
+- body:realAssignee.applicationRoles.size integer
+- body:realAssignee.avatarUrls object
+- body:realAssignee.avatarUrls.16x16 string
+(+19 fields cut)
+
+## S506-N0013  PUT /rest/api/3/configuration/timetracking
+desc: Select time tracking provider | Selects a time tracking provider. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: TimeTrackingProvider
+- body:key string
+- body:name string
+- body:url string
+
+## S506-N0014  PUT /rest/api/3/configuration/timetracking/options
+desc: Set time tracking settings | Sets the time tracking settings. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: TimeTrackingConfiguration
+- body:defaultUnit string enum[minute|hour|day|week]
+- body:timeFormat string enum[pretty|days|hours]
+- body:workingDaysPerWeek number
+- body:workingHoursPerDay number
+
+## S506-N0015  POST /rest/api/3/dashboard
+desc: Create dashboard | Creates a dashboard. **[Permissions](#permissions) required:** None.
+schema: DashboardDetails
+- body:description string
+- body:editPermissions array<object>
+- body:editPermissions[].group object
+- body:editPermissions[].group.groupId string
+- body:editPermissions[].group.name string
+- body:editPermissions[].group.self string
+- body:editPermissions[].id integer
+- body:editPermissions[].project object
+- body:editPermissions[].project.archived boolean
+- body:editPermissions[].project.archivedBy object
+- body:editPermissions[].project.archivedDate string
+- body:editPermissions[].project.assigneeType string enum[PROJECT_LEAD|UNASSIGNED]
+- body:editPermissions[].project.avatarUrls object
+- body:editPermissions[].project.components array<object>
+- body:editPermissions[].project.deleted boolean
+- body:editPermissions[].project.deletedBy object
+- body:editPermissions[].project.deletedDate string
+- body:editPermissions[].project.description string
+- body:editPermissions[].project.email string
+- body:editPermissions[].project.expand string
+- body:editPermissions[].project.favourite boolean
+- body:editPermissions[].project.id string
+- body:editPermissions[].project.insight object
+- body:editPermissions[].project.isPrivate boolean
+- body:editPermissions[].project.issueTypeHierarchy object
+- body:editPermissions[].project.issueTypes array<object>
+- body:editPermissions[].project.key string
+- body:editPermissions[].project.landingPageInfo object
+- body:editPermissions[].project.lead object
+- body:editPermissions[].project.name string
+- body:editPermissions[].project.permissions object
+- body:editPermissions[].project.projectCategory object
+- body:editPermissions[].project.projectTypeKey string enum[software|service_desk|business]
+- body:editPermissions[].project.properties object
+- body:editPermissions[].project.retentionTillDate string
+- body:editPermissions[].project.roles object
+- body:editPermissions[].project.self string
+- body:editPermissions[].project.simplified boolean
+- body:editPermissions[].project.style string enum[classic|next-gen]
+- body:editPermissions[].project.url string
+- body:editPermissions[].project.uuid string
+- body:editPermissions[].project.versions array<object>
+- body:editPermissions[].role object
+- body:editPermissions[].role.actors array<object>
+- body:editPermissions[].role.admin boolean
+- body:editPermissions[].role.currentUserRole boolean
+- body:editPermissions[].role.default boolean
+- body:editPermissions[].role.description string
+- body:editPermissions[].role.id integer
+- body:editPermissions[].role.name string
+- body:editPermissions[].role.roleConfigurable boolean
+- body:editPermissions[].role.scope object
+- body:editPermissions[].role.self string
+- body:editPermissions[].role.translatedName string
+- body:editPermissions[].type string enum[user|group|project|projectRole|global|loggedin|authenticated|project-unknown]
+- body:editPermissions[].user object
+- body:editPermissions[].user.accountId string
+- body:editPermissions[].user.active boolean
+- body:editPermissions[].user.avatarUrls object
+- body:editPermissions[].user.displayName string
+- body:editPermissions[].user.key string
+- body:editPermissions[].user.name string
+- body:editPermissions[].user.self string
+- body:name string
+- body:sharePermissions array<object>
+- body:sharePermissions[].group object
+- body:sharePermissions[].group.groupId string
+- body:sharePermissions[].group.name string
+- body:sharePermissions[].group.self string
+- body:sharePermissions[].id integer
+- body:sharePermissions[].project object
+- body:sharePermissions[].project.archived boolean
+- body:sharePermissions[].project.archivedBy object
+- body:sharePermissions[].project.archivedDate string
+- body:sharePermissions[].project.assigneeType string enum[PROJECT_LEAD|UNASSIGNED]
+- body:sharePermissions[].project.avatarUrls object
+- body:sharePermissions[].project.components array<object>
+- body:sharePermissions[].project.deleted boolean
+- body:sharePermissions[].project.deletedBy object
+- body:sharePermissions[].project.deletedDate string
+(+46 fields cut)
+
+## S506-N0016  POST /rest/api/3/dashboard/{dashboardId}/gadget
+desc: Add gadget to dashboard | Adds a gadget to a dashboard. **[Permissions](#permissions) required:** None.
+schema: DashboardGadgetSettings
+- path:dashboardId integer
+- body:color string
+- body:ignoreUriAndModuleKeyValidation boolean
+- body:moduleKey string
+- body:position object
+- body:position.The column position of the gadget. integer
+- body:position.The row position of the gadget. integer
+- body:title string
+- body:uri string
+
+## S506-N0017  DELETE /rest/api/3/dashboard/{dashboardId}/gadget/{gadgetId}
+desc: Remove gadget from dashboard | Removes a dashboard gadget from a dashboard. When a gadget is removed from a dashboard, other gadgets in the same column are moved up to fill the emptied position. **[Permissions](#permissions) required:** None.
+- path:dashboardId integer
+- path:gadgetId integer
+
+## S506-N0018  PUT /rest/api/3/dashboard/{dashboardId}/gadget/{gadgetId}
+desc: Update gadget on dashboard | Changes the title, position, and color of the gadget on a dashboard. **[Permissions](#permissions) required:** None.
+schema: DashboardGadgetUpdateRequest
+- path:dashboardId integer
+- path:gadgetId integer
+- body:color string
+- body:position object
+- body:position.The column position of the gadget. integer
+- body:position.The row position of the gadget. integer
+- body:title string
+
+## S506-N0019  DELETE /rest/api/3/dashboard/{dashboardId}/items/{itemId}/properties/{propertyKey}
+desc: Delete dashboard item property | Deletes a dashboard item property. This operation can be accessed anonymously. **[Permissions](#permissions) required:** The user must be the owner of the dashboard. Note, users with the *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg) are considered owners of the System dashboard.
+- path:dashboardId string
+- path:itemId string
+- path:propertyKey string
+
+## S506-N0020  PUT /rest/api/3/dashboard/{dashboardId}/items/{itemId}/properties/{propertyKey}
+desc: Set dashboard item property | Sets the value of a dashboard item property. Use this resource in apps to store custom data against a dashboard item. A dashboard item enables an app to add user-specific information to a user dashboard. Dashboard items are exposed to users as gadgets that users can add to their dashboards. For more information on how users do this, see [Adding and customizing gadgets
+- path:dashboardId string
+- path:itemId string
+- path:propertyKey string

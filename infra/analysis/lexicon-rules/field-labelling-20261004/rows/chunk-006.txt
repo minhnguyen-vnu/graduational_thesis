@@ -1,0 +1,780 @@
+## S124-0001  POST /comptage
+summary: Compter le nombre de caractère
+desc: Compte le nombre de SMS necessaire à un envoi
+- body:comptage string enum[1]
+- body:date_envoi string
+- body:emetteur string
+- body:gmt_zone string enum[Pacific/Midway|America/Adak|Etc/GMT+10|Pacific/Marquesas|Pacific/Gambier|America/Anchorage|America/Ensenada|Etc/GMT+8|America/Los_Angeles|America/Denver|America/Chihuahua|America/Dawson_Creek]
+- body:keyid string
+- body:nostop string
+- body:num string
+- body:numAzur string enum[1]
+- body:sms string
+- body:smslong string enum[999]
+- body:tracker string
+- body:ucs2 string
+
+## S124-0002  POST /dellistenoire
+summary: Ajoute un numero en liste noire
+desc: Supprime un numero en liste noire
+- query:keyid string
+- query:delListeNoire string enum[1]
+- query:num string
+
+## S124-0003  POST /getlistenoire
+summary: Retourne le liste noire
+desc: Retourne un fichier csv zippé contenant la liste noire
+- query:keyid string
+- query:getListeNoire string enum[1]
+
+## S124-0004  POST /hlr
+summary: Vérifier la validité d'un numéro
+desc: Réalise un lookup HLR sur les numéros
+- body:getHLR string enum[1]
+- body:keyid string
+- body:num array<string>
+
+## S124-0005  POST /repertoire
+summary: Gestion repertoire (creation)
+desc: Cree un nouveau répertoire et retourne son identifiant. Cet identifiant pourra être utilisé pour ajouter ou supprimer des numéros via l'API.
+- body:keyid string
+- body:repertoireEdit string enum[create]
+- body:repertoireNom string
+
+## S124-0006  PUT /repertoire
+summary: Gestion repertoire (modification)
+desc: Ajoute ou supprime une liste de numéros à un répertoire existant.
+- body:champ1 array<string>
+- body:champ10 array<string>
+- body:champ11 array<string>
+- body:champ12 array<string>
+- body:champ13 array<string>
+- body:champ14 array<string>
+- body:champ15 array<string>
+- body:champ16 array<string>
+- body:champ17 array<string>
+- body:champ18 array<string>
+- body:champ19 array<string>
+- body:champ2 array<string>
+- body:champ20 array<string>
+- body:champ21 array<string>
+- body:champ22 array<string>
+- body:champ23 array<string>
+- body:champ24 array<string>
+- body:champ25 array<string>
+- body:champ26 array<string>
+- body:champ27 array<string>
+- body:champ3 array<string>
+- body:champ4 array<string>
+- body:champ5 array<string>
+- body:champ6 array<string>
+- body:champ7 array<string>
+- body:champ8 array<string>
+- body:champ9 array<string>
+- body:keyid string
+- body:num array<string>
+- body:repertoireEdit string enum[add|del]
+- body:repertoireId string
+
+## S124-0007  POST /setlistenoire
+summary: Ajoute un numero en liste noire
+desc: Ajoute un numero en liste noire. Une fois ajouté, les requêtes d'envoi de SMS marketing vers ce numéro seront refusées.
+- query:keyid string
+- query:setlisteNoire string enum[1]
+- query:num string
+
+## S124-0008  POST /shortlink
+summary: add a shortlink
+desc: add a shortlink
+- body:keyid string
+- body:shortlink string
+
+## S124-0009  POST /sms
+summary: Envoyer un sms
+desc: Envoi un sms vers un unique destinataire
+- body:date_envoi string
+- body:emetteur string
+- body:gmt_zone string enum[Pacific/Midway|America/Adak|Etc/GMT+10|Pacific/Marquesas|Pacific/Gambier|America/Anchorage|America/Ensenada|Etc/GMT+8|America/Los_Angeles|America/Denver|America/Chihuahua|America/Dawson_Creek]
+- body:keyid string
+- body:nostop string
+- body:num string
+- body:numAzur string enum[1]
+- body:sms string
+- body:smslong string
+- body:tracker string
+- body:ucs2 string
+
+## S124-0010  POST /smsmulti
+summary: Envoyer des SMS
+desc: Envoi de SMS vers 1 ou plusieurs destinataires
+- body:date_envoi string
+- body:emetteur string
+- body:gmt_zone string enum[Pacific/Midway|America/Adak|Etc/GMT+10|Pacific/Marquesas|Pacific/Gambier|America/Anchorage|America/Ensenada|Etc/GMT+8|America/Los_Angeles|America/Denver|America/Chihuahua|America/Dawson_Creek]
+- body:keyid string
+- body:nostop string
+- body:num array<string>
+- body:numAzur string enum[1]
+- body:repertoireId string
+- body:sms array<string>
+- body:smslong string
+- body:tracker array<string>
+- body:ucs2 string
+
+## S124-0011  POST /subaccount
+summary: Ajoute un sous compte
+desc: Ajoute un sous compte
+- body:keyid string
+- body:subAccountEdit string enum[addAccount]
+- body:subAccountLogin string
+- body:subAccountPassword string
+
+## S124-0012  PUT /subaccount
+summary: Edit a subaccount
+desc: Edit a subaccount
+- body:keyid string
+- body:subAccountAddCredit string
+- body:subAccountCountryCode string
+- body:subAccountEdit string enum[setPrice|addCredit|setRestriction]
+- body:subAccountKeyId string
+- body:subAccountPrice string
+- body:subAccountRestrictionStop string enum[0|1]
+- body:subAccountRestrictionTime string enum[0|1]
+
+## S125-0002  PUT /attempted-delivery-query-resolved
+summary: Attempted delivery query resolved
+desc: This webhook will be invoked whenever an attempted delivery query has been resolved.
+- body:OrderId string
+- body:Resolution object
+- body:Resolution.Cancellation object
+- body:Resolution.Cancellation.Reason string enum[new_address_not_within_area|unable_to_reprepare|driver_not_available|area_unsafe|customer_doesnt_want_anymore]
+- body:Resolution.Redelivery object
+- body:Resolution.Redelivery.CustomerTimeZone string
+- body:Resolution.Redelivery.NewDueDate string
+- body:Resolution.Redelivery.Status string enum[driver_at_address|repreparing]
+- body:Resolution.Type string enum[order_cancelled|redeliver_order]
+- body:Tenant string enum[uk|dk|es|ie|it|no|au|nz]
+
+## S125-0003  PATCH /checkout/{tenant}/{checkoutId}
+summary: Update Checkout
+desc: Update the details required to fulfil an order, which includes: - The customer making the purchase - Where and when the items will be received by the customer - Instructions about the order
+- path:tenant string
+- path:checkoutId string
+- body:customer object
+- body:customer.dateOfBirth string
+- body:customer.firstName string
+- body:customer.lastName string
+- body:customer.phoneNumber string
+- body:fulfilment object
+- body:fulfilment.location object
+- body:fulfilment.location.address object
+- body:fulfilment.location.geolocation object
+- body:fulfilment.time object
+- body:fulfilment.time.asap boolean
+- body:fulfilment.time.scheduled object
+- body:notes array<object>
+- body:notes[].note string
+- body:notes[].type string enum[delivery]
+
+## S125-0004  POST /consumers/{tenant}
+summary: Create consumer
+desc: Creates a consumer for the given tenant.
+- path:tenant string
+- body:emailAddress string
+- body:firstName string
+- body:lastName string
+- body:marketingPreferences array<object>
+- body:marketingPreferences[].channelName string enum[Email|Push|Sms]
+- body:marketingPreferences[].dateUpdated string
+- body:marketingPreferences[].isSubscribed boolean
+- body:password string
+- body:registrationSource string enum[Native|Guest]
+
+## S125-0005  PUT /consumers/{tenant}/me/communication-preferences/{type}
+summary: Set only the channel subscriptions for a given consumer's communication preference type
+desc: Set only the channel subscriptions for a given consumer's communication preference type. E.g., An empty list of subscribed Channels implies unsubscribe from all channels.
+- path:tenant string
+- path:type string enum[marketing]
+- body:subscribedChannels array<string> enum[email|sms|push]
+
+## S125-0007  POST /consumers/{tenant}/me/communication-preferences/{type}/subscribedChannels/{channel}
+summary: Subscribe to a specific communication preference channel
+desc: Subscribe to a specific communication preference channel.
+- path:tenant string
+- path:type string enum[marketing]
+- path:channel string enum[email|sms|push]
+
+## S125-0008  PUT /delivery-failed
+summary: Delivery Attempt Failed
+desc: This webhook will be invoked whenever an attempted delivery event is created from the device.
+- body:OrderId string
+- body:Reason string
+- body:RestaurantId number
+- body:Tenant string
+
+## S125-0009  POST /delivery/pools
+summary: Create a new delivery pool
+desc: A delivery pool is a named group of drivers which deliver food for a set of restaurants.
+- body:name string
+- body:restaurants array<number>
+
+## S125-0021  PUT /driver-location
+summary: Driver Location
+desc: Driver Location
+- body:Location object
+- body:Location.Latitude number
+- body:Location.Longitude number
+- body:OrderId string
+- body:TimeStamp string
+
+## S125-0025  POST /menu-ingestion-complete
+summary: Menu ingestion complete
+desc: Callback to confirm that an attempt to ingest a menu has completed either successfully or unsuccessfully
+- body:correlationId string
+- body:fault object
+- body:fault.errors array<object>
+- body:fault.errors[].code string
+- body:fault.errors[].description string
+- body:fault.id string
+- body:restaurantId string
+- body:result string enum[success|fail]
+- body:tenant string enum[au|dk|es|ie|it|no|uk|nz]
+- body:timestamp string
+
+## S125-0026  POST /order-accepted
+summary: Order accepted
+desc: This webhook will be invoked whenever the order was accepted.
+- body:AcceptedFor string
+- body:Event string
+- body:OrderId string
+
+## S125-0032  POST /order-rejected
+summary: Order rejected
+desc: This webhook will be invoked whenever the order was rejected.
+- body:Event string
+- body:RejectedAt string
+- body:RejectedBy string
+- body:RejectedReason string
+
+## S125-0033  PUT /order-requires-delivery-acceptance
+summary: Order requires delivery acceptance
+desc: This webhook will be invoked when we have determined that an order is required acceptance for delivery. Upon receiving the request, the order should be scheduled for pickup by a courier/driver. We expect an immediate `201` response from this webhook to denote that you have received the request.
+- body:BasketInfo object
+- body:BasketInfo.BasketId string
+- body:BasketInfo.DeliveryCharge number
+- body:BasketInfo.Discount number
+- body:BasketInfo.Discounts array<object>
+- body:BasketInfo.Discounts[].Discount number
+- body:BasketInfo.Discounts[].DiscountType string
+- body:BasketInfo.Discounts[].Id number
+- body:BasketInfo.Discounts[].QualifyingValue number
+- body:BasketInfo.GroupedBasketItems array<object>
+- body:BasketInfo.GroupedBasketItems[].BasketItem object
+- body:BasketInfo.GroupedBasketItems[].CombinedPrice number
+- body:BasketInfo.GroupedBasketItems[].MenuCardNumber string
+- body:BasketInfo.GroupedBasketItems[].OrderSubId number
+- body:BasketInfo.GroupedBasketItems[].Quantity number
+- body:BasketInfo.MenuId number
+- body:BasketInfo.MultiBuyDiscount number
+- body:BasketInfo.SubTotal number
+- body:BasketInfo.ToSpend number
+- body:BasketInfo.Total number
+- body:CustomerInfo object
+- body:CustomerInfo.Address string
+- body:CustomerInfo.City string
+- body:CustomerInfo.DisplayPhoneNumber string
+- body:CustomerInfo.Email string
+- body:CustomerInfo.Id string
+- body:CustomerInfo.Latitude number
+- body:CustomerInfo.LocationAccuracyDescription string
+- body:CustomerInfo.LocationAccuracyInMeters number
+- body:CustomerInfo.LocationSource string
+- body:CustomerInfo.Longitude number
+- body:CustomerInfo.Name string
+- body:CustomerInfo.PhoneMaskingCode string
+- body:CustomerInfo.PhoneNumber string
+- body:CustomerInfo.Postcode string
+- body:CustomerInfo.PreviousRestuarantOrderCount number
+- body:CustomerInfo.TimeZone string
+- body:CustomerOrderId number
+- body:FriendlyOrderReference string
+- body:Id string
+- body:IsAMiniFistPumpOrder boolean
+- body:Order object
+- body:Order.DueDate string
+- body:Order.DueDateWithUtcOffset string
+- body:Order.InitialDueDate string
+- body:Order.InitialDueDateWithUtcOffset string
+- body:Order.NoteToRestaurant string
+- body:Order.PickupNoticePeriod string
+- body:Order.PlacedDate string
+- body:Order.PromptAsap boolean
+- body:Order.RdsPickupTimeWithUtcOffset string
+- body:Order.ServiceType string enum[Collection|Delivery]
+- body:OrderId string
+- body:OrderReference string
+- body:PaymentInfo object
+- body:PaymentInfo.CashOnDelivery boolean
+- body:PaymentInfo.DriverTipValue number
+- body:PaymentInfo.PaidDate string
+- body:PaymentInfo.PaymentLines array<object>
+- body:PaymentInfo.PaymentLines[].CardFee number
+- body:PaymentInfo.PaymentLines[].Type string enum[Card]
+- body:PaymentInfo.PaymentLines[].Value number
+- body:PaymentInfo.Total number
+- body:PaymentInfo.TotalComplementary number
+- body:RestaurantInfo object
+- body:RestaurantInfo.AddressLines array<string>
+- body:RestaurantInfo.City string
+- body:RestaurantInfo.DispatchMethod string
+- body:RestaurantInfo.EmailAddress string
+- body:RestaurantInfo.Id string
+- body:RestaurantInfo.Latitude number
+- body:RestaurantInfo.Longitude number
+- body:RestaurantInfo.Name string
+- body:RestaurantInfo.PhoneNumber string
+- body:RestaurantInfo.PickupNotes string
+- body:RestaurantInfo.Postcode string
+- body:Restrictions array<object>
+- body:Restrictions[].Type string enum[Alcohol]
+
+## S125-0034  POST /order-time-updated
+summary: Order time updated
+desc: Callback to notify recipients that there has been a change to the restaurant order times for a given day and service type
+- body:dayOfWeek string enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:lowerBoundMinutes integer
+- body:restaurantId string
+- body:serviceType string enum[Delivery|Collection]
+- body:upperBoundMinutes integer
+
+## S125-0039  POST /orders/{orderId}/complete
+summary: Complete order
+desc: Call when an order is complete. An order can only be marked as complete if it hasn't already been marked as cancelled or complete.
+- path:orderId string
+
+## S125-0045  PUT /orders/{orderId}/deliverystate/driverlocation
+summary: Update the driver's current location
+desc: <p>Just Eat requires all delivery partners to send regular driver location callbacks, that record the GPS location of the drivers assigned to each order</p><p>Partners should aim to supply this callback approximately every 10 seconds.</p><p>Please provide an up-to-date ETA for when the driver will reach the restaurant in this request - this value is significant since it informs when a restaurant i
+- path:orderId string
+- body:EtaAtDeliveryAddress string
+- body:EtaAtRestaurant string
+- body:Location object
+- body:Location.Accuracy number
+- body:Location.Heading number
+- body:Location.Latitude number
+- body:Location.Longitude number
+- body:Location.Speed number
+- body:TimeStampWithUtcOffset string
+
+## S125-0050  POST /orders/{orderId}/readyforcollection
+summary: Mark order as ready for collection
+desc: Call when a collection order is ready to be collected by the customer. An order can only be marked as ready for collection if it is a collection order in the accepted state.
+- path:orderId string
+
+## S125-0051  PUT /orders/{orderId}/reject
+summary: Reject order
+desc: Call when an order has been rejected. An order can only be rejected if it hasn't previously been accepted, rejected, cancelled or ignored
+- path:orderId string
+- body:Message string
+
+## S125-0052  POST /orders/{tenant}/{orderId}/consumerqueries/lateorder/restaurantresponse
+summary: Response to Late Order Update Request
+desc: If a customer has requested an update on the status of a late order, a response can be given by calling this endpoint.
+- path:tenant string
+- path:orderId string
+- body:additionalDeliveryTimeToAddMinutes integer
+- body:lateOrderStatus string enum[Preparing|OnItsWay|Delivered]
+
+## S125-0053  POST /orders/{tenant}/{orderId}/consumerqueries/lateordercompensation/restaurantresponse
+summary: Update late order compensation request with Restaurant response
+desc: If a customer has requested compensation for a late order, a restaurant response is given by calling this endpoint.
+- path:tenant string
+- path:orderId string
+- body:acceptedAmount integer
+- body:isAccepted boolean
+- body:orderId string
+- body:rejectedReasonCode string enum[BadTraffic|BadWeather|BusierThanExpected|CompensatedWithItem|NoReason]
+
+## S125-0054  POST /orders/{tenant}/{orderId}/restaurantqueries/compensation
+summary: Create Compensation requests
+desc: When an order is cancelled the restaurant might be eligible for compensation, this endpoint allows a request for compensation to be created.
+- path:tenant string
+- path:orderId string
+- body:Comments string
+- body:ReasonCode string enum[NotSet|BeingPrepared|OnItsWay|Delivered|Unknown]
+
+## S125-0056  PUT /restaurant-offline-status
+summary: Restaurant Offline Status
+desc: Callback to notify that a restaurant has been taken offline through an active Restaurant Event or there's been a change in whether the restaurant can override a previous offline status.
+- body:AllowRestaurantOverride boolean
+- body:IsOffline boolean
+- body:RestaurantId string
+- body:Tenant string enum[au|dk|es|ie|it|no|uk|nz]
+
+## S125-0057  PUT /restaurant-online-status
+summary: Restaurant Online Status
+desc: Callback to notify that a restaurant is now able to come back online as there are no longer any active offline Restaurant Events
+- body:AllowRestaurantOverride boolean
+- body:IsOffline boolean
+- body:RestaurantId string
+- body:Tenant string enum[au|dk|es|ie|it|no|uk|nz]
+
+## S125-0059  POST /restaurants/{tenant}/{restaurantId}/customerclaims/{id}/restaurantresponse
+summary: Submit a restaurant response for the claim
+desc: Submit a restaurant response for the claim, where the restaurant can tell us if they accept or reject the claim
+- path:tenant string
+- path:restaurantId string
+- path:id string
+- body:decision string enum[Accepted|Rejected|PartiallyAccepted]
+- body:items array<object>
+- body:items[].decision string enum[Accepted|Rejected]
+- body:items[].id string
+- body:justification object
+- body:justification.comments string
+- body:justification.reason string enum[AlreadyRefunded|ItemReplaced|PartialRefundRequired|WasNotMissing|WillRedeliver|OrderWasHot|OrderWasOnTime|OrderWasPacked|FoodWasIntact|AddExtraItem|Other]
+
+## S125-0060  PUT /restaurants/{tenant}/{restaurantId}/customerclaims/{id}/restaurantresponse/justification
+summary: Add reason and comments to the response
+desc: Add reason and optional comments in case of rejection of order claim
+- path:tenant string
+- path:restaurantId string
+- path:id string
+- body:comments string
+- body:reason string enum[AlreadyRefunded|ItemReplaced|PartialRefundRequired|WasNotMissing|WillRedeliver|OrderWasHot|OrderWasOnTime|OrderWasPacked|FoodWasIntact|AddExtraItem|Other]
+
+## S125-0062  PUT /restaurants/{tenant}/{restaurantId}/menu
+summary: Create or update a menu
+desc: This will begin an asynchronous process that will lead to that menu becoming live on the Just Eat platform
+- path:tenant string
+- path:restaurantId string
+- body:currency string
+- body:description string
+- body:name string
+- body:restaurantId string
+- body:availabilities array<object>
+- body:availabilities[].description string
+- body:availabilities[].id string
+- body:availabilities[].name string
+- body:availabilities[].serviceTypes array<string> enum[collection|delivery]
+- body:availabilities[].times array<object>
+- body:availabilities[].times[].daysOfTheWeek array<string> enum[monday|tuesday|wednesday|thursday|friday|saturday|sunday]
+- body:availabilities[].times[].fromDateTime string
+- body:availabilities[].times[].toDateTime string
+- body:categories array<object>
+- body:categories[].description string
+- body:categories[].id string
+- body:categories[].name string
+- body:categories[].itemIds array<string>
+- body:items array<object>
+- body:items[].description string
+- body:items[].id string
+- body:items[].labels array<string> enum[hot|vegetarian|alcohol]
+- body:items[].name string
+- body:items[].requireOtherProducts boolean
+- body:items[].type string enum[menuItem|deal]
+- body:items[].dealGroups array<object>
+- body:items[].dealGroups[].id string
+- body:items[].dealGroups[].name string
+- body:items[].dealGroups[].numberOfChoices integer
+- body:items[].dealGroups[].dealItemVariations array<object>
+- body:items[].imageUrl string
+- body:items[].modifierGroups array<object>
+- body:items[].modifierGroups[].id string
+- body:items[].modifierGroups[].maxChoices integer
+- body:items[].modifierGroups[].minChoices integer
+- body:items[].modifierGroups[].modifiers array<object>
+- body:items[].modifierGroups[].name string
+- body:items[].variations array<object>
+- body:items[].variations[].availabilityIds array<string>
+- body:items[].variations[].basePrice number
+- body:items[].variations[].dealGroupsIds array<string>
+- body:items[].variations[].dealOnly boolean
+- body:items[].variations[].id string
+- body:items[].variations[].kitchenNumber string
+- body:items[].variations[].modifierGroupsIds array<string>
+- body:items[].variations[].name string
+- body:items[].variations[].type string enum[noVariation|variation]
+
+## S125-0063  PUT /restaurants/{tenant}/{restaurantId}/ordertimes/{dayOfWeek}/{serviceType}
+summary: Update the restaurant's delivery and collection lead times
+desc: Update the restaurant's delivery and collection lead times
+- path:tenant string
+- path:restaurantId string
+- path:dayOfWeek string enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- path:serviceType string enum[Delivery|Collection]
+- body:lowerBoundMinutes integer
+- body:upperBoundMinutes integer
+
+## S125-0064  PUT /restaurants/{tenant}/{restaurantId}/servicetimes
+summary: Create or update service times
+desc: Creates or updates the service times (the weekly times at which a restaurant is in service for delivery or collection) for a restaurant
+- path:tenant string
+- path:restaurantId string
+- body:serviceTimes object
+- body:serviceTimes.friday object
+- body:serviceTimes.friday.collection array<object>
+- body:serviceTimes.friday.delivery array<object>
+- body:serviceTimes.monday object
+- body:serviceTimes.monday.collection array<object>
+- body:serviceTimes.monday.delivery array<object>
+- body:serviceTimes.saturday object
+- body:serviceTimes.saturday.collection array<object>
+- body:serviceTimes.saturday.delivery array<object>
+- body:serviceTimes.sunday object
+- body:serviceTimes.sunday.collection array<object>
+- body:serviceTimes.sunday.delivery array<object>
+- body:serviceTimes.thursday object
+- body:serviceTimes.thursday.collection array<object>
+- body:serviceTimes.thursday.delivery array<object>
+- body:serviceTimes.tuesday object
+- body:serviceTimes.tuesday.collection array<object>
+- body:serviceTimes.tuesday.delivery array<object>
+- body:serviceTimes.wednesday object
+- body:serviceTimes.wednesday.collection array<object>
+- body:serviceTimes.wednesday.delivery array<object>
+
+## S125-0066  POST /v1/{tenant}/restaurants/event/offline
+summary: Create Offline Event
+desc: Creates an event for the specified restaurants that indicates a reason for those restaurants to be offline.
+- path:tenant string
+- body:allowRestaurantOverride boolean
+- body:category string
+- body:duration string
+- body:endDate string
+- body:legacyTempOfflineType string enum[Unset|None|TempOffline|ClosedToday|ClosedDueToEvent|FailedJctConnection|NoTrOverride|IgnoredOrders]
+- body:name string
+- body:reason string
+- body:restaurantIds string
+- body:startDate string
+
+## S125-0067  DELETE /v1/{tenant}/restaurants/{id}/event/offline
+summary: Delete Offline Event
+desc: Removes specified restaurant from offline events. If role header is `System` or `Operations` only events created by the specified role will be affected. If role header is `Restaurant` then all events that have `allowRestaurantOverride=true` will be affected.
+- path:tenant string
+- path:id string
+
+## S125-0068  POST /{tenant}/orders/{orderId}/queries/attempteddelivery
+summary: Delivery Attempt Failed
+desc: If the customer hasn't answered the door to collect the order, then an attempted delivery event can be created using this endpoint.
+- path:tenant string
+- path:orderId string
+- body:ReasonCode string enum[problem_with_address|no_answer]
+
+## S125-0069  POST /{tenant}/orders/{orderId}/queries/attempteddelivery/resolution/redeliverorder
+summary: Request Redelivery of the Order
+desc: If the customer responds, then you can trigger the redelivery of an order through this endpoint
+- path:tenant string
+- path:orderId string
+- body:NewDueDate string
+- body:Status string enum[driver_at_address|repreparing]
+
+## S128-0001  DELETE /assets/{id}
+summary: Delete Asset
+desc: Delete an asset by its asset id. If a render creates multiple assets, such as thumbnail and poster images, each asset must be deleted individually by the asset id. **base URL:** https://api.shotstack.io/serve/{version}
+- path:id string
+
+## S128-0002  POST /render
+summary: Render Asset
+desc: Queue and render the contents of a timeline as a video, image or audio file.
+- body:callback string
+- body:disk string enum[local|mount]
+- body:output object
+- body:output.aspectRatio string enum[16:9|9:16|1:1|4:5|4:3]
+- body:output.destinations array<object>
+- body:output.destinations[].exclude boolean
+- body:output.destinations[].provider string
+- body:output.format string enum[mp4|gif|mp3|jpg|png|bmp]
+- body:output.fps integer enum[12|15|24|25|30]
+- body:output.poster object
+- body:output.poster.capture number
+- body:output.quality string enum[low|medium|high]
+- body:output.range object
+- body:output.range.length number
+- body:output.range.start number
+- body:output.resolution string enum[preview|mobile|sd|hd|1080]
+- body:output.scaleTo string enum[preview|mobile|sd|hd|1080]
+- body:output.size object
+- body:output.size.height integer
+- body:output.size.width integer
+- body:output.thumbnail object
+- body:output.thumbnail.capture number
+- body:output.thumbnail.scale number
+- body:timeline object
+- body:timeline.background string
+- body:timeline.cache boolean
+- body:timeline.fonts array<object>
+- body:timeline.fonts[].src string
+- body:timeline.soundtrack object
+- body:timeline.soundtrack.effect string enum[fadeIn|fadeOut|fadeInFadeOut]
+- body:timeline.soundtrack.src string
+- body:timeline.soundtrack.volume number
+- body:timeline.tracks array<object>
+- body:timeline.tracks[].clips array<object>
+
+## S130-0001  POST /auth
+desc: Request Authentication Token
+- query:client_id string
+- query:client_secret string
+
+## S131-0027  POST /v1/appStoreVersionLocalizations
+- body:description string
+- body:keywords string
+- body:locale string
+- body:marketingUrl string
+- body:promotionalText string
+- body:supportUrl string
+- body:whatsNew string
+- body:appStoreVersion object
+- body:appStoreVersion.data object
+- body:appStoreVersion.data.id string
+- body:appStoreVersion.data.type string enum[appStoreVersions]
+
+## S131-0030  POST /v1/appStoreVersionPhasedReleases
+- body:phasedReleaseState string enum[INACTIVE|ACTIVE|PAUSED|COMPLETE]
+- body:appStoreVersion object
+- body:appStoreVersion.data object
+- body:appStoreVersion.data.id string
+- body:appStoreVersion.data.type string enum[appStoreVersions]
+
+## S131-0032  PATCH /v1/appStoreVersionPhasedReleases/{id}
+- path:id string
+- body:phasedReleaseState string enum[INACTIVE|ACTIVE|PAUSED|COMPLETE]
+
+## S131-0039  PATCH /v1/apps/{id}
+- path:id string
+- body:availableInNewTerritories boolean
+- body:bundleId string
+- body:contentRightsDeclaration string enum[DOES_NOT_USE_THIRD_PARTY_CONTENT|USES_THIRD_PARTY_CONTENT]
+- body:primaryLocale string
+- body:availableTerritories object
+- body:availableTerritories.data array<object>
+- body:availableTerritories.data[].id string
+- body:availableTerritories.data[].type string enum[territories]
+- body:prices object
+- body:prices.data array<object>
+- body:prices.data[].id string
+- body:prices.data[].type string enum[appPrices]
+
+## S131-0048  PATCH /v1/betaBuildLocalizations/{id}
+- path:id string
+- body:whatsNew string
+
+## S131-0053  POST /v1/betaGroups/{id}/relationships/betaTesters
+- path:id string
+- body:id string
+- body:type string enum[betaTesters]
+
+## S131-0058  POST /v1/betaTesters
+- body:email string
+- body:firstName string
+- body:lastName string
+- body:betaGroups object
+- body:betaGroups.data array<object>
+- body:betaGroups.data[].id string
+- body:betaGroups.data[].type string enum[betaGroups]
+- body:builds object
+- body:builds.data array<object>
+- body:builds.data[].id string
+- body:builds.data[].type string enum[builds]
+
+## S131-0065  PATCH /v1/buildBetaDetails/{id}
+- path:id string
+- body:autoNotifyEnabled boolean
+
+## S131-0071  DELETE /v1/builds/{id}/relationships/individualTesters
+- path:id string
+- body:id string
+- body:type string enum[betaTesters]
+
+## S131-0073  POST /v1/bundleIdCapabilities
+- body:capabilityType string enum[ICLOUD|IN_APP_PURCHASE|GAME_CENTER|PUSH_NOTIFICATIONS|WALLET|INTER_APP_AUDIO|MAPS|ASSOCIATED_DOMAINS|PERSONAL_VPN|APP_GROUPS|HEALTHKIT|HOMEKIT]
+- body:settings array<object>
+- body:settings[].allowedInstances string enum[ENTRY|SINGLE|MULTIPLE]
+- body:settings[].description string
+- body:settings[].enabledByDefault boolean
+- body:settings[].key string enum[ICLOUD_VERSION|DATA_PROTECTION_PERMISSION_LEVEL|APPLE_ID_AUTH_APP_CONSENT]
+- body:settings[].minInstances integer
+- body:settings[].name string
+- body:settings[].options array<object>
+- body:settings[].options[].description string
+- body:settings[].options[].enabled boolean
+- body:settings[].options[].enabledByDefault boolean
+- body:settings[].options[].key string enum[XCODE_5|XCODE_6|COMPLETE_PROTECTION|PROTECTED_UNLESS_OPEN|PROTECTED_UNTIL_FIRST_USER_AUTH|PRIMARY_APP_CONSENT]
+- body:settings[].options[].name string
+- body:settings[].options[].supportsWildcard boolean
+- body:settings[].visible boolean
+- body:bundleId object
+- body:bundleId.data object
+- body:bundleId.data.id string
+- body:bundleId.data.type string enum[bundleIds]
+
+## S131-0075  PATCH /v1/bundleIdCapabilities/{id}
+- path:id string
+- body:capabilityType string enum[ICLOUD|IN_APP_PURCHASE|GAME_CENTER|PUSH_NOTIFICATIONS|WALLET|INTER_APP_AUDIO|MAPS|ASSOCIATED_DOMAINS|PERSONAL_VPN|APP_GROUPS|HEALTHKIT|HOMEKIT]
+- body:settings array<object>
+- body:settings[].allowedInstances string enum[ENTRY|SINGLE|MULTIPLE]
+- body:settings[].description string
+- body:settings[].enabledByDefault boolean
+- body:settings[].key string enum[ICLOUD_VERSION|DATA_PROTECTION_PERMISSION_LEVEL|APPLE_ID_AUTH_APP_CONSENT]
+- body:settings[].minInstances integer
+- body:settings[].name string
+- body:settings[].options array<object>
+- body:settings[].options[].description string
+- body:settings[].options[].enabled boolean
+- body:settings[].options[].enabledByDefault boolean
+- body:settings[].options[].key string enum[XCODE_5|XCODE_6|COMPLETE_PROTECTION|PROTECTED_UNLESS_OPEN|PROTECTED_UNTIL_FIRST_USER_AUTH|PRIMARY_APP_CONSENT]
+- body:settings[].options[].name string
+- body:settings[].options[].supportsWildcard boolean
+- body:settings[].visible boolean
+
+## S131-0082  PATCH /v1/devices/{id}
+- path:id string
+- body:name string
+- body:status string enum[ENABLED|DISABLED]
+
+## S131-0092  POST /v1/profiles
+- body:name string
+- body:profileType string enum[IOS_APP_DEVELOPMENT|IOS_APP_STORE|IOS_APP_ADHOC|IOS_APP_INHOUSE|MAC_APP_DEVELOPMENT|MAC_APP_STORE|MAC_APP_DIRECT|TVOS_APP_DEVELOPMENT|TVOS_APP_STORE|TVOS_APP_ADHOC|TVOS_APP_INHOUSE|MAC_CATALYST_APP_DEVELOPMENT]
+- body:bundleId object
+- body:bundleId.data object
+- body:bundleId.data.id string
+- body:bundleId.data.type string enum[bundleIds]
+- body:certificates object
+- body:certificates.data array<object>
+- body:certificates.data[].id string
+- body:certificates.data[].type string enum[certificates]
+- body:devices object
+- body:devices.data array<object>
+- body:devices.data[].id string
+- body:devices.data[].type string enum[devices]
+
+## S131-0097  POST /v1/userInvitations
+- body:allAppsVisible boolean
+- body:email string
+- body:firstName string
+- body:lastName string
+- body:provisioningAllowed boolean
+- body:roles array<string> enum[ADMIN|FINANCE|TECHNICAL|ACCOUNT_HOLDER|READ_ONLY|SALES|MARKETING|APP_MANAGER|DEVELOPER|ACCESS_TO_REPORTS|CUSTOMER_SUPPORT|CREATE_APPS]
+- body:visibleApps object
+- body:visibleApps.data array<object>
+- body:visibleApps.data[].id string
+- body:visibleApps.data[].type string enum[apps]
+
+## S131-0100  PATCH /v1/users/{id}
+- path:id string
+- body:allAppsVisible boolean
+- body:provisioningAllowed boolean
+- body:roles array<string> enum[ADMIN|FINANCE|TECHNICAL|ACCOUNT_HOLDER|READ_ONLY|SALES|MARKETING|APP_MANAGER|DEVELOPER|ACCESS_TO_REPORTS|CUSTOMER_SUPPORT|CREATE_APPS]
+- body:visibleApps object
+- body:visibleApps.data array<object>
+- body:visibleApps.data[].id string
+- body:visibleApps.data[].type string enum[apps]
+
+## S131-0101  DELETE /v1/users/{id}/relationships/visibleApps
+- path:id string
+- body:id string
+- body:type string enum[apps]
+
+## S131-0103  POST /v1/users/{id}/relationships/visibleApps
+- path:id string
+- body:id string
+- body:type string enum[apps]

@@ -1,0 +1,1174 @@
+## S621-0001  POST /bulk/download
+summary: Create a new bulk download job (asynchronous)
+- body:apiLimit integer
+- body:continueFromJobId integer
+- body:docsHubDetails object
+- body:docsHubDetails.instanceId string
+- body:docsHubDetails.path string
+- body:filterDateField string
+- body:filterNulls boolean
+- body:format string enum[application/json|txt/csv|application/jsonl]
+- body:from string
+- body:limit integer
+- body:notificationUrl string
+- body:objectName string
+- body:pageSize integer
+- body:query object
+- body:query.anyKey string
+- body:selectFields string
+- body:to string
+- body:where string
+
+## S621-0002  POST /bulk/query
+summary: Create an asynchronous bulk query job.
+- query:q string
+- query:lastRunDate string
+- query:from string
+- query:to string
+- body:metaData string
+
+## S621-0003  PUT /bulk/{id}/cancel
+summary: Cancel an asynchronous bulk query job.
+- path:id string
+
+## S621-0004  POST /bulk/{objectName}
+summary: Upload a file of objects to be bulk uploaded to the provider.
+- path:objectName string
+- body:metaData string
+- body:file file
+
+## S621-0005  POST /customers
+summary: Create a new customer in eCommerce system.With the exception of the 'id' field, the required fields indicated in the 'Customer' model are those required to create a new customer
+- body:billingPerson object
+- body:billingPerson.city string
+- body:billingPerson.companyName string
+- body:billingPerson.countryCode string
+- body:billingPerson.countryName string
+- body:billingPerson.name string
+- body:billingPerson.phone string
+- body:billingPerson.postalCode string
+- body:billingPerson.stateName string
+- body:billingPerson.stateOrProvinceCode string
+- body:billingPerson.stateOrProvinceName string
+- body:billingPerson.street string
+- body:customerGroupId integer
+- body:email string
+- body:password string
+- body:shippingAddresses array<object>
+- body:shippingAddresses[].city string
+- body:shippingAddresses[].companyName string
+- body:shippingAddresses[].countryCode string
+- body:shippingAddresses[].countryName string
+- body:shippingAddresses[].name string
+- body:shippingAddresses[].phone string
+- body:shippingAddresses[].postalCode string
+- body:shippingAddresses[].stateName string
+- body:shippingAddresses[].stateOrProvinceCode string
+- body:shippingAddresses[].stateOrProvinceName string
+- body:shippingAddresses[].street string
+- body:taxExempt boolean
+- body:taxId number
+- body:taxIdValid boolean
+
+## S621-0006  DELETE /customers/{id}
+summary: Delete a customer associated with a given ID from your eCommerce system. Specifying a customer associated with a given ID that does not exist will result in an error message
+- path:id string
+
+## S621-0007  PATCH /customers/{id}
+summary: Update an customer associated with a given ID in the eCommerce system.The update API uses the PATCH HTTP verb, so only those fields provided in the customer object will be updated, and those fields not provided will be left alone. Updating a customer with a specified ID that does not exist will result in an error response
+- path:id string
+- body:billingPerson object
+- body:billingPerson.city string
+- body:billingPerson.companyName string
+- body:billingPerson.countryCode string
+- body:billingPerson.countryName string
+- body:billingPerson.name string
+- body:billingPerson.phone string
+- body:billingPerson.postalCode string
+- body:billingPerson.stateName string
+- body:billingPerson.stateOrProvinceCode string
+- body:billingPerson.stateOrProvinceName string
+- body:billingPerson.street string
+- body:customerGroupId integer
+- body:email string
+- body:password string
+- body:shippingAddresses array<object>
+- body:shippingAddresses[].city string
+- body:shippingAddresses[].companyName string
+- body:shippingAddresses[].countryCode string
+- body:shippingAddresses[].countryName string
+- body:shippingAddresses[].name string
+- body:shippingAddresses[].phone string
+- body:shippingAddresses[].postalCode string
+- body:shippingAddresses[].stateName string
+- body:shippingAddresses[].stateOrProvinceCode string
+- body:shippingAddresses[].stateOrProvinceName string
+- body:shippingAddresses[].street string
+- body:taxExempt boolean
+- body:taxId number
+- body:taxIdValid boolean
+
+## S621-0008  POST /orders
+summary: Create an order in the eCommerce system.With the exception of the 'id' field, the required fields indicated in the 'Order' model are those required to create a new order.The paymentStatus can only be AWAITING_PAYMENT or INCOMPLETE.The fulfillmentStatus can only be AWAITING_PROCESSING
+- body:billingPerson object
+- body:billingPerson.city string
+- body:billingPerson.companyName string
+- body:billingPerson.countryCode string
+- body:billingPerson.countryName string
+- body:billingPerson.name string
+- body:billingPerson.phone string
+- body:billingPerson.postalCode string
+- body:billingPerson.stateName string
+- body:billingPerson.stateOrProvinceCode string
+- body:billingPerson.stateOrProvinceName string
+- body:billingPerson.street string
+- body:couponDiscount number
+- body:customerId number
+- body:customerTaxExempt boolean
+- body:customerTaxId integer
+- body:customerTaxIdValid boolean
+- body:discount number
+- body:email string
+- body:fulfillmentStatus string
+- body:globalReferer string
+- body:hidden boolean
+- body:items array<object>
+- body:items[].categoryId integer
+- body:items[].couponApplied boolean
+- body:items[].digital boolean
+- body:items[].fixedShippingRate number
+- body:items[].fixedShippingRateOnly boolean
+- body:items[].hdThumbnailUrl string
+- body:items[].id integer
+- body:items[].imageUrl string
+- body:items[].isShippingRequired boolean
+- body:items[].name string
+- body:items[].price number
+- body:items[].productAvailable boolean
+- body:items[].productId integer
+- body:items[].productPrice number
+- body:items[].quantity integer
+- body:items[].quantityInStock number
+- body:items[].shipping number
+- body:items[].sku string
+- body:items[].smallThumbnailUrl string
+- body:items[].tax number
+- body:items[].taxes array<object>
+- body:items[].taxes[].name string
+- body:items[].taxes[].total number
+- body:items[].taxes[].value number
+- body:items[].trackQuantity boolean
+- body:items[].weight number
+- body:membershipBasedDiscount number
+- body:orderComments string
+- body:paymentMethod string
+- body:paymentModule string
+- body:paymentStatus string
+- body:privateAdminNotes string
+- body:refererUrl string
+- body:reversedTaxApplied boolean
+- body:sample boolean
+- body:shippingMethod string
+- body:shippingOption object
+- body:shippingOption.estimatedTransitTime string
+- body:shippingOption.isPickup boolean
+- body:shippingOption.shippingCarrierName string
+- body:shippingOption.shippingMethodName string
+- body:shippingOption.shippingRate number
+- body:shippingPerson object
+- body:shippingPerson.city string
+- body:shippingPerson.companyName string
+- body:shippingPerson.countryCode string
+- body:shippingPerson.countryName string
+- body:shippingPerson.name string
+- body:shippingPerson.phone string
+- body:shippingPerson.postalCode string
+- body:shippingPerson.stateName string
+- body:shippingPerson.stateOrProvinceCode string
+- body:shippingPerson.stateOrProvinceName string
+- body:shippingPerson.street string
+- body:subtotal number
+- body:tax number
+- body:total number
+- (2 truong bi cat)
+
+## S621-0009  DELETE /orders/{id}
+summary: Delete an order associated with a given ID from your eCommerce system. Specifying an order associated with a given ID that does not exist will result in an error message
+- path:id string
+
+## S621-0010  PATCH /orders/{id}
+summary: Update an order associated with a given ID in the eCommerce system. The update API uses the PATCH HTTP verb, so only those fields provided in the order object will be updated, and those fields not provided will be left alone. Updating an order with a specified ID that does not exist will result in an error response</strong>
+- path:id string
+- query:action string
+- body:billingPerson object
+- body:billingPerson.city string
+- body:billingPerson.companyName string
+- body:billingPerson.countryCode string
+- body:billingPerson.countryName string
+- body:billingPerson.name string
+- body:billingPerson.phone string
+- body:billingPerson.postalCode string
+- body:billingPerson.stateName string
+- body:billingPerson.stateOrProvinceCode string
+- body:billingPerson.stateOrProvinceName string
+- body:billingPerson.street string
+- body:couponDiscount number
+- body:customerId number
+- body:customerTaxExempt boolean
+- body:customerTaxId integer
+- body:customerTaxIdValid boolean
+- body:discount number
+- body:email string
+- body:fulfillmentStatus string
+- body:globalReferer string
+- body:hidden boolean
+- body:items array<object>
+- body:items[].categoryId integer
+- body:items[].couponApplied boolean
+- body:items[].digital boolean
+- body:items[].fixedShippingRate number
+- body:items[].fixedShippingRateOnly boolean
+- body:items[].hdThumbnailUrl string
+- body:items[].id integer
+- body:items[].imageUrl string
+- body:items[].isShippingRequired boolean
+- body:items[].name string
+- body:items[].price number
+- body:items[].productAvailable boolean
+- body:items[].productId integer
+- body:items[].productPrice number
+- body:items[].quantity integer
+- body:items[].quantityInStock number
+- body:items[].shipping number
+- body:items[].sku string
+- body:items[].smallThumbnailUrl string
+- body:items[].tax number
+- body:items[].taxes array<object>
+- body:items[].taxes[].name string
+- body:items[].taxes[].total number
+- body:items[].taxes[].value number
+- body:items[].trackQuantity boolean
+- body:items[].weight number
+- body:membershipBasedDiscount number
+- body:orderComments string
+- body:paymentModule string
+- body:paymentStatus string
+- body:privateAdminNotes string
+- body:refererUrl string
+- body:reversedTaxApplied boolean
+- body:sample boolean
+- body:shippingMethod string
+- body:shippingOption object
+- body:shippingOption.estimatedTransitTime string
+- body:shippingOption.isPickup boolean
+- body:shippingOption.shippingCarrierName string
+- body:shippingOption.shippingMethodName string
+- body:shippingOption.shippingRate number
+- body:shippingPerson object
+- body:shippingPerson.city string
+- body:shippingPerson.companyName string
+- body:shippingPerson.countryCode string
+- body:shippingPerson.countryName string
+- body:shippingPerson.name string
+- body:shippingPerson.phone string
+- body:shippingPerson.postalCode string
+- body:shippingPerson.stateName string
+- body:shippingPerson.stateOrProvinceCode string
+- body:shippingPerson.stateOrProvinceName string
+- body:shippingPerson.street string
+- body:subtotal number
+- body:tax number
+- (7 truong bi cat)
+
+## S621-0011  POST /products
+summary: Create a new product in eCommerce system.With the exception of the 'id' field, the required fields indicated in the 'Product' model are those required to create a new product
+- body:attributes array<object>
+- body:attributes[].id integer
+- body:attributes[].internalName string
+- body:attributes[].name string
+- body:attributes[].value string
+- body:categoryIds array<integer>
+- body:compareAtPrice number
+- body:compareToPrice number
+- body:created string
+- body:defaultCategoryId integer
+- body:description string
+- body:dimensions object
+- body:dimensions.height number
+- body:dimensions.length number
+- body:dimensions.width number
+- body:enabled boolean
+- body:favorites object
+- body:favorites.count integer
+- body:favorites.displayedCount string
+- body:fixedShippingRate number
+- body:fixedShippingRateOnly boolean
+- body:galleryImages array<object>
+- body:galleryImages[].alt string
+- body:galleryImages[].height integer
+- body:galleryImages[].thumbnail string
+- body:galleryImages[].url string
+- body:galleryImages[].width integer
+- body:googleItemCondition string
+- body:isShippingRequired boolean
+- body:name string
+- body:options array<object>
+- body:options[].choices array<object>
+- body:options[].choices[].priceModifier number
+- body:options[].choices[].priceModifierType string
+- body:options[].choices[].text string
+- body:options[].defaultChoice integer
+- body:options[].name string
+- body:options[].required boolean
+- body:options[].type string
+- body:price number
+- body:productClassId integer
+- body:quantity integer
+- body:relatedProducts object
+- body:relatedProducts.productIds array<number>
+- body:relatedProducts.relatedCategory object
+- body:relatedProducts.relatedCategory.categoryId number
+- body:relatedProducts.relatedCategory.enabled boolean
+- body:relatedProducts.relatedCategory.productCount number
+- body:seoDescription string
+- body:seoTitle string
+- body:shipping object
+- body:shipping.disabledMethods array<string>
+- body:shipping.enabledMethods array<string>
+- body:shipping.flatRate number
+- body:shipping.methodMarkup number
+- body:shipping.type string
+- body:showOnFrontpage number
+- body:sku string
+- body:tax object
+- body:tax.defaultLocationIncludedTaxRate number
+- body:tax.enabledManualTaxes array<integer>
+- body:taxes array<object>
+- body:taxes[].name string
+- body:taxes[].total number
+- body:taxes[].value number
+- body:warningLimit integer
+- body:weight number
+- body:wholesalePrices object
+- body:wholesalePrices.{quantity} number
+
+## S621-0012  DELETE /products/{id}
+summary: Delete a product associated with a given ID from your eCommerce system. Specifying a product associated with a given ID that does not exist will result in an error message
+- path:id string
+
+## S621-0013  PATCH /products/{id}
+summary: Update a product associated with a given ID in the eCommerce system. The update API uses the PATCH HTTP verb, so only those fields provided in the product object will be updated, and those fields not provided will be left alone. Updating a product with a specified ID that does not exist will result in an error response. <p><strong>Update supports the following fields: sku, quantity, trackQuantity, quantityDelta, warningLimit, name, price, weight, tangible, enabled, fixedShippingRateOnly, fixedShippingRate, description, wholesalePrices, compareAtPrice, productClassId</strong>
+- path:id string
+- body:attributes array<object>
+- body:attributes[].id integer
+- body:attributes[].internalName string
+- body:attributes[].name string
+- body:attributes[].value string
+- body:categoryIds array<integer>
+- body:compareAtPrice number
+- body:compareToPrice number
+- body:defaultCategoryId integer
+- body:description string
+- body:dimensions object
+- body:dimensions.height number
+- body:dimensions.length number
+- body:dimensions.width number
+- body:enabled boolean
+- body:fixedShippingRate number
+- body:fixedShippingRateOnly boolean
+- body:galleryImages array<object>
+- body:galleryImages[].alt string
+- body:galleryImages[].height integer
+- body:galleryImages[].thumbnail string
+- body:galleryImages[].url string
+- body:galleryImages[].width integer
+- body:googleItemCondition string
+- body:isShippingRequired boolean
+- body:name string
+- body:options array<object>
+- body:options[].choices array<object>
+- body:options[].choices[].priceModifier number
+- body:options[].choices[].priceModifierType string
+- body:options[].choices[].text string
+- body:options[].defaultChoice integer
+- body:options[].name string
+- body:options[].required boolean
+- body:options[].type string
+- body:price number
+- body:productClassId integer
+- body:quantity integer
+- body:relatedProducts object
+- body:relatedProducts.productIds array<number>
+- body:relatedProducts.relatedCategory object
+- body:relatedProducts.relatedCategory.categoryId number
+- body:relatedProducts.relatedCategory.enabled boolean
+- body:relatedProducts.relatedCategory.productCount number
+- body:seoDescription string
+- body:seoTitle string
+- body:shipping object
+- body:shipping.disabledMethods array<string>
+- body:shipping.enabledMethods array<string>
+- body:shipping.flatRate number
+- body:shipping.methodMarkup number
+- body:shipping.type string
+- body:showOnFrontpage number
+- body:sku string
+- body:tax object
+- body:tax.defaultLocationIncludedTaxRate number
+- body:tax.enabledManualTaxes array<integer>
+- body:taxes array<object>
+- body:taxes[].name string
+- body:taxes[].total number
+- body:taxes[].value number
+- body:warningLimit integer
+- body:weight number
+- body:wholesalePrices object
+- body:wholesalePrices.{quantity} number
+
+## S621-0014  POST /{objectName}
+summary: Create an {objectName}
+- path:objectName string
+- body:objectField string
+
+## S621-0015  DELETE /{objectName}/{objectId}
+summary: Delete an {objectName}
+- path:objectName string
+- path:objectId string
+
+## S621-0016  PATCH /{objectName}/{objectId}
+summary: Update an {objectName}
+- path:objectName string
+- path:objectId string
+- body:objectField string
+
+## S621-0017  PUT /{objectName}/{objectId}
+summary: Update an {objectName}
+- path:objectName string
+- path:objectId string
+- body:objectField string
+
+## S621-0018  POST /{objectName}/{objectId}/{childObjectName}
+summary: Create an {objectName}
+- path:objectName string
+- path:objectId string
+- path:childObjectName string
+- body:objectField string
+
+## S621-0019  DELETE /{objectName}/{objectId}/{childObjectName}/{childObjectId}
+summary: Delete an {childObjectName}
+- path:objectName string
+- path:childObjectName string
+- path:objectId string
+- path:childObjectId string
+
+## S621-0020  PATCH /{objectName}/{objectId}/{childObjectName}/{childObjectId}
+summary: Update an {childObjectName}
+- path:objectName string
+- path:childObjectName string
+- path:objectId string
+- path:childObjectId string
+- body:objectField string
+
+## S621-0021  PUT /{objectName}/{objectId}/{childObjectName}/{childObjectId}
+summary: Update an {childObjectName}
+- path:objectName string
+- path:childObjectName string
+- path:objectId string
+- path:childObjectId string
+- body:objectField string
+
+## S622-0001  POST /questions
+summary: Create a New Question
+desc: You may create your own question using this action. It takes a JSON object containing a question and a collection of answers in the form of choices.
+- body:choices array<string>
+- body:question string
+
+## S624-0001  POST /v4/auth/login
+summary: Authenticate user (Login)
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128679; Deprecated since v4.13.0</h3> ### Description: Authenticates user and provides an authentication token (`X-Sds-Auth-Token`) that is required for the most operations. ### Precondition: Existing user that is **NOT** locked. ### Postcondition: User is logged in. ### Further 
+- body:authType string enum[basic|active_directory|radius]
+- body:language string
+- body:login string
+- body:password string
+- body:state string
+- body:token string
+- body:userName string
+
+## S624-0002  POST /v4/auth/recover_username
+summary: Recover username
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.13.0</h3> ### Description: Request an email with the user names of all accounts connected to the email. ### Precondition: Valid email address. ### Postcondition: An email is sent to the provided address, with a list of account user names connected to it. ### Furt
+- body:creatorLanguage string
+- body:email string
+
+## S624-0003  POST /v4/auth/reset_password
+summary: Request password reset
+desc: ### Description: Request an email with a password reset token for a certain user to reset password. ### Precondition: Registered user account. ### Postcondition: Provided user receives email with password reset token. ### Further Information: None.
+- body:creatorLanguage string
+- body:language string
+- body:login string
+- body:userName string
+
+## S624-0004  POST /v4/nodes/deleted_nodes/actions/restore
+summary: Restore deleted nodes
+desc: ### Description: Restore a list of deleted nodes. ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; create</span> permissions in parent room and <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; restore recycle bin</span>
+- body:deletedNodeIds array<integer>
+- body:keepShareLinks boolean
+- body:parentId integer
+- body:resolutionStrategy string enum[autorename|overwrite|fail]
+
+## S624-0005  DELETE /v4/nodes/files/uploads/{upload_id}
+summary: Cancel file upload
+desc: ### Description: Cancel a (S3) file upload and destroy the upload channel. ### Precondition: An upload channel has been created and user has to be the creator of the upload channel. ### Postcondition: The upload channel is removed and all temporary uploaded data is purged. ### Further Information: It is recommended to notify the API about cancelled uploads if possible.
+- path:upload_id string
+
+## S624-0006  PUT /v4/nodes/rooms/{room_id}/guest_users
+summary: Add guest users to a room
+desc: ### Description: Add guest users to a room ### Precondition: User needs to be a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Room Administrator</span>. To add new members, the user needs the right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#1282
+- path:room_id integer
+- body:roomGuestInvitations array<object>
+- body:roomGuestInvitations[].email string
+- body:roomGuestInvitations[].firstName string
+- body:roomGuestInvitations[].lastName string
+
+## S624-0007  PUT /v4/nodes/rooms/{room_id}/users
+summary: Add or change room granted user(s)
+desc: ### Description: All existing user permissions will be overwritten. ### Precondition: User needs to be a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Room Administrator</span>. To add new members, the user needs the right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px;
+- path:room_id integer
+- body:items array<object>
+- body:items[].id integer
+- body:items[].permissions object
+- body:items[].permissions.change boolean
+- body:items[].permissions.create boolean
+- body:items[].permissions.delete boolean
+- body:items[].permissions.deleteRecycleBin boolean
+- body:items[].permissions.manage boolean
+- body:items[].permissions.manageDownloadShare boolean
+- body:items[].permissions.manageUploadShare boolean
+- body:items[].permissions.read boolean
+- body:items[].permissions.readRecycleBin boolean
+- body:items[].permissions.restoreRecycleBin boolean
+
+## S624-0008  POST /v4/nodes/zip/download
+summary: Download files / folders as ZIP archive
+desc: ### Description: Download multiple files in a ZIP archive. ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; read</span> permissions in auth parent room. ### Postcondition: Stream is returned. ### Further Information: None.
+- body:nodeIds array<integer>
+
+## S624-0009  DELETE /v4/nodes/{node_id}/favorite
+summary: Unmark a node (room, folder or file) as favorite
+desc: ### Description: Unmarks a node (room, folder or file) as favorite. ### Precondition: Authenticated user is allowed to <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128065; see</span> the node (i.e. `isBrowsable = true`). ### Postcondition: A node gets unmarked as favorite. ### Further Information: None.
+- path:node_id integer
+
+## S624-0010  PUT /v4/provisioning/customers/{customer_id}
+summary: Update customer
+desc: ### Description: Change selected attributes of a customer. ### Precondition: Authentication with `X-Sds-Service-Token` required. ### Postcondition: Selected attributes of customer are updated. ### Further Information: None.
+- path:customer_id integer
+- body:companyName string
+- body:customerContractType string enum[demo|free|pay]
+- body:isLocked boolean
+- body:lockStatus boolean
+- body:providerCustomerId string
+- body:quotaMax integer
+- body:userMax integer
+- body:webhooksMax integer
+
+## S624-0011  POST /v4/provisioning/webhooks
+summary: Create tenant webhook
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.19.0</h3> ### Description: Create a new webhook for the tenant scope. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; manage webhook</span> required. ### Postcon
+- body:eventTypeNames array<string>
+- body:isEnabled boolean
+- body:name string
+- body:secret string
+- body:triggerExampleEvent boolean
+- body:url string
+
+## S624-0012  DELETE /v4/provisioning/webhooks/{webhook_id}
+summary: Remove tenant webhook
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.19.0</h3> ### Description: Delete a webhook for the tenant scope. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; manage webhook</span> required. ### Postconditi
+- path:webhook_id integer
+
+## S624-0013  POST /v4/public/shares/uploads/{access_key}
+summary: Create new file upload channel
+desc: ### Description: Create a new upload channel. ### Precondition: None. ### Postcondition: Upload channel is created and corresponding upload URL, token & upload ID are returned. ### Further Information: Use `uploadUrl` the upload `token` is deprecated. Please provide the size of the intended upload so that the quota can be checked in advanced and no data is transferred unnecessarily. ### Node namin
+- path:access_key string
+- body:directS3Upload boolean
+- body:name string
+- body:password string
+- body:size integer
+- body:timestampCreation string
+- body:timestampModification string
+
+## S624-0014  POST /v4/settings/keypairs
+summary: Create system rescue key pair and preserve copy of old private key
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.24.0</h3> ### Description: Create system rescue key pair and preserve copy of old private key. ### Precondition: * Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change config</s
+- body:previousPrivateKey object
+- body:previousPrivateKey.createdAt string
+- body:previousPrivateKey.createdBy integer
+- body:previousPrivateKey.privateKey string
+- body:previousPrivateKey.version string
+- body:privateKeyContainer object
+- body:privateKeyContainer.createdAt string
+- body:privateKeyContainer.createdBy integer
+- body:privateKeyContainer.privateKey string
+- body:privateKeyContainer.version string
+- body:publicKeyContainer object
+- body:publicKeyContainer.createdAt string
+- body:publicKeyContainer.createdBy integer
+- body:publicKeyContainer.publicKey string
+- body:publicKeyContainer.version string
+
+## S624-0015  DELETE /v4/settings/webhooks/{webhook_id}
+summary: Remove webhook
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.19.0</h3> ### Description: Delete a webhook for the customer scope. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change config</span> required. ### Postcondit
+- path:webhook_id integer
+
+## S624-0016  DELETE /v4/shares/downloads/{share_id}
+summary: Remove Download Share
+desc: ### Description: Delete a Download Share. ### Precondition: User with <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; manage download share</span> permissions on target node. ### Postcondition: Download Share is deleted. ### Further Information: Only the Download Share is removed; the referenced file or container persist
+- path:share_id integer
+
+## S624-0017  POST /v4/shares/downloads/{share_id}/email
+summary: Send an existing Download Share link via email
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.11.0</h3> ### Description: Send an email to specific recipients for existing Download Share. ### Precondition: User with <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; manage download 
+- path:share_id integer
+- body:body string
+- body:receiverLanguage string
+- body:recipients array<string>
+
+## S624-0018  PUT /v4/system/config/auth/ads/{ad_id}
+summary: Update Active Directory configuration
+desc: ### Description: Update an existing Active Directory configuration. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> of the Provider Customer required. ### Postcondition: Active Directory configuration updated. ### Further Information: None.
+- path:ad_id integer
+- body:adExportGroup string
+- body:alias string
+- body:createHomeFolder boolean
+- body:homeFolderParent integer
+- body:ldapUsersDomain string
+- body:sdsImportGroup integer
+- body:serverAdminName string
+- body:serverAdminPassword string
+- body:serverIp string
+- body:serverPort integer
+- body:sslFingerPrint string
+- body:useLdaps boolean
+- body:userFilter string
+- body:userImport boolean
+
+## S624-0019  PUT /v4/system/config/auth/openid/idps/{idp_id}
+summary: Update OpenID Connect IDP configuration
+desc: ### Description: Update an existing OpenID Connect IDP configuration. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Config Manager</s
+- path:idp_id integer
+- body:authorizationEndPointUrl string
+- body:clientId string
+- body:clientSecret string
+- body:fallbackMappingClaim string
+- body:flow string enum[authorization_code|hybrid]
+- body:issuer string
+- body:jwksEndPointUrl string
+- body:mappingClaim string
+- body:name string
+- body:pkceChallengeMethod string
+- body:pkceEnabled boolean
+- body:redirectUris array<string>
+- body:resetFallbackMappingClaim boolean
+- body:scopes array<string>
+- body:tokenEndPointUrl string
+- body:userImportEnabled boolean
+- body:userImportGroup integer
+- body:userInfoEndPointUrl string
+- body:userInfoSource string enum[user_info_endpoint|id_token]
+- body:userManagementUrl string
+- body:userUpdateEnabled boolean
+
+## S624-0020  POST /v4/system/config/oauth/clients
+summary: Create OAuth client
+desc: ### Description: Create a new OAuth client. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Config Manager</span> of the Provider Custo
+- body:accessTokenValidity integer
+- body:approvalValidity integer
+- body:clientId string
+- body:clientName string
+- body:clientSecret string
+- body:clientType string enum[confidential|public]
+- body:grantTypes array<string> enum[authorization_code|client_credentials|implicit|password|refresh_token]
+- body:redirectUris array<string>
+- body:refreshTokenValidity integer
+
+## S624-0021  PUT /v4/system/config/policies/guest_users
+summary: Change guest user policies
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.40.0</h3> ### Description: Change current guest user policies. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='
+- body:isInviteUsersEnabled boolean
+
+## S624-0022  PUT /v4/system/config/policies/mfa
+summary: Change MFA policies
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.37.0</h3> ### Description: Change current multi-factor authentication policies. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and r
+- body:isMfaEnforced boolean
+
+## S624-0023  PUT /v4/system/config/policies/passwords
+summary: Change password policies
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.14.0</h3> ### Description: Change current password policies for any password types: * `login` * `shares` * `encryption` ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#1
+- body:encryptionPasswordPolicies object
+- body:encryptionPasswordPolicies.characterRules object
+- body:encryptionPasswordPolicies.characterRules.mustContainCharacters array<string> enum[alpha|uppercase|lowercase|numeric|special|all|none]
+- body:encryptionPasswordPolicies.characterRules.numberOfCharacteristicsToEnforce integer
+- body:encryptionPasswordPolicies.minLength integer
+- body:encryptionPasswordPolicies.rejectKeyboardPatterns boolean
+- body:encryptionPasswordPolicies.rejectUserInfo boolean
+- body:loginPasswordPolicies object
+- body:loginPasswordPolicies.characterRules object
+- body:loginPasswordPolicies.characterRules.mustContainCharacters array<string> enum[alpha|uppercase|lowercase|numeric|special|all|none]
+- body:loginPasswordPolicies.characterRules.numberOfCharacteristicsToEnforce integer
+- body:loginPasswordPolicies.enforceLoginPasswordChange boolean
+- body:loginPasswordPolicies.minLength integer
+- body:loginPasswordPolicies.numberOfArchivedPasswords integer
+- body:loginPasswordPolicies.passwordExpiration object
+- body:loginPasswordPolicies.passwordExpiration.enabled boolean
+- body:loginPasswordPolicies.passwordExpiration.maxPasswordAge integer
+- body:loginPasswordPolicies.rejectDictionaryWords boolean
+- body:loginPasswordPolicies.rejectKeyboardPatterns boolean
+- body:loginPasswordPolicies.rejectUserInfo boolean
+- body:loginPasswordPolicies.userLockout object
+- body:loginPasswordPolicies.userLockout.enabled boolean
+- body:loginPasswordPolicies.userLockout.lockoutPeriod integer
+- body:loginPasswordPolicies.userLockout.maxNumberOfLoginFailures integer
+- body:sharesPasswordPolicies object
+- body:sharesPasswordPolicies.characterRules object
+- body:sharesPasswordPolicies.characterRules.mustContainCharacters array<string> enum[alpha|uppercase|lowercase|numeric|special|all|none]
+- body:sharesPasswordPolicies.characterRules.numberOfCharacteristicsToEnforce integer
+- body:sharesPasswordPolicies.minLength integer
+- body:sharesPasswordPolicies.rejectDictionaryWords boolean
+- body:sharesPasswordPolicies.rejectKeyboardPatterns boolean
+- body:sharesPasswordPolicies.rejectUserInfo boolean
+
+## S624-0024  POST /v4/system/config/policies/passwords/enforce_change
+summary: Enforce login password change for all users
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.24.0</h3> ### Description: Enforce login password change for all users. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <spa
+
+## S624-0025  PUT /v4/system/config/settings/auth
+summary: Update authentication settings
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.6.0</h3> ### Description: DRACOON authentication configuration entry point. Change configurable authentication settings. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#
+- body:authMethods array<object>
+- body:authMethods[].isEnabled boolean
+- body:authMethods[].name string
+- body:authMethods[].priority integer
+
+## S624-0026  PUT /v4/system/config/settings/eventlog
+summary: Update eventlog settings
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.6.0</h3> ### Description: DRACOON eventlog configuration entry point. Change configurable eventlog settings. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; chan
+- body:enabled boolean
+- body:logIpEnabled boolean
+- body:retentionPeriod integer
+
+## S624-0027  PUT /v4/system/config/storage/s3
+summary: Update S3 storage configuration
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.3.0</h3> ### Description: Update existing S3 configuration. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='pad
+- body:accessKey string
+- body:bucketName string
+- body:bucketUrl string
+- body:endpointUrl string
+- body:region string
+- body:secretKey string
+
+## S624-0028  DELETE /v4/uploads/{token}
+summary: Cancel file upload
+desc: ### Description: Cancel file upload. ### Precondition: Valid upload token. ### Postcondition: Upload canceled, token invalidated and all already transfered chunks removed. ### Further Information: It is recommended to notify the API about cancelled uploads if possible.
+- path:token string
+
+## S624-0029  PUT /v4/uploads/{token}
+summary: Complete file upload
+desc: ### Description: Finish uploading a file. ### Precondition: Valid upload token. ### Postcondition: File created. ### Further Information: The provided file name might be changed in accordance with the resolution strategy: * **autorename**: changes the file name and adds a number to avoid conflicts. * **overwrite**: deletes any old file with the same file name. * **fail**: returns an error; in this
+- path:token string
+- body:fileKey object
+- body:fileKey.iv string
+- body:fileKey.key string
+- body:fileKey.tag string
+- body:fileKey.version string
+- body:fileName string
+- body:keepShareLinks boolean
+- body:resolutionStrategy string enum[autorename|overwrite|fail]
+- body:userFileKeyList object
+- body:userFileKeyList.items array<object>
+- body:userFileKeyList.items[].fileKey object
+- body:userFileKeyList.items[].userId integer
+
+## S624-0030  DELETE /v4/user/account/avatar
+summary: Reset avatar
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.11.0</h3> ### Description: Reset (custom) avatar to default avatar. ### Precondition: Authenticated user. ### Postcondition: * User's avatar gets deleted. * Default avatar is set. ### Further Information: None.
+
+## S624-0031  DELETE /v4/user/account/mfa
+summary: Using emergency-code
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.37.0</h3> ### Description: Using emergency code for login ### Precondition: User has MFA enabled and is already logged in with account/pw (aka pre-Auth-Role) ### Postcondition: All MFA-setups for the user are deleted. ### Further Information:
+- query:emergency_code string
+
+## S624-0032  DELETE /v4/user/oauth/approvals/{client_id}
+summary: Remove OAuth client approval
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.22.0</h3> ### Functional Description: Delete an OAuth client approval. ### Precondition: Authenticated user and valid client ID ### Postcondition: OAuth Client approval is revoked. ### Further Information: None.
+- path:client_id string
+
+## S624-0033  DELETE /v4/user/oauth/authorizations/{client_id}
+summary: Remove all OAuth authorizations of a client
+desc: ### Description: Delete all authorizations of a client. ### Precondition: Authenticated user and valid client ID ### Postcondition: All authorizations for the client are revoked. ### Further Information: None.
+- path:client_id string
+
+## S624-0034  PUT /v4/user/profileAttributes
+summary: Add or edit user profile attributes
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.7.0</h3> ### Description: Add or edit custom user profile attributes. <br/><br/><span style="font-weight: bold; color: red;"> &#128679; **Warning: Please note that the response with HTTP status code 200 (OK) is deprecated and will be replaced with HTTP status cod
+- body:items array<object>
+- body:items[].key string
+- body:items[].value string
+
+## S624-0035  PUT /v4/user/subscriptions/download_shares
+summary: Subscribe or Unsubscribe a List of Download Shares for notifications
+desc: <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.25.0</h3> ### Description: Subscribe/Unsubscribe download shares for notifications. ### Precondition: User with _"manage download share"_ permissions on target node. ### Postcondition: Download shares are subscribed or unsubscribed. Notifications for these downlo
+- body:isSubscribed boolean
+- body:objectIds array<integer>
+
+## S624-0036  PUT /v4/users/{user_id}
+summary: Update user's metadata
+desc: ### Description: Update user's metadata. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change users</span> required. ### Postcondition: User's metadata is updated. ### Further Information: * If a user should **NOT** expire, leave `expireAt` empty. * All input fields are limited to **150** charac
+- path:user_id integer
+- body:authData object
+- body:authData.adConfigId integer
+- body:authData.login string
+- body:authData.method string
+- body:authData.oidConfigId integer
+- body:authMethods array<object>
+- body:authMethods[].authId string
+- body:authMethods[].isEnabled boolean
+- body:authMethods[].options array<object>
+- body:authMethods[].options[].key string
+- body:authMethods[].options[].value string
+- body:email string
+- body:expiration object
+- body:expiration.enableExpiration boolean
+- body:expiration.expireAt string
+- body:firstName string
+- body:gender string
+- body:isLocked boolean
+- body:lastName string
+- body:lockStatus integer
+- body:mfaConfig object
+- body:mfaConfig.mfaEnforced boolean
+- body:phone string
+- body:receiverLanguage string
+- body:title string
+- body:userName string
+
+## S626-0001  DELETE /course-mappings/{offeringId}/{externalCourseId}
+summary: Remove course mapping
+desc: Removes the course mapping between the offering and the externalCourseId.
+- path:offeringId string
+- path:externalCourseId string
+
+## S626-0002  PUT /course-mappings/{offeringId}/{externalCourseId}
+summary: Add course mapping
+desc: Creates a mapping between the offering and the externalCourseId.
+- path:offeringId string
+- path:externalCourseId string
+
+## S626-0003  PUT /courses/{contentId}/metadata/category
+summary: Update course category
+desc: Add or update course category in the metadata of a course.
+- path:contentId string
+- body:category string
+
+## S626-0004  PUT /courses/{contentId}/metadata/level
+summary: Update course level
+desc: Add or update the course level in the metadata of a course.
+- path:contentId string
+- body:level string
+
+## S626-0005  PUT /courses/{contentId}/metadata/tags
+summary: Update course tags
+desc: Add or update course tags in the metadata of a course.
+- path:contentId string
+- body:tags array<string>
+
+## S626-0006  PUT /courses/{contentId}/metadata/topic
+summary: Update course topic
+desc: Add or update the course topic in the metadata of a course.
+- path:contentId string
+- body:topic string
+
+## S626-0007  POST /courses/{rootContentId}/permissions/{userEmail}
+summary: Update course access
+desc: Provide a user with access to a specific course by rootContentId.
+- path:rootContentId string
+- path:userEmail string
+- body:isBuilder boolean
+- body:isReviewer boolean
+
+## S626-0008  POST /offerings
+summary: Create offering
+desc: Creates a new offering.
+- body:badge object
+- body:badge.badgeExpiry object
+- body:badge.badgeExpiry.expirationDate string
+- body:badge.badgeExpiry.expires boolean
+- body:badge.badgeExpiry.expiryType string enum[date|timeframe]
+- body:badge.badgeExpiry.timeframeAmount number
+- body:badge.badgeExpiry.timeframeUnit string enum[days|months|years]
+- body:badge.description string
+- body:badge.requiresApproval boolean
+- body:badge.title string
+- body:contentId string
+- body:createDefaultChannels boolean
+- body:description string
+- body:earlyCloseOffDate string
+- body:end string
+- body:hasEarlyCloseOff boolean
+- body:identifier string
+- body:isReadonly boolean
+- body:metadata object
+- body:metadata.category string
+- body:metadata.level string
+- body:metadata.tags array<string>
+- body:metadata.topic string
+- body:name string
+- body:rootContentId string
+- body:start string
+- body:trailerVideoUrl string
+- body:useRelativeDates boolean
+
+## S626-0009  PATCH /offerings/{offeringId}
+summary: Update offering
+desc: Updates the offering.
+- path:offeringId string
+- body:badge object
+- body:badge.badgeExpiry object
+- body:badge.badgeExpiry.expirationDate string
+- body:badge.badgeExpiry.expires boolean
+- body:badge.badgeExpiry.expiryType string enum[date|timeframe]
+- body:badge.badgeExpiry.timeframeAmount number
+- body:badge.badgeExpiry.timeframeUnit string enum[days|months|years]
+- body:badge.description string
+- body:badge.requiresApproval boolean
+- body:badge.title string
+- body:contentId string
+- body:description string
+- body:earlyCloseOffDate string
+- body:end string
+- body:hasEarlyCloseOff boolean
+- body:identifier string
+- body:isReadonly boolean
+- body:metadata object
+- body:metadata.category string
+- body:metadata.level string
+- body:metadata.tags array<string>
+- body:metadata.topic string
+- body:name string
+- body:overview string
+- body:rootContentId string
+- body:start string
+- body:trailerVideoUrl string
+- body:useRelativeDates boolean
+
+## S626-0010  PATCH /offerings/{offeringId}/assessments/{assessmentId}
+summary: Update assessment details
+desc: Updates the assessment details for a specified assessment in an offering.
+- path:offeringId string
+- path:assessmentId string
+- body:content string
+- body:dueDate string
+- body:markNumber string
+- body:markType string
+- body:openDate string
+
+## S626-0011  DELETE /offerings/{offeringId}/assessments/{assessmentId}/documents/{documentId}
+summary: Remove assessment document
+desc: Removes the assessment document file for a specified assessment in an offering.
+- path:offeringId string
+- path:assessmentId string
+- path:documentId string
+
+## S626-0012  PATCH /offerings/{offeringId}/assessments/{assessmentId}/{userEmail}
+summary: Update the due dates for a learner's quiz attempt
+desc: Updates the due dates for a learner's quiz attempt specified by the assessmentId.
+- path:offeringId string
+- path:assessmentId string
+- path:userEmail string
+- body:dueDate string
+
+## S626-0013  POST /offerings/{offeringId}/channels
+summary: Add channel
+desc: Adds new channel to the specified offering.
+- path:offeringId string
+- body:isBroadcastOnly boolean
+- body:title string
+
+## S626-0014  PATCH /offerings/{offeringId}/channels/{channelId}
+summary: Update channel
+desc: Updates a channel in an offering.
+- path:offeringId string
+- path:channelId string
+- body:group object
+- body:group.autoAssign boolean
+- body:groupDiscussion boolean
+- body:isBroadcastOnly boolean
+- body:privateSupport boolean
+- body:title string
+
+## S626-0015  DELETE /offerings/{offeringId}/channels/{channelId}/learners
+summary: Remove learners from a group channel
+desc: Removes a learner from the specified group channel.
+- path:offeringId string
+- path:channelId string
+- body:email string
+
+## S626-0016  POST /offerings/{offeringId}/channels/{channelId}/learners
+summary: Add learners to a group channel
+desc: Adds a learner to a specified group channel.
+- path:offeringId string
+- path:channelId string
+- body:email string
+
+## S626-0017  POST /offerings/{offeringId}/groups
+summary: Add an assessment group
+desc: Creates a new assessment group in an offering.
+- path:offeringId string
+- body:title string
+
+## S626-0018  POST /offerings/{offeringId}/groups/{groupId}/learners
+summary: Add a learner to an assessment group
+desc: Adds a learner into the specified assessment group.
+- path:offeringId string
+- path:groupId string
+- body:email string
+
+## S626-0019  DELETE /offerings/{offeringId}/groups/{groupId}/learners/{userEmail}
+summary: Remove a learner from an assessment group
+desc: Removes a learner from the specified assessment group.
+- path:offeringId string
+- path:groupId string
+- path:userEmail string
+
+## S626-0020  PUT /offerings/{offeringId}/metadata/category
+summary: Update offering category metadata
+desc: Updates the offering category metadata.
+- path:offeringId string
+- body:category string
+
+## S626-0021  PUT /offerings/{offeringId}/metadata/level
+summary: Update offering level metadata
+desc: Updates the offering level metadata.
+- path:offeringId string
+- body:level string
+
+## S626-0022  PUT /offerings/{offeringId}/metadata/tags
+summary: Update offering tags metadata
+desc: Updates the offering tags metadata.
+- path:offeringId string
+- body:tags array<string>
+
+## S626-0023  PUT /offerings/{offeringId}/metadata/topic
+summary: Update offering topic metadata
+desc: Updates the offering topic metadata.
+- path:offeringId string
+- body:topic string
+
+## S626-0024  POST /offerings/{offeringId}/users
+summary: Adds user to the offering
+desc: Adds one or more users to the offering.
+- path:offeringId string
+- body:email string
+- body:firstName string
+- body:isFacilitator boolean
+- body:isMarker boolean
+- body:isReadonly boolean
+- body:lastName string
+- body:metadata object
+- body:metadata.tags array<string>
+- body:personId string
+- body:profile object
+- body:profile.displayName string
+- body:sendInvite boolean
+- body:sendNotificationEmail boolean
+
+## S626-0025  DELETE /offerings/{offeringId}/users/{markerEmail}/marks
+summary: Remove learners from coach's marking list
+desc: Removes an array of learners from coach's marking list.
+- path:offeringId string
+- path:markerEmail string
+- body:(body) string
+
+## S626-0026  POST /offerings/{offeringId}/users/{markerEmail}/marks
+summary: Add learners to be marked by a coach
+desc: Adds an array of learners to be marked by the specified coach.
+- path:offeringId string
+- path:markerEmail string
+- body:(body) string
+
+## S626-0027  DELETE /offerings/{offeringId}/users/{userEmail}
+summary: Removes user from the offering
+desc: Removes a user from the offering.
+- path:offeringId string
+- path:userEmail string
+
+## S626-0028  DELETE /offerings/{offeringId}/users/{userEmail}/assessments/{assessmentId}
+summary: Reset user's assessment to draft state
+desc: Resets the user's submitted assessment to a draft state.
+- path:offeringId string
+- path:userEmail string
+- path:assessmentId string
+
+## S626-0029  POST /offerings/{offeringId}/users/{userEmail}/badges/award
+summary: Award badge
+desc: Awards a badge to a user in the offering.
+- path:offeringId string
+- path:userEmail string
+
+## S626-0030  POST /users
+summary: Add new user
+desc: Creates a new user.
+- body:email string
+- body:firstName string
+- body:lastName string
+- body:metadata object
+- body:metadata.tags array<string>
+- body:personId string
+- body:profile object
+- body:profile.displayName string
+- body:sendInvite boolean
+
+## S626-0031  PATCH /users/{userEmail}
+summary: Update user
+desc: Updates the specified user by email.
+- path:userEmail string
+- body:email string
+- body:firstName string
+- body:lastName string
+- body:metadata object
+- body:metadata.tags array<string>
+- body:personId string
+- body:profile object
+- body:profile.displayName string
+- body:sendInvite boolean
+
+## S626-0032  POST /users/{userEmail}/invite-email
+summary: Resend invitation email
+desc: Re-sends an invitation e-mail to the specified user.
+- path:userEmail string
+
+## S626-0033  POST /users/{userEmail}/offerings
+summary: Adds the user to the specified offerings as a learner
+desc: Adds a user to an array of offerings by offeringId.
+- path:userEmail string
+- body:(body) string
+
+## S626-0034  POST /users/{userEmail}/permissions/{permissionName}
+summary: Add permission to user
+desc: Adds additional permissions to the specified user.
+- path:userEmail string
+- path:permissionName string enum[builder|manager]
+
+## S626-0035  PUT /users/{userEmail}/suspend
+summary: Suspend user
+desc: Suspends the specified user's account.
+- path:userEmail string
+- body:suspended boolean
+
+## S626-0036  PATCH /users/{userEmail}/transfer
+summary: Transfer a user between offerings
+desc: Moves the user's access and progress from one offering to another.
+- path:userEmail string
+- body:fromOfferingId string
+- body:sendInvite boolean
+- body:toOfferingId string

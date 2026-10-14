@@ -1,0 +1,86 @@
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+index 0d1163b..8861182 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -37,10 +37,12 @@ import org.evomaster.core.search.gene.string.StringGene
+ import org.evomaster.core.search.*
+ import org.evomaster.core.search.gene.Gene
+ import org.evomaster.core.search.gene.ObjectGene
++import org.evomaster.core.search.gene.collection.ArrayGene
+ import org.evomaster.core.search.gene.collection.EnumGene
+ import org.evomaster.core.search.gene.numeric.IntegerGene
+ import org.evomaster.core.search.gene.numeric.LongGene
+ import org.evomaster.core.search.gene.utils.GeneUtils
++import org.evomaster.core.search.gene.wrapper.OptionalGene
+ import org.evomaster.core.search.service.Archive
+ import org.evomaster.core.search.service.FitnessFunction
+ import org.evomaster.core.search.service.IdMapper
+@@ -699,6 +701,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 log.debug("Stateful-authorization: could not set reduced role '$reducedRole' on ${transition.getName()}")
+                 return false
+             }
++            keepOnlyTargetFields(transition)
+         }
+         base.addMainActionInEmptyEnterpriseGroup(action = transition)
+ 
+@@ -966,6 +969,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         action.auth = restorer
+         if (!setUserTargetToVictim(action, target)) return false
+         if (!setAllRoleFieldsTo(action, elevatedRole)) return false
++        keepOnlyTargetFields(action)
+ 
+         val base = victimSlice.copy() as RestIndividual
+         base.addMainActionInEmptyEnterpriseGroup(action = action)
+@@ -1001,6 +1005,33 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         setInParams(action.parameters.filterIsInstance<BodyParam>(), roleFieldSignals, reducedRole)
+             || setInQueryParamsTopLevel(action, roleFieldSignals, reducedRole)
+ 
++    private fun keepOnlyTargetFields(action: RestCallAction) {
++        val userInPath = action.parameters.filterIsInstance<PathParam>().any { p ->
++            val n = p.name.lowercase()
++            transitionUserParamSignals.any { n == it || n.contains(it) }
++        }
++        fun keep(name: String): Boolean {
++            val n = name.lowercase()
++            return roleFieldSignals.any { n == it || n.contains(it) }
++                || (!userInPath && transitionUserParamSignals.any { n == it || n.contains(it) })
++        }
++        val removed = mutableListOf<String>()
++        for (p in action.parameters.filterIsInstance<BodyParam>()) {
++            val obj = p.primaryGene().flatView().firstOrNull { it is ObjectGene } as ObjectGene? ?: continue
++            obj.fixedFields.filterIsInstance<OptionalGene>()
++                .filter { it.isActive && !keep(it.name) }
++                .forEach { it.isActive = false; removed.add(it.name) }
++        }
++        for (p in action.parameters.filterIsInstance<QueryParam>()) {
++            val g = p.primaryGene()
++            if (g is OptionalGene && g.isActive && !keep(p.name)) {
++                g.isActive = false
++                removed.add(p.name)
++            }
++        }
++        log.debug("Stateful-authorization: removed optional fields $removed from ${action.getName()}")
++    }
++
+     private fun trySetFromStringValue(g: Gene, value: String): Boolean =
+         try {
+             g.setFromStringValue(value)
+@@ -1011,8 +1042,17 @@ class RestSecurityBuilder : TimeBoxedPhase {
+     private fun setAllRoleFieldsTo(action: RestCallAction, value: String): Boolean {
+         var any = false
+         for (p in action.parameters.filterIsInstance<BodyParam>()) {
+-            for (g in p.primaryGene().flatView()) {
++            val genes = p.primaryGene().flatView()
++            val objectArrayFields = genes.filter { g ->
+                 val n = g.name.lowercase()
++                roleFieldSignals.any { n == it || n.contains(it) }
++                    && g.flatView().any { it is ArrayGene<*> && it.template is ObjectGene }
++            }.flatMap { it.flatView() }
++            for (g in genes) {
++                val n = g.name.lowercase()
++                if (objectArrayFields.any { it === g }) {
++                    continue
++                }
+                 if (roleFieldSignals.any { n == it || n.contains(it) } && trySetFromStringValue(g, value)) {
+                     any = true
+                 }

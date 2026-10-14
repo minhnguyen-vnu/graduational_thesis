@@ -1,0 +1,1501 @@
+## S395-N0066  DELETE /v1/customers/{customer}/subscriptions/{subscription_exposed_id}
+desc: <p>Cancels a customer’s subscription. If you set the <code>at_period_end</code> parameter to <code>true</code>, the subscription will remain active until the end of the period, at which point it will be canceled and not renewed. Otherwise, with the default <code>false</code> value, the subscription is terminated immediately. In either case, the customer will not be charged again for the subscripti
+- path:customer string
+- path:subscription_exposed_id string
+- body:expand array<string>
+- body:invoice_now boolean
+- body:prorate boolean
+
+## S395-N0067  POST /v1/customers/{customer}/subscriptions/{subscription_exposed_id}
+desc: <p>Updates an existing subscription on a customer to match the specified parameters. When changing plans or quantities, we will optionally prorate the price we charge next month to make up for any price changes. To preview how the proration will be calculated, use the <a href="#upcoming_invoice">upcoming invoice</a> endpoint.</p>
+- path:customer string
+- path:subscription_exposed_id string
+- body:add_invoice_items array<object>
+- body:add_invoice_items[].price string
+- body:add_invoice_items[].price_data object
+- body:add_invoice_items[].price_data.currency string
+- body:add_invoice_items[].price_data.product string
+- body:add_invoice_items[].price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:add_invoice_items[].price_data.unit_amount integer
+- body:add_invoice_items[].price_data.unit_amount_decimal string
+- body:add_invoice_items[].quantity integer
+- body:add_invoice_items[].tax_rates array<string> enum[]
+- body:application_fee_percent number
+- body:automatic_tax object
+- body:automatic_tax.enabled boolean
+- body:billing_cycle_anchor string enum[now|unchanged]
+- body:billing_thresholds object enum[]
+- body:billing_thresholds.amount_gte integer
+- body:billing_thresholds.reset_billing_cycle_anchor boolean
+- body:cancel_at integer enum[]
+- body:cancel_at_period_end boolean
+- body:cancellation_details object
+- body:cancellation_details.comment string
+- body:cancellation_details.feedback string enum[|customer_service|low_quality|missing_features|other|switched_service|too_complex|too_expensive|unused]
+- body:collection_method string enum[charge_automatically|send_invoice]
+- body:coupon string
+- body:days_until_due integer
+- body:default_payment_method string
+- body:default_source string
+- body:default_tax_rates array<string> enum[]
+- body:expand array<string>
+- body:items array<object>
+- body:items[].billing_thresholds object enum[]
+- body:items[].billing_thresholds.usage_gte integer
+- body:items[].clear_usage boolean
+- body:items[].deleted boolean
+- body:items[].id string
+- body:items[].metadata object enum[]
+- body:items[].price string
+- body:items[].price_data object
+- body:items[].price_data.currency string
+- body:items[].price_data.product string
+- body:items[].price_data.recurring object
+- body:items[].price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:items[].price_data.unit_amount integer
+- body:items[].price_data.unit_amount_decimal string
+- body:items[].quantity integer
+- body:items[].tax_rates array<string> enum[]
+- body:metadata object enum[]
+- body:off_session boolean
+- body:pause_collection object enum[]
+- body:pause_collection.behavior string enum[keep_as_draft|mark_uncollectible|void]
+- body:pause_collection.resumes_at integer
+- body:payment_behavior string enum[allow_incomplete|default_incomplete|error_if_incomplete|pending_if_incomplete]
+- body:payment_settings object
+- body:payment_settings.payment_method_options object
+- body:payment_settings.payment_method_options.acss_debit object enum[]
+- body:payment_settings.payment_method_options.bancontact object enum[]
+- body:payment_settings.payment_method_options.card object enum[]
+- body:payment_settings.payment_method_options.customer_balance object enum[]
+- body:payment_settings.payment_method_options.konbini object enum[]
+- body:payment_settings.payment_method_options.us_bank_account object enum[]
+- body:payment_settings.payment_method_types array<string> enum[ach_credit_transfer|ach_debit|acss_debit|au_becs_debit|bacs_debit|bancontact|boleto|card|customer_balance|fpx|giropay|grabpay]
+- body:payment_settings.save_default_payment_method string enum[off|on_subscription]
+- body:pending_invoice_item_interval object enum[]
+- body:pending_invoice_item_interval.interval string enum[day|month|week|year]
+- body:pending_invoice_item_interval.interval_count integer
+- body:promotion_code string
+- body:proration_behavior string enum[always_invoice|create_prorations|none]
+- body:proration_date integer
+- body:transfer_data object enum[]
+- body:transfer_data.amount_percent number
+- body:transfer_data.destination string
+- body:trial_end string enum[now]
+- body:trial_from_plan boolean
+- body:trial_settings object
+- body:trial_settings.end_behavior object
+- body:trial_settings.end_behavior.missing_payment_method string enum[cancel|create_invoice|pause]
+
+## S395-N0068  DELETE /v1/customers/{customer}/subscriptions/{subscription_exposed_id}/discount
+desc: <p>Removes the currently applied discount on a customer.</p>
+- path:customer string
+- path:subscription_exposed_id string
+- body:(body) object
+
+## S395-N0069  POST /v1/customers/{customer}/tax_ids
+desc: <p>Creates a new <code>TaxID</code> object for a customer.</p>
+- path:customer string
+- body:expand array<string>
+- body:type string enum[ae_trn|au_abn|au_arn|bg_uic|br_cnpj|br_cpf|ca_bn|ca_gst_hst|ca_pst_bc|ca_pst_mb|ca_pst_sk|ca_qst]
+- body:value string
+
+## S395-N0070  DELETE /v1/customers/{customer}/tax_ids/{id}
+desc: <p>Deletes an existing <code>TaxID</code> object.</p>
+- path:customer string
+- path:id string
+- body:(body) object
+
+## S395-N0071  POST /v1/disputes/{dispute}
+desc: <p>When you get a dispute, contacting your customer is always the best first step. If that doesn’t work, you can submit evidence to help us resolve the dispute in your favor. You can do this in your <a href="https://dashboard.stripe.com/disputes">dashboard</a>, but if you prefer, you can use the API to submit evidence programmatically.</p> <p>Depending on your dispute type, different evidence fiel
+- path:dispute string
+- body:evidence object
+- body:evidence.access_activity_log string
+- body:evidence.billing_address string
+- body:evidence.cancellation_policy string
+- body:evidence.cancellation_policy_disclosure string
+- body:evidence.cancellation_rebuttal string
+- body:evidence.customer_communication string
+- body:evidence.customer_email_address string
+- body:evidence.customer_name string
+- body:evidence.customer_purchase_ip string
+- body:evidence.customer_signature string
+- body:evidence.duplicate_charge_documentation string
+- body:evidence.duplicate_charge_explanation string
+- body:evidence.duplicate_charge_id string
+- body:evidence.product_description string
+- body:evidence.receipt string
+- body:evidence.refund_policy string
+- body:evidence.refund_policy_disclosure string
+- body:evidence.refund_refusal_explanation string
+- body:evidence.service_date string
+- body:evidence.service_documentation string
+- body:evidence.shipping_address string
+- body:evidence.shipping_carrier string
+- body:evidence.shipping_date string
+- body:evidence.shipping_documentation string
+- body:evidence.shipping_tracking_number string
+- body:evidence.uncategorized_file string
+- body:evidence.uncategorized_text string
+- body:expand array<string>
+- body:metadata object enum[]
+- body:submit boolean
+
+## S395-N0072  POST /v1/disputes/{dispute}/close
+desc: <p>Closing the dispute for a charge indicates that you do not have any evidence to submit and are essentially dismissing the dispute, acknowledging it as lost.</p> <p>The status of the dispute will change from <code>needs_response</code> to <code>lost</code>. <em>Closing a dispute is irreversible</em>.</p>
+- path:dispute string
+- body:expand array<string>
+
+## S395-N0073  POST /v1/ephemeral_keys
+desc: <p>Creates a short-lived API key for a given resource.</p>
+- body:customer string
+- body:expand array<string>
+- body:issuing_card string
+- body:verification_session string
+
+## S395-N0076  POST /v1/file_links/{link}
+desc: <p>Updates an existing file link object. Expired links can no longer be updated.</p>
+- path:link string
+- body:expand array<string>
+- body:expires_at string enum[now]
+- body:metadata object enum[]
+
+## S395-N0077  POST /v1/files
+desc: <p>To upload a file to Stripe, you’ll need to send a request of type <code>multipart/form-data</code>. The request should contain the file you would like to upload, as well as the parameters for creating a file.</p> <p>All of Stripe’s officially supported Client libraries should have support for sending <code>multipart/form-data</code>.</p>
+- body:expand array<string>
+- body:file string
+- body:file_link_data object
+- body:file_link_data.create boolean
+- body:file_link_data.expires_at integer
+- body:file_link_data.metadata object enum[]
+- body:purpose string enum[account_requirement|additional_verification|business_icon|business_logo|customer_signature|dispute_evidence|identity_document|pci_document|tax_document_user_upload|terminal_reader_splashscreen]
+
+## S395-N0078  POST /v1/financial_connections/accounts/{account}/disconnect
+desc: <p>Disables your access to a Financial Connections <code>Account</code>. You will no longer be able to access data associated with the account (e.g. balances, transactions).</p>
+- path:account string
+- body:expand array<string>
+
+## S395-N0079  POST /v1/financial_connections/accounts/{account}/refresh
+desc: <p>Refreshes the data associated with a Financial Connections <code>Account</code>.</p>
+- path:account string
+- body:expand array<string>
+- body:features array<string> enum[balance|ownership]
+
+## S395-N0080  POST /v1/financial_connections/sessions
+desc: <p>To launch the Financial Connections authorization flow, create a <code>Session</code>. The session’s <code>client_secret</code> can be used to launch the flow using Stripe.js.</p>
+- body:account_holder object
+- body:account_holder.account string
+- body:account_holder.customer string
+- body:account_holder.type string enum[account|customer]
+- body:expand array<string>
+- body:filters object
+- body:filters.countries array<string>
+- body:permissions array<string> enum[balances|ownership|payment_method|transactions]
+- body:return_url string
+
+## S395-N0081  POST /v1/identity/verification_sessions
+desc: <p>Creates a VerificationSession object.</p> <p>After the VerificationSession is created, display a verification modal using the session <code>client_secret</code> or send your users to the session’s <code>url</code>.</p> <p>If your API key is in test mode, verification checks won’t actually process, though everything else will occur as if in live mode.</p> <p>Related guide: <a href="/docs/identit
+- body:expand array<string>
+- body:metadata object
+- body:options object
+- body:options.document object enum[]
+- body:options.document.allowed_types array<string> enum[driving_license|id_card|passport]
+- body:options.document.require_id_number boolean
+- body:options.document.require_live_capture boolean
+- body:options.document.require_matching_selfie boolean
+- body:return_url string
+- body:type string enum[document|id_number]
+
+## S395-N0082  POST /v1/identity/verification_sessions/{session}
+desc: <p>Updates a VerificationSession object.</p> <p>When the session status is <code>requires_input</code>, you can use this method to update the verification check and options.</p>
+- path:session string
+- body:expand array<string>
+- body:metadata object
+- body:options object
+- body:options.document object enum[]
+- body:options.document.allowed_types array<string> enum[driving_license|id_card|passport]
+- body:options.document.require_id_number boolean
+- body:options.document.require_live_capture boolean
+- body:options.document.require_matching_selfie boolean
+- body:type string enum[document|id_number]
+
+## S395-N0083  POST /v1/identity/verification_sessions/{session}/cancel
+desc: <p>A VerificationSession object can be canceled when it is in <code>requires_input</code> <a href="/docs/identity/how-sessions-work">status</a>.</p> <p>Once canceled, future submission attempts are disabled. This cannot be undone. <a href="/docs/identity/verification-sessions#cancel">Learn more</a>.</p>
+- path:session string
+- body:expand array<string>
+
+## S395-N0085  POST /v1/invoiceitems
+desc: <p>Creates an item to be added to a draft invoice (up to 250 items per invoice). If no invoice is specified, the item will be on the next invoice created for the customer specified.</p>
+- body:amount integer
+- body:currency string
+- body:customer string
+- body:description string
+- body:discountable boolean
+- body:discounts array<object> enum[]
+- body:discounts[].coupon string
+- body:discounts[].discount string
+- body:expand array<string>
+- body:invoice string
+- body:metadata object enum[]
+- body:period object
+- body:period.end integer
+- body:period.start integer
+- body:price string
+- body:price_data object
+- body:price_data.currency string
+- body:price_data.product string
+- body:price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:price_data.unit_amount integer
+- body:price_data.unit_amount_decimal string
+- body:quantity integer
+- body:subscription string
+- body:tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:tax_code string enum[]
+- body:tax_rates array<string>
+- body:unit_amount integer
+- body:unit_amount_decimal string
+
+## S395-N0087  POST /v1/invoiceitems/{invoiceitem}
+desc: <p>Updates the amount or description of an invoice item on an upcoming invoice. Updating an invoice item is only possible before the invoice it’s attached to is closed.</p>
+- path:invoiceitem string
+- body:amount integer
+- body:description string
+- body:discountable boolean
+- body:discounts array<object> enum[]
+- body:discounts[].coupon string
+- body:discounts[].discount string
+- body:expand array<string>
+- body:metadata object enum[]
+- body:period object
+- body:period.end integer
+- body:period.start integer
+- body:price string
+- body:price_data object
+- body:price_data.currency string
+- body:price_data.product string
+- body:price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:price_data.unit_amount integer
+- body:price_data.unit_amount_decimal string
+- body:quantity integer
+- body:tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:tax_code string enum[]
+- body:tax_rates array<string> enum[]
+- body:unit_amount integer
+- body:unit_amount_decimal string
+
+## S395-N0089  DELETE /v1/invoices/{invoice}
+desc: <p>Permanently deletes a one-off invoice draft. This cannot be undone. Attempts to delete invoices that are no longer in a draft state will fail; once an invoice has been finalized or if an invoice is for a subscription, it must be <a href="#void_invoice">voided</a>.</p>
+- path:invoice string
+- body:(body) object
+
+## S395-N0090  POST /v1/invoices/{invoice}
+desc: <p>Draft invoices are fully editable. Once an invoice is <a href="/docs/billing/invoices/workflow#finalized">finalized</a>, monetary values, as well as <code>collection_method</code>, become uneditable.</p> <p>If you would like to stop the Stripe Billing engine from automatically finalizing, reattempting payments on, sending reminders for, or <a href="/docs/billing/invoices/reconciliation">automat
+- path:invoice string
+- body:account_tax_ids array<string> enum[]
+- body:application_fee_amount integer
+- body:auto_advance boolean
+- body:automatic_tax object
+- body:automatic_tax.enabled boolean
+- body:collection_method string enum[charge_automatically|send_invoice]
+- body:custom_fields array<object> enum[]
+- body:custom_fields[].name string
+- body:custom_fields[].value string
+- body:days_until_due integer
+- body:default_payment_method string
+- body:default_source string
+- body:default_tax_rates array<string> enum[]
+- body:description string
+- body:discounts array<object> enum[]
+- body:discounts[].coupon string
+- body:discounts[].discount string
+- body:due_date integer
+- body:expand array<string>
+- body:footer string
+- body:metadata object enum[]
+- body:on_behalf_of string enum[]
+- body:payment_settings object
+- body:payment_settings.default_mandate string
+- body:payment_settings.payment_method_options object
+- body:payment_settings.payment_method_options.acss_debit object enum[]
+- body:payment_settings.payment_method_options.bancontact object enum[]
+- body:payment_settings.payment_method_options.card object enum[]
+- body:payment_settings.payment_method_options.customer_balance object enum[]
+- body:payment_settings.payment_method_options.konbini object enum[]
+- body:payment_settings.payment_method_options.us_bank_account object enum[]
+- body:payment_settings.payment_method_types array<string> enum[ach_credit_transfer|ach_debit|acss_debit|au_becs_debit|bacs_debit|bancontact|boleto|card|customer_balance|fpx|giropay|grabpay]
+- body:rendering_options object enum[]
+- body:rendering_options.amount_tax_display string enum[|exclude_tax|include_inclusive_tax]
+- body:shipping_cost object enum[]
+- body:shipping_cost.shipping_rate string
+- body:shipping_cost.shipping_rate_data object
+- body:shipping_cost.shipping_rate_data.delivery_estimate object
+- body:shipping_cost.shipping_rate_data.display_name string
+- body:shipping_cost.shipping_rate_data.fixed_amount object
+- body:shipping_cost.shipping_rate_data.metadata object
+- body:shipping_cost.shipping_rate_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:shipping_cost.shipping_rate_data.tax_code string
+- body:shipping_cost.shipping_rate_data.type string enum[fixed_amount]
+- body:shipping_details object enum[]
+- body:shipping_details.address object
+- body:shipping_details.address.city string
+- body:shipping_details.address.country string
+- body:shipping_details.address.line1 string
+- body:shipping_details.address.line2 string
+- body:shipping_details.address.postal_code string
+- body:shipping_details.address.state string
+- body:shipping_details.name string
+- body:shipping_details.phone string
+- body:statement_descriptor string
+- body:transfer_data object enum[]
+- body:transfer_data.amount integer
+- body:transfer_data.destination string
+
+## S395-N0091  POST /v1/invoices/{invoice}/finalize
+desc: <p>Stripe automatically finalizes drafts before sending and attempting payment on invoices. However, if you’d like to finalize a draft invoice manually, you can do so using this method.</p>
+- path:invoice string
+- body:auto_advance boolean
+- body:expand array<string>
+
+## S395-N0092  POST /v1/invoices/{invoice}/mark_uncollectible
+desc: <p>Marking an invoice as uncollectible is useful for keeping track of bad debts that can be written off for accounting purposes.</p>
+- path:invoice string
+- body:expand array<string>
+
+## S395-N0093  POST /v1/invoices/{invoice}/pay
+desc: <p>Stripe automatically creates and then attempts to collect payment on invoices for customers on subscriptions according to your <a href="https://dashboard.stripe.com/account/billing/automatic">subscriptions settings</a>. However, if you’d like to attempt payment on an invoice out of the normal collection schedule or for some other reason, you can do so.</p>
+- path:invoice string
+- body:expand array<string>
+- body:forgive boolean
+- body:mandate string
+- body:off_session boolean
+- body:paid_out_of_band boolean
+- body:payment_method string
+- body:source string
+
+## S395-N0094  POST /v1/invoices/{invoice}/send
+desc: <p>Stripe will automatically send invoices to customers according to your <a href="https://dashboard.stripe.com/account/billing/automatic">subscriptions settings</a>. However, if you’d like to manually send an invoice to your customer out of the normal schedule, you can do so. When sending invoices that have already been paid, there will be no reference to the payment in the email.</p> <p>Requests
+- path:invoice string
+- body:expand array<string>
+
+## S395-N0095  POST /v1/invoices/{invoice}/void
+desc: <p>Mark a finalized invoice as void. This cannot be undone. Voiding an invoice is similar to <a href="#delete_invoice">deletion</a>, however it only applies to finalized invoices and maintains a papertrail where the invoice can still be found.</p>
+- path:invoice string
+- body:expand array<string>
+
+## S395-N0096  POST /v1/issuing/authorizations/{authorization}
+desc: <p>Updates the specified Issuing <code>Authorization</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>
+- path:authorization string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0097  POST /v1/issuing/authorizations/{authorization}/approve
+desc: <p>Approves a pending Issuing <code>Authorization</code> object. This request should be made within the timeout window of the <a href="/docs/issuing/controls/real-time-authorizations">real-time authorization</a> flow. You can also respond directly to the webhook request to approve an authorization (preferred). More details can be found <a href="https://site-admin.stripe.com/docs/issuing/controls/r
+- path:authorization string
+- body:amount integer
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0098  POST /v1/issuing/authorizations/{authorization}/decline
+desc: <p>Declines a pending Issuing <code>Authorization</code> object. This request should be made within the timeout window of the <a href="/docs/issuing/controls/real-time-authorizations">real time authorization</a> flow. You can also respond directly to the webhook request to decline an authorization (preferred). More details can be found <a href="https://site-admin.stripe.com/docs/issuing/controls/r
+- path:authorization string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0099  POST /v1/issuing/cardholders
+desc: <p>Creates a new Issuing <code>Cardholder</code> object that can be issued cards.</p>
+- body:billing object
+- body:billing.address object
+- body:billing.address.city string
+- body:billing.address.country string
+- body:billing.address.line1 string
+- body:billing.address.line2 string
+- body:billing.address.postal_code string
+- body:billing.address.state string
+- body:company object
+- body:company.tax_id string
+- body:email string
+- body:expand array<string>
+- body:individual object
+- body:individual.dob object
+- body:individual.dob.day integer
+- body:individual.dob.month integer
+- body:individual.dob.year integer
+- body:individual.first_name string
+- body:individual.last_name string
+- body:individual.verification object
+- body:individual.verification.document object
+- body:metadata object
+- body:name string
+- body:phone_number string
+- body:spending_controls object
+- body:spending_controls.allowed_categories array<string> enum[ac_refrigeration_repair|accounting_bookkeeping_services|advertising_services|agricultural_cooperative|airlines_air_carriers|airports_flying_fields|ambulance_services|amusement_parks_carnivals|antique_reproductions|antique_shops|aquariums|architectural_surveying_services]
+- body:spending_controls.blocked_categories array<string> enum[ac_refrigeration_repair|accounting_bookkeeping_services|advertising_services|agricultural_cooperative|airlines_air_carriers|airports_flying_fields|ambulance_services|amusement_parks_carnivals|antique_reproductions|antique_shops|aquariums|architectural_surveying_services]
+- body:spending_controls.spending_limits array<object>
+- body:spending_controls.spending_limits[].amount integer
+- body:spending_controls.spending_limits[].categories array<string> enum[ac_refrigeration_repair|accounting_bookkeeping_services|advertising_services|agricultural_cooperative|airlines_air_carriers|airports_flying_fields|ambulance_services|amusement_parks_carnivals|antique_reproductions|antique_shops|aquariums|architectural_surveying_services]
+- body:spending_controls.spending_limits[].interval string enum[all_time|daily|monthly|per_authorization|weekly|yearly]
+- body:spending_controls.spending_limits_currency string
+- body:status string enum[active|inactive]
+- body:type string enum[company|individual]
+
+## S395-N0100  POST /v1/issuing/cardholders/{cardholder}
+desc: <p>Updates the specified Issuing <code>Cardholder</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>
+- path:cardholder string
+- body:billing object
+- body:billing.address object
+- body:billing.address.city string
+- body:billing.address.country string
+- body:billing.address.line1 string
+- body:billing.address.line2 string
+- body:billing.address.postal_code string
+- body:billing.address.state string
+- body:company object
+- body:company.tax_id string
+- body:email string
+- body:expand array<string>
+- body:individual object
+- body:individual.dob object
+- body:individual.dob.day integer
+- body:individual.dob.month integer
+- body:individual.dob.year integer
+- body:individual.first_name string
+- body:individual.last_name string
+- body:individual.verification object
+- body:individual.verification.document object
+- body:metadata object
+- body:phone_number string
+- body:spending_controls object
+- body:spending_controls.allowed_categories array<string> enum[ac_refrigeration_repair|accounting_bookkeeping_services|advertising_services|agricultural_cooperative|airlines_air_carriers|airports_flying_fields|ambulance_services|amusement_parks_carnivals|antique_reproductions|antique_shops|aquariums|architectural_surveying_services]
+- body:spending_controls.blocked_categories array<string> enum[ac_refrigeration_repair|accounting_bookkeeping_services|advertising_services|agricultural_cooperative|airlines_air_carriers|airports_flying_fields|ambulance_services|amusement_parks_carnivals|antique_reproductions|antique_shops|aquariums|architectural_surveying_services]
+- body:spending_controls.spending_limits array<object>
+- body:spending_controls.spending_limits[].amount integer
+- body:spending_controls.spending_limits[].categories array<string> enum[ac_refrigeration_repair|accounting_bookkeeping_services|advertising_services|agricultural_cooperative|airlines_air_carriers|airports_flying_fields|ambulance_services|amusement_parks_carnivals|antique_reproductions|antique_shops|aquariums|architectural_surveying_services]
+- body:spending_controls.spending_limits[].interval string enum[all_time|daily|monthly|per_authorization|weekly|yearly]
+- body:spending_controls.spending_limits_currency string
+- body:status string enum[active|inactive]
+
+## S395-N0101  POST /v1/issuing/cards
+desc: <p>Creates an Issuing <code>Card</code> object.</p>
+- body:cardholder string
+- body:currency string
+- body:expand array<string>
+- body:financial_account string
+- body:metadata object
+- body:replacement_for string
+- body:replacement_reason string enum[damaged|expired|lost|stolen]
+- body:shipping object
+- body:shipping.address object
+- body:shipping.address.city string
+- body:shipping.address.country string
+- body:shipping.address.line1 string
+- body:shipping.address.line2 string
+- body:shipping.address.postal_code string
+- body:shipping.address.state string
+- body:shipping.customs object
+- body:shipping.customs.eori_number string
+- body:shipping.name string
+- body:shipping.phone_number string
+- body:shipping.require_signature boolean
+- body:shipping.service string enum[express|priority|standard]
+- body:shipping.type string enum[bulk|individual]
+- body:spending_controls object
+- body:spending_controls.allowed_categories array<string> enum[ac_refrigeration_repair|accounting_bookkeeping_services|advertising_services|agricultural_cooperative|airlines_air_carriers|airports_flying_fields|ambulance_services|amusement_parks_carnivals|antique_reproductions|antique_shops|aquariums|architectural_surveying_services]
+- body:spending_controls.blocked_categories array<string> enum[ac_refrigeration_repair|accounting_bookkeeping_services|advertising_services|agricultural_cooperative|airlines_air_carriers|airports_flying_fields|ambulance_services|amusement_parks_carnivals|antique_reproductions|antique_shops|aquariums|architectural_surveying_services]
+- body:spending_controls.spending_limits array<object>
+- body:spending_controls.spending_limits[].amount integer
+- body:spending_controls.spending_limits[].categories array<string> enum[ac_refrigeration_repair|accounting_bookkeeping_services|advertising_services|agricultural_cooperative|airlines_air_carriers|airports_flying_fields|ambulance_services|amusement_parks_carnivals|antique_reproductions|antique_shops|aquariums|architectural_surveying_services]
+- body:spending_controls.spending_limits[].interval string enum[all_time|daily|monthly|per_authorization|weekly|yearly]
+- body:status string enum[active|inactive]
+- body:type string enum[physical|virtual]
+
+## S395-N0102  POST /v1/issuing/cards/{card}
+desc: <p>Updates the specified Issuing <code>Card</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>
+- path:card string
+- body:cancellation_reason string enum[lost|stolen]
+- body:expand array<string>
+- body:metadata object enum[]
+- body:pin object
+- body:pin.encrypted_number string
+- body:spending_controls object
+- body:spending_controls.allowed_categories array<string> enum[ac_refrigeration_repair|accounting_bookkeeping_services|advertising_services|agricultural_cooperative|airlines_air_carriers|airports_flying_fields|ambulance_services|amusement_parks_carnivals|antique_reproductions|antique_shops|aquariums|architectural_surveying_services]
+- body:spending_controls.blocked_categories array<string> enum[ac_refrigeration_repair|accounting_bookkeeping_services|advertising_services|agricultural_cooperative|airlines_air_carriers|airports_flying_fields|ambulance_services|amusement_parks_carnivals|antique_reproductions|antique_shops|aquariums|architectural_surveying_services]
+- body:spending_controls.spending_limits array<object>
+- body:spending_controls.spending_limits[].amount integer
+- body:spending_controls.spending_limits[].categories array<string> enum[ac_refrigeration_repair|accounting_bookkeeping_services|advertising_services|agricultural_cooperative|airlines_air_carriers|airports_flying_fields|ambulance_services|amusement_parks_carnivals|antique_reproductions|antique_shops|aquariums|architectural_surveying_services]
+- body:spending_controls.spending_limits[].interval string enum[all_time|daily|monthly|per_authorization|weekly|yearly]
+- body:status string enum[active|canceled|inactive]
+
+## S395-N0103  POST /v1/issuing/disputes
+desc: <p>Creates an Issuing <code>Dispute</code> object. Individual pieces of evidence within the <code>evidence</code> object are optional at this point. Stripe only validates that required evidence is present during submission. Refer to <a href="/docs/issuing/purchases/disputes#dispute-reasons-and-evidence">Dispute reasons and evidence</a> for more details about evidence requirements.</p>
+- body:amount integer
+- body:evidence object
+- body:evidence.canceled object enum[]
+- body:evidence.canceled.additional_documentation string enum[]
+- body:evidence.canceled.canceled_at integer enum[]
+- body:evidence.canceled.cancellation_policy_provided boolean enum[]
+- body:evidence.canceled.cancellation_reason string
+- body:evidence.canceled.expected_at integer enum[]
+- body:evidence.canceled.explanation string
+- body:evidence.canceled.product_description string
+- body:evidence.canceled.product_type string enum[|merchandise|service]
+- body:evidence.canceled.return_status string enum[|merchant_rejected|successful]
+- body:evidence.canceled.returned_at integer enum[]
+- body:evidence.duplicate object enum[]
+- body:evidence.duplicate.additional_documentation string enum[]
+- body:evidence.duplicate.card_statement string enum[]
+- body:evidence.duplicate.cash_receipt string enum[]
+- body:evidence.duplicate.check_image string enum[]
+- body:evidence.duplicate.explanation string
+- body:evidence.duplicate.original_transaction string
+- body:evidence.fraudulent object enum[]
+- body:evidence.fraudulent.additional_documentation string enum[]
+- body:evidence.fraudulent.explanation string
+- body:evidence.merchandise_not_as_described object enum[]
+- body:evidence.merchandise_not_as_described.additional_documentation string enum[]
+- body:evidence.merchandise_not_as_described.explanation string
+- body:evidence.merchandise_not_as_described.received_at integer enum[]
+- body:evidence.merchandise_not_as_described.return_description string
+- body:evidence.merchandise_not_as_described.return_status string enum[|merchant_rejected|successful]
+- body:evidence.merchandise_not_as_described.returned_at integer enum[]
+- body:evidence.not_received object enum[]
+- body:evidence.not_received.additional_documentation string enum[]
+- body:evidence.not_received.expected_at integer enum[]
+- body:evidence.not_received.explanation string
+- body:evidence.not_received.product_description string
+- body:evidence.not_received.product_type string enum[|merchandise|service]
+- body:evidence.other object enum[]
+- body:evidence.other.additional_documentation string enum[]
+- body:evidence.other.explanation string
+- body:evidence.other.product_description string
+- body:evidence.other.product_type string enum[|merchandise|service]
+- body:evidence.reason string enum[canceled|duplicate|fraudulent|merchandise_not_as_described|not_received|other|service_not_as_described]
+- body:evidence.service_not_as_described object enum[]
+- body:evidence.service_not_as_described.additional_documentation string enum[]
+- body:evidence.service_not_as_described.canceled_at integer enum[]
+- body:evidence.service_not_as_described.cancellation_reason string
+- body:evidence.service_not_as_described.explanation string
+- body:evidence.service_not_as_described.received_at integer enum[]
+- body:expand array<string>
+- body:metadata object
+- body:transaction string
+- body:treasury object
+- body:treasury.received_debit string
+
+## S395-N0104  POST /v1/issuing/disputes/{dispute}
+desc: <p>Updates the specified Issuing <code>Dispute</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged. Properties on the <code>evidence</code> object can be unset by passing in an empty string.</p>
+- path:dispute string
+- body:amount integer
+- body:evidence object
+- body:evidence.canceled object enum[]
+- body:evidence.canceled.additional_documentation string enum[]
+- body:evidence.canceled.canceled_at integer enum[]
+- body:evidence.canceled.cancellation_policy_provided boolean enum[]
+- body:evidence.canceled.cancellation_reason string
+- body:evidence.canceled.expected_at integer enum[]
+- body:evidence.canceled.explanation string
+- body:evidence.canceled.product_description string
+- body:evidence.canceled.product_type string enum[|merchandise|service]
+- body:evidence.canceled.return_status string enum[|merchant_rejected|successful]
+- body:evidence.canceled.returned_at integer enum[]
+- body:evidence.duplicate object enum[]
+- body:evidence.duplicate.additional_documentation string enum[]
+- body:evidence.duplicate.card_statement string enum[]
+- body:evidence.duplicate.cash_receipt string enum[]
+- body:evidence.duplicate.check_image string enum[]
+- body:evidence.duplicate.explanation string
+- body:evidence.duplicate.original_transaction string
+- body:evidence.fraudulent object enum[]
+- body:evidence.fraudulent.additional_documentation string enum[]
+- body:evidence.fraudulent.explanation string
+- body:evidence.merchandise_not_as_described object enum[]
+- body:evidence.merchandise_not_as_described.additional_documentation string enum[]
+- body:evidence.merchandise_not_as_described.explanation string
+- body:evidence.merchandise_not_as_described.received_at integer enum[]
+- body:evidence.merchandise_not_as_described.return_description string
+- body:evidence.merchandise_not_as_described.return_status string enum[|merchant_rejected|successful]
+- body:evidence.merchandise_not_as_described.returned_at integer enum[]
+- body:evidence.not_received object enum[]
+- body:evidence.not_received.additional_documentation string enum[]
+- body:evidence.not_received.expected_at integer enum[]
+- body:evidence.not_received.explanation string
+- body:evidence.not_received.product_description string
+- body:evidence.not_received.product_type string enum[|merchandise|service]
+- body:evidence.other object enum[]
+- body:evidence.other.additional_documentation string enum[]
+- body:evidence.other.explanation string
+- body:evidence.other.product_description string
+- body:evidence.other.product_type string enum[|merchandise|service]
+- body:evidence.reason string enum[canceled|duplicate|fraudulent|merchandise_not_as_described|not_received|other|service_not_as_described]
+- body:evidence.service_not_as_described object enum[]
+- body:evidence.service_not_as_described.additional_documentation string enum[]
+- body:evidence.service_not_as_described.canceled_at integer enum[]
+- body:evidence.service_not_as_described.cancellation_reason string
+- body:evidence.service_not_as_described.explanation string
+- body:evidence.service_not_as_described.received_at integer enum[]
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0106  POST /v1/issuing/settlements/{settlement}
+desc: <p>Updates the specified Issuing <code>Settlement</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>
+- path:settlement string
+- body:expand array<string>
+- body:metadata object
+
+## S395-N0107  POST /v1/issuing/transactions/{transaction}
+desc: <p>Updates the specified Issuing <code>Transaction</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>
+- path:transaction string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0108  POST /v1/link_account_sessions
+desc: <p>To launch the Financial Connections authorization flow, create a <code>Session</code>. The session’s <code>client_secret</code> can be used to launch the flow using Stripe.js.</p>
+- body:account_holder object
+- body:account_holder.account string
+- body:account_holder.customer string
+- body:account_holder.type string enum[account|customer]
+- body:expand array<string>
+- body:filters object
+- body:filters.countries array<string>
+- body:permissions array<string> enum[balances|ownership|payment_method|transactions]
+- body:return_url string
+
+## S395-N0109  POST /v1/linked_accounts/{account}/disconnect
+desc: <p>Disables your access to a Financial Connections <code>Account</code>. You will no longer be able to access data associated with the account (e.g. balances, transactions).</p>
+- path:account string
+- body:expand array<string>
+
+## S395-N0110  POST /v1/linked_accounts/{account}/refresh
+desc: <p>Refreshes the data associated with a Financial Connections <code>Account</code>.</p>
+- path:account string
+- body:expand array<string>
+- body:features array<string> enum[balance|ownership]
+
+## S395-N0111  POST /v1/payment_intents
+desc: <p>Creates a PaymentIntent object.</p> <p>After the PaymentIntent is created, attach a payment method and <a href="/docs/api/payment_intents/confirm">confirm</a> to continue the payment. You can read more about the different payment flows available via the Payment Intents API <a href="/docs/payments/payment-intents">here</a>.</p> <p>When <code>confirm=true</code> is used during creation, it is equ
+- body:amount integer
+- body:application_fee_amount integer
+- body:automatic_payment_methods object
+- body:automatic_payment_methods.enabled boolean
+- body:capture_method string enum[automatic|manual]
+- body:confirm boolean
+- body:confirmation_method string enum[automatic|manual]
+- body:currency string
+- body:customer string
+- body:description string
+- body:error_on_requires_action boolean
+- body:expand array<string>
+- body:mandate string
+- body:mandate_data object
+- body:mandate_data.customer_acceptance object
+- body:mandate_data.customer_acceptance.accepted_at integer
+- body:mandate_data.customer_acceptance.offline object
+- body:mandate_data.customer_acceptance.online object
+- body:mandate_data.customer_acceptance.type string enum[offline|online]
+- body:metadata object
+- body:off_session boolean enum[one_off|recurring]
+- body:on_behalf_of string
+- body:payment_method string
+- body:payment_method_data object
+- body:payment_method_data.acss_debit object
+- body:payment_method_data.acss_debit.account_number string
+- body:payment_method_data.acss_debit.institution_number string
+- body:payment_method_data.acss_debit.transit_number string
+- body:payment_method_data.affirm object
+- body:payment_method_data.afterpay_clearpay object
+- body:payment_method_data.alipay object
+- body:payment_method_data.au_becs_debit object
+- body:payment_method_data.au_becs_debit.account_number string
+- body:payment_method_data.au_becs_debit.bsb_number string
+- body:payment_method_data.bacs_debit object
+- body:payment_method_data.bacs_debit.account_number string
+- body:payment_method_data.bacs_debit.sort_code string
+- body:payment_method_data.bancontact object
+- body:payment_method_data.billing_details object
+- body:payment_method_data.billing_details.address object enum[]
+- body:payment_method_data.billing_details.email string enum[]
+- body:payment_method_data.billing_details.name string
+- body:payment_method_data.billing_details.phone string
+- body:payment_method_data.blik object
+- body:payment_method_data.boleto object
+- body:payment_method_data.boleto.tax_id string
+- body:payment_method_data.customer_balance object
+- body:payment_method_data.eps object
+- body:payment_method_data.eps.bank string enum[arzte_und_apotheker_bank|austrian_anadi_bank_ag|bank_austria|bankhaus_carl_spangler|bankhaus_schelhammer_und_schattera_ag|bawag_psk_ag|bks_bank_ag|brull_kallmus_bank_ag|btv_vier_lander_bank|capital_bank_grawe_gruppe_ag|deutsche_bank_ag|dolomitenbank]
+- body:payment_method_data.fpx object
+- body:payment_method_data.fpx.bank string enum[affin_bank|agrobank|alliance_bank|ambank|bank_islam|bank_muamalat|bank_of_china|bank_rakyat|bsn|cimb|deutsche_bank|hong_leong_bank]
+- body:payment_method_data.giropay object
+- body:payment_method_data.grabpay object
+- body:payment_method_data.ideal object
+- body:payment_method_data.ideal.bank string enum[abn_amro|asn_bank|bunq|handelsbanken|ing|knab|moneyou|rabobank|regiobank|revolut|sns_bank|triodos_bank]
+- body:payment_method_data.interac_present object
+- body:payment_method_data.klarna object
+- body:payment_method_data.klarna.dob object
+- body:payment_method_data.konbini object
+- body:payment_method_data.link object
+- body:payment_method_data.metadata object
+- body:payment_method_data.oxxo object
+- body:payment_method_data.p24 object
+- body:payment_method_data.p24.bank string enum[alior_bank|bank_millennium|bank_nowy_bfg_sa|bank_pekao_sa|banki_spbdzielcze|blik|bnp_paribas|boz|citi_handlowy|credit_agricole|envelobank|etransfer_pocztowy24]
+- body:payment_method_data.paynow object
+- body:payment_method_data.pix object
+- body:payment_method_data.promptpay object
+- body:payment_method_data.radar_options object
+- body:payment_method_data.radar_options.session string
+- body:payment_method_data.sepa_debit object
+- body:payment_method_data.sepa_debit.iban string
+- body:payment_method_data.sofort object
+- body:payment_method_data.sofort.country string enum[AT|BE|DE|ES|IT|NL]
+- body:payment_method_data.type string enum[acss_debit|affirm|afterpay_clearpay|alipay|au_becs_debit|bacs_debit|bancontact|blik|boleto|customer_balance|eps|fpx]
+- body:payment_method_data.us_bank_account object
+- body:payment_method_data.us_bank_account.account_holder_type string enum[company|individual]
+- body:payment_method_data.us_bank_account.account_number string
+- body:payment_method_data.us_bank_account.account_type string enum[checking|savings]
+- body:payment_method_data.us_bank_account.financial_connections_account string
+- body:payment_method_data.us_bank_account.routing_number string
+(+123 fields cut)
+
+## S395-N0112  POST /v1/payment_intents/{intent}
+desc: <p>Updates properties on a PaymentIntent object without confirming.</p> <p>Depending on which properties you update, you may need to confirm the PaymentIntent again. For example, updating the <code>payment_method</code> will always require you to confirm the PaymentIntent again. If you prefer to update and confirm at the same time, we recommend updating properties via the <a href="/docs/api/paymen
+- path:intent string
+- body:amount integer
+- body:application_fee_amount integer enum[]
+- body:capture_method string enum[automatic|manual]
+- body:currency string
+- body:customer string
+- body:description string
+- body:expand array<string>
+- body:metadata object enum[]
+- body:payment_method string
+- body:payment_method_data object
+- body:payment_method_data.acss_debit object
+- body:payment_method_data.acss_debit.account_number string
+- body:payment_method_data.acss_debit.institution_number string
+- body:payment_method_data.acss_debit.transit_number string
+- body:payment_method_data.affirm object
+- body:payment_method_data.afterpay_clearpay object
+- body:payment_method_data.alipay object
+- body:payment_method_data.au_becs_debit object
+- body:payment_method_data.au_becs_debit.account_number string
+- body:payment_method_data.au_becs_debit.bsb_number string
+- body:payment_method_data.bacs_debit object
+- body:payment_method_data.bacs_debit.account_number string
+- body:payment_method_data.bacs_debit.sort_code string
+- body:payment_method_data.bancontact object
+- body:payment_method_data.billing_details object
+- body:payment_method_data.billing_details.address object enum[]
+- body:payment_method_data.billing_details.email string enum[]
+- body:payment_method_data.billing_details.name string
+- body:payment_method_data.billing_details.phone string
+- body:payment_method_data.blik object
+- body:payment_method_data.boleto object
+- body:payment_method_data.boleto.tax_id string
+- body:payment_method_data.customer_balance object
+- body:payment_method_data.eps object
+- body:payment_method_data.eps.bank string enum[arzte_und_apotheker_bank|austrian_anadi_bank_ag|bank_austria|bankhaus_carl_spangler|bankhaus_schelhammer_und_schattera_ag|bawag_psk_ag|bks_bank_ag|brull_kallmus_bank_ag|btv_vier_lander_bank|capital_bank_grawe_gruppe_ag|deutsche_bank_ag|dolomitenbank]
+- body:payment_method_data.fpx object
+- body:payment_method_data.fpx.bank string enum[affin_bank|agrobank|alliance_bank|ambank|bank_islam|bank_muamalat|bank_of_china|bank_rakyat|bsn|cimb|deutsche_bank|hong_leong_bank]
+- body:payment_method_data.giropay object
+- body:payment_method_data.grabpay object
+- body:payment_method_data.ideal object
+- body:payment_method_data.ideal.bank string enum[abn_amro|asn_bank|bunq|handelsbanken|ing|knab|moneyou|rabobank|regiobank|revolut|sns_bank|triodos_bank]
+- body:payment_method_data.interac_present object
+- body:payment_method_data.klarna object
+- body:payment_method_data.klarna.dob object
+- body:payment_method_data.konbini object
+- body:payment_method_data.link object
+- body:payment_method_data.metadata object
+- body:payment_method_data.oxxo object
+- body:payment_method_data.p24 object
+- body:payment_method_data.p24.bank string enum[alior_bank|bank_millennium|bank_nowy_bfg_sa|bank_pekao_sa|banki_spbdzielcze|blik|bnp_paribas|boz|citi_handlowy|credit_agricole|envelobank|etransfer_pocztowy24]
+- body:payment_method_data.paynow object
+- body:payment_method_data.pix object
+- body:payment_method_data.promptpay object
+- body:payment_method_data.radar_options object
+- body:payment_method_data.radar_options.session string
+- body:payment_method_data.sepa_debit object
+- body:payment_method_data.sepa_debit.iban string
+- body:payment_method_data.sofort object
+- body:payment_method_data.sofort.country string enum[AT|BE|DE|ES|IT|NL]
+- body:payment_method_data.type string enum[acss_debit|affirm|afterpay_clearpay|alipay|au_becs_debit|bacs_debit|bancontact|blik|boleto|customer_balance|eps|fpx]
+- body:payment_method_data.us_bank_account object
+- body:payment_method_data.us_bank_account.account_holder_type string enum[company|individual]
+- body:payment_method_data.us_bank_account.account_number string
+- body:payment_method_data.us_bank_account.account_type string enum[checking|savings]
+- body:payment_method_data.us_bank_account.financial_connections_account string
+- body:payment_method_data.us_bank_account.routing_number string
+- body:payment_method_data.wechat_pay object
+- body:payment_method_options object
+- body:payment_method_options.acss_debit object enum[]
+- body:payment_method_options.acss_debit.mandate_options object
+- body:payment_method_options.acss_debit.setup_future_usage string enum[|none|off_session|on_session]
+- body:payment_method_options.acss_debit.verification_method string enum[automatic|instant|microdeposits]
+- body:payment_method_options.affirm object enum[]
+- body:payment_method_options.affirm.capture_method string enum[|manual]
+- body:payment_method_options.affirm.setup_future_usage string enum[none]
+- body:payment_method_options.afterpay_clearpay object enum[]
+- body:payment_method_options.afterpay_clearpay.capture_method string enum[|manual]
+- body:payment_method_options.afterpay_clearpay.reference string
+- body:payment_method_options.afterpay_clearpay.setup_future_usage string enum[none]
+(+105 fields cut)
+
+## S395-N0113  POST /v1/payment_intents/{intent}/apply_customer_balance
+desc: <p>Manually reconcile the remaining amount for a customer_balance PaymentIntent.</p>
+- path:intent string
+- body:amount integer
+- body:currency string
+- body:expand array<string>
+
+## S395-N0114  POST /v1/payment_intents/{intent}/cancel
+desc: <p>A PaymentIntent object can be canceled when it is in one of these statuses: <code>requires_payment_method</code>, <code>requires_capture</code>, <code>requires_confirmation</code>, <code>requires_action</code> or, <a href="/docs/payments/intents">in rare cases</a>, <code>processing</code>. </p> <p>Once canceled, no additional charges will be made by the PaymentIntent and any operations on the P
+- path:intent string
+- body:cancellation_reason string enum[abandoned|duplicate|fraudulent|requested_by_customer]
+- body:expand array<string>
+
+## S395-N0115  POST /v1/payment_intents/{intent}/capture
+desc: <p>Capture the funds of an existing uncaptured PaymentIntent when its status is <code>requires_capture</code>.</p> <p>Uncaptured PaymentIntents will be canceled a set number of days after they are created (7 by default).</p> <p>Learn more about <a href="/docs/payments/capture-later">separate authorization and capture</a>.</p>
+- path:intent string
+- body:amount_to_capture integer
+- body:application_fee_amount integer
+- body:expand array<string>
+- body:statement_descriptor string
+- body:statement_descriptor_suffix string
+- body:transfer_data object
+- body:transfer_data.amount integer
+
+## S395-N0118  POST /v1/payment_intents/{intent}/verify_microdeposits
+desc: <p>Verifies microdeposits on a PaymentIntent object.</p>
+- path:intent string
+- body:amounts array<integer>
+- body:client_secret string
+- body:descriptor_code string
+- body:expand array<string>
+
+## S395-N0119  POST /v1/payment_links
+desc: <p>Creates a payment link.</p>
+- body:after_completion object
+- body:after_completion.hosted_confirmation object
+- body:after_completion.hosted_confirmation.custom_message string
+- body:after_completion.redirect object
+- body:after_completion.redirect.url string
+- body:after_completion.type string enum[hosted_confirmation|redirect]
+- body:allow_promotion_codes boolean
+- body:application_fee_amount integer
+- body:application_fee_percent number
+- body:automatic_tax object
+- body:automatic_tax.enabled boolean
+- body:billing_address_collection string enum[auto|required]
+- body:consent_collection object
+- body:consent_collection.promotions string enum[auto|none]
+- body:consent_collection.terms_of_service string enum[none|required]
+- body:currency string
+- body:custom_fields array<object>
+- body:custom_fields[].dropdown object
+- body:custom_fields[].dropdown.options array<object>
+- body:custom_fields[].key string
+- body:custom_fields[].label object
+- body:custom_fields[].label.custom string
+- body:custom_fields[].label.type string enum[custom]
+- body:custom_fields[].optional boolean
+- body:custom_fields[].type string enum[dropdown|numeric|text]
+- body:custom_text object
+- body:custom_text.shipping_address object enum[]
+- body:custom_text.shipping_address.message string
+- body:custom_text.submit object enum[]
+- body:custom_text.submit.message string
+- body:customer_creation string enum[always|if_required]
+- body:expand array<string>
+- body:invoice_creation object
+- body:invoice_creation.enabled boolean
+- body:invoice_creation.invoice_data object
+- body:invoice_creation.invoice_data.account_tax_ids array<string> enum[]
+- body:invoice_creation.invoice_data.custom_fields array<object> enum[]
+- body:invoice_creation.invoice_data.description string
+- body:invoice_creation.invoice_data.footer string
+- body:invoice_creation.invoice_data.metadata object enum[]
+- body:invoice_creation.invoice_data.rendering_options object enum[]
+- body:line_items array<object>
+- body:line_items[].adjustable_quantity object
+- body:line_items[].adjustable_quantity.enabled boolean
+- body:line_items[].adjustable_quantity.maximum integer
+- body:line_items[].adjustable_quantity.minimum integer
+- body:line_items[].price string
+- body:line_items[].quantity integer
+- body:metadata object
+- body:on_behalf_of string
+- body:payment_intent_data object
+- body:payment_intent_data.capture_method string enum[automatic|manual]
+- body:payment_intent_data.setup_future_usage string enum[off_session|on_session]
+- body:payment_method_collection string enum[always|if_required]
+- body:payment_method_types array<string> enum[affirm|afterpay_clearpay|alipay|au_becs_debit|bacs_debit|bancontact|blik|boleto|card|eps|fpx|giropay]
+- body:phone_number_collection object
+- body:phone_number_collection.enabled boolean
+- body:shipping_address_collection object
+- body:shipping_address_collection.allowed_countries array<string> enum[AC|AD|AE|AF|AG|AI|AL|AM|AO|AQ|AR|AT]
+- body:shipping_options array<object>
+- body:shipping_options[].shipping_rate string
+- body:submit_type string enum[auto|book|donate|pay]
+- body:subscription_data object
+- body:subscription_data.description string
+- body:subscription_data.trial_period_days integer
+- body:tax_id_collection object
+- body:tax_id_collection.enabled boolean
+- body:transfer_data object
+- body:transfer_data.amount integer
+- body:transfer_data.destination string
+
+## S395-N0121  POST /v1/payment_methods
+desc: <p>Creates a PaymentMethod object. Read the <a href="/docs/stripe-js/reference#stripe-create-payment-method">Stripe.js reference</a> to learn how to create PaymentMethods via Stripe.js.</p> <p>Instead of creating a PaymentMethod directly, we recommend using the <a href="/docs/payments/accept-a-payment">PaymentIntents</a> API to accept a payment immediately or the <a href="/docs/payments/save-and-r
+- body:acss_debit object
+- body:acss_debit.account_number string
+- body:acss_debit.institution_number string
+- body:acss_debit.transit_number string
+- body:affirm object
+- body:afterpay_clearpay object
+- body:alipay object
+- body:au_becs_debit object
+- body:au_becs_debit.account_number string
+- body:au_becs_debit.bsb_number string
+- body:bacs_debit object
+- body:bacs_debit.account_number string
+- body:bacs_debit.sort_code string
+- body:bancontact object
+- body:billing_details object
+- body:billing_details.address object enum[]
+- body:billing_details.address.city string
+- body:billing_details.address.country string
+- body:billing_details.address.line1 string
+- body:billing_details.address.line2 string
+- body:billing_details.address.postal_code string
+- body:billing_details.address.state string
+- body:billing_details.email string enum[]
+- body:billing_details.name string
+- body:billing_details.phone string
+- body:blik object
+- body:boleto object
+- body:boleto.tax_id string
+- body:card object
+- body:card.cvc string
+- body:card.exp_month integer
+- body:card.exp_year integer
+- body:card.number string
+- body:card.token string
+- body:customer string
+- body:customer_balance object
+- body:eps object
+- body:eps.bank string enum[arzte_und_apotheker_bank|austrian_anadi_bank_ag|bank_austria|bankhaus_carl_spangler|bankhaus_schelhammer_und_schattera_ag|bawag_psk_ag|bks_bank_ag|brull_kallmus_bank_ag|btv_vier_lander_bank|capital_bank_grawe_gruppe_ag|deutsche_bank_ag|dolomitenbank]
+- body:expand array<string>
+- body:fpx object
+- body:fpx.bank string enum[affin_bank|agrobank|alliance_bank|ambank|bank_islam|bank_muamalat|bank_of_china|bank_rakyat|bsn|cimb|deutsche_bank|hong_leong_bank]
+- body:giropay object
+- body:grabpay object
+- body:ideal object
+- body:ideal.bank string enum[abn_amro|asn_bank|bunq|handelsbanken|ing|knab|moneyou|rabobank|regiobank|revolut|sns_bank|triodos_bank]
+- body:interac_present object
+- body:klarna object
+- body:klarna.dob object
+- body:klarna.dob.day integer
+- body:klarna.dob.month integer
+- body:klarna.dob.year integer
+- body:konbini object
+- body:link object
+- body:metadata object
+- body:oxxo object
+- body:p24 object
+- body:p24.bank string enum[alior_bank|bank_millennium|bank_nowy_bfg_sa|bank_pekao_sa|banki_spbdzielcze|blik|bnp_paribas|boz|citi_handlowy|credit_agricole|envelobank|etransfer_pocztowy24]
+- body:payment_method string
+- body:paynow object
+- body:pix object
+- body:promptpay object
+- body:radar_options object
+- body:radar_options.session string
+- body:sepa_debit object
+- body:sepa_debit.iban string
+- body:sofort object
+- body:sofort.country string enum[AT|BE|DE|ES|IT|NL]
+- body:type string enum[acss_debit|affirm|afterpay_clearpay|alipay|au_becs_debit|bacs_debit|bancontact|blik|boleto|card|customer_balance|eps]
+- body:us_bank_account object
+- body:us_bank_account.account_holder_type string enum[company|individual]
+- body:us_bank_account.account_number string
+- body:us_bank_account.account_type string enum[checking|savings]
+- body:us_bank_account.financial_connections_account string
+- body:us_bank_account.routing_number string
+- body:wechat_pay object
+
+## S395-N0122  POST /v1/payment_methods/{payment_method}
+desc: <p>Updates a PaymentMethod object. A PaymentMethod must be attached a customer to be updated.</p>
+- path:payment_method string
+- body:billing_details object
+- body:billing_details.address object enum[]
+- body:billing_details.address.city string
+- body:billing_details.address.country string
+- body:billing_details.address.line1 string
+- body:billing_details.address.line2 string
+- body:billing_details.address.postal_code string
+- body:billing_details.address.state string
+- body:billing_details.email string enum[]
+- body:billing_details.name string
+- body:billing_details.phone string
+- body:card object
+- body:card.exp_month integer
+- body:card.exp_year integer
+- body:expand array<string>
+- body:link object
+- body:metadata object enum[]
+- body:us_bank_account object
+- body:us_bank_account.account_holder_type string enum[company|individual]
+
+## S395-N0124  POST /v1/payment_methods/{payment_method}/detach
+desc: <p>Detaches a PaymentMethod object from a Customer. After a PaymentMethod is detached, it can no longer be used for a payment or re-attached to a Customer.</p>
+- path:payment_method string
+- body:expand array<string>
+
+## S395-N0125  POST /v1/payouts
+desc: <p>To send funds to your own bank account, you create a new payout object. Your <a href="#balance">Stripe balance</a> must be able to cover the payout amount, or you’ll receive an “Insufficient Funds” error.</p> <p>If your API key is in test mode, money won’t actually be sent, though everything else will occur as if in live mode.</p> <p>If you are creating a manual payout on a Stripe account that 
+- body:amount integer
+- body:currency string
+- body:description string
+- body:destination string
+- body:expand array<string>
+- body:metadata object
+- body:method string enum[instant|standard]
+- body:source_type string enum[bank_account|card|fpx]
+- body:statement_descriptor string
+
+## S395-N0126  POST /v1/payouts/{payout}
+desc: <p>Updates the specified payout by setting the values of the parameters passed. Any parameters not provided will be left unchanged. This request accepts only the metadata as arguments.</p>
+- path:payout string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0127  POST /v1/payouts/{payout}/cancel
+desc: <p>A previously created payout can be canceled if it has not yet been paid out. Funds will be refunded to your available balance. You may not cancel automatic Stripe payouts.</p>
+- path:payout string
+- body:expand array<string>
+
+## S395-N0128  POST /v1/payouts/{payout}/reverse
+desc: <p>Reverses a payout by debiting the destination bank account. Only payouts for connected accounts to US bank accounts may be reversed at this time. If the payout is in the <code>pending</code> status, <code>/v1/payouts/:id/cancel</code> should be used instead.</p> <p>By requesting a reversal via <code>/v1/payouts/:id/reverse</code>, you confirm that the authorized signatory of the selected bank a
+- path:payout string
+- body:expand array<string>
+- body:metadata object
+
+## S395-N0129  POST /v1/plans
+desc: <p>You can now model subscriptions more flexibly using the <a href="#prices">Prices API</a>. It replaces the Plans API and is backwards compatible to simplify your migration.</p>
+- body:active boolean
+- body:aggregate_usage string enum[last_during_period|last_ever|max|sum]
+- body:amount integer
+- body:amount_decimal string
+- body:billing_scheme string enum[per_unit|tiered]
+- body:currency string
+- body:expand array<string>
+- body:id string
+- body:interval string enum[day|month|week|year]
+- body:interval_count integer
+- body:metadata object enum[]
+- body:nickname string
+- body:product object
+- body:product.active boolean
+- body:product.id string
+- body:product.metadata object
+- body:product.name string
+- body:product.statement_descriptor string
+- body:product.tax_code string
+- body:product.unit_label string
+- body:tiers array<object>
+- body:tiers[].flat_amount integer
+- body:tiers[].flat_amount_decimal string
+- body:tiers[].unit_amount integer
+- body:tiers[].unit_amount_decimal string
+- body:tiers[].up_to string enum[inf]
+- body:tiers_mode string enum[graduated|volume]
+- body:transform_usage object
+- body:transform_usage.divide_by integer
+- body:transform_usage.round string enum[down|up]
+- body:trial_period_days integer
+- body:usage_type string enum[licensed|metered]
+
+## S395-N0130  DELETE /v1/plans/{plan}
+desc: <p>Deleting plans means new subscribers can’t be added. Existing subscribers aren’t affected.</p>
+- path:plan string
+- body:(body) object
+
+## S395-N0131  POST /v1/plans/{plan}
+desc: <p>Updates the specified plan by setting the values of the parameters passed. Any parameters not provided are left unchanged. By design, you cannot change a plan’s ID, amount, currency, or billing cycle.</p>
+- path:plan string
+- body:active boolean
+- body:expand array<string>
+- body:metadata object enum[]
+- body:nickname string
+- body:product string
+- body:trial_period_days integer
+
+## S395-N0132  POST /v1/prices
+desc: <p>Creates a new price for an existing product. The price can be recurring or one-time.</p>
+- body:active boolean
+- body:billing_scheme string enum[per_unit|tiered]
+- body:currency string
+- body:currency_options object
+- body:custom_unit_amount object
+- body:custom_unit_amount.enabled boolean
+- body:custom_unit_amount.maximum integer
+- body:custom_unit_amount.minimum integer
+- body:custom_unit_amount.preset integer
+- body:expand array<string>
+- body:lookup_key string
+- body:metadata object
+- body:nickname string
+- body:product string
+- body:product_data object
+- body:product_data.active boolean
+- body:product_data.id string
+- body:product_data.metadata object
+- body:product_data.name string
+- body:product_data.statement_descriptor string
+- body:product_data.tax_code string
+- body:product_data.unit_label string
+- body:recurring object
+- body:recurring.aggregate_usage string enum[last_during_period|last_ever|max|sum]
+- body:recurring.interval string enum[day|month|week|year]
+- body:recurring.interval_count integer
+- body:recurring.usage_type string enum[licensed|metered]
+- body:tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:tiers array<object>
+- body:tiers[].flat_amount integer
+- body:tiers[].flat_amount_decimal string
+- body:tiers[].unit_amount integer
+- body:tiers[].unit_amount_decimal string
+- body:tiers[].up_to string enum[inf]
+- body:tiers_mode string enum[graduated|volume]
+- body:transfer_lookup_key boolean
+- body:transform_quantity object
+- body:transform_quantity.divide_by integer
+- body:transform_quantity.round string enum[down|up]
+- body:unit_amount integer
+- body:unit_amount_decimal string
+
+## S395-N0134  POST /v1/products
+desc: <p>Creates a new product object.</p>
+- body:active boolean
+- body:default_price_data object
+- body:default_price_data.currency string
+- body:default_price_data.currency_options object
+- body:default_price_data.recurring object
+- body:default_price_data.recurring.interval string enum[day|month|week|year]
+- body:default_price_data.recurring.interval_count integer
+- body:default_price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:default_price_data.unit_amount integer
+- body:default_price_data.unit_amount_decimal string
+- body:description string
+- body:expand array<string>
+- body:id string
+- body:images array<string>
+- body:metadata object
+- body:name string
+- body:package_dimensions object
+- body:package_dimensions.height number
+- body:package_dimensions.length number
+- body:package_dimensions.weight number
+- body:package_dimensions.width number
+- body:shippable boolean
+- body:statement_descriptor string
+- body:tax_code string
+- body:unit_label string
+- body:url string
+
+## S395-N0135  DELETE /v1/products/{id}
+desc: <p>Delete a product. Deleting a product is only possible if it has no prices associated with it. Additionally, deleting a product with <code>type=good</code> is only possible if it has no SKUs associated with it.</p>
+- path:id string
+- body:(body) object
+
+## S395-N0136  POST /v1/products/{id}
+desc: <p>Updates the specific product by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>
+- path:id string
+- body:active boolean
+- body:default_price string
+- body:description string
+- body:expand array<string>
+- body:images array<string> enum[]
+- body:metadata object enum[]
+- body:name string
+- body:package_dimensions object enum[]
+- body:package_dimensions.height number
+- body:package_dimensions.length number
+- body:package_dimensions.weight number
+- body:package_dimensions.width number
+- body:shippable boolean
+- body:statement_descriptor string
+- body:tax_code string enum[]
+- body:unit_label string
+- body:url string enum[]
+
+## S395-N0137  POST /v1/promotion_codes
+desc: <p>A promotion code points to a coupon. You can optionally restrict the code to a specific customer, redemption limit, and expiration date.</p>
+- body:active boolean
+- body:code string
+- body:coupon string
+- body:customer string
+- body:expand array<string>
+- body:expires_at integer
+- body:max_redemptions integer
+- body:metadata object
+- body:restrictions object
+- body:restrictions.currency_options object
+- body:restrictions.first_time_transaction boolean
+- body:restrictions.minimum_amount integer
+- body:restrictions.minimum_amount_currency string
+
+## S395-N0138  POST /v1/promotion_codes/{promotion_code}
+desc: <p>Updates the specified promotion code by setting the values of the parameters passed. Most fields are, by design, not editable.</p>
+- path:promotion_code string
+- body:active boolean
+- body:expand array<string>
+- body:metadata object enum[]
+- body:restrictions object
+- body:restrictions.currency_options object
+
+## S395-N0139  POST /v1/quotes
+desc: <p>A quote models prices and services for a customer. Default options for <code>header</code>, <code>description</code>, <code>footer</code>, and <code>expires_at</code> can be set in the dashboard via the <a href="https://dashboard.stripe.com/settings/billing/quote">quote template</a>.</p>
+- body:application_fee_amount integer enum[]
+- body:application_fee_percent number enum[]
+- body:automatic_tax object
+- body:automatic_tax.enabled boolean
+- body:collection_method string enum[charge_automatically|send_invoice]
+- body:customer string
+- body:default_tax_rates array<string> enum[]
+- body:description string
+- body:discounts array<object> enum[]
+- body:discounts[].coupon string
+- body:discounts[].discount string
+- body:expand array<string>
+- body:expires_at integer
+- body:footer string
+- body:from_quote object
+- body:from_quote.is_revision boolean
+- body:from_quote.quote string
+- body:header string
+- body:invoice_settings object
+- body:invoice_settings.days_until_due integer
+- body:line_items array<object>
+- body:line_items[].price string
+- body:line_items[].price_data object
+- body:line_items[].price_data.currency string
+- body:line_items[].price_data.product string
+- body:line_items[].price_data.recurring object
+- body:line_items[].price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:line_items[].price_data.unit_amount integer
+- body:line_items[].price_data.unit_amount_decimal string
+- body:line_items[].quantity integer
+- body:line_items[].tax_rates array<string> enum[]
+- body:metadata object
+- body:on_behalf_of string enum[]
+- body:subscription_data object
+- body:subscription_data.description string
+- body:subscription_data.effective_date string enum[current_period_end]
+- body:subscription_data.trial_period_days integer enum[]
+- body:test_clock string
+- body:transfer_data object enum[]
+- body:transfer_data.amount integer
+- body:transfer_data.amount_percent number
+- body:transfer_data.destination string
+
+## S395-N0140  POST /v1/quotes/{quote}
+desc: <p>A quote models prices and services for a customer.</p>
+- path:quote string
+- body:application_fee_amount integer enum[]
+- body:application_fee_percent number enum[]
+- body:automatic_tax object
+- body:automatic_tax.enabled boolean
+- body:collection_method string enum[charge_automatically|send_invoice]
+- body:customer string
+- body:default_tax_rates array<string> enum[]
+- body:description string
+- body:discounts array<object> enum[]
+- body:discounts[].coupon string
+- body:discounts[].discount string
+- body:expand array<string>
+- body:expires_at integer
+- body:footer string
+- body:header string
+- body:invoice_settings object
+- body:invoice_settings.days_until_due integer
+- body:line_items array<object>
+- body:line_items[].id string
+- body:line_items[].price string
+- body:line_items[].price_data object
+- body:line_items[].price_data.currency string
+- body:line_items[].price_data.product string
+- body:line_items[].price_data.recurring object
+- body:line_items[].price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:line_items[].price_data.unit_amount integer
+- body:line_items[].price_data.unit_amount_decimal string
+- body:line_items[].quantity integer
+- body:line_items[].tax_rates array<string> enum[]
+- body:metadata object
+- body:on_behalf_of string enum[]
+- body:subscription_data object
+- body:subscription_data.description string
+- body:subscription_data.effective_date string enum[current_period_end]
+- body:subscription_data.trial_period_days integer enum[]
+- body:transfer_data object enum[]
+- body:transfer_data.amount integer
+- body:transfer_data.amount_percent number
+- body:transfer_data.destination string
+
+## S395-N0141  POST /v1/quotes/{quote}/accept
+desc: <p>Accepts the specified quote.</p>
+- path:quote string
+- body:expand array<string>
+
+## S395-N0142  POST /v1/quotes/{quote}/cancel
+desc: <p>Cancels the quote.</p>
+- path:quote string
+- body:expand array<string>
+
+## S395-N0145  DELETE /v1/radar/value_list_items/{item}
+desc: <p>Deletes a <code>ValueListItem</code> object, removing it from its parent value list.</p>
+- path:item string
+- body:(body) object
+
+## S395-N0146  POST /v1/radar/value_lists
+desc: <p>Creates a new <code>ValueList</code> object, which can then be referenced in rules.</p>
+- body:alias string
+- body:expand array<string>
+- body:item_type string enum[card_bin|card_fingerprint|case_sensitive_string|country|customer_id|email|ip_address|string]
+- body:metadata object
+- body:name string
+
+## S395-N0147  DELETE /v1/radar/value_lists/{value_list}
+desc: <p>Deletes a <code>ValueList</code> object, also deleting any items contained within the value list. To be deleted, a value list must not be referenced in any rules.</p>
+- path:value_list string
+- body:(body) object
+
+## S395-N0148  POST /v1/radar/value_lists/{value_list}
+desc: <p>Updates a <code>ValueList</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged. Note that <code>item_type</code> is immutable.</p>
+- path:value_list string
+- body:alias string
+- body:expand array<string>
+- body:metadata object
+- body:name string
+
+## S395-N0149  POST /v1/refunds
+desc: <p>Create a refund.</p>
+- body:amount integer
+- body:charge string
+- body:currency string
+- body:customer string
+- body:expand array<string>
+- body:instructions_email string
+- body:metadata object enum[]
+- body:origin string enum[customer_balance]
+- body:payment_intent string
+- body:reason string enum[duplicate|fraudulent|requested_by_customer]
+- body:refund_application_fee boolean
+- body:reverse_transfer boolean
+
+## S395-N0150  POST /v1/refunds/{refund}
+desc: <p>Updates the specified refund by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p> <p>This request only accepts <code>metadata</code> as an argument.</p>
+- path:refund string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0151  POST /v1/refunds/{refund}/cancel
+desc: <p>Cancels a refund with a status of <code>requires_action</code>.</p> <p>Refunds in other states cannot be canceled, and only refunds for payment methods that require customer action will enter the <code>requires_action</code> state.</p>
+- path:refund string
+- body:expand array<string>
+
+## S395-N0152  POST /v1/reporting/report_runs
+desc: <p>Creates a new object and begin running the report. (Certain report types require a <a href="https://stripe.com/docs/keys#test-live-modes">live-mode API key</a>.)</p>
+- body:expand array<string>
+- body:parameters object
+- body:parameters.columns array<string>
+- body:parameters.connected_account string
+- body:parameters.currency string
+- body:parameters.interval_end integer
+- body:parameters.interval_start integer
+- body:parameters.payout string
+- body:parameters.reporting_category string enum[advance|advance_funding|anticipation_repayment|charge|charge_failure|connect_collection_transfer|connect_reserved_funds|contribution|dispute|dispute_reversal|fee|financing_paydown]
+- body:parameters.timezone string enum[Africa/Abidjan|Africa/Accra|Africa/Addis_Ababa|Africa/Algiers|Africa/Asmara|Africa/Asmera|Africa/Bamako|Africa/Bangui|Africa/Banjul|Africa/Bissau|Africa/Blantyre|Africa/Brazzaville]
+- body:report_type string
+
+## S395-N0154  POST /v1/setup_intents
+desc: <p>Creates a SetupIntent object.</p> <p>After the SetupIntent is created, attach a payment method and <a href="/docs/api/setup_intents/confirm">confirm</a> to collect any required permissions to charge the payment method later.</p>
+- body:attach_to_self boolean
+- body:confirm boolean
+- body:customer string
+- body:description string
+- body:expand array<string>
+- body:flow_directions array<string> enum[inbound|outbound]
+- body:mandate_data object
+- body:mandate_data.customer_acceptance object
+- body:mandate_data.customer_acceptance.accepted_at integer
+- body:mandate_data.customer_acceptance.offline object
+- body:mandate_data.customer_acceptance.online object
+- body:mandate_data.customer_acceptance.type string enum[offline|online]
+- body:metadata object
+- body:on_behalf_of string
+- body:payment_method string
+- body:payment_method_data object
+- body:payment_method_data.acss_debit object
+- body:payment_method_data.acss_debit.account_number string
+- body:payment_method_data.acss_debit.institution_number string
+- body:payment_method_data.acss_debit.transit_number string
+- body:payment_method_data.affirm object
+- body:payment_method_data.afterpay_clearpay object
+- body:payment_method_data.alipay object
+- body:payment_method_data.au_becs_debit object
+- body:payment_method_data.au_becs_debit.account_number string
+- body:payment_method_data.au_becs_debit.bsb_number string
+- body:payment_method_data.bacs_debit object
+- body:payment_method_data.bacs_debit.account_number string
+- body:payment_method_data.bacs_debit.sort_code string
+- body:payment_method_data.bancontact object
+- body:payment_method_data.billing_details object
+- body:payment_method_data.billing_details.address object enum[]
+- body:payment_method_data.billing_details.email string enum[]
+- body:payment_method_data.billing_details.name string
+- body:payment_method_data.billing_details.phone string
+- body:payment_method_data.blik object
+- body:payment_method_data.boleto object
+- body:payment_method_data.boleto.tax_id string
+- body:payment_method_data.customer_balance object
+- body:payment_method_data.eps object
+- body:payment_method_data.eps.bank string enum[arzte_und_apotheker_bank|austrian_anadi_bank_ag|bank_austria|bankhaus_carl_spangler|bankhaus_schelhammer_und_schattera_ag|bawag_psk_ag|bks_bank_ag|brull_kallmus_bank_ag|btv_vier_lander_bank|capital_bank_grawe_gruppe_ag|deutsche_bank_ag|dolomitenbank]
+- body:payment_method_data.fpx object
+- body:payment_method_data.fpx.bank string enum[affin_bank|agrobank|alliance_bank|ambank|bank_islam|bank_muamalat|bank_of_china|bank_rakyat|bsn|cimb|deutsche_bank|hong_leong_bank]
+- body:payment_method_data.giropay object
+- body:payment_method_data.grabpay object
+- body:payment_method_data.ideal object
+- body:payment_method_data.ideal.bank string enum[abn_amro|asn_bank|bunq|handelsbanken|ing|knab|moneyou|rabobank|regiobank|revolut|sns_bank|triodos_bank]
+- body:payment_method_data.interac_present object
+- body:payment_method_data.klarna object
+- body:payment_method_data.klarna.dob object
+- body:payment_method_data.konbini object
+- body:payment_method_data.link object
+- body:payment_method_data.metadata object
+- body:payment_method_data.oxxo object
+- body:payment_method_data.p24 object
+- body:payment_method_data.p24.bank string enum[alior_bank|bank_millennium|bank_nowy_bfg_sa|bank_pekao_sa|banki_spbdzielcze|blik|bnp_paribas|boz|citi_handlowy|credit_agricole|envelobank|etransfer_pocztowy24]
+- body:payment_method_data.paynow object
+- body:payment_method_data.pix object
+- body:payment_method_data.promptpay object
+- body:payment_method_data.radar_options object
+- body:payment_method_data.radar_options.session string
+- body:payment_method_data.sepa_debit object
+- body:payment_method_data.sepa_debit.iban string
+- body:payment_method_data.sofort object
+- body:payment_method_data.sofort.country string enum[AT|BE|DE|ES|IT|NL]
+- body:payment_method_data.type string enum[acss_debit|affirm|afterpay_clearpay|alipay|au_becs_debit|bacs_debit|bancontact|blik|boleto|customer_balance|eps|fpx]
+- body:payment_method_data.us_bank_account object
+- body:payment_method_data.us_bank_account.account_holder_type string enum[company|individual]
+- body:payment_method_data.us_bank_account.account_number string
+- body:payment_method_data.us_bank_account.account_type string enum[checking|savings]
+- body:payment_method_data.us_bank_account.financial_connections_account string
+- body:payment_method_data.us_bank_account.routing_number string
+- body:payment_method_data.wechat_pay object
+- body:payment_method_options object
+- body:payment_method_options.acss_debit object
+- body:payment_method_options.acss_debit.currency string enum[cad|usd]
+- body:payment_method_options.acss_debit.mandate_options object
+- body:payment_method_options.acss_debit.verification_method string enum[automatic|instant|microdeposits]
+- body:payment_method_options.blik object
+- body:payment_method_options.blik.code string
+(+18 fields cut)

@@ -1,0 +1,55 @@
+#!/bin/zsh
+set -u
+
+SQUAD=/Users/minhnguyen/IdeaProjects/graduational-thesis/infra/squad
+LEDGER="$SQUAD/reports/runs.csv"
+CMD="${1:-status}"
+UID_NOW=$(id -u)
+
+case "$CMD" in
+  status)
+    if [ -f "$SQUAD/PAUSE" ]; then
+      echo "Trạng thái: TẠM DỪNG (xoá $SQUAD/PAUSE để bật lại)"
+    else
+      echo "Trạng thái: đang bật"
+    fi
+    echo ""
+    echo "Lịch đã nạp:"
+    launchctl list 2>/dev/null | grep com.thesis.squad || echo "  chưa nạp lịch nào"
+    echo ""
+    echo "5 lần chạy gần nhất:"
+    if [ -f "$LEDGER" ]; then
+      tail -5 "$LEDGER"
+    else
+      echo "  chưa có lần nào"
+    fi
+    echo ""
+    echo "Việc nặng đang chạy:"
+    ps -axo pid=,command= | grep -E "evomaster.*\.jar|em-results/.*\.sh" | grep -v grep || echo "  không có"
+    echo ""
+    echo "Báo cáo mới nhất:"
+    ls -t "$SQUAD/reports"/*.md 2>/dev/null | head -3 || echo "  chưa có"
+    echo ""
+    echo "Đề bài đang chờ:"
+    ls "$SQUAD/tasks"/*.md 2>/dev/null | tail -3 || echo "  chưa có"
+    ;;
+  pause)
+    touch "$SQUAD/PAUSE"
+    echo "Đã tạm dừng. Đến giờ máy vẫn bật lên nhưng thoát ngay, không gọi claude."
+    ;;
+  resume)
+    rm -f "$SQUAD/PAUSE"
+    echo "Đã bật lại."
+    ;;
+  stop)
+    launchctl kill TERM "gui/$UID_NOW/com.thesis.squad.night" 2>/dev/null
+    launchctl kill TERM "gui/$UID_NOW/com.thesis.squad.report" 2>/dev/null
+    pkill -f squad-run.sh 2>/dev/null
+    pkill -f "claude -p" 2>/dev/null
+    echo "Đã giết phiên tự động đang chạy, nếu có."
+    ;;
+  *)
+    echo "Dùng: squad [status|pause|resume|stop]"
+    exit 2
+    ;;
+esac

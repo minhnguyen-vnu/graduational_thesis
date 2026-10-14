@@ -1,0 +1,111 @@
+diff -ruN a/core/src/main/kotlin/org/evomaster/core/EMConfig.kt b/core/src/main/kotlin/org/evomaster/core/EMConfig.kt
+--- a/core/src/main/kotlin/org/evomaster/core/EMConfig.kt	2026-09-16 22:55:15
++++ b/core/src/main/kotlin/org/evomaster/core/EMConfig.kt	2026-09-16 22:56:21
+@@ -3064,6 +3064,17 @@
+             " still run unchanged, so a run using this option does NOT measure black-box recall.")
+     var statefulAuthzTransition = ""
+ 
++    @Experimental
++    @Cfg("THESIS EXTENSION. Judge a stateful-authorization (MR-A1) triple with two credentials. After the" +
++            " triple has been executed, the same follow-up request is sent again in a separate test, in which" +
++            " the victim logs in after the transition and therefore uses a freshly issued credential. The fault" +
++            " is reported only when the source is 2xx, the transition is 2xx, the follow-up with the" +
++            " pre-transition credential is 2xx, and the follow-up with the fresh credential is denied, ie any" +
++            " non-2xx for PUT and 403 for the other verbs. When true, neither the built-in transition" +
++            " vocabulary nor the re-login probe on the victim slice takes part in the judgment. When false" +
++            " (the default), the triple is judged exactly as before.")
++    var statefulAuthzTwoCredentialJudgment = false
++
+     enum class VulnerableInputClassificationStrategy {
+         /**
+          * Uses the manual methods to select the vulnerable inputs.
+diff -ruN a/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt	2026-09-16 22:55:24
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt	2026-09-16 22:56:46
+@@ -572,12 +572,15 @@
+             return StatusGroup.G_2xx.isInGroup(code)
+         }
+ 
++        val twoCredentialJudgment = config.statefulAuthzTwoCredentialJudgment
++
+         for (srcIndex in actions.indices) {
+             val source = actions[srcIndex]
+             if (source.auth is NoAuth
+                 || !isAllowed(source)
+                 || source.verb !in listOf(HttpVerb.PUT, HttpVerb.PATCH, HttpVerb.POST, HttpVerb.DELETE)
+-                || RestSecurityBuilder.looksLikePermissionReducingTransition(source, config.statefulAuthzTransition)) {
++                || (!twoCredentialJudgment
++                    && RestSecurityBuilder.looksLikePermissionReducingTransition(source, config.statefulAuthzTransition))) {
+                 continue
+             }
+ 
+@@ -595,7 +598,8 @@
+                     val t = actions[it]
+                     t.auth.isDifferentFrom(source.auth)
+                         && isAllowed(t)
+-                        && RestSecurityBuilder.looksLikePermissionReducingTransition(t, config.statefulAuthzTransition)
++                        && (twoCredentialJudgment
++                            || RestSecurityBuilder.looksLikePermissionReducingTransition(t, config.statefulAuthzTransition))
+                 }
+                 if (!hasTransition) {
+                     continue
+diff -ruN a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt	2026-09-16 22:55:30
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt	2026-09-16 23:30:07
+@@ -680,10 +680,10 @@
+         }
+ 
+         if (StatusGroup.G_2xx.isInGroup(followUpCode!!)
+-            && !reLoginProbeConfirmsPrivilegeRemoved(victimSlice)) {
++            && !privilegeRemovalConfirmed(victimSlice, followUp)) {
+             LoggingUtil.getInfoLogger().info(
+                 "Discarded an UNCONFIRMED stateful-authorization (MR-A1) attempt on ${source.getName()}:" +
+-                    " re-logging the victim in did not show the privilege removed" +
++                    " ${unconfirmedReason()}" +
+                     " (victim '${victimAuth.name}', operator '${operator.name}', codes $observed)"
+             )
+             return false
+@@ -702,6 +702,43 @@
+         }
+         archive.addIfNeeded(ei)
+         return true
++    }
++
++    private fun privilegeRemovalConfirmed(victimSlice: RestIndividual, followUp: RestCallAction): Boolean =
++        if (config.statefulAuthzTwoCredentialJudgment) {
++            freshCredentialDeniesFollowUp(victimSlice, followUp)
++        } else {
++            reLoginProbeConfirmsPrivilegeRemoved(victimSlice)
++        }
++
++    private fun unconfirmedReason(): String =
++        if (config.statefulAuthzTwoCredentialJudgment) {
++            "the same request sent with a freshly issued victim credential was not denied"
++        } else {
++            "re-logging the victim in did not show the privilege removed"
++        }
++
++    private fun freshCredentialDeniesFollowUp(victimSlice: RestIndividual, followUp: RestCallAction): Boolean {
++
++        val actions = mutableListOf<RestCallAction>()
++        victimSlice.seeMainExecutableActions().dropLast(1).forEach { actions.add(it.copy() as RestCallAction) }
++        actions.add(followUp.copy() as RestCallAction)
++
++        val probe = RestIndividual(actions, SampleType.SECURITY)
++        probe.resetLocalIdRecursively()
++        probe.doInitializeLocalId()
++        probe.ensureFlattenedStructure()
++
++        val ei = fitness.computeWholeAchievedCoverageForPostProcessing(probe) ?: return false
++
++        val last = probe.seeMainExecutableActions().lastOrNull() ?: return false
++        val code = (ei.seeResult(last.getLocalId()) as? RestCallResult)?.getStatusCode() ?: return false
++
++        return if (last.verb == HttpVerb.PUT) {
++            !StatusGroup.G_2xx.isInGroup(code)
++        } else {
++            code == 403
++        }
+     }
+ 
+     private fun reLoginProbeConfirmsPrivilegeRemoved(victimSlice: RestIndividual): Boolean {

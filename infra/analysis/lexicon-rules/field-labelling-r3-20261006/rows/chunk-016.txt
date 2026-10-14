@@ -1,0 +1,778 @@
+## S326-0027  DELETE /api/services/{serviceId}/apikeys/{clientId}/quotas
+desc: Reset the quota state of an api key | Reset the quota state of an api key
+- path:serviceId string
+- path:clientId string
+
+## S326-0028  PATCH /api/services/{serviceId}/targets
+desc: Update a service descriptor targets | Update a service descriptor targets
+schema: Patch
+- path:serviceId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0029  POST /api/services/{serviceId}/template
+desc: Create a service descriptor error template | Update a service descriptor targets
+schema: ErrorTemplate
+- path:serviceId string
+- body:messages object
+- body:serviceId string
+- body:template40x string
+- body:template50x string
+- body:templateBuild string
+- body:templateMaintenance string
+
+## S326-0030  PUT /api/services/{serviceId}/template
+desc: Update an error template to a service descriptor | Update an error template to a service descriptor
+schema: ErrorTemplate
+- path:serviceId string
+- body:messages object
+- body:serviceId string
+- body:template40x string
+- body:template50x string
+- body:templateBuild string
+- body:templateMaintenance string
+
+## S326-0031  POST /api/snowmonkey/_start
+desc: Start the Snow Monkey | Start the Snow Monkey
+
+## S326-0032  POST /api/snowmonkey/_stop
+desc: Stop the Snow Monkey | Stop the Snow Monkey
+
+## S326-0033  PUT /api/snowmonkey/config
+desc: Update current Snow Monkey config | Update current Snow Monkey config
+schema: Group
+- body:description string
+- body:id string
+- body:name string
+
+## S326-0034  DELETE /api/verifiers/{verifierId}
+desc: Delete one global JWT verifiers | Delete one global JWT verifiers
+- path:verifierId string
+
+## S326-0035  PATCH /api/verifiers/{verifierId}
+desc: Update one global JWT verifiers | Update one global JWT verifiers
+schema: Patch
+- path:verifierId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0036  PUT /api/verifiers/{verifierId}
+desc: Update one global JWT verifiers | Update one global JWT verifiers
+schema: GlobalJwtVerifier
+- path:verifierId string
+- body:algoSettings object
+- body:algoSettings.secret string
+- body:algoSettings.size integer
+- body:algoSettings.type string
+- body:algoSettings.privateKey string
+- body:algoSettings.publicKey string
+- body:algoSettings.headers object
+- body:algoSettings.kty string
+- body:algoSettings.timeout integer
+- body:algoSettings.ttl integer
+- body:algoSettings.url string
+- body:desc string
+- body:enabled boolean
+- body:id string
+- body:name string
+- body:source object
+- body:source.name string
+- body:source.type string
+- body:source.remove string
+- body:strategy object
+- body:strategy.type string
+- body:strategy.verificationSettings object
+- body:strategy.verificationSettings.fields object
+- body:strategy.verificationSettings.mappingSettings object
+- body:strategy.algoSettings object
+- body:strategy.algoSettings.secret string
+- body:strategy.algoSettings.size integer
+- body:strategy.algoSettings.type string
+- body:strategy.algoSettings.privateKey string
+- body:strategy.algoSettings.publicKey string
+- body:strategy.algoSettings.headers object
+- body:strategy.algoSettings.kty string
+- body:strategy.algoSettings.timeout integer
+- body:strategy.algoSettings.ttl integer
+- body:strategy.algoSettings.url string
+- body:strategy.transformSettings object
+- body:strategy.transformSettings.location object
+- body:strategy.transformSettings.mappingSettings object
+- body:strict boolean
+
+## S328-0001  DELETE /networks/{networkId}
+desc: Delete a network | Delete a network
+- path:networkId string
+
+## S328-0002  PUT /networks/{networkId}/appliance/firewall/inboundFirewallRules
+desc: Update the inbound firewall rules of an MX network | Update the inbound firewall rules of an MX network
+- path:networkId string
+- body:rules array<object>
+- body:rules[].comment string
+- body:rules[].destCidr string
+- body:rules[].destPort string
+- body:rules[].policy string enum[allow|deny]
+- body:rules[].protocol string enum[any|icmp|icmp6|tcp|udp]
+- body:rules[].srcCidr string
+- body:rules[].srcPort string
+- body:rules[].syslogEnabled boolean
+- body:syslogDefaultRule boolean
+
+## S328-0003  PUT /networks/{networkId}/bluetoothSettings
+desc: Update the Bluetooth settings for a network | Update the Bluetooth settings for a network. See the docs page for <a href="https://documentation.meraki.com/MR/Bluetooth/Bluetooth_Low_Energy_(BLE)">Bluetooth settings</a>.
+- path:networkId string
+- body:advertisingEnabled boolean
+- body:major integer
+- body:majorMinorAssignmentMode string enum[Non-unique|Unique]
+- body:minor integer
+- body:scanningEnabled boolean
+- body:uuid string
+
+## S328-0004  POST /networks/{networkId}/camera/qualityRetentionProfiles
+desc: Creates new quality retention profile for this network. | Creates new quality retention profile for this network.
+- path:networkId string
+- body:audioRecordingEnabled boolean
+- body:cloudArchiveEnabled boolean
+- body:maxRetentionDays integer
+- body:motionBasedRetentionEnabled boolean
+- body:motionDetectorVersion integer
+- body:name string
+- body:restrictedBandwidthModeEnabled boolean
+- body:scheduleId string
+- body:videoSettings object
+- body:videoSettings.MV12/MV22/MV72 object
+- body:videoSettings.MV12/MV22/MV72.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV12/MV22/MV72.resolution string enum[1280x720|1920x1080]
+- body:videoSettings.MV12WE object
+- body:videoSettings.MV12WE.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV12WE.resolution string enum[1280x720|1920x1080]
+- body:videoSettings.MV13 object
+- body:videoSettings.MV13.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV13.resolution string enum[1080x1080|2688x1512]
+- body:videoSettings.MV21/MV71 object
+- body:videoSettings.MV21/MV71.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV21/MV71.resolution string enum[1280x720]
+- body:videoSettings.MV22X/MV72X object
+- body:videoSettings.MV22X/MV72X.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV22X/MV72X.resolution string enum[1280x720|1920x1080|2688x1512]
+- body:videoSettings.MV32 object
+- body:videoSettings.MV32.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV32.resolution string enum[1080x1080|2058x2058]
+- body:videoSettings.MV33 object
+- body:videoSettings.MV33.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV33.resolution string enum[1080x1080|2112x2112]
+- body:videoSettings.MV52 object
+- body:videoSettings.MV52.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV52.resolution string enum[1280x720|1920x1080|2688x1512|3840x2160]
+- body:videoSettings.MV63 object
+- body:videoSettings.MV63.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV63.resolution string enum[1920x1080|2688x1512]
+- body:videoSettings.MV63X object
+- body:videoSettings.MV63X.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV63X.resolution string enum[1920x1080|2688x1512|3840x2160]
+- body:videoSettings.MV93 object
+- body:videoSettings.MV93.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV93.resolution string enum[1080x1080|2112x2112]
+- body:videoSettings.MV93X object
+- body:videoSettings.MV93X.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV93X.resolution string enum[1080x1080|2112x2112|2880x2880]
+
+## S328-0005  DELETE /networks/{networkId}/camera/qualityRetentionProfiles/{qualityRetentionProfileId}
+desc: Delete an existing quality retention profile for this network. | Delete an existing quality retention profile for this network.
+- path:networkId string
+- path:qualityRetentionProfileId string
+
+## S328-0006  PUT /networks/{networkId}/devices/{serial}
+desc: Update the attributes of a device | Update the attributes of a device
+- path:networkId string
+- path:serial string
+- body:address string
+- body:floorPlanId string
+- body:lat number
+- body:lng number
+- body:moveMapMarker boolean
+- body:name string
+- body:notes string
+- body:switchProfileId string
+- body:tags string
+
+## S328-0007  PUT /networks/{networkId}/l3FirewallRules
+desc: Update the L3 firewall rules of an MX network | Update the L3 firewall rules of an MX network
+- path:networkId string
+- body:rules array<object>
+- body:rules[].comment string
+- body:rules[].destCidr string
+- body:rules[].destPort string
+- body:rules[].policy string enum[allow|deny]
+- body:rules[].protocol string enum[any|icmp|icmp6|tcp|udp]
+- body:rules[].srcCidr string
+- body:rules[].srcPort string
+- body:rules[].syslogEnabled boolean
+- body:syslogDefaultRule boolean
+
+## S328-0008  PUT /networks/{networkId}/oneToManyNatRules
+desc: Set the 1:Many NAT mapping rules for an MX network | Set the 1:Many NAT mapping rules for an MX network
+- path:networkId string
+- body:rules array<object>
+- body:rules[].portRules array<object>
+- body:rules[].portRules[].allowedIps array<string>
+- body:rules[].portRules[].localIp string
+- body:rules[].portRules[].localPort string
+- body:rules[].portRules[].name string
+- body:rules[].portRules[].protocol string enum[tcp|udp]
+- body:rules[].portRules[].publicPort string
+- body:rules[].publicIp string
+- body:rules[].uplink string enum[internet1|internet2]
+
+## S328-0009  POST /networks/{networkId}/pii/requests
+desc: Submit a new delete or restrict processing PII request | Submit a new delete or restrict processing PII request ## ALTERNATE PATH ``` /organizations/{organizationId}/pii/requests ```
+- path:networkId string
+- body:datasets array<string>
+- body:email string
+- body:mac string
+- body:smDeviceId string
+- body:smUserId string
+- body:type string enum[delete|restrict processing]
+- body:username string
+
+## S328-0010  PUT /networks/{networkId}/security/malwareSettings
+desc: Set the supported malware settings for an MX network | Set the supported malware settings for an MX network
+- path:networkId string
+- body:allowedFiles array<object>
+- body:allowedFiles[].comment string
+- body:allowedFiles[].sha256 string
+- body:allowedUrls array<object>
+- body:allowedUrls[].comment string
+- body:allowedUrls[].url string
+- body:mode string enum[disabled|enabled]
+
+## S328-0011  PUT /networks/{networkId}/siteToSiteVpn
+desc: Update the site-to-site VPN settings of a network | Update the site-to-site VPN settings of a network. Only valid for MX networks in NAT mode.
+- path:networkId string
+- body:hubs array<object>
+- body:hubs[].hubId string
+- body:hubs[].useDefaultRoute boolean
+- body:mode string enum[hub|none|spoke]
+- body:subnets array<object>
+- body:subnets[].localSubnet string
+- body:subnets[].useVpn boolean
+
+## S328-0012  PUT /networks/{networkId}/sm/devices/checkin
+desc: Force check-in a set of devices | Force check-in a set of devices
+- path:networkId string
+- body:ids string
+- body:scope string
+- body:serials string
+- body:wifiMacs string
+
+## S328-0013  PUT /networks/{networkId}/sm/devices/tags
+desc: Add, delete, or update the tags of a set of devices | Add, delete, or update the tags of a set of devices
+- path:networkId string
+- body:ids string
+- body:scope string
+- body:serials string
+- body:tags string
+- body:updateAction string
+- body:wifiMacs string
+
+## S328-0014  PUT /networks/{networkId}/sm/targetGroups/{targetGroupId}
+desc: Update a target group | Update a target group
+- path:networkId string
+- path:targetGroupId string
+- body:name string
+- body:scope string
+
+## S328-0015  PUT /networks/{networkId}/ssids/{number}/splashSettings
+desc: Modify the splash page settings for the given SSID | Modify the splash page settings for the given SSID
+- path:networkId string
+- path:number string
+- body:splashUrl string
+- body:useSplashUrl boolean
+
+## S328-0016  POST /networks/{networkId}/switch/portSchedules
+desc: Add a switch port schedule | Add a switch port schedule
+- path:networkId string
+- body:name string
+- body:portSchedule object
+- body:portSchedule.friday object
+- body:portSchedule.friday.active boolean
+- body:portSchedule.friday.from string
+- body:portSchedule.friday.to string
+- body:portSchedule.monday object
+- body:portSchedule.monday.active boolean
+- body:portSchedule.monday.from string
+- body:portSchedule.monday.to string
+- body:portSchedule.saturday object
+- body:portSchedule.saturday.active boolean
+- body:portSchedule.saturday.from string
+- body:portSchedule.saturday.to string
+- body:portSchedule.sunday object
+- body:portSchedule.sunday.active boolean
+- body:portSchedule.sunday.from string
+- body:portSchedule.sunday.to string
+- body:portSchedule.thursday object
+- body:portSchedule.thursday.active boolean
+- body:portSchedule.thursday.from string
+- body:portSchedule.thursday.to string
+- body:portSchedule.tuesday object
+- body:portSchedule.tuesday.active boolean
+- body:portSchedule.tuesday.from string
+- body:portSchedule.tuesday.to string
+- body:portSchedule.wednesday object
+- body:portSchedule.wednesday.active boolean
+- body:portSchedule.wednesday.from string
+- body:portSchedule.wednesday.to string
+
+## S328-0017  PUT /networks/{networkId}/switch/settings
+desc: Update switch network settings | Update switch network settings
+- path:networkId string
+- body:powerExceptions array<object>
+- body:powerExceptions[].powerType string enum[combined|redundant|useNetworkSetting]
+- body:powerExceptions[].serial string
+- body:useCombinedPower boolean
+- body:vlan integer
+
+## S328-0018  PUT /networks/{networkId}/switch/settings/mtu
+desc: Update the MTU configuration | Update the MTU configuration
+- path:networkId string
+- body:defaultMtuSize integer
+- body:overrides array<object>
+- body:overrides[].mtuSize integer
+- body:overrides[].switchProfiles array<string>
+- body:overrides[].switches array<string>
+
+## S328-0019  PUT /networks/{networkId}/switch/settings/multicast
+desc: Update multicast settings for a network | Update multicast settings for a network
+- path:networkId string
+- body:defaultSettings object
+- body:defaultSettings.floodUnknownMulticastTrafficEnabled boolean
+- body:defaultSettings.igmpSnoopingEnabled boolean
+- body:overrides array<object>
+- body:overrides[].floodUnknownMulticastTrafficEnabled boolean
+- body:overrides[].igmpSnoopingEnabled boolean
+- body:overrides[].stacks array<string>
+- body:overrides[].switchProfiles array<string>
+- body:overrides[].switches array<string>
+
+## S328-0020  PUT /networks/{networkId}/switch/settings/qosRules/{qosRuleId}
+desc: Update a quality of service rule | Update a quality of service rule
+- path:networkId string
+- path:qosRuleId string
+- body:dscp integer
+- body:dstPort integer
+- body:dstPortRange string
+- body:protocol string enum[ANY|TCP|UDP]
+- body:srcPort integer
+- body:srcPortRange string
+- body:vlan integer
+
+## S328-0021  POST /networks/{networkId}/switchStacks
+desc: Create a stack | Create a stack
+- path:networkId string
+- body:name string
+- body:serials array<string>
+
+## S328-0022  DELETE /networks/{networkId}/switchStacks/{switchStackId}
+desc: Delete a stack | Delete a stack
+- path:networkId string
+- path:switchStackId string
+
+## S328-0023  POST /networks/{networkId}/switchStacks/{switchStackId}/remove
+desc: Remove a switch from a stack | Remove a switch from a stack
+- path:networkId string
+- path:switchStackId string
+- body:serial string
+
+## S328-0024  PUT /networks/{networkId}/syslogServers
+desc: Update the syslog servers for a network | Update the syslog servers for a network
+- path:networkId string
+- body:servers array<object>
+- body:servers[].host string
+- body:servers[].port integer
+- body:servers[].roles array<string>
+
+## S328-0025  POST /networks/{networkId}/unbind
+desc: Unbind a network from a template. | Unbind a network from a template.
+- path:networkId string
+
+## S328-0026  PUT /networks/{networkId}/vlansEnabledState
+desc: Enable/Disable VLANs for the given network | Enable/Disable VLANs for the given network
+- path:networkId string
+- body:enabled boolean
+
+## S328-0027  PUT /networks/{networkId}/wireless/settings
+desc: Update the wireless settings for a network | Update the wireless settings for a network
+- path:networkId string
+- body:ipv6BridgeEnabled boolean
+- body:ledLightsOn boolean
+- body:locationAnalyticsEnabled boolean
+- body:meshingEnabled boolean
+- body:upgradeStrategy string enum[minimizeClientDowntime|minimizeUpgradeTime]
+
+## S328-0028  PUT /networks/{network_id}/sm/devices/lock
+desc: Lock a set of devices | Lock a set of devices
+- path:network_id string
+- body:ids string
+- body:pin integer
+- body:scope string
+- body:serials string
+- body:wifiMacs string
+
+## S328-0029  POST /organizations/{organizationId}/actionBatches
+desc: Create an action batch | Create an action batch
+- path:organizationId string
+- body:actions array<object>
+- body:actions[].body object
+- body:actions[].operation string
+- body:actions[].resource string
+- body:confirmed boolean
+- body:synchronous boolean
+
+## S328-0030  DELETE /organizations/{organizationId}/actionBatches/{actionBatchId}
+desc: Delete an action batch | Delete an action batch
+- path:organizationId string
+- path:actionBatchId string
+
+## S328-0031  PUT /organizations/{organizationId}/actionBatches/{actionBatchId}
+desc: Update an action batch | Update an action batch
+- path:organizationId string
+- path:actionBatchId string
+- body:confirmed boolean
+- body:synchronous boolean
+
+## S328-0032  PUT /organizations/{organizationId}/insight/monitoredMediaServers/{monitoredMediaServerId}
+desc: Update a monitored media server for this organization | Update a monitored media server for this organization. Only valid for organizations with Meraki Insight.
+- path:organizationId string
+- path:monitoredMediaServerId string
+- body:address string
+- body:name string
+
+## S328-0033  POST /organizations/{organizationId}/licenses/assignSeats
+desc: Assign SM seats to a network | Assign SM seats to a network. This will increase the managed SM device limit of the network
+- path:organizationId string
+- body:licenseId string
+- body:networkId string
+- body:seatCount integer
+
+## S328-0034  POST /organizations/{organizationId}/networks/combine
+desc: Combine multiple networks into a single network | Combine multiple networks into a single network
+- path:organizationId string
+- body:enrollmentString string
+- body:name string
+- body:networkIds array<string>
+
+## S328-0035  PUT /organizations/{organizationId}/security/intrusionSettings
+desc: Sets supported intrusion settings for an organization | Sets supported intrusion settings for an organization
+- path:organizationId string
+- body:whitelistedRules array<object>
+- body:whitelistedRules[].message string
+- body:whitelistedRules[].ruleId string
+
+## S328-0036  PUT /organizations/{organizationId}/vpnFirewallRules
+desc: Update the firewall rules of an organization's site-to-site VPN | Update the firewall rules of an organization's site-to-site VPN
+- path:organizationId string
+- body:rules array<object>
+- body:rules[].comment string
+- body:rules[].destCidr string
+- body:rules[].destPort string
+- body:rules[].policy string enum[allow|deny]
+- body:rules[].protocol string enum[any|icmp|icmp6|tcp|udp]
+- body:rules[].srcCidr string
+- body:rules[].srcPort string
+- body:rules[].syslogEnabled boolean
+- body:syslogDefaultRule boolean
+
+## S329-0001  POST /artifact/upload
+desc: Upload an artifact | Uploads an artifact to be imported by Microcks.
+schema: ArtifactUpload
+- query:mainArtifact boolean
+- body:file string
+
+## S329-0002  POST /import
+desc: Import a snapshot | Import a repository snapshot previsouly exported into Microcks
+schema: SnapshotUpload
+- body:file string
+
+## S329-0003  POST /jobs
+desc: Create ImportJob | Create a new ImportJob
+schema: ImportJob
+- body:active boolean
+- body:createdDate string
+- body:etag string
+- body:frequency string
+- body:id string
+- body:lastImportDate string
+- body:lastImportError string
+- body:mainArtifact boolean
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.createdOn integer
+- body:metadata.labels object
+- body:metadata.lastUpdate integer
+- body:name string
+- body:repositoryDisableSSLValidation boolean
+- body:repositoryUrl string
+- body:secretRef object
+- body:secretRef.name string
+- body:secretRef.secretId string
+- body:serviceRefs array<object>
+- body:serviceRefs[].name string
+- body:serviceRefs[].serviceId string
+- body:serviceRefs[].version string
+
+## S329-0004  DELETE /jobs/{id}
+desc: Delete ImportJob | Delete an ImportJob
+- path:id string
+
+## S329-0005  POST /jobs/{id}
+desc: Update ImportJob | Update an ImportJob
+schema: ImportJob
+- path:id string
+- body:active boolean
+- body:createdDate string
+- body:etag string
+- body:frequency string
+- body:id string
+- body:lastImportDate string
+- body:lastImportError string
+- body:mainArtifact boolean
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.createdOn integer
+- body:metadata.labels object
+- body:metadata.lastUpdate integer
+- body:name string
+- body:repositoryDisableSSLValidation boolean
+- body:repositoryUrl string
+- body:secretRef object
+- body:secretRef.name string
+- body:secretRef.secretId string
+- body:serviceRefs array<object>
+- body:serviceRefs[].name string
+- body:serviceRefs[].serviceId string
+- body:serviceRefs[].version string
+
+## S329-0006  PUT /jobs/{id}/activate
+desc: Activate an ImportJob | Make an ImportJob active, so that it is executed
+- path:id string
+
+## S329-0007  PUT /jobs/{id}/start
+desc: Start an ImportJob | Starting an ImportJob forces it to immediatly import mock definitions
+- path:id string
+
+## S329-0008  PUT /jobs/{id}/stop
+desc: Stop an ImportJob | Stopping an ImportJob desactivate it, so that it won't execute at next schedule
+- path:id string
+
+## S329-0009  POST /secrets
+desc: Create a new Secret
+schema: Secret
+- body:caCertPem string
+- body:description string
+- body:id string
+- body:name string
+- body:password string
+- body:token string
+- body:tokenHeader string
+- body:username string
+
+## S329-0010  DELETE /secrets/{id}
+desc: Delete Secret | Delete a Secret
+- path:id string
+
+## S329-0011  PUT /secrets/{id}
+desc: Update Secret | Update a Secret
+- path:id string
+
+## S329-0012  DELETE /services/{id}
+desc: Delete Service | Delete a Service
+- path:id string
+
+## S329-0013  PUT /services/{id}/metadata
+desc: Update Service Metadata
+schema: Metadata
+- path:id string
+- body:annotations object
+- body:createdOn integer
+- body:labels object
+- body:lastUpdate integer
+
+## S329-0014  PUT /services/{id}/operation
+desc: Override Service Operation
+schema: OperationOverrideDTO
+- path:id string
+- query:operationName string
+- body:defaultDelay integer
+- body:dispatcher string
+- body:dispatcherRules string
+- body:parameterConstraints array<object>
+- body:parameterConstraints[].in string enum[path|query|header]
+- body:parameterConstraints[].mustMatchRegexp string
+- body:parameterConstraints[].name string
+- body:parameterConstraints[].recopy boolean
+- body:parameterConstraints[].required boolean
+
+## S329-0015  POST /tests
+desc: Create a new Test
+schema: TestRequest
+- body:filteredOperations array<string>
+- body:operationHeaders object
+- body:runnerType string enum[HTTP|SOAP_HTTP|SOAP_UI|POSTMAN|OPEN_API_SCHEMA|ASYNC_API_SCHEMA|GRPC_PROTOBUF|GRAPHQL_SCHEMA]
+- body:secretName string
+- body:serviceId string
+- body:testEndpoint string
+- body:timeout integer
+
+## S329-0016  POST /tests/{id}/testCaseResult
+desc: Report and create a new TestCaseResult | Report a TestCaseResult (typically used by a Test runner)
+schema: TestCaseReturnDTO
+- path:id string
+- body:operationName string
+
+## S330-0001  POST /api/v1/invite/verify/{token}
+desc: verifyAdminInvite | **Note**: another call to ```GET /api/v1/self``` is required to see the new set of privileges
+- path:token string
+
+## S330-0002  DELETE /api/v1/login/oauth/{provider}
+desc: unlinkOAuth2Provider | Unlink OAuth2 Provider
+- path:provider string
+
+## S330-0003  PUT /api/v1/msps/{msp_id}/admins/{admin_id}
+desc: updateMspAdmin | Update MSP Admin
+schema: admin
+- path:msp_id string
+- path:admin_id string
+- body:admin_id string
+- body:email string
+- body:enable_two_factor boolean
+- body:first_name string
+- body:hours integer
+- body:last_name string
+- body:oauth_google boolean
+- body:phone string
+- body:phone2 string
+- body:privileges array<object>
+- body:privileges[].for_site boolean
+- body:privileges[].msp_id string
+- body:privileges[].msp_logo_url string
+- body:privileges[].msp_name string
+- body:privileges[].msp_url string
+- body:privileges[].name string
+- body:privileges[].org_id string
+- body:privileges[].org_name string
+- body:privileges[].orggroup_ids array<string>
+- body:privileges[].role string enum[admin|write|read|helpdesk|installer]
+- body:privileges[].scope string enum[org|site|msp|orggroup]
+- body:privileges[].site_id string
+- body:privileges[].sitegroup_ids array<string>
+- body:privileges[].views array<string>
+- body:session_expiry integer
+- body:tags array<string>
+- body:two_factor_verified boolean
+- body:via_sso string
+
+## S330-0004  POST /api/v1/orgs/{org_id}/aptemplates
+desc: createOrgAptemplate | Create Org AP Template
+schema: aptemplate
+- path:org_id string
+- body:ap_matching object
+- body:ap_matching.enabled boolean
+- body:ap_matching.rules array<object>
+- body:ap_matching.rules[].match_model string
+- body:ap_matching.rules[].name string
+- body:ap_matching.rules[].port_config object
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:modified_time number
+- body:org_id string
+- body:site_id string
+- body:wifi object
+- body:wifi.cisco_enabled boolean
+- body:wifi.disable_11k boolean
+- body:wifi.disable_radios_when_power_constrained boolean
+- body:wifi.enable_arp_spoof boolean
+- body:wifi.enable_shared_radio_scanning boolean
+- body:wifi.enabled boolean
+- body:wifi.locate_connected boolean
+- body:wifi.locate_unconnected boolean
+- body:wifi.mesh_allow_dfs boolean
+- body:wifi.mesh_enable_crm boolean
+- body:wifi.mesh_enabled boolean
+- body:wifi.proxy_arp boolean
+
+## S330-0005  DELETE /api/v1/orgs/{org_id}/assets/{asset_id}
+desc: deleteOrgAsset | Delete Org Asset
+- path:org_id string
+- path:asset_id string
+
+## S330-0006  POST /api/v1/orgs/{org_id}/mxedges/{mxedge_id}/upgrade
+desc: upgradeOrgMxEdge | Upgrade MxEdge
+- path:org_id string
+- path:mxedge_id string
+- body:channel string enum[stable|beta|alpha]
+- body:mxedge_ids array<string>
+- body:versions object
+- body:versions.mxagent string
+- body:versions.tunterm string
+
+## S330-0007  PUT /api/v1/orgs/{org_id}/psks/{psk_id}
+desc: updateOrgPsk | Update Org PSK
+schema: psk
+- path:org_id string
+- path:psk_id string
+- body:admin_sso_id string
+- body:created_time number
+- body:email string
+- body:expire_time integer
+- body:expiry_notification_time integer
+- body:id string
+- body:mac string
+- body:max_usage integer
+- body:modified_time number
+- body:name string
+- body:note string
+- body:notify_expiry boolean
+- body:notify_on_create_or_edit boolean
+- body:old_passphrase string
+- body:org_id string
+- body:passphrase string
+- body:role string
+- body:site_id string
+- body:ssid string
+- body:usage string enum[multi|single]
+- body:vlan_id integer
+
+## S330-0008  DELETE /api/v1/orgs/{org_id}/sdkinvites/{sdkinvite_id}
+desc: revokeSdkInvite | Revoke SDK Invite
+- path:org_id string
+- path:sdkinvite_id string
+
+## S330-0009  DELETE /api/v1/orgs/{org_id}/sdktemplates/{sdktemplate_id}
+desc: deleteSdkTemplate | Delete SDK Template
+- path:org_id string
+- path:sdktemplate_id string
+
+## S330-0010  POST /api/v1/orgs/{org_id}/setting/juniper/link_accounts
+desc: linkOrgToJuniperJuniperAccount | Link Juniper Accounts
+- path:org_id string
+- body:password string
+- body:username string
+
+## S330-0011  DELETE /api/v1/orgs/{org_id}/sitegroups/{sitegroup_id}
+desc: deleteOrgSiteGroup | Delete Org Site Group
+- path:org_id string
+- path:sitegroup_id string
+
+## S330-0012  DELETE /api/v1/orgs/{org_id}/templates/{template_id}
+desc: deleteOrgTemplate | Delete Org Template
+- path:org_id string
+- path:template_id string
+
+## S330-0013  POST /api/v1/orgs/{org_id}/templates/{template_id}/clone
+desc: cloneOrgTemplate | Clone Org Template
+- path:org_id string
+- path:template_id string
+- body:name string

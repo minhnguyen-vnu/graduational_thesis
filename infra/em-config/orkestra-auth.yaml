@@ -1,0 +1,21 @@
+auth:
+  - name: viewer
+    loginEndpointAuth:
+      payloadRaw: '{"email":"tgt@orkestra.test","password":"Thesis-Pass-1234!"}'
+  - name: operator
+    loginEndpointAuth:
+      payloadRaw: '{"email":"op@orkestra.test","password":"Thesis-Pass-1234!"}'
+  - name: victim
+    loginEndpointAuth:
+      payloadRaw: '{"email":"vic@orkestra.test","password":"Thesis-Pass-1234!"}'
+authTemplate:
+  loginEndpointAuth:
+    externalEndpointURL: http://localhost:3000/v1/auth/operator/login
+    verb: POST
+    contentType: application/json
+    token:
+      extractFrom: body
+      extractSelector: /accessToken
+      sendIn: header
+      sendName: Authorization
+      sendTemplate: "Bearer {token}"

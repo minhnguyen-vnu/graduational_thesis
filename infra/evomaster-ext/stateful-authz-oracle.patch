@@ -1,0 +1,620 @@
+diff --git a/core/src/main/kotlin/org/evomaster/core/EMConfig.kt b/core/src/main/kotlin/org/evomaster/core/EMConfig.kt
+index ed830a3220..b498b4d72a 100644
+--- a/core/src/main/kotlin/org/evomaster/core/EMConfig.kt
++++ b/core/src/main/kotlin/org/evomaster/core/EMConfig.kt
+@@ -3041,6 +3041,15 @@ class EMConfig {
+             "When false, all experimental oracles are disabled.")
+     var useExperimentalOracles = false
+ 
++    @Experimental
++    @Cfg("THESIS EXTENSION. Endpoint used to restore the SUT to a known state before each attempt at" +
++            " building a stateful-authorization (MR-A1) triple, given as \"<VERB> <URL>\", eg" +
++            " \"POST http://localhost:8080/reset\". This is the black-box analogue of the state reset" +
++            " that white-box EvoMaster performs through the SUT driver. When empty (the default), no" +
++            " reset is done, and the search phase may already have demoted or deleted the accounts the" +
++            " triple needs.")
++    var statefulAuthzResetEndpoint = ""
++
+     enum class VulnerableInputClassificationStrategy {
+         /**
+          * Uses the manual methods to select the vulnerable inputs.
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/enterprise/ExperimentalFaultCategory.kt b/core/src/main/kotlin/org/evomaster/core/problem/enterprise/ExperimentalFaultCategory.kt
+index 9ef55105ff..112dd649f6 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/enterprise/ExperimentalFaultCategory.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/enterprise/ExperimentalFaultCategory.kt
+@@ -51,6 +51,12 @@ enum class ExperimentalFaultCategory(
+     HTTP_STATUS_NO_205_IF_CONTENT(964,"HTTP/REST-Design Violation: no-205-if-content","205WhenContent", "TODO"),
+     HTTP_STATUS_NO_426_IF_NO_UPGRADE(965,"HTTP/REST-Design Violation: no-426-if-no-upgrade","426MissingUpgrade", "TODO"),
+ 
++    //97x: experimental security oracles — thesis stateful/temporal authorization extension (MR-A1)
++    SECURITY_STATEFUL_AUTHORIZATION(970,
++        "Stateful Authorization: privilege persists after a permission-reducing transition",
++        "stillAllowedAfterPermissionRevoked",
++        "An action requiring a privilege, once observed ALLOWED, was still ALLOWED when replayed with the same credential after that privilege was removed (e.g. a role downgrade). The removal was never enforced on the already-issued credential."),
++
+     //3xx: GraphQL
+     GQL_ERROR_FIELD(920, "Error Field", "returnedErrors",
+         "TODO"),
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
+index 71e73d682e..e6201c10a6 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
+@@ -113,6 +113,7 @@ class RestSecurityOracle {
+         handleAnonymousWriteCheck(individual, actionResults, fv)
+         handleHiddenAccessible(individual, actionResults, fv)
+         handleSsrfFaults(individual, actionResults, fv)
++        handleStatefulAuthorization(individual, actionResults, fv)
+     }
+ 
+     private fun handleSsrfFaults(
+@@ -548,6 +549,109 @@ class RestSecurityOracle {
+         }
+     }
+ 
++    /**
++     * Thesis extension — MR-A1 stateful/temporal authorization oracle (JUDGMENT side).
++     *
++     * Detects "privilege persists after a permission-reducing transition": an action that was
++     * ALLOWED (2xx) for a principal is STILL ALLOWED (2xx) when replayed with the SAME credential
++     * after an intervening state change performed by a DIFFERENT, still-privileged principal.
++     * This is the same-user / across-time axis that the baseline SECURITY_WRONG_AUTHORIZATION
++     * (cross-user / single-instant) oracle cannot reach.
++     * See docs/metamorphic-authz-relations.md (§2-§3) in the thesis repo.
++     *
++     * JUDGMENT ONLY. The guarantee that the intervening action is genuinely permission-reducing,
++     * and that the action is gated by the removed privilege (the "guard", §2.3), is the job of the
++     * construction side — RestSecurityBuilder.addForStatefulAccessControl() — the next thesis step.
++     * Until that emits SampleType.SECURITY triples of shape [source, transition, follow-up], this
++     * handler finds no matching pattern and stays silent. The category is experimental, so it is
++     * inactive unless EvoMaster is run with --useExperimentalOracles true.
++     */
++    private fun handleStatefulAuthorization(
++        individual: RestIndividual,
++        actionResults: List<ActionResult>,
++        fv: FitnessValue
++    ) {
++
++        if (!config.isEnabledFaultCategory(ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION)) {
++            return
++        }
++
++        val actions = individual.seeMainExecutableActions()
++
++        fun statusOf(a: RestCallAction): Int? =
++            (actionResults.find { it.sourceLocalId == a.getLocalId() } as RestCallResult?)?.getStatusCode()
++
++        fun isAllowed(a: RestCallAction): Boolean {
++            val code = statusOf(a) ?: return false
++            return StatusGroup.G_2xx.isInGroup(code)
++        }
++
++        for (srcIndex in actions.indices) {
++            val source = actions[srcIndex]
++            // The source must be an authenticated, ALLOWED, STATE-CHANGING action: the privilege
++            // demonstrably worked, and it is a write. A GET that remains readable after a downgrade
++            // is not evidence that a removed write privilege is still honoured -- and read endpoints
++            // are the ones that repeat harmlessly all over a generated test, so allowing them here
++            // is what turns this oracle into a false-positive generator (§5.1, the guard).
++            if (source.auth is NoAuth
++                || !isAllowed(source)
++                || source.verb !in listOf(HttpVerb.PUT, HttpVerb.PATCH, HttpVerb.POST, HttpVerb.DELETE)
++                // the guarded action must not itself be the transition endpoint, otherwise
++                // "demote A, then demote B" reads as a violation
++                || RestSecurityBuilder.looksLikePermissionReducingTransition(source)) {
++                continue
++            }
++
++            for (followUpIndex in (srcIndex + 1) until actions.size) {
++                val followUp = actions[followUpIndex]
++
++                // same endpoint, and — the crux (§5.3) — the SAME credential replayed, never re-login
++                if (followUp.getName() != source.getName() || followUp.auth.isDifferentFrom(source.auth)) {
++                    continue
++                }
++                // the bug: the removed privilege is still honored -> follow-up also ALLOWED
++                if (!isAllowed(followUp)) {
++                    continue
++                }
++
++                // There must be an intervening PERMISSION-REDUCING transition, applied by a
++                // DIFFERENT still-privileged principal.
++                //
++                // Checking that the intervening action really is a transition is essential, not
++                // belt-and-braces: this handler runs over EVERY individual, not only the triples
++                // built by addForStatefulAccessControl(). Accepting "any successful call by another
++                // user" made two consecutive reads of the same endpoint (eg GET /me by name2) look
++                // like a violation whenever an unrelated call by another user sat between them --
++                // a false positive with no transition anywhere in the test.
++                val hasTransition = (srcIndex + 1 until followUpIndex).any {
++                    val t = actions[it]
++                    t.auth.isDifferentFrom(source.auth)
++                        && isAllowed(t)
++                        && RestSecurityBuilder.looksLikePermissionReducingTransition(t)
++                }
++                if (!hasTransition) {
++                    continue
++                }
++
++                val result = actionResults
++                    .filterIsInstance<RestCallResult>()
++                    .find { it.sourceLocalId == followUp.getLocalId() }
++                    ?: continue
++
++                val scenarioId = idMapper.handleLocalTarget(
++                    idMapper.getFaultDescriptiveId(
++                        ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION, followUp.getName()
++                    )
++                )
++                fv.updateTarget(scenarioId, 1.0, followUpIndex)
++                result.addFault(
++                    DetectedFault(ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION, followUp.getName(), null)
++                )
++                return
++            }
++        }
++    }
++
+ 
+     private fun verifySampleType(individual: RestIndividual){
+         if(individual.sampleType != SampleType.SECURITY){
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+index e3652b2015..fcdb5ba770 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -21,13 +21,22 @@ import org.evomaster.core.problem.rest.builder.RestIndividualSelectorUtils
+ import org.evomaster.core.problem.rest.data.*
+ import org.evomaster.core.problem.rest.oracle.RestSecurityOracle.Companion.SQLI_PAYLOADS
+ import org.evomaster.core.problem.rest.oracle.RestSecurityOracle.Companion.XSS_PAYLOADS
++import org.evomaster.core.problem.api.param.Param
++import org.evomaster.core.problem.rest.param.BodyParam
+ import org.evomaster.core.problem.rest.param.PathParam
++import org.evomaster.core.problem.rest.param.QueryParam
+ import org.evomaster.core.problem.rest.resource.RestResourceCalls
+ import org.evomaster.core.problem.rest.service.sampler.AbstractRestSampler
+ import org.evomaster.core.problem.security.service.SSRFAnalyser
++import org.evomaster.core.remote.HttpClientFactory
++import javax.ws.rs.client.Client
++import javax.ws.rs.client.Entity
++import javax.ws.rs.core.MediaType
+ import org.evomaster.core.search.gene.string.StringGene
+ 
+ import org.evomaster.core.search.*
++import org.evomaster.core.search.gene.Gene
++import org.evomaster.core.search.gene.collection.EnumGene
+ import org.evomaster.core.search.gene.utils.GeneUtils
+ import org.evomaster.core.search.service.Archive
+ import org.evomaster.core.search.service.FitnessFunction
+@@ -52,6 +61,36 @@ class RestSecurityBuilder : TimeBoxedPhase {
+ 
+     companion object {
+         private val log: Logger = LoggerFactory.getLogger(RestSecurityBuilder::class.java)
++
++        private val TRANSITION_PATH_SIGNALS =
++            listOf("role","permission","member","subscription","plan","owner","grant","access")
++
++        private val TRANSITION_VERBS =
++            listOf(HttpVerb.PUT, HttpVerb.PATCH, HttpVerb.POST, HttpVerb.DELETE)
++
++        /**
++         * Ceiling on triple attempts per run. Retrying costs more than time: every attempt that lands
++         * its transition takes a privilege away from the SUT for good, so an unbounded retry would
++         * strip the very state later attempts depend on. The phase time budget is checked separately.
++         */
++        private const val MAX_STATEFUL_TRIPLE_ATTEMPTS = 8
++
++        /**
++         * Does this action look like a permission-reducing transition? A *write* whose path/name
++         * carries a role/permission signal.
++         *
++         * Shared with the judgment side (RestSecurityOracle.handleStatefulAuthorization) on purpose:
++         * the oracle runs over EVERY individual, not only the triples this builder assembles, so it
++         * cannot assume the intervening action is a real transition. Keeping the single definition
++         * here stops the two sides from drifting apart.
++         */
++        fun looksLikePermissionReducingTransition(a: RestCallAction): Boolean {
++            if (a.verb !in TRANSITION_VERBS) {
++                return false
++            }
++            val hay = (a.path.toString() + " " + a.getName()).lowercase()
++            return TRANSITION_PATH_SIGNALS.any { hay.contains(it) }
++        }
+     }
+ 
+     /**
+@@ -137,6 +176,13 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         //recompute due to possible new tests we might need
+         individualsInSolution = this.archive.extractSolution().individuals
+ 
++        //THESIS EXTENSION: stateful/temporal authorization (MR-A1). Same-user, across-time axis.
++        //Runs right after expandWithForbidden (which provides the 403 "guard" evidence we rely on)
++        //and before the other access-control checks, so it is not starved of the phase time budget.
++        if(!hasPhaseTimedOut()) {
++            addForStatefulAccessControl()
++        }
++
+         // we can see what is available from the schema, and then check if already existing a test for it in archive
+         // newly generated tests will be added back to archive
+         if(!hasPhaseTimedOut()) {
+@@ -295,6 +341,382 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         TODO("Not yet implemented")
+     }
+ 
++
++    /*
++        THESIS EXTENSION — MR-A1 stateful/temporal authorization oracle (CONSTRUCTION side).
++
++        Companion of RestSecurityOracle.handleStatefulAuthorization() (the JUDGMENT side). Builds, by
++        construction, the grant -> transition -> re-attempt triple the baseline never assembles (it
++        re-logs-in every test, so it never replays a pre-transition token):
++
++            [ source:     a  by victim V              -> observed 2xx  (privilege demonstrably works)
++              transition: a role/permission-reducing call by a DIFFERENT still-privileged user,
++                          targeting V, setting a reduced role                        (the downgrade)
++              follow-up:  a  by V, SAME credential, same resource -> if still 2xx  => BUG ]
++
++        Token replay is native (EvoMaster logs each user in once, up front, before the action loop), so
++        we do nothing special about tokens; we only set auth.name per action. Detection happens in the
++        JUDGMENT handler during fitness evaluation. The category is experimental => this is inert unless
++        run with --useExperimentalOracles true, so baseline runs are untouched.
++        See docs/metamorphic-authz-relations.md (§5) and CLAUDE.md §7.8 in the thesis repo.
++
++        SCOPE (§5.3): the core targets an explicit role-change endpoint, recognised by a naming signal
++        plus a user-identifying parameter, with a "reduced" value harvested from the schema's role
++        vocabulary by a low-privilege naming signal. Broader transition/value inference is future work.
++     */
++
++    private val transitionPathSignals = TRANSITION_PATH_SIGNALS
++    private val transitionUserParamSignals = listOf("username","userid","user_id","user","account","member","subject","principal","id")
++    private val roleFieldSignals = listOf("role","plan","permission","level","tier")
++    private val roleLowPrivSignals = listOf("view","read","guest","basic","free","member","user","none","restrict","limited")
++    private val roleHighPrivSignals = listOf("admin","owner","super","root","manage","write","edit","power","full")
++
++    /**
++     * Users whose privilege THIS phase has already reduced. Reusing one as the transition operator
++     * makes the transition fail (403); reusing one as the victim makes the source fail (403), and in
++     * black-box that aborts the whole test before the transition is ever sent, so the triple is not
++     * merely wrong, it is never performed.
++     */
++    private val privilegeReducedInPhase = mutableSetOf<String>()
++
++    /** Executed triple attempts, valid or void. Each is a real test run against the SUT. */
++    private var statefulTripleAttempts = 0
++
++    /** Lazily built, only if a reset endpoint was configured. */
++    private val resetClient: Client by lazy { HttpClientFactory.createTrustingJerseyClient() }
++
++    /**
++     * Restore the SUT to a known state, if the user configured an endpoint for it.
++     *
++     * Black-box EvoMaster has no equivalent of the white-box driver's resetStateOfSUT(), so by the
++     * time the security phase starts, the search has typically spent minutes demoting and deleting
++     * the very accounts an MR-A1 triple needs. This optional hook closes that gap. Reported as an
++     * ablation against the default of no reset, it measures how much of the recall loss is caused by
++     * state destruction rather than by the oracle itself.
++     */
++    private fun resetSutState() {
++
++        val spec = config.statefulAuthzResetEndpoint
++        if (spec.isBlank()) return
++
++        val parts = spec.trim().split(Regex("\\s+"), 2)
++        if (parts.size != 2) {
++            LoggingUtil.uniqueUserWarn("Ignoring malformed statefulAuthzResetEndpoint '$spec':" +
++                    " expected \"<VERB> <URL>\", eg \"POST http://localhost:8080/reset\"")
++            return
++        }
++        val (verb, url) = parts
++
++        val status = try {
++            val b = resetClient.target(url).request()
++            val empty = Entity.entity("", MediaType.APPLICATION_JSON_TYPE)
++            val r = when (verb.uppercase()) {
++                "GET" -> b.get()
++                "POST" -> b.post(empty)
++                "PUT" -> b.put(empty)
++                "DELETE" -> b.delete()
++                else -> {
++                    LoggingUtil.uniqueUserWarn("Ignoring statefulAuthzResetEndpoint: unsupported verb '$verb'")
++                    return
++                }
++            }
++            r.status.also { r.close() }
++        } catch (e: Exception) {
++            LoggingUtil.getInfoLogger().warn("SUT state reset via $spec failed: ${e.message}")
++            return
++        }
++
++        LoggingUtil.getInfoLogger().info("SUT state reset via $spec -> $status")
++
++        // The reset undid every demotion this phase performed, so the users we were skipping are
++        // privileged again. Not clearing this would keep discarding candidates the reset just revived.
++        if (status in 200..299) {
++            privilegeReducedInPhase.clear()
++        }
++    }
++
++    private fun addForStatefulAccessControl() {
++
++        if (!config.isEnabledFaultCategory(ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION)) {
++            log.debug("Skipping experimental stateful-authorization security test as disabled in configuration")
++            return
++        }
++        // a victim and a distinct still-privileged operator are both required
++        if (!checkForAtLeastNumberOfAuthenticatedUsers(2)) {
++            return
++        }
++
++        // refresh: earlier phases (eg expandWithForbidden) may have added the 403 tests we rely on
++        individualsInSolution = archive.extractSolution().individuals
++
++        val transition = findPermissionReducingTransition()
++        if (transition == null) {
++            log.debug("Skipping stateful-authorization: no permission-reducing transition endpoint found")
++            return
++        }
++        val reducedRole = harvestReducedRoleValue(transition)
++        if (reducedRole == null) {
++            log.debug("Skipping stateful-authorization: no reduced role value in the schema vocabulary")
++            return
++        }
++
++        // source/follow-up must be a NON-consuming guarded write, so the same resource is repeatable
++        val sourceVerbs = listOf(HttpVerb.PUT, HttpVerb.PATCH)
++
++        for (verb in sourceVerbs) {
++            for (op in RestIndividualSelectorUtils.getAllActionDefinitions(actionDefinitions, verb)) {
++
++                if (hasPhaseTimedOut()) return
++                if (op.path == transition.path) continue // the transition endpoint is not a source
++
++                // GUARD (§5.1): the action must be privilege-gated -> some user was denied it (403)
++                val guarded = RestIndividualSelectorUtils.findIndividuals(
++                    individualsInSolution, verb, op.path, status = 403
++                ).isNotEmpty()
++                if (!guarded) continue
++
++                // Every distinct user seen ALLOWED (2xx) on this guarded action is a victim candidate,
++                // smallest test first. One candidate is not enough. A triple is VOID (§5.3) -- not a
++                // result -- when the victim's credential no longer works (401: the fuzzer may well
++                // have deleted the account during the search), when the privilege was already gone
++                // (403, which aborts the black-box test at its first action), or when the transition
++                // did not take effect (403 by an operator who is not privileged either). Each of those
++                // is answered by trying the NEXT candidate: that is what "void and retry" means, and
++                // without it a single unlucky pick silently costs the whole run.
++                val victimCandidates = RestIndividualSelectorUtils.findAndSlice(
++                    individualsInSolution, verb, op.path,
++                    statusGroup = StatusGroup.G_2xx, authenticated = true
++                ).sortedBy { it.size() }
++                    .distinctBy { it.seeMainExecutableActions().last().auth.name }
++
++                for (victimSlice in victimCandidates) {
++                    if (hasPhaseTimedOut()) return
++                    if (statefulTripleAttempts >= MAX_STATEFUL_TRIPLE_ATTEMPTS) return
++                    // stop this endpoint at the first VALID triple: further attempts would reduce yet
++                    // more privileges, polluting the state for the endpoints still to be tried
++                    if (buildStatefulAuthzTriple(victimSlice, transition, reducedRole)) break
++                }
++            }
++        }
++    }
++
++    /**
++     * Try to obtain ONE conclusive MR-A1 triple for this victim, retrying over the possible operators.
++     *
++     * @return true if a VALID triple was executed, ie the attempt produced a verdict -- whatever that
++     * verdict is. False means every attempt was VOID under §5.3 and the caller should move on to
++     * another victim candidate.
++     */
++    private fun buildStatefulAuthzTriple(
++        victimSlice: RestIndividual,
++        transitionDef: RestCallAction,
++        reducedRole: String
++    ): Boolean {
++        val victimAuth = victimSlice.seeMainExecutableActions().lastOrNull()?.auth ?: return false
++        if (victimAuth is NoAuth) return false
++        // nothing left to take away from a victim this phase already demoted, and the source would be
++        // denied -- which in black-box kills the test before the transition is even sent
++        if (privilegeReducedInPhase.contains(victimAuth.name)) return false
++
++        // DIFFERENT, still-privileged users to perform the transition; prefer any seen doing it (2xx),
++        // and never one we demoted ourselves, whose transition could only come back 403
++        val operators = authSettings.getAllOthers(victimAuth.name, HttpWsAuthenticationInfo::class.java)
++            .filter { !privilegeReducedInPhase.contains(it.name) }
++            .sortedByDescending { o ->
++                RestIndividualSelectorUtils.findIndividuals(
++                    individualsInSolution, transitionDef.verb, transitionDef.path,
++                    statusGroup = StatusGroup.G_2xx, authenticatedWith = o.name
++                ).isNotEmpty()
++            }
++
++        for (operator in operators) {
++            if (hasPhaseTimedOut()) return false
++            if (statefulTripleAttempts >= MAX_STATEFUL_TRIPLE_ATTEMPTS) return false
++            if (executeStatefulAuthzTriple(victimSlice, transitionDef, reducedRole, operator)) {
++                return true
++            }
++        }
++        return false
++    }
++
++    /**
++     * Build and run one [source -> transition -> follow-up] attempt with the given operator.
++     * @return true if the triple was conclusive (§5.3), false if VOID.
++     */
++    private fun executeStatefulAuthzTriple(
++        victimSlice: RestIndividual,
++        transitionDef: RestCallAction,
++        reducedRole: String,
++        operator: HttpWsAuthenticationInfo
++    ): Boolean {
++        val base = victimSlice.copy() as RestIndividual
++        val source = base.seeMainExecutableActions().lastOrNull() ?: return false
++        val victimAuth = source.auth
++        if (victimAuth is NoAuth) return false
++
++        // --- transition: reduce the victim's role, performed by the operator ---
++        val transition = transitionDef.copy() as RestCallAction
++        transition.resetLocalIdRecursively()
++        transition.forceNewTaints()
++        transition.doInitialize(randomness)
++        transition.auth = operator
++        // target the victim (path param), and set a reduced role (body field); either failing => void
++        if (!setUserTargetToVictim(transition, victimAuth.name)) {
++            log.debug("Stateful-authorization: could not target victim '${victimAuth.name}' on ${transition.getName()}")
++            return false
++        }
++        if (!setRoleFieldToReduced(transition, reducedRole)) {
++            log.debug("Stateful-authorization: could not set reduced role '$reducedRole' on ${transition.getName()}")
++            return false
++        }
++        base.addMainActionInEmptyEnterpriseGroup(action = transition)
++
++        // --- follow-up: replay the guarded action, SAME credential, same resource ---
++        val followUp = source.copy() as RestCallAction
++        followUp.resetLocalIdRecursively()
++        followUp.forceNewTaints()
++        followUp.auth = victimAuth
++        followUp.usePreviousLocationId = source.usePreviousLocationId
++        followUp.bindBasedOn(source.path, source.parameters.filterIsInstance<PathParam>(), null)
++        base.addMainActionInEmptyEnterpriseGroup(action = followUp)
++
++        base.doInitializeLocalId()
++        base.modifySampleType(SampleType.SECURITY)
++        base.ensureFlattenedStructure()
++        base.fixResourceForwardLinks()
++        org.evomaster.core.Lazy.assert { base.verifyValidity(); true }
++
++        // THESIS EXTENSION (ablation). Everything above only builds the individual in memory; the SUT
++        // is first touched by the fitness call below, so this is the last possible moment to reset.
++        resetSutState()
++
++        // fitness runs the JUDGMENT handler; the test is kept only if it revealed a new (fault) target
++        val ei = fitness.computeWholeAchievedCoverageForPostProcessing(base)
++        if (ei == null) {
++            log.warn("Failed to evaluate constructed stateful-authorization individual")
++            return false
++        }
++        statefulTripleAttempts++
++
++        // What the SUT actually did, looked up per action rather than by position: black-box stops a
++        // test at its first failing resource-creating call, so an action can have NO result at all.
++        fun statusOf(a: RestCallAction): Int? =
++            (ei.seeResult(a.getLocalId()) as? RestCallResult)?.getStatusCode()
++        val sourceCode = statusOf(source)
++        val transitionCode = statusOf(transition)
++        val followUpCode = statusOf(followUp)
++        val observed = listOf(sourceCode, transitionCode, followUpCode)
++            .joinToString("/") { it?.toString() ?: "-" }
++
++        // Whether the transition landed decides who is still privileged for the attempts after this
++        // one, and it is true even when the triple as a whole turns out void.
++        if (transitionCode != null && StatusGroup.G_2xx.isInGroup(transitionCode)) {
++            privilegeReducedInPhase.add(victimAuth.name)
++        }
++
++        // VALIDITY (§5.3). The privilege must have demonstrably worked (source 2xx), the transition
++        // must have taken effect (2xx), and the follow-up must be conclusive -- 401 means the token
++        // was invalid or expired, which is INCONCLUSIVE and must never be read as a verdict. Anything
++        // else is not a result at all, and the caller retries with another candidate.
++        val valid = sourceCode != null && StatusGroup.G_2xx.isInGroup(sourceCode)
++            && transitionCode != null && StatusGroup.G_2xx.isInGroup(transitionCode)
++            && followUpCode != null && followUpCode != 401
++
++        if (!valid) {
++            LoggingUtil.getInfoLogger().info(
++                "Discarded a VOID stateful-authorization (MR-A1) attempt on ${source.getName()}" +
++                    " (victim '${victimAuth.name}', operator '${operator.name}', codes $observed)"
++            )
++            return false
++        }
++
++        // A conclusive triple was performed. Logged UNCONDITIONALLY, before any verdict, so that
++        // construction (this line) and judgment (the line below) are counted separately: a true
++        // negative means something only for a run that actually put a valid triple to the SUT.
++        // The three statuses ARE the triple [source / transition / follow-up].
++        LoggingUtil.getInfoLogger().info(
++            "Assembled a stateful-authorization (MR-A1) triple on ${source.getName()}" +
++                " (victim '${victimAuth.name}', operator '${operator.name}'," +
++                " transition ${transition.getName()}, statuses $observed)"
++        )
++        if (ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION in DetectedFaultUtils.getDetectedFaultCategories(ei)) {
++            LoggingUtil.getInfoLogger().info(
++                "Constructed a stateful-authorization (MR-A1) test revealing privilege persistence" +
++                    " after a role downgrade on ${source.getName()} (victim '${victimAuth.name}')"
++            )
++        }
++        archive.addIfNeeded(ei)
++        return true
++    }
++
++    /**
++     * Recognise a permission-reducing transition endpoint: a write whose path/name carries a
++     * role/permission signal AND that exposes a user-identifying parameter (so we can target a victim).
++     * Scoped to role-change endpoints per §5.3; broader signal inference is future work.
++     */
++    private fun findPermissionReducingTransition(): RestCallAction? {
++        val preferredOrder = listOf(HttpVerb.PUT, HttpVerb.PATCH, HttpVerb.POST, HttpVerb.DELETE)
++        return actionDefinitions
++            .filter { it.verb in preferredOrder }
++            .sortedBy { preferredOrder.indexOf(it.verb) }
++            .firstOrNull { a ->
++                val hay = (a.path.toString() + " " + a.getName()).lowercase()
++                val pathSignal = transitionPathSignals.any { hay.contains(it) }
++                val hasUserParam = allGenes(a).any { g ->
++                    val n = g.name.lowercase()
++                    transitionUserParamSignals.any { n == it || n.contains(it) }
++                }
++                pathSignal && hasUserParam
++            }
++    }
++
++    /**
++     * Harvest a "reduced" role value from the schema's role vocabulary (enum values that carry a
++     * privilege signal), preferring values from the transition action itself. A value is "reduced"
++     * when it matches a low-privilege signal and no high-privilege signal (eg VIEWER over ADMIN).
++     */
++    private fun harvestReducedRoleValue(transition: RestCallAction): String? {
++        val vocab = (allGenes(transition) + actionDefinitions.flatMap { allGenes(it) })
++            .filterIsInstance<EnumGene<*>>()
++            .flatMap { it.values.map { v -> v.toString() } }
++            .distinct()
++        return vocab.firstOrNull { v ->
++            val lv = v.lowercase()
++            roleLowPrivSignals.any { lv.contains(it) } && roleHighPrivSignals.none { lv.contains(it) }
++        }
++    }
++
++    private fun allGenes(action: RestCallAction): List<Gene> =
++        action.seeTopGenes().flatMap { it.flatView() }
++
++    /**
++     * Bind the victim's identity on the transition. A role-change endpoint identifies the target user
++     * via a PATH parameter (eg /users/{username}/role); fall back to a BODY field. We deliberately do
++     * NOT match query params, to avoid the springdoc `caller` artifact (a CurrentUser object that also
++     * carries username/role fields but which the app ignores).
++     */
++    private fun setUserTargetToVictim(action: RestCallAction, victimName: String): Boolean =
++        setInParams(action.parameters.filterIsInstance<PathParam>(), transitionUserParamSignals, victimName)
++            || setInParams(action.parameters.filterIsInstance<BodyParam>(), transitionUserParamSignals, victimName)
++
++    /**
++     * Set the reduced role on the transition's BODY (never on the `caller` query artifact).
++     */
++    private fun setRoleFieldToReduced(action: RestCallAction, reducedRole: String): Boolean =
++        setInParams(action.parameters.filterIsInstance<BodyParam>(), roleFieldSignals, reducedRole)
++
++    private fun setInParams(params: List<Param>, signals: List<String>, value: String): Boolean {
++        for (p in params) {
++            for (g in p.primaryGene().flatView()) {
++                val n = g.name.lowercase()
++                if (signals.any { n == it || n.contains(it) } && g.setFromStringValue(value)) {
++                    return true
++                }
++            }
++        }
++        return false
++    }
++
+     private fun addForInjections() {
+ 
+         if (!config.isEnabledFaultCategory(DefinedFaultCategory.XSS)) {

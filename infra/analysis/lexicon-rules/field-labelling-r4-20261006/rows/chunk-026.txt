@@ -1,0 +1,507 @@
+## S210-N0064  POST /orgs/{org}/actions/required_workflows
+desc: Create a required workflow | Create a required workflow in an organization. You must authenticate using an access token with the `admin:org` scope to use this endpoint. For more information, see "[Required Workflows](https://docs.github.com/enterprise-cloud@latest//actions/using-workflows/required-workflows)."
+- path:org string
+- body:repository_id string
+- body:scope string enum[selected|all]
+- body:selected_repository_ids array<integer>
+- body:workflow_file_path string
+
+## S210-N0065  DELETE /orgs/{org}/actions/required_workflows/{required_workflow_id}
+desc: Delete a required workflow | Deletes a required workflow configured in an organization. You must authenticate using an access token with the `admin:org` scope to use this endpoint. For more information, see "[Required Workflows](https://docs.github.com/enterprise-cloud@latest//actions/using-workflows/required-workflows)."
+- path:org string
+- path:required_workflow_id integer
+
+## S210-N0066  PATCH /orgs/{org}/actions/required_workflows/{required_workflow_id}
+desc: Update a required workflow | Update a required workflow in an organization. You must authenticate using an access token with the `admin:org` scope to use this endpoint. For more information, see "[Required Workflows](https://docs.github.com/enterprise-cloud@latest//actions/using-workflows/required-workflows)."
+- path:org string
+- path:required_workflow_id integer
+- body:repository_id string
+- body:scope string enum[selected|all]
+- body:selected_repository_ids array<integer>
+- body:workflow_file_path string
+
+## S210-N0067  PUT /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories
+desc: Sets repositories for a required workflow | Sets the repositories for a required workflow that is required for selected repositories. You must authenticate using an access token with the `admin:org` scope to use this endpoint. For more information, see "[Required Workflows](https://docs.github.com/enterprise-cloud@latest//actions/using-workflows/required-workflows)."
+- path:org string
+- path:required_workflow_id integer
+- body:selected_repository_ids array<integer>
+
+## S210-N0068  DELETE /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories/{repository_id}
+desc: Remove a selected repository from required workflow | Removes a repository from a required workflow. To use this endpoint, the required workflow must be configured to run on selected repositories. You must authenticate using an access token with the `admin:org` scope to use this endpoint. For more information, see "[Required Workflows](https://docs.github.com/enterprise-cloud@latest//actions/using
+- path:org string
+- path:required_workflow_id integer
+- path:repository_id integer
+
+## S210-N0069  PUT /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories/{repository_id}
+desc: Add a repository to a required workflow | Adds a repository to a required workflow. To use this endpoint, the required workflow must be configured to run on selected repositories. You must authenticate using an access token with the `admin:org` scope to use this endpoint. For more information, see "[Required Workflows](https://docs.github.com/enterprise-cloud@latest//actions/using-workflows/requir
+- path:org string
+- path:required_workflow_id integer
+- path:repository_id integer
+
+## S210-N0070  POST /orgs/{org}/actions/runner-groups
+desc: Create a self-hosted runner group for an organization | Creates a new self-hosted runner group for an organization. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- body:allows_public_repositories boolean
+- body:name string
+- body:restricted_to_workflows boolean
+- body:runners array<integer>
+- body:selected_repository_ids array<integer>
+- body:selected_workflows array<string>
+- body:visibility string enum[selected|all|private]
+
+## S210-N0071  DELETE /orgs/{org}/actions/runner-groups/{runner_group_id}
+desc: Delete a self-hosted runner group from an organization | Deletes a self-hosted runner group for an organization. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:runner_group_id integer
+
+## S210-N0072  PATCH /orgs/{org}/actions/runner-groups/{runner_group_id}
+desc: Update a self-hosted runner group for an organization | Updates the `name` and `visibility` of a self-hosted runner group in an organization. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:runner_group_id integer
+- body:allows_public_repositories boolean
+- body:name string
+- body:restricted_to_workflows boolean
+- body:selected_workflows array<string>
+- body:visibility string enum[selected|all|private]
+
+## S210-N0074  DELETE /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}
+desc: Remove repository access to a self-hosted runner group in an organization | Removes a repository from the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization)." You must authenticat
+- path:org string
+- path:runner_group_id integer
+- path:repository_id integer
+
+## S210-N0075  PUT /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}
+desc: Add repository access to a self-hosted runner group in an organization | Adds a repository to the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization)." You must authenticate using 
+- path:org string
+- path:runner_group_id integer
+- path:repository_id integer
+
+## S210-N0076  PUT /orgs/{org}/actions/runner-groups/{runner_group_id}/runners
+desc: Set self-hosted runners in a group for an organization | Replaces the list of self-hosted runners that are part of an organization runner group. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:runner_group_id integer
+- body:runners array<integer>
+
+## S210-N0077  DELETE /orgs/{org}/actions/runner-groups/{runner_group_id}/runners/{runner_id}
+desc: Remove a self-hosted runner from a group for an organization | Removes a self-hosted runner from a group configured in an organization. The runner is then returned to the default group. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:runner_group_id integer
+- path:runner_id integer
+
+## S210-N0078  PUT /orgs/{org}/actions/runner-groups/{runner_group_id}/runners/{runner_id}
+desc: Add a self-hosted runner to a group for an organization | Adds a self-hosted runner to a runner group configured in an organization. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:runner_group_id integer
+- path:runner_id integer
+
+## S210-N0079  POST /orgs/{org}/actions/runners/registration-token
+desc: Create a registration token for an organization | Returns a token that you can pass to the `config` script. The token expires after one hour. You must authenticate using an access token with the `admin:org` scope to use this endpoint. #### Example using registration token Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint. ``` ./config.sh --u
+- path:org string
+
+## S210-N0080  POST /orgs/{org}/actions/runners/remove-token
+desc: Create a remove token for an organization | Returns a token that you can pass to the `config` script to remove a self-hosted runner from an organization. The token expires after one hour. You must authenticate using an access token with the `admin:org` scope to use this endpoint. #### Example using remove token To remove your self-hosted runner from an organization, replace `TOKEN` with the remove
+- path:org string
+
+## S210-N0081  DELETE /orgs/{org}/actions/runners/{runner_id}
+desc: Delete a self-hosted runner from an organization | Forces the removal of a self-hosted runner from an organization. You can use this endpoint to completely remove the runner when the machine you were using no longer exists. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:runner_id integer
+
+## S210-N0082  DELETE /orgs/{org}/actions/runners/{runner_id}/labels
+desc: Remove all custom labels from a self-hosted runner for an organization | Remove all custom labels from a self-hosted runner configured in an organization. Returns the remaining read-only labels from the runner. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:runner_id integer
+
+## S210-N0084  PUT /orgs/{org}/actions/runners/{runner_id}/labels
+desc: Set custom labels for a self-hosted runner for an organization | Remove all previous custom labels and set the new custom labels for a specific self-hosted runner configured in an organization. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:runner_id integer
+- body:labels array<string>
+
+## S210-N0085  DELETE /orgs/{org}/actions/runners/{runner_id}/labels/{name}
+desc: Remove a custom label from a self-hosted runner for an organization | Remove a custom label from a self-hosted runner configured in an organization. Returns the remaining labels from the runner. This endpoint returns a `404 Not Found` status if the custom label is not present on the runner. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:runner_id integer
+- path:name string
+
+## S210-N0086  DELETE /orgs/{org}/actions/secrets/{secret_name}
+desc: Delete an organization secret | Deletes a secret in an organization using the secret name. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+- path:org string
+- path:secret_name string
+
+## S210-N0087  PUT /orgs/{org}/actions/secrets/{secret_name}
+desc: Create or update an organization secret | Creates or updates an organization secret with an encrypted value. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. #### Example e
+- path:org string
+- path:secret_name string
+- body:encrypted_value string
+- body:key_id string
+- body:selected_repository_ids array<integer>
+- body:visibility string enum[all|private|selected]
+
+## S210-N0088  PUT /orgs/{org}/actions/secrets/{secret_name}/repositories
+desc: Set selected repositories for an organization secret | Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access t
+- path:org string
+- path:secret_name string
+- body:selected_repository_ids array<integer>
+
+## S210-N0089  DELETE /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}
+desc: Remove selected repository from an organization secret | Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access tok
+- path:org string
+- path:secret_name string
+- path:repository_id integer
+
+## S210-N0090  PUT /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}
+desc: Add selected repository to an organization secret | Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with th
+- path:org string
+- path:secret_name string
+- path:repository_id integer
+
+## S210-N0091  POST /orgs/{org}/actions/variables
+desc: Create an organization variable | Creates an organization variable that you can reference in a GitHub Actions workflow. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `organization_actions_variables:write` organization permission to use this endpoint.
+- path:org string
+- body:name string
+- body:selected_repository_ids array<integer>
+- body:value string
+- body:visibility string enum[all|private|selected]
+
+## S210-N0092  DELETE /orgs/{org}/actions/variables/{name}
+desc: Delete an organization variable | Deletes an organization variable using the variable name. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `organization_actions_variables:write` organization permission to use this endpoint.
+- path:org string
+- path:name string
+
+## S210-N0093  PATCH /orgs/{org}/actions/variables/{name}
+desc: Update an organization variable | Updates an organization variable that you can reference in a GitHub Actions workflow. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `organization_actions_variables:write` organization permission to use this endpoint.
+- path:org string
+- path:name string
+- body:name string
+- body:selected_repository_ids array<integer>
+- body:value string
+- body:visibility string enum[all|private|selected]
+
+## S210-N0094  PUT /orgs/{org}/actions/variables/{name}/repositories
+desc: Set selected repositories for an organization variable | Replaces all repositories for an organization variable that is available to selected repositories. Organization variables that are available to selected repositories have their `visibility` field set to `selected`. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `organiza
+- path:org string
+- path:name string
+- body:selected_repository_ids array<integer>
+
+## S210-N0095  DELETE /orgs/{org}/actions/variables/{name}/repositories/{repository_id}
+desc: Remove selected repository from an organization variable | Removes a repository from an organization variable that is available to selected repositories. Organization variables that are available to selected repositories have their `visibility` field set to `selected`. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `organizati
+- path:org string
+- path:name string
+- path:repository_id integer
+
+## S210-N0096  PUT /orgs/{org}/actions/variables/{name}/repositories/{repository_id}
+desc: Add selected repository to an organization variable | Adds a repository to an organization variable that is available to selected repositories. Organization variables that are available to selected repositories have their `visibility` field set to `selected`. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `organization_actions
+- path:org string
+- path:name string
+- path:repository_id integer
+
+## S210-N0097  DELETE /orgs/{org}/announcement
+desc: Remove announcement banner from organization | Removes the announcement banner currently set for the organization.
+- path:org string
+
+## S210-N0099  DELETE /orgs/{org}/blocks/{username}
+desc: Unblock a user from an organization
+- path:org string
+- path:username string
+
+## S210-N0100  PUT /orgs/{org}/blocks/{username}
+desc: Block a user from an organization
+- path:org string
+- path:username string
+
+## S210-N0101  PUT /orgs/{org}/codespaces/billing
+desc: Manage access control for organization codespaces | Sets which users can access codespaces in an organization. This is synonymous with granting or revoking codespaces billing permissions for users according to the visibility. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- body:selected_usernames array<string>
+- body:visibility string enum[disabled|selected_members|all_members|all_members_and_outside_collaborators]
+
+## S210-N0102  DELETE /orgs/{org}/codespaces/billing/selected_users
+desc: Removes users from Codespaces billing for an organization | Codespaces for the specified users will no longer be billed to the organization. To use this endpoint, the billing settings for the organization must be set to `selected_members`. For information on how to change this setting please see [these docs].(https://docs.github.com/enterprise-cloud@latest//rest/codespaces/organizations#manage-acc
+- path:org string
+- body:selected_usernames array<string>
+
+## S210-N0104  DELETE /orgs/{org}/codespaces/secrets/{secret_name}
+desc: Delete an organization secret | Deletes an organization secret using the secret name. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:secret_name string
+
+## S210-N0105  PUT /orgs/{org}/codespaces/secrets/{secret_name}
+desc: Create or update an organization secret | Creates or updates an organization secret with an encrypted value. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access token with the `admin:org` scope to use this endpoint. #### Example encrypting a secret using Node.js Encrypt your secret using the [libsodium-wrappers
+- path:org string
+- path:secret_name string
+- body:encrypted_value string
+- body:key_id string
+- body:selected_repository_ids array<integer>
+- body:visibility string enum[all|private|selected]
+
+## S210-N0106  PUT /orgs/{org}/codespaces/secrets/{secret_name}/repositories
+desc: Set selected repositories for an organization secret | Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/codespaces#create-or-update-an-organization-secret). You must authenticate using an acces
+- path:org string
+- path:secret_name string
+- body:selected_repository_ids array<integer>
+
+## S210-N0107  DELETE /orgs/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}
+desc: Remove selected repository from an organization secret | Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/codespaces#create-or-update-an-organization-secret). You must authenticate using an access 
+- path:org string
+- path:secret_name string
+- path:repository_id integer
+
+## S210-N0108  PUT /orgs/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}
+desc: Add selected repository to an organization secret | Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/codespaces#create-or-update-an-organization-secret). You must authenticate using an access token with
+- path:org string
+- path:secret_name string
+- path:repository_id integer
+
+## S210-N0110  POST /orgs/{org}/custom_roles
+desc: Create a custom role | **Note**: This operation is in beta and is subject to change. Creates a custom repository role that can be used by all repositories owned by the organization. To use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope. GitHub Apps must have the `organization_custom_roles:write` organization pe
+- path:org string
+- body:base_role string enum[read|triage|write|maintain]
+- body:description string
+- body:name string
+- body:permissions array<string>
+
+## S210-N0111  DELETE /orgs/{org}/custom_roles/{role_id}
+desc: Delete a custom role | **Note**: This operation is in beta and is subject to change. Deletes a custom role from an organization. Once the custom role has been deleted, any user, team, or invitation with the deleted custom role will be reassigned the inherited role. To use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org
+- path:org string
+- path:role_id integer
+
+## S210-N0112  PATCH /orgs/{org}/custom_roles/{role_id}
+desc: Update a custom role | **Note**: This operation is in beta and subject to change. Updates a custom repository role that can be used by all repositories owned by the organization. To use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope. GitHub Apps must have the `organization_custom_roles:write` organization permi
+- path:org string
+- path:role_id integer
+- body:base_role string enum[read|triage|write|maintain]
+- body:description string
+- body:name string
+- body:permissions array<string>
+
+## S210-N0113  DELETE /orgs/{org}/dependabot/secrets/{secret_name}
+desc: Delete an organization secret | Deletes a secret in an organization using the secret name. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.
+- path:org string
+- path:secret_name string
+
+## S210-N0114  PUT /orgs/{org}/dependabot/secrets/{secret_name}
+desc: Create or update an organization secret | Creates or updates an organization secret with an encrypted value. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint. ###
+- path:org string
+- path:secret_name string
+- body:encrypted_value string
+- body:key_id string
+- body:selected_repository_ids array<string>
+- body:visibility string enum[all|private|selected]
+
+## S210-N0115  PUT /orgs/{org}/dependabot/secrets/{secret_name}/repositories
+desc: Set selected repositories for an organization secret | Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/dependabot#create-or-update-an-organization-secret). You must authenticate using an acces
+- path:org string
+- path:secret_name string
+- body:selected_repository_ids array<integer>
+
+## S210-N0116  DELETE /orgs/{org}/dependabot/secrets/{secret_name}/repositories/{repository_id}
+desc: Remove selected repository from an organization secret | Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/dependabot#create-or-update-an-organization-secret). You must authenticate using an access 
+- path:org string
+- path:secret_name string
+- path:repository_id integer
+
+## S210-N0117  PUT /orgs/{org}/dependabot/secrets/{secret_name}/repositories/{repository_id}
+desc: Add selected repository to an organization secret | Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-cloud@latest//rest/reference/dependabot#create-or-update-an-organization-secret). You must authenticate using an access token with
+- path:org string
+- path:secret_name string
+- path:repository_id integer
+
+## S210-N0118  POST /orgs/{org}/hooks
+desc: Create an organization webhook | Here's how you can create a hook that posts payloads in JSON format:
+- path:org string
+- body:active boolean
+- body:config object
+- body:config.content_type string
+- body:config.insecure_ssl string
+- body:config.password string
+- body:config.secret string
+- body:config.url string
+- body:config.username string
+- body:events array<string>
+- body:name string
+
+## S210-N0120  PATCH /orgs/{org}/hooks/{hook_id}
+desc: Update an organization webhook | Updates a webhook configured in an organization. When you update a webhook, the `secret` will be overwritten. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for an organization](/rest/re
+- path:org string
+- path:hook_id integer
+- body:active boolean
+- body:config object
+- body:config.content_type string
+- body:config.insecure_ssl string
+- body:config.secret string
+- body:config.url string
+- body:events array<string>
+- body:name string
+
+## S210-N0121  PATCH /orgs/{org}/hooks/{hook_id}/config
+desc: Update a webhook configuration for an organization | Updates the webhook configuration for an organization. To update more information about the webhook, including the `active` state and `events`, use "[Update an organization webhook ](/rest/reference/orgs#update-an-organization-webhook)." Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:write` 
+- path:org string
+- path:hook_id integer
+- body:content_type string
+- body:insecure_ssl string
+- body:secret string
+- body:url string
+
+## S210-N0122  POST /orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}/attempts
+desc: Redeliver a delivery for an organization webhook | Redeliver a delivery for a webhook configured in an organization.
+- path:org string
+- path:hook_id integer
+- path:delivery_id integer
+
+## S210-N0123  POST /orgs/{org}/hooks/{hook_id}/pings
+desc: Ping an organization webhook | This will trigger a [ping event](https://docs.github.com/enterprise-cloud@latest//webhooks/#ping-event) to be sent to the hook.
+- path:org string
+- path:hook_id integer
+
+## S210-N0124  DELETE /orgs/{org}/interaction-limits
+desc: Remove interaction restrictions for an organization | Removes all interaction restrictions from public repositories in the given organization. You must be an organization owner to remove restrictions.
+- path:org string
+
+## S210-N0125  PUT /orgs/{org}/interaction-limits
+desc: Set interaction restrictions for an organization | Temporarily restricts interactions to a certain type of GitHub user in any public repository in the given organization. You must be an organization owner to set these restrictions. Setting the interaction limit at the organization level will overwrite any interaction limits that are set for individual repositories owned by the organization.
+schema: interaction-limit
+- path:org string
+- body:expiry string enum[one_day|three_days|one_week|one_month|six_months]
+- body:limit string enum[existing_users|contributors_only|collaborators_only]
+
+## S210-N0126  POST /orgs/{org}/invitations
+desc: Create an organization invitation | Invite people to an organization by using their GitHub user ID or their email address. In order to create invitations in an organization, the authenticated user must be an organization owner. This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest//github/managing-subscriptions-and-notifications-on-github/about-notifications). Crea
+- path:org string
+- body:email string
+- body:invitee_id integer
+- body:role string enum[admin|direct_member|billing_manager]
+- body:team_ids array<integer>
+
+## S210-N0127  DELETE /orgs/{org}/invitations/{invitation_id}
+desc: Cancel an organization invitation | Cancel an organization invitation. In order to cancel an organization invitation, the authenticated user must be an organization owner. This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest//github/managing-subscriptions-and-notifications-on-github/about-notifications).
+- path:org string
+- path:invitation_id integer
+
+## S210-N0128  DELETE /orgs/{org}/members/{username}
+desc: Remove an organization member | Removing a user from this list will remove them from all teams and they will no longer have any access to the organization's repositories.
+- path:org string
+- path:username string
+
+## S210-N0129  DELETE /orgs/{org}/members/{username}/codespaces/{codespace_name}
+desc: Delete a codespace from the organization | Deletes a user's codespace. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:username string
+- path:codespace_name string
+
+## S210-N0130  POST /orgs/{org}/members/{username}/codespaces/{codespace_name}/stop
+desc: Stop a codespace for an organization user | Stops a user's codespace. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:username string
+- path:codespace_name string
+
+## S210-N0131  DELETE /orgs/{org}/memberships/{username}
+desc: Remove organization membership for a user | In order to remove a user's membership with an organization, the authenticated user must be an organization owner. If the specified user is an active member of the organization, this will remove them from the organization. If the specified user has been invited to the organization, this will cancel their invitation. The specified user will receive an ema
+- path:org string
+- path:username string
+
+## S210-N0132  PUT /orgs/{org}/memberships/{username}
+desc: Set organization membership for a user | Only authenticated organization owners can add a member to the organization or update the member's role. * If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/enterprise-cloud@latest//rest/reference/orgs#get-organi
+- path:org string
+- path:username string
+- body:role string enum[admin|member]
+
+## S210-N0133  POST /orgs/{org}/migrations
+desc: Start an organization migration | Initiates the generation of a migration archive.
+- path:org string
+- body:exclude array<string> enum[repositories]
+- body:exclude_attachments boolean
+- body:exclude_git_data boolean
+- body:exclude_metadata boolean
+- body:exclude_owner_projects boolean
+- body:exclude_releases boolean
+- body:lock_repositories boolean
+- body:org_metadata_only boolean
+- body:repositories array<string>
+
+## S210-N0134  DELETE /orgs/{org}/migrations/{migration_id}/archive
+desc: Delete an organization migration archive | Deletes a previous migration archive. Migration archives are automatically deleted after seven days.
+- path:org string
+- path:migration_id integer
+
+## S210-N0135  DELETE /orgs/{org}/migrations/{migration_id}/repos/{repo_name}/lock
+desc: Unlock an organization repository | Unlocks a repository that was locked for migration. You should unlock each migrated repository and [delete them](https://docs.github.com/enterprise-cloud@latest//rest/repos/repos#delete-a-repository) when the migration is complete and you no longer need the source data.
+- path:org string
+- path:migration_id integer
+- path:repo_name string
+
+## S210-N0136  DELETE /orgs/{org}/outside_collaborators/{username}
+desc: Remove outside collaborator from an organization | Removing a user from this list will remove them from all the organization's repositories.
+- path:org string
+- path:username string
+
+## S210-N0138  DELETE /orgs/{org}/packages/{package_type}/{package_name}
+desc: Delete a package for an organization | Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance. To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `read:packages` and `delete:pack
+- path:package_type string enum[npm|maven|rubygems|docker|nuget|container]
+- path:package_name string
+- path:org string
+
+## S210-N0139  POST /orgs/{org}/packages/{package_type}/{package_name}/restore
+desc: Restore a package for an organization | Restores an entire package in an organization. You can restore a deleted package under the following conditions: - The package was deleted within the last 30 days. - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this 
+- path:package_type string enum[npm|maven|rubygems|docker|nuget|container]
+- path:package_name string
+- path:org string
+- query:token string
+
+## S210-N0140  DELETE /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}
+desc: Delete package version for an organization | Deletes a specific package version in an organization. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance. To use this endpoint, you must have admin permissions in the organization and authenticate using an access token wit
+- path:package_type string enum[npm|maven|rubygems|docker|nuget|container]
+- path:package_name string
+- path:org string
+- path:package_version_id integer
+
+## S210-N0141  POST /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore
+desc: Restore package version for an organization | Restores a specific package version in an organization. You can restore a deleted package under the following conditions: - The package was deleted within the last 30 days. - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your pa
+- path:package_type string enum[npm|maven|rubygems|docker|nuget|container]
+- path:package_name string
+- path:org string
+- path:package_version_id integer
+
+## S210-N0142  POST /orgs/{org}/projects
+desc: Create an organization project | Creates an organization project board. Returns a `410 Gone` status if projects are disabled in the organization or if the organization does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+- path:org string
+- body:body string
+- body:name string
+
+## S210-N0143  DELETE /orgs/{org}/public_members/{username}
+desc: Remove public organization membership for the authenticated user
+- path:org string
+- path:username string
+
+## S210-N0144  PUT /orgs/{org}/public_members/{username}
+desc: Set public organization membership for the authenticated user | The user can publicize their own membership. (A user cannot publicize the membership for another user.) Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#http-verbs)."
+- path:org string
+- path:username string
+
+## S210-N0145  POST /orgs/{org}/repos
+desc: Create an organization repository | Creates a new repository in the specified organization. The authenticated user must be a member of the organization. **OAuth scope requirements** When using [OAuth](https://docs.github.com/enterprise-cloud@latest//apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include: * `public_repo` scope or `repo` scope to create a public 
+- path:org string
+- body:allow_auto_merge boolean
+- body:allow_merge_commit boolean
+- body:allow_rebase_merge boolean
+- body:allow_squash_merge boolean
+- body:auto_init boolean
+- body:delete_branch_on_merge boolean
+- body:description string
+- body:gitignore_template string
+- body:has_downloads boolean
+- body:has_issues boolean
+- body:has_projects boolean
+- body:has_wiki boolean
+- body:homepage string
+- body:is_template boolean
+- body:license_template string
+- body:merge_commit_message string enum[PR_BODY|PR_TITLE|BLANK]
+- body:merge_commit_title string enum[PR_TITLE|MERGE_MESSAGE]
+- body:name string
+- body:private boolean
+- body:squash_merge_commit_message string enum[PR_BODY|COMMIT_MESSAGES|BLANK]
+- body:squash_merge_commit_title string enum[PR_TITLE|COMMIT_OR_PR_TITLE]
+- body:team_id integer
+- body:use_squash_pr_title_as_default boolean
+- body:visibility string enum[public|private|internal]

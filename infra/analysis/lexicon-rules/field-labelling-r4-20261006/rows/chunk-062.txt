@@ -1,0 +1,509 @@
+## S109-N0045  DELETE /v3/projects/{id}/fork
+desc: Remove a forked_from relationship | Remove a forked_from relationship
+- path:id string
+
+## S109-N0046  POST /v3/projects/{id}/fork/{forked_from_id}
+desc: Mark this project as forked from another | Mark this project as forked from another
+- path:id string
+- path:forked_from_id string
+
+## S109-N0047  POST /v3/projects/{id}/hooks
+desc: Add hook to project | Add hook to project
+- path:id string
+- body:url string
+- body:push_events boolean
+- body:issues_events boolean
+- body:merge_requests_events boolean
+- body:tag_push_events boolean
+- body:note_events boolean
+- body:build_events boolean
+- body:pipeline_events boolean
+- body:wiki_page_events boolean
+- body:enable_ssl_verification boolean
+- body:token string
+
+## S109-N0048  DELETE /v3/projects/{id}/hooks/{hook_id}
+desc: Deletes project hook | Deletes project hook
+- path:id string
+- path:hook_id integer
+
+## S109-N0050  POST /v3/projects/{id}/issues
+desc: Create a new project issue | Create a new project issue
+- path:id string
+- body:title string
+- body:created_at string
+- body:merge_request_for_resolving_discussions integer
+- body:description string
+- body:assignee_id integer
+- body:milestone_id integer
+- body:labels string
+- body:due_date string
+- body:confidential boolean
+
+## S109-N0051  DELETE /v3/projects/{id}/issues/{issue_id}
+desc: Delete a project issue | Delete a project issue
+- path:id string
+- path:issue_id integer
+
+## S109-N0052  PUT /v3/projects/{id}/issues/{issue_id}
+desc: Update an existing issue | Update an existing issue
+- path:id string
+- path:issue_id integer
+- body:title string
+- body:updated_at string
+- body:state_event string enum[reopen|close]
+- body:description string
+- body:assignee_id integer
+- body:milestone_id integer
+- body:labels string
+- body:due_date string
+- body:confidential boolean
+- body:created_at string
+
+## S109-N0053  POST /v3/projects/{id}/issues/{issue_id}/add_spent_time
+desc: Add spent time for a project issue | Add spent time for a project issue
+- path:id string
+- path:issue_id integer
+- body:duration string
+
+## S109-N0054  POST /v3/projects/{id}/issues/{issue_id}/award_emoji
+desc: Award a new Emoji | This feature was introduced in 8.9
+- path:id integer
+- path:issue_id integer
+- body:name string
+
+## S109-N0055  DELETE /v3/projects/{id}/issues/{issue_id}/award_emoji/{award_id}
+desc: Delete a +awardables+ award emoji | This feature was introduced in 8.9
+- path:award_id integer
+- path:id integer
+- path:issue_id integer
+
+## S109-N0056  POST /v3/projects/{id}/issues/{issue_id}/move
+desc: Move an existing issue | Move an existing issue
+- path:id string
+- path:issue_id integer
+- body:to_project_id integer
+
+## S109-N0057  POST /v3/projects/{id}/issues/{issue_id}/notes/{note_id}/award_emoji
+desc: Award a new Emoji | This feature was introduced in 8.9
+- path:id integer
+- path:issue_id integer
+- path:note_id integer
+- body:name string
+
+## S109-N0058  DELETE /v3/projects/{id}/issues/{issue_id}/notes/{note_id}/award_emoji/{award_id}
+desc: Delete a +awardables+ award emoji | This feature was introduced in 8.9
+- path:award_id integer
+- path:id integer
+- path:issue_id integer
+- path:note_id integer
+
+## S109-N0060  POST /v3/projects/{id}/issues/{issue_id}/reset_time_estimate
+desc: Reset the time estimate for a project issue | Reset the time estimate for a project issue
+- path:id string
+- path:issue_id integer
+
+## S109-N0061  POST /v3/projects/{id}/issues/{issue_id}/time_estimate
+desc: Set a time estimate for a project issue | Set a time estimate for a project issue
+- path:id string
+- path:issue_id integer
+- body:duration string
+
+## S109-N0062  POST /v3/projects/{id}/issues/{issue_id}/todo
+desc: Create a todo on an issuable | Create a todo on an issuable
+- path:id string
+- path:issue_id integer
+
+## S109-N0063  POST /v3/projects/{id}/issues/{noteable_id}/notes
+desc: Create a new +noteable+ note | Create a new +noteable+ note
+- path:id string
+- path:noteable_id integer
+- body:body string
+- body:created_at string
+
+## S109-N0064  DELETE /v3/projects/{id}/issues/{noteable_id}/notes/{note_id}
+desc: Delete a +noteable+ note | Delete a +noteable+ note
+- path:id string
+- path:noteable_id integer
+- path:note_id integer
+
+## S109-N0065  PUT /v3/projects/{id}/issues/{noteable_id}/notes/{note_id}
+desc: Update an existing +noteable+ note | Update an existing +noteable+ note
+- path:id string
+- path:noteable_id integer
+- path:note_id integer
+- body:body string
+
+## S109-N0066  DELETE /v3/projects/{id}/issues/{subscribable_id}/subscription
+desc: Unsubscribe from a resource | Unsubscribe from a resource
+- path:id string
+- path:subscribable_id string
+
+## S109-N0067  POST /v3/projects/{id}/issues/{subscribable_id}/subscription
+desc: Subscribe to a resource | Subscribe to a resource
+- path:id string
+- path:subscribable_id string
+
+## S109-N0068  POST /v3/projects/{id}/keys
+desc: Add new deploy key to currently authenticated user | Add new deploy key to currently authenticated user
+- path:id string
+- body:key string
+- body:title string
+
+## S109-N0069  DELETE /v3/projects/{id}/keys/{key_id}
+desc: Delete deploy key for a project | Delete deploy key for a project
+- path:id string
+- path:key_id integer
+
+## S109-N0070  DELETE /v3/projects/{id}/keys/{key_id}/disable
+desc: Disable a deploy key for a project | This feature was added in GitLab 8.11
+- path:id string
+- path:key_id integer
+
+## S109-N0071  POST /v3/projects/{id}/keys/{key_id}/enable
+desc: Enable a deploy key for a project | This feature was added in GitLab 8.11
+- path:id string
+- path:key_id integer
+
+## S109-N0072  DELETE /v3/projects/{id}/labels
+desc: Delete an existing label | Delete an existing label
+- path:id string
+- query:name string
+
+## S109-N0073  POST /v3/projects/{id}/labels
+desc: Create a new label | Create a new label
+- path:id string
+- body:name string
+- body:color string
+- body:description string
+- body:priority integer
+
+## S109-N0074  PUT /v3/projects/{id}/labels
+desc: Update an existing label. At least one optional parameter is required. | Update an existing label. At least one optional parameter is required.
+- path:id string
+- body:name string
+- body:new_name string
+- body:color string
+- body:description string
+- body:priority integer
+
+## S109-N0075  DELETE /v3/projects/{id}/labels/{subscribable_id}/subscription
+desc: Unsubscribe from a resource | Unsubscribe from a resource
+- path:id string
+- path:subscribable_id string
+
+## S109-N0076  POST /v3/projects/{id}/labels/{subscribable_id}/subscription
+desc: Subscribe to a resource | Subscribe to a resource
+- path:id string
+- path:subscribable_id string
+
+## S109-N0078  DELETE /v3/projects/{id}/members/{user_id}
+desc: Removes a user from a group or project. | Removes a user from a group or project.
+- path:id string
+- path:user_id integer
+
+## S109-N0079  PUT /v3/projects/{id}/members/{user_id}
+desc: Updates a member of a group or project. | Updates a member of a group or project.
+- path:id string
+- path:user_id integer
+- body:access_level integer
+- body:expires_at string
+
+## S109-N0080  PUT /v3/projects/{id}/merge_request/{merge_request_id}
+desc: Update a merge request | Update a merge request
+- path:id string
+- path:merge_request_id integer
+- body:title string
+- body:target_branch string
+- body:state_event string enum[close|reopen|merge]
+- body:description string
+- body:assignee_id integer
+- body:milestone_id integer
+- body:labels string
+- body:remove_source_branch boolean
+
+## S109-N0081  POST /v3/projects/{id}/merge_request/{merge_request_id}/cancel_merge_when_build_succeeds
+desc: Cancel merge if "Merge When Pipeline Succeeds" is enabled | Cancel merge if "Merge When Pipeline Succeeds" is enabled
+- path:id string
+- path:merge_request_id integer
+
+## S109-N0082  POST /v3/projects/{id}/merge_request/{merge_request_id}/comments
+desc: Post a comment to a merge request | Duplicate. DEPRECATED and WILL BE REMOVED in 9.0
+- path:id string
+- path:merge_request_id integer
+- body:note string
+
+## S109-N0083  PUT /v3/projects/{id}/merge_request/{merge_request_id}/merge
+desc: Merge a merge request | Merge a merge request
+- path:id string
+- path:merge_request_id integer
+- body:merge_commit_message string
+- body:should_remove_source_branch boolean
+- body:merge_when_build_succeeds boolean
+- body:sha string
+
+## S109-N0084  DELETE /v3/projects/{id}/merge_request/{subscribable_id}/subscription
+desc: Unsubscribe from a resource | Unsubscribe from a resource
+- path:id string
+- path:subscribable_id string
+
+## S109-N0085  POST /v3/projects/{id}/merge_request/{subscribable_id}/subscription
+desc: Subscribe to a resource | Subscribe to a resource
+- path:id string
+- path:subscribable_id string
+
+## S109-N0086  POST /v3/projects/{id}/merge_requests
+desc: Create a merge request | Create a merge request
+- path:id string
+- body:title string
+- body:source_branch string
+- body:target_branch string
+- body:target_project_id integer
+- body:description string
+- body:assignee_id integer
+- body:milestone_id integer
+- body:labels string
+- body:remove_source_branch boolean
+
+## S109-N0087  DELETE /v3/projects/{id}/merge_requests/{merge_request_id}
+desc: Delete a merge request | Delete a merge request
+- path:id string
+- path:merge_request_id integer
+
+## S109-N0088  PUT /v3/projects/{id}/merge_requests/{merge_request_id}
+desc: Update a merge request | Update a merge request
+- path:id string
+- path:merge_request_id integer
+- body:title string
+- body:target_branch string
+- body:state_event string enum[close|reopen|merge]
+- body:description string
+- body:assignee_id integer
+- body:milestone_id integer
+- body:labels string
+- body:remove_source_branch boolean
+
+## S109-N0089  POST /v3/projects/{id}/merge_requests/{merge_request_id}/add_spent_time
+desc: Add spent time for a project merge_request | Add spent time for a project merge_request
+- path:id string
+- path:merge_request_id integer
+- body:duration string
+
+## S109-N0090  POST /v3/projects/{id}/merge_requests/{merge_request_id}/award_emoji
+desc: Award a new Emoji | This feature was introduced in 8.9
+- path:id integer
+- path:merge_request_id integer
+- body:name string
+
+## S109-N0091  DELETE /v3/projects/{id}/merge_requests/{merge_request_id}/award_emoji/{award_id}
+desc: Delete a +awardables+ award emoji | This feature was introduced in 8.9
+- path:award_id integer
+- path:id integer
+- path:merge_request_id integer
+
+## S109-N0092  POST /v3/projects/{id}/merge_requests/{merge_request_id}/cancel_merge_when_build_succeeds
+desc: Cancel merge if "Merge When Pipeline Succeeds" is enabled | Cancel merge if "Merge When Pipeline Succeeds" is enabled
+- path:id string
+- path:merge_request_id integer
+
+## S109-N0093  POST /v3/projects/{id}/merge_requests/{merge_request_id}/comments
+desc: Post a comment to a merge request | Duplicate. DEPRECATED and WILL BE REMOVED in 9.0
+- path:id string
+- path:merge_request_id integer
+- body:note string
+
+## S109-N0094  PUT /v3/projects/{id}/merge_requests/{merge_request_id}/merge
+desc: Merge a merge request | Merge a merge request
+- path:id string
+- path:merge_request_id integer
+- body:merge_commit_message string
+- body:should_remove_source_branch boolean
+- body:merge_when_build_succeeds boolean
+- body:sha string
+
+## S109-N0095  POST /v3/projects/{id}/merge_requests/{merge_request_id}/notes/{note_id}/award_emoji
+desc: Award a new Emoji | This feature was introduced in 8.9
+- path:id integer
+- path:merge_request_id integer
+- path:note_id integer
+- body:name string
+
+## S109-N0096  DELETE /v3/projects/{id}/merge_requests/{merge_request_id}/notes/{note_id}/award_emoji/{award_id}
+desc: Delete a +awardables+ award emoji | This feature was introduced in 8.9
+- path:award_id integer
+- path:id integer
+- path:merge_request_id integer
+- path:note_id integer
+
+## S109-N0097  POST /v3/projects/{id}/merge_requests/{merge_request_id}/reset_spent_time
+desc: Reset spent time for a project merge_request | Reset spent time for a project merge_request
+- path:id string
+- path:merge_request_id integer
+
+## S109-N0098  POST /v3/projects/{id}/merge_requests/{merge_request_id}/reset_time_estimate
+desc: Reset the time estimate for a project merge_request | Reset the time estimate for a project merge_request
+- path:id string
+- path:merge_request_id integer
+
+## S109-N0099  POST /v3/projects/{id}/merge_requests/{merge_request_id}/time_estimate
+desc: Set a time estimate for a project merge_request | Set a time estimate for a project merge_request
+- path:id string
+- path:merge_request_id integer
+- body:duration string
+
+## S109-N0100  POST /v3/projects/{id}/merge_requests/{merge_request_id}/todo
+desc: Create a todo on an issuable | Create a todo on an issuable
+- path:id string
+- path:merge_request_id integer
+
+## S109-N0101  POST /v3/projects/{id}/merge_requests/{noteable_id}/notes
+desc: Create a new +noteable+ note | Create a new +noteable+ note
+- path:id string
+- path:noteable_id integer
+- body:body string
+- body:created_at string
+
+## S109-N0102  DELETE /v3/projects/{id}/merge_requests/{noteable_id}/notes/{note_id}
+desc: Delete a +noteable+ note | Delete a +noteable+ note
+- path:id string
+- path:noteable_id integer
+- path:note_id integer
+
+## S109-N0103  PUT /v3/projects/{id}/merge_requests/{noteable_id}/notes/{note_id}
+desc: Update an existing +noteable+ note | Update an existing +noteable+ note
+- path:id string
+- path:noteable_id integer
+- path:note_id integer
+- body:body string
+
+## S109-N0104  DELETE /v3/projects/{id}/merge_requests/{subscribable_id}/subscription
+desc: Unsubscribe from a resource | Unsubscribe from a resource
+- path:id string
+- path:subscribable_id string
+
+## S109-N0106  POST /v3/projects/{id}/milestones
+desc: Create a new project milestone | Create a new project milestone
+- path:id string
+- body:title string
+- body:description string
+- body:due_date string
+- body:start_date string
+
+## S109-N0107  PUT /v3/projects/{id}/milestones/{milestone_id}
+desc: Update an existing project milestone | Update an existing project milestone
+- path:id string
+- path:milestone_id integer
+- body:title string
+- body:state_event string enum[close|activate]
+- body:description string
+- body:due_date string
+- body:start_date string
+
+## S109-N0109  POST /v3/projects/{id}/pipeline
+desc: Create a new pipeline | This feature was introduced in GitLab 8.14
+- path:id string
+- body:ref string
+
+## S109-N0110  POST /v3/projects/{id}/pipelines/{pipeline_id}/cancel
+desc: Cancel all builds in the pipeline | This feature was introduced in GitLab 8.11.
+- path:id string
+- path:pipeline_id integer
+
+## S109-N0111  POST /v3/projects/{id}/pipelines/{pipeline_id}/retry
+desc: Retry failed builds in the pipeline | This feature was introduced in GitLab 8.11.
+- path:id string
+- path:pipeline_id integer
+
+## S109-N0112  POST /v3/projects/{id}/repository/branches
+desc: Create branch | Create branch
+- path:id string
+- body:branch_name string
+- body:ref string
+
+## S109-N0113  DELETE /v3/projects/{id}/repository/branches/{branch}
+desc: Delete a branch | Delete a branch
+- path:id string
+- path:branch string
+
+## S109-N0114  PUT /v3/projects/{id}/repository/branches/{branch}/protect
+desc: Protect a single branch | Protect a single branch
+- path:id string
+- path:branch string
+- body:developers_can_push boolean
+- body:developers_can_merge boolean
+
+## S109-N0115  PUT /v3/projects/{id}/repository/branches/{branch}/unprotect
+desc: Unprotect a single branch | Unprotect a single branch
+- path:id string
+- path:branch string
+
+## S109-N0116  POST /v3/projects/{id}/repository/commits
+desc: Commit multiple file changes as one commit | This feature was introduced in GitLab 8.13
+- path:id string
+- body:branch_name string
+- body:commit_message string
+- body:actions array<any>
+- body:author_email string
+- body:author_name string
+
+## S109-N0117  POST /v3/projects/{id}/repository/commits/{sha}/cherry_pick
+desc: Cherry pick commit into a branch | This feature was introduced in GitLab 8.15
+- path:id string
+- path:sha string
+- body:branch string
+
+## S109-N0118  POST /v3/projects/{id}/repository/commits/{sha}/comments
+desc: Post comment to commit | Post comment to commit
+- path:id string
+- path:sha string
+- body:note string
+- body:path string
+- body:line integer
+- body:line_type string enum[new|old]
+
+## S109-N0119  DELETE /v3/projects/{id}/repository/files
+desc: Delete an existing file in repository | Delete an existing file in repository
+- path:id string
+- query:file_path string
+- query:branch_name string
+- query:commit_message string
+- query:author_email string
+- query:author_name string
+
+## S109-N0120  POST /v3/projects/{id}/repository/files
+desc: Create new file in repository | Create new file in repository
+- path:id string
+- body:file_path string
+- body:branch_name string
+- body:commit_message string
+- body:author_email string
+- body:author_name string
+- body:content string
+- body:encoding string enum[base64]
+
+## S109-N0121  PUT /v3/projects/{id}/repository/files
+desc: Update existing file in repository | Update existing file in repository
+- path:id string
+- body:file_path string
+- body:branch_name string
+- body:commit_message string
+- body:author_email string
+- body:author_name string
+- body:content string
+- body:encoding string enum[base64]
+
+## S109-N0122  DELETE /v3/projects/{id}/repository/merged_branches
+- path:id string
+
+## S109-N0123  POST /v3/projects/{id}/repository/tags
+desc: Create a new repository tag | Create a new repository tag
+- path:id string
+- body:tag_name string
+- body:ref string
+- body:message string
+- body:release_description string
+
+## S109-N0124  DELETE /v3/projects/{id}/repository/tags/{tag_name}
+desc: Delete a repository tag | Delete a repository tag
+- path:id string
+- path:tag_name string

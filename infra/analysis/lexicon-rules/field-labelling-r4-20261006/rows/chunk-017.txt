@@ -1,0 +1,863 @@
+## S506-N0194  DELETE /rest/api/3/screens/{screenId}/tabs/{tabId}
+desc: Delete screen tab | Deletes a screen tab. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:screenId integer
+- path:tabId integer
+
+## S506-N0196  POST /rest/api/3/screens/{screenId}/tabs/{tabId}/fields
+desc: Add screen tab field | Adds a field to a screen tab. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: AddFieldBean
+- path:screenId integer
+- path:tabId integer
+- body:fieldId string
+
+## S506-N0197  DELETE /rest/api/3/screens/{screenId}/tabs/{tabId}/fields/{id}
+desc: Remove screen tab field | Removes a field from a screen tab. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:screenId integer
+- path:tabId integer
+- path:id string
+
+## S506-N0198  POST /rest/api/3/screens/{screenId}/tabs/{tabId}/fields/{id}/move
+desc: Move screen tab field | Moves a screen tab field. If `after` and `position` are provided in the request, `position` is ignored. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: MoveFieldBean
+- path:screenId integer
+- path:tabId integer
+- path:id string
+- body:after string
+- body:position string enum[Earlier|Later|First|Last]
+
+## S506-N0199  POST /rest/api/3/screens/{screenId}/tabs/{tabId}/move/{pos}
+desc: Move screen tab | Moves a screen tab. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:screenId integer
+- path:tabId integer
+- path:pos integer
+
+## S506-N0200  POST /rest/api/3/screenscheme
+desc: Create screen scheme | Creates a screen scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: ScreenSchemeDetails
+- body:description string
+- body:name string
+- body:screens object
+- body:screens.create integer
+- body:screens.default integer
+- body:screens.edit integer
+- body:screens.view integer
+
+## S506-N0201  DELETE /rest/api/3/screenscheme/{screenSchemeId}
+desc: Delete screen scheme | Deletes a screen scheme. A screen scheme cannot be deleted if it is used in an issue type screen scheme. Only screens schemes used in classic projects can be deleted. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:screenSchemeId string
+
+## S506-N0203  POST /rest/api/3/search
+desc: Search for issues using JQL (POST) | Searches for issues using [JQL](https://confluence.atlassian.com/x/egORLQ). There is a [GET](#api-rest-api-3-search-get) version of this resource that can be used for smaller JQL query expressions. This operation can be accessed anonymously. **[Permissions](#permissions) required:** Issues are included in the response where the user has: * *Browse projects* [pr
+schema: SearchRequestBean
+- body:expand array<string>
+- body:fields array<string>
+- body:fieldsByKeys boolean
+- body:jql string
+- body:maxResults integer
+- body:properties array<string>
+- body:startAt integer
+- body:validateQuery string enum[strict|warn|none|true|false]
+
+## S506-N0204  PUT /rest/api/3/settings/columns
+desc: Set issue navigator default columns | Sets the default issue navigator columns. The `columns` parameter accepts a navigable field value and is expressed as HTML form data. To specify multiple columns, pass multiple `columns` parameters. For example, in curl: `curl -X PUT -d columns=summary -d columns=description https://your-domain.atlassian.net/rest/api/3/settings/columns` If no column details ar
+- body:(body) string
+
+## S506-N0206  POST /rest/api/3/statuses
+desc: Bulk create statuses | Creates statuses for a global or project scope. **[Permissions](#permissions) required:** * *Administer projects* [project permission.](https://confluence.atlassian.com/x/yodKLg) * *Administer Jira* [project permission.](https://confluence.atlassian.com/x/yodKLg)
+schema: StatusCreateRequest
+- body:scope object
+- body:scope.project object
+- body:scope.project.id string
+- body:scope.type string enum[PROJECT|GLOBAL]
+- body:statuses array<object>
+- body:statuses[].description string
+- body:statuses[].name string
+- body:statuses[].statusCategory string enum[TODO|IN_PROGRESS|DONE]
+
+## S506-N0207  PUT /rest/api/3/statuses
+desc: Bulk update statuses | Updates statuses by ID. **[Permissions](#permissions) required:** * *Administer projects* [project permission.](https://confluence.atlassian.com/x/yodKLg) * *Administer Jira* [project permission.](https://confluence.atlassian.com/x/yodKLg)
+schema: StatusUpdateRequest
+- body:statuses array<object>
+- body:statuses[].description string
+- body:statuses[].id string
+- body:statuses[].name string
+- body:statuses[].statusCategory string enum[TODO|IN_PROGRESS|DONE]
+
+## S506-N0208  POST /rest/api/3/task/{taskId}/cancel
+desc: Cancel task | Cancels a task. **[Permissions](#permissions) required:** either of: * *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg). * Creator of the task.
+- path:taskId string
+
+## S506-N0209  POST /rest/api/3/uiModifications
+desc: Create UI modification | Creates a UI modification. UI modification can only be created by Forge apps. Each app can define up to 100 UI modifications. Each UI modification can define up to 1000 contexts. **[Permissions](#permissions) required:** * *None* if the UI modification is created without contexts. * *Browse projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for one o
+schema: CreateUiModificationDetails
+- body:contexts array<object>
+- body:contexts[].id string
+- body:contexts[].isAvailable boolean
+- body:contexts[].issueTypeId string
+- body:contexts[].projectId string
+- body:contexts[].viewType string
+- body:data string
+- body:description string
+- body:name string
+
+## S506-N0210  DELETE /rest/api/3/uiModifications/{uiModificationId}
+desc: Delete UI modification | Deletes a UI modification. All the contexts that belong to the UI modification are deleted too. UI modification can only be deleted by Forge apps. **[Permissions](#permissions) required:** None.
+- path:uiModificationId string
+
+## S506-N0211  PUT /rest/api/3/uiModifications/{uiModificationId}
+desc: Update UI modification | Updates a UI modification. UI modification can only be updated by Forge apps. Each UI modification can define up to 1000 contexts. **[Permissions](#permissions) required:** * *None* if the UI modification is created without contexts. * *Browse projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for one or more projects, if the UI modification is creat
+schema: UpdateUiModificationDetails
+- path:uiModificationId string
+- body:contexts array<object>
+- body:contexts[].id string
+- body:contexts[].isAvailable boolean
+- body:contexts[].issueTypeId string
+- body:contexts[].projectId string
+- body:contexts[].viewType string
+- body:data string
+- body:description string
+- body:name string
+
+## S506-N0213  DELETE /rest/api/3/universal_avatar/type/{type}/owner/{owningObjectId}/avatar/{id}
+desc: Delete avatar | Deletes an avatar from a project or issue type. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:type string enum[project|issuetype]
+- path:owningObjectId string
+- path:id integer
+
+## S506-N0214  DELETE /rest/api/3/user
+desc: Delete user | Deletes a user. If the operation completes successfully then the user is removed from Jira's user base. This operation does not delete the user's Atlassian account. **[Permissions](#permissions) required:** Site administration (that is, membership of the *site-admin* [group](https://confluence.atlassian.com/x/24xjL)).
+- query:accountId string
+- query:username string
+- query:key string
+
+## S506-N0215  POST /rest/api/3/user
+desc: Create user | Creates a user. This resource is retained for legacy compatibility. As soon as a more suitable alternative is available this resource will be deprecated. If the user exists and has access to Jira, the operation returns a 201 status. If the user exists but does not have access to Jira, the operation returns a 400 status. **[Permissions](#permissions) required:** *Administer Jira* [glo
+schema: NewUserDetails
+- body:applicationKeys array<string>
+- body:displayName string
+- body:emailAddress string
+- body:key string
+- body:name string
+- body:password string
+- body:self string
+
+## S506-N0216  DELETE /rest/api/3/user/columns
+desc: Reset user default columns | Resets the default [ issue table columns](https://confluence.atlassian.com/x/XYdKLg) for the user to the system default. If `accountId` is not passed, the calling user's default columns are reset. **[Permissions](#permissions) required:** * *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg), to set the columns on any user. * Permission to 
+- query:accountId string
+- query:username string
+
+## S506-N0217  PUT /rest/api/3/user/columns
+desc: Set user default columns | Sets the default [ issue table columns](https://confluence.atlassian.com/x/XYdKLg) for the user. If an account ID is not passed, the calling user's default columns are set. If no column details are sent, then all default columns are removed. The parameters for this resource are expressed as HTML form data. For example, in curl: `curl -X PUT -d columns=summary -d columns=
+- query:accountId string
+- body:(body) string
+
+## S506-N0218  DELETE /rest/api/3/user/properties/{propertyKey}
+desc: Delete user property | Deletes a property from a user. Note: This operation does not access the [user properties](https://confluence.atlassian.com/x/8YxjL) created and maintained in Jira. **[Permissions](#permissions) required:** * *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg), to delete a property from any user. * Access to Jira, to delete a property from the ca
+- path:propertyKey string
+- query:accountId string
+- query:userKey string
+- query:username string
+
+## S506-N0219  PUT /rest/api/3/user/properties/{propertyKey}
+desc: Set user property | Sets the value of a user's property. Use this resource to store custom data against a user. Note: This operation does not access the [user properties](https://confluence.atlassian.com/x/8YxjL) created and maintained in Jira. **[Permissions](#permissions) required:** * *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg), to set a property on any user
+- path:propertyKey string
+- query:accountId string
+- query:userKey string
+- query:username string
+
+## S506-N0220  POST /rest/api/3/version
+desc: Create version | Creates a project version. This operation can be accessed anonymously. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg) or *Administer Projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project the version is added to.
+schema: Version
+- body:archived boolean
+- body:description string
+- body:expand string
+- body:id string
+- body:issuesStatusForFixVersion object
+- body:issuesStatusForFixVersion.done integer
+- body:issuesStatusForFixVersion.inProgress integer
+- body:issuesStatusForFixVersion.toDo integer
+- body:issuesStatusForFixVersion.unmapped integer
+- body:moveUnfixedIssuesTo string
+- body:name string
+- body:operations array<object>
+- body:operations[].href string
+- body:operations[].iconClass string
+- body:operations[].id string
+- body:operations[].label string
+- body:operations[].styleClass string
+- body:operations[].title string
+- body:operations[].weight integer
+- body:overdue boolean
+- body:project string
+- body:projectId integer
+- body:releaseDate string
+- body:released boolean
+- body:self string
+- body:startDate string
+- body:userReleaseDate string
+- body:userStartDate string
+
+## S506-N0221  DELETE /rest/api/3/version/{id}
+desc: Delete version | Deletes a project version. Deprecated, use [ Delete and replace version](#api-rest-api-3-version-id-removeAndSwap-post) that supports swapping version values in custom fields, in addition to the swapping for `fixVersion` and `affectedVersion` provided in this resource. Alternative versions can be provided to update issues that use the deleted version in `fixVersion` or `affectedVe
+- path:id string
+- query:moveFixIssuesTo string
+- query:moveAffectedIssuesTo string
+
+## S506-N0222  PUT /rest/api/3/version/{id}
+desc: Update version | Updates a project version. This operation can be accessed anonymously. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg) or *Administer Projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project that contains the version.
+schema: Version
+- path:id string
+- body:archived boolean
+- body:description string
+- body:expand string
+- body:id string
+- body:issuesStatusForFixVersion object
+- body:issuesStatusForFixVersion.done integer
+- body:issuesStatusForFixVersion.inProgress integer
+- body:issuesStatusForFixVersion.toDo integer
+- body:issuesStatusForFixVersion.unmapped integer
+- body:moveUnfixedIssuesTo string
+- body:name string
+- body:operations array<object>
+- body:operations[].href string
+- body:operations[].iconClass string
+- body:operations[].id string
+- body:operations[].label string
+- body:operations[].styleClass string
+- body:operations[].title string
+- body:operations[].weight integer
+- body:overdue boolean
+- body:project string
+- body:projectId integer
+- body:releaseDate string
+- body:released boolean
+- body:self string
+- body:startDate string
+- body:userReleaseDate string
+- body:userStartDate string
+
+## S506-N0223  PUT /rest/api/3/version/{id}/mergeto/{moveIssuesTo}
+desc: Merge versions | Merges two project versions. The merge is completed by deleting the version specified in `id` and replacing any occurrences of its ID in `fixVersion` with the version ID specified in `moveIssuesTo`. Consider using [ Delete and replace version](#api-rest-api-3-version-id-removeAndSwap-post) instead. This resource supports swapping version values in `fixVersion`, `affectedVersion`, 
+- path:id string
+- path:moveIssuesTo string
+
+## S506-N0224  POST /rest/api/3/version/{id}/move
+desc: Move version | Modifies the version's sequence within the project, which affects the display order of the versions in Jira. This operation can be accessed anonymously. **[Permissions](#permissions) required:** *Browse projects* project permission for the project that contains the version.
+schema: VersionMoveBean
+- path:id string
+- body:after string
+- body:position string enum[Earlier|Later|First|Last]
+
+## S506-N0225  POST /rest/api/3/version/{id}/removeAndSwap
+desc: Delete and replace version | Deletes a project version. Alternative versions can be provided to update issues that use the deleted version in `fixVersion`, `affectedVersion`, or any version picker custom fields. If alternatives are not provided, occurrences of `fixVersion`, `affectedVersion`, and any version picker custom field, that contain the deleted version, are cleared. Any replacement versio
+schema: DeleteAndReplaceVersionBean
+- path:id string
+- body:customFieldReplacementList array<object>
+- body:customFieldReplacementList[].customFieldId integer
+- body:customFieldReplacementList[].moveTo integer
+- body:moveAffectedIssuesTo integer
+- body:moveFixIssuesTo integer
+
+## S506-N0229  POST /rest/api/3/workflow
+desc: Create workflow | Creates a workflow. You can define transition rules using the shapes detailed in the following sections. If no transitional rules are specified the default system transition rules are used. #### Conditions #### Conditions enable workflow rules that govern whether a transition can execute. ##### Always false condition ##### A condition that always fails. { "type": "AlwaysFalseCond
+schema: CreateWorkflowDetails
+- body:description string
+- body:name string
+- body:statuses array<object>
+- body:statuses[].id string
+- body:statuses[].properties object
+- body:transitions array<object>
+- body:transitions[].description string
+- body:transitions[].from array<string>
+- body:transitions[].name string
+- body:transitions[].properties object
+- body:transitions[].rules object
+- body:transitions[].rules.conditions object
+- body:transitions[].rules.postFunctions array<object>
+- body:transitions[].rules.validators array<object>
+- body:transitions[].screen object
+- body:transitions[].screen.id string
+- body:transitions[].to string
+- body:transitions[].type string enum[global|initial|directed]
+
+## S506-N0230  PUT /rest/api/3/workflow/rule/config
+desc: Update workflow transition rule configurations | Updates configuration of workflow transition rules. The following rule types are supported: * [post functions](https://developer.atlassian.com/cloud/jira/platform/modules/workflow-post-function/) * [conditions](https://developer.atlassian.com/cloud/jira/platform/modules/workflow-condition/) * [validators](https://developer.atlassian.com/cloud/jira/p
+schema: WorkflowTransitionRulesUpdate
+- body:workflows array<object>
+- body:workflows[].conditions array<object>
+- body:workflows[].conditions[].configuration object
+- body:workflows[].conditions[].id string
+- body:workflows[].conditions[].key string
+- body:workflows[].conditions[].transition object
+- body:workflows[].postFunctions array<object>
+- body:workflows[].postFunctions[].configuration object
+- body:workflows[].postFunctions[].id string
+- body:workflows[].postFunctions[].key string
+- body:workflows[].postFunctions[].transition object
+- body:workflows[].validators array<object>
+- body:workflows[].validators[].configuration object
+- body:workflows[].validators[].id string
+- body:workflows[].validators[].key string
+- body:workflows[].validators[].transition object
+- body:workflows[].workflowId object
+- body:workflows[].workflowId.draft boolean
+- body:workflows[].workflowId.name string
+
+## S506-N0231  PUT /rest/api/3/workflow/rule/config/delete
+desc: Delete workflow transition rule configurations | Deletes workflow transition rules from one or more workflows. These rule types are supported: * [post functions](https://developer.atlassian.com/cloud/jira/platform/modules/workflow-post-function/) * [conditions](https://developer.atlassian.com/cloud/jira/platform/modules/workflow-condition/) * [validators](https://developer.atlassian.com/cloud/jira
+schema: WorkflowsWithTransitionRulesDetails
+- body:workflows array<object>
+- body:workflows[].workflowId object
+- body:workflows[].workflowId.draft boolean
+- body:workflows[].workflowId.name string
+- body:workflows[].workflowRuleIds array<string>
+
+## S506-N0232  DELETE /rest/api/3/workflow/transitions/{transitionId}/properties
+desc: Delete workflow transition property | Deletes a property from a workflow transition. Transition properties are used to change the behavior of a transition. For more information, see [Transition properties](https://confluence.atlassian.com/x/zIhKLg#Advancedworkflowconfiguration-transitionproperties) and [Workflow properties](https://confluence.atlassian.com/x/JYlKLg). **[Permissions](#permissions) 
+- path:transitionId integer
+- query:key string
+- query:workflowName string
+- query:workflowMode string enum[live|draft]
+
+## S506-N0233  POST /rest/api/3/workflow/transitions/{transitionId}/properties
+desc: Create workflow transition property | Adds a property to a workflow transition. Transition properties are used to change the behavior of a transition. For more information, see [Transition properties](https://confluence.atlassian.com/x/zIhKLg#Advancedworkflowconfiguration-transitionproperties) and [Workflow properties](https://confluence.atlassian.com/x/JYlKLg). **[Permissions](#permissions) requi
+schema: WorkflowTransitionProperty
+- path:transitionId integer
+- query:key string
+- query:workflowName string
+- query:workflowMode string enum[live|draft]
+- body:id string
+- body:key string
+- body:value string
+
+## S506-N0234  PUT /rest/api/3/workflow/transitions/{transitionId}/properties
+desc: Update workflow transition property | Updates a workflow transition by changing the property value. Trying to update a property that does not exist results in a new property being added to the transition. Transition properties are used to change the behavior of a transition. For more information, see [Transition properties](https://confluence.atlassian.com/x/zIhKLg#Advancedworkflowconfiguration-tr
+schema: WorkflowTransitionProperty
+- path:transitionId integer
+- query:key string
+- query:workflowName string
+- query:workflowMode string enum[live|draft]
+- body:id string
+- body:key string
+- body:value string
+
+## S506-N0235  DELETE /rest/api/3/workflow/{entityId}
+desc: Delete inactive workflow | Deletes a workflow. The workflow cannot be deleted if it is: * an active workflow. * a system workflow. * associated with any workflow scheme. * associated with any draft workflow scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:entityId string
+
+## S506-N0236  POST /rest/api/3/workflowscheme
+desc: Create workflow scheme | Creates a workflow scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: WorkflowScheme
+- body:defaultWorkflow string
+- body:description string
+- body:draft boolean
+- body:id integer
+- body:issueTypeMappings object
+- body:issueTypes object
+- body:lastModified string
+- body:lastModifiedUser object
+- body:lastModifiedUser.accountId string
+- body:lastModifiedUser.accountType string enum[atlassian|app|customer|unknown]
+- body:lastModifiedUser.active boolean
+- body:lastModifiedUser.applicationRoles object
+- body:lastModifiedUser.applicationRoles.callback object
+- body:lastModifiedUser.applicationRoles.items array<object>
+- body:lastModifiedUser.applicationRoles.max-results integer
+- body:lastModifiedUser.applicationRoles.pagingCallback object
+- body:lastModifiedUser.applicationRoles.size integer
+- body:lastModifiedUser.avatarUrls object
+- body:lastModifiedUser.avatarUrls.16x16 string
+- body:lastModifiedUser.avatarUrls.24x24 string
+- body:lastModifiedUser.avatarUrls.32x32 string
+- body:lastModifiedUser.avatarUrls.48x48 string
+- body:lastModifiedUser.displayName string
+- body:lastModifiedUser.emailAddress string
+- body:lastModifiedUser.expand string
+- body:lastModifiedUser.groups object
+- body:lastModifiedUser.groups.callback object
+- body:lastModifiedUser.groups.items array<object>
+- body:lastModifiedUser.groups.max-results integer
+- body:lastModifiedUser.groups.pagingCallback object
+- body:lastModifiedUser.groups.size integer
+- body:lastModifiedUser.key string
+- body:lastModifiedUser.locale string
+- body:lastModifiedUser.name string
+- body:lastModifiedUser.self string
+- body:lastModifiedUser.timeZone string
+- body:name string
+- body:originalDefaultWorkflow string
+- body:originalIssueTypeMappings object
+- body:self string
+- body:updateDraftIfNeeded boolean
+
+## S506-N0237  PUT /rest/api/3/workflowscheme/project
+desc: Assign workflow scheme to project | Assigns a workflow scheme to a project. This operation is performed only when there are no issues in the project. Workflow schemes can only be assigned to classic projects. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: WorkflowSchemeProjectAssociation
+- body:projectId string
+- body:workflowSchemeId string
+
+## S506-N0238  DELETE /rest/api/3/workflowscheme/{id}
+desc: Delete workflow scheme | Deletes a workflow scheme. Note that a workflow scheme cannot be deleted if it is active (that is, being used by at least one project). **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id integer
+
+## S506-N0240  POST /rest/api/3/workflowscheme/{id}/createdraft
+desc: Create draft workflow scheme | Create a draft workflow scheme from an active workflow scheme, by copying the active workflow scheme. Note that an active workflow scheme can only have one draft workflow scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id integer
+
+## S506-N0241  DELETE /rest/api/3/workflowscheme/{id}/default
+desc: Delete default workflow | Resets the default workflow for a workflow scheme. That is, the default workflow is set to Jira's system workflow (the *jira* workflow). Note that active workflow schemes cannot be edited. If the workflow scheme is active, set `updateDraftIfNeeded` to `true` and a draft workflow scheme is created or updated with the default workflow reset. The draft workflow scheme can be
+- path:id integer
+- query:updateDraftIfNeeded boolean
+
+## S506-N0242  PUT /rest/api/3/workflowscheme/{id}/default
+desc: Update default workflow | Sets the default workflow for a workflow scheme. Note that active workflow schemes cannot be edited. If the workflow scheme is active, set `updateDraftIfNeeded` to `true` in the request object and a draft workflow scheme is created or updated with the new default workflow. The draft workflow scheme can be published in Jira. **[Permissions](#permissions) required:** *Admin
+schema: DefaultWorkflow
+- path:id integer
+- body:updateDraftIfNeeded boolean
+- body:workflow string
+
+## S506-N0243  DELETE /rest/api/3/workflowscheme/{id}/draft
+desc: Delete draft workflow scheme | Deletes a draft workflow scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id integer
+
+## S506-N0244  PUT /rest/api/3/workflowscheme/{id}/draft
+desc: Update draft workflow scheme | Updates a draft workflow scheme. If a draft workflow scheme does not exist for the active workflow scheme, then a draft is created. Note that an active workflow scheme can only have one draft workflow scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: WorkflowScheme
+- path:id integer
+- body:defaultWorkflow string
+- body:description string
+- body:draft boolean
+- body:id integer
+- body:issueTypeMappings object
+- body:issueTypes object
+- body:lastModified string
+- body:lastModifiedUser object
+- body:lastModifiedUser.accountId string
+- body:lastModifiedUser.accountType string enum[atlassian|app|customer|unknown]
+- body:lastModifiedUser.active boolean
+- body:lastModifiedUser.applicationRoles object
+- body:lastModifiedUser.applicationRoles.callback object
+- body:lastModifiedUser.applicationRoles.items array<object>
+- body:lastModifiedUser.applicationRoles.max-results integer
+- body:lastModifiedUser.applicationRoles.pagingCallback object
+- body:lastModifiedUser.applicationRoles.size integer
+- body:lastModifiedUser.avatarUrls object
+- body:lastModifiedUser.avatarUrls.16x16 string
+- body:lastModifiedUser.avatarUrls.24x24 string
+- body:lastModifiedUser.avatarUrls.32x32 string
+- body:lastModifiedUser.avatarUrls.48x48 string
+- body:lastModifiedUser.displayName string
+- body:lastModifiedUser.emailAddress string
+- body:lastModifiedUser.expand string
+- body:lastModifiedUser.groups object
+- body:lastModifiedUser.groups.callback object
+- body:lastModifiedUser.groups.items array<object>
+- body:lastModifiedUser.groups.max-results integer
+- body:lastModifiedUser.groups.pagingCallback object
+- body:lastModifiedUser.groups.size integer
+- body:lastModifiedUser.key string
+- body:lastModifiedUser.locale string
+- body:lastModifiedUser.name string
+- body:lastModifiedUser.self string
+- body:lastModifiedUser.timeZone string
+- body:name string
+- body:originalDefaultWorkflow string
+- body:originalIssueTypeMappings object
+- body:self string
+- body:updateDraftIfNeeded boolean
+
+## S506-N0245  DELETE /rest/api/3/workflowscheme/{id}/draft/default
+desc: Delete draft default workflow | Resets the default workflow for a workflow scheme's draft. That is, the default workflow is set to Jira's system workflow (the *jira* workflow). **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id integer
+
+## S506-N0246  PUT /rest/api/3/workflowscheme/{id}/draft/default
+desc: Update draft default workflow | Sets the default workflow for a workflow scheme's draft. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: DefaultWorkflow
+- path:id integer
+- body:updateDraftIfNeeded boolean
+- body:workflow string
+
+## S506-N0247  DELETE /rest/api/3/workflowscheme/{id}/draft/issuetype/{issueType}
+desc: Delete workflow for issue type in draft workflow scheme | Deletes the issue type-workflow mapping for an issue type in a workflow scheme's draft. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id integer
+- path:issueType string
+
+## S506-N0248  PUT /rest/api/3/workflowscheme/{id}/draft/issuetype/{issueType}
+desc: Set workflow for issue type in draft workflow scheme | Sets the workflow for an issue type in a workflow scheme's draft. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueTypeWorkflowMapping
+- path:id integer
+- path:issueType string
+- body:issueType string
+- body:updateDraftIfNeeded boolean
+- body:workflow string
+
+## S506-N0250  DELETE /rest/api/3/workflowscheme/{id}/draft/workflow
+desc: Delete issue types for workflow in draft workflow scheme | Deletes the workflow-issue type mapping for a workflow in a workflow scheme's draft. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id integer
+- query:workflowName string
+
+## S506-N0251  PUT /rest/api/3/workflowscheme/{id}/draft/workflow
+desc: Set issue types for workflow in workflow scheme | Sets the issue types for a workflow in a workflow scheme's draft. The workflow can also be set as the default workflow for the draft workflow scheme. Unmapped issues types are mapped to the default workflow. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueTypesWorkflowMapping
+- path:id integer
+- query:workflowName string
+- body:defaultMapping boolean
+- body:issueTypes array<string>
+- body:updateDraftIfNeeded boolean
+- body:workflow string
+
+## S506-N0252  DELETE /rest/api/3/workflowscheme/{id}/issuetype/{issueType}
+desc: Delete workflow for issue type in workflow scheme | Deletes the issue type-workflow mapping for an issue type in a workflow scheme. Note that active workflow schemes cannot be edited. If the workflow scheme is active, set `updateDraftIfNeeded` to `true` and a draft workflow scheme is created or updated with the issue type-workflow mapping deleted. The draft workflow scheme can be published in Jira
+- path:id integer
+- path:issueType string
+- query:updateDraftIfNeeded boolean
+
+## S506-N0253  PUT /rest/api/3/workflowscheme/{id}/issuetype/{issueType}
+desc: Set workflow for issue type in workflow scheme | Sets the workflow for an issue type in a workflow scheme. Note that active workflow schemes cannot be edited. If the workflow scheme is active, set `updateDraftIfNeeded` to `true` in the request body and a draft workflow scheme is created or updated with the new issue type-workflow mapping. The draft workflow scheme can be published in Jira. **[Perm
+schema: IssueTypeWorkflowMapping
+- path:id integer
+- path:issueType string
+- body:issueType string
+- body:updateDraftIfNeeded boolean
+- body:workflow string
+
+## S506-N0255  PUT /rest/api/3/workflowscheme/{id}/workflow
+desc: Set issue types for workflow in workflow scheme | Sets the issue types for a workflow in a workflow scheme. The workflow can also be set as the default workflow for the workflow scheme. Unmapped issues types are mapped to the default workflow. Note that active workflow schemes cannot be edited. If the workflow scheme is active, set `updateDraftIfNeeded` to `true` in the request body and a draft wo
+schema: IssueTypesWorkflowMapping
+- path:id integer
+- query:workflowName string
+- body:defaultMapping boolean
+- body:issueTypes array<string>
+- body:updateDraftIfNeeded boolean
+- body:workflow string
+
+## S506-N0256  POST /rest/api/3/worklog/list
+desc: Get worklogs | Returns worklog details for a list of worklog IDs. The returned list of worklogs is limited to 1000 items. **[Permissions](#permissions) required:** Permission to access Jira, however, worklogs are only returned where either of the following is true: * the worklog is set as *Viewable by All Users*. * the user is a member of a project role or group with permission to view the worklog
+schema: WorklogIdsRequestBean
+- query:expand string
+- body:ids array<integer>
+
+## S506-N0257  DELETE /rest/atlassian-connect/1/addons/{addonKey}/properties/{propertyKey}
+desc: Delete app property | Deletes an app's property. **[Permissions](#permissions) required:** Only a Connect app whose key matches `addonKey` can make this request.
+- path:addonKey string
+- path:propertyKey string
+
+## S506-N0258  PUT /rest/atlassian-connect/1/addons/{addonKey}/properties/{propertyKey}
+desc: Set app property | Sets the value of an app's property. Use this resource to store custom data for your app. The value of the request body must be a [valid](http://tools.ietf.org/html/rfc4627), non-empty JSON blob. The maximum length is 32768 characters. **[Permissions](#permissions) required:** Only a Connect app whose key matches `addonKey` can make this request.
+- path:addonKey string
+- path:propertyKey string
+
+## S506-N0259  DELETE /rest/atlassian-connect/1/app/module/dynamic
+desc: Remove modules | Remove all or a list of modules registered by the calling app. **[Permissions](#permissions) required:** Only Connect apps can make this request.
+- query:moduleKey array<string>
+
+## S506-N0260  POST /rest/atlassian-connect/1/app/module/dynamic
+desc: Register modules | Registers a list of modules. **[Permissions](#permissions) required:** Only Connect apps can make this request.
+schema: ConnectModules
+- body:modules array<object>
+
+## S506-N0261  PUT /rest/atlassian-connect/1/migration/field
+desc: Bulk update custom field value | Updates the value of a custom field added by Connect apps on one or more issues. The values of up to 200 custom fields can be updated. **[Permissions](#permissions) required:** Only Connect apps can make this request.
+schema: ConnectCustomFieldValues
+- body:updateValueList array<object>
+- body:updateValueList[]._type string enum[StringIssueField|NumberIssueField|RichTextIssueField|SingleSelectIssueField|MultiSelectIssueField|TextIssueField]
+- body:updateValueList[].fieldID integer
+- body:updateValueList[].issueID integer
+- body:updateValueList[].number number
+- body:updateValueList[].optionID string
+- body:updateValueList[].richText string
+- body:updateValueList[].string string
+- body:updateValueList[].text string
+
+## S506-N0262  PUT /rest/atlassian-connect/1/migration/properties/{entityType}
+desc: Bulk update entity properties | Updates the values of multiple entity properties for an object, up to 50 updates per request. This operation is for use by Connect apps during app migration.
+schema: EntityPropertyDetails
+- path:entityType string enum[IssueProperty|CommentProperty|DashboardItemProperty|IssueTypeProperty|ProjectProperty|UserProperty|WorklogProperty|BoardProperty|SprintProperty]
+- body:entityId number
+- body:key string
+- body:value string
+
+## S390-N0006  POST /crawls/{id}/cancel
+desc: Creates a Crawl resource.
+schema: Crawl
+- path:id string
+- body:archived boolean
+- body:author object
+- body:author.currentPassword any
+- body:author.defaultOrganization object
+- body:author.defaultOrganization.createdAt string
+- body:author.defaultOrganization.id string
+- body:author.defaultOrganization.name string
+- body:author.defaultOrganization.projects array<object>
+- body:author.defaultOrganization.slug string
+- body:author.defaultOrganization.updatedAt string
+- body:author.defaultOrganization.userOrganizations array<object>
+- body:author.email string
+- body:author.id string
+- body:author.name string
+- body:author.newEmail string
+- body:author.newEmailToken string
+- body:author.newEmailTokenExpiredAt string
+- body:author.password string
+- body:author.plainPassword string
+- body:author.plainPasswordRepeat any
+- body:author.projectsFlattened array<string>
+- body:author.superAdmin boolean
+- body:author.updatedAt string
+- body:author.userOrganizations array<object>
+- body:author.userOrganizations[].functionalRoles array<string>
+- body:author.userOrganizations[].id string
+- body:author.userOrganizations[].organization string
+- body:author.userOrganizations[].user string
+- body:author.userProjects array<string>
+- body:createdAt string
+- body:currentConcurrency integer
+- body:error string
+- body:finishedAt string
+- body:firstUrl string
+- body:id string
+- body:marking array<string>
+- body:stats array<string>
+- body:trigger string
+- body:updatedAt string
+
+## S390-N0010  POST /imports
+desc: Creates a Import resource.
+schema: Import-Write
+- body:csvContent any
+- body:project string
+
+## S390-N0011  PUT /instances/{id}
+desc: Replaces the Instance resource.
+schema: Instance-Write
+- path:id string
+- body:agentDuration integer
+- body:message string
+- body:rulesCount integer
+- body:rulesHash string
+
+## S390-N0026  PUT /projects/{id}
+desc: Replaces the Project resource.
+schema: Project-Write
+- path:id string
+- body:ignoreProjectTypes array<string>
+- body:name string
+- body:onboardingCompletedDemos array<string>
+
+## S390-N0039  PUT /users/forgot-password/{resetToken}
+desc: Replaces the User resource.
+schema: User-Password
+- path:resetToken string
+- body:plainPassword string
+- body:plainPasswordRepeat any
+
+## S390-N0040  DELETE /users/{id}
+desc: Removes the User resource.
+- path:id string
+
+## S390-N0041  PUT /users/{id}/edit-email
+desc: Replaces the User resource.
+schema: User-EditInfo
+- path:id string
+- body:name string
+
+## S404-N0001  DELETE /addon
+desc: Delete an app | Deletes the application for the user. This endpoint is intended to be used by Bitbucket Connect apps and only supports JWT authentication -- that is how Bitbucket identifies the particular installation of the app. Developers with applications registered in the "Develop Apps" section of Bitbucket Marketplace need not use this endpoint as updates for those applications can be sent ou
+
+## S404-N0002  PUT /addon
+desc: Update an installed app | Updates the application installation for the user. This endpoint is intended to be used by Bitbucket Connect apps and only supports JWT authentication -- that is how Bitbucket identifies the particular installation of the app. Developers with applications registered in the "Develop Apps" section of Bitbucket need not use this endpoint as updates for those applications can
+
+## S404-N0003  DELETE /addon/linkers/{linker_key}/values
+desc: Delete all linker values | Delete all [linker](/cloud/bitbucket/modules/linker/) values for the specified linker of the authenticated application.
+- path:linker_key string
+
+## S404-N0004  POST /addon/linkers/{linker_key}/values
+desc: Create a linker value | Creates a [linker](/cloud/bitbucket/modules/linker/) value for the specified linker of authenticated application. A linker value lets applications supply values to modify its regular expression. The base regular expression must use a Bitbucket-specific match group `(?K)` which will be translated to `([\w\-]+)`. A value must match this pattern. [Read more about linker values
+- path:linker_key string
+
+## S404-N0006  DELETE /addon/linkers/{linker_key}/values/{value_id}
+desc: Delete a linker value | Delete a single [linker](/cloud/bitbucket/modules/linker/) value of the authenticated application.
+- path:linker_key string
+- path:value_id integer
+
+## S404-N0007  DELETE /repositories/{workspace}/{repo_slug}
+desc: Delete a repository | Deletes the repository. This is an irreversible operation. This does not affect its forks.
+- path:repo_slug string
+- path:workspace string
+- query:redirect_to string
+
+## S404-N0008  POST /repositories/{workspace}/{repo_slug}
+desc: Create a repository | Creates a new repository. Note: In order to set the project for the newly created repository, pass in either the project key or the project UUID as part of the request body as shown in the examples below: ``` $ curl -X POST -H "Content-Type: application/json" -d '{ "scm": "git", "project": { "key": "MARS" } }' https://api.bitbucket.org/2.0/repositories/teamsinspace/hablanding
+schema: repository
+- path:repo_slug string
+- path:workspace string
+- body:type string
+- body:created_on string
+- body:description string
+- body:fork_policy string enum[allow_forks|no_public_forks|no_forks]
+- body:full_name string
+- body:has_issues boolean
+- body:has_wiki boolean
+- body:is_private boolean
+- body:language string
+- body:links object
+- body:links.avatar object
+- body:links.avatar.href string
+- body:links.avatar.name string
+- body:links.clone array<object>
+- body:links.clone[].href string
+- body:links.clone[].name string
+- body:links.commits object
+- body:links.commits.href string
+- body:links.commits.name string
+- body:links.downloads object
+- body:links.downloads.href string
+- body:links.downloads.name string
+- body:links.forks object
+- body:links.forks.href string
+- body:links.forks.name string
+- body:links.hooks object
+- body:links.hooks.href string
+- body:links.hooks.name string
+- body:links.html object
+- body:links.html.href string
+- body:links.html.name string
+- body:links.pullrequests object
+- body:links.pullrequests.href string
+- body:links.pullrequests.name string
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:links.watchers object
+- body:links.watchers.href string
+- body:links.watchers.name string
+- body:mainbranch object
+- body:mainbranch.links object
+- body:mainbranch.links.commits object
+- body:mainbranch.links.html object
+- body:mainbranch.links.self object
+- body:mainbranch.name string
+- body:mainbranch.target object
+- body:mainbranch.target.type string
+- body:mainbranch.target.author object
+- body:mainbranch.target.date string
+- body:mainbranch.target.hash string
+- body:mainbranch.target.message string
+- body:mainbranch.target.parents array<object>
+- body:mainbranch.target.summary object
+- body:mainbranch.target.participants array<object>
+- body:mainbranch.target.repository object
+- body:mainbranch.type string
+- body:mainbranch.default_merge_strategy string
+- body:mainbranch.merge_strategies array<string> enum[merge_commit|squash|fast_forward]
+- body:name string
+- body:owner object
+- body:owner.type string
+- body:owner.created_on string
+- body:owner.display_name string
+- body:owner.links object
+- body:owner.links.avatar object
+- body:owner.username string
+- body:owner.uuid string
+- body:parent object
+- body:parent.type string
+- body:parent.created_on string
+- body:parent.description string
+- body:parent.fork_policy string enum[allow_forks|no_public_forks|no_forks]
+- body:parent.full_name string
+- body:parent.has_issues boolean
+- body:parent.has_wiki boolean
+- body:parent.is_private boolean
+- body:parent.language string
+(+86 fields cut)
+
+## S404-N0009  PUT /repositories/{workspace}/{repo_slug}
+desc: Update a repository | Since this endpoint can be used to both update and to create a repository, the request body depends on the intent. #### Creation See the POST documentation for the repository endpoint for an example of the request body. #### Update Note: Changing the `name` of the repository will cause the location to be changed. This is because the URL of the repo is derived from the name (a
+schema: repository
+- path:repo_slug string
+- path:workspace string
+- body:type string
+- body:created_on string
+- body:description string
+- body:fork_policy string enum[allow_forks|no_public_forks|no_forks]
+- body:full_name string
+- body:has_issues boolean
+- body:has_wiki boolean
+- body:is_private boolean
+- body:language string
+- body:links object
+- body:links.avatar object
+- body:links.avatar.href string
+- body:links.avatar.name string
+- body:links.clone array<object>
+- body:links.clone[].href string
+- body:links.clone[].name string
+- body:links.commits object
+- body:links.commits.href string
+- body:links.commits.name string
+- body:links.downloads object
+- body:links.downloads.href string
+- body:links.downloads.name string
+- body:links.forks object
+- body:links.forks.href string
+- body:links.forks.name string
+- body:links.hooks object
+- body:links.hooks.href string
+- body:links.hooks.name string
+- body:links.html object
+- body:links.html.href string
+- body:links.html.name string
+- body:links.pullrequests object
+- body:links.pullrequests.href string
+- body:links.pullrequests.name string
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:links.watchers object
+- body:links.watchers.href string
+- body:links.watchers.name string
+- body:mainbranch object
+- body:mainbranch.links object
+- body:mainbranch.links.commits object
+- body:mainbranch.links.html object
+- body:mainbranch.links.self object
+- body:mainbranch.name string
+- body:mainbranch.target object
+- body:mainbranch.target.type string
+- body:mainbranch.target.author object
+- body:mainbranch.target.date string
+- body:mainbranch.target.hash string
+- body:mainbranch.target.message string
+- body:mainbranch.target.parents array<object>
+- body:mainbranch.target.summary object
+- body:mainbranch.target.participants array<object>
+- body:mainbranch.target.repository object
+- body:mainbranch.type string
+- body:mainbranch.default_merge_strategy string
+- body:mainbranch.merge_strategies array<string> enum[merge_commit|squash|fast_forward]
+- body:name string
+- body:owner object
+- body:owner.type string
+- body:owner.created_on string
+- body:owner.display_name string
+- body:owner.links object
+- body:owner.links.avatar object
+- body:owner.username string
+- body:owner.uuid string
+- body:parent object
+- body:parent.type string
+- body:parent.created_on string
+- body:parent.description string
+- body:parent.fork_policy string enum[allow_forks|no_public_forks|no_forks]
+- body:parent.full_name string
+- body:parent.has_issues boolean
+- body:parent.has_wiki boolean
+- body:parent.is_private boolean
+- body:parent.language string
+(+86 fields cut)
+
+## S404-N0011  DELETE /repositories/{workspace}/{repo_slug}/branch-restrictions/{id}
+desc: Delete a branch restriction rule | Deletes an existing branch restriction rule.
+- path:id string
+- path:repo_slug string
+- path:workspace string

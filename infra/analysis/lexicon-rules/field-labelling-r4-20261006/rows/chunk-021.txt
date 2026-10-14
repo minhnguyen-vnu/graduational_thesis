@@ -1,0 +1,1171 @@
+## S395-N0155  POST /v1/setup_intents/{intent}
+desc: <p>Updates a SetupIntent object.</p>
+- path:intent string
+- body:attach_to_self boolean
+- body:customer string
+- body:description string
+- body:expand array<string>
+- body:flow_directions array<string> enum[inbound|outbound]
+- body:metadata object enum[]
+- body:payment_method string
+- body:payment_method_data object
+- body:payment_method_data.acss_debit object
+- body:payment_method_data.acss_debit.account_number string
+- body:payment_method_data.acss_debit.institution_number string
+- body:payment_method_data.acss_debit.transit_number string
+- body:payment_method_data.affirm object
+- body:payment_method_data.afterpay_clearpay object
+- body:payment_method_data.alipay object
+- body:payment_method_data.au_becs_debit object
+- body:payment_method_data.au_becs_debit.account_number string
+- body:payment_method_data.au_becs_debit.bsb_number string
+- body:payment_method_data.bacs_debit object
+- body:payment_method_data.bacs_debit.account_number string
+- body:payment_method_data.bacs_debit.sort_code string
+- body:payment_method_data.bancontact object
+- body:payment_method_data.billing_details object
+- body:payment_method_data.billing_details.address object enum[]
+- body:payment_method_data.billing_details.email string enum[]
+- body:payment_method_data.billing_details.name string
+- body:payment_method_data.billing_details.phone string
+- body:payment_method_data.blik object
+- body:payment_method_data.boleto object
+- body:payment_method_data.boleto.tax_id string
+- body:payment_method_data.customer_balance object
+- body:payment_method_data.eps object
+- body:payment_method_data.eps.bank string enum[arzte_und_apotheker_bank|austrian_anadi_bank_ag|bank_austria|bankhaus_carl_spangler|bankhaus_schelhammer_und_schattera_ag|bawag_psk_ag|bks_bank_ag|brull_kallmus_bank_ag|btv_vier_lander_bank|capital_bank_grawe_gruppe_ag|deutsche_bank_ag|dolomitenbank]
+- body:payment_method_data.fpx object
+- body:payment_method_data.fpx.bank string enum[affin_bank|agrobank|alliance_bank|ambank|bank_islam|bank_muamalat|bank_of_china|bank_rakyat|bsn|cimb|deutsche_bank|hong_leong_bank]
+- body:payment_method_data.giropay object
+- body:payment_method_data.grabpay object
+- body:payment_method_data.ideal object
+- body:payment_method_data.ideal.bank string enum[abn_amro|asn_bank|bunq|handelsbanken|ing|knab|moneyou|rabobank|regiobank|revolut|sns_bank|triodos_bank]
+- body:payment_method_data.interac_present object
+- body:payment_method_data.klarna object
+- body:payment_method_data.klarna.dob object
+- body:payment_method_data.konbini object
+- body:payment_method_data.link object
+- body:payment_method_data.metadata object
+- body:payment_method_data.oxxo object
+- body:payment_method_data.p24 object
+- body:payment_method_data.p24.bank string enum[alior_bank|bank_millennium|bank_nowy_bfg_sa|bank_pekao_sa|banki_spbdzielcze|blik|bnp_paribas|boz|citi_handlowy|credit_agricole|envelobank|etransfer_pocztowy24]
+- body:payment_method_data.paynow object
+- body:payment_method_data.pix object
+- body:payment_method_data.promptpay object
+- body:payment_method_data.radar_options object
+- body:payment_method_data.radar_options.session string
+- body:payment_method_data.sepa_debit object
+- body:payment_method_data.sepa_debit.iban string
+- body:payment_method_data.sofort object
+- body:payment_method_data.sofort.country string enum[AT|BE|DE|ES|IT|NL]
+- body:payment_method_data.type string enum[acss_debit|affirm|afterpay_clearpay|alipay|au_becs_debit|bacs_debit|bancontact|blik|boleto|customer_balance|eps|fpx]
+- body:payment_method_data.us_bank_account object
+- body:payment_method_data.us_bank_account.account_holder_type string enum[company|individual]
+- body:payment_method_data.us_bank_account.account_number string
+- body:payment_method_data.us_bank_account.account_type string enum[checking|savings]
+- body:payment_method_data.us_bank_account.financial_connections_account string
+- body:payment_method_data.us_bank_account.routing_number string
+- body:payment_method_data.wechat_pay object
+- body:payment_method_options object
+- body:payment_method_options.acss_debit object
+- body:payment_method_options.acss_debit.currency string enum[cad|usd]
+- body:payment_method_options.acss_debit.mandate_options object
+- body:payment_method_options.acss_debit.verification_method string enum[automatic|instant|microdeposits]
+- body:payment_method_options.blik object
+- body:payment_method_options.blik.code string
+- body:payment_method_options.card object
+- body:payment_method_options.card.mandate_options object
+- body:payment_method_options.card.network string enum[amex|cartes_bancaires|diners|discover|interac|jcb|mastercard|unionpay|unknown|visa]
+- body:payment_method_options.card.request_three_d_secure string enum[any|automatic]
+- body:payment_method_options.link object
+- body:payment_method_options.link.persistent_token string
+- body:payment_method_options.sepa_debit object
+(+6 fields cut)
+
+## S395-N0156  POST /v1/setup_intents/{intent}/cancel
+desc: <p>A SetupIntent object can be canceled when it is in one of these statuses: <code>requires_payment_method</code>, <code>requires_confirmation</code>, or <code>requires_action</code>. </p> <p>Once canceled, setup is abandoned and any operations on the SetupIntent will fail with an error.</p>
+- path:intent string
+- body:cancellation_reason string enum[abandoned|duplicate|requested_by_customer]
+- body:expand array<string>
+
+## S395-N0158  POST /v1/setup_intents/{intent}/verify_microdeposits
+desc: <p>Verifies microdeposits on a SetupIntent object.</p>
+- path:intent string
+- body:amounts array<integer>
+- body:client_secret string
+- body:descriptor_code string
+- body:expand array<string>
+
+## S395-N0159  POST /v1/shipping_rates
+desc: <p>Creates a new shipping rate object.</p>
+- body:delivery_estimate object
+- body:delivery_estimate.maximum object
+- body:delivery_estimate.maximum.unit string enum[business_day|day|hour|month|week]
+- body:delivery_estimate.maximum.value integer
+- body:delivery_estimate.minimum object
+- body:delivery_estimate.minimum.unit string enum[business_day|day|hour|month|week]
+- body:delivery_estimate.minimum.value integer
+- body:display_name string
+- body:expand array<string>
+- body:fixed_amount object
+- body:fixed_amount.amount integer
+- body:fixed_amount.currency string
+- body:fixed_amount.currency_options object
+- body:metadata object
+- body:tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:tax_code string
+- body:type string enum[fixed_amount]
+
+## S395-N0161  POST /v1/sources
+desc: <p>Creates a new source object.</p>
+- body:amount integer
+- body:currency string
+- body:customer string
+- body:expand array<string>
+- body:flow string enum[code_verification|none|receiver|redirect]
+- body:mandate object
+- body:mandate.acceptance object
+- body:mandate.acceptance.date integer
+- body:mandate.acceptance.ip string
+- body:mandate.acceptance.offline object
+- body:mandate.acceptance.online object
+- body:mandate.acceptance.status string enum[accepted|pending|refused|revoked]
+- body:mandate.acceptance.type string enum[offline|online]
+- body:mandate.acceptance.user_agent string
+- body:mandate.amount integer enum[]
+- body:mandate.currency string
+- body:mandate.interval string enum[one_time|scheduled|variable]
+- body:mandate.notification_method string enum[deprecated_none|email|manual|none|stripe_email]
+- body:metadata object
+- body:original_source string
+- body:owner object
+- body:owner.address object
+- body:owner.address.city string
+- body:owner.address.country string
+- body:owner.address.line1 string
+- body:owner.address.line2 string
+- body:owner.address.postal_code string
+- body:owner.address.state string
+- body:owner.email string
+- body:owner.name string
+- body:owner.phone string
+- body:receiver object
+- body:receiver.refund_attributes_method string enum[email|manual|none]
+- body:redirect object
+- body:redirect.return_url string
+- body:source_order object
+- body:source_order.items array<object>
+- body:source_order.items[].amount integer
+- body:source_order.items[].currency string
+- body:source_order.items[].description string
+- body:source_order.items[].parent string
+- body:source_order.items[].quantity integer
+- body:source_order.items[].type string enum[discount|shipping|sku|tax]
+- body:source_order.shipping object
+- body:source_order.shipping.address object
+- body:source_order.shipping.carrier string
+- body:source_order.shipping.name string
+- body:source_order.shipping.phone string
+- body:source_order.shipping.tracking_number string
+- body:statement_descriptor string
+- body:token string
+- body:type string
+- body:usage string enum[reusable|single_use]
+
+## S395-N0162  POST /v1/sources/{source}
+desc: <p>Updates the specified source by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p> <p>This request accepts the <code>metadata</code> and <code>owner</code> as arguments. It is also possible to update type specific information for selected payment methods. Please refer to our <a href="/docs/sources">payment method guides</a> for more detail.</p>
+- path:source string
+- body:amount integer
+- body:expand array<string>
+- body:mandate object
+- body:mandate.acceptance object
+- body:mandate.acceptance.date integer
+- body:mandate.acceptance.ip string
+- body:mandate.acceptance.offline object
+- body:mandate.acceptance.online object
+- body:mandate.acceptance.status string enum[accepted|pending|refused|revoked]
+- body:mandate.acceptance.type string enum[offline|online]
+- body:mandate.acceptance.user_agent string
+- body:mandate.amount integer enum[]
+- body:mandate.currency string
+- body:mandate.interval string enum[one_time|scheduled|variable]
+- body:mandate.notification_method string enum[deprecated_none|email|manual|none|stripe_email]
+- body:metadata object enum[]
+- body:owner object
+- body:owner.address object
+- body:owner.address.city string
+- body:owner.address.country string
+- body:owner.address.line1 string
+- body:owner.address.line2 string
+- body:owner.address.postal_code string
+- body:owner.address.state string
+- body:owner.email string
+- body:owner.name string
+- body:owner.phone string
+- body:source_order object
+- body:source_order.items array<object>
+- body:source_order.items[].amount integer
+- body:source_order.items[].currency string
+- body:source_order.items[].description string
+- body:source_order.items[].parent string
+- body:source_order.items[].quantity integer
+- body:source_order.items[].type string enum[discount|shipping|sku|tax]
+- body:source_order.shipping object
+- body:source_order.shipping.address object
+- body:source_order.shipping.carrier string
+- body:source_order.shipping.name string
+- body:source_order.shipping.phone string
+- body:source_order.shipping.tracking_number string
+
+## S395-N0163  POST /v1/sources/{source}/verify
+desc: <p>Verify a given source.</p>
+- path:source string
+- body:expand array<string>
+- body:values array<string>
+
+## S395-N0164  POST /v1/subscription_items
+desc: <p>Adds a new item to an existing subscription. No existing items will be changed or replaced.</p>
+- body:billing_thresholds object enum[]
+- body:billing_thresholds.usage_gte integer
+- body:expand array<string>
+- body:metadata object
+- body:payment_behavior string enum[allow_incomplete|default_incomplete|error_if_incomplete|pending_if_incomplete]
+- body:price string
+- body:price_data object
+- body:price_data.currency string
+- body:price_data.product string
+- body:price_data.recurring object
+- body:price_data.recurring.interval string enum[day|month|week|year]
+- body:price_data.recurring.interval_count integer
+- body:price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:price_data.unit_amount integer
+- body:price_data.unit_amount_decimal string
+- body:proration_behavior string enum[always_invoice|create_prorations|none]
+- body:proration_date integer
+- body:quantity integer
+- body:subscription string
+- body:tax_rates array<string> enum[]
+
+## S395-N0165  DELETE /v1/subscription_items/{item}
+desc: <p>Deletes an item from the subscription. Removing a subscription item from a subscription will not cancel the subscription.</p>
+- path:item string
+- body:clear_usage boolean
+- body:proration_behavior string enum[always_invoice|create_prorations|none]
+- body:proration_date integer
+
+## S395-N0166  POST /v1/subscription_items/{item}
+desc: <p>Updates the plan or quantity of an item on a current subscription.</p>
+- path:item string
+- body:billing_thresholds object enum[]
+- body:billing_thresholds.usage_gte integer
+- body:expand array<string>
+- body:metadata object enum[]
+- body:off_session boolean
+- body:payment_behavior string enum[allow_incomplete|default_incomplete|error_if_incomplete|pending_if_incomplete]
+- body:price string
+- body:price_data object
+- body:price_data.currency string
+- body:price_data.product string
+- body:price_data.recurring object
+- body:price_data.recurring.interval string enum[day|month|week|year]
+- body:price_data.recurring.interval_count integer
+- body:price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:price_data.unit_amount integer
+- body:price_data.unit_amount_decimal string
+- body:proration_behavior string enum[always_invoice|create_prorations|none]
+- body:proration_date integer
+- body:quantity integer
+- body:tax_rates array<string> enum[]
+
+## S395-N0167  POST /v1/subscription_items/{subscription_item}/usage_records
+desc: <p>Creates a usage record for a specified subscription item and date, and fills it with a quantity.</p> <p>Usage records provide <code>quantity</code> information that Stripe uses to track how much a customer is using your service. With usage information and the pricing model set up by the <a href="https://stripe.com/docs/billing/subscriptions/metered-billing">metered billing</a> plan, Stripe help
+- path:subscription_item string
+- body:action string enum[increment|set]
+- body:expand array<string>
+- body:quantity integer
+- body:timestamp string enum[now]
+
+## S395-N0169  POST /v1/subscription_schedules/{schedule}
+desc: <p>Updates an existing subscription schedule.</p>
+- path:schedule string
+- body:default_settings object
+- body:default_settings.application_fee_percent number
+- body:default_settings.automatic_tax object
+- body:default_settings.automatic_tax.enabled boolean
+- body:default_settings.billing_cycle_anchor string enum[automatic|phase_start]
+- body:default_settings.billing_thresholds object enum[]
+- body:default_settings.billing_thresholds.amount_gte integer
+- body:default_settings.billing_thresholds.reset_billing_cycle_anchor boolean
+- body:default_settings.collection_method string enum[charge_automatically|send_invoice]
+- body:default_settings.default_payment_method string
+- body:default_settings.description string
+- body:default_settings.invoice_settings object
+- body:default_settings.invoice_settings.days_until_due integer
+- body:default_settings.on_behalf_of string enum[]
+- body:default_settings.transfer_data object enum[]
+- body:default_settings.transfer_data.amount_percent number
+- body:default_settings.transfer_data.destination string
+- body:end_behavior string enum[cancel|none|release|renew]
+- body:expand array<string>
+- body:metadata object enum[]
+- body:phases array<object>
+- body:phases[].add_invoice_items array<object>
+- body:phases[].add_invoice_items[].price string
+- body:phases[].add_invoice_items[].price_data object
+- body:phases[].add_invoice_items[].quantity integer
+- body:phases[].add_invoice_items[].tax_rates array<string> enum[]
+- body:phases[].application_fee_percent number
+- body:phases[].automatic_tax object
+- body:phases[].automatic_tax.enabled boolean
+- body:phases[].billing_cycle_anchor string enum[automatic|phase_start]
+- body:phases[].billing_thresholds object enum[]
+- body:phases[].billing_thresholds.amount_gte integer
+- body:phases[].billing_thresholds.reset_billing_cycle_anchor boolean
+- body:phases[].collection_method string enum[charge_automatically|send_invoice]
+- body:phases[].coupon string
+- body:phases[].default_payment_method string
+- body:phases[].default_tax_rates array<string> enum[]
+- body:phases[].description string
+- body:phases[].end_date integer enum[now]
+- body:phases[].invoice_settings object
+- body:phases[].invoice_settings.days_until_due integer
+- body:phases[].items array<object>
+- body:phases[].items[].billing_thresholds object enum[]
+- body:phases[].items[].metadata object
+- body:phases[].items[].price string
+- body:phases[].items[].price_data object
+- body:phases[].items[].quantity integer
+- body:phases[].items[].tax_rates array<string> enum[]
+- body:phases[].iterations integer
+- body:phases[].metadata object
+- body:phases[].on_behalf_of string
+- body:phases[].proration_behavior string enum[always_invoice|create_prorations|none]
+- body:phases[].start_date integer enum[now]
+- body:phases[].transfer_data object
+- body:phases[].transfer_data.amount_percent number
+- body:phases[].transfer_data.destination string
+- body:phases[].trial boolean
+- body:phases[].trial_end integer enum[now]
+- body:proration_behavior string enum[always_invoice|create_prorations|none]
+
+## S395-N0170  POST /v1/subscription_schedules/{schedule}/cancel
+desc: <p>Cancels a subscription schedule and its associated subscription immediately (if the subscription schedule has an active subscription). A subscription schedule can only be canceled if its status is <code>not_started</code> or <code>active</code>.</p>
+- path:schedule string
+- body:expand array<string>
+- body:invoice_now boolean
+- body:prorate boolean
+
+## S395-N0172  POST /v1/subscriptions
+desc: <p>Creates a new subscription on an existing customer. Each customer can have up to 500 active or scheduled subscriptions.</p> <p>When you create a subscription with <code>collection_method=charge_automatically</code>, the first invoice is finalized as part of the request. The <code>payment_behavior</code> parameter determines the exact behavior of the initial payment.</p> <p>To start subscription
+- body:add_invoice_items array<object>
+- body:add_invoice_items[].price string
+- body:add_invoice_items[].price_data object
+- body:add_invoice_items[].price_data.currency string
+- body:add_invoice_items[].price_data.product string
+- body:add_invoice_items[].price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:add_invoice_items[].price_data.unit_amount integer
+- body:add_invoice_items[].price_data.unit_amount_decimal string
+- body:add_invoice_items[].quantity integer
+- body:add_invoice_items[].tax_rates array<string> enum[]
+- body:application_fee_percent number
+- body:automatic_tax object
+- body:automatic_tax.enabled boolean
+- body:backdate_start_date integer
+- body:billing_cycle_anchor integer
+- body:billing_thresholds object enum[]
+- body:billing_thresholds.amount_gte integer
+- body:billing_thresholds.reset_billing_cycle_anchor boolean
+- body:cancel_at integer
+- body:cancel_at_period_end boolean
+- body:collection_method string enum[charge_automatically|send_invoice]
+- body:coupon string
+- body:currency string
+- body:customer string
+- body:days_until_due integer
+- body:default_payment_method string
+- body:default_source string
+- body:default_tax_rates array<string> enum[]
+- body:description string
+- body:expand array<string>
+- body:items array<object>
+- body:items[].billing_thresholds object enum[]
+- body:items[].billing_thresholds.usage_gte integer
+- body:items[].metadata object
+- body:items[].price string
+- body:items[].price_data object
+- body:items[].price_data.currency string
+- body:items[].price_data.product string
+- body:items[].price_data.recurring object
+- body:items[].price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:items[].price_data.unit_amount integer
+- body:items[].price_data.unit_amount_decimal string
+- body:items[].quantity integer
+- body:items[].tax_rates array<string> enum[]
+- body:metadata object enum[]
+- body:off_session boolean
+- body:on_behalf_of string enum[]
+- body:payment_behavior string enum[allow_incomplete|default_incomplete|error_if_incomplete|pending_if_incomplete]
+- body:payment_settings object
+- body:payment_settings.payment_method_options object
+- body:payment_settings.payment_method_options.acss_debit object enum[]
+- body:payment_settings.payment_method_options.bancontact object enum[]
+- body:payment_settings.payment_method_options.card object enum[]
+- body:payment_settings.payment_method_options.customer_balance object enum[]
+- body:payment_settings.payment_method_options.konbini object enum[]
+- body:payment_settings.payment_method_options.us_bank_account object enum[]
+- body:payment_settings.payment_method_types array<string> enum[ach_credit_transfer|ach_debit|acss_debit|au_becs_debit|bacs_debit|bancontact|boleto|card|customer_balance|fpx|giropay|grabpay]
+- body:payment_settings.save_default_payment_method string enum[off|on_subscription]
+- body:pending_invoice_item_interval object enum[]
+- body:pending_invoice_item_interval.interval string enum[day|month|week|year]
+- body:pending_invoice_item_interval.interval_count integer
+- body:promotion_code string
+- body:proration_behavior string enum[always_invoice|create_prorations|none]
+- body:transfer_data object
+- body:transfer_data.amount_percent number
+- body:transfer_data.destination string
+- body:trial_end string enum[now]
+- body:trial_from_plan boolean
+- body:trial_period_days integer
+- body:trial_settings object
+- body:trial_settings.end_behavior object
+- body:trial_settings.end_behavior.missing_payment_method string enum[cancel|create_invoice|pause]
+
+## S395-N0173  DELETE /v1/subscriptions/{subscription_exposed_id}
+desc: <p>Cancels a customer’s subscription immediately. The customer will not be charged again for the subscription.</p> <p>Note, however, that any pending invoice items that you’ve created will still be charged for at the end of the period, unless manually <a href="#delete_invoiceitem">deleted</a>. If you’ve set the subscription to cancel at the end of the period, any pending prorations will also be le
+- path:subscription_exposed_id string
+- body:cancellation_details object
+- body:cancellation_details.comment string
+- body:cancellation_details.feedback string enum[|customer_service|low_quality|missing_features|other|switched_service|too_complex|too_expensive|unused]
+- body:expand array<string>
+- body:invoice_now boolean
+- body:prorate boolean
+
+## S395-N0174  POST /v1/subscriptions/{subscription_exposed_id}
+desc: <p>Updates an existing subscription on a customer to match the specified parameters. When changing plans or quantities, we will optionally prorate the price we charge next month to make up for any price changes. To preview how the proration will be calculated, use the <a href="#upcoming_invoice">upcoming invoice</a> endpoint.</p>
+- path:subscription_exposed_id string
+- body:add_invoice_items array<object>
+- body:add_invoice_items[].price string
+- body:add_invoice_items[].price_data object
+- body:add_invoice_items[].price_data.currency string
+- body:add_invoice_items[].price_data.product string
+- body:add_invoice_items[].price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:add_invoice_items[].price_data.unit_amount integer
+- body:add_invoice_items[].price_data.unit_amount_decimal string
+- body:add_invoice_items[].quantity integer
+- body:add_invoice_items[].tax_rates array<string> enum[]
+- body:application_fee_percent number
+- body:automatic_tax object
+- body:automatic_tax.enabled boolean
+- body:billing_cycle_anchor string enum[now|unchanged]
+- body:billing_thresholds object enum[]
+- body:billing_thresholds.amount_gte integer
+- body:billing_thresholds.reset_billing_cycle_anchor boolean
+- body:cancel_at integer enum[]
+- body:cancel_at_period_end boolean
+- body:cancellation_details object
+- body:cancellation_details.comment string
+- body:cancellation_details.feedback string enum[|customer_service|low_quality|missing_features|other|switched_service|too_complex|too_expensive|unused]
+- body:collection_method string enum[charge_automatically|send_invoice]
+- body:coupon string
+- body:days_until_due integer
+- body:default_payment_method string
+- body:default_source string
+- body:default_tax_rates array<string> enum[]
+- body:description string
+- body:expand array<string>
+- body:items array<object>
+- body:items[].billing_thresholds object enum[]
+- body:items[].billing_thresholds.usage_gte integer
+- body:items[].clear_usage boolean
+- body:items[].deleted boolean
+- body:items[].id string
+- body:items[].metadata object enum[]
+- body:items[].price string
+- body:items[].price_data object
+- body:items[].price_data.currency string
+- body:items[].price_data.product string
+- body:items[].price_data.recurring object
+- body:items[].price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:items[].price_data.unit_amount integer
+- body:items[].price_data.unit_amount_decimal string
+- body:items[].quantity integer
+- body:items[].tax_rates array<string> enum[]
+- body:metadata object enum[]
+- body:off_session boolean
+- body:on_behalf_of string enum[]
+- body:pause_collection object enum[]
+- body:pause_collection.behavior string enum[keep_as_draft|mark_uncollectible|void]
+- body:pause_collection.resumes_at integer
+- body:payment_behavior string enum[allow_incomplete|default_incomplete|error_if_incomplete|pending_if_incomplete]
+- body:payment_settings object
+- body:payment_settings.payment_method_options object
+- body:payment_settings.payment_method_options.acss_debit object enum[]
+- body:payment_settings.payment_method_options.bancontact object enum[]
+- body:payment_settings.payment_method_options.card object enum[]
+- body:payment_settings.payment_method_options.customer_balance object enum[]
+- body:payment_settings.payment_method_options.konbini object enum[]
+- body:payment_settings.payment_method_options.us_bank_account object enum[]
+- body:payment_settings.payment_method_types array<string> enum[ach_credit_transfer|ach_debit|acss_debit|au_becs_debit|bacs_debit|bancontact|boleto|card|customer_balance|fpx|giropay|grabpay]
+- body:payment_settings.save_default_payment_method string enum[off|on_subscription]
+- body:pending_invoice_item_interval object enum[]
+- body:pending_invoice_item_interval.interval string enum[day|month|week|year]
+- body:pending_invoice_item_interval.interval_count integer
+- body:promotion_code string
+- body:proration_behavior string enum[always_invoice|create_prorations|none]
+- body:proration_date integer
+- body:transfer_data object enum[]
+- body:transfer_data.amount_percent number
+- body:transfer_data.destination string
+- body:trial_end string enum[now]
+- body:trial_from_plan boolean
+- body:trial_settings object
+- body:trial_settings.end_behavior object
+- body:trial_settings.end_behavior.missing_payment_method string enum[cancel|create_invoice|pause]
+
+## S395-N0175  DELETE /v1/subscriptions/{subscription_exposed_id}/discount
+desc: <p>Removes the currently applied discount on a subscription.</p>
+- path:subscription_exposed_id string
+- body:(body) object
+
+## S395-N0176  POST /v1/subscriptions/{subscription}/resume
+desc: <p>Initiates resumption of a paused subscription, optionally resetting the billing cycle anchor and creating prorations. If a resumption invoice is generated, it must be paid or marked uncollectible before the subscription will be unpaused. If payment succeeds the subscription will become <code>active</code>, and if payment fails the subscription will be <code>past_due</code>. The resumption invoi
+- path:subscription string
+- body:billing_cycle_anchor string enum[now|unchanged]
+- body:expand array<string>
+- body:proration_behavior string enum[always_invoice|create_prorations|none]
+- body:proration_date integer
+
+## S395-N0177  POST /v1/tax_rates
+desc: <p>Creates a new tax rate.</p>
+- body:active boolean
+- body:country string
+- body:description string
+- body:display_name string
+- body:expand array<string>
+- body:inclusive boolean
+- body:jurisdiction string
+- body:metadata object
+- body:percentage number
+- body:state string
+- body:tax_type string enum[gst|hst|igst|jct|lease_tax|pst|qst|rst|sales_tax|vat]
+
+## S395-N0178  POST /v1/tax_rates/{tax_rate}
+desc: <p>Updates an existing tax rate.</p>
+- path:tax_rate string
+- body:active boolean
+- body:country string
+- body:description string
+- body:display_name string
+- body:expand array<string>
+- body:jurisdiction string
+- body:metadata object enum[]
+- body:state string
+- body:tax_type string enum[gst|hst|igst|jct|lease_tax|pst|qst|rst|sales_tax|vat]
+
+## S395-N0179  POST /v1/terminal/configurations
+desc: <p>Creates a new <code>Configuration</code> object.</p>
+- body:bbpos_wisepos_e object
+- body:bbpos_wisepos_e.splashscreen string enum[]
+- body:expand array<string>
+- body:tipping object enum[]
+- body:tipping.aud object
+- body:tipping.aud.fixed_amounts array<integer>
+- body:tipping.aud.percentages array<integer>
+- body:tipping.aud.smart_tip_threshold integer
+- body:tipping.cad object
+- body:tipping.cad.fixed_amounts array<integer>
+- body:tipping.cad.percentages array<integer>
+- body:tipping.cad.smart_tip_threshold integer
+- body:tipping.chf object
+- body:tipping.chf.fixed_amounts array<integer>
+- body:tipping.chf.percentages array<integer>
+- body:tipping.chf.smart_tip_threshold integer
+- body:tipping.czk object
+- body:tipping.czk.fixed_amounts array<integer>
+- body:tipping.czk.percentages array<integer>
+- body:tipping.czk.smart_tip_threshold integer
+- body:tipping.dkk object
+- body:tipping.dkk.fixed_amounts array<integer>
+- body:tipping.dkk.percentages array<integer>
+- body:tipping.dkk.smart_tip_threshold integer
+- body:tipping.eur object
+- body:tipping.eur.fixed_amounts array<integer>
+- body:tipping.eur.percentages array<integer>
+- body:tipping.eur.smart_tip_threshold integer
+- body:tipping.gbp object
+- body:tipping.gbp.fixed_amounts array<integer>
+- body:tipping.gbp.percentages array<integer>
+- body:tipping.gbp.smart_tip_threshold integer
+- body:tipping.hkd object
+- body:tipping.hkd.fixed_amounts array<integer>
+- body:tipping.hkd.percentages array<integer>
+- body:tipping.hkd.smart_tip_threshold integer
+- body:tipping.myr object
+- body:tipping.myr.fixed_amounts array<integer>
+- body:tipping.myr.percentages array<integer>
+- body:tipping.myr.smart_tip_threshold integer
+- body:tipping.nok object
+- body:tipping.nok.fixed_amounts array<integer>
+- body:tipping.nok.percentages array<integer>
+- body:tipping.nok.smart_tip_threshold integer
+- body:tipping.nzd object
+- body:tipping.nzd.fixed_amounts array<integer>
+- body:tipping.nzd.percentages array<integer>
+- body:tipping.nzd.smart_tip_threshold integer
+- body:tipping.sek object
+- body:tipping.sek.fixed_amounts array<integer>
+- body:tipping.sek.percentages array<integer>
+- body:tipping.sek.smart_tip_threshold integer
+- body:tipping.sgd object
+- body:tipping.sgd.fixed_amounts array<integer>
+- body:tipping.sgd.percentages array<integer>
+- body:tipping.sgd.smart_tip_threshold integer
+- body:tipping.usd object
+- body:tipping.usd.fixed_amounts array<integer>
+- body:tipping.usd.percentages array<integer>
+- body:tipping.usd.smart_tip_threshold integer
+- body:verifone_p400 object
+- body:verifone_p400.splashscreen string enum[]
+
+## S395-N0180  DELETE /v1/terminal/configurations/{configuration}
+desc: <p>Deletes a <code>Configuration</code> object.</p>
+- path:configuration string
+- body:(body) object
+
+## S395-N0181  POST /v1/terminal/configurations/{configuration}
+desc: <p>Updates a new <code>Configuration</code> object.</p>
+- path:configuration string
+- body:bbpos_wisepos_e object enum[]
+- body:bbpos_wisepos_e.splashscreen string enum[]
+- body:expand array<string>
+- body:tipping object enum[]
+- body:tipping.aud object
+- body:tipping.aud.fixed_amounts array<integer>
+- body:tipping.aud.percentages array<integer>
+- body:tipping.aud.smart_tip_threshold integer
+- body:tipping.cad object
+- body:tipping.cad.fixed_amounts array<integer>
+- body:tipping.cad.percentages array<integer>
+- body:tipping.cad.smart_tip_threshold integer
+- body:tipping.chf object
+- body:tipping.chf.fixed_amounts array<integer>
+- body:tipping.chf.percentages array<integer>
+- body:tipping.chf.smart_tip_threshold integer
+- body:tipping.czk object
+- body:tipping.czk.fixed_amounts array<integer>
+- body:tipping.czk.percentages array<integer>
+- body:tipping.czk.smart_tip_threshold integer
+- body:tipping.dkk object
+- body:tipping.dkk.fixed_amounts array<integer>
+- body:tipping.dkk.percentages array<integer>
+- body:tipping.dkk.smart_tip_threshold integer
+- body:tipping.eur object
+- body:tipping.eur.fixed_amounts array<integer>
+- body:tipping.eur.percentages array<integer>
+- body:tipping.eur.smart_tip_threshold integer
+- body:tipping.gbp object
+- body:tipping.gbp.fixed_amounts array<integer>
+- body:tipping.gbp.percentages array<integer>
+- body:tipping.gbp.smart_tip_threshold integer
+- body:tipping.hkd object
+- body:tipping.hkd.fixed_amounts array<integer>
+- body:tipping.hkd.percentages array<integer>
+- body:tipping.hkd.smart_tip_threshold integer
+- body:tipping.myr object
+- body:tipping.myr.fixed_amounts array<integer>
+- body:tipping.myr.percentages array<integer>
+- body:tipping.myr.smart_tip_threshold integer
+- body:tipping.nok object
+- body:tipping.nok.fixed_amounts array<integer>
+- body:tipping.nok.percentages array<integer>
+- body:tipping.nok.smart_tip_threshold integer
+- body:tipping.nzd object
+- body:tipping.nzd.fixed_amounts array<integer>
+- body:tipping.nzd.percentages array<integer>
+- body:tipping.nzd.smart_tip_threshold integer
+- body:tipping.sek object
+- body:tipping.sek.fixed_amounts array<integer>
+- body:tipping.sek.percentages array<integer>
+- body:tipping.sek.smart_tip_threshold integer
+- body:tipping.sgd object
+- body:tipping.sgd.fixed_amounts array<integer>
+- body:tipping.sgd.percentages array<integer>
+- body:tipping.sgd.smart_tip_threshold integer
+- body:tipping.usd object
+- body:tipping.usd.fixed_amounts array<integer>
+- body:tipping.usd.percentages array<integer>
+- body:tipping.usd.smart_tip_threshold integer
+- body:verifone_p400 object enum[]
+- body:verifone_p400.splashscreen string enum[]
+
+## S395-N0182  POST /v1/terminal/connection_tokens
+desc: <p>To connect to a reader the Stripe Terminal SDK needs to retrieve a short-lived connection token from Stripe, proxied through your server. On your backend, add an endpoint that creates and returns a connection token.</p>
+- body:expand array<string>
+- body:location string
+
+## S395-N0183  POST /v1/terminal/locations
+desc: <p>Creates a new <code>Location</code> object. For further details, including which address fields are required in each country, see the <a href="/docs/terminal/fleet/locations">Manage locations</a> guide.</p>
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.line1 string
+- body:address.line2 string
+- body:address.postal_code string
+- body:address.state string
+- body:configuration_overrides string
+- body:display_name string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0184  DELETE /v1/terminal/locations/{location}
+desc: <p>Deletes a <code>Location</code> object.</p>
+- path:location string
+- body:(body) object
+
+## S395-N0186  POST /v1/terminal/readers
+desc: <p>Creates a new <code>Reader</code> object.</p>
+- body:expand array<string>
+- body:label string
+- body:location string
+- body:metadata object enum[]
+- body:registration_code string
+
+## S395-N0187  DELETE /v1/terminal/readers/{reader}
+desc: <p>Deletes a <code>Reader</code> object.</p>
+- path:reader string
+- body:(body) object
+
+## S395-N0188  POST /v1/terminal/readers/{reader}
+desc: <p>Updates a <code>Reader</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>
+- path:reader string
+- body:expand array<string>
+- body:label string
+- body:metadata object enum[]
+
+## S395-N0189  POST /v1/terminal/readers/{reader}/cancel_action
+desc: <p>Cancels the current reader action.</p>
+- path:reader string
+- body:expand array<string>
+
+## S395-N0190  POST /v1/terminal/readers/{reader}/process_payment_intent
+desc: <p>Initiates a payment flow on a Reader.</p>
+- path:reader string
+- body:expand array<string>
+- body:payment_intent string
+- body:process_config object
+- body:process_config.skip_tipping boolean
+- body:process_config.tipping object
+- body:process_config.tipping.amount_eligible integer
+
+## S395-N0191  POST /v1/terminal/readers/{reader}/process_setup_intent
+desc: <p>Initiates a setup intent flow on a Reader.</p>
+- path:reader string
+- body:customer_consent_collected boolean
+- body:expand array<string>
+- body:setup_intent string
+
+## S395-N0192  POST /v1/terminal/readers/{reader}/refund_payment
+desc: <p>Initiates a refund on a Reader</p>
+- path:reader string
+- body:amount integer
+- body:charge string
+- body:expand array<string>
+- body:metadata object
+- body:payment_intent string
+- body:refund_application_fee boolean
+- body:reverse_transfer boolean
+
+## S395-N0193  POST /v1/terminal/readers/{reader}/set_reader_display
+desc: <p>Sets reader display to show cart details.</p>
+- path:reader string
+- body:cart object
+- body:cart.currency string
+- body:cart.line_items array<object>
+- body:cart.line_items[].amount integer
+- body:cart.line_items[].description string
+- body:cart.line_items[].quantity integer
+- body:cart.tax integer
+- body:cart.total integer
+- body:expand array<string>
+- body:type string enum[cart]
+
+## S395-N0194  POST /v1/test_helpers/customers/{customer}/fund_cash_balance
+desc: <p>Create an incoming testmode bank transfer</p>
+- path:customer string
+- body:amount integer
+- body:currency string
+- body:expand array<string>
+- body:reference string
+
+## S395-N0195  POST /v1/test_helpers/issuing/cards/{card}/shipping/deliver
+desc: <p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>delivered</code>.</p>
+- path:card string
+- body:expand array<string>
+
+## S395-N0196  POST /v1/test_helpers/issuing/cards/{card}/shipping/fail
+desc: <p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>failure</code>.</p>
+- path:card string
+- body:expand array<string>
+
+## S395-N0197  POST /v1/test_helpers/issuing/cards/{card}/shipping/return
+desc: <p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>returned</code>.</p>
+- path:card string
+- body:expand array<string>
+
+## S395-N0198  POST /v1/test_helpers/issuing/cards/{card}/shipping/ship
+desc: <p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>shipped</code>.</p>
+- path:card string
+- body:expand array<string>
+
+## S395-N0199  POST /v1/test_helpers/refunds/{refund}/expire
+desc: <p>Expire a refund with a status of <code>requires_action</code>.</p>
+- path:refund string
+- body:expand array<string>
+
+## S395-N0200  POST /v1/test_helpers/terminal/readers/{reader}/present_payment_method
+desc: <p>Presents a payment method on a simulated reader. Can be used to simulate accepting a payment, saving a card or refunding a transaction.</p>
+- path:reader string
+- body:card_present object
+- body:card_present.number string
+- body:expand array<string>
+- body:interac_present object
+- body:interac_present.number string
+- body:type string enum[card_present|interac_present]
+
+## S395-N0201  POST /v1/test_helpers/test_clocks
+desc: <p>Creates a new test clock that can be attached to new customers and quotes.</p>
+- body:expand array<string>
+- body:frozen_time integer
+- body:name string
+
+## S395-N0203  POST /v1/test_helpers/test_clocks/{test_clock}/advance
+desc: <p>Starts advancing a test clock to a specified time in the future. Advancement is done when status changes to <code>Ready</code>.</p>
+- path:test_clock string
+- body:expand array<string>
+- body:frozen_time integer
+
+## S395-N0204  POST /v1/test_helpers/treasury/inbound_transfers/{id}/fail
+desc: <p>Transitions a test mode created InboundTransfer to the <code>failed</code> status. The InboundTransfer must already be in the <code>processing</code> state.</p>
+- path:id string
+- body:expand array<string>
+- body:failure_details object
+- body:failure_details.code string enum[account_closed|account_frozen|bank_account_restricted|bank_ownership_changed|debit_not_authorized|incorrect_account_holder_address|incorrect_account_holder_name|incorrect_account_holder_tax_id|insufficient_funds|invalid_account_number|invalid_currency|no_account]
+
+## S395-N0208  POST /v1/test_helpers/treasury/outbound_payments/{id}/post
+desc: <p>Transitions a test mode created OutboundPayment to the <code>posted</code> status. The OutboundPayment must already be in the <code>processing</code> state.</p>
+- path:id string
+- body:expand array<string>
+
+## S395-N0209  POST /v1/test_helpers/treasury/outbound_payments/{id}/return
+desc: <p>Transitions a test mode created OutboundPayment to the <code>returned</code> status. The OutboundPayment must already be in the <code>processing</code> state.</p>
+- path:id string
+- body:expand array<string>
+- body:returned_details object
+- body:returned_details.code string enum[account_closed|account_frozen|bank_account_restricted|bank_ownership_changed|declined|incorrect_account_holder_name|invalid_account_number|invalid_currency|no_account|other]
+
+## S395-N0210  POST /v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}/fail
+desc: <p>Transitions a test mode created OutboundTransfer to the <code>failed</code> status. The OutboundTransfer must already be in the <code>processing</code> state.</p>
+- path:outbound_transfer string
+- body:expand array<string>
+
+## S395-N0211  POST /v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}/post
+desc: <p>Transitions a test mode created OutboundTransfer to the <code>posted</code> status. The OutboundTransfer must already be in the <code>processing</code> state.</p>
+- path:outbound_transfer string
+- body:expand array<string>
+
+## S395-N0212  POST /v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}/return
+desc: <p>Transitions a test mode created OutboundTransfer to the <code>returned</code> status. The OutboundTransfer must already be in the <code>processing</code> state.</p>
+- path:outbound_transfer string
+- body:expand array<string>
+- body:returned_details object
+- body:returned_details.code string enum[account_closed|account_frozen|bank_account_restricted|bank_ownership_changed|declined|incorrect_account_holder_name|invalid_account_number|invalid_currency|no_account|other]
+
+## S395-N0214  POST /v1/test_helpers/treasury/received_debits
+desc: <p>Use this endpoint to simulate a test mode ReceivedDebit initiated by a third party. In live mode, you can’t directly create ReceivedDebits initiated by third parties.</p>
+- body:amount integer
+- body:currency string
+- body:description string
+- body:expand array<string>
+- body:financial_account string
+- body:initiating_payment_method_details object
+- body:initiating_payment_method_details.type string enum[us_bank_account]
+- body:initiating_payment_method_details.us_bank_account object
+- body:initiating_payment_method_details.us_bank_account.account_holder_name string
+- body:initiating_payment_method_details.us_bank_account.account_number string
+- body:initiating_payment_method_details.us_bank_account.routing_number string
+- body:network string enum[ach]
+
+## S395-N0216  POST /v1/topups
+desc: <p>Top up the balance of an account</p>
+- body:amount integer
+- body:currency string
+- body:description string
+- body:expand array<string>
+- body:metadata object enum[]
+- body:source string
+- body:statement_descriptor string
+- body:transfer_group string
+
+## S395-N0217  POST /v1/topups/{topup}
+desc: <p>Updates the metadata of a top-up. Other top-up details are not editable by design.</p>
+- path:topup string
+- body:description string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0218  POST /v1/topups/{topup}/cancel
+desc: <p>Cancels a top-up. Only pending top-ups can be canceled.</p>
+- path:topup string
+- body:expand array<string>
+
+## S395-N0219  POST /v1/transfers
+desc: <p>To send funds from your Stripe account to a connected account, you create a new transfer object. Your <a href="#balance">Stripe balance</a> must be able to cover the transfer amount, or you’ll receive an “Insufficient Funds” error.</p>
+- body:amount integer
+- body:currency string
+- body:description string
+- body:destination string
+- body:expand array<string>
+- body:metadata object
+- body:source_transaction string
+- body:source_type string enum[bank_account|card|fpx]
+- body:transfer_group string
+
+## S395-N0220  POST /v1/transfers/{id}/reversals
+desc: <p>When you create a new reversal, you must specify a transfer to create it on.</p> <p>When reversing transfers, you can optionally reverse part of the transfer. You can do so as many times as you wish until the entire transfer has been reversed.</p> <p>Once entirely reversed, a transfer can’t be reversed again. This method will return an error when called on an already-reversed transfer, or when 
+- path:id string
+- body:amount integer
+- body:description string
+- body:expand array<string>
+- body:metadata object enum[]
+- body:refund_application_fee boolean
+
+## S395-N0221  POST /v1/transfers/{transfer}
+desc: <p>Updates the specified transfer by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p> <p>This request accepts only metadata as an argument.</p>
+- path:transfer string
+- body:description string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0222  POST /v1/transfers/{transfer}/reversals/{id}
+desc: <p>Updates the specified reversal by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p> <p>This request only accepts metadata and description as arguments.</p>
+- path:id string
+- path:transfer string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0223  POST /v1/treasury/credit_reversals
+desc: <p>Reverses a ReceivedCredit and creates a CreditReversal object.</p>
+- body:expand array<string>
+- body:metadata object
+- body:received_credit string
+
+## S395-N0224  POST /v1/treasury/debit_reversals
+desc: <p>Reverses a ReceivedDebit and creates a DebitReversal object.</p>
+- body:expand array<string>
+- body:metadata object
+- body:received_debit string
+
+## S395-N0225  POST /v1/treasury/financial_accounts
+desc: <p>Creates a new FinancialAccount. For now, each connected account can only have one FinancialAccount.</p>
+- body:expand array<string>
+- body:features object
+- body:features.card_issuing object
+- body:features.card_issuing.requested boolean
+- body:features.deposit_insurance object
+- body:features.deposit_insurance.requested boolean
+- body:features.financial_addresses object
+- body:features.financial_addresses.aba object
+- body:features.inbound_transfers object
+- body:features.inbound_transfers.ach object
+- body:features.intra_stripe_flows object
+- body:features.intra_stripe_flows.requested boolean
+- body:features.outbound_payments object
+- body:features.outbound_payments.ach object
+- body:features.outbound_payments.us_domestic_wire object
+- body:features.outbound_transfers object
+- body:features.outbound_transfers.ach object
+- body:features.outbound_transfers.us_domestic_wire object
+- body:metadata object
+- body:platform_restrictions object
+- body:platform_restrictions.inbound_flows string enum[restricted|unrestricted]
+- body:platform_restrictions.outbound_flows string enum[restricted|unrestricted]
+- body:supported_currencies array<string>
+
+## S395-N0226  POST /v1/treasury/financial_accounts/{financial_account}
+desc: <p>Updates the details of a FinancialAccount.</p>
+- path:financial_account string
+- body:expand array<string>
+- body:features object
+- body:features.card_issuing object
+- body:features.card_issuing.requested boolean
+- body:features.deposit_insurance object
+- body:features.deposit_insurance.requested boolean
+- body:features.financial_addresses object
+- body:features.financial_addresses.aba object
+- body:features.inbound_transfers object
+- body:features.inbound_transfers.ach object
+- body:features.intra_stripe_flows object
+- body:features.intra_stripe_flows.requested boolean
+- body:features.outbound_payments object
+- body:features.outbound_payments.ach object
+- body:features.outbound_payments.us_domestic_wire object
+- body:features.outbound_transfers object
+- body:features.outbound_transfers.ach object
+- body:features.outbound_transfers.us_domestic_wire object
+- body:metadata object
+- body:platform_restrictions object
+- body:platform_restrictions.inbound_flows string enum[restricted|unrestricted]
+- body:platform_restrictions.outbound_flows string enum[restricted|unrestricted]
+
+## S395-N0227  POST /v1/treasury/financial_accounts/{financial_account}/features
+desc: <p>Updates the Features associated with a FinancialAccount.</p>
+- path:financial_account string
+- body:card_issuing object
+- body:card_issuing.requested boolean
+- body:deposit_insurance object
+- body:deposit_insurance.requested boolean
+- body:expand array<string>
+- body:financial_addresses object
+- body:financial_addresses.aba object
+- body:financial_addresses.aba.requested boolean
+- body:inbound_transfers object
+- body:inbound_transfers.ach object
+- body:inbound_transfers.ach.requested boolean
+- body:intra_stripe_flows object
+- body:intra_stripe_flows.requested boolean
+- body:outbound_payments object
+- body:outbound_payments.ach object
+- body:outbound_payments.ach.requested boolean
+- body:outbound_payments.us_domestic_wire object
+- body:outbound_payments.us_domestic_wire.requested boolean
+- body:outbound_transfers object
+- body:outbound_transfers.ach object
+- body:outbound_transfers.ach.requested boolean
+- body:outbound_transfers.us_domestic_wire object
+- body:outbound_transfers.us_domestic_wire.requested boolean
+
+## S395-N0228  POST /v1/treasury/inbound_transfers
+desc: <p>Creates an InboundTransfer.</p>
+- body:amount integer
+- body:currency string
+- body:description string
+- body:expand array<string>
+- body:financial_account string
+- body:metadata object
+- body:origin_payment_method string
+- body:statement_descriptor string
+
+## S395-N0229  POST /v1/treasury/inbound_transfers/{inbound_transfer}/cancel
+desc: <p>Cancels an InboundTransfer.</p>
+- path:inbound_transfer string
+- body:expand array<string>
+
+## S395-N0230  POST /v1/treasury/outbound_payments
+desc: <p>Creates an OutboundPayment.</p>
+- body:amount integer
+- body:currency string
+- body:customer string
+- body:description string
+- body:destination_payment_method string
+- body:destination_payment_method_data object
+- body:destination_payment_method_data.billing_details object
+- body:destination_payment_method_data.billing_details.address object enum[]
+- body:destination_payment_method_data.billing_details.email string enum[]
+- body:destination_payment_method_data.billing_details.name string
+- body:destination_payment_method_data.billing_details.phone string
+- body:destination_payment_method_data.financial_account string
+- body:destination_payment_method_data.metadata object
+- body:destination_payment_method_data.type string enum[financial_account|us_bank_account]
+- body:destination_payment_method_data.us_bank_account object
+- body:destination_payment_method_data.us_bank_account.account_holder_type string enum[company|individual]
+- body:destination_payment_method_data.us_bank_account.account_number string
+- body:destination_payment_method_data.us_bank_account.account_type string enum[checking|savings]
+- body:destination_payment_method_data.us_bank_account.financial_connections_account string
+- body:destination_payment_method_data.us_bank_account.routing_number string
+- body:destination_payment_method_options object
+- body:destination_payment_method_options.us_bank_account object enum[]
+- body:destination_payment_method_options.us_bank_account.network string enum[ach|us_domestic_wire]
+- body:end_user_details object
+- body:end_user_details.ip_address string
+- body:end_user_details.present boolean
+- body:expand array<string>
+- body:financial_account string
+- body:metadata object
+- body:statement_descriptor string
+
+## S395-N0231  POST /v1/treasury/outbound_payments/{id}/cancel
+desc: <p>Cancel an OutboundPayment.</p>
+- path:id string
+- body:expand array<string>
+
+## S395-N0233  POST /v1/treasury/outbound_transfers/{outbound_transfer}/cancel
+desc: <p>An OutboundTransfer can be canceled if the funds have not yet been paid out.</p>
+- path:outbound_transfer string
+- body:expand array<string>
+
+## S395-N0234  POST /v1/webhook_endpoints
+desc: <p>A webhook endpoint must have a <code>url</code> and a list of <code>enabled_events</code>. You may optionally specify the Boolean <code>connect</code> parameter. If set to true, then a Connect webhook endpoint that notifies the specified <code>url</code> about events from all connected accounts is created; otherwise an account webhook endpoint that notifies the specified <code>url</code> only a
+- body:api_version string enum[2011-01-01|2011-06-21|2011-06-28|2011-08-01|2011-09-15|2011-11-17|2012-02-23|2012-03-25|2012-06-18|2012-06-28|2012-07-09|2012-09-24]
+- body:connect boolean
+- body:description string
+- body:enabled_events array<string> enum[*|account.application.authorized|account.application.deauthorized|account.external_account.created|account.external_account.deleted|account.external_account.updated|account.updated|application_fee.created|application_fee.refund.updated|application_fee.refunded|balance.available|billing_portal.configuration.created]
+- body:expand array<string>
+- body:metadata object enum[]
+- body:url string
+
+## S395-N0236  POST /v1/webhook_endpoints/{webhook_endpoint}
+desc: <p>Updates the webhook endpoint. You may edit the <code>url</code>, the list of <code>enabled_events</code>, and the status of your endpoint.</p>
+- path:webhook_endpoint string
+- body:description string
+- body:disabled boolean
+- body:enabled_events array<string> enum[*|account.application.authorized|account.application.deauthorized|account.external_account.created|account.external_account.deleted|account.external_account.updated|account.updated|application_fee.created|application_fee.refund.updated|application_fee.refunded|balance.available|billing_portal.configuration.created]
+- body:expand array<string>
+- body:metadata object enum[]
+- body:url string
+
+## S340-N0008  PUT /annotation_layer/{pk}/annotation/{annotation_id}
+desc: Update an Annotation layer
+schema: AnnotationRestApi.put
+- path:pk integer
+- path:annotation_id integer
+- body:end_dttm string
+- body:json_metadata string
+- body:long_descr string
+- body:short_descr string
+- body:start_dttm string
+
+## S340-N0010  DELETE /chart/
+desc: Deletes multiple Charts in a bulk operation.
+- query:q any
+
+## S340-N0015  PUT /chart/{pk}
+desc: Changes a Chart.
+schema: ChartRestApi.put
+- path:pk integer
+- body:cache_timeout integer
+- body:dashboards array<integer>
+- body:datasource_id integer
+- body:datasource_type string enum[druid|table|view]
+- body:description string
+- body:owners array<integer>
+- body:params string
+- body:query_context string
+- body:slice_name string
+- body:viz_type string
+
+## S340-N0017  POST /css_template/
+desc: Create a CSS template
+schema: CssTemplateRestApi.post
+- body:css string
+- body:template_name string
+
+## S340-N0018  DELETE /css_template/{pk}
+desc: Delete CSS template
+- path:pk integer
+
+## S340-N0019  PUT /css_template/{pk}
+desc: Update a CSS template
+schema: CssTemplateRestApi.put
+- path:pk integer
+- body:css string
+- body:template_name string

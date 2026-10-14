@@ -1,0 +1,15 @@
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -1262,7 +1262,11 @@
+             return if (snapshot == exclude) emptyList() else listOf(snapshot)
+         }
+         val raw = when (field.kind) {
+-            "enum" -> field.enumValues.sortedByDescending { valueScore("high", it) - valueScore("low", it) }
++            "enum" -> {
++                val ranked = field.enumValues.sortedByDescending { valueScore("high", it) - valueScore("low", it) }
++                val high = ranked.filter { valueScore("high", it) > valueScore("low", it) }
++                if (high.isNotEmpty()) high else ranked
++            }
+             "bool" -> listOf("true")
+             "num" -> elevatedNumericRoleCandidates
+             "str" -> tableValues("highstr")

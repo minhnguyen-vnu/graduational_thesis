@@ -1,0 +1,37 @@
+# EvoMaster black-box auth config for the raouf held-out target (WFC format, jar P2e).
+#
+# raouf (raouf-b-dev/ecommerce-store-api) authenticates with an RS256 bearer token.
+# Login: POST /v1/authentication/login  body {email,password}  -> JSON field "accessToken".
+# externalEndpointURL points at the capture proxy (:8212), so logins are recorded in the
+# traffic jsonl and the per-account login count can be verified (CLAUDE.md §Đo đạc).
+#
+# Passwords are the POST-first-rotation values (docpw + "x"): all seeded accounts carry
+# mustChangePassword=true, so the reseed rotates each once (login -> change-password) and a
+# plain login with the rotated password then returns a usable, mustChangePassword=false token.
+# See infra/em-results/raouf-heldout-20261014/PROTOCOL.md.
+#
+# File order = [low, operator, victim]; RestSampler processes the LAST entry first, so the
+# A1 victim (admin) is reached first within the budget, the operator (superadmin) second.
+
+auth:
+  - name: low             # CUSTOMER, negative control
+    loginEndpointAuth:
+      payloadRaw: '{"email":"customer@store.local","password":"Customer123!x"}'
+  - name: operator        # SUPER_ADMIN, performs the role demotion (manage_roles)
+    loginEndpointAuth:
+      payloadRaw: '{"email":"superadmin@store.local","password":"SuperAdmin123!x"}'
+  - name: victim          # ADMIN, the A1 demotion victim (manage_users)
+    loginEndpointAuth:
+      payloadRaw: '{"email":"admin@store.local","password":"Admin123!x"}'
+
+authTemplate:
+  loginEndpointAuth:
+    externalEndpointURL: http://localhost:8212/v1/authentication/login
+    verb: POST
+    contentType: application/json
+    token:
+      extractFrom: body
+      extractSelector: /accessToken
+      sendIn: header
+      sendName: Authorization
+      sendTemplate: "Bearer {token}"

@@ -1,0 +1,231 @@
+## S510-0001  DELETE /rest-service-fecru/admin/groups/{name}
+desc: Deletes a group by name
+- path:name string
+
+## S510-0002  DELETE /rest-service-fecru/admin/groups/{name}/users
+desc: Removes user from group
+- path:name string
+
+## S510-0003  PUT /rest-service-fecru/admin/groups/{name}/users
+desc: Adds user to group
+- path:name string
+
+## S510-0004  POST /rest-service-fecru/admin/permission-schemes
+desc: Creates a new permission scheme. The new permission scheme is blank or can be created from another existing permission scheme.
+- query:copyFrom string
+
+## S510-0005  PUT /rest-service-fecru/admin/permission-schemes/{name}
+desc: Updates an existing permission scheme.
+- path:name string
+
+## S510-0006  PUT /rest-service-fecru/admin/permission-schemes/{name}/groups
+desc: Add group permission [group name, action name] to given permission scheme List of available action names:
+- path:name string
+
+## S510-0007  PUT /rest-service-fecru/admin/permission-schemes/{name}/logged-in-users
+desc: Add logged-in-users permission [action name] to given permission scheme List of available action names:
+- path:name string
+
+## S510-0008  PUT /rest-service-fecru/admin/permission-schemes/{name}/review-roles
+desc: Add review-role permission [role name, action name] to given permission scheme List of available action names: List of available role names:
+- path:name string
+
+## S510-0009  DELETE /rest-service-fecru/admin/permission-schemes/{name}/users
+desc: Removes user permission [username, action name] from given permission scheme
+- path:name string
+
+## S510-0010  DELETE /rest-service-fecru/admin/projects/{key}
+desc: Deletes a project by key (including all reviews in this project). Use to move reviews to another project.
+- path:key string
+- query:deleteProjectReviews boolean
+
+## S510-0011  DELETE /rest-service-fecru/admin/projects/{key}/allowed-reviewer-groups
+desc: Delete group from project's allowed reviewer group list
+- path:key string
+
+## S510-0012  DELETE /rest-service-fecru/admin/projects/{key}/allowed-reviewer-users
+desc: Remove user from project's allowed reviewer users list
+- path:key string
+
+## S510-0013  DELETE /rest-service-fecru/admin/projects/{key}/default-reviewer-groups
+desc: Delete group from project's default reviewer group list
+- path:key string
+
+## S510-0014  DELETE /rest-service-fecru/admin/projects/{key}/default-reviewer-users
+desc: Remove user from project's default reviewer users list
+- path:key string
+
+## S510-0015  POST /rest-service-fecru/admin/repositories
+desc: Creates a repository.
+
+## S510-0016  POST /rest-service-fecru/admin/repositories-v1
+desc: Adds repository
+
+## S510-0017  DELETE /rest-service-fecru/admin/repositories-v1/{repository}/
+desc: Deletes repository. Warning: you can not undo this operation
+- path:repository string
+
+## S510-0018  POST /rest-service-fecru/admin/repositories-v1/{repository}/enable
+desc: Enables repository.
+- path:repository string
+
+## S510-0019  POST /rest-service-fecru/admin/repositories-v1/{repository}/reindex-discussions
+desc: Rebuilds the changeset discussion index for the specified repository. The index is used to display changeset discussions in activity streams.
+- path:repository string
+
+## S510-0020  POST /rest-service-fecru/admin/repositories-v1/{repository}/reindex-reviews
+desc: Re-indexes all the Crucible revision data (which revisions have been reviewed)
+- path:repository string
+- query:synchronous boolean
+
+## S510-0021  POST /rest-service-fecru/admin/repositories-v1/{repository}/reindex-search
+desc: Rebuilds the search index data for the given repository. This will rebuild the data used to search by path, commit message and comitter, also used for activity streams and JIRA integration.
+- path:repository string
+
+## S510-0022  POST /rest-service-fecru/admin/repositories-v1/{repository}/scan
+desc: Runs an incremental repository index now. This is the same operation as triggered by scheduled indexing. Can be called using the REST Api Token to authorize.
+- path:repository string
+- query:synchronous boolean
+
+## S510-0023  POST /rest-service-fecru/admin/repositories-v1/{repository}/scan-cvs
+desc: Scans the whole CVS repository for any changes since the last scan. Only valid for CVS repositories.
+- path:repository string
+
+## S510-0024  POST /rest-service-fecru/admin/repositories-v1/{repository}/start
+desc: Starts the repository.
+- path:repository string
+
+## S510-0025  POST /rest-service-fecru/admin/repositories-v1/{repository}/stop
+desc: Stops the repository. Does not wait for the repository to stop before returning.
+- path:repository string
+
+## S510-0026  PUT /rest-service-fecru/admin/repositories/{repository}
+desc: Updates an existing repository.
+- path:repository string
+
+## S510-0027  PUT /rest-service-fecru/admin/repositories/{repository}/full-incremental-index
+desc: Runs an full incremental repository index. For CVS: scans the whole CVS repository for any changes since the last scan. For other repository types will trigger an incremental index.
+- path:repository string
+
+## S510-0028  PUT /rest-service-fecru/admin/repositories/{repository}/permissions/groups
+desc: Note: use /rest-service-fecru/admin/repository-permissions/ endpoint for full repository permission administration functionality Adds group to repository allowed groups
+- path:repository string
+
+## S510-0029  PUT /rest-service-fecru/admin/repositories/{repository}/reindex-changeset-discussion
+desc: Rebuilds the changeset discussion index for the specified repository. The index is used to display changeset discussions in activity streams.
+- path:repository string
+
+## S510-0030  POST /rest-service-fecru/admin/users/
+desc: Creates a new user. Tries to add the user to fisheye-users and crucible-users groups if those exist.
+
+## S510-0031  DELETE /rest-service-fecru/admin/users/{name}
+desc: Deletes a user by name
+- path:name string
+
+## S510-0032  PUT /rest-service-fecru/admin/users/{name}
+desc: Updates an existing user.
+- path:name string
+
+## S510-0033  PUT /rest-service-fecru/admin/users/{name}/groups
+desc: Adds user to group
+- path:name string
+
+## S510-0034  POST /rest-service-fecru/auth/login
+desc: Get the user authentication token.
+
+## S510-0035  POST /rest-service-fecru/share-content-v1/share
+
+## S510-0036  POST /rest-service-fecru/user-prefs-v1
+desc: Using POST method to set a user preference. If repo is not set, the preference will be recognised as a global preference.
+
+## S511-0001  DELETE /anything
+summary: Returns anything passed in request data.
+
+## S511-0002  PATCH /anything
+summary: Returns anything passed in request data.
+
+## S511-0003  POST /anything
+summary: Returns anything passed in request data.
+
+## S511-0004  PUT /anything
+summary: Returns anything passed in request data.
+
+## S511-0005  DELETE /anything/{anything}
+summary: Returns anything passed in request data.
+- path:anything string
+
+## S511-0006  PATCH /anything/{anything}
+summary: Returns anything passed in request data.
+- path:anything string
+
+## S511-0007  POST /anything/{anything}
+summary: Returns anything passed in request data.
+- path:anything string
+
+## S511-0008  PUT /anything/{anything}
+summary: Returns anything passed in request data.
+- path:anything string
+
+## S511-0009  DELETE /delay/{delay}
+summary: Returns a delayed response (max of 10 seconds).
+- path:delay integer
+
+## S511-0010  PATCH /delay/{delay}
+summary: Returns a delayed response (max of 10 seconds).
+- path:delay integer
+
+## S511-0011  POST /delay/{delay}
+summary: Returns a delayed response (max of 10 seconds).
+- path:delay integer
+
+## S511-0012  PUT /delay/{delay}
+summary: Returns a delayed response (max of 10 seconds).
+- path:delay integer
+
+## S511-0013  DELETE /delete
+summary: The request's DELETE parameters.
+
+## S511-0014  PATCH /patch
+summary: The request's PATCH parameters.
+
+## S511-0015  POST /post
+summary: The request's POST parameters.
+
+## S511-0016  PUT /put
+summary: The request's PUT parameters.
+
+## S511-0017  DELETE /redirect-to
+summary: 302/3XX Redirects to the given URL.
+
+## S511-0018  PATCH /redirect-to
+summary: 302/3XX Redirects to the given URL.
+
+## S511-0019  POST /redirect-to
+summary: 302/3XX Redirects to the given URL.
+- body:status_code integer
+- body:url string
+
+## S511-0020  PUT /redirect-to
+summary: 302/3XX Redirects to the given URL.
+- body:status_code integer
+- body:url string
+
+## S511-0021  POST /response-headers
+summary: Returns a set of response headers from the query string.
+- query:freeform string
+
+## S511-0022  DELETE /status/{codes}
+summary: Return status code or random status code if more than one are given
+- path:codes string
+
+## S511-0023  PATCH /status/{codes}
+summary: Return status code or random status code if more than one are given
+- path:codes string
+
+## S511-0024  POST /status/{codes}
+summary: Return status code or random status code if more than one are given
+- path:codes string
+
+## S511-0025  PUT /status/{codes}
+summary: Return status code or random status code if more than one are given
+- path:codes string

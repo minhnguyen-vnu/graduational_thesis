@@ -1,0 +1,23 @@
+== reset handcheck staff ==
+== admin login ==
+  admin: staffId=1 role:edit=True
+== admin creates victim + plain (default pwd 123, code staff_<id>) ==
+  add victim=200  add plain=200
+  victimId=46 plainId=47 (login code staff_46 / staff_47)
+== admin assigns victim HIGH role 1, plain LOW role 9 ==
+  set victim->1: 200  set plain->9: 200
+== NEG CONTROL: plain (role 9, no role:edit) PUT /role -> expect body code 1300 (denied) ==
+  plain token: staffId=47 role:edit=False
+  neg body-code=1300
+== victim login (OLD token, role 1) ==
+  victim_old: staffId=46 role:edit=True
+== TRIPLE (ALLOWED=body code 200, DENIED=body code 1300) ==
+  source (victim_old PUT /role) code=200
+  transition (admin demote victim->9) code=200
+  follow-up (victim_old SAME token PUT /role) code=200
+  victim_new: staffId=46 role:edit=False
+  D1 (victim_new token PUT /role) code=1300
+== VERDICT ==
+  PASS: MR-A1 confirmed on running hrm 1ef6abc
+  old-token(role:edit) after demotion allowed(code 200) vs new-token denied(code 1300) ; neg denied(code 1300)
+  NOTE: hrm signals denial as HTTP 200 + body code 1300, not HTTP 403

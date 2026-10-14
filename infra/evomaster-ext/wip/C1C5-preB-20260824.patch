@@ -1,0 +1,620 @@
+diff --git a/core/src/main/kotlin/org/evomaster/core/EMConfig.kt b/core/src/main/kotlin/org/evomaster/core/EMConfig.kt
+index b498b4d72a..0b4a24798e 100644
+--- a/core/src/main/kotlin/org/evomaster/core/EMConfig.kt
++++ b/core/src/main/kotlin/org/evomaster/core/EMConfig.kt
+@@ -3050,6 +3050,20 @@ class EMConfig {
+             " triple needs.")
+     var statefulAuthzResetEndpoint = ""
+ 
++    @Experimental
++    @Cfg("THESIS EXTENSION. Declare the permission-reducing transition explicitly, for APIs whose" +
++            " transition cannot be inferred from the schema: either because its name is outside the" +
++            " built-in vocabulary, or because the schema exposes no role enum to harvest a reduced" +
++            " value from. Format: \"<VERB> <PATH> name=value ...\", where a value may be the" +
++            " placeholder <victim> or <operator>, eg" +
++            " \"POST /api/set_user_permission user=<victim> role=1 permission=0\"." +
++            " When empty (the default), the transition is inferred from the schema exactly as before," +
++            " so this option cannot alter results measured without it. Note this declares only WHICH" +
++            " action reduces a permission and HOW to aim it at a victim: choosing the victim, finding" +
++            " the guarded action, replaying the pre-transition credential and judging the outcome all" +
++            " still run unchanged, so a run using this option does NOT measure black-box recall.")
++    var statefulAuthzTransition = ""
++
+     enum class VulnerableInputClassificationStrategy {
+         /**
+          * Uses the manual methods to select the vulnerable inputs.
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
+index e6201c10a6..ccdfdaf4f6 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
+@@ -598,7 +598,7 @@ class RestSecurityOracle {
+                 || source.verb !in listOf(HttpVerb.PUT, HttpVerb.PATCH, HttpVerb.POST, HttpVerb.DELETE)
+                 // the guarded action must not itself be the transition endpoint, otherwise
+                 // "demote A, then demote B" reads as a violation
+-                || RestSecurityBuilder.looksLikePermissionReducingTransition(source)) {
++                || RestSecurityBuilder.looksLikePermissionReducingTransition(source, config.statefulAuthzTransition)) {
+                 continue
+             }
+ 
+@@ -627,7 +627,7 @@ class RestSecurityOracle {
+                     val t = actions[it]
+                     t.auth.isDifferentFrom(source.auth)
+                         && isAllowed(t)
+-                        && RestSecurityBuilder.looksLikePermissionReducingTransition(t)
++                        && RestSecurityBuilder.looksLikePermissionReducingTransition(t, config.statefulAuthzTransition)
+                 }
+                 if (!hasTransition) {
+                     continue
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+index fcdb5ba770..a84b66de0e 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -37,6 +37,8 @@ import org.evomaster.core.search.gene.string.StringGene
+ import org.evomaster.core.search.*
+ import org.evomaster.core.search.gene.Gene
+ import org.evomaster.core.search.gene.collection.EnumGene
++import org.evomaster.core.search.gene.numeric.IntegerGene
++import org.evomaster.core.search.gene.numeric.LongGene
+ import org.evomaster.core.search.gene.utils.GeneUtils
+ import org.evomaster.core.search.service.Archive
+ import org.evomaster.core.search.service.FitnessFunction
+@@ -75,6 +77,15 @@ class RestSecurityBuilder : TimeBoxedPhase {
+          */
+         private const val MAX_STATEFUL_TRIPLE_ATTEMPTS = 8
+ 
++        /**
++         * Attempt ceiling when the transition is declared rather than inferred. Higher because that
++         * mode is meant for real-world surfaces: 8 attempts were chosen against a 13-endpoint target,
++         * and on a 105-endpoint one they are exhausted on low-privilege candidates before the actual
++         * admin-only guard is ever reached. Raising it costs phase time, never precision -- every
++         * extra attempt is still discarded as VOID unless the SUT actually performed the triple.
++         */
++        private const val MAX_STATEFUL_TRIPLE_ATTEMPTS_DECLARED = 40
++
+         /**
+          * Does this action look like a permission-reducing transition? A *write* whose path/name
+          * carries a role/permission signal.
+@@ -84,13 +95,59 @@ class RestSecurityBuilder : TimeBoxedPhase {
+          * cannot assume the intervening action is a real transition. Keeping the single definition
+          * here stops the two sides from drifting apart.
+          */
+-        fun looksLikePermissionReducingTransition(a: RestCallAction): Boolean {
++        fun looksLikePermissionReducingTransition(a: RestCallAction, declared: String = ""): Boolean {
++            // An explicitly declared transition counts as one whatever its name looks like. This is
++            // the ONLY way the two sides can stay in agreement: if construction accepted a declared
++            // endpoint that judgment then rejected, the builder would assemble triples the oracle
++            // would never score, which is exactly the drift the shared predicate exists to prevent.
++            parseDeclaredTransition(declared)?.let {
++                return a.verb == it.verb && a.path.toString().equals(it.path, ignoreCase = true)
++            }
+             if (a.verb !in TRANSITION_VERBS) {
+                 return false
+             }
+             val hay = (a.path.toString() + " " + a.getName()).lowercase()
+             return TRANSITION_PATH_SIGNALS.any { hay.contains(it) }
+         }
++
++        /**
++         * A transition supplied by the user instead of inferred: which action reduces a permission,
++         * and how to aim it at a victim. See EMConfig.statefulAuthzTransition for the rationale and
++         * for what it deliberately does NOT supply.
++         *
++         * @param bindings parameter name -> value, where a value may contain the placeholders
++         *                 <victim> and <operator>, resolved per attempt.
++         */
++        data class DeclaredTransition(
++            val verb: HttpVerb,
++            val path: String,
++            val bindings: Map<String, String>
++        )
++
++        /**
++         * Parse "<VERB> <PATH> name=value ...". Returns null when nothing was declared, and also
++         * when the declaration is malformed -- in which case inference simply proceeds as usual, so
++         * a typo degrades to the default behaviour rather than silently producing a broken triple.
++         */
++        fun parseDeclaredTransition(spec: String): DeclaredTransition? {
++            if (spec.isBlank()) return null
++            val parts = spec.trim().split(Regex("\\s+"))
++            if (parts.size < 2) {
++                LoggingUtil.uniqueUserWarn("Ignoring malformed statefulAuthzTransition '$spec':" +
++                        " expected \"<VERB> <PATH> name=value ...\"")
++                return null
++            }
++            val verb = try {
++                HttpVerb.valueOf(parts[0].uppercase())
++            } catch (e: IllegalArgumentException) {
++                LoggingUtil.uniqueUserWarn("Ignoring statefulAuthzTransition: unsupported verb '${parts[0]}'")
++                return null
++            }
++            val bindings = parts.drop(2)
++                .mapNotNull { p -> p.split("=", limit = 2).takeIf { it.size == 2 } }
++                .associate { it[0] to it[1] }
++            return DeclaredTransition(verb, parts[1], bindings)
++        }
+     }
+ 
+     /**
+@@ -371,6 +428,20 @@ class RestSecurityBuilder : TimeBoxedPhase {
+     private val roleLowPrivSignals = listOf("view","read","guest","basic","free","member","user","none","restrict","limited")
+     private val roleHighPrivSignals = listOf("admin","owner","super","root","manage","write","edit","power","full")
+ 
++    /**
++     * Values to TRY in a role field the schema describes only as a number, best first. A bare integer
++     * carries no privilege ordering -- nothing in `role: integer` says whether 0 or 1 is the lesser
++     * role -- so these cannot be filtered by a naming signal the way enum values can. They are
++     * proposals, and the re-login probe is what decides whether one actually took a privilege away.
++     */
++    private val numericRoleCandidates = listOf("1", "0", "2")
++
++    /**
++     * Same idea for a free-form string role field: common low-privilege role names, tried only after
++     * the schema's own vocabulary has been exhausted.
++     */
++    private val stringRoleCandidates = listOf("user", "viewer", "guest", "member", "basic")
++
+     /**
+      * Users whose privilege THIS phase has already reduced. Reusing one as the transition operator
+      * makes the transition fail (403); reusing one as the victim makes the source fail (403), and in
+@@ -382,6 +453,9 @@ class RestSecurityBuilder : TimeBoxedPhase {
+     /** Executed triple attempts, valid or void. Each is a real test run against the SUT. */
+     private var statefulTripleAttempts = 0
+ 
++    /** Ceiling for [statefulTripleAttempts]; raised in declared-transition mode. */
++    private var maxStatefulAttempts = MAX_STATEFUL_TRIPLE_ATTEMPTS
++
+     /** Lazily built, only if a reset endpoint was configured. */
+     private val resetClient: Client by lazy { HttpClientFactory.createTrustingJerseyClient() }
+ 
+@@ -449,31 +523,96 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         // refresh: earlier phases (eg expandWithForbidden) may have added the 403 tests we rely on
+         individualsInSolution = archive.extractSolution().individuals
+ 
+-        val transition = findPermissionReducingTransition()
+-        if (transition == null) {
+-            log.debug("Skipping stateful-authorization: no permission-reducing transition endpoint found")
+-            return
++        val declared = parseDeclaredTransition(config.statefulAuthzTransition)
++
++        val transition: RestCallAction?
++        val reducedRoleCandidates: List<String>
++        if (declared != null) {
++            transition = actionDefinitions.firstOrNull {
++                it.verb == declared.verb && it.path.toString().equals(declared.path, ignoreCase = true)
++            }
++            if (transition == null) {
++                LoggingUtil.uniqueUserWarn("Declared statefulAuthzTransition" +
++                        " '${declared.verb} ${declared.path}' is not in the schema; ignoring it")
++                return
++            }
++            // the reduced value is supplied by the declaration, so nothing has to be harvested
++            reducedRoleCandidates = listOf("")
++        } else {
++            transition = findPermissionReducingTransition()
++            if (transition == null) {
++                log.debug("Skipping stateful-authorization: no permission-reducing transition endpoint found")
++                return
++            }
++            reducedRoleCandidates = harvestReducedRoleCandidates(transition)
++            if (reducedRoleCandidates.isEmpty()) {
++                log.debug("Skipping stateful-authorization: no reduced role value could be proposed" +
++                        " for ${transition.getName()}")
++                return
++            }
+         }
+-        val reducedRole = harvestReducedRoleValue(transition)
+-        if (reducedRole == null) {
+-            log.debug("Skipping stateful-authorization: no reduced role value in the schema vocabulary")
+-            return
++
++        // Source/follow-up must be a NON-consuming guarded write, so the same resource is repeatable.
++        // PUT/PATCH are the verbs that carry that meaning in a RESTful API, and they are preferred
++        // whenever the API offers one. POST is a FALLBACK, used only when PUT/PATCH yield no guarded
++        // candidate at all: an RPC-style API that exposes every operation as a POST would otherwise
++        // have no admissible source whatsoever, which is a blind spot of the tool rather than a
++        // property of the API.
++        //
++        // Fallback rather than addition, deliberately. Admitting POST alongside PUT/PATCH also works
++        // and costs no precision -- a genuinely consuming POST breaks its own follow-up and is
++        // discarded as VOID (§5.3), and a source not actually gated by the removed privilege is
++        // rejected by the re-login probe. But it changes what the tool does on APIs that were never
++        // the problem: on Tier-1 it builds a SECOND triple from POST /reports, which alters the
++        // recorded status strings for the reset arms (measured -- 3 of 21 regression rows moved,
++        // with zero verdicts changed). Preferring PUT/PATCH keeps every published Tier-1/Tier-2
++        // number exactly reproducible while still unblocking the POST-only surface this exists for.
++
++        maxStatefulAttempts = if (declared != null) {
++            MAX_STATEFUL_TRIPLE_ATTEMPTS_DECLARED
++        } else {
++            MAX_STATEFUL_TRIPLE_ATTEMPTS
+         }
+ 
+-        // source/follow-up must be a NON-consuming guarded write, so the same resource is repeatable
+-        val sourceVerbs = listOf(HttpVerb.PUT, HttpVerb.PATCH)
++        // Collect the guarded candidates before attempting any, so that in declared mode they can be
++        // ORDERED. On a 13-endpoint target the order hardly matters; on a 105-endpoint one the attempt
++        // budget is spent entirely on low-privilege endpoints before the admin-only guard is reached.
++        fun guardedCandidatesFor(verbs: List<HttpVerb>) = verbs.flatMap { verb ->
++            RestIndividualSelectorUtils.getAllActionDefinitions(actionDefinitions, verb)
++                .filter { op ->
++                    // the transition endpoint is not a source
++                    op.path != transition.path
++                        // GUARD (§5.1): must be privilege-gated -> some user was denied it (403)
++                        && RestIndividualSelectorUtils.findIndividuals(
++                            individualsInSolution, verb, op.path, status = 403
++                        ).isNotEmpty()
++                }
++                .map { verb to it }
++        }
++
++        // Note the fallback is on the GUARDED candidates, not on the schema: an API may declare a
++        // PUT and still offer no evidence that it is privilege-gated, and in that case it has given
++        // us nothing to work with and POST should be reached for.
++        val candidates = guardedCandidatesFor(listOf(HttpVerb.PUT, HttpVerb.PATCH))
++            .ifEmpty { guardedCandidatesFor(listOf(HttpVerb.POST)) }
++
++        // Prefer what looks most like an admin-only action: the FEWER distinct users were ever allowed
++        // on it, the more restricted it is, with ties broken by how many were denied. This is only a
++        // heuristic over black-box evidence, and it changes the ORDER candidates are tried in, never
++        // which are eligible -- so it can make a run find a triple sooner, never find a different one.
++        // Applied in declared mode only, so every measurement taken without a declared transition is
++        // unaffected; evaluating it on the inferred path is future work.
++        val ordered = if (declared == null) candidates else candidates.sortedWith(
++            compareBy(
++                { distinctUsersOn(it.first, it.second.path, statusGroup = StatusGroup.G_2xx) },
++                { -distinctUsersOn(it.first, it.second.path, status = 403) }
++            )
++        )
+ 
+-        for (verb in sourceVerbs) {
+-            for (op in RestIndividualSelectorUtils.getAllActionDefinitions(actionDefinitions, verb)) {
++        for ((verb, op) in ordered) {
++            run {
+ 
+                 if (hasPhaseTimedOut()) return
+-                if (op.path == transition.path) continue // the transition endpoint is not a source
+-
+-                // GUARD (§5.1): the action must be privilege-gated -> some user was denied it (403)
+-                val guarded = RestIndividualSelectorUtils.findIndividuals(
+-                    individualsInSolution, verb, op.path, status = 403
+-                ).isNotEmpty()
+-                if (!guarded) continue
+ 
+                 // Every distinct user seen ALLOWED (2xx) on this guarded action is a victim candidate,
+                 // smallest test first. One candidate is not enough. A triple is VOID (§5.3) -- not a
+@@ -491,10 +630,10 @@ class RestSecurityBuilder : TimeBoxedPhase {
+ 
+                 for (victimSlice in victimCandidates) {
+                     if (hasPhaseTimedOut()) return
+-                    if (statefulTripleAttempts >= MAX_STATEFUL_TRIPLE_ATTEMPTS) return
++                    if (statefulTripleAttempts >= maxStatefulAttempts) return
+                     // stop this endpoint at the first VALID triple: further attempts would reduce yet
+                     // more privileges, polluting the state for the endpoints still to be tried
+-                    if (buildStatefulAuthzTriple(victimSlice, transition, reducedRole)) break
++                    if (buildStatefulAuthzTriple(victimSlice, transition, reducedRoleCandidates, declared)) break
+                 }
+             }
+         }
+@@ -510,7 +649,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+     private fun buildStatefulAuthzTriple(
+         victimSlice: RestIndividual,
+         transitionDef: RestCallAction,
+-        reducedRole: String
++        reducedRoleCandidates: List<String>,
++        declared: DeclaredTransition?
+     ): Boolean {
+         val victimAuth = victimSlice.seeMainExecutableActions().lastOrNull()?.auth ?: return false
+         if (victimAuth is NoAuth) return false
+@@ -529,11 +669,35 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 ).isNotEmpty()
+             }
+ 
++        // Operator is the OUTER loop and the proposed role value the INNER one, because the two fail
++        // for unrelated reasons and only one of them is worth re-trying in place:
++        //
++        //   value never sent (the schema would not accept it, eg "viewer" into `role: integer`)
++        //       -> nothing was done to the SUT; try the NEXT VALUE
++        //   value sent, transition rejected (403: this operator is not privileged either)
++        //       -> no value can repair that; try the NEXT OPERATOR
++        //   value sent, transition accepted (2xx)
++        //       -> the victim's privilege is spent, and a second transition on an already-reduced
++        //          account could only look like one that did nothing; give this victim up
++        //
++        // The distinction is read off [statefulTripleAttempts], which counts only triples actually
++        // put to the SUT, and off [privilegeReducedInPhase], which records transitions that landed.
+         for (operator in operators) {
+-            if (hasPhaseTimedOut()) return false
+-            if (statefulTripleAttempts >= MAX_STATEFUL_TRIPLE_ATTEMPTS) return false
+-            if (executeStatefulAuthzTriple(victimSlice, transitionDef, reducedRole, operator)) {
+-                return true
++            for (reducedRole in reducedRoleCandidates) {
++                if (hasPhaseTimedOut()) return false
++                if (statefulTripleAttempts >= maxStatefulAttempts) return false
++
++                val before = statefulTripleAttempts
++                if (executeStatefulAuthzTriple(victimSlice, transitionDef, reducedRole, operator, declared)) {
++                    return true
++                }
++                if (statefulTripleAttempts == before) {
++                    continue        // not sent at all: this value did not fit the schema
++                }
++                if (privilegeReducedInPhase.contains(victimAuth.name)) {
++                    return false    // the transition landed; the victim is spent
++                }
++                break               // the transition was rejected: change operator, not value
+             }
+         }
+         return false
+@@ -547,7 +711,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         victimSlice: RestIndividual,
+         transitionDef: RestCallAction,
+         reducedRole: String,
+-        operator: HttpWsAuthenticationInfo
++        operator: HttpWsAuthenticationInfo,
++        declared: DeclaredTransition?
+     ): Boolean {
+         val base = victimSlice.copy() as RestIndividual
+         val source = base.seeMainExecutableActions().lastOrNull() ?: return false
+@@ -560,14 +725,23 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         transition.forceNewTaints()
+         transition.doInitialize(randomness)
+         transition.auth = operator
+-        // target the victim (path param), and set a reduced role (body field); either failing => void
+-        if (!setUserTargetToVictim(transition, victimAuth.name)) {
+-            log.debug("Stateful-authorization: could not target victim '${victimAuth.name}' on ${transition.getName()}")
+-            return false
+-        }
+-        if (!setRoleFieldToReduced(transition, reducedRole)) {
+-            log.debug("Stateful-authorization: could not set reduced role '$reducedRole' on ${transition.getName()}")
+-            return false
++        // target the victim, and set a reduced role; either failing => void
++        if (declared != null) {
++            // Bind by the names the user declared, rather than by inferred signals.
++            if (!applyDeclaredBindings(transition, declared, victimAuth.name, operator.name)) {
++                log.debug("Stateful-authorization: could not apply declared bindings" +
++                        " ${declared.bindings} on ${transition.getName()}")
++                return false
++            }
++        } else {
++            if (!setUserTargetToVictim(transition, victimAuth.name)) {
++                log.debug("Stateful-authorization: could not target victim '${victimAuth.name}' on ${transition.getName()}")
++                return false
++            }
++            if (!setRoleFieldToReduced(transition, reducedRole)) {
++                log.debug("Stateful-authorization: could not set reduced role '$reducedRole' on ${transition.getName()}")
++                return false
++            }
+         }
+         base.addMainActionInEmptyEnterpriseGroup(action = transition)
+ 
+@@ -630,6 +804,20 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return false
+         }
+ 
++        // The follow-up was ALLOWED, so this is exactly the branch on which a 970 would be raised.
++        // Confirm the premise by OBSERVATION before letting that happen (see the probe's own doc).
++        // Deliberately not run when the follow-up was denied: the probe can only ever WITHHOLD a
++        // fault, never manufacture one, so it cannot disturb a triple that already passes.
++        if (StatusGroup.G_2xx.isInGroup(followUpCode!!)
++            && !reLoginProbeConfirmsPrivilegeRemoved(victimSlice)) {
++            LoggingUtil.getInfoLogger().info(
++                "Discarded an UNCONFIRMED stateful-authorization (MR-A1) attempt on ${source.getName()}:" +
++                    " re-logging the victim in did not show the privilege removed" +
++                    " (victim '${victimAuth.name}', operator '${operator.name}', codes $observed)"
++            )
++            return false
++        }
++
+         // A conclusive triple was performed. Logged UNCONDITIONALLY, before any verdict, so that
+         // construction (this line) and judgment (the line below) are counted separately: a true
+         // negative means something only for a run that actually put a valid triple to the SUT.
+@@ -649,6 +837,57 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return true
+     }
+ 
++    /**
++     * Re-login probe: establish BY OBSERVATION -- rather than by guessing from the schema -- both
++     * that the transition really removed a privilege and that the guarded action really is gated by
++     * the privilege that was removed. The victim logs in AGAIN and re-attempts the same action with
++     * the FRESH credential:
++     *
++     *   fresh DENIED (403) -> the privilege is gone, AND this action is gated by it => premise holds
++     *   fresh ALLOWED      -> either nothing was taken away, or this action is gated by something
++     *                         else entirely (ownership, say, rather than role)      => VOID
++     *   anything else (eg 401: the victim can no longer log in at all)              => INCONCLUSIVE
++     *
++     * IT IS NOT CIRCULAR. The oracle asks what the OLD credential can still do; the probe asks what a
++     * NEW one can do. They are different questions, and on a vulnerable SUT they have different
++     * answers -- which is the whole point: this bug class exists precisely because privileges are
++     * snapshotted into the credential when it is issued, so a credential issued AFTER the transition
++     * always reflects the CURRENT state, on a vulnerable and a fixed target alike.
++     *
++     * What it buys: the three schema heuristics upstream (which endpoint is a transition, which value
++     * is the lesser role, which action is privilege-gated) all GUESS, and a wrong guess used to be
++     * discoverable only as a false positive. The probe converts each of them into a claim the SUT
++     * itself has to confirm.
++     *
++     * The fresh login costs nothing to arrange: BlackBoxRestFitness re-runs AuthUtils.getTokens and
++     * getCookies for EVERY individual it evaluates, so running the probe as its OWN individual
++     * re-authenticates the victim without touching the auth layer at all.
++     */
++    private fun reLoginProbeConfirmsPrivilegeRemoved(victimSlice: RestIndividual): Boolean {
++
++        val probe = victimSlice.copy() as RestIndividual
++        probe.modifySampleType(SampleType.SECURITY)
++        val ei = fitness.computeWholeAchievedCoverageForPostProcessing(probe) ?: return false
++
++        // READ THE LAST ACTION THAT ACTUALLY RAN, not the guard by position. The slice usually opens
++        // with a setup call that is itself privileged -- creating the resource the guard then acts on
++        // -- and black-box ABORTS a test at its first failing resource-creating call. So on a victim
++        // who really was demoted, the freshly logged-in probe is typically denied at the SETUP call
++        // and the guard never runs at all, leaving it with no result. Insisting on a status for the
++        // guard would read that as "not confirmed" and throw away a genuine detection, even though
++        // being denied earlier in the same chain is if anything STRONGER evidence: the privilege is
++        // gone at the first place it is needed.
++        val lastObserved = probe.seeMainExecutableActions()
++            .mapNotNull { (ei.seeResult(it.getLocalId()) as? RestCallResult)?.getStatusCode() }
++            .lastOrNull()
++            ?: return false
++
++        // 403 = denied under a CURRENT credential => the privilege really was removed, and this chain
++        // really does need it. Anything else -- 2xx (still allowed), 401 (cannot log in at all, so
++        // INCONCLUSIVE per §5.3), 404 (resource gone) -- does not establish the premise.
++        return lastObserved == 403
++    }
++
+     /**
+      * Recognise a permission-reducing transition endpoint: a write whose path/name carries a
+      * role/permission signal AND that exposes a user-identifying parameter (so we can target a victim).
+@@ -671,19 +910,43 @@ class RestSecurityBuilder : TimeBoxedPhase {
+     }
+ 
+     /**
+-     * Harvest a "reduced" role value from the schema's role vocabulary (enum values that carry a
+-     * privilege signal), preferring values from the transition action itself. A value is "reduced"
+-     * when it matches a low-privilege signal and no high-privilege signal (eg VIEWER over ADMIN).
++     * Values to try in the transition's role field, best first.
++     *
++     * This used to DECIDE a single value, harvested from the schema's enum vocabulary by a
++     * low-privilege naming signal. That works only where the schema names its roles: an API that
++     * declares `role: integer` offers no vocabulary at all, and the whole oracle was skipped there
++     * even though the transition endpoint had been recognised correctly. So this now PROPOSES, and
++     * the re-login probe (see [reLoginProbeConfirmsPrivilegeRemoved]) is what establishes whether a
++     * proposal actually removed a privilege -- an observation about the SUT rather than a guess
++     * about its schema.
++     *
++     * ORDER IS LOAD-BEARING. Without a configured reset endpoint the transition can realistically be
++     * applied ONCE per victim, so in practice only the first candidate is tried. The enum match
++     * therefore stays first, which leaves the behaviour that produced every measured Tier-1/Tier-2
++     * number exactly as it was.
+      */
+-    private fun harvestReducedRoleValue(transition: RestCallAction): String? {
+-        val vocab = (allGenes(transition) + actionDefinitions.flatMap { allGenes(it) })
++    private fun harvestReducedRoleCandidates(transition: RestCallAction): List<String> {
++
++        val enumVocab = (allGenes(transition) + actionDefinitions.flatMap { allGenes(it) })
+             .filterIsInstance<EnumGene<*>>()
+             .flatMap { it.values.map { v -> v.toString() } }
+             .distinct()
+-        return vocab.firstOrNull { v ->
++
++        val lowPrivEnum = enumVocab.filter { v ->
+             val lv = v.lowercase()
+             roleLowPrivSignals.any { lv.contains(it) } && roleHighPrivSignals.none { lv.contains(it) }
+         }
++
++        // What the role field on THIS transition actually is decides which untyped fallbacks make
++        // sense: numbers for a numeric field, role-ish words for a string one.
++        val roleGenes = allGenes(transition).filter { g ->
++            val n = g.name.lowercase()
++            roleFieldSignals.any { n == it || n.contains(it) }
++        }
++        val numeric = if (roleGenes.any { it is IntegerGene || it is LongGene }) numericRoleCandidates else emptyList()
++        val strings = if (roleGenes.any { it is StringGene }) stringRoleCandidates else emptyList()
++
++        return (lowPrivEnum + numeric + (enumVocab - lowPrivEnum.toSet()) + strings).distinct()
+     }
+ 
+     private fun allGenes(action: RestCallAction): List<Gene> =
+@@ -691,19 +954,97 @@ class RestSecurityBuilder : TimeBoxedPhase {
+ 
+     /**
+      * Bind the victim's identity on the transition. A role-change endpoint identifies the target user
+-     * via a PATH parameter (eg /users/{username}/role); fall back to a BODY field. We deliberately do
+-     * NOT match query params, to avoid the springdoc `caller` artifact (a CurrentUser object that also
+-     * carries username/role fields but which the app ignores).
++     * via a PATH parameter (eg /users/{username}/role) or a BODY field; an RPC-style API instead puts
++     * it in the QUERY STRING (eg POST /api/set_user_permission?user=..), and matching only path and
++     * body made every such transition unbindable and so unusable.
++     *
++     * Query params are matched LAST and only at their TOP LEVEL -- see [setInQueryParamsTopLevel].
+      */
+     private fun setUserTargetToVictim(action: RestCallAction, victimName: String): Boolean =
+         setInParams(action.parameters.filterIsInstance<PathParam>(), transitionUserParamSignals, victimName)
+             || setInParams(action.parameters.filterIsInstance<BodyParam>(), transitionUserParamSignals, victimName)
++            || setInQueryParamsTopLevel(action, transitionUserParamSignals, victimName)
+ 
+     /**
+-     * Set the reduced role on the transition's BODY (never on the `caller` query artifact).
++     * Set the reduced role on the transition's BODY, falling back to a top-level QUERY parameter.
+      */
+     private fun setRoleFieldToReduced(action: RestCallAction, reducedRole: String): Boolean =
+         setInParams(action.parameters.filterIsInstance<BodyParam>(), roleFieldSignals, reducedRole)
++            || setInQueryParamsTopLevel(action, roleFieldSignals, reducedRole)
++
++    /**
++     * Match a QUERY parameter by its own name only, never a field nested inside one.
++     *
++     * The restriction is not cosmetic. Tier-1 is served by springdoc, which wrongly publishes the
++     * controller's internal `CurrentUser` argument as a `caller` query parameter carrying nested
++     * `username` and `role` fields that the application completely ignores. A blanket search over
++     * nested query genes would happily bind the transition into `caller.role`, get a 200 back, and
++     * record a transition that demoted nobody -- manufacturing precisely the situation §5.3's
++     * validity conditions exist to exclude, and turning a false negative into a FALSE POSITIVE.
++     * A real RPC-style parameter is flat (`?user=x&role=1`), so nothing legitimate is lost.
++     *
++     * This fallback is unreachable on both seeded targets, where the path/body binding above already
++     * succeeds; it exists for APIs that offer no path or body parameter at all.
++     */
++    private fun setInQueryParamsTopLevel(
++        action: RestCallAction,
++        signals: List<String>,
++        value: String
++    ): Boolean {
++        for (p in action.parameters.filterIsInstance<QueryParam>()) {
++            val n = p.name.lowercase()
++            if (signals.any { n == it || n.contains(it) } && p.primaryGene().setFromStringValue(value)) {
++                return true
++            }
++        }
++        return false
++    }
++
++    /**
++     * How many DISTINCT authenticated users were ever observed getting the given outcome on this
++     * endpoint. Used to rank guard candidates: an admin-only action has few users allowed and many
++     * denied, an action open to every role has the opposite profile.
++     */
++    private fun distinctUsersOn(
++        verb: HttpVerb,
++        path: RestPath,
++        statusGroup: StatusGroup? = null,
++        status: Int? = null
++    ): Int =
++        RestIndividualSelectorUtils.findAndSlice(
++            individualsInSolution, verb, path,
++            status = status, statusGroup = statusGroup, authenticated = true
++        ).mapNotNull { it.seeMainExecutableActions().lastOrNull()?.auth?.name }
++            .distinct()
++            .size
++
++    /**
++     * Apply a declared transition's bindings to the action, resolving the <victim> and <operator>
++     * placeholders for this attempt. Unlike the inferred path, names are matched EXACTLY: the user
++     * said which parameter carries what, so guessing on top of that would only hide their mistakes.
++     *
++     * All bindings must succeed. A partially aimed transition is worse than none: it would still be
++     * sent, could still return 2xx, and would then be counted as a transition that never actually
++     * demoted the victim -- manufacturing the one thing §5.3's validity conditions exist to exclude.
++     */
++    private fun applyDeclaredBindings(
++        action: RestCallAction,
++        declared: DeclaredTransition,
++        victimName: String,
++        operatorName: String
++    ): Boolean {
++        if (declared.bindings.isEmpty()) {
++            return true
++        }
++        return declared.bindings.all { (name, raw) ->
++            val value = raw
++                .replace("<victim>", victimName)
++                .replace("<operator>", operatorName)
++            allGenes(action).any { g ->
++                g.name.equals(name, ignoreCase = true) && g.setFromStringValue(value)
++            }
++        }
++    }
+ 
+     private fun setInParams(params: List<Param>, signals: List<String>, value: String): Boolean {
+         for (p in params) {

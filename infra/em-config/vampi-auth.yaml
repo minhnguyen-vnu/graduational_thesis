@@ -1,0 +1,40 @@
+# EvoMaster black-box auth config for VAmPI (WFC format).
+# Seeded VAmPI users come from GET /users/v1/_debug after GET /createdb.
+# Login: POST /users/v1/login  body {username,password}  -> field "auth_token"
+# Sent as: Authorization: Bearer <token>   (JWT, ~60s expiry -> dynamic login required)
+
+auth:
+  - name: admin            # admin user (admin flag = true)
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: admin
+        password: "pass1"
+        usernameField: username
+        passwordField: password
+  - name: name1            # regular user #1
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: name1
+        password: "pass1"
+        usernameField: username
+        passwordField: password
+  - name: name2            # regular user #2
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: name2
+        password: "pass2"
+        usernameField: username
+        passwordField: password
+
+# Shared settings applied to every user above (avoids repetition).
+authTemplate:
+  loginEndpointAuth:
+    endpoint: /users/v1/login
+    verb: POST
+    contentType: application/json
+    token:                       # v6.1.1 WFC TokenHandling keys
+      extractFrom: body          # token is in the JSON response body
+      extractSelector: /auth_token   # JSON Pointer to the token field
+      sendIn: header
+      sendName: Authorization
+      sendTemplate: "Bearer {token}"

@@ -1,0 +1,83 @@
+
+1. Context
+    Kịch bản, đúng như nó xảy ra trong hệ thống thật:
+
+        alice là ADMIN. Cô ấy đăng nhập, nhận một token, và xoá được báo cáo. Bình thường.
+        Một admin khác hạ quyền alice xuống VIEWER. Về nguyên tắc, từ giây này alice không được
+        xoá gì nữa. alice dùng lại đúng token cũ đó — và vẫn xoá được.
+
+
+    + Phân quyền là lớp lỗ hổng API số 1 trong thực tế (OWASP API Security Top 10)
+    + Công trình đối chuẩn trực tiếp là Şahin, Zhang & Arcuri (2026), arXiv:2604.00702 —
+      chính nhóm tác giả của EvoMaster.  Họ vừa thêm 9 oracle bảo mật vào công cụ (mã lỗi F200–F210)
+      , trong đó có các oracle về phân quyền. Điểm mấu chốt: cả 9 oracle đó đều so sánh giữa những
+      người dùng khác nhau, tại một thời điểm đóng băng. Không oracle nào mô hình hoá một phép chuyển
+      đổi làm giảm quyền diễn ra theo thời gian. Tức nghĩa là, báo cáo của Sahin so sánh khác người,
+      cùng một thời điểm, còn luận văn của ta tập trung vào một người nhưng khác thời điểm
+
+    + Các tài liệu khác đã kiểm tra:
+        1. BACScan (CCS 2025) — đối thủ mạnh nhất về access control, nhưng nhắm web app truyền thống,
+        vẫn là khác-người / một-thời-điểm, không có phép chuyển đổi quyền.
+
+        2. ARMeta (2026) — gần nhất về phương pháp (cùng dùng metamorphic testing trên REST API),
+        nhưng các quan hệ của nó thuần chức năng; phần nghiên cứu tình huống về RBAC không định
+        nghĩa quan hệ phân quyền nào. Đúng con đường chưa ai đi.
+
+        3. BACFuzz (2025) — fuzzer phân quyền cho ứng dụng PHP, không phải REST/OpenAPI;
+        khác-người, một thời điểm.
+
+        4. AuthREST (2025) — nhắm lỗi xác thực (authentication), không phải phân quyền (authorization).
+
+        5. Công cụ thương mại (StackHawk, Invicti, Equixly...) — đều là ma trận so sánh chéo người dùng
+        tại một thời điểm; không công cụ nào phát lại token cũ qua một lần hạ quyền.
+
+2. Hiện đã thực hiện được
+    Đinh nghĩa mã lỗi: 970, tức ta sẽ tái hiện lỗi trên ở trên mã lỗi 970
+
+    Ý tưởng ở đây là ta dựng một application sẽ tồn tại 2 phiên bản:
+        + Phiên bản lỗi: tồn tại lỗi mà luận văn ta hướng đến
+        + Phiên bản an toàn: là phiên bản fix được cái lỗi trên
+
+    Môi trường thực hiện:
+        Tier-1 reports-api: Ứng dụng Spring Boot tự viết, bật/tắt lỗi bằng một cờ cấu hình
+        Tier-2 vampi-seeded: Fork của VAmPI (ứng dụng lỗ hổng công khai), cấy thêm endpoint
+                             hạ quyền + lỗi tương ứng
+
+        Cùng một image, một biến môi trường quyết định có lỗi hay không → chạy hai cổng song song
+        và so sánh vi phân. Bản có lỗi phải bắn, bản đã sửa phải im. Cùng một oracle cho hai phán
+        quyết trái ngược nhau chỉ nhờ một cờ cấu hình — đó là cách chứng minh cả dương tính thật
+        lẫn âm tính thật trong một phép đo.
+
+    Kết quả thực nghiệm:
+        Mỗi con số dưới đây là 20 lần chạy độc lập (seed 1–20), cấu hình giữ nguyên hoàn toàn giữa
+        hai công cụ — khác biệt duy nhất là bật/tắt oracle của luận văn.
+
+        Với Tier-1:
+            bản có lỗi: 16/20 = 80% (CI 95%: 58–92%)
+            bản sửa: 0/20 (chặn trên 16%)
+            với sahin: sahin không tái hiện được lỗi của ta
+
+        Với Tier-2:
+            bản có lỗi: 4/20 = 20% (CI 95%: 8–42%)
+            bản sửa: 0/20 (chặn trên 16%)
+            với sahin: sahin không tái hiện được lỗi của ta
+
+    Chứng minh đối chuẩn (Sahin không tái hiện được lỗi):
+
+        Bằng chứng 1 — đối chuẩn vẫn đang hoạt động tốt. Trên đúng bia đo đó, nó bắn F209 (rò rỉ stack trace)
+        ở 17/20 lần chạy. Các oracle bảo mật của Şahin đang chạy bình thường và đang tìm ra lỗi bảo mật thật.
+        Vì vậy con số 0 trên lỗi có trạng thái không thể quy cho cấu hình sai.
+
+        Bằng chứng 2 — đo trực tiếp hình dạng của test sinh ra, hoàn toàn độc lập với mã lỗi. Viết một script
+        phân tích mã nguồn các test mà đối chuẩn sinh ra, đếm xem nó có bao giờ tự ghép được công thức
+        ghi → hạ quyền → ghi lại cùng token hay không. Kết quả trên 1.909 test từ 20 lần chạy:
+
+            Lần ghi vào endpoint hạ quyền	    145
+            Lần ghi vào endpoint bị canh quyền	148
+            Test chứa cả hai	                5
+            Test ghép đúng thành bộ ba	        0
+
+
+
+
+

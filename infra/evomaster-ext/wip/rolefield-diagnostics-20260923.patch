@@ -1,0 +1,103 @@
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -517,6 +517,7 @@
+             transition = chosen
+             reducedRoleCandidates = chosenValues
+             log.debug("Stateful-authorization transition chosen: ${transition.getName()}")
++            log.debug("Stateful-authorization reduced role values: $chosenValues")
+         }
+ 
+         val transitionOp: RestCallAction = transition
+@@ -547,25 +548,39 @@
+                 { -distinctUsersOn(it.first, it.second.path, status = 403) }
+             )
+         )
++        log.debug("Stateful-authorization guarded source candidates: ${ordered.size}" +
++                " ${ordered.map { "${it.first}:${it.second.path}" }}")
+ 
+         for ((verb, op) in ordered) {
+             run {
+ 
+-                if (hasPhaseTimedOut()) return
++                if (hasPhaseTimedOut()) {
++                    log.debug("Stateful-authorization: phase timed out before source $verb:${op.path}")
++                    return
++                }
+ 
+                 val victimCandidates = RestIndividualSelectorUtils.findAndSlice(
+                     individualsInSolution, verb, op.path,
+                     statusGroup = StatusGroup.G_2xx, authenticated = true
+                 ).sortedBy { it.size() }
+                     .distinctBy { it.seeMainExecutableActions().last().auth.name }
++                log.debug("Stateful-authorization source $verb:${op.path} victims" +
++                        " ${victimCandidates.map { it.seeMainExecutableActions().last().auth.name }}")
+ 
+                 for (victimSlice in victimCandidates) {
+-                    if (hasPhaseTimedOut()) return
+-                    if (statefulTripleAttempts >= maxStatefulAttempts) return
++                    if (hasPhaseTimedOut()) {
++                        log.debug("Stateful-authorization: phase timed out on source $verb:${op.path}")
++                        return
++                    }
++                    if (statefulTripleAttempts >= maxStatefulAttempts) {
++                        log.debug("Stateful-authorization: attempt cap $maxStatefulAttempts reached")
++                        return
++                    }
+                     if (buildStatefulAuthzTriple(victimSlice, transitionOp, reducedRoleCandidates, declared)) break
+                 }
+             }
+         }
++        log.debug("Stateful-authorization: sources exhausted after $statefulTripleAttempts triple attempts")
+     }
+ 
+     private fun buildStatefulAuthzTriple(
+@@ -579,7 +594,10 @@
+ 
+         resetSutState()
+ 
+-        if (privilegeReducedInPhase.contains(victimAuth.name)) return false
++        if (privilegeReducedInPhase.contains(victimAuth.name)) {
++            log.debug("Stateful-authorization: victim '${victimAuth.name}' already reduced in this phase")
++            return false
++        }
+ 
+         val operators = authSettings.getAllOthers(victimAuth.name, HttpWsAuthenticationInfo::class.java)
+             .filter { !privilegeReducedInPhase.contains(it.name) }
+@@ -589,6 +607,7 @@
+                     statusGroup = StatusGroup.G_2xx, authenticatedWith = o.name
+                 ).isNotEmpty()
+             }
++        log.debug("Stateful-authorization victim '${victimAuth.name}' operators ${operators.map { it.name }}")
+ 
+         for (operator in operators) {
+             for (reducedRole in reducedRoleCandidates) {
+@@ -874,8 +893,18 @@
+     }
+ 
+     private fun harvestReducedRoleCandidates(transition: RestCallAction): List<String> {
++
++        val roleGenes = allGenes(transition).filter { g ->
++            val n = g.name.lowercase()
++            roleFieldSignals.any { n == it || n.contains(it) }
++        }
++        if (roleGenes.isEmpty()) {
++            return emptyList()
++        }
+ 
++        val contentTypeGenes = transition.parameters.filterIsInstance<BodyParam>().map { it.contentTypeGene }
+         val enumVocab = allGenes(transition)
++            .filter { g -> contentTypeGenes.none { it === g } }
+             .filterIsInstance<EnumGene<*>>()
+             .flatMap { it.values.map { v -> v.toString() } }
+             .distinct()
+@@ -885,10 +914,6 @@
+             roleLowPrivSignals.any { lv.contains(it) } && roleHighPrivSignals.none { lv.contains(it) }
+         }
+ 
+-        val roleGenes = allGenes(transition).filter { g ->
+-            val n = g.name.lowercase()
+-            roleFieldSignals.any { n == it || n.contains(it) }
+-        }
+         val numeric = if (roleGenes.any { it is IntegerGene || it is LongGene }) numericRoleCandidates else emptyList()
+         val strings = if (roleGenes.any { it is StringGene }) stringRoleCandidates else emptyList()
+ 

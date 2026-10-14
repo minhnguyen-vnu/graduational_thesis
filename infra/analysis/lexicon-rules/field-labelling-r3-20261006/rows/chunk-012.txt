@@ -1,0 +1,913 @@
+## S304-0005  PUT /goals/{goal_gid}
+desc: Update a goal | An existing goal can be updated by making a PUT request on the URL for that goal. Only the fields provided in the `data` block will be updated; any unspecified fields will remain unchanged. Returns the complete updated goal record.
+- path:goal_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.due_on string
+- body:data.html_notes string
+- body:data.is_workspace_level boolean
+- body:data.liked boolean
+- body:data.name string
+- body:data.notes string
+- body:data.start_on string
+- body:data.status string
+- body:data.followers array<string>
+- body:data.owner string
+- body:data.team string
+- body:data.time_period string
+- body:data.workspace string
+
+## S304-0006  POST /goals/{goal_gid}/removeFollowers
+desc: Remove a collaborator from a goal | Removes followers from a goal. Returns the goal the followers were removed from. Each goal can be associated with zero or more followers in the system. Requests to add/remove followers, if successful, will return the complete updated goal record, described above.
+- path:goal_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:followers array<string>
+
+## S304-0007  POST /goals/{goal_gid}/removeSupportingRelationship
+desc: Removes a supporting goal relationship | Removes a goal relationship for a given parent goal.
+- path:goal_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:supporting_resource string
+
+## S304-0008  POST /organization_exports
+desc: Create an organization export request | This method creates a request to export an Organization. Asana will complete the export at some point after you create the request.
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- query:limit integer
+- query:offset string
+- body:organization string
+
+## S304-0009  DELETE /portfolios/{portfolio_gid}
+desc: Delete a portfolio | An existing portfolio can be deleted by making a DELETE request on the URL for that portfolio. Returns an empty data record.
+- path:portfolio_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+
+## S304-0010  PUT /portfolios/{portfolio_gid}
+desc: Update a portfolio | An existing portfolio can be updated by making a PUT request on the URL for that portfolio. Only the fields provided in the `data` block will be updated; any unspecified fields will remain unchanged. Returns the complete updated portfolio record.
+- path:portfolio_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+- body:data.color string enum[dark-pink|dark-green|dark-blue|dark-red|dark-teal|dark-brown|dark-orange|dark-purple|dark-warm-gray|light-pink|light-green|light-blue]
+- body:data.members array<string>
+- body:data.public boolean
+- body:data.workspace string
+
+## S304-0011  POST /portfolios/{portfolio_gid}/addCustomFieldSetting
+desc: Add a custom field to a portfolio | Custom fields are associated with portfolios by way of custom field settings. This method creates a setting for the portfolio.
+- path:portfolio_gid string
+- query:opt_pretty boolean
+- body:custom_field string
+- body:insert_after string
+- body:insert_before string
+- body:is_important boolean
+
+## S304-0012  POST /portfolios/{portfolio_gid}/addMembers
+desc: Add users to a portfolio | Adds the specified list of users as members of the portfolio. Returns the updated portfolio record.
+- path:portfolio_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:members string
+
+## S304-0013  DELETE /project_briefs/{project_brief_gid}
+desc: Delete a project brief | Deletes a specific, existing project brief. Returns an empty data record.
+- path:project_brief_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+
+## S304-0014  PUT /project_briefs/{project_brief_gid}
+desc: Update a project brief | An existing project brief can be updated by making a PUT request on the URL for that project brief. Only the fields provided in the `data` block will be updated; any unspecified fields will remain unchanged. Returns the complete updated project brief record.
+- path:project_brief_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.html_text string
+- body:data.title string
+- body:data.text string
+
+## S304-0015  POST /projects
+desc: Create a project | Create a new project in a workspace or team. Every project is required to be created in a specific workspace or organization, and this cannot be changed once set. Note that you can use the `workspace` parameter regardless of whether or not it is an organization. If the workspace for your project is an organization, you must also supply a `team` to share the project with. Returns
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+- body:data.archived boolean
+- body:data.color string enum[dark-pink|dark-green|dark-blue|dark-red|dark-teal|dark-brown|dark-orange|dark-purple|dark-warm-gray|light-pink|light-green|light-blue]
+- body:data.created_at string
+- body:data.current_status object
+- body:data.current_status.gid string
+- body:data.current_status.resource_type string
+- body:data.current_status.title string
+- body:data.current_status.color string enum[green|yellow|red|blue]
+- body:data.current_status.html_text string
+- body:data.current_status.text string
+- body:data.current_status.author object
+- body:data.current_status.created_at string
+- body:data.current_status.created_by object
+- body:data.current_status.modified_at string
+- body:data.current_status_update object
+- body:data.current_status_update.gid string
+- body:data.current_status_update.resource_type string
+- body:data.current_status_update.resource_subtype string enum[project_status_update|portfolio_status_update|goal_status_update]
+- body:data.current_status_update.title string
+- body:data.custom_field_settings array<object>
+- body:data.custom_field_settings[].gid string
+- body:data.custom_field_settings[].resource_type string
+- body:data.custom_field_settings[].custom_field object
+- body:data.custom_field_settings[].is_important boolean
+- body:data.custom_field_settings[].parent object
+- body:data.custom_field_settings[].project object
+- body:data.default_view string enum[list|board|calendar|timeline]
+- body:data.due_date string
+- body:data.due_on string
+- body:data.html_notes string
+- body:data.is_template boolean
+- body:data.members array<object>
+- body:data.members[].gid string
+- body:data.members[].resource_type string
+- body:data.members[].name string
+- body:data.modified_at string
+- body:data.notes string
+- body:data.public boolean
+- body:data.start_on string
+- body:data.workspace object
+- body:data.workspace.gid string
+- body:data.workspace.resource_type string
+- body:data.workspace.name string
+- body:data.custom_fields object
+- body:data.followers string
+- body:data.owner string
+- body:data.team string
+
+## S304-0016  DELETE /projects/{project_gid}
+desc: Delete a project | A specific, existing project can be deleted by making a DELETE request on the URL for that project. Returns an empty data record.
+- path:project_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+
+## S304-0017  POST /projects/{project_gid}/addCustomFieldSetting
+desc: Add a custom field to a project | Custom fields are associated with projects by way of custom field settings. This method creates a setting for the project.
+- path:project_gid string
+- query:opt_pretty boolean
+- body:custom_field string
+- body:insert_after string
+- body:insert_before string
+- body:is_important boolean
+
+## S304-0018  POST /projects/{project_gid}/project_briefs
+desc: Create a project brief | Creates a new project brief. Returns the full record of the newly created project brief.
+- path:project_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.html_text string
+- body:data.title string
+- body:data.text string
+
+## S304-0019  POST /projects/{project_gid}/removeCustomFieldSetting
+desc: Remove a custom field from a project | Removes a custom field setting from a project.
+- path:project_gid string
+- query:opt_pretty boolean
+- body:custom_field string
+
+## S304-0020  POST /projects/{project_gid}/removeFollowers
+desc: Remove followers from a project | Removes the specified list of users from following the project, this will not affect project membership status. Returns the updated project record.
+- path:project_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:followers string
+
+## S304-0021  DELETE /sections/{section_gid}
+desc: Delete a section | A specific, existing section can be deleted by making a DELETE request on the URL for that section. Note that sections must be empty to be deleted. The last remaining section cannot be deleted. Returns an empty data block.
+- path:section_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+
+## S304-0022  POST /status_updates
+desc: Create a status update | Creates a new status update on an object. Returns the full record of the newly created status update.
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- query:limit integer
+- query:offset string
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.resource_subtype string enum[project_status_update|portfolio_status_update|goal_status_update]
+- body:data.title string
+- body:data.html_text string
+- body:data.status_type string enum[on_track|at_risk|off_track|on_hold|complete|achieved|partial|missed|dropped]
+- body:data.text string
+- body:data.parent string
+
+## S304-0023  DELETE /stories/{story_gid}
+desc: Delete a story | Deletes a story. A user can only delete stories they have created. Returns an empty data record.
+- path:story_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+
+## S304-0024  PUT /stories/{story_gid}
+desc: Update a story | Updates the story and returns the full record for the updated story. Only comment stories can have their text updated, and only comment stories and attachment stories can be pinned. Only one of `text` and `html_text` can be specified.
+- path:story_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.created_at string
+- body:data.html_text string
+- body:data.is_pinned boolean
+- body:data.resource_subtype string
+- body:data.sticker_name string enum[green_checkmark|people_dancing|dancing_unicorn|heart|party_popper|people_waving_flags|splashing_narwhal|trophy|yeti_riding_unicorn|celebrating_people|determined_climbers|phoenix_spreading_love]
+- body:data.text string
+
+## S304-0025  PUT /tags/{tag_gid}
+desc: Update a tag | Updates the properties of a tag. Only the fields provided in the `data` block will be updated; any unspecified fields will remain unchanged. When using this method, it is best to specify only those fields you wish to change, or else you may overwrite changes made by another user since you last retrieved the tag. Returns the complete updated tag record.
+- path:tag_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- query:limit integer
+- query:offset string
+
+## S304-0026  POST /tasks
+desc: Create a task | Creating a new task is as easy as POSTing to the `/tasks` endpoint with a data block containing the fields you’d like to set on the task. Any unspecified fields will take on default values. Every task is required to be created in a specific workspace, and this workspace cannot be changed once set. The workspace need not be set explicitly if you specify `projects` or a `parent` task
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.name string
+- body:data.resource_subtype string enum[default_task|milestone|section|approval]
+- body:data.actual_time_minutes number
+- body:data.approval_status string enum[pending|approved|rejected|changes_requested]
+- body:data.assignee_status string enum[today|upcoming|later|new|inbox]
+- body:data.completed boolean
+- body:data.completed_at string
+- body:data.completed_by object
+- body:data.completed_by.gid string
+- body:data.completed_by.resource_type string
+- body:data.completed_by.name string
+- body:data.created_at string
+- body:data.dependencies array<object>
+- body:data.dependencies[].gid string
+- body:data.dependencies[].resource_type string
+- body:data.dependents array<object>
+- body:data.dependents[].gid string
+- body:data.dependents[].resource_type string
+- body:data.due_at string
+- body:data.due_on string
+- body:data.external object
+- body:data.external.data string
+- body:data.external.gid string
+- body:data.hearted boolean
+- body:data.hearts array<object>
+- body:data.hearts[].gid string
+- body:data.hearts[].user object
+- body:data.html_notes string
+- body:data.is_rendered_as_separator boolean
+- body:data.liked boolean
+- body:data.likes array<object>
+- body:data.likes[].gid string
+- body:data.likes[].user object
+- body:data.memberships array<object>
+- body:data.memberships[].project object
+- body:data.memberships[].section object
+- body:data.modified_at string
+- body:data.notes string
+- body:data.num_hearts integer
+- body:data.num_likes integer
+- body:data.num_subtasks integer
+- body:data.start_at string
+- body:data.start_on string
+- body:data.assignee string
+- body:data.assignee_section string
+- body:data.custom_fields object
+- body:data.followers array<string>
+- body:data.parent string
+- body:data.projects array<string>
+- body:data.tags array<string>
+- body:data.workspace string
+
+## S304-0027  DELETE /tasks/{task_gid}
+desc: Delete a task | A specific, existing task can be deleted by making a DELETE request on the URL for that task. Deleted tasks go into the “trash” of the user making the delete request. Tasks can be recovered from the trash within a period of 30 days; afterward they are completely removed from the system. Returns an empty data record.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+
+## S304-0028  POST /tasks/{task_gid}/removeDependencies
+desc: Unlink dependencies from a task | Unlinks a set of dependencies from this task.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:dependencies array<string>
+
+## S304-0029  POST /tasks/{task_gid}/removeDependents
+desc: Unlink dependents from a task | Unlinks a set of dependents from this task.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:dependents array<string>
+
+## S304-0030  POST /tasks/{task_gid}/removeFollowers
+desc: Remove followers from a task | Removes each of the specified followers from the task if they are following. Returns the complete, updated record for the affected task.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:followers array<string>
+
+## S304-0031  POST /tasks/{task_gid}/removeProject
+desc: Remove a project from a task | Removes the task from the specified project. The task will still exist in the system, but it will not be in the project anymore. Returns an empty data block.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:project string
+
+## S304-0032  POST /tasks/{task_gid}/removeTag
+desc: Remove a tag from a task | Removes a tag from a task. Returns an empty data block.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:tag string
+
+## S304-0033  POST /tasks/{task_gid}/setParent
+desc: Set the parent of a task | parent, or no parent task at all. Returns an empty data block. When using `insert_before` and `insert_after`, at most one of those two options can be specified, and they must already be subtasks of the parent.
+- path:task_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:insert_after string
+- body:insert_before string
+- body:parent string
+
+## S304-0034  POST /teams/{team_gid}/addUser
+desc: Add a user to a team | The user making this call must be a member of the team in order to add others. The user being added must exist in the same organization as the team. Returns the complete team membership record for the newly added user.
+- path:team_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:user string
+
+## S304-0035  DELETE /webhooks/{webhook_gid}
+desc: Delete a webhook | This method *permanently* removes a webhook. Note that it may be possible to receive a request that was already in flight after deleting the webhook, but no further requests will be issued.
+- path:webhook_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+
+## S304-0036  PUT /webhooks/{webhook_gid}
+desc: Update a webhook | An existing webhook's filters can be updated by making a PUT request on the URL for that webhook. Note that the webhook's previous `filters` array will be completely overwritten by the `filters` sent in the PUT request.
+- path:webhook_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:filters array<object>
+- body:filters[].action string
+- body:filters[].fields array<string>
+- body:filters[].resource_subtype string
+- body:filters[].resource_type string
+
+## S305-0001  POST /ScheduleSeries/AddBooking
+desc: Create new Schedule Booking
+schema: CreateBooking
+- body:CategoryIDFK integer
+- body:DurationType string
+- body:EndDate string
+- body:HoursPerDay number
+- body:Notes string
+- body:ProjectIDFK integer
+- body:ScheduleOnDaysOff boolean
+- body:StartDate string
+- body:TaskIDFK integer
+- body:TotalDuration number
+- body:UserIDFK integer
+
+## S305-0002  POST /ScheduleSeries/AddLeave
+desc: Create new Leave Booking
+schema: CreateLeave
+- body:LeaveEndDate string
+- body:LeaveHoursPerDay number
+- body:LeaveNotes string
+- body:LeaveNotify boolean
+- body:LeaveStartDate string
+- body:LeaveTypeIDFK integer
+- body:LeaveUserIDFK integer
+
+## S305-0003  PUT /ScheduleSeries/EditBooking
+desc: Edit Booking
+schema: EditBooking
+- body:CategoryIDFK integer
+- body:DurationType string
+- body:EndDate string
+- body:HoursPerDay number
+- body:Notes string
+- body:ProjectIDFK integer
+- body:ScheduleOnDaysOff boolean
+- body:ScheduleSeriesID integer
+- body:StartDate string
+- body:TaskIDFK integer
+- body:TotalDuration number
+- body:UserIDFK integer
+
+## S305-0004  PUT /ScheduleSeries/EditLeave
+desc: Edit Leave Booking
+schema: EditLeave
+- body:EndDate string
+- body:HoursPerDay number
+- body:LeaveTypeIDFK integer
+- body:Notes string
+- body:ScheduleSeriesID integer
+- body:StartDate string
+- body:UserIDFK integer
+
+## S305-0005  POST /api/Bill
+desc: Create a new draft Bill
+schema: NewBill
+- body:BillNumber string
+- body:BillTemplateIDFK integer
+- body:CompanyIDFK integer
+- body:CompanyName string
+- body:CurrencyCode string
+- body:DateIssued string
+- body:DueDate string
+- body:Email string
+- body:ExchangeRate number
+- body:Firstname string
+- body:Lastname string
+- body:LineItems array<object>
+- body:LineItems[].Description string
+- body:LineItems[].Discount number
+- body:LineItems[].InventoryItemIDFK integer
+- body:LineItems[].InventoryItemName string
+- body:LineItems[].ProjectIDFK integer
+- body:LineItems[].Quantity number
+- body:LineItems[].TaxIDFK integer
+- body:LineItems[].TaxName string
+- body:LineItems[].TaxPercent number
+- body:LineItems[].UnitPrice number
+- body:Notes string
+- body:PaymentTerms integer
+- body:Subject string
+- body:SupplierPONumber string
+- body:TransactionPrefix string
+- body:TransactionTaxConfigCode string
+
+## S305-0006  POST /api/BillPayment
+desc: Create new Bill Payment and optionally assign payment allocations to Bills
+schema: NewBillPayment
+- body:Amount number
+- body:CompanyIDFK integer
+- body:CurrencyCode string
+- body:DateIssued string
+- body:ExchangeRate number
+- body:Notes string
+- body:PaymentAllocations array<object>
+- body:PaymentAllocations[].AllocationAmount number
+- body:PaymentAllocations[].AllocationDate string
+- body:PaymentAllocations[].BillTransactionIDFK integer
+- body:PaymentNumber string
+- body:PaymentProviderCode string
+- body:TransactionPrefix string
+- body:TransactionReference string
+
+## S305-0007  POST /api/Company
+desc: Create a Company
+schema: NewCompany
+- body:BillingAddress string
+- body:BillingAddressCity string
+- body:BillingAddressLine string
+- body:BillingAddressPostCode string
+- body:BillingAddressState string
+- body:BillingCountryCode string
+- body:Comments string
+- body:CompanyName string
+- body:CurrencyCode string
+- body:Fax string
+- body:Phone string
+- body:TaxNumber string
+- body:website string
+
+## S305-0008  PUT /api/Company
+desc: Update a Company record. | Requires CompanyID and a list of field names to update. The FieldsToUpdate field accepts a string array containing field names that should be updated.
+schema: UpdateCompany
+- body:BillingAddress string
+- body:BillingAddressCity string
+- body:BillingAddressLine string
+- body:BillingAddressPostCode string
+- body:BillingAddressState string
+- body:BillingCountryCode string
+- body:Comments string
+- body:CompanyID integer
+- body:CompanyName string
+- body:Fax string
+- body:FieldsToUpdate array<string>
+- body:Phone string
+- body:TaxNumber string
+- body:website string
+
+## S305-0009  POST /api/Contact
+desc: Create a Contact
+schema: NewCompanyContact
+- body:CompanyBillingAddress string
+- body:CompanyBillingAddressCity string
+- body:CompanyBillingAddressCountryCode string
+- body:CompanyBillingAddressLine string
+- body:CompanyBillingAddressPostCode string
+- body:CompanyBillingAddressState string
+- body:CompanyIDFK integer
+- body:CompanyName string
+- body:ContactEmail string
+- body:CurrencyCode string
+- body:Firstname string
+- body:Lastname string
+- body:Mobile string
+- body:Phone string
+- body:PositionTitle string
+- body:UpdateExisting boolean
+
+## S305-0010  POST /api/Estimate
+desc: Create a new draft Estimate
+schema: NewEstimate
+- body:CompanyIDFK integer
+- body:CompanyName string
+- body:CurrencyCode string
+- body:CustomerPONumber string
+- body:DateIssued string
+- body:DueDate string
+- body:Email string
+- body:EstimateNumber string
+- body:EstimatePrefix string
+- body:EstimateTaxConfigCode string
+- body:ExchangeRate number
+- body:Firstname string
+- body:InvoiceTemplateIDFK integer
+- body:Lastname string
+- body:LineItems array<object>
+- body:LineItems[].Description string
+- body:LineItems[].Discount number
+- body:LineItems[].InventoryItemIDFK integer
+- body:LineItems[].InventoryItemName string
+- body:LineItems[].Quantity number
+- body:LineItems[].TaxIDFK integer
+- body:LineItems[].TaxName string
+- body:LineItems[].TaxPercent number
+- body:LineItems[].UnitPrice number
+- body:Notes string
+- body:Subject string
+
+## S305-0011  DELETE /api/Expense
+desc: Delete a Timesheet Entry
+- body:(body) integer
+
+## S305-0012  POST /api/Expense
+desc: Create an Expense | Create an Expense
+schema: NewExpense
+- body:Amount number
+- body:CurrencyCode string
+- body:CustomerIDFK integer
+- body:CustomerName string
+- body:ExchangeRate number
+- body:ExpenseCategoryIDFK integer
+- body:ExpenseCategoryName string
+- body:ExpenseDate string
+- body:ExpensePaymentMethodIDFK integer
+- body:FileAttachmentIDs array<integer>
+- body:GroupTripName string
+- body:Merchant string
+- body:MerchantTaxNumber string
+- body:Notes string
+- body:ProjectIDFK integer
+- body:ProjectName string
+- body:Quantity number
+- body:TaskIDFK integer
+- body:TaxIDFK integer
+- body:TaxName string
+- body:TransactionTaxConfigCode string
+- body:UserEmail string
+- body:UserIDFK integer
+- body:VerifyAndSave boolean
+- body:isChargeable boolean
+- body:isReimbursable boolean
+
+## S305-0013  PUT /api/Expense
+desc: Update an Expense | Update an Expense
+schema: UpdateExpense
+- body:Amount number
+- body:CurrencyCode string
+- body:CustomerIDFK integer
+- body:ExchangeRate number
+- body:ExpenseCategoryIDFK integer
+- body:ExpenseDate string
+- body:ExpenseID integer
+- body:ExpensePaymentMethodIDFK integer
+- body:FieldsToUpdate array<string>
+- body:FileAttachmentIDs array<integer>
+- body:GroupTripName string
+- body:Merchant string
+- body:MerchantTaxNumber string
+- body:Notes string
+- body:ProjectIDFK integer
+- body:Quantity number
+- body:TaskIDFK integer
+- body:TaxIDFK integer
+- body:TransactionTaxConfigCode string
+- body:VerifyAndSave boolean
+- body:isChargeable boolean
+- body:isReimbursable boolean
+
+## S305-0014  POST /api/Expense/Attachment
+- body:File file
+
+## S305-0015  POST /api/ExpenseApproval/Submit
+desc: Submit Expenses for Approval.
+- query:UserID integer
+- query:SendNotifications boolean
+- body:(body) integer
+
+## S305-0016  POST /api/Invoice
+desc: Create a new draft invoice
+schema: NewInvoice
+- body:CompanyIDFK integer
+- body:CompanyName string
+- body:CurrencyCode string
+- body:CustomerPONumber string
+- body:DateIssued string
+- body:DueDate string
+- body:Email string
+- body:ExchangeRate number
+- body:Firstname string
+- body:InvoiceNumber string
+- body:InvoiceTemplateIDFK integer
+- body:Lastname string
+- body:LineItems array<object>
+- body:LineItems[].Description string
+- body:LineItems[].Discount number
+- body:LineItems[].InventoryItemIDFK integer
+- body:LineItems[].InventoryItemName string
+- body:LineItems[].ProjectIDFK integer
+- body:LineItems[].Quantity number
+- body:LineItems[].TaxIDFK integer
+- body:LineItems[].TaxName string
+- body:LineItems[].TaxPercent number
+- body:LineItems[].UnitPrice number
+- body:Notes string
+- body:PaymentTerms integer
+- body:Subject string
+- body:TransactionPrefix string
+- body:TransactionTaxConfigCode string
+
+## S305-0017  POST /api/Payment
+desc: Create new Payment and optionally assign payment allocations to Invoices
+schema: NewPayment
+- body:Amount number
+- body:CustomerIDFK integer
+- body:DateIssued string
+- body:ExchangeRate number
+- body:Notes string
+- body:PaymentAllocations array<object>
+- body:PaymentAllocations[].AllocationAmount number
+- body:PaymentAllocations[].AllocationDate string
+- body:PaymentAllocations[].InvoiceTransactionIDFK integer
+- body:PaymentNumber string
+- body:PaymentProviderCode string
+- body:TransactionPrefix string
+- body:TransactionReference string
+
+## S305-0018  POST /api/Project
+desc: Create a Project
+schema: NewProjectModel
+- body:BudgetAmount number
+- body:BudgetHours number
+- body:CompanyIDFK integer
+- body:CompanyName string
+- body:CurrencyCode string
+- body:EndDate string
+- body:PopulateDefaultProjectMembers boolean
+- body:ProjectCategoryIDFK integer
+- body:ProjectCode string
+- body:ProjectNotes string
+- body:ProjectStatusCode string
+- body:ProjectTitle string
+- body:StartDate string
+- body:TimesheetApprovalRequiredbyDefault boolean
+- body:isTaskRequiredOnTimesheet boolean
+
+## S305-0019  PUT /api/Project
+desc: Update an Project | Update a Project
+schema: UpdateProjectModel
+- body:BudgetAmount number
+- body:BudgetHours number
+- body:EndDate string
+- body:FieldsToUpdate array<string>
+- body:ProjectBillableTypeCode string
+- body:ProjectBudgetTypeCode string
+- body:ProjectCategoryIDFK integer
+- body:ProjectID integer
+- body:ProjectNotes string
+- body:ProjectStatusCode string
+- body:ProjectTitle string
+- body:StartDate string
+- body:TimesheetApprovalRequiredbyDefault boolean
+- body:isTaskRequiredOnTimesheet boolean
+
+## S305-0020  POST /api/ProjectMember
+desc: Assign a user as a Member of a Project | the Amount columns for Cost, Budget, Rates should be specified as a decimal. Financial amounts assume the currency of the Customer company. Budget units depend on the Budget method set on the Project.
+schema: NewProjectMember
+- body:BudgetAmount number
+- body:CostAmount number
+- body:ProjectIDFK integer
+- body:RateAmount number
+- body:UserIDFK integer
+- body:canCommentOnTasks boolean
+- body:canCreateTasks boolean
+- body:canDeleteTasks boolean
+- body:canUpdateTasks boolean
+- body:isProjectManager boolean
+- body:isTimesheetAllowed boolean
+- body:isTimesheetApprovalRequired boolean
+- body:isTimesheetApprover boolean
+
+## S305-0021  PUT /api/ProjectMember
+desc: Update a Member of a Project | Fields are only updated if their field name is in the FieldsToUpdate string collection. The Amount columns for Cost, Budget, Rates if specified should be a decimal. Financial amounts assume the currency of the parent Company. Budget units depend on the Budget method set on the Project.
+schema: UpdateProjectMember
+- body:BudgetAmount number
+- body:CostAmount number
+- body:FieldsToUpdate array<string>
+- body:ProjectIDFK integer
+- body:RateAmount number
+- body:UserIDFK integer
+- body:canCommentOnTasks boolean
+- body:canCreateTasks boolean
+- body:canDeleteTasks boolean
+- body:canUpdateTasks boolean
+- body:isProjectManager boolean
+- body:isTimesheetAllowed boolean
+- body:isTimesheetApprovalRequired boolean
+- body:isTimesheetApprover boolean
+
+## S305-0022  POST /api/ProjectTimesheetCategory
+desc: Assign a TimeSheetCategory to a Project.
+schema: AssignProjectTimesheetCategory
+- body:BudgetHours number
+- body:CostAmount number
+- body:ProjectIDFK integer
+- body:RateAmount number
+- body:TimesheetCategoryIDFK integer
+- body:isBillable boolean
+- body:isPayable boolean
+
+## S305-0023  DELETE /api/Section
+desc: Delete a Section
+- query:SectionID integer
+
+## S305-0024  POST /api/Section
+desc: Create a Section
+schema: NewSection
+- body:EndDateUTC string
+- body:ProjectIDFK integer
+- body:StartDateUTC string
+- body:Title string
+
+## S305-0025  DELETE /api/Task
+desc: Delete a Task
+- query:TaskID integer
+
+## S305-0026  POST /api/Task
+desc: Create a Task
+schema: NewTask
+- body:AccountTaskTypeIDFK integer
+- body:AssignedToUserIDFKs array<integer>
+- body:DateDue string
+- body:DateStart string
+- body:Description string
+- body:EstimatedEffort number
+- body:ProjectIDFK integer
+- body:SectionIDFK integer
+- body:Tags array<object>
+- body:Tags[].Color string
+- body:Tags[].Name string
+- body:TaskPriorityCode string
+- body:Title string
+
+## S305-0027  PUT /api/Task
+desc: Update a Task. | Requires TaskID and a list of field names to update. The FieldsToUpdate field accepts a string array containing field names that should be updated.
+schema: UpdateTask
+- body:AssignedToUserIDFK array<integer>
+- body:DateDue string
+- body:DateStart string
+- body:Description string
+- body:EstimatedEffort number
+- body:FieldsToUpdate array<string>
+- body:PercentComplete integer
+- body:SectionIDFK integer
+- body:Tags array<object>
+- body:Tags[].Color string
+- body:Tags[].Name string
+- body:TaskID integer
+- body:TaskPriorityCode string
+- body:TaskStatusCode string
+- body:Title string
+
+## S305-0028  POST /api/Timesheet
+desc: Create a new Timesheet Entry
+schema: NewTimesheet
+- body:CustomMetadata string
+- body:Duration number
+- body:EntryDate string
+- body:Notes string
+- body:ProjectIDFK integer
+- body:TaskIDFK integer
+- body:TimesheetCategoryIDFK integer
+- body:UserIDFK integer
+- body:hasStartEndTime boolean
+- body:isInvoiced boolean
+
+## S305-0029  PUT /api/Timesheet
+desc: Update a Timesheet | The FieldsToUpdate field expects a string array collection of the field names you would like updated. Valid fields to update inlcude "ProjectIDFK", "TimeSheetCategoryIDFK", "TaskIDFK", "Duration", "EntryDate", "Notes", "hasStartEndTime", "CustomMetadata". If you intend to provide start/end times on timesheets, this is achieved by including the start time in the EntryDate field
+schema: UpdateTimesheetModel
+- body:CustomMetadata string
+- body:Duration number
+- body:EntryDate string
+- body:FieldsToUpdate array<string>
+- body:Notes string
+- body:ProjectIDFK integer
+- body:TaskIDFK integer
+- body:TimeSheetEntryID integer
+- body:TimesheetCategoryIDFK integer
+- body:hasStartEndTime boolean
+
+## S305-0030  DELETE /api/Timesheet/{id}
+desc: Delete a Timesheet Entry
+- path:id integer
+
+## S305-0031  POST /api/TimesheetSubmission
+desc: Submit Timesheets for Approval. | Either provide a a specific Day (WholeDayOf) or any day in a Week (WholeWeekOf) to submit all draft timesheets in that day or week
+- query:SendNotifications boolean
+- query:WholeWeekOf string
+- query:WholeDayOf string
+- query:UserID integer
+
+## S305-0032  DELETE /api/TimesheetTimer/{id}
+desc: Stop the timer running on an existing Timesheet Entry
+- path:id integer
+- query:UserID integer
+
+## S305-0033  POST /api/TimesheetTimer/{id}
+desc: Starts a Timer running on an existing Timesheet Entry
+- path:id integer
+- query:UserID integer
+
+## S305-0034  DELETE /api/Webhook
+desc: Delete webhook subscription by URL
+- query:target_url string
+
+## S305-0035  POST /api/Webhook
+desc: Subscribe to Webhook. On success, returns ID of webhook subscription. | When you receive a webhook, you should respond with Http 200 OK Status Code, otherwise we will retry. To create a webhook, you need both the webhook_notifications scope, as well as the scope for the required entity being monitored. Event values are: "company_created", "company_deleted", "company_updated", "contact_created", "c
+schema: CreateSubscription
+- body:event string
+- body:secret string
+- body:target_url string
+
+## S305-0036  DELETE /api/Webhook/{id}
+desc: Delete Webhook Subscription by ID
+- path:id integer
+
+## S306-0001  POST /user/active/terminate
+desc: &nbsp; <i class="fa fa-lg fa-unlock-alt"></i>
+schema: blazemeter\Routing\v4\UserModel5
+- body:(body) any
+
+## S306-0002  PATCH /user/password
+desc: Update user name&nbsp; <i class="fa fa-lg fa-unlock-alt"></i>
+schema: blazemeter\Routing\v4\UserModel1
+- body:(body) any
+
+## S306-0003  POST /user/password
+desc: Update user name&nbsp; <i class="fa fa-lg fa-unlock-alt"></i>
+schema: blazemeter\Routing\v4\UserModel3
+- body:(body) any
+
+## S306-0004  PUT /user/password
+desc: Update user name&nbsp; <i class="fa fa-lg fa-unlock-alt"></i>
+schema: blazemeter\Routing\v4\UserModel2
+- body:(body) any
+
+## S306-0005  POST /user/register
+desc: Registration&nbsp; <i class="fa fa-lg fa-unlock-alt"></i>
+schema: blazemeter\Routing\v4\UserModel4
+- body:(body) any
+
+## S307-0001  POST /bulk/md5
+desc: Bulk search of MD5 hashes in a JSON array with the key 'hashes'.
+
+## S307-0002  POST /bulk/sha1
+desc: Bulk search of SHA1 hashes in a JSON array with the 'hashes'.

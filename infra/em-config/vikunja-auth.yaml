@@ -1,0 +1,34 @@
+auth:
+  - name: alice
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: alice
+        password: "alicepass1234"
+        usernameField: username
+        passwordField: password
+  - name: bob
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: bob
+        password: "bobpass1234"
+        usernameField: username
+        passwordField: password
+  - name: carol
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: carol
+        password: "carolpass1234"
+        usernameField: username
+        passwordField: password
+
+authTemplate:
+  loginEndpointAuth:
+    endpoint: /api/v1/login
+    verb: POST
+    contentType: application/json
+    token:
+      extractFrom: body
+      extractSelector: /token
+      sendIn: header
+      sendName: Authorization
+      sendTemplate: "Bearer {token}"

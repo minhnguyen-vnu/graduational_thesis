@@ -1,0 +1,993 @@
+## S108-N0133  DELETE /repos/{owner}/{repo}/wiki/page/{pageName}
+desc: Delete a wiki page
+- path:owner string
+- path:repo string
+- path:pageName string
+
+## S108-N0134  PATCH /repos/{owner}/{repo}/wiki/page/{pageName}
+desc: Edit a wiki page
+schema: CreateWikiPageOptions
+- path:owner string
+- path:repo string
+- path:pageName string
+- body:content_base64 string
+- body:message string
+- body:title string
+
+## S108-N0135  POST /repos/{template_owner}/{template_repo}/generate
+desc: Create a repository using a template
+schema: GenerateRepoOption
+- path:template_owner string
+- path:template_repo string
+- body:avatar boolean
+- body:default_branch string
+- body:description string
+- body:git_content boolean
+- body:git_hooks boolean
+- body:labels boolean
+- body:name string
+- body:owner string
+- body:private boolean
+- body:topics boolean
+- body:webhooks boolean
+
+## S108-N0137  PATCH /teams/{id}
+desc: Edit a team
+schema: EditTeamOption
+- path:id integer
+- body:can_create_org_repo boolean
+- body:description string
+- body:includes_all_repositories boolean
+- body:name string
+- body:permission string enum[read|write|admin]
+- body:units array<string>
+- body:units_map object
+
+## S108-N0138  DELETE /teams/{id}/members/{username}
+desc: Remove a team member
+- path:id integer
+- path:username string
+
+## S108-N0140  DELETE /teams/{id}/repos/{org}/{repo}
+desc: Remove a repository from a team | This does not delete the repository, it only removes the repository from the team.
+- path:id integer
+- path:org string
+- path:repo string
+
+## S108-N0141  PUT /teams/{id}/repos/{org}/{repo}
+desc: Add a repository to a team
+- path:id integer
+- path:org string
+- path:repo string
+
+## S108-N0142  POST /user/applications/oauth2
+desc: creates a new OAuth2 application
+schema: CreateOAuth2ApplicationOptions
+- body:confidential_client boolean
+- body:name string
+- body:redirect_uris array<string>
+
+## S108-N0143  DELETE /user/applications/oauth2/{id}
+desc: delete an OAuth2 Application
+- path:id integer
+
+## S108-N0144  PATCH /user/applications/oauth2/{id}
+desc: update an OAuth2 Application, this includes regenerating the client secret
+schema: CreateOAuth2ApplicationOptions
+- path:id integer
+- body:confidential_client boolean
+- body:name string
+- body:redirect_uris array<string>
+
+## S108-N0145  DELETE /user/emails
+desc: Delete email addresses
+schema: DeleteEmailOption
+- body:emails array<string>
+
+## S108-N0146  POST /user/emails
+desc: Add email addresses
+schema: CreateEmailOption
+- body:emails array<string>
+
+## S108-N0147  DELETE /user/following/{username}
+desc: Unfollow a user
+- path:username string
+
+## S108-N0148  PUT /user/following/{username}
+desc: Follow a user
+- path:username string
+
+## S108-N0150  POST /user/gpg_keys
+desc: Create a GPG key
+schema: CreateGPGKeyOption
+- body:armored_public_key string
+- body:armored_signature string
+
+## S108-N0152  POST /user/keys
+desc: Create a public key
+schema: CreateKeyOption
+- body:key string
+- body:read_only boolean
+- body:title string
+
+## S108-N0153  DELETE /user/keys/{id}
+desc: Delete a public key
+- path:id integer
+
+## S108-N0154  POST /user/repos
+desc: Create a repository
+schema: CreateRepoOption
+- body:auto_init boolean
+- body:default_branch string
+- body:description string
+- body:gitignores string
+- body:issue_labels string
+- body:license string
+- body:name string
+- body:private boolean
+- body:readme string
+- body:template boolean
+- body:trust_model string enum[default|collaborator|committer|collaboratorcommitter]
+
+## S108-N0155  PATCH /user/settings
+desc: Update user settings
+schema: UserSettingsOptions
+- body:description string
+- body:diff_view_style string
+- body:full_name string
+- body:hide_activity boolean
+- body:hide_email boolean
+- body:language string
+- body:location string
+- body:theme string
+- body:website string
+
+## S108-N0157  PUT /user/starred/{owner}/{repo}
+desc: Star the given repo
+- path:owner string
+- path:repo string
+
+## S108-N0158  POST /users/{username}/tokens
+desc: Create an access token
+schema: CreateAccessTokenOption
+- path:username string
+- body:name string
+- body:scopes array<string>
+
+## S326-N0001  POST /api/auths
+desc: Create one global auth. module config | Create one global auth. module config
+schema: LdapAuthModuleConfig
+- body:adminPassword string
+- body:adminUsername string
+- body:desc string
+- body:emailField string
+- body:groupFilter string
+- body:id string
+- body:name string
+- body:nameField string
+- body:otoroshiDataField string
+- body:searchBase string
+- body:searchFilter string
+- body:serverUrl string
+- body:sessionMaxAge integer
+- body:type string
+- body:userBase string
+- body:users array<object>
+- body:users[].email string
+- body:users[].metadata object
+- body:users[].name string
+- body:users[].password string
+- body:accessTokenField string
+- body:authorizeUrl string
+- body:callbackUrl string
+- body:claims string
+- body:clientId string
+- body:clientSecret string
+- body:jwtVerifier object
+- body:jwtVerifier.secret string
+- body:jwtVerifier.size integer
+- body:jwtVerifier.type string
+- body:jwtVerifier.privateKey string
+- body:jwtVerifier.publicKey string
+- body:jwtVerifier.headers object
+- body:jwtVerifier.kty string
+- body:jwtVerifier.timeout integer
+- body:jwtVerifier.ttl integer
+- body:jwtVerifier.url string
+- body:loginUrl string
+- body:logoutUrl string
+- body:oidConfig string
+- body:readProfileFromToken boolean
+- body:scope string
+- body:tokenUrl string
+- body:useCookies boolean
+- body:useJson boolean
+- body:userInfoUrl string
+
+## S326-N0002  DELETE /api/auths/{id}
+desc: Delete one global auth. module config | Delete one global auth. module config
+- path:id string
+
+## S326-N0004  PUT /api/auths/{id}
+desc: Update one global auth. module config | Update one global auth. module config
+schema: LdapAuthModuleConfig
+- path:id string
+- body:adminPassword string
+- body:adminUsername string
+- body:desc string
+- body:emailField string
+- body:groupFilter string
+- body:id string
+- body:name string
+- body:nameField string
+- body:otoroshiDataField string
+- body:searchBase string
+- body:searchFilter string
+- body:serverUrl string
+- body:sessionMaxAge integer
+- body:type string
+- body:userBase string
+- body:users array<object>
+- body:users[].email string
+- body:users[].metadata object
+- body:users[].name string
+- body:users[].password string
+- body:accessTokenField string
+- body:authorizeUrl string
+- body:callbackUrl string
+- body:claims string
+- body:clientId string
+- body:clientSecret string
+- body:jwtVerifier object
+- body:jwtVerifier.secret string
+- body:jwtVerifier.size integer
+- body:jwtVerifier.type string
+- body:jwtVerifier.privateKey string
+- body:jwtVerifier.publicKey string
+- body:jwtVerifier.headers object
+- body:jwtVerifier.kty string
+- body:jwtVerifier.timeout integer
+- body:jwtVerifier.ttl integer
+- body:jwtVerifier.url string
+- body:loginUrl string
+- body:logoutUrl string
+- body:oidConfig string
+- body:readProfileFromToken boolean
+- body:scope string
+- body:tokenUrl string
+- body:useCookies boolean
+- body:useJson boolean
+- body:userInfoUrl string
+
+## S326-N0010  DELETE /api/client-validators/{id}
+desc: Delete one validation authorities by id | Delete one validation authorities by id
+- path:id string
+
+## S326-N0014  DELETE /api/data-exporter-configs/_bulk
+desc: Delete a data exporter config | Delete a data exporter config
+schema: Patch
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-N0015  PATCH /api/data-exporter-configs/_bulk
+desc: Update a data exporter configs with a diff | Update a data exporter configs with a diff
+schema: Patch
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-N0017  PUT /api/data-exporter-configs/_bulk
+desc: Update a data exporter configs | Update a data exporter configs
+schema: DataExporterConfig
+- body:bufferSize integer
+- body:config object
+- body:config.clusterUri string
+- body:config.headers object
+- body:config.index string
+- body:config.password string
+- body:config.type string
+- body:config.user string
+- body:config.keyPass string
+- body:config.keyStore string
+- body:config.servers array<string>
+- body:config.topic string
+- body:config.trustore string
+- body:config.namespace string
+- body:config.tenant string
+- body:config.uri array<string>
+- body:config.path string
+- body:config.to array<string>
+- body:config.url string
+- body:config.apiKey string
+- body:config.domain string
+- body:config.eu boolean
+- body:config.apiKeyPrivate string
+- body:config.apiKeyPublic string
+- body:config.config object
+- body:config.ref string
+- body:desc string
+- body:enabled string
+- body:filtering object
+- body:filtering.exclude array<object>
+- body:filtering.include array<object>
+- body:groupDuration integer
+- body:groupSize integer
+- body:id string
+- body:jsonWorkers integer
+- body:location object
+- body:location.teams array<object>
+- body:location.tenant string
+- body:metadata object
+- body:name string
+- body:projection object
+- body:sendWorkers integer
+- body:typ string enum[kafka|pulsar|file|mailer|elastic|console|custom]
+
+## S326-N0021  PATCH /api/globalconfig
+desc: Update the global configuration with a diff | Update the global configuration with a diff
+schema: Patch
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-N0024  POST /api/groups/{groupId}/apikeys
+desc: Create a new api key for a group | Create a new api key for a group
+schema: ApiKey
+- path:groupId string
+- body:authorizedEntities array<string>
+- body:clientId string
+- body:clientName string
+- body:clientSecret string
+- body:dailyQuota integer
+- body:enabled boolean
+- body:metadata object
+- body:monthlyQuota integer
+- body:throttlingQuota integer
+
+## S326-N0025  DELETE /api/groups/{groupId}/apikeys/{clientId}
+desc: Delete an api key | Delete an api key for a specified service group
+- path:groupId string
+- path:clientId string
+
+## S326-N0026  PATCH /api/groups/{groupId}/apikeys/{clientId}
+desc: Update an api key with a diff | Update an api key for a specified service descriptor with a diff
+schema: Patch
+- path:groupId string
+- path:clientId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-N0032  POST /api/import
+desc: Import the full state of Otoroshi as a file | Import the full state of Otoroshi as a file
+schema: ImportExport
+- body:admins array<object>
+- body:admins[].createdAt integer
+- body:admins[].label string
+- body:admins[].password string
+- body:admins[].registration object
+- body:admins[].username string
+- body:apiKeys array<object>
+- body:apiKeys[].authorizedEntities array<string>
+- body:apiKeys[].clientId string
+- body:apiKeys[].clientName string
+- body:apiKeys[].clientSecret string
+- body:apiKeys[].dailyQuota integer
+- body:apiKeys[].enabled boolean
+- body:apiKeys[].metadata object
+- body:apiKeys[].monthlyQuota integer
+- body:apiKeys[].throttlingQuota integer
+- body:appConfig object
+- body:config object
+- body:config.alertsEmails array<string>
+- body:config.alertsWebhooks array<object>
+- body:config.alertsWebhooks[].headers object
+- body:config.alertsWebhooks[].url string
+- body:config.analyticsWebhooks array<object>
+- body:config.analyticsWebhooks[].headers object
+- body:config.analyticsWebhooks[].url string
+- body:config.apiReadOnly boolean
+- body:config.autoLinkToDefaultGroup boolean
+- body:config.backofficeAuth0Config object
+- body:config.backofficeAuth0Config.callbackUrl string
+- body:config.backofficeAuth0Config.clientId string
+- body:config.backofficeAuth0Config.clientSecret string
+- body:config.backofficeAuth0Config.domain string
+- body:config.cleverSettings object
+- body:config.cleverSettings.consumerKey string
+- body:config.cleverSettings.consumerSecret string
+- body:config.cleverSettings.orgaId string
+- body:config.cleverSettings.secret string
+- body:config.cleverSettings.token string
+- body:config.elasticReadsConfig object
+- body:config.elasticReadsConfig.clusterUri string
+- body:config.elasticReadsConfig.headers object
+- body:config.elasticReadsConfig.index string
+- body:config.elasticReadsConfig.password string
+- body:config.elasticReadsConfig.type string
+- body:config.elasticReadsConfig.user string
+- body:config.elasticWritesConfigs array<object>
+- body:config.elasticWritesConfigs[].clusterUri string
+- body:config.elasticWritesConfigs[].headers object
+- body:config.elasticWritesConfigs[].index string
+- body:config.elasticWritesConfigs[].password string
+- body:config.elasticWritesConfigs[].type string
+- body:config.elasticWritesConfigs[].user string
+- body:config.endlessIpAddresses array<string>
+- body:config.ipFiltering object
+- body:config.ipFiltering.blacklist array<string>
+- body:config.ipFiltering.whitelist array<string>
+- body:config.limitConcurrentRequests boolean
+- body:config.lines array<string>
+- body:config.mailerSettings object
+- body:config.mailerSettings.apiKey string
+- body:config.mailerSettings.apiKeyPrivate string
+- body:config.mailerSettings.apiKeyPublic string
+- body:config.mailerSettings.domain string
+- body:config.mailerSettings.eu boolean
+- body:config.mailerSettings.header object
+- body:config.mailerSettings.type string
+- body:config.mailerSettings.url string
+- body:config.maxConcurrentRequests integer
+- body:config.maxHttp10ResponseSize integer
+- body:config.maxLogsSize integer
+- body:config.middleFingers boolean
+- body:config.perIpThrottlingQuota integer
+- body:config.privateAppsAuth0Config object
+- body:config.privateAppsAuth0Config.callbackUrl string
+- body:config.privateAppsAuth0Config.clientId string
+- body:config.privateAppsAuth0Config.clientSecret string
+- body:config.privateAppsAuth0Config.domain string
+- body:config.streamEntityOnly boolean
+- body:config.throttlingQuota integer
+- body:config.u2fLoginOnly boolean
+(+132 fields cut)
+
+## S326-N0034  POST /api/scripts
+desc: Create a new script | Create a new script
+schema: Script
+- body:code object
+- body:desc object
+- body:id string
+- body:name string
+
+## S326-N0036  DELETE /api/scripts/{scriptId}
+desc: Delete a script | Delete a script
+- path:scriptId string
+
+## S326-N0038  PUT /api/scripts/{scriptId}
+desc: Update a script | Update a script
+schema: Script
+- path:scriptId string
+- body:code object
+- body:desc object
+- body:id string
+- body:name string
+
+## S326-N0039  POST /api/services
+desc: Create a new service descriptor | Create a new service descriptor
+schema: Service
+- body:Canary object
+- body:Canary.enabled boolean
+- body:Canary.root string
+- body:Canary.targets array<object>
+- body:Canary.targets[].host string
+- body:Canary.targets[].scheme string
+- body:Canary.traffic integer
+- body:additionalHeaders object
+- body:api object
+- body:api.exposeApi boolean
+- body:api.openApiDescriptorUrl string
+- body:authConfigRef string
+- body:buildMode boolean
+- body:chaosConfig object
+- body:chaosConfig.badResponsesFaultConfig object
+- body:chaosConfig.badResponsesFaultConfig.ratio number
+- body:chaosConfig.badResponsesFaultConfig.responses array<object>
+- body:chaosConfig.enabled boolean
+- body:chaosConfig.largeRequestFaultConfig object
+- body:chaosConfig.largeRequestFaultConfig.additionalRequestSize integer
+- body:chaosConfig.largeRequestFaultConfig.ratio number
+- body:chaosConfig.largeResponseFaultConfig object
+- body:chaosConfig.largeResponseFaultConfig.additionalRequestSize integer
+- body:chaosConfig.largeResponseFaultConfig.ratio number
+- body:chaosConfig.latencyInjectionFaultConfig object
+- body:chaosConfig.latencyInjectionFaultConfig.from integer
+- body:chaosConfig.latencyInjectionFaultConfig.ratio number
+- body:chaosConfig.latencyInjectionFaultConfig.to integer
+- body:clientConfig object
+- body:clientConfig.backoffFactor integer
+- body:clientConfig.callTimeout integer
+- body:clientConfig.globalTimeout integer
+- body:clientConfig.maxErrors integer
+- body:clientConfig.retries integer
+- body:clientConfig.retryInitialDelay integer
+- body:clientConfig.sampleInterval integer
+- body:clientConfig.useCircuitBreaker boolean
+- body:clientValidatorRef string
+- body:cors object
+- body:cors.allowCredentials boolean
+- body:cors.allowHeaders array<string>
+- body:cors.allowMethods array<string>
+- body:cors.allowOrigin string
+- body:cors.enabled boolean
+- body:cors.excludedPatterns array<string>
+- body:cors.exposeHeaders array<string>
+- body:cors.maxAge integer
+- body:domain string
+- body:enabled boolean
+- body:enforceSecureCommunication boolean
+- body:env string
+- body:forceHttps boolean
+- body:groups array<string>
+- body:gzip object
+- body:gzip.blackList array<string>
+- body:gzip.bufferSize integer
+- body:gzip.chunkedThreshold integer
+- body:gzip.compressionLevel integer
+- body:gzip.enabled boolean
+- body:gzip.excludedPatterns array<string>
+- body:gzip.whiteList array<string>
+- body:headersVerification object
+- body:healthCheck object
+- body:healthCheck.enabled boolean
+- body:healthCheck.url string
+- body:id string
+- body:ipFiltering object
+- body:ipFiltering.blacklist array<string>
+- body:ipFiltering.whitelist array<string>
+- body:jwtVerifier object
+- body:jwtVerifier.algoSettings object
+- body:jwtVerifier.algoSettings.secret string
+- body:jwtVerifier.algoSettings.size integer
+- body:jwtVerifier.algoSettings.type string
+- body:jwtVerifier.algoSettings.privateKey string
+- body:jwtVerifier.algoSettings.publicKey string
+- body:jwtVerifier.algoSettings.headers object
+- body:jwtVerifier.algoSettings.kty string
+- body:jwtVerifier.algoSettings.timeout integer
+- body:jwtVerifier.algoSettings.ttl integer
+(+55 fields cut)
+
+## S326-N0040  DELETE /api/services/{serviceId}
+desc: Delete a service descriptor | Delete a service descriptor
+- path:serviceId string
+
+## S326-N0041  PATCH /api/services/{serviceId}
+desc: Update a service descriptor with a diff | Update a service descriptor with a diff
+schema: Patch
+- path:serviceId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-N0043  POST /api/services/{serviceId}/apikeys
+desc: Create a new api key for a service
+schema: ApiKey
+- path:serviceId string
+- body:authorizedEntities array<string>
+- body:clientId string
+- body:clientName string
+- body:clientSecret string
+- body:dailyQuota integer
+- body:enabled boolean
+- body:metadata object
+- body:monthlyQuota integer
+- body:throttlingQuota integer
+
+## S326-N0044  DELETE /api/services/{serviceId}/apikeys/{clientId}
+desc: Delete an api key | Delete an api key for a specified service descriptor
+- path:serviceId string
+- path:clientId string
+
+## S326-N0048  DELETE /api/services/{serviceId}/targets
+desc: Delete a service descriptor target | Delete a service descriptor target
+- path:serviceId string
+
+## S326-N0050  POST /api/services/{serviceId}/targets
+desc: Add a target to a service descriptor | Add a target to a service descriptor
+schema: Target
+- path:serviceId string
+- body:host string
+- body:scheme string
+
+## S326-N0051  DELETE /api/services/{serviceId}/template
+desc: Delete a service descriptor error template | Delete a service descriptor error template
+- path:serviceId string
+
+## S326-N0056  PATCH /api/snowmonkey/config
+desc: Update current Snow Monkey config | Update current Snow Monkey config
+schema: Group
+- body:description string
+- body:id string
+- body:name string
+
+## S326-N0058  DELETE /api/snowmonkey/outages
+desc: Reset Snow Monkey Outages for the day | Reset Snow Monkey Outages for the day
+
+## S326-N0059  POST /api/verifiers
+desc: Create one global JWT verifiers | Create one global JWT verifiers
+schema: GlobalJwtVerifier
+- body:algoSettings object
+- body:algoSettings.secret string
+- body:algoSettings.size integer
+- body:algoSettings.type string
+- body:algoSettings.privateKey string
+- body:algoSettings.publicKey string
+- body:algoSettings.headers object
+- body:algoSettings.kty string
+- body:algoSettings.timeout integer
+- body:algoSettings.ttl integer
+- body:algoSettings.url string
+- body:desc string
+- body:enabled boolean
+- body:id string
+- body:name string
+- body:source object
+- body:source.name string
+- body:source.type string
+- body:source.remove string
+- body:strategy object
+- body:strategy.type string
+- body:strategy.verificationSettings object
+- body:strategy.verificationSettings.fields object
+- body:strategy.verificationSettings.mappingSettings object
+- body:strategy.algoSettings object
+- body:strategy.algoSettings.secret string
+- body:strategy.algoSettings.size integer
+- body:strategy.algoSettings.type string
+- body:strategy.algoSettings.privateKey string
+- body:strategy.algoSettings.publicKey string
+- body:strategy.algoSettings.headers object
+- body:strategy.algoSettings.kty string
+- body:strategy.algoSettings.timeout integer
+- body:strategy.algoSettings.ttl integer
+- body:strategy.algoSettings.url string
+- body:strategy.transformSettings object
+- body:strategy.transformSettings.location object
+- body:strategy.transformSettings.mappingSettings object
+- body:strict boolean
+
+## S101-N0001  POST /v0.1/api_tokens
+desc: Creates a new User API token
+- body:description string
+- body:scope array<string> enum[all|viewer]
+
+## S101-N0003  POST /v0.1/apps
+desc: Creates a new app and returns it to the caller
+- body:description string
+- body:display_name string
+- body:name string
+- body:os string enum[Android|iOS|macOS|Tizen|tvOS|Windows|Linux|Custom]
+- body:platform string enum[Java|Objective-C-Swift|UWP|Cordova|React-Native|Xamarin|Unity|Electron|WPF|WinForms|Custom]
+- body:release_type string
+
+## S101-N0004  DELETE /v0.1/apps/{owner_name}/{app_name}
+desc: Delete an app
+- path:app_name string
+- path:owner_name string
+
+## S101-N0005  PATCH /v0.1/apps/{owner_name}/{app_name}
+desc: Partially updates a single app
+- path:app_name string
+- path:owner_name string
+- body:description string
+- body:display_name string
+- body:icon_asset_id string
+- body:icon_url string
+- body:name string
+- body:release_type string
+
+## S101-N0006  POST /v0.1/apps/{owner_name}/{app_name}/analytics/audiences/definition/test
+desc: Tests audience definition.
+- path:owner_name string
+- path:app_name string
+- body:custom_properties object
+- body:definition string
+- body:description string
+- body:enabled boolean
+
+## S101-N0007  DELETE /v0.1/apps/{owner_name}/{app_name}/analytics/audiences/{audience_name}
+desc: Deletes audience definition.
+- path:audience_name string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0010  POST /v0.1/apps/{owner_name}/{app_name}/analytics/distribution/release_counts
+desc: Count of total downloads for the provided distribution releases.
+- path:owner_name string
+- path:app_name string
+- body:releases array<object>
+- body:releases[].distribution_group string
+- body:releases[].release string
+
+## S101-N0011  DELETE /v0.1/apps/{owner_name}/{app_name}/analytics/event_logs/{event_name}
+desc: Delete the set of Events with the specified event names.
+- path:event_name string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0012  DELETE /v0.1/apps/{owner_name}/{app_name}/analytics/events/{event_name}
+desc: Delete the set of Events with the specified event names.
+- path:event_name string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0013  POST /v0.1/apps/{owner_name}/{app_name}/api_tokens
+desc: Creates a new App API token
+- path:owner_name string
+- path:app_name string
+- body:description string
+- body:scope array<string> enum[all|viewer]
+
+## S101-N0014  DELETE /v0.1/apps/{owner_name}/{app_name}/api_tokens/{api_token_id}
+desc: Delete the App Api Token object with the specific ID
+- path:owner_name string
+- path:app_name string
+- path:api_token_id string
+
+## S101-N0015  DELETE /v0.1/apps/{owner_name}/{app_name}/apple_mapping
+desc: Delete mapping of apple app to an existing app in apple store.
+- path:owner_name string
+- path:app_name string
+- body:(body) string
+
+## S101-N0017  DELETE /v0.1/apps/{owner_name}/{app_name}/avatar
+desc: Deletes the uploaded app avatar
+- path:owner_name string
+- path:app_name string
+
+## S101-N0019  POST /v0.1/apps/{owner_name}/{app_name}/azure_subscriptions
+desc: Link azure subscription to an app
+- path:owner_name string
+- path:app_name string
+- body:subscription_id string
+
+## S101-N0020  DELETE /v0.1/apps/{owner_name}/{app_name}/azure_subscriptions/{azure_subscription_id}
+desc: Delete the azure subscriptions for the app
+- path:azure_subscription_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0021  POST /v0.1/apps/{owner_name}/{app_name}/branches/{branch}/builds
+desc: Create a build
+- path:branch string
+- path:owner_name string
+- path:app_name string
+- body:debug boolean
+- body:sourceVersion string
+
+## S101-N0022  DELETE /v0.1/apps/{owner_name}/{app_name}/branches/{branch}/config
+desc: Deletes the branch build configuration
+- path:branch string
+- path:owner_name string
+- path:app_name string
+- body:(body) object
+
+## S101-N0023  POST /v0.1/apps/{owner_name}/{app_name}/branches/{branch}/config
+desc: Configures the branch for build
+- path:branch string
+- path:owner_name string
+- path:app_name string
+- body:artifactVersioning object
+- body:artifactVersioning.buildNumberFormat string enum[buildId|timestamp]
+- body:badgeIsEnabled boolean
+- body:cloneFromBranch string
+- body:signed boolean
+- body:testsEnabled boolean
+- body:toolsets object
+- body:toolsets.android object
+- body:toolsets.android.automaticSigning boolean
+- body:toolsets.android.buildVariant string
+- body:toolsets.android.gradleWrapperPath string
+- body:toolsets.android.isRoot boolean
+- body:toolsets.android.keyAlias string
+- body:toolsets.android.keyPassword string
+- body:toolsets.android.keystoreEncoded string
+- body:toolsets.android.keystoreFilename string
+- body:toolsets.android.keystorePassword string
+- body:toolsets.android.module string
+- body:toolsets.android.runLint boolean
+- body:toolsets.android.runTests boolean
+- body:toolsets.javascript object
+- body:toolsets.javascript.packageJsonPath string
+- body:toolsets.javascript.reactNativeVersion string
+- body:toolsets.javascript.runTests boolean
+- body:toolsets.xamarin object
+- body:toolsets.xamarin.args string
+- body:toolsets.xamarin.configuration string
+- body:toolsets.xamarin.isSimBuild boolean
+- body:toolsets.xamarin.monoVersion string
+- body:toolsets.xamarin.p12File string
+- body:toolsets.xamarin.p12Pwd string
+- body:toolsets.xamarin.provProfile string
+- body:toolsets.xamarin.sdkBundle string
+- body:toolsets.xamarin.slnPath string
+- body:toolsets.xamarin.symlink string
+- body:toolsets.xcode object
+- body:toolsets.xcode.appExtensionProvisioningProfileFiles array<object>
+- body:toolsets.xcode.archiveConfiguration string
+- body:toolsets.xcode.automaticSigning boolean
+- body:toolsets.xcode.cartfilePath string
+- body:toolsets.xcode.certificateEncoded string
+- body:toolsets.xcode.certificateFileId string
+- body:toolsets.xcode.certificateFilename string
+- body:toolsets.xcode.certificatePassword string
+- body:toolsets.xcode.certificateUploadId string
+- body:toolsets.xcode.forceLegacyBuildSystem boolean
+- body:toolsets.xcode.podfilePath string
+- body:toolsets.xcode.projectOrWorkspacePath string
+- body:toolsets.xcode.provisioningProfileEncoded string
+- body:toolsets.xcode.provisioningProfileFileId string
+- body:toolsets.xcode.provisioningProfileFilename string
+- body:toolsets.xcode.provisioningProfileUploadId string
+- body:toolsets.xcode.scheme string
+- body:toolsets.xcode.targetToArchive string
+- body:toolsets.xcode.teamId string
+- body:toolsets.xcode.xcodeProjectSha string
+- body:toolsets.xcode.xcodeVersion string
+- body:trigger string enum[continous|continuous|manual]
+
+## S101-N0024  PUT /v0.1/apps/{owner_name}/{app_name}/branches/{branch}/config
+desc: Reconfigures the branch for build
+- path:branch string
+- path:owner_name string
+- path:app_name string
+- body:artifactVersioning object
+- body:artifactVersioning.buildNumberFormat string enum[buildId|timestamp]
+- body:badgeIsEnabled boolean
+- body:cloneFromBranch string
+- body:signed boolean
+- body:testsEnabled boolean
+- body:toolsets object
+- body:toolsets.android object
+- body:toolsets.android.automaticSigning boolean
+- body:toolsets.android.buildVariant string
+- body:toolsets.android.gradleWrapperPath string
+- body:toolsets.android.isRoot boolean
+- body:toolsets.android.keyAlias string
+- body:toolsets.android.keyPassword string
+- body:toolsets.android.keystoreEncoded string
+- body:toolsets.android.keystoreFilename string
+- body:toolsets.android.keystorePassword string
+- body:toolsets.android.module string
+- body:toolsets.android.runLint boolean
+- body:toolsets.android.runTests boolean
+- body:toolsets.javascript object
+- body:toolsets.javascript.packageJsonPath string
+- body:toolsets.javascript.reactNativeVersion string
+- body:toolsets.javascript.runTests boolean
+- body:toolsets.xamarin object
+- body:toolsets.xamarin.args string
+- body:toolsets.xamarin.configuration string
+- body:toolsets.xamarin.isSimBuild boolean
+- body:toolsets.xamarin.monoVersion string
+- body:toolsets.xamarin.p12File string
+- body:toolsets.xamarin.p12Pwd string
+- body:toolsets.xamarin.provProfile string
+- body:toolsets.xamarin.sdkBundle string
+- body:toolsets.xamarin.slnPath string
+- body:toolsets.xamarin.symlink string
+- body:toolsets.xcode object
+- body:toolsets.xcode.appExtensionProvisioningProfileFiles array<object>
+- body:toolsets.xcode.archiveConfiguration string
+- body:toolsets.xcode.automaticSigning boolean
+- body:toolsets.xcode.cartfilePath string
+- body:toolsets.xcode.certificateEncoded string
+- body:toolsets.xcode.certificateFileId string
+- body:toolsets.xcode.certificateFilename string
+- body:toolsets.xcode.certificatePassword string
+- body:toolsets.xcode.certificateUploadId string
+- body:toolsets.xcode.forceLegacyBuildSystem boolean
+- body:toolsets.xcode.podfilePath string
+- body:toolsets.xcode.projectOrWorkspacePath string
+- body:toolsets.xcode.provisioningProfileEncoded string
+- body:toolsets.xcode.provisioningProfileFileId string
+- body:toolsets.xcode.provisioningProfileFilename string
+- body:toolsets.xcode.provisioningProfileUploadId string
+- body:toolsets.xcode.scheme string
+- body:toolsets.xcode.targetToArchive string
+- body:toolsets.xcode.teamId string
+- body:toolsets.xcode.xcodeProjectSha string
+- body:toolsets.xcode.xcodeVersion string
+- body:trigger string enum[continous|continuous|manual]
+
+## S101-N0025  PATCH /v0.1/apps/{owner_name}/{app_name}/builds/{build_id}
+desc: Cancels a build
+- path:build_id integer
+- path:owner_name string
+- path:app_name string
+- body:status string enum[cancelling]
+
+## S101-N0027  PATCH /v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}
+desc: Updates a group.
+- path:crash_group_id string
+- path:owner_name string
+- path:app_name string
+- body:annotation string
+- body:status string enum[open|closed|ignored]
+
+## S101-N0029  POST /v0.1/apps/{owner_name}/{app_name}/deployments
+desc: Creates a CodePush Deployment for the given app
+- path:owner_name string
+- path:app_name string
+- body:key string
+- body:latest_release object
+- body:latest_release.description string
+- body:latest_release.is_disabled boolean
+- body:latest_release.is_mandatory boolean
+- body:latest_release.rollout integer
+- body:latest_release.target_binary_range string
+- body:latest_release.blob_url string
+- body:latest_release.diff_package_map object
+- body:latest_release.label string
+- body:latest_release.original_deployment string
+- body:latest_release.original_label string
+- body:latest_release.package_hash string
+- body:latest_release.release_method string enum[Upload|Promote|Rollback]
+- body:latest_release.released_by string
+- body:latest_release.size number
+- body:latest_release.upload_time integer
+- body:name string
+
+## S101-N0030  DELETE /v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}
+desc: Deletes a CodePush Deployment for the given app
+- path:deployment_name string
+- path:owner_name string
+- path:app_name string
+- body:(body) object
+
+## S101-N0032  POST /v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/promote_release/{promote_deployment_name}
+desc: Promote one release (default latest one) from one deployment to another
+- path:deployment_name string
+- path:promote_deployment_name string
+- path:owner_name string
+- path:app_name string
+- body:description string
+- body:is_disabled boolean
+- body:is_mandatory boolean
+- body:rollout integer
+- body:target_binary_range string
+- body:label string
+
+## S101-N0033  DELETE /v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/releases
+desc: Clears a Deployment of releases
+- path:deployment_name string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0034  POST /v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/releases
+desc: Create a new CodePush release for the specified deployment
+- path:deployment_name string
+- path:owner_name string
+- path:app_name string
+- body:deployment_name string
+- body:description string
+- body:disabled boolean
+- body:mandatory boolean
+- body:no_duplicate_release_error boolean
+- body:release_upload object
+- body:release_upload.id string
+- body:release_upload.token string
+- body:release_upload.upload_domain string
+- body:rollout integer
+- body:target_binary_version string
+
+## S101-N0035  PATCH /v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/releases/{release_label}
+desc: Modifies a CodePush release metadata under the given Deployment
+- path:deployment_name string
+- path:release_label string
+- path:owner_name string
+- path:app_name string
+- body:description string
+- body:is_disabled boolean
+- body:is_mandatory boolean
+- body:rollout integer
+- body:target_binary_range string
+
+## S101-N0037  POST /v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/uploads
+desc: Create a new CodePush release upload for the specified deployment
+- path:deployment_name string
+- path:owner_name string
+- path:app_name string

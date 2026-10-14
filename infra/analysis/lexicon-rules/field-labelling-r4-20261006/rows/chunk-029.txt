@@ -1,0 +1,613 @@
+## S210-N0309  POST /repos/{owner}/{repo}/issues/{issue_number}/assignees
+desc: Add assignees to an issue | Adds up to 10 assignees to an issue. Users already assigned to an issue are not replaced.
+- path:owner string
+- path:repo string
+- path:issue_number integer
+- body:assignees array<string>
+
+## S210-N0310  POST /repos/{owner}/{repo}/issues/{issue_number}/comments
+desc: Create an issue comment | This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest//github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#
+- path:owner string
+- path:repo string
+- path:issue_number integer
+- body:body string
+
+## S210-N0311  DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels
+desc: Remove all labels from an issue
+- path:owner string
+- path:repo string
+- path:issue_number integer
+
+## S210-N0312  POST /repos/{owner}/{repo}/issues/{issue_number}/labels
+desc: Add labels to an issue
+- path:owner string
+- path:repo string
+- path:issue_number integer
+- body:labels array<string>
+
+## S210-N0313  PUT /repos/{owner}/{repo}/issues/{issue_number}/labels
+desc: Set labels for an issue | Removes any previous labels and sets the new labels for an issue.
+- path:owner string
+- path:repo string
+- path:issue_number integer
+- body:labels array<string>
+
+## S210-N0314  DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}
+desc: Remove a label from an issue | Removes the specified label from the issue, and returns the remaining labels on the issue. This endpoint returns a `404 Not Found` status if the label does not exist.
+- path:owner string
+- path:repo string
+- path:issue_number integer
+- path:name string
+
+## S210-N0315  DELETE /repos/{owner}/{repo}/issues/{issue_number}/lock
+desc: Unlock an issue | Users with push access can unlock an issue's conversation.
+- path:owner string
+- path:repo string
+- path:issue_number integer
+
+## S210-N0316  PUT /repos/{owner}/{repo}/issues/{issue_number}/lock
+desc: Lock an issue | Users with push access can lock an issue or pull request's conversation. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#http-verbs)."
+- path:owner string
+- path:repo string
+- path:issue_number integer
+- body:lock_reason string enum[off-topic|too heated|resolved|spam]
+
+## S210-N0317  POST /repos/{owner}/{repo}/issues/{issue_number}/reactions
+desc: Create reaction for an issue | Create a reaction to an [issue](https://docs.github.com/enterprise-cloud@latest//rest/reference/issues/). A response with an HTTP `200` status means that you already added the reaction type to this issue.
+- path:owner string
+- path:repo string
+- path:issue_number integer
+- body:content string enum[+1|-1|laugh|confused|heart|hooray|rocket|eyes]
+
+## S210-N0318  DELETE /repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id}
+desc: Delete an issue reaction | **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/issues/:issue_number/reactions/:reaction_id`. Delete a reaction to an [issue](https://docs.github.com/enterprise-cloud@latest//rest/reference/issues/).
+- path:owner string
+- path:repo string
+- path:issue_number integer
+- path:reaction_id integer
+
+## S210-N0319  POST /repos/{owner}/{repo}/keys
+desc: Create a deploy key | You can create a read-only deploy key.
+- path:owner string
+- path:repo string
+- body:key string
+- body:read_only boolean
+- body:title string
+
+## S210-N0320  DELETE /repos/{owner}/{repo}/keys/{key_id}
+desc: Delete a deploy key | Deploy keys are immutable. If you need to update a key, remove the key and create a new one instead.
+- path:owner string
+- path:repo string
+- path:key_id integer
+
+## S210-N0321  POST /repos/{owner}/{repo}/labels
+desc: Create a label
+- path:owner string
+- path:repo string
+- body:color string
+- body:description string
+- body:name string
+
+## S210-N0322  DELETE /repos/{owner}/{repo}/labels/{name}
+desc: Delete a label
+- path:owner string
+- path:repo string
+- path:name string
+
+## S210-N0324  DELETE /repos/{owner}/{repo}/lfs
+desc: Disable Git LFS for a repository | Disables Git LFS for a repository. Access tokens must have the `admin:enterprise` scope.
+- path:owner string
+- path:repo string
+
+## S210-N0325  PUT /repos/{owner}/{repo}/lfs
+desc: Enable Git LFS for a repository | Enables Git LFS for a repository. Access tokens must have the `admin:enterprise` scope.
+- path:owner string
+- path:repo string
+
+## S210-N0326  POST /repos/{owner}/{repo}/merge-upstream
+desc: Sync a fork branch with the upstream repository | Sync a branch of a forked repository to keep it up-to-date with the upstream repository.
+- path:owner string
+- path:repo string
+- body:branch string
+
+## S210-N0327  POST /repos/{owner}/{repo}/merges
+desc: Merge a branch
+- path:owner string
+- path:repo string
+- body:base string
+- body:commit_message string
+- body:head string
+
+## S210-N0328  POST /repos/{owner}/{repo}/milestones
+desc: Create a milestone
+- path:owner string
+- path:repo string
+- body:description string
+- body:due_on string
+- body:state string enum[open|closed]
+- body:title string
+
+## S210-N0329  DELETE /repos/{owner}/{repo}/milestones/{milestone_number}
+desc: Delete a milestone
+- path:owner string
+- path:repo string
+- path:milestone_number integer
+
+## S210-N0330  PATCH /repos/{owner}/{repo}/milestones/{milestone_number}
+desc: Update a milestone
+- path:owner string
+- path:repo string
+- path:milestone_number integer
+- body:description string
+- body:due_on string
+- body:state string enum[open|closed]
+- body:title string
+
+## S210-N0331  PUT /repos/{owner}/{repo}/notifications
+desc: Mark repository notifications as read | Marks all notifications in a repository as "read" for the current user. If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Cloud will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List reposit
+- path:owner string
+- path:repo string
+- body:last_read_at string
+
+## S210-N0332  DELETE /repos/{owner}/{repo}/pages
+desc: Delete a GitHub Enterprise Cloud Pages site | Deletes a GitHub Enterprise Cloud Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages). To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub 
+- path:owner string
+- path:repo string
+
+## S210-N0333  POST /repos/{owner}/{repo}/pages
+desc: Create a GitHub Enterprise Cloud Pages site | Configures a GitHub Enterprise Cloud Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages)." To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. Git
+- path:owner string
+- path:repo string
+- body:build_type string enum[legacy|workflow]
+- body:source object
+- body:source.branch string
+- body:source.path string enum[/|/docs]
+
+## S210-N0334  PUT /repos/{owner}/{repo}/pages
+desc: Update information about a GitHub Enterprise Cloud Pages site | Updates information for a GitHub Enterprise Cloud Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages). To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages wri
+- path:owner string
+- path:repo string
+- body:build_type string enum[legacy|workflow]
+- body:cname string
+- body:https_enforced boolean
+- body:public boolean
+- body:source string enum[gh-pages|master|master /docs]
+- body:source.branch string
+- body:source.path string enum[/|/docs]
+
+## S210-N0335  POST /repos/{owner}/{repo}/pages/builds
+desc: Request a GitHub Enterprise Cloud Pages build | You can request that your site be built from the latest revision on the default branch. This has the same effect as pushing a commit to your default branch, but does not require an additional commit. Manually triggering page builds can be helpful when diagnosing build warnings and failures. Build requests are limited to one concurrent build per repos
+- path:owner string
+- path:repo string
+
+## S210-N0336  POST /repos/{owner}/{repo}/pages/deployment
+desc: Create a GitHub Pages deployment | Create a GitHub Pages deployment for a repository. Users must have write permissions. GitHub Apps must have the `pages:write` permission to use this endpoint.
+- path:owner string
+- path:repo string
+- body:artifact_url string
+- body:environment string
+- body:oidc_token string
+- body:pages_build_version string
+
+## S210-N0337  POST /repos/{owner}/{repo}/projects
+desc: Create a repository project | Creates a repository project board. Returns a `410 Gone` status if projects are disabled in the repository or if the repository does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned.
+- path:owner string
+- path:repo string
+- body:body string
+- body:name string
+
+## S210-N0338  POST /repos/{owner}/{repo}/pulls
+desc: Create a pull request | Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github
+- path:owner string
+- path:repo string
+- body:base string
+- body:body string
+- body:draft boolean
+- body:head string
+- body:head_repo string
+- body:issue integer
+- body:maintainer_can_modify boolean
+- body:title string
+
+## S210-N0339  DELETE /repos/{owner}/{repo}/pulls/comments/{comment_id}
+desc: Delete a review comment for a pull request | Deletes a review comment.
+- path:owner string
+- path:repo string
+- path:comment_id integer
+
+## S210-N0340  PATCH /repos/{owner}/{repo}/pulls/comments/{comment_id}
+desc: Update a review comment for a pull request | Enables you to edit a review comment.
+- path:owner string
+- path:repo string
+- path:comment_id integer
+- body:body string
+
+## S210-N0341  POST /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions
+desc: Create reaction for a pull request review comment | Create a reaction to a [pull request review comment](https://docs.github.com/enterprise-cloud@latest//rest/reference/pulls#comments). A response with an HTTP `200` status means that you already added the reaction type to this pull request review comment.
+- path:owner string
+- path:repo string
+- path:comment_id integer
+- body:content string enum[+1|-1|laugh|confused|heart|hooray|rocket|eyes]
+
+## S210-N0342  DELETE /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions/{reaction_id}
+desc: Delete a pull request comment reaction | **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/pulls/comments/:comment_id/reactions/:reaction_id.` Delete a reaction to a [pull request review comment](https://docs.github.com/enterprise-cloud@latest//rest/reference/pulls#review-comments).
+- path:owner string
+- path:repo string
+- path:comment_id integer
+- path:reaction_id integer
+
+## S210-N0343  PATCH /repos/{owner}/{repo}/pulls/{pull_number}
+desc: Update a pull request | Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github
+- path:owner string
+- path:repo string
+- path:pull_number integer
+- body:base string
+- body:body string
+- body:maintainer_can_modify boolean
+- body:state string enum[open|closed]
+- body:title string
+
+## S210-N0344  POST /repos/{owner}/{repo}/pulls/{pull_number}/codespaces
+desc: Create a codespace from a pull request | Creates a codespace owned by the authenticated user for the specified pull request. You must authenticate using an access token with the `codespace` scope to use this endpoint. GitHub Apps must have write access to the `codespaces` repository permission to use this endpoint.
+- path:owner string
+- path:repo string
+- path:pull_number integer
+- body:client_ip string
+- body:devcontainer_path string
+- body:display_name string
+- body:idle_timeout_minutes integer
+- body:location string
+- body:machine string
+- body:multi_repo_permissions_opt_out boolean
+- body:retention_period_minutes integer
+- body:working_directory string
+
+## S210-N0345  POST /repos/{owner}/{repo}/pulls/{pull_number}/comments
+desc: Create a review comment for a pull request | Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/enterprise-cloud@latest//rest/reference/issues#create-an-issue-comment)." We recommend creating a review comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment 
+- path:owner string
+- path:repo string
+- path:pull_number integer
+- body:body string
+- body:commit_id string
+- body:in_reply_to integer
+- body:line integer
+- body:path string
+- body:position integer
+- body:side string enum[LEFT|RIGHT]
+- body:start_line integer
+- body:start_side string enum[LEFT|RIGHT|side]
+
+## S210-N0347  PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge
+desc: Merge a pull request | This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest//github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#sec
+- path:owner string
+- path:repo string
+- path:pull_number integer
+- body:commit_message string
+- body:commit_title string
+- body:merge_method string enum[merge|squash|rebase]
+- body:sha string
+
+## S210-N0348  DELETE /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers
+desc: Remove requested reviewers from a pull request
+- path:owner string
+- path:repo string
+- path:pull_number integer
+- body:reviewers array<string>
+- body:team_reviewers array<string>
+
+## S210-N0349  POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers
+desc: Request reviewers for a pull request | This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest//github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-
+- path:owner string
+- path:repo string
+- path:pull_number integer
+- body:reviewers array<string>
+- body:team_reviewers array<string>
+
+## S210-N0350  POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews
+desc: Create a review for a pull request | This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest//github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-th
+- path:owner string
+- path:repo string
+- path:pull_number integer
+- body:body string
+- body:comments array<object>
+- body:comments[].body string
+- body:comments[].line integer
+- body:comments[].path string
+- body:comments[].position integer
+- body:comments[].side string
+- body:comments[].start_line integer
+- body:comments[].start_side string
+- body:commit_id string
+- body:event string enum[APPROVE|REQUEST_CHANGES|COMMENT]
+
+## S210-N0351  DELETE /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}
+desc: Delete a pending review for a pull request
+- path:owner string
+- path:repo string
+- path:pull_number integer
+- path:review_id integer
+
+## S210-N0352  PUT /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}
+desc: Update a review for a pull request | Update the review summary comment with new text.
+- path:owner string
+- path:repo string
+- path:pull_number integer
+- path:review_id integer
+- body:body string
+
+## S210-N0353  PUT /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/dismissals
+desc: Dismiss a review for a pull request | **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/enterprise-cloud@latest//rest/reference/repos#branches), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews.
+- path:owner string
+- path:repo string
+- path:pull_number integer
+- path:review_id integer
+- body:event string enum[DISMISS]
+- body:message string
+
+## S210-N0355  PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch
+desc: Update a pull request branch | Updates the pull request branch with the latest upstream changes by merging HEAD from the base branch into the pull request branch.
+- path:owner string
+- path:repo string
+- path:pull_number integer
+- body:expected_head_sha string
+
+## S210-N0356  POST /repos/{owner}/{repo}/releases
+desc: Create a release | Users with push access to the repository can create a release. This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest//github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterpris
+- path:owner string
+- path:repo string
+- body:body string
+- body:discussion_category_name string
+- body:draft boolean
+- body:generate_release_notes boolean
+- body:make_latest string enum[true|false|legacy]
+- body:name string
+- body:prerelease boolean
+- body:tag_name string
+- body:target_commitish string
+
+## S210-N0357  DELETE /repos/{owner}/{repo}/releases/assets/{asset_id}
+desc: Delete a release asset
+- path:owner string
+- path:repo string
+- path:asset_id integer
+
+## S210-N0358  PATCH /repos/{owner}/{repo}/releases/assets/{asset_id}
+desc: Update a release asset | Users with push access to the repository can edit a release asset.
+- path:owner string
+- path:repo string
+- path:asset_id integer
+- body:label string
+- body:name string
+- body:state string
+
+## S210-N0360  DELETE /repos/{owner}/{repo}/releases/{release_id}
+desc: Delete a release | Users with push access to the repository can delete a release.
+- path:owner string
+- path:repo string
+- path:release_id integer
+
+## S210-N0361  PATCH /repos/{owner}/{repo}/releases/{release_id}
+desc: Update a release | Users with push access to the repository can edit a release.
+- path:owner string
+- path:repo string
+- path:release_id integer
+- body:body string
+- body:discussion_category_name string
+- body:draft boolean
+- body:make_latest string enum[true|false|legacy]
+- body:name string
+- body:prerelease boolean
+- body:tag_name string
+- body:target_commitish string
+
+## S210-N0362  POST /repos/{owner}/{repo}/releases/{release_id}/assets
+desc: Upload a release asset | This endpoint makes use of [a Hypermedia relation](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in the response of the [Create a release endpoint](https://docs.github.com/enterpri
+- path:owner string
+- path:repo string
+- path:release_id integer
+- query:name string
+- query:label string
+- body:(body) string
+
+## S210-N0363  POST /repos/{owner}/{repo}/releases/{release_id}/reactions
+desc: Create reaction for a release | Create a reaction to a [release](https://docs.github.com/enterprise-cloud@latest//rest/reference/repos#releases). A response with a `Status: 200 OK` means that you already added the reaction type to this release.
+- path:owner string
+- path:repo string
+- path:release_id integer
+- body:content string enum[+1|laugh|heart|hooray|rocket|eyes]
+
+## S210-N0364  DELETE /repos/{owner}/{repo}/releases/{release_id}/reactions/{reaction_id}
+desc: Delete a release reaction | **Note:** You can also specify a repository by `repository_id` using the route `DELETE delete /repositories/:repository_id/releases/:release_id/reactions/:reaction_id`. Delete a reaction to a [release](https://docs.github.com/enterprise-cloud@latest//rest/reference/repos#releases).
+- path:owner string
+- path:repo string
+- path:release_id integer
+- path:reaction_id integer
+
+## S210-N0365  PATCH /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}
+desc: Update a secret scanning alert | Updates the status of a secret scanning alert in an eligible repository. To use this endpoint, you must be an administrator for the repository or for the organization that owns the repository, and you must use a personal access token with the `repo` scope or `security_events` scope. For public repositories, you may instead use the `public_repo` scope. GitHub Apps m
+- path:owner string
+- path:repo string
+- path:alert_number integer
+- body:resolution string enum[false_positive|wont_fix|revoked|used_in_tests]
+- body:resolution_comment string
+- body:state string enum[open|resolved]
+
+## S210-N0366  POST /repos/{owner}/{repo}/statuses/{sha}
+desc: Create a commit status | Users with push access in a repository can create commit statuses for a given SHA. Note: there is a limit of 1000 statuses per `sha` and `context` within a repository. Attempts to create more than 1000 statuses will result in a validation error.
+- path:owner string
+- path:repo string
+- path:sha string
+- body:context string
+- body:description string
+- body:state string enum[error|failure|pending|success]
+- body:target_url string
+
+## S210-N0367  DELETE /repos/{owner}/{repo}/subscription
+desc: Delete a repository subscription | This endpoint should only be used to stop watching a repository. To control whether or not you wish to receive notifications from a repository, [set the repository's subscription manually](https://docs.github.com/enterprise-cloud@latest//rest/reference/activity#set-a-repository-subscription).
+- path:owner string
+- path:repo string
+
+## S210-N0368  PUT /repos/{owner}/{repo}/subscription
+desc: Set a repository subscription | If you would like to watch a repository, set `subscribed` to `true`. If you would like to ignore notifications made within a repository, set `ignored` to `true`. If you would like to stop watching a repository, [delete the repository's subscription](https://docs.github.com/enterprise-cloud@latest//rest/reference/activity#delete-a-repository-subscription) completely.
+- path:owner string
+- path:repo string
+- body:ignored boolean
+- body:subscribed boolean
+
+## S210-N0369  POST /repos/{owner}/{repo}/tags/protection
+desc: Create a tag protection state for a repository | This creates a tag protection state for a repository. This endpoint is only available to repository administrators.
+- path:owner string
+- path:repo string
+- body:pattern string
+
+## S210-N0370  DELETE /repos/{owner}/{repo}/tags/protection/{tag_protection_id}
+desc: Delete a tag protection state for a repository | This deletes a tag protection state for a repository. This endpoint is only available to repository administrators.
+- path:owner string
+- path:repo string
+- path:tag_protection_id integer
+
+## S210-N0371  PUT /repos/{owner}/{repo}/topics
+desc: Replace all repository topics
+- path:owner string
+- path:repo string
+- body:names array<string>
+
+## S210-N0372  POST /repos/{owner}/{repo}/transfer
+desc: Transfer a repository | A transfer request will need to be accepted by the new owner when transferring a personal repository to another user. The response will contain the original `owner`, and the transfer will continue asynchronously. For more details on the requirements to transfer personal and organization-owned repositories, see [about repository transfers](https://docs.github.com/enterprise-
+- path:owner string
+- path:repo string
+- body:new_name string
+- body:new_owner string
+- body:team_ids array<integer>
+
+## S210-N0373  DELETE /repos/{owner}/{repo}/vulnerability-alerts
+desc: Disable vulnerability alerts | Disables dependency alerts and the dependency graph for a repository. The authenticated user must have admin access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://docs.github.com/enterprise-cloud@latest//articles/about-security-alerts-for-vulnerable-dependencies)".
+- path:owner string
+- path:repo string
+
+## S210-N0374  PUT /repos/{owner}/{repo}/vulnerability-alerts
+desc: Enable vulnerability alerts | Enables dependency alerts and the dependency graph for a repository. The authenticated user must have admin access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://docs.github.com/enterprise-cloud@latest//articles/about-security-alerts-for-vulnerable-dependencies)".
+- path:owner string
+- path:repo string
+
+## S210-N0375  POST /repos/{template_owner}/{template_repo}/generate
+desc: Create a repository using a template | Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. If the repository is not public, the authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the re
+- path:template_owner string
+- path:template_repo string
+- body:description string
+- body:include_all_branches boolean
+- body:name string
+- body:owner string
+- body:private boolean
+
+## S210-N0376  DELETE /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}
+desc: Delete an environment secret | Deletes a secret in an environment using the secret name. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+- path:repository_id integer
+- path:environment_name string
+- path:secret_name string
+
+## S210-N0377  PUT /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}
+desc: Create or update an environment secret | Creates or updates an environment secret with an encrypted value. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint. #### Example encrypting
+- path:repository_id integer
+- path:environment_name string
+- path:secret_name string
+- body:encrypted_value string
+- body:key_id string
+
+## S210-N0378  POST /repositories/{repository_id}/environments/{environment_name}/variables
+desc: Create an environment variable | Create an environment variable that you can reference in a GitHub Actions workflow. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `environment:write` repository permission to use this endpoint.
+- path:repository_id integer
+- path:environment_name string
+- body:name string
+- body:value string
+
+## S210-N0379  DELETE /repositories/{repository_id}/environments/{environment_name}/variables/{name}
+desc: Delete an environment variable | Deletes an environment variable using the variable name. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `environment:write` repository permission to use this endpoint.
+- path:repository_id integer
+- path:name string
+- path:environment_name string
+
+## S210-N0380  PATCH /repositories/{repository_id}/environments/{environment_name}/variables/{name}
+desc: Update an environment variable | Updates an environment variable that you can reference in a GitHub Actions workflow. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `environment:write` repository permission to use this endpoint.
+- path:repository_id integer
+- path:name string
+- path:environment_name string
+- body:name string
+- body:value string
+
+## S210-N0381  POST /scim/v2/organizations/{org}/Users
+desc: Provision and invite a SCIM user | Provisions organization membership for a user, and sends an activation email to the email address. If the user was previously a member of the organization, the invitation will reinstate any former privileges that the user had. For more information about reinstating former members, see "[Reinstating a former member of your organization](https://docs.github.com/ent
+- path:org string
+- body:active boolean
+- body:displayName string
+- body:emails array<object>
+- body:emails[].primary boolean
+- body:emails[].type string
+- body:emails[].value string
+- body:externalId string
+- body:groups array<string>
+- body:name object
+- body:name.familyName string
+- body:name.formatted string
+- body:name.givenName string
+- body:schemas array<string>
+- body:userName string
+
+## S210-N0382  DELETE /scim/v2/organizations/{org}/Users/{scim_user_id}
+desc: Delete a SCIM user from an organization
+- path:org string
+- path:scim_user_id string
+
+## S210-N0383  PATCH /scim/v2/organizations/{org}/Users/{scim_user_id}
+desc: Update an attribute for a SCIM user | Allows you to change a provisioned user's individual attributes. To change a user's values, you must provide a specific `Operations` JSON format that contains at least one of the `add`, `remove`, or `replace` operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5
+- path:org string
+- path:scim_user_id string
+- body:Operations array<object>
+- body:Operations[].op string enum[add|remove|replace]
+- body:Operations[].path string
+- body:Operations[].value object
+- body:Operations[].value.active boolean
+- body:Operations[].value.externalId string
+- body:Operations[].value.familyName string
+- body:Operations[].value.givenName string
+- body:Operations[].value.userName string
+- body:schemas array<string>
+
+## S210-N0384  PUT /scim/v2/organizations/{org}/Users/{scim_user_id}
+desc: Update a provisioned organization membership | Replaces an existing provisioned user's information. You must provide all the information required for the user as if you were provisioning them for the first time. Any existing user information that you don't provide will be removed. If you want to only update a specific attribute, use the [Update an attribute for a SCIM user](https://docs.github.com
+- path:org string
+- path:scim_user_id string
+- body:active boolean
+- body:displayName string
+- body:emails array<object>
+- body:emails[].primary boolean
+- body:emails[].type string
+- body:emails[].value string
+- body:externalId string
+- body:groups array<string>
+- body:name object
+- body:name.familyName string
+- body:name.formatted string
+- body:name.givenName string
+- body:schemas array<string>
+- body:userName string
+
+## S210-N0385  DELETE /teams/{team_id}
+desc: Delete a team (Legacy) | **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a team](https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#delete-a-team) endpoint. To delete a team, the authenticated user must be an organization owner or team maintainer. If you are an orga
+- path:team_id integer
+
+## S210-N0386  PATCH /teams/{team_id}
+desc: Update a team (Legacy) | **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a team](https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#update-a-team) endpoint. To edit a team, the authenticated user must either be an organization owner or a team maintainer. **Note:** W
+- path:team_id integer
+- body:description string
+- body:name string
+- body:parent_team_id integer
+- body:permission string enum[pull|push|admin]
+- body:privacy string enum[secret|closed]
+
+## S210-N0387  POST /teams/{team_id}/discussions
+desc: Create a discussion (Legacy) | **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#create-a-discussion) endpoint. Creates a new discussion post on a team's page. OAuth access tokens require the `write:di
+- path:team_id integer
+- body:body string
+- body:private boolean
+- body:title string

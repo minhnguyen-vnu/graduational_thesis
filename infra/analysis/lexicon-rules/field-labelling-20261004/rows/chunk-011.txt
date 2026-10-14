@@ -1,0 +1,720 @@
+## S214-0005  PATCH /api/v1/Environments/{environmentId}
+- path:environmentId string
+- body:autoShutdownDelayMinutes integer
+- body:failoverDetails object
+- body:failoverDetails.failoverEnabled boolean
+- body:failoverDetails.failoverRegion integer enum[101 (EastAsia)|102 (SouthEastAsia)|201 (AustraliaCentral)|202 (AustraliaCentral2)|203 (AustraliaEast)|205 (AustraliaSouthEast)|301 (BrazilSouth)|401 (CanadaCentral)|402 (CanadaEast)|501 (NorthEurope)|502 (WestEurope)|601 (FranceCentral)]
+- body:friendlyName string
+- body:planAccessToken string
+- body:planId string
+- body:skuName string
+
+## S214-0010  POST /api/v1/Environments/{environmentId}/notify
+- path:environmentId string
+- body:details string
+- body:displayMode string
+- body:message string
+- body:modal boolean
+
+## S214-0013  PATCH /api/v1/Environments/{environmentId}/restore
+- path:environmentId string
+
+## S214-0015  POST /api/v1/Environments/{environmentId}/shutdown
+- path:environmentId string
+
+## S214-0019  POST /api/v1/GenevaActions/Configuration/{target}
+- path:target string
+- body:comment string
+- body:key string
+- body:value string
+
+## S214-0022  PUT /api/v1/GenevaActions/Environments/{environmentId}/archive
+- path:environmentId string
+
+## S214-0026  POST /api/v1/GenevaActions/Pools/{poolCode}/rotate-pool
+- path:poolCode string
+
+## S214-0032  DELETE /api/v1/GenevaActions/VnetPoolDefinitions
+- body:dimensions object
+- body:isEnabled boolean
+- body:location integer enum[101 (EastAsia)|102 (SouthEastAsia)|201 (AustraliaCentral)|202 (AustraliaCentral2)|203 (AustraliaEast)|205 (AustraliaSouthEast)|301 (BrazilSouth)|401 (CanadaCentral)|402 (CanadaEast)|501 (NorthEurope)|502 (WestEurope)|601 (FranceCentral)]
+- body:logicalSkus array<string>
+- body:subtype integer enum[0 (Default)|2 (ShrunkBlob)|3 (FullBlob)|4 (UserParametersBlob)|5 (PrebuildHash)|6 (VnetInjected)]
+- body:targetCount integer
+- body:type integer enum[1 (ComputeVM)|2 (StorageFileShare)|3 (StorageArchive)|4 (KeyVault)|5 (OSDisk)|6 (NetworkInterface)|7 (InputQueue)|8 (Snapshot)|9 (PoolQueue)|10 (VirtualNetwork)|11 (NetworkSecurityGroup)|12 (LiveShareWorkspace)]
+
+## S214-0034  POST /api/v1/HeartBeat
+- body:agentVersion string
+- body:collectedDataList array<object>
+- body:collectedDataList[].environmentId string
+- body:collectedDataList[].name string
+- body:collectedDataList[].parentActivityId string
+- body:collectedDataList[].timestamp string
+- body:environmentId string
+- body:resourceId string
+- body:timeStamp string
+
+## S214-0039  PUT /api/v1/Secrets/{secretId}
+- path:secretId string
+- query:planId string
+- body:filters array<object>
+- body:filters[].type integer enum[1 (GitRepo)|2 (CodespaceName)]
+- body:filters[].value string
+- body:notes string
+- body:scope integer enum[1 (Plan)|2 (User)]
+- body:secretName string
+- body:value string
+
+## S214-0044  POST /api/v1/Tokens/plans/{planName}/writeCodespaces
+- path:planName string
+- query:expiration string
+
+## S214-0046  PUT /api/v1/Tokens/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/{providerNamespace}/plans/{resourceName}
+- path:subscriptionId string
+- path:resourceGroup string
+- path:providerNamespace string
+- path:resourceName string
+- body:id string
+- body:identity object
+- body:identity.principalId string
+- body:identity.tenantId string
+- body:identity.type string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.defaultCodespaceSku string
+- body:properties.defaultEnvironmentSku string
+- body:properties.encryption object
+- body:properties.encryption.keySource string
+- body:properties.encryption.keyVaultProperties object
+- body:properties.userId string
+- body:properties.vnetProperties object
+- body:properties.vnetProperties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-0051  POST /api/v1/Tokens/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/{providerNamespace}/plans/{resourceName}/writeCodespaces
+- path:subscriptionId string
+- path:resourceGroup string
+- path:providerNamespace string
+- path:resourceName string
+- query:expiration string
+
+## S214-0052  POST /api/v1/Tokens/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/{providerNamespace}/plans/{resourceName}/writeDelegates
+- path:subscriptionId string
+- path:resourceGroup string
+- path:providerNamespace string
+- path:resourceName string
+- body:environmentIds array<string>
+- body:expiration string
+- body:identity object
+- body:identity.displayName string
+- body:identity.id string
+- body:identity.username string
+- body:portNumbers array<integer>
+- body:scope string
+
+## S214-0053  POST /api/v1/Tokens/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/{providerNamespace}/plans/{resourceName}/writeEnvironments
+- path:subscriptionId string
+- path:resourceGroup string
+- path:providerNamespace string
+- path:resourceName string
+- query:expiration string
+
+## S214-0054  DELETE /api/v1/UserSubscriptions
+- query:email string
+
+## S214-0060  PUT /api/v1/subscriptions/{subscriptionId}/providers/Microsoft.VSOnline/plans/SubscriptionLifeCycleNotification
+- path:subscriptionId string
+- body:properties object
+- body:properties.accountOwner object
+- body:properties.accountOwner.email string
+- body:properties.accountOwner.puid string
+- body:properties.additionalProperties object
+- body:properties.additionalProperties.billingProperties object
+- body:properties.additionalProperties.resourceProviderProperties string
+- body:properties.locationPlacementId string
+- body:properties.managedByTenants array<object>
+- body:properties.managedByTenants[].key string
+- body:properties.managedByTenants[].value string
+- body:properties.quotaId string
+- body:properties.registeredFeatures array<object>
+- body:properties.registeredFeatures[].key string
+- body:properties.registeredFeatures[].value string
+- body:properties.tenantId string
+- body:registrationDate string
+- body:state string
+
+## S214-0063  DELETE /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+- body:id string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-0065  PUT /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+- body:id string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-0067  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}/resourceCreationValidate
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+- body:id string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-0069  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}/resourceDeletionValidate
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+- body:id string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-0074  PUT /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Codespaces/plans/{resourceName}
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- body:id string
+- body:identity object
+- body:identity.principalId string
+- body:identity.tenantId string
+- body:identity.type string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.defaultCodespaceSku string
+- body:properties.defaultEnvironmentSku string
+- body:properties.encryption object
+- body:properties.encryption.keySource string
+- body:properties.encryption.keyVaultProperties object
+- body:properties.userId string
+- body:properties.vnetProperties object
+- body:properties.vnetProperties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-0075  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Codespaces/plans/{resourceName}/deleteAllCodespaces
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- query:expiration string
+
+## S214-0077  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Codespaces/plans/{resourceName}/readAllCodespaces
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- query:expiration string
+
+## S214-0078  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Codespaces/plans/{resourceName}/readAllEnvironments
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- query:expiration string
+
+## S214-0082  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Codespaces/plans/{resourceName}/resourceDeletionValidate
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+
+## S214-0087  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Codespaces/plans/{resourceName}/writeDelegates
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- body:environmentIds array<string>
+- body:expiration string
+- body:identity object
+- body:identity.displayName string
+- body:identity.id string
+- body:identity.username string
+- body:portNumbers array<integer>
+- body:scope string
+
+## S214-0089  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.VSOnline/plans/resourceReadBegin
+- path:subscriptionId string
+- path:resourceGroup string
+- body:value array<object>
+- body:value[].id string
+- body:value[].identity object
+- body:value[].identity.principalId string
+- body:value[].identity.tenantId string
+- body:value[].identity.type string
+- body:value[].location string
+- body:value[].name string
+- body:value[].properties object
+- body:value[].properties.defaultCodespaceSku string
+- body:value[].properties.defaultEnvironmentSku string
+- body:value[].properties.encryption object
+- body:value[].properties.userId string
+- body:value[].properties.vnetProperties object
+- body:value[].provisioningState string
+- body:value[].tags object
+- body:value[].type string
+
+## S214-0094  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.VSOnline/plans/{resourceName}/readAllEnvironments
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- query:expiration string
+
+## S214-0096  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.VSOnline/plans/{resourceName}/resourceCreationCompleted
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+
+## S214-0098  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.VSOnline/plans/{resourceName}/resourceDeletionValidate
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+
+## S214-0099  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.VSOnline/plans/{resourceName}/resourcePatchCompleted
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- body:identity object
+- body:identity.principalId string
+- body:identity.tenantId string
+- body:identity.type string
+- body:properties object
+- body:properties.defaultCodespaceSku string
+- body:properties.defaultEnvironmentSku string
+- body:properties.encryption object
+- body:properties.encryption.keySource string
+- body:properties.encryption.keyVaultProperties object
+- body:properties.userId string
+- body:properties.vnetProperties object
+- body:properties.vnetProperties.subnetId string
+
+## S214-0106  POST /api/v1/subscriptions/{subscriptionId}/{resourceGroup}/providers/Microsoft.VSOnline/plans/{resourceName}/deleteDelegates
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+
+## S214-0111  PATCH /api/v1/tenant/{tenantId}/PoolGroup/{poolGroupName}
+- path:tenantId string
+- path:poolGroupName string
+- body:displayName string
+- body:tags object
+
+## S214-0112  PUT /api/v1/tenant/{tenantId}/PoolGroup/{poolGroupName}
+- path:tenantId string
+- path:poolGroupName string
+- body:displayName string
+- body:region integer enum[101 (EastAsia)|102 (SouthEastAsia)|201 (AustraliaCentral)|202 (AustraliaCentral2)|203 (AustraliaEast)|205 (AustraliaSouthEast)|301 (BrazilSouth)|401 (CanadaCentral)|402 (CanadaEast)|501 (NorthEurope)|502 (WestEurope)|601 (FranceCentral)]
+- body:tags object
+
+## S214-0120  POST /api/v2/prebuilds/templates/updatemaxversions
+- body:branchName string
+- body:devContainerPath string
+- body:maxPrebuildTemplateVersions integer
+- body:repoId integer
+
+## S300-0001  POST /vaults/{vaultUuid}/items
+summary: Create a new Item
+- path:vaultUuid string
+- body:category string enum[LOGIN|PASSWORD|API_CREDENTIAL|SERVER|DATABASE|CREDIT_CARD|MEMBERSHIP|PASSPORT|SOFTWARE_LICENSE|OUTDOOR_LICENSE|SECURE_NOTE|WIRELESS_ROUTER]
+- body:createdAt string
+- body:favorite boolean
+- body:id string
+- body:lastEditedBy string
+- body:state string enum[ARCHIVED|DELETED]
+- body:tags array<string>
+- body:title string
+- body:updatedAt string
+- body:urls array<object>
+- body:urls[].href string
+- body:urls[].label string
+- body:urls[].primary boolean
+- body:vault object
+- body:vault.id string
+- body:version integer
+- body:fields array<object>
+- body:fields[].entropy number
+- body:fields[].generate boolean
+- body:fields[].id string
+- body:fields[].label string
+- body:fields[].purpose string enum[|USERNAME|PASSWORD|NOTES]
+- body:fields[].recipe object
+- body:fields[].recipe.characterSets array<string> enum[LETTERS|DIGITS|SYMBOLS]
+- body:fields[].recipe.excludeCharacters string
+- body:fields[].recipe.length integer
+- body:fields[].section object
+- body:fields[].section.id string
+- body:fields[].type string enum[STRING|EMAIL|CONCEALED|URL|TOTP|DATE|MONTH_YEAR|MENU]
+- body:fields[].value string
+- body:files array<object>
+- body:files[].content string
+- body:files[].content_path string
+- body:files[].id string
+- body:files[].name string
+- body:files[].section object
+- body:files[].section.id string
+- body:files[].size integer
+- body:sections array<object>
+- body:sections[].id string
+- body:sections[].label string
+
+## S300-0002  DELETE /vaults/{vaultUuid}/items/{itemUuid}
+summary: Delete an Item
+- path:vaultUuid string
+- path:itemUuid string
+
+## S300-0003  PATCH /vaults/{vaultUuid}/items/{itemUuid}
+summary: Update a subset of Item attributes
+desc: Applies a modified [RFC6902 JSON Patch](https://tools.ietf.org/html/rfc6902) document to an Item or ItemField. This endpoint only supports `add`, `remove` and `replace` operations. When modifying a specific ItemField, the ItemField's ID in the `path` attribute of the operation object: `/fields/{fieldId}`
+- path:vaultUuid string
+- path:itemUuid string
+- body:op string enum[add|remove|replace]
+- body:path string
+- body:value object
+
+## S300-0004  PUT /vaults/{vaultUuid}/items/{itemUuid}
+summary: Update an Item
+- path:vaultUuid string
+- path:itemUuid string
+- body:category string enum[LOGIN|PASSWORD|API_CREDENTIAL|SERVER|DATABASE|CREDIT_CARD|MEMBERSHIP|PASSPORT|SOFTWARE_LICENSE|OUTDOOR_LICENSE|SECURE_NOTE|WIRELESS_ROUTER]
+- body:createdAt string
+- body:favorite boolean
+- body:id string
+- body:lastEditedBy string
+- body:state string enum[ARCHIVED|DELETED]
+- body:tags array<string>
+- body:title string
+- body:updatedAt string
+- body:urls array<object>
+- body:urls[].href string
+- body:urls[].label string
+- body:urls[].primary boolean
+- body:vault object
+- body:vault.id string
+- body:version integer
+- body:fields array<object>
+- body:fields[].entropy number
+- body:fields[].generate boolean
+- body:fields[].id string
+- body:fields[].label string
+- body:fields[].purpose string enum[|USERNAME|PASSWORD|NOTES]
+- body:fields[].recipe object
+- body:fields[].recipe.characterSets array<string> enum[LETTERS|DIGITS|SYMBOLS]
+- body:fields[].recipe.excludeCharacters string
+- body:fields[].recipe.length integer
+- body:fields[].section object
+- body:fields[].section.id string
+- body:fields[].type string enum[STRING|EMAIL|CONCEALED|URL|TOTP|DATE|MONTH_YEAR|MENU]
+- body:fields[].value string
+- body:files array<object>
+- body:files[].content string
+- body:files[].content_path string
+- body:files[].id string
+- body:files[].name string
+- body:files[].section object
+- body:files[].section.id string
+- body:files[].size integer
+- body:sections array<object>
+- body:sections[].id string
+- body:sections[].label string
+
+## S301-0001  POST /v1/projects/{project}/locations/{location}/apis
+desc: CreateApi creates a specified API.
+- path:project string
+- path:location string
+- query:apiId string
+- body:annotations object
+- body:availability string
+- body:createTime string
+- body:description string
+- body:displayName string
+- body:labels object
+- body:name string
+- body:recommendedDeployment string
+- body:recommendedVersion string
+- body:updateTime string
+
+## S301-0002  DELETE /v1/projects/{project}/locations/{location}/apis/{api}
+desc: DeleteApi removes a specified API and all of the resources that it owns.
+- path:project string
+- path:location string
+- path:api string
+- query:force boolean
+
+## S301-0003  PATCH /v1/projects/{project}/locations/{location}/apis/{api}
+desc: UpdateApi can be used to modify a specified API.
+- path:project string
+- path:location string
+- path:api string
+- query:updateMask string
+- query:allowMissing boolean
+- body:annotations object
+- body:availability string
+- body:createTime string
+- body:description string
+- body:displayName string
+- body:labels object
+- body:name string
+- body:recommendedDeployment string
+- body:recommendedVersion string
+- body:updateTime string
+
+## S301-0004  POST /v1/projects/{project}/locations/{location}/apis/{api}/deployments
+desc: CreateApiDeployment creates a specified deployment.
+- path:project string
+- path:location string
+- path:api string
+- query:apiDeploymentId string
+- body:accessGuidance string
+- body:annotations object
+- body:apiSpecRevision string
+- body:createTime string
+- body:description string
+- body:displayName string
+- body:endpointUri string
+- body:externalChannelUri string
+- body:intendedAudience string
+- body:labels object
+- body:name string
+- body:revisionCreateTime string
+- body:revisionId string
+- body:revisionUpdateTime string
+
+## S301-0005  DELETE /v1/projects/{project}/locations/{location}/apis/{api}/deployments/{deployment}
+desc: DeleteApiDeployment removes a specified deployment, all revisions, and all child resources (e.g. artifacts).
+- path:project string
+- path:location string
+- path:api string
+- path:deployment string
+- query:force boolean
+
+## S301-0006  PATCH /v1/projects/{project}/locations/{location}/apis/{api}/deployments/{deployment}
+desc: UpdateApiDeployment can be used to modify a specified deployment.
+- path:project string
+- path:location string
+- path:api string
+- path:deployment string
+- query:updateMask string
+- query:allowMissing boolean
+- body:accessGuidance string
+- body:annotations object
+- body:apiSpecRevision string
+- body:createTime string
+- body:description string
+- body:displayName string
+- body:endpointUri string
+- body:externalChannelUri string
+- body:intendedAudience string
+- body:labels object
+- body:name string
+- body:revisionCreateTime string
+- body:revisionId string
+- body:revisionUpdateTime string
+
+## S301-0007  DELETE /v1/projects/{project}/locations/{location}/apis/{api}/deployments/{deployment}:deleteRevision
+desc: DeleteApiDeploymentRevision deletes a revision of a deployment.
+- path:project string
+- path:location string
+- path:api string
+- path:deployment string
+
+## S301-0008  POST /v1/projects/{project}/locations/{location}/apis/{api}/deployments/{deployment}:rollback
+desc: RollbackApiDeployment sets the current revision to a specified prior revision. Note that this creates a new revision with a new revision ID.
+- path:project string
+- path:location string
+- path:api string
+- path:deployment string
+- body:name string
+- body:revisionId string
+
+## S301-0009  POST /v1/projects/{project}/locations/{location}/apis/{api}/deployments/{deployment}:tagRevision
+desc: TagApiDeploymentRevision adds a tag to a specified revision of a deployment.
+- path:project string
+- path:location string
+- path:api string
+- path:deployment string
+- body:name string
+- body:tag string
+
+## S301-0010  POST /v1/projects/{project}/locations/{location}/apis/{api}/versions
+desc: CreateApiVersion creates a specified version.
+- path:project string
+- path:location string
+- path:api string
+- query:apiVersionId string
+- body:annotations object
+- body:createTime string
+- body:description string
+- body:displayName string
+- body:labels object
+- body:name string
+- body:state string
+- body:updateTime string
+
+## S301-0011  DELETE /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}
+desc: DeleteApiVersion removes a specified version and all of the resources that it owns.
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- query:force boolean
+
+## S301-0012  PATCH /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}
+desc: UpdateApiVersion can be used to modify a specified version.
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- query:updateMask string
+- query:allowMissing boolean
+- body:annotations object
+- body:createTime string
+- body:description string
+- body:displayName string
+- body:labels object
+- body:name string
+- body:state string
+- body:updateTime string
+
+## S301-0013  POST /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}/specs
+desc: CreateApiSpec creates a specified spec.
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- query:apiSpecId string
+- body:annotations object
+- body:contents string
+- body:createTime string
+- body:description string
+- body:filename string
+- body:hash string
+- body:labels object
+- body:mimeType string
+- body:name string
+- body:revisionCreateTime string
+- body:revisionId string
+- body:revisionUpdateTime string
+- body:sizeBytes integer
+- body:sourceUri string
+
+## S301-0014  DELETE /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}/specs/{spec}
+desc: DeleteApiSpec removes a specified spec, all revisions, and all child resources (e.g. artifacts).
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- path:spec string
+- query:force boolean
+
+## S301-0015  PATCH /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}/specs/{spec}
+desc: UpdateApiSpec can be used to modify a specified spec.
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- path:spec string
+- query:updateMask string
+- query:allowMissing boolean
+- body:annotations object
+- body:contents string
+- body:createTime string
+- body:description string
+- body:filename string
+- body:hash string
+- body:labels object
+- body:mimeType string
+- body:name string
+- body:revisionCreateTime string
+- body:revisionId string
+- body:revisionUpdateTime string
+- body:sizeBytes integer
+- body:sourceUri string
+
+## S301-0016  DELETE /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}/specs/{spec}:deleteRevision
+desc: DeleteApiSpecRevision deletes a revision of a spec.
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- path:spec string
+
+## S301-0017  POST /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}/specs/{spec}:rollback
+desc: RollbackApiSpec sets the current revision to a specified prior revision. Note that this creates a new revision with a new revision ID.
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- path:spec string
+- body:name string
+- body:revisionId string
+
+## S301-0018  POST /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}/specs/{spec}:tagRevision
+desc: TagApiSpecRevision adds a tag to a specified revision of a spec.
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- path:spec string
+- body:name string
+- body:tag string
+
+## S301-0019  POST /v1/projects/{project}/locations/{location}/artifacts
+desc: CreateArtifact creates a specified artifact.
+- path:project string
+- path:location string
+- query:artifactId string
+- body:contents string
+- body:createTime string
+- body:hash string
+- body:mimeType string
+- body:name string
+- body:sizeBytes integer
+- body:updateTime string
+
+## S301-0020  DELETE /v1/projects/{project}/locations/{location}/artifacts/{artifact}
+desc: DeleteArtifact removes a specified artifact.
+- path:project string
+- path:location string
+- path:artifact string
+
+## S301-0021  PUT /v1/projects/{project}/locations/{location}/artifacts/{artifact}
+desc: ReplaceArtifact can be used to replace a specified artifact.
+- path:project string
+- path:location string
+- path:artifact string
+- body:contents string
+- body:createTime string
+- body:hash string
+- body:mimeType string
+- body:name string
+- body:sizeBytes integer
+- body:updateTime string

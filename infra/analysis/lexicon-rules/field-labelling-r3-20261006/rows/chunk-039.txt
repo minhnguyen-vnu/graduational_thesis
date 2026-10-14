@@ -1,0 +1,833 @@
+## S530-0001  POST /buckets
+desc: Create a new bucket
+schema: NewBucket
+- body:name string
+- body:team_id string
+
+## S530-0002  DELETE /buckets/{bucketKey}
+desc: Delete a single bucket resource.
+- path:bucketKey string
+
+## S530-0003  POST /buckets/{bucketKey}/environments
+desc: Create new shared environment.
+schema: Environment
+- path:bucketKey string
+- body:auth string
+- body:client_certificate string
+- body:emails object
+- body:exported_at integer
+- body:headers object
+- body:id string
+- body:initial_script_hash string
+- body:initial_variables object
+- body:integrations array<object>
+- body:integrations[].description string
+- body:integrations[].id string
+- body:integrations[].type string
+- body:integrations[].uuid string
+- body:name string
+- body:parent_environment_id string
+- body:preserve_cookies boolean
+- body:regions array<string>
+- body:remote_agents array<object>
+- body:remote_agents[].agent_id string
+- body:remote_agents[].name string
+- body:remote_agents[].version string
+- body:retry_on_failure boolean
+- body:script string
+- body:script_library array<string>
+- body:stop_on_failure boolean
+- body:test_id string
+- body:verify_ssl boolean
+- body:version string
+- body:webhooks string
+
+## S530-0004  PUT /buckets/{bucketKey}/environments/{environmentId}
+desc: Update the details of a shared environment.
+schema: Environment
+- path:bucketKey string
+- path:environmentId string
+- body:auth string
+- body:client_certificate string
+- body:emails object
+- body:exported_at integer
+- body:headers object
+- body:id string
+- body:initial_script_hash string
+- body:initial_variables object
+- body:integrations array<object>
+- body:integrations[].description string
+- body:integrations[].id string
+- body:integrations[].type string
+- body:integrations[].uuid string
+- body:name string
+- body:parent_environment_id string
+- body:preserve_cookies boolean
+- body:regions array<string>
+- body:remote_agents array<object>
+- body:remote_agents[].agent_id string
+- body:remote_agents[].name string
+- body:remote_agents[].version string
+- body:retry_on_failure boolean
+- body:script string
+- body:script_library array<string>
+- body:stop_on_failure boolean
+- body:test_id string
+- body:verify_ssl boolean
+- body:version string
+- body:webhooks string
+
+## S530-0005  DELETE /buckets/{bucketKey}/messages
+desc: Clear a bucket (remove all messages).
+- path:bucketKey string
+
+## S530-0006  POST /buckets/{bucketKey}/messages
+desc: Create a message
+schema: NewMessage
+- path:bucketKey string
+- body:request object
+- body:request.body string
+- body:request.body_encoding string
+- body:request.form string
+- body:request.headers string
+- body:request.method string
+- body:request.timestamp number
+- body:request.url string
+- body:response object
+- body:response.body string
+- body:response.body_encoding string
+- body:response.headers string
+- body:response.reason string
+- body:response.response_time number
+- body:response.status integer
+- body:response.timestamp number
+
+## S530-0007  POST /buckets/{bucketKey}/tests
+desc: Create a test.
+schema: Test
+- path:bucketKey string
+- body:created_at integer
+- body:created_by object
+- body:created_by.email string
+- body:created_by.id string
+- body:created_by.name string
+- body:default_environment_id string
+- body:description string
+- body:id string
+- body:last_run object
+- body:name string
+- body:trigger_url string
+
+## S530-0008  DELETE /buckets/{bucketKey}/tests/{testId}
+desc: Delete a test, including all steps, schedules, test-specific environments and results.
+- path:bucketKey string
+- path:testId string
+
+## S530-0009  PUT /buckets/{bucketKey}/tests/{testId}
+desc: Modify a test's name, description, default environment and its steps. To modify other individual properties of a test, make requests to the steps, environments, and schedules subresources of the test.
+- path:bucketKey string
+- path:testId string
+
+## S530-0010  POST /buckets/{bucketKey}/tests/{testId}/environments
+desc: Create new test environment.
+schema: Environment
+- path:bucketKey string
+- path:testId string
+- body:auth string
+- body:client_certificate string
+- body:emails object
+- body:exported_at integer
+- body:headers object
+- body:id string
+- body:initial_script_hash string
+- body:initial_variables object
+- body:integrations array<object>
+- body:integrations[].description string
+- body:integrations[].id string
+- body:integrations[].type string
+- body:integrations[].uuid string
+- body:name string
+- body:parent_environment_id string
+- body:preserve_cookies boolean
+- body:regions array<string>
+- body:remote_agents array<object>
+- body:remote_agents[].agent_id string
+- body:remote_agents[].name string
+- body:remote_agents[].version string
+- body:retry_on_failure boolean
+- body:script string
+- body:script_library array<string>
+- body:stop_on_failure boolean
+- body:test_id string
+- body:verify_ssl boolean
+- body:version string
+- body:webhooks string
+
+## S530-0011  PUT /buckets/{bucketKey}/tests/{testId}/environments/{environmentId}
+desc: Update the details of a test environment.
+schema: Environment
+- path:bucketKey string
+- path:testId string
+- path:environmentId string
+- body:auth string
+- body:client_certificate string
+- body:emails object
+- body:exported_at integer
+- body:headers object
+- body:id string
+- body:initial_script_hash string
+- body:initial_variables object
+- body:integrations array<object>
+- body:integrations[].description string
+- body:integrations[].id string
+- body:integrations[].type string
+- body:integrations[].uuid string
+- body:name string
+- body:parent_environment_id string
+- body:preserve_cookies boolean
+- body:regions array<string>
+- body:remote_agents array<object>
+- body:remote_agents[].agent_id string
+- body:remote_agents[].name string
+- body:remote_agents[].version string
+- body:retry_on_failure boolean
+- body:script string
+- body:script_library array<string>
+- body:stop_on_failure boolean
+- body:test_id string
+- body:verify_ssl boolean
+- body:version string
+- body:webhooks string
+
+## S530-0012  POST /buckets/{bucketKey}/tests/{testId}/steps
+desc: Add new test step.
+schema: TestStep
+- path:bucketKey string
+- path:testId string
+- body:step_type string
+
+## S530-0013  DELETE /buckets/{bucketKey}/tests/{testId}/steps/{stepId}
+desc: Delete a step from a test.
+- path:bucketKey string
+- path:testId string
+- path:stepId string
+
+## S530-0014  PUT /buckets/{bucketKey}/tests/{testId}/steps/{stepId}
+desc: Update the details of a single test step.
+schema: TestStep
+- path:bucketKey string
+- path:testId string
+- path:stepId string
+- body:step_type string
+
+## S531-0001  POST /anonymization/keys/query
+desc: submit a query for anonymization keys
+schema: anonymizationKeyQuery
+- body:count integer
+- body:order object
+- body:order.orderAscending boolean
+- body:order.orderBy string
+- body:queryProperties array<object>
+- body:queryProperties[].operator string
+- body:queryProperties[].propertyName string
+- body:queryProperties[].propertyValue string
+- body:startIndex integer
+
+## S531-0002  DELETE /boxes/outgoing/{id}
+desc: delete an outgoing transaction. This will stop ongoing transactions.
+- path:id integer
+
+## S531-0003  POST /filtering/associations
+desc: Inserts or updates a source <-> filter associations. If the specified Source already has an association this is updated, otherwise a new is inserted.
+schema: sourceTagFilter
+- body:id integer
+- body:sourceId integer
+- body:sourceType string
+- body:tagFilterId integer
+
+## S531-0004  DELETE /filtering/associations/{id}
+desc: remove the source <-> filter association corresponding to the supplied ID
+- path:id integer
+
+## S531-0005  POST /filtering/filters
+desc: Inserts or updates a filter. If a filter with same name as supplied filter exists this filter is updated, otherwise a new filter is inserted.
+schema: filter
+- body:id integer
+- body:name string
+- body:tagFilterType string
+- body:tags array<object>
+- body:tags[].previous object
+- body:tags[].previous.item string
+- body:tags[].previous.previous object
+- body:tags[].previous.tag integer
+- body:tags[].tag integer
+
+## S531-0006  DELETE /filtering/filters/{id}
+desc: remove the filter corresponding to the supplied ID
+- path:id integer
+
+## S531-0007  POST /filtering/filters/{id}/tagpaths
+desc: add a tagpath to a filter
+schema: tagPathTag
+- path:id integer
+- body:previous object
+- body:previous.item string
+- body:previous.previous object
+- body:previous.previous.item string
+- body:previous.previous.previous object
+- body:previous.previous.tag integer
+- body:previous.tag integer
+- body:tag integer
+
+## S531-0008  DELETE /filtering/filters/{id}/tagpaths/{tagpathid}
+desc: remove the tagpath corresponding to the supplied ID
+- path:id integer
+- path:tagpathid integer
+
+## S531-0009  POST /images
+desc: add a DICOM dataset to slicebox
+- body:dataset file
+
+## S531-0010  POST /images/export
+desc: create an export set, a group of image IDs of images to export. The export set will contain the selected images. The export set is available for download 12 hours before it is automatically deleted.
+- body:(body) integer
+
+## S531-0011  DELETE /images/{id}
+desc: Delete the image with the supplied ID
+- path:id integer
+
+## S531-0012  PUT /images/{id}/anonymize
+desc: delete the selected image and replace it with an anonymized version
+schema: anonymizationData
+- path:id integer
+- body:profile object
+- body:profile.options array<object>
+- body:profile.options[].description string
+- body:profile.options[].name string
+- body:profile.options[].rank integer
+- body:profile.options[].title string
+- body:tagValues array<object>
+- body:tagValues[].tagPath object
+- body:tagValues[].tagPath.previous object
+- body:tagValues[].tagPath.tag integer
+- body:tagValues[].value string
+
+## S531-0013  POST /images/{id}/anonymized
+desc: get an anonymized version of the image with the supplied ID
+schema: anonymizationData
+- path:id integer
+- body:profile object
+- body:profile.options array<object>
+- body:profile.options[].description string
+- body:profile.options[].name string
+- body:profile.options[].rank integer
+- body:profile.options[].title string
+- body:tagValues array<object>
+- body:tagValues[].tagPath object
+- body:tagValues[].tagPath.previous object
+- body:tagValues[].tagPath.tag integer
+- body:tagValues[].value string
+
+## S531-0014  PUT /images/{id}/modify
+desc: modify and/or insert image attributes according to the input tagpath-value mappings
+schema: tagMapping
+- path:id integer
+- body:tagPath object
+- body:tagPath.previous object
+- body:tagPath.previous.item string
+- body:tagPath.previous.previous object
+- body:tagPath.previous.tag integer
+- body:tagPath.tag integer
+- body:value string
+
+## S531-0015  POST /import/sessions/{id}/images
+desc: add a DICOM dataset to the import session with the supplied ID
+- path:id integer
+- body:dataset file
+
+## S531-0016  DELETE /log/{id}
+desc: Delete the log entry with the supplied ID
+- path:id integer
+
+## S531-0017  POST /metadata/flatseries/query
+desc: submit a query for flat series
+schema: query
+- body:count integer
+- body:filters object
+- body:filters.seriesTagIds array<integer>
+- body:filters.seriesTypeIds array<integer>
+- body:filters.sourceRefs array<object>
+- body:filters.sourceRefs[].sourceId integer
+- body:filters.sourceRefs[].sourceType string
+- body:order object
+- body:order.orderAscending boolean
+- body:order.orderBy string
+- body:queryProperties array<object>
+- body:queryProperties[].operator string
+- body:queryProperties[].propertyName string
+- body:queryProperties[].propertyValue string
+- body:startIndex integer
+
+## S531-0018  POST /metadata/images/query
+desc: submit a query for images
+schema: query
+- body:count integer
+- body:filters object
+- body:filters.seriesTagIds array<integer>
+- body:filters.seriesTypeIds array<integer>
+- body:filters.sourceRefs array<object>
+- body:filters.sourceRefs[].sourceId integer
+- body:filters.sourceRefs[].sourceType string
+- body:order object
+- body:order.orderAscending boolean
+- body:order.orderBy string
+- body:queryProperties array<object>
+- body:queryProperties[].operator string
+- body:queryProperties[].propertyName string
+- body:queryProperties[].propertyValue string
+- body:startIndex integer
+
+## S531-0019  POST /metadata/patients/query
+desc: submit a query for patients
+schema: query
+- body:count integer
+- body:filters object
+- body:filters.seriesTagIds array<integer>
+- body:filters.seriesTypeIds array<integer>
+- body:filters.sourceRefs array<object>
+- body:filters.sourceRefs[].sourceId integer
+- body:filters.sourceRefs[].sourceType string
+- body:order object
+- body:order.orderAscending boolean
+- body:order.orderBy string
+- body:queryProperties array<object>
+- body:queryProperties[].operator string
+- body:queryProperties[].propertyName string
+- body:queryProperties[].propertyValue string
+- body:startIndex integer
+
+## S531-0020  POST /metadata/series/{id}/seriestags
+desc: add a series tag to the series with the supplied ID
+schema: seriestag
+- path:id integer
+- body:id integer
+- body:name string
+
+## S531-0021  DELETE /metadata/series/{id}/seriestypes
+desc: Delete all series types for the series with the supplied ID
+- path:id integer
+
+## S531-0022  DELETE /metadata/series/{seriesId}/seriestypes/{seriesTypeId}
+desc: Delete the series type with the supplied series type ID from the series with the supplied series ID
+- path:seriesId integer
+- path:seriesTypeId integer
+
+## S531-0023  POST /metadata/studies/query
+desc: submit a query for studies
+schema: query
+- body:count integer
+- body:filters object
+- body:filters.seriesTagIds array<integer>
+- body:filters.seriesTypeIds array<integer>
+- body:filters.sourceRefs array<object>
+- body:filters.sourceRefs[].sourceId integer
+- body:filters.sourceRefs[].sourceType string
+- body:order object
+- body:order.orderAscending boolean
+- body:order.orderBy string
+- body:queryProperties array<object>
+- body:queryProperties[].operator string
+- body:queryProperties[].propertyName string
+- body:queryProperties[].propertyValue string
+- body:startIndex integer
+
+## S531-0024  POST /scps
+desc: add a new SCP for receiving DICOM images
+schema: scp
+- body:aeTitle string
+- body:id integer
+- body:name string
+- body:port integer
+
+## S531-0025  DELETE /scps/{id}
+desc: shut down and remove the SCP corresponding to the supplied ID
+- path:id integer
+
+## S531-0026  POST /seriestypes
+desc: add a new series type
+schema: seriestype
+- body:id integer
+- body:name string
+
+## S531-0027  POST /seriestypes/rules
+desc: add a new series type rule
+schema: seriestyperule
+- body:id integer
+- body:seriesTypeId integer
+
+## S531-0028  DELETE /seriestypes/rules/{id}
+desc: remove the series type rule corresponding to the supplied ID
+- path:id integer
+
+## S531-0029  POST /seriestypes/series/query
+desc: submit a query for seriestypes for a list of series
+schema: idsquery
+- body:ids array<integer>
+
+## S531-0030  PUT /seriestypes/{id}
+desc: request an asynchronous update of all series, labelling appropriate series with the series type corresponding to the supplied ID.
+- path:id integer
+
+## S531-0031  POST /transactions/{token}/image
+desc: add an image (dataset) as part of a transaction. This method is used when sending images using the push method to a public slicebox.
+- path:token string
+- query:transactionid integer
+- query:sequencenumber integer
+- query:totalimagecount integer
+
+## S531-0032  POST /transactions/{token}/outgoing/done
+desc: signal that the supplied outgoing transaction and image was successfully received and can be marked as sent. This method is used when sending images using the poll method from a public slicebox.
+schema: outgoingTransactionImage
+- path:token string
+- body:image object
+- body:image.id integer
+- body:image.imageId integer
+- body:image.outgoingTransactionId integer
+- body:image.sent boolean
+- body:image.sequenceNumber integer
+- body:transaction object
+- body:transaction.boxId integer
+- body:transaction.boxName string
+- body:transaction.id integer
+- body:transaction.profile object
+- body:transaction.profile.options array<object>
+- body:transaction.sentImageCount integer
+- body:transaction.status string
+- body:transaction.totalImageCount integer
+- body:transaction.updated integer
+
+## S531-0033  POST /transactions/{token}/outgoing/failed
+desc: signal that the image corresponding to the supplied outgoing transaction and image could not be read or stored properly on the receiving side, and that the transaction should be marked as failed.
+schema: failedOutgoingTransactionImage
+- path:token string
+- body:message string
+- body:transactionImage object
+- body:transactionImage.image object
+- body:transactionImage.image.id integer
+- body:transactionImage.image.imageId integer
+- body:transactionImage.image.outgoingTransactionId integer
+- body:transactionImage.image.sent boolean
+- body:transactionImage.image.sequenceNumber integer
+- body:transactionImage.transaction object
+- body:transactionImage.transaction.boxId integer
+- body:transactionImage.transaction.boxName string
+- body:transactionImage.transaction.id integer
+- body:transactionImage.transaction.profile object
+- body:transactionImage.transaction.sentImageCount integer
+- body:transactionImage.transaction.status string
+- body:transactionImage.transaction.totalImageCount integer
+- body:transactionImage.transaction.updated integer
+
+## S531-0034  PUT /transactions/{token}/status
+desc: update the status of the transaction with the supplied ID
+- path:token string
+- query:transactionid integer
+- body:(body) string
+
+## S531-0035  POST /users
+desc: Creates a new user. Dupicates are accepted but not added.
+schema: newUser
+- body:password string
+- body:role string
+- body:user string
+
+## S531-0036  DELETE /users/{id}
+desc: deletes a single user based on the ID supplied
+- path:id integer
+
+## S532-0001  PUT /group/{groupId}/settings
+desc: Update group settings
+- path:groupId string
+
+## S532-0002  POST /monitor/dep-graph
+desc: Monitor Dep Graph | Use this endpoint to monitor a [DepGraph data object](https://github.com/snyk/dep-graph#depgraphdata).
+- query:org string
+- body:depGraph object
+- body:depGraph.graph object
+- body:depGraph.graph.nodes array<any>
+- body:depGraph.graph.rootNodeId string
+- body:depGraph.pkgManager object
+- body:depGraph.pkgManager.name string
+- body:depGraph.pkgManager.repositories array<any>
+- body:depGraph.pkgs array<any>
+- body:depGraph.schemaVersion string
+- body:meta object
+- body:meta.targetFramework string
+
+## S532-0003  POST /org/{orgId}/audit
+desc: Get organization level audit logs
+- path:orgId string
+- query:from string
+- query:to string
+- query:page number
+- query:sortOrder string
+- body:filters object
+- body:filters.email string
+- body:filters.event string enum[api.access|org.billing.info.edit|org.billing.subscription.edit|org.cloud_config.settings.edit|org.create|org.delete|org.edit|org.ignore_policy.edit|org.integration.create|org.integration.delete|org.integration.edit|org.integration.settings.edit]
+- body:filters.excludeEvent string enum[api.access|org.billing.info.edit|org.billing.subscription.edit|org.cloud_config.settings.edit|org.create|org.delete|org.edit|org.ignore_policy.edit|org.integration.create|org.integration.delete|org.integration.edit|org.integration.settings.edit]
+- body:filters.projectId string
+- body:filters.userId string
+
+## S532-0004  POST /org/{orgId}/dependencies
+desc: List all dependencies
+- path:orgId string
+- query:sortBy string enum[projects|dependency|severity|dependenciesWithIssues]
+- query:order string enum[asc|desc]
+- query:page number
+- query:perPage number
+- body:filters object
+- body:filters.depStatus string
+- body:filters.dependencies any
+- body:filters.languages array<any>
+- body:filters.licenses any
+- body:filters.projects any
+- body:filters.severity array<any>
+
+## S532-0005  PUT /org/{orgId}/integrations/{integrationId}
+desc: Update existing integration | + Update integration's credentials for given organization. Integration must be **not brokered** + Enable or disable brokered integration for given organization. *Credentials required for disabling brokered integration* Examples in right section: 1. Set up a broker for an existing integration 2. Update credentials for an existing non-brokered integration 3. Disable bro
+- path:orgId string
+- path:integrationId string
+- body:broker object
+- body:broker.enabled boolean
+- body:type string enum[acr|artifactory-cr|azure-repos|bitbucket-cloud|bitbucket-server|digitalocean-cr|docker-hub|ecr|gcr|github|github-cr|github-enterprise]
+- body:credentials object
+- body:credentials.AcrCredentials object
+- body:credentials.AcrCredentials.password string
+- body:credentials.AcrCredentials.registryBase string
+- body:credentials.AcrCredentials.username string
+- body:credentials.ArtifactoryCrCredentials object
+- body:credentials.ArtifactoryCrCredentials.password string
+- body:credentials.ArtifactoryCrCredentials.registryBase string
+- body:credentials.ArtifactoryCrCredentials.username string
+- body:credentials.AzureReposCredentials object
+- body:credentials.AzureReposCredentials.url string
+- body:credentials.AzureReposCredentials.username string
+- body:credentials.BitbucketCloudCredentials object
+- body:credentials.BitbucketCloudCredentials.password string
+- body:credentials.BitbucketCloudCredentials.username string
+- body:credentials.BitbucketServerCredentials object
+- body:credentials.BitbucketServerCredentials.password string
+- body:credentials.BitbucketServerCredentials.url string
+- body:credentials.BitbucketServerCredentials.username string
+- body:credentials.DigitalOceanCrCredentials object
+- body:credentials.DigitalOceanCrCredentials.token string
+- body:credentials.DockerHubCredentials object
+- body:credentials.DockerHubCredentials.password string
+- body:credentials.DockerHubCredentials.username string
+- body:credentials.EcrCredentials object
+- body:credentials.EcrCredentials.region string
+- body:credentials.EcrCredentials.roleArn string
+- body:credentials.GcrCredentials object
+- body:credentials.GcrCredentials.password string
+- body:credentials.GcrCredentials.registryBase string
+- body:credentials.GitHubCredentials object
+- body:credentials.GitHubCredentials.token string
+- body:credentials.GitHubCrCredentials object
+- body:credentials.GitHubCrCredentials.password string
+- body:credentials.GitHubCrCredentials.registryBase string
+- body:credentials.GitHubCrCredentials.username string
+- body:credentials.GitHubEnterpriseCredentials object
+- body:credentials.GitHubEnterpriseCredentials.token string
+- body:credentials.GitHubEnterpriseCredentials.url string
+- body:credentials.GitLabCredentials object
+- body:credentials.GitLabCredentials.token string
+- body:credentials.GitLabCredentials.url string
+- body:credentials.GitLabCrCredentials object
+- body:credentials.GitLabCrCredentials.password string
+- body:credentials.GitLabCrCredentials.registryBase string
+- body:credentials.GitLabCrCredentials.username string
+- body:credentials.GoogleArtifactCrCredentials object
+- body:credentials.GoogleArtifactCrCredentials.password string
+- body:credentials.GoogleArtifactCrCredentials.registryBase string
+- body:credentials.HarborCrCredentials object
+- body:credentials.HarborCrCredentials.password string
+- body:credentials.HarborCrCredentials.registryBase string
+- body:credentials.HarborCrCredentials.username string
+- body:credentials.NexusCrCredentials object
+- body:credentials.NexusCrCredentials.password string
+- body:credentials.NexusCrCredentials.registryBase string
+- body:credentials.NexusCrCredentials.username string
+- body:credentials.QuayCrCredentials object
+- body:credentials.QuayCrCredentials.password string
+- body:credentials.QuayCrCredentials.registryBase string
+- body:credentials.QuayCrCredentials.username string
+
+## S532-0006  POST /org/{orgId}/integrations/{integrationId}/authentication/provision-token
+desc: Provision new broker token | Issue a new and unique provisional broker token for the brokered integration. Used for zero down-time token rotation with the Snyk Broker. Once provisioned, the token can be used to initialize a new broker client before using the switch API to update the token in use by the integration. The new provisional token will fail to be created if the integration, or any other 
+- path:orgId string
+- path:integrationId string
+
+## S532-0007  POST /org/{orgId}/integrations/{integrationId}/authentication/switch-token
+desc: Switch between broker tokens | Switch the existing broker token with the provisioned token for this integration and any other in the same group. Only perform this action when you have a Broker client running with the provisioned token. This action will fail if there is no token provisioned for this integration or any integration in the same group.
+- path:orgId string
+- path:integrationId string
+
+## S532-0008  POST /org/{orgId}/integrations/{integrationId}/import
+desc: Import targets
+- path:orgId string
+- path:integrationId string
+- body:exclusionGlobs string
+- body:files array<any>
+- body:target object
+- body:target.branch string
+- body:target.name string
+- body:target.owner string
+
+## S532-0009  PUT /org/{orgId}/integrations/{integrationId}/settings
+desc: Update
+- path:orgId string
+- path:integrationId string
+- body:autoDepUpgradeEnabled boolean
+- body:autoDepUpgradeIgnoredDependencies array<any>
+- body:autoDepUpgradeLimit number
+- body:autoDepUpgradeMinAge number
+- body:autoRemediationPrs object
+- body:autoRemediationPrs.backlogPrsEnabled boolean
+- body:autoRemediationPrs.freshPrsEnabled boolean
+- body:autoRemediationPrs.usePatchRemediation boolean
+- body:dockerfileSCMEnabled boolean
+- body:manualRemediationPrs object
+- body:manualRemediationPrs.usePatchRemediation boolean
+- body:pullRequestAssignment object
+- body:pullRequestAssignment.assignees array<any>
+- body:pullRequestAssignment.enabled boolean
+- body:pullRequestAssignment.type string enum[auto|manual]
+- body:pullRequestFailOnAnyVulns boolean
+- body:pullRequestFailOnlyForHighSeverity boolean
+- body:pullRequestTestEnabled boolean
+
+## S532-0010  POST /org/{orgId}/invite
+desc: Invite users
+- path:orgId string
+- body:email string
+- body:isAdmin boolean
+
+## S532-0011  DELETE /org/{orgId}/members/{userId}
+desc: Remove a member from the organization
+- path:orgId string
+- path:userId string
+
+## S532-0012  PUT /org/{orgId}/members/{userId}
+desc: Update a member in the organization
+- path:orgId string
+- path:userId string
+- body:role string
+
+## S532-0013  DELETE /org/{orgId}/project/{projectId}
+desc: Delete a project
+- path:orgId string
+- path:projectId string
+
+## S532-0014  PUT /org/{orgId}/project/{projectId}
+desc: Update a project
+- path:orgId string
+- path:projectId string
+- body:branch string
+- body:owner object
+- body:owner.id string
+
+## S532-0015  POST /org/{orgId}/project/{projectId}/activate
+desc: Activate | Activating a project will: - Add a repository webhook for supported integrations. - Enable pull request tests for new vulnerabilities. - Open Fix pull request for newly disclosed vulnerabilities. - Enable recurring tests, sending email alerts about newly disclosed vulnerabilities.
+- path:orgId string
+- path:projectId string
+
+## S532-0016  POST /org/{orgId}/project/{projectId}/attributes
+desc: Applying attributes | Applies an attribute to the provided project. It is possible to assign multiple values to each attribute, but you can only assign values to one of the predefined attribute categories, using the predefined options for this category. Assigning an attribute requires the caller to be either an Organization Administrator or a Group Administrator. Assigning an attribute will overri
+- path:orgId string
+- path:projectId string
+- body:criticality array<any>
+- body:environment array<any>
+- body:lifecycle array<any>
+
+## S532-0017  POST /org/{orgId}/project/{projectId}/history/{snapshotId}/aggregated-issues
+desc: List all project snapshot aggregated issues
+- path:orgId string
+- path:projectId string
+- path:snapshotId string
+- body:filters object
+- body:filters.exploitMaturity array<any>
+- body:filters.ignored boolean
+- body:filters.patched boolean
+- body:filters.priority object
+- body:filters.priority.score object
+- body:filters.severities array<any>
+- body:filters.types array<any>
+- body:includeDescription boolean
+- body:includeIntroducedThrough boolean
+
+## S532-0018  DELETE /org/{orgId}/project/{projectId}/ignore/{issueId}
+desc: Delete ignores
+- path:orgId string
+- path:projectId string
+- path:issueId string
+
+## S532-0019  POST /org/{orgId}/project/{projectId}/ignore/{issueId}
+desc: Add ignore
+- path:orgId string
+- path:projectId string
+- path:issueId string
+- body:disregardIfFixable boolean
+- body:expires string
+- body:ignorePath string
+- body:reason string
+- body:reasonType string enum[not-vulnerable|wont-fix|temporary-ignore]
+
+## S532-0020  POST /org/{orgId}/project/{projectId}/issue/{issueId}/jira-issue
+desc: Create jira issue
+- path:issueId string
+- path:orgId string
+- path:projectId string
+- body:fields object
+- body:fields.issuetype object
+- body:fields.project object
+- body:fields.summary string
+
+## S532-0021  POST /org/{orgId}/project/{projectId}/tags
+desc: Add a tag to a project | ​
+- path:orgId string
+- path:projectId string
+- body:key string
+- body:value string
+
+## S532-0022  POST /org/{orgId}/project/{projectId}/tags/remove
+desc: Remove a tag from a project
+- path:orgId string
+- path:projectId string
+- body:key string
+- body:value string
+
+## S532-0023  POST /org/{orgId}/projects
+desc: List all projects
+- path:orgId string
+- body:filters object
+- body:filters.attributes object
+- body:filters.attributes.criticality array<any>
+- body:filters.attributes.environment array<any>
+- body:filters.attributes.lifecycle array<any>
+- body:filters.isMonitored boolean
+- body:filters.name string
+- body:filters.origin string
+- body:filters.tags object
+- body:filters.tags.includes array<any>
+- body:filters.type string
+
+## S532-0024  DELETE /org/{orgId}/provision
+desc: Delete pending user provision
+- path:orgId string
+
+## S532-0025  POST /org/{orgId}/provision
+desc: Provision a user to the organization
+- path:orgId string
+- body:email string
+- body:role string
+- body:rolePublicId string

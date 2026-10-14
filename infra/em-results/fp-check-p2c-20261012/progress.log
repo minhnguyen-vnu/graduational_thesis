@@ -1,0 +1,12 @@
+FP guard for the restore-swap fix (RestSecurityBuilder.kt:858) — jar b2ade76415abaa0c
+FIXED/patched targets only; the swapped restore now succeeds (restorer=admin), so a triple may ASSEMBLE,
+but a patched app must deny the follow-up -> det970 MUST be 0. Any det970=1 here is a false positive.
+flags = remeasure fixed-noreset; no --statefulAuthzResetEndpoint. restore_ok>0 shows the restore path ran.
+15:41:19 PASS tier1 reports-fixed seed=1 det970=0 assembled=1 void=0 restore_ok=0 restore_no=0 statuses=200/200/403
+15:46:07 PASS tier1 reports-fixed seed=2 det970=0 assembled=1 void=0 restore_ok=0 restore_no=0 statuses=200/200/403
+15:50:50 PASS tier1 reports-fixed seed=3 det970=0 assembled=1 void=0 restore_ok=0 restore_no=0 statuses=200/200/403
+15:56:10 PASS tier2 vampi-fixed seed=1 det970=0 assembled=1 void=0 restore_ok=0 restore_no=0 statuses=200/200/403
+16:01:37 PASS tier2 vampi-fixed seed=2 det970=0 assembled=0 void=0 restore_ok=0 restore_no=0 statuses=NA
+16:07:15 PASS tier2 vampi-fixed seed=3 det970=0 assembled=0 void=6 restore_ok=0 restore_no=3 statuses=NA
+FP CHECK DONE Mon Oct 12 16:07:15 +07 2026 fail=0
+NO FALSE POSITIVES — restore-swap safe on patched targets

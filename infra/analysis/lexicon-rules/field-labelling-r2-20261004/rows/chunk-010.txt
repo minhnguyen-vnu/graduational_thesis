@@ -1,0 +1,809 @@
+## S535-0001  DELETE /__admin/mappings
+summary: Delete all stub mappings
+
+## S535-0002  POST /__admin/mappings
+summary: Create a new stub mapping
+- body:id string
+- body:metadata object
+- body:name string
+- body:newScenarioState string
+- body:persistent boolean
+- body:postServeActions object
+- body:priority integer
+- body:request object
+- body:request.basicAuthCredentials object
+- body:request.basicAuthCredentials.password string
+- body:request.basicAuthCredentials.username string
+- body:request.bodyPatterns array<object>
+- body:request.cookies object
+- body:request.headers object
+- body:request.method string
+- body:request.queryParameters object
+- body:request.url string
+- body:request.urlPath string
+- body:request.urlPathPattern string
+- body:request.urlPattern string
+- body:requiredScenarioState string
+- body:response object
+- body:response.additionalProxyRequestHeaders object
+- body:response.base64Body string
+- body:response.body string
+- body:response.bodyFileName string
+- body:response.delayDistribution object
+- body:response.delayDistribution.median integer
+- body:response.delayDistribution.sigma number
+- body:response.delayDistribution.type string enum[lognormal]
+- body:response.delayDistribution.lower integer
+- body:response.delayDistribution.upper integer
+- body:response.fault string enum[CONNECTION_RESET_BY_PEER|EMPTY_RESPONSE|MALFORMED_RESPONSE_CHUNK|RANDOM_DATA_THEN_CLOSE]
+- body:response.fixedDelayMilliseconds integer
+- body:response.fromConfiguredStub boolean
+- body:response.headers object
+- body:response.jsonBody object
+- body:response.proxyBaseUrl string
+- body:response.status integer
+- body:response.statusMessage string
+- body:response.transformerParameters object
+- body:response.transformers array<string>
+- body:scenarioName string
+- body:uuid string
+
+## S535-0003  POST /__admin/mappings/find-by-metadata
+desc: Find stubs by matching on their metadata
+- body:caseInsensitive boolean
+- body:equalTo boolean
+- body:contains string
+- body:matches string
+- body:doesNotMatch string
+- body:equalToJson string
+- body:ignoreArrayOrder boolean
+- body:ignoreExtraElements boolean
+- body:matchesJsonPath string
+- body:equalToXml string
+- body:matchesXpath string
+- body:namespaces object
+- body:valuePattern object
+
+## S535-0004  POST /__admin/mappings/import
+summary: Import stub mappings
+desc: Import given stub mappings to the backing store
+
+## S535-0005  POST /__admin/mappings/remove-by-metadata
+summary: Delete stub mappings matching metadata
+- body:caseInsensitive boolean
+- body:equalTo boolean
+- body:contains string
+- body:matches string
+- body:doesNotMatch string
+- body:equalToJson string
+- body:ignoreArrayOrder boolean
+- body:ignoreExtraElements boolean
+- body:matchesJsonPath string
+- body:equalToXml string
+- body:matchesXpath string
+- body:namespaces object
+- body:valuePattern object
+
+## S535-0006  POST /__admin/mappings/reset
+summary: Reset stub mappings
+desc: Restores stub mappings to the defaults defined back in the backing store
+
+## S535-0007  POST /__admin/mappings/save
+summary: Persist stub mappings
+desc: Save all persistent stub mappings to the backing store
+
+## S535-0008  DELETE /__admin/mappings/{stubMappingId}
+summary: Delete a stub mapping
+- path:stubMappingId string
+
+## S535-0009  PUT /__admin/mappings/{stubMappingId}
+summary: Update a stub mapping
+- path:stubMappingId string
+- body:id string
+- body:metadata object
+- body:name string
+- body:newScenarioState string
+- body:persistent boolean
+- body:postServeActions object
+- body:priority integer
+- body:request object
+- body:request.basicAuthCredentials object
+- body:request.basicAuthCredentials.password string
+- body:request.basicAuthCredentials.username string
+- body:request.bodyPatterns array<object>
+- body:request.cookies object
+- body:request.headers object
+- body:request.method string
+- body:request.queryParameters object
+- body:request.url string
+- body:request.urlPath string
+- body:request.urlPathPattern string
+- body:request.urlPattern string
+- body:requiredScenarioState string
+- body:response object
+- body:response.additionalProxyRequestHeaders object
+- body:response.base64Body string
+- body:response.body string
+- body:response.bodyFileName string
+- body:response.delayDistribution object
+- body:response.delayDistribution.median integer
+- body:response.delayDistribution.sigma number
+- body:response.delayDistribution.type string enum[lognormal]
+- body:response.delayDistribution.lower integer
+- body:response.delayDistribution.upper integer
+- body:response.fault string enum[CONNECTION_RESET_BY_PEER|EMPTY_RESPONSE|MALFORMED_RESPONSE_CHUNK|RANDOM_DATA_THEN_CLOSE]
+- body:response.fixedDelayMilliseconds integer
+- body:response.fromConfiguredStub boolean
+- body:response.headers object
+- body:response.jsonBody object
+- body:response.proxyBaseUrl string
+- body:response.status integer
+- body:response.statusMessage string
+- body:response.transformerParameters object
+- body:response.transformers array<string>
+- body:scenarioName string
+- body:uuid string
+
+## S535-0010  POST /__admin/near-misses/request
+summary: Find near misses matching specific request
+desc: Find at most 3 near misses for closest stub mappings to the specified request
+- body:absoluteUrl string
+- body:body string
+- body:cookies object
+- body:headers object
+- body:method string
+- body:url string
+
+## S535-0011  POST /__admin/near-misses/request-pattern
+summary: Find near misses matching request pattern
+desc: Find at most 3 near misses for closest logged requests to the specified request pattern
+- body:basicAuthCredentials object
+- body:basicAuthCredentials.password string
+- body:basicAuthCredentials.username string
+- body:bodyPatterns array<object>
+- body:cookies object
+- body:headers object
+- body:method string
+- body:queryParameters object
+- body:url string
+- body:urlPath string
+- body:urlPathPattern string
+- body:urlPattern string
+
+## S535-0012  POST /__admin/recordings/snapshot
+summary: Take a snapshot recording
+- body:captureHeaders object
+- body:extractBodyCriteria object
+- body:extractBodyCriteria.binarySizeThreshold string
+- body:extractBodyCriteria.textSizeThreshold string
+- body:persist boolean
+- body:repeatsAsScenarios boolean
+- body:requestBodyPattern object
+- body:requestBodyPattern.caseInsensitive boolean
+- body:requestBodyPattern.ignoreArrayOrder boolean
+- body:requestBodyPattern.ignoreExtraElements boolean
+- body:requestBodyPattern.matcher string enum[auto]
+- body:transformerParameters object
+- body:transformers array<string>
+- body:filters object
+- body:filters.ids array<string>
+- body:filters.basicAuthCredentials object
+- body:filters.basicAuthCredentials.password string
+- body:filters.basicAuthCredentials.username string
+- body:filters.bodyPatterns array<object>
+- body:filters.cookies object
+- body:filters.headers object
+- body:filters.method string
+- body:filters.queryParameters object
+- body:filters.url string
+- body:filters.urlPath string
+- body:filters.urlPathPattern string
+- body:filters.urlPattern string
+
+## S535-0013  POST /__admin/recordings/start
+summary: Start recording
+desc: Begin recording stub mappings
+- body:captureHeaders object
+- body:extractBodyCriteria object
+- body:extractBodyCriteria.binarySizeThreshold string
+- body:extractBodyCriteria.textSizeThreshold string
+- body:persist boolean
+- body:repeatsAsScenarios boolean
+- body:requestBodyPattern object
+- body:requestBodyPattern.caseInsensitive boolean
+- body:requestBodyPattern.ignoreArrayOrder boolean
+- body:requestBodyPattern.ignoreExtraElements boolean
+- body:requestBodyPattern.matcher string enum[auto]
+- body:transformerParameters object
+- body:transformers array<string>
+- body:filters object
+- body:filters.basicAuthCredentials object
+- body:filters.basicAuthCredentials.password string
+- body:filters.basicAuthCredentials.username string
+- body:filters.bodyPatterns array<object>
+- body:filters.cookies object
+- body:filters.headers object
+- body:filters.method string
+- body:filters.queryParameters object
+- body:filters.url string
+- body:filters.urlPath string
+- body:filters.urlPathPattern string
+- body:filters.urlPattern string
+- body:targetBaseUrl string
+
+## S535-0014  POST /__admin/recordings/stop
+summary: Stop recording
+desc: End recording of stub mappings
+
+## S535-0015  DELETE /__admin/requests
+summary: Delete all requests in journal
+
+## S535-0016  POST /__admin/requests/count
+summary: Count requests by criteria
+desc: Count requests logged in the journal matching the specified criteria
+- body:basicAuthCredentials object
+- body:basicAuthCredentials.password string
+- body:basicAuthCredentials.username string
+- body:bodyPatterns array<object>
+- body:cookies object
+- body:headers object
+- body:method string
+- body:queryParameters object
+- body:url string
+- body:urlPath string
+- body:urlPathPattern string
+- body:urlPattern string
+
+## S535-0017  POST /__admin/requests/find
+summary: Find requests by criteria
+desc: Retrieve details of requests logged in the journal matching the specified criteria
+- body:basicAuthCredentials object
+- body:basicAuthCredentials.password string
+- body:basicAuthCredentials.username string
+- body:bodyPatterns array<object>
+- body:cookies object
+- body:headers object
+- body:method string
+- body:queryParameters object
+- body:url string
+- body:urlPath string
+- body:urlPathPattern string
+- body:urlPattern string
+
+## S535-0018  POST /__admin/requests/remove
+summary: Remove requests by criteria
+desc: Removed requests logged in the journal matching the specified criteria
+- body:basicAuthCredentials object
+- body:basicAuthCredentials.password string
+- body:basicAuthCredentials.username string
+- body:bodyPatterns array<object>
+- body:cookies object
+- body:headers object
+- body:method string
+- body:queryParameters object
+- body:url string
+- body:urlPath string
+- body:urlPathPattern string
+- body:urlPattern string
+
+## S535-0019  POST /__admin/requests/remove-by-metadata
+summary: Delete requests mappings matching metadata
+- body:caseInsensitive boolean
+- body:equalTo boolean
+- body:contains string
+- body:matches string
+- body:doesNotMatch string
+- body:equalToJson string
+- body:ignoreArrayOrder boolean
+- body:ignoreExtraElements boolean
+- body:matchesJsonPath string
+- body:equalToXml string
+- body:matchesXpath string
+- body:namespaces object
+- body:valuePattern object
+
+## S535-0020  POST /__admin/requests/reset
+summary: Empty the request journal
+
+## S535-0021  DELETE /__admin/requests/{requestId}
+summary: Delete request by ID
+- path:requestId string
+
+## S535-0022  POST /__admin/reset
+summary: Reset mappings and request journal
+desc: Reset mappings to the default state and reset the request journal
+
+## S535-0023  POST /__admin/scenarios/reset
+summary: Reset the state of all scenarios
+
+## S535-0024  POST /__admin/settings
+summary: Update global settings
+- body:median integer
+- body:sigma number
+- body:type string enum[lognormal]
+- body:lower integer
+- body:upper integer
+- body:fixedDelay number
+
+## S535-0025  POST /__admin/shutdown
+desc: Shutdown the WireMock server
+
+## S537-0001  POST /accounts/{account_id}/apps
+summary: Creates an app
+desc: Creates an application with the specified properties.
+- path:account_id string
+- body:apnsCertificate string
+- body:apnsPrivateKey string
+- body:apnsUseSandboxEndpoint boolean
+- body:fcmKey string
+- body:name string
+- body:status string enum[enabled|disabled]
+- body:tlsOnly boolean
+
+## S537-0002  POST /apps/{app_id}/keys
+summary: Creates a key
+desc: Creates an API key for the application specified.
+- path:app_id string
+- body:capabilities array<string> enum[publish|subscribe|history|presence|channel-metadata|push-admin|push-subscribe|statistics]
+- body:channels string
+- body:name string
+
+## S537-0003  PATCH /apps/{app_id}/keys/{key_id}
+summary: Updates a key
+desc: Update the API key with the specified key ID, for the application with the specified application ID.
+- path:app_id string
+- path:key_id string
+- body:capabilities array<string> enum[publish|subscribe|history|presence|channel-metadata|push-admin|push-subscribe|statistics]
+- body:channels string
+- body:name string
+
+## S537-0004  POST /apps/{app_id}/keys/{key_id}/revoke
+summary: Revokes a key
+desc: Revokes the API key with the specified ID, with the Application ID. This deletes the key.
+- path:app_id string
+- path:key_id string
+
+## S537-0005  POST /apps/{app_id}/namespaces
+summary: Creates a namespace
+desc: Creates a namespace for the specified application ID.
+- path:app_id string
+- body:authenticated boolean
+- body:id string
+- body:persistLast boolean
+- body:persisted boolean
+- body:pushEnabled boolean
+- body:tlsOnly boolean
+
+## S537-0006  DELETE /apps/{app_id}/namespaces/{namespace_id}
+summary: Deletes a namespace
+desc: Deletes the namespace with the specified ID, for the specified application ID.
+- path:app_id string
+- path:namespace_id string
+
+## S537-0007  PATCH /apps/{app_id}/namespaces/{namespace_id}
+summary: Updates a namespace
+desc: Updates the namespace with the specified ID, for the application with the specified application ID.
+- path:app_id string
+- path:namespace_id string
+- body:authenticated boolean
+- body:persistLast boolean
+- body:persisted boolean
+- body:pushEnabled boolean
+- body:tlsOnly boolean
+
+## S537-0008  POST /apps/{app_id}/queues
+summary: Creates a queue
+desc: Creates a queue for the application specified by application ID. The properties for the queue to be created are specified in the request body.
+- path:app_id string
+- body:maxLength integer
+- body:name string
+- body:region string
+- body:ttl integer
+
+## S537-0009  DELETE /apps/{app_id}/queues/{queue_id}
+summary: Deletes a queue
+desc: Delete the queue with the specified queue name, from the application with the specified application ID.
+- path:app_id string
+- path:queue_id string
+
+## S537-0010  POST /apps/{app_id}/rules
+summary: Creates a Reactor rule
+desc: Creates a rule for the application with the specified application ID.
+- path:app_id string
+- body:requestMode string enum[single|batch]
+- body:ruleType string enum[http]
+- body:source object
+- body:source.channelFilter string
+- body:source.type string enum[channel.message|channel.presence|channel.lifecycle|channel.occupancy]
+- body:status string enum[enabled|disabled]
+- body:target object
+- body:target.enveloped boolean
+- body:target.format string enum[json|msgpack]
+- body:target.headers array<object>
+- body:target.headers[].name string
+- body:target.headers[].value string
+- body:target.signingKeyId string
+- body:target.url string
+- body:_links object
+- body:appId string
+- body:created number
+- body:id string
+- body:modified number
+- body:version string
+
+## S537-0011  DELETE /apps/{app_id}/rules/{rule_id}
+summary: Deletes a Reactor rule
+- path:app_id string
+- path:rule_id string
+
+## S537-0012  PATCH /apps/{app_id}/rules/{rule_id}
+summary: Updates a Reactor rule
+- path:app_id string
+- path:rule_id string
+- body:requestMode string enum[single|batch]
+- body:ruleType string enum[http]
+- body:source object
+- body:source.channelFilter string
+- body:source.type string enum[channel.message|channel.presence|channel.lifecycle|channel.occupancy]
+- body:status string enum[enabled|disabled]
+- body:target object
+- body:target.enveloped boolean
+- body:target.format string enum[json|msgpack]
+- body:target.headers array<object>
+- body:target.headers[].name string
+- body:target.headers[].value string
+- body:target.signingKeyId string
+- body:target.url string
+
+## S537-0013  DELETE /apps/{id}
+summary: Deletes an app
+desc: Deletes the application with the specified application ID.
+- path:id string
+
+## S537-0014  PATCH /apps/{id}
+summary: Updates an app
+desc: Updates the application with the specified application ID.
+- path:id string
+- body:apnsCertificate string
+- body:apnsPrivateKey string
+- body:apnsUseSandboxEndpoint boolean
+- body:fcmKey string
+- body:name string
+- body:status string enum[enabled|disabled]
+- body:tlsOnly boolean
+
+## S537-0015  POST /apps/{id}/pkcs12
+summary: Updates app's APNs info from a `.p12` file
+desc: Updates the application's Apple Push Notification service (APNs) information.
+- path:id string
+- body:p12File string
+- body:p12Pass string
+
+## S538-0001  POST /.cqactions.html
+- query:authorizableId string
+- query:changelog string
+
+## S538-0002  POST /apps/system/config/com.adobe.granite.auth.saml.SamlAuthenticationHandler.config
+- query:keyStorePassword string
+- query:keyStorePassword@TypeHint string
+- query:service.ranking integer
+- query:service.ranking@TypeHint string
+- query:idpHttpRedirect boolean
+- query:idpHttpRedirect@TypeHint string
+- query:createUser boolean
+- query:createUser@TypeHint string
+- query:defaultRedirectUrl string
+- query:defaultRedirectUrl@TypeHint string
+- query:userIDAttribute string
+- query:userIDAttribute@TypeHint string
+- query:defaultGroups array<string>
+- query:defaultGroups@TypeHint string
+- query:idpCertAlias string
+- query:idpCertAlias@TypeHint string
+- query:addGroupMemberships boolean
+- query:addGroupMemberships@TypeHint string
+- query:path array<string>
+- query:path@TypeHint string
+- query:synchronizeAttributes array<string>
+- query:synchronizeAttributes@TypeHint string
+- query:clockTolerance integer
+- query:clockTolerance@TypeHint string
+- query:groupMembershipAttribute string
+- query:groupMembershipAttribute@TypeHint string
+- query:idpUrl string
+- query:idpUrl@TypeHint string
+- query:logoutUrl string
+- query:logoutUrl@TypeHint string
+- query:serviceProviderEntityId string
+- query:serviceProviderEntityId@TypeHint string
+- query:assertionConsumerServiceURL string
+- query:assertionConsumerServiceURL@TypeHint string
+- query:handleLogout boolean
+- query:handleLogout@TypeHint string
+- query:spPrivateKeyAlias string
+- query:spPrivateKeyAlias@TypeHint string
+- query:useEncryption boolean
+- query:useEncryption@TypeHint string
+- query:nameIdFormat string
+- query:nameIdFormat@TypeHint string
+- query:digestMethod string
+- query:digestMethod@TypeHint string
+- query:signatureMethod string
+- query:signatureMethod@TypeHint string
+- query:userIntermediatePath string
+- query:userIntermediatePath@TypeHint string
+
+## S538-0003  POST /apps/system/config/com.shinesolutions.aem.passwordreset.Activator
+- query:pwdreset.authorizables array<string>
+- query:pwdreset.authorizables@TypeHint string
+
+## S538-0004  POST /apps/system/config/com.shinesolutions.healthcheck.hc.impl.ActiveBundleHealthCheck
+- query:bundles.ignored array<string>
+- query:bundles.ignored@TypeHint string
+
+## S538-0005  POST /apps/system/config/org.apache.felix.http
+- query:org.apache.felix.https.nio boolean
+- query:org.apache.felix.https.nio@TypeHint string
+- query:org.apache.felix.https.keystore string
+- query:org.apache.felix.https.keystore@TypeHint string
+- query:org.apache.felix.https.keystore.password string
+- query:org.apache.felix.https.keystore.password@TypeHint string
+- query:org.apache.felix.https.keystore.key string
+- query:org.apache.felix.https.keystore.key@TypeHint string
+- query:org.apache.felix.https.keystore.key.password string
+- query:org.apache.felix.https.keystore.key.password@TypeHint string
+- query:org.apache.felix.https.truststore string
+- query:org.apache.felix.https.truststore@TypeHint string
+- query:org.apache.felix.https.truststore.password string
+- query:org.apache.felix.https.truststore.password@TypeHint string
+- query:org.apache.felix.https.clientcertificate string
+- query:org.apache.felix.https.clientcertificate@TypeHint string
+- query:org.apache.felix.https.enable boolean
+- query:org.apache.felix.https.enable@TypeHint string
+- query:org.osgi.service.http.port.secure string
+- query:org.osgi.service.http.port.secure@TypeHint string
+
+## S538-0006  POST /apps/system/config/org.apache.http.proxyconfigurator.config
+- query:proxy.host string
+- query:proxy.host@TypeHint string
+- query:proxy.port integer
+- query:proxy.port@TypeHint string
+- query:proxy.exceptions array<string>
+- query:proxy.exceptions@TypeHint string
+- query:proxy.enabled boolean
+- query:proxy.enabled@TypeHint string
+- query:proxy.user string
+- query:proxy.user@TypeHint string
+- query:proxy.password string
+- query:proxy.password@TypeHint string
+
+## S538-0007  POST /apps/system/config/org.apache.sling.jcr.davex.impl.servlets.SlingDavExServlet
+- query:alias string
+- query:alias@TypeHint string
+- query:dav.create-absolute-uri boolean
+- query:dav.create-absolute-uri@TypeHint string
+
+## S538-0008  POST /apps/system/config/org.apache.sling.security.impl.ReferrerFilter
+- query:allow.empty boolean
+- query:allow.empty@TypeHint string
+- query:allow.hosts string
+- query:allow.hosts@TypeHint string
+- query:allow.hosts.regexp string
+- query:allow.hosts.regexp@TypeHint string
+- query:filter.methods string
+- query:filter.methods@TypeHint string
+
+## S538-0009  POST /apps/system/config/org.apache.sling.servlets.get.DefaultGetServlet
+- query:json.maximumresults string
+- query:json.maximumresults@TypeHint string
+- query:enable.html boolean
+- query:enable.html@TypeHint string
+- query:enable.txt boolean
+- query:enable.txt@TypeHint string
+- query:enable.xml boolean
+- query:enable.xml@TypeHint string
+
+## S538-0010  POST /apps/system/config/{configNodeName}
+- path:configNodeName string
+
+## S538-0011  POST /bin/querybuilder.json
+- query:path string
+- query:p.limit number
+- query:1_property string
+- query:1_property.value string
+
+## S538-0012  POST /crx/explorer/ui/setpassword.jsp
+- query:old string
+- query:plain string
+- query:verify string
+
+## S538-0013  POST /crx/packmgr/service.jsp
+- query:cmd string
+
+## S538-0014  POST /crx/packmgr/service/.json/{path}
+- path:path string
+- query:cmd string
+- query:groupName string
+- query:packageName string
+- query:packageVersion string
+- query:_charset_ string
+- query:force boolean
+- query:recursive boolean
+- body:package string
+
+## S538-0015  POST /crx/packmgr/update.jsp
+- query:groupName string
+- query:packageName string
+- query:version string
+- query:path string
+- query:filter string
+- query:_charset_ string
+
+## S538-0016  DELETE /etc/replication/agents.{runmode}/{name}
+- path:runmode string
+- path:name string
+
+## S538-0017  POST /etc/replication/agents.{runmode}/{name}
+- path:runmode string
+- path:name string
+- query:jcr:content/cq:distribute boolean
+- query:jcr:content/cq:distribute@TypeHint string
+- query:jcr:content/cq:name string
+- query:jcr:content/cq:template string
+- query:jcr:content/enabled boolean
+- query:jcr:content/jcr:description string
+- query:jcr:content/jcr:lastModified string
+- query:jcr:content/jcr:lastModifiedBy string
+- query:jcr:content/jcr:mixinTypes string
+- query:jcr:content/jcr:title string
+- query:jcr:content/logLevel string
+- query:jcr:content/noStatusUpdate boolean
+- query:jcr:content/noVersioning boolean
+- query:jcr:content/protocolConnectTimeout number
+- query:jcr:content/protocolHTTPConnectionClosed boolean
+- query:jcr:content/protocolHTTPExpired string
+- query:jcr:content/protocolHTTPHeaders array<string>
+- query:jcr:content/protocolHTTPHeaders@TypeHint string
+- query:jcr:content/protocolHTTPMethod string
+- query:jcr:content/protocolHTTPSRelaxed boolean
+- query:jcr:content/protocolInterface string
+- query:jcr:content/protocolSocketTimeout number
+- query:jcr:content/protocolVersion string
+- query:jcr:content/proxyNTLMDomain string
+- query:jcr:content/proxyNTLMHost string
+- query:jcr:content/proxyHost string
+- query:jcr:content/proxyPassword string
+- query:jcr:content/proxyPort number
+- query:jcr:content/proxyUser string
+- query:jcr:content/queueBatchMaxSize number
+- query:jcr:content/queueBatchMode string
+- query:jcr:content/queueBatchWaitTime number
+- query:jcr:content/retryDelay string
+- query:jcr:content/reverseReplication boolean
+- query:jcr:content/serializationType string
+- query:jcr:content/sling:resourceType string
+- query:jcr:content/ssl string
+- query:jcr:content/transportNTLMDomain string
+- query:jcr:content/transportNTLMHost string
+- query:jcr:content/transportPassword string
+- query:jcr:content/transportUri string
+- query:jcr:content/transportUser string
+- query:jcr:content/triggerDistribute boolean
+- query:jcr:content/triggerModified boolean
+- query:jcr:content/triggerOnOffTime boolean
+- query:jcr:content/triggerReceive boolean
+- query:jcr:content/triggerSpecific boolean
+- query:jcr:content/userId string
+- query:jcr:primaryType string
+- query::operation string
+
+## S538-0018  POST /etc/truststore
+- body:truststore.p12 string
+
+## S538-0019  POST /libs/granite/security/post/authorizables
+- query:authorizableId string
+- query:intermediatePath string
+- query:createUser string
+- query:createGroup string
+- query:rep:password string
+- query:profile/givenName string
+
+## S538-0020  POST /libs/granite/security/post/sslSetup.html
+- query:keystorePassword string
+- query:keystorePasswordConfirm string
+- query:truststorePassword string
+- query:truststorePasswordConfirm string
+- query:httpsHostname string
+- query:httpsPort string
+- body:certificateFile string
+- body:privatekeyFile string
+
+## S538-0021  POST /libs/granite/security/post/truststore
+- query::operation string
+- query:newPassword string
+- query:rePassword string
+- query:keyStoreType string
+- query:removeAlias string
+- body:certificate string
+
+## S538-0022  POST /libs/replication/treeactivation.html
+- query:ignoredeactivated boolean
+- query:onlymodified boolean
+- query:path string
+- query:cmd string
+
+## S538-0023  POST /system/console/bundles/{name}
+- path:name string
+- query:action string
+
+## S538-0024  POST /system/console/configMgr/com.adobe.granite.auth.saml.SamlAuthenticationHandler
+- query:post boolean
+- query:apply boolean
+- query:delete boolean
+- query:action string
+- query:$location string
+- query:path array<string>
+- query:service.ranking integer
+- query:idpUrl string
+- query:idpCertAlias string
+- query:idpHttpRedirect boolean
+- query:serviceProviderEntityId string
+- query:assertionConsumerServiceURL string
+- query:spPrivateKeyAlias string
+- query:keyStorePassword string
+- query:defaultRedirectUrl string
+- query:userIDAttribute string
+- query:useEncryption boolean
+- query:createUser boolean
+- query:addGroupMemberships boolean
+- query:groupMembershipAttribute string
+- query:defaultGroups array<string>
+- query:nameIdFormat string
+- query:synchronizeAttributes array<string>
+- query:handleLogout boolean
+- query:logoutUrl string
+- query:clockTolerance integer
+- query:digestMethod string
+- query:signatureMethod string
+- query:userIntermediatePath string
+- query:propertylist array<string>
+
+## S538-0025  POST /system/console/jmx/com.adobe.granite:type=Repository/op/{action}
+- path:action string
+
+## S538-0026  POST /{intermediatePath}/{authorizableId}.ks.html
+- path:intermediatePath string
+- path:authorizableId string
+- query::operation string
+- query:currentPassword string
+- query:newPassword string
+- query:rePassword string
+- query:keyPassword string
+- query:keyStorePass string
+- query:alias string
+- query:newAlias string
+- query:removeAlias string
+- body:cert-chain string
+- body:keyStore string
+- body:pk string
+
+## S538-0027  POST /{path}/
+- path:path string
+- query:jcr:primaryType string
+- query::name string
+
+## S538-0028  DELETE /{path}/{name}
+- path:path string
+- path:name string
+
+## S538-0029  POST /{path}/{name}
+- path:path string
+- path:name string
+- query::operation string
+- query:deleteAuthorizable string
+- body:file string
+
+## S538-0030  POST /{path}/{name}.rw.html
+- path:path string
+- path:name string
+- query:addMembers string

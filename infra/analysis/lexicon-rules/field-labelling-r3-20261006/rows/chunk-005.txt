@@ -1,0 +1,697 @@
+## S116-0059  POST /batch
+desc: Execute a batch of requests against the service. As shown in the Sample Request, the input is a dictionary with IDs as keys and request objects as values. Each request object specifies the HTTP method and the resource and, optionally, the content and a list of parent IDs. The list of parent IDs specifies which other requests must complete before the given request will be executed. The example firs
+- body:(body) object
+
+## S116-0062  DELETE /elementcategories/{webId}
+desc: Delete an element category.
+- path:webId string
+
+## S116-0074  POST /elements/{webId}/notificationrules
+desc: Create a notification rule.
+schema: NotificationRule
+- path:webId string
+- query:webIdType string
+- body:AutoCreated boolean
+- body:CategoryNames array<string>
+- body:Criteria string
+- body:Description string
+- body:Id string
+- body:MultiTriggerEventOption string
+- body:Name string
+- body:NonrepetitionInterval string
+- body:Path string
+- body:ResendInterval string
+- body:Status string
+- body:TemplateName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-0082  POST /elementtemplates/{webId}/attributetemplates
+desc: Create an attribute template.
+schema: AttributeTemplate
+- path:webId string
+- query:webIdType string
+- body:CategoryNames array<string>
+- body:ConfigString string
+- body:DataReferencePlugIn string
+- body:DefaultUnitsName string
+- body:DefaultUnitsNameAbbreviation string
+- body:DefaultValue object
+- body:Description string
+- body:HasChildren boolean
+- body:Id string
+- body:IsConfigurationItem boolean
+- body:IsExcluded boolean
+- body:IsHidden boolean
+- body:IsManualDataEntry boolean
+- body:Links object
+- body:Links.AttributeTemplates string
+- body:Links.Categories string
+- body:Links.ElementTemplate string
+- body:Links.Parent string
+- body:Links.Self string
+- body:Links.Trait string
+- body:Name string
+- body:Path string
+- body:TraitName string
+- body:Type string
+- body:TypeQualifier string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-0083  POST /elementtemplates/{webId}/notificationruletemplates
+desc: Create a notification rule template.
+schema: NotificationRuleTemplate
+- path:webId string
+- query:webIdType string
+- body:CategoryNames array<string>
+- body:Criteria string
+- body:Description string
+- body:Id string
+- body:MultiTriggerEventOption string
+- body:Name string
+- body:NonrepetitionInterval string
+- body:Path string
+- body:ResendInterval string
+- body:Status string
+- body:TemplateName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-0088  PATCH /enumerationsets/{webId}
+desc: Update an enumeration set by replacing items in its definition.
+schema: EnumerationSet
+- path:webId string
+- body:Description string
+- body:Id string
+- body:Links object
+- body:Links.DataServer string
+- body:Links.Database string
+- body:Links.Security string
+- body:Links.SecurityEntries string
+- body:Links.Self string
+- body:Links.Values string
+- body:Name string
+- body:Path string
+- body:SerializeDescription boolean
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-0095  POST /eventframes/searchbyattribute
+desc: Create a link for a "Search EventFrames By Attribute Value" operation, whose queries are specified in the request content. The SearchRoot is specified by the Web Id of the root EventFrame. If the SearchRoot is not specified, then the search starts at the Asset Database. ElementTemplate must be provided as the Web ID of the ElementTemplate, which are used to create the EventFrames. All the attribut
+schema: SearchByAttribute
+- query:noResults boolean
+- query:selectedFields string
+- query:webIdType string
+- body:ElementTemplate string
+- body:SearchRoot string
+- body:ValueQueries array<object>
+- body:ValueQueries[].AttributeName string
+- body:ValueQueries[].AttributeUOM string
+- body:ValueQueries[].AttributeValue object
+- body:ValueQueries[].SearchOperator string
+- body:ValueQueries[].WebException object
+- body:ValueQueries[].WebException.Errors array<string>
+- body:ValueQueries[].WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-0107  POST /eventframes/{webId}/securityentries
+desc: Create a security entry owned by the event frame.
+schema: SecurityEntry
+- path:webId string
+- query:applyToChildren boolean
+- query:webIdType string
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-0124  PATCH /notificationruletemplates/{webId}
+desc: Update a notification rule template by replacing items in its definition.
+schema: NotificationRuleTemplate
+- path:webId string
+- body:CategoryNames array<string>
+- body:Criteria string
+- body:Description string
+- body:Id string
+- body:MultiTriggerEventOption string
+- body:Name string
+- body:NonrepetitionInterval string
+- body:Path string
+- body:ResendInterval string
+- body:Status string
+- body:TemplateName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-0136  POST /streams/{webId}/updates
+desc: Register for stream updates | The supplied webId will register for stream updates. For a 201 or 204 response, the returned location header will contain the url for retrieving the next set of stream updates.
+- path:webId string
+- query:selectedFields string
+- query:webIdType string
+
+## S116-0139  POST /streamsets/updates
+desc: Register for stream updates | The supplied webIds will register for stream updates. For a 200 response, the returned location header will contain the url for retrieving the next set of stream updates.
+- query:webId array<string>
+- query:selectedFields string
+- query:webIdType string
+
+## S116-0150  PATCH /tables/{webId}
+desc: Update a table by replacing items in its definition.
+schema: Table
+- path:webId string
+- body:CategoryNames array<string>
+- body:ConvertToLocalTime boolean
+- body:Description string
+- body:Id string
+- body:Links object
+- body:Links.Categories string
+- body:Links.Data string
+- body:Links.Database string
+- body:Links.Security string
+- body:Links.SecurityEntries string
+- body:Links.Self string
+- body:Name string
+- body:Path string
+- body:TimeZone string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-0153  DELETE /tables/{webId}/securityentries/{name}
+desc: Delete a security entry owned by the table.
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+
+## S118-0001  POST /authentication/forgotPassword
+desc: forgotPassword
+schema: EmailModel
+- body:email string
+
+## S118-0002  POST /authentication/register
+desc: register
+schema: RegistrationModel
+- body:city string
+- body:companyDescription string
+- body:companyName string
+- body:country string
+- body:date1 string
+- body:date2 string
+- body:date3 string
+- body:email string
+- body:firstName string
+- body:lastName string
+- body:number1 integer
+- body:number2 integer
+- body:number3 integer
+- body:password string
+- body:phone string
+- body:state string
+- body:storage string
+- body:streetAddress string
+- body:string1 string
+- body:string2 string
+- body:string3 string
+- body:username string
+- body:zip string
+
+## S118-0003  POST /authentication/setForgotPassword
+desc: validates the mail token and set new password
+schema: ForgotMailToken
+- body:activity string
+- body:password string
+- body:token string
+
+## S118-0004  POST /authentication/token
+desc: authenticate the user and returns the token
+schema: LoginUser
+- body:password string
+- body:username string
+
+## S118-0005  POST /authentication/validateMailToken
+desc: validates the mail token
+schema: MailToken
+- body:activity string
+- body:token string
+
+## S119-0001  POST /api/v1/exposed/{exposed_app_action_id}/execute/
+desc: Execute App Action Endpoint | Give us a plain english description of exact action you want to do. There should be dynamically generated documentation for this endpoint for each action that is exposed.
+schema: ExecuteRequest
+- path:exposed_app_action_id string
+- body:instructions string
+- body:preview_only boolean
+
+## S120-0001  POST /search/{index}/{operation}
+desc: Perform complex search queries over Auckland Museum Collections and Cenotaph data | Searches performed via this endpoint run against an [Elastic](www.elastic.co) server. This endpoint mirrors the Elastic search API documented [here](https://www.elastic.co/guide/en/elasticsearch/reference/1.5/search-search.html) Use the - `collectionsonline` index to perform searches over other all Collections data
+- path:index string
+- path:operation string
+- body:(body) object
+
+## S120-0002  POST /sparql
+desc: Auckland Museum SPARQL endpoint | You can execute your [SPARQL](http://www.w3.org/TR/rdf-sparql-query/) queries against this endpoint. The sparql query should be provided as the value of the request parameter `query`. Set the `Accept` header to `application/sparql-results+xml` to get results in XML. Set it to `application/sparql-results+json` to get results in JSON.
+- body:query string
+- body:infer boolean
+
+## S122-0001  POST /request
+desc: This is a socket protocol delimited by CRLF (not http)
+schema: AllRequestTypesExample
+- body:authentication object
+- body:authentication.id integer
+- body:authentication.op string
+- body:authentication.appKey string
+- body:authentication.session string
+- body:heartbeat object
+- body:heartbeat.id integer
+- body:heartbeat.op string
+- body:marketSubscription object
+- body:marketSubscription.id integer
+- body:marketSubscription.op string
+- body:marketSubscription.clk string
+- body:marketSubscription.conflateMs integer
+- body:marketSubscription.heartbeatMs integer
+- body:marketSubscription.initialClk string
+- body:marketSubscription.marketDataFilter object
+- body:marketSubscription.marketDataFilter.fields array<string> enum[EX_BEST_OFFERS_DISP|EX_BEST_OFFERS|EX_ALL_OFFERS|EX_TRADED|EX_TRADED_VOL|EX_LTP|EX_MARKET_DEF|SP_TRADED|SP_PROJECTED]
+- body:marketSubscription.marketDataFilter.ladderLevels integer
+- body:marketSubscription.marketFilter object
+- body:marketSubscription.marketFilter.bettingTypes array<string> enum[ODDS|LINE|RANGE|ASIAN_HANDICAP_DOUBLE_LINE|ASIAN_HANDICAP_SINGLE_LINE]
+- body:marketSubscription.marketFilter.bspMarket boolean
+- body:marketSubscription.marketFilter.countryCodes array<string>
+- body:marketSubscription.marketFilter.eventIds array<string>
+- body:marketSubscription.marketFilter.eventTypeIds array<string>
+- body:marketSubscription.marketFilter.marketIds array<string>
+- body:marketSubscription.marketFilter.marketTypes array<string>
+- body:marketSubscription.marketFilter.raceTypes array<string>
+- body:marketSubscription.marketFilter.turnInPlayEnabled boolean
+- body:marketSubscription.marketFilter.venues array<string>
+- body:marketSubscription.segmentationEnabled boolean
+- body:opTypes string enum[heartbeat|authentication|marketSubscription|orderSubscription]
+- body:orderSubscriptionMessage object
+- body:orderSubscriptionMessage.id integer
+- body:orderSubscriptionMessage.op string
+- body:orderSubscriptionMessage.clk string
+- body:orderSubscriptionMessage.conflateMs integer
+- body:orderSubscriptionMessage.heartbeatMs integer
+- body:orderSubscriptionMessage.initialClk string
+- body:orderSubscriptionMessage.orderFilter object
+- body:orderSubscriptionMessage.orderFilter.accountIds array<integer>
+- body:orderSubscriptionMessage.orderFilter.customerStrategyRefs array<string>
+- body:orderSubscriptionMessage.orderFilter.includeOverallPosition boolean
+- body:orderSubscriptionMessage.orderFilter.partitionMatchedByStrategyRef boolean
+- body:orderSubscriptionMessage.segmentationEnabled boolean
+
+## S123-0001  POST /Destiny2/Actions/Items/EquipItem/
+desc: Equip an item. You must have a valid Destiny Account, and either be in a social space, in orbit, or offline.
+
+## S123-0003  POST /Destiny2/Actions/Items/InsertSocketPlug/
+desc: Insert a plug into a socketed item. I know how it sounds, but I assure you it's much more G-rated than you might be guessing. We haven't decided yet whether this will be able to insert plugs that have side effects, but if we do it will require special scope permission for an application attempting to do so. You must have a valid Destiny Account, and either be in a social space, in orbit, or offlin
+
+## S123-0004  POST /Destiny2/Actions/Items/InsertSocketPlugFree/
+desc: Insert a 'free' plug into an item's socket. This does not require 'Advanced Write Action' authorization and is available to 3rd-party apps, but will only work on 'free and reversible' socket actions (Perks, Armor Mods, Shaders, Ornaments, etc.). You must have a valid Destiny Account, and the character must either be in a social space, in orbit, or offline.
+
+## S123-0006  POST /Destiny2/Actions/Items/SetLockState/
+desc: Set the Lock State for an instanced item. You must have a valid Destiny Account.
+
+## S123-0009  POST /Destiny2/Actions/Loadouts/ClearLoadout/
+desc: Clear the identifiers and items of a loadout.
+
+## S123-0010  POST /Destiny2/Actions/Loadouts/EquipLoadout/
+desc: Equip a loadout. You must have a valid Destiny Account, and either be in a social space, in orbit, or offline.
+
+## S123-0012  POST /Destiny2/Actions/Loadouts/UpdateLoadoutIdentifiers/
+desc: Update the color, icon, and name of a loadout.
+
+## S123-0013  POST /Destiny2/Awa/AwaProvideAuthorizationResult/
+desc: Provide the result of the user interaction. Called by the Bungie Destiny App to approve or reject a request.
+
+## S123-0015  POST /Destiny2/SearchDestinyPlayerByBungieName/{membershipType}/
+desc: Returns a list of Destiny memberships given a global Bungie Display Name. This method will hide overridden memberships due to cross save.
+- path:membershipType integer
+
+## S123-0019  POST /GroupV2/Recommended/{groupType}/{createDateRange}/
+desc: Gets groups recommended for you based on the groups to whom those you follow belong.
+- path:createDateRange integer
+- path:groupType integer
+
+## S123-0020  POST /GroupV2/Search/
+desc: Search for Groups.
+
+## S123-0021  POST /GroupV2/{groupId}/Admin/AbdicateFoundership/{membershipType}/{founderIdNew}/
+desc: An administrative method to allow the founder of a group or clan to give up their position to another admin permanently.
+- path:founderIdNew integer
+- path:groupId integer
+- path:membershipType integer
+
+## S123-0022  POST /GroupV2/{groupId}/Edit/
+desc: Edit an existing group. You must have suitable permissions in the group to perform this operation. This latest revision will only edit the fields you pass in - pass null for properties you want to leave unaltered.
+- path:groupId integer
+
+## S123-0023  POST /GroupV2/{groupId}/EditClanBanner/
+desc: Edit an existing group's clan banner. You must have suitable permissions in the group to perform this operation. All fields are required.
+- path:groupId integer
+
+## S123-0024  POST /GroupV2/{groupId}/EditFounderOptions/
+desc: Edit group options only available to a founder. You must have suitable permissions in the group to perform this operation.
+- path:groupId integer
+
+## S123-0025  POST /GroupV2/{groupId}/Members/Approve/{membershipType}/{membershipId}/
+desc: Approve the given membershipId to join the group/clan as long as they have applied.
+- path:groupId integer
+- path:membershipId integer
+- path:membershipType integer
+
+## S123-0027  POST /GroupV2/{groupId}/Members/ApproveList/
+desc: Approve all of the pending users for the given group.
+- path:groupId integer
+
+## S123-0029  POST /GroupV2/{groupId}/Members/DenyList/
+desc: Deny all of the pending users for the given group that match the passed-in .
+- path:groupId integer
+
+## S123-0030  POST /GroupV2/{groupId}/Members/IndividualInvite/{membershipType}/{membershipId}/
+desc: Invite a user to join this group.
+- path:groupId integer
+- path:membershipId integer
+- path:membershipType integer
+
+## S123-0032  POST /GroupV2/{groupId}/Members/{membershipType}/{membershipId}/Ban/
+desc: Bans the requested member from the requested group for the specified period of time.
+- path:groupId integer
+- path:membershipId integer
+- path:membershipType integer
+
+## S123-0033  POST /GroupV2/{groupId}/Members/{membershipType}/{membershipId}/Kick/
+desc: Kick a member from the given group, forcing them to reapply if they wish to re-join the group. You must have suitable permissions in the group to perform this operation.
+- path:groupId integer
+- path:membershipId integer
+- path:membershipType integer
+
+## S123-0034  POST /GroupV2/{groupId}/Members/{membershipType}/{membershipId}/SetMembershipType/{memberType}/
+desc: Edit the membership type of a given member. You must have suitable permissions in the group to perform this operation.
+- path:groupId integer
+- path:membershipId integer
+- path:membershipType integer
+- path:memberType integer
+
+## S123-0036  POST /GroupV2/{groupId}/OptionalConversations/Add/
+desc: Add a new optional conversation/chat channel. Requires admin permissions to the group.
+- path:groupId integer
+
+## S123-0037  POST /GroupV2/{groupId}/OptionalConversations/Edit/{conversationId}/
+desc: Edit the settings of an optional conversation/chat channel. Requires admin permissions to the group.
+- path:conversationId integer
+- path:groupId integer
+
+## S123-0038  POST /Social/Friends/Add/{membershipId}/
+desc: Requests a friend relationship with the target user. Any of the target user's linked membership ids are valid inputs.
+- path:membershipId string
+
+## S123-0039  POST /Social/Friends/Remove/{membershipId}/
+desc: Remove a friend relationship with the target user. The user must be on your friend list, though no error will occur if they are not.
+- path:membershipId string
+
+## S123-0040  POST /Social/Friends/Requests/Accept/{membershipId}/
+desc: Accepts a friend relationship with the target user. The user must be on your incoming friend request list, though no error will occur if they are not.
+- path:membershipId string
+
+## S123-0042  POST /Social/Friends/Requests/Remove/{membershipId}/
+desc: Remove a friend relationship with the target user. The user must be on your outgoing request friend list, though no error will occur if they are not.
+- path:membershipId string
+
+## S123-0043  POST /Tokens/Partner/ApplyMissingOffers/{partnerApplicationId}/{targetBnetMembershipId}/
+desc: Apply a partner offer to the targeted user. This endpoint does not claim a new offer, but any already claimed offers will be applied to the game if not already.
+- path:partnerApplicationId integer
+- path:targetBnetMembershipId integer
+
+## S123-0044  POST /Tokens/Partner/ClaimOffer/
+desc: Claim a partner offer as the authenticated user.
+
+## S123-0046  POST /User/Search/GlobalName/{page}/
+desc: Given the prefix of a global display name, returns all users who share that name.
+- path:page integer
+
+## S124-0001  POST /comptage
+desc: Compter le nombre de caractère | Compte le nombre de SMS necessaire à un envoi
+schema: ComptageRequest
+- body:comptage string enum[1]
+- body:date_envoi string
+- body:emetteur string
+- body:gmt_zone string enum[Pacific/Midway|America/Adak|Etc/GMT+10|Pacific/Marquesas|Pacific/Gambier|America/Anchorage|America/Ensenada|Etc/GMT+8|America/Los_Angeles|America/Denver|America/Chihuahua|America/Dawson_Creek]
+- body:keyid string
+- body:nostop string
+- body:num string
+- body:numAzur string enum[1]
+- body:sms string
+- body:smslong string enum[999]
+- body:tracker string
+- body:ucs2 string
+
+## S124-0002  POST /dellistenoire
+desc: Ajoute un numero en liste noire | Supprime un numero en liste noire
+- query:keyid string
+- query:delListeNoire string enum[1]
+- query:num string
+
+## S124-0003  POST /getlistenoire
+desc: Retourne le liste noire | Retourne un fichier csv zippé contenant la liste noire
+- query:keyid string
+- query:getListeNoire string enum[1]
+
+## S124-0004  POST /hlr
+desc: Vérifier la validité d'un numéro | Réalise un lookup HLR sur les numéros
+schema: HLRrequest
+- body:getHLR string enum[1]
+- body:keyid string
+- body:num array<string>
+
+## S124-0005  POST /repertoire
+desc: Gestion repertoire (creation) | Cree un nouveau répertoire et retourne son identifiant. Cet identifiant pourra être utilisé pour ajouter ou supprimer des numéros via l'API.
+schema: REPERTOIREcreaterequest
+- body:keyid string
+- body:repertoireEdit string enum[create]
+- body:repertoireNom string
+
+## S124-0006  PUT /repertoire
+desc: Gestion repertoire (modification) | Ajoute ou supprime une liste de numéros à un répertoire existant.
+schema: REPERTOIREmodifrequest
+- body:champ1 array<string>
+- body:champ10 array<string>
+- body:champ11 array<string>
+- body:champ12 array<string>
+- body:champ13 array<string>
+- body:champ14 array<string>
+- body:champ15 array<string>
+- body:champ16 array<string>
+- body:champ17 array<string>
+- body:champ18 array<string>
+- body:champ19 array<string>
+- body:champ2 array<string>
+- body:champ20 array<string>
+- body:champ21 array<string>
+- body:champ22 array<string>
+- body:champ23 array<string>
+- body:champ24 array<string>
+- body:champ25 array<string>
+- body:champ26 array<string>
+- body:champ27 array<string>
+- body:champ3 array<string>
+- body:champ4 array<string>
+- body:champ5 array<string>
+- body:champ6 array<string>
+- body:champ7 array<string>
+- body:champ8 array<string>
+- body:champ9 array<string>
+- body:keyid string
+- body:num array<string>
+- body:repertoireEdit string enum[add|del]
+- body:repertoireId string
+
+## S124-0007  POST /setlistenoire
+desc: Ajoute un numero en liste noire | Ajoute un numero en liste noire. Une fois ajouté, les requêtes d'envoi de SMS marketing vers ce numéro seront refusées.
+- query:keyid string
+- query:setlisteNoire string enum[1]
+- query:num string
+
+## S124-0008  POST /shortlink
+desc: add a shortlink | add a shortlink
+schema: ShortlinkRequest
+- body:keyid string
+- body:shortlink string
+
+## S124-0009  POST /sms
+desc: Envoyer un sms | Envoi un sms vers un unique destinataire
+schema: SmsUniqueRequest
+- body:date_envoi string
+- body:emetteur string
+- body:gmt_zone string enum[Pacific/Midway|America/Adak|Etc/GMT+10|Pacific/Marquesas|Pacific/Gambier|America/Anchorage|America/Ensenada|Etc/GMT+8|America/Los_Angeles|America/Denver|America/Chihuahua|America/Dawson_Creek]
+- body:keyid string
+- body:nostop string
+- body:num string
+- body:numAzur string enum[1]
+- body:sms string
+- body:smslong string
+- body:tracker string
+- body:ucs2 string
+
+## S124-0010  POST /smsmulti
+desc: Envoyer des SMS | Envoi de SMS vers 1 ou plusieurs destinataires
+schema: SMSRequest
+- body:date_envoi string
+- body:emetteur string
+- body:gmt_zone string enum[Pacific/Midway|America/Adak|Etc/GMT+10|Pacific/Marquesas|Pacific/Gambier|America/Anchorage|America/Ensenada|Etc/GMT+8|America/Los_Angeles|America/Denver|America/Chihuahua|America/Dawson_Creek]
+- body:keyid string
+- body:nostop string
+- body:num array<string>
+- body:numAzur string enum[1]
+- body:repertoireId string
+- body:sms array<string>
+- body:smslong string
+- body:tracker array<string>
+- body:ucs2 string
+
+## S124-0011  POST /subaccount
+desc: Ajoute un sous compte | Ajoute un sous compte
+schema: SubaccountAddRequest
+- body:keyid string
+- body:subAccountEdit string enum[addAccount]
+- body:subAccountLogin string
+- body:subAccountPassword string
+
+## S124-0012  PUT /subaccount
+desc: Edit a subaccount | Edit a subaccount
+schema: SubaccountRequest
+- body:keyid string
+- body:subAccountAddCredit string
+- body:subAccountCountryCode string
+- body:subAccountEdit string enum[setPrice|addCredit|setRestriction]
+- body:subAccountKeyId string
+- body:subAccountPrice string
+- body:subAccountRestrictionStop string enum[0|1]
+- body:subAccountRestrictionTime string enum[0|1]
+
+## S125-0002  PUT /attempted-delivery-query-resolved
+desc: Attempted delivery query resolved | This webhook will be invoked whenever an attempted delivery query has been resolved.
+schema: attempted-delivery-resolved
+- body:OrderId string
+- body:Resolution object
+- body:Resolution.Cancellation object
+- body:Resolution.Cancellation.Reason string enum[new_address_not_within_area|unable_to_reprepare|driver_not_available|area_unsafe|customer_doesnt_want_anymore]
+- body:Resolution.Redelivery object
+- body:Resolution.Redelivery.CustomerTimeZone string
+- body:Resolution.Redelivery.NewDueDate string
+- body:Resolution.Redelivery.Status string enum[driver_at_address|repreparing]
+- body:Resolution.Type string enum[order_cancelled|redeliver_order]
+- body:Tenant string enum[uk|dk|es|ie|it|no|au|nz]
+
+## S125-0003  PATCH /checkout/{tenant}/{checkoutId}
+desc: Update Checkout | Update the details required to fulfil an order, which includes: - The customer making the purchase - Where and when the items will be received by the customer - Instructions about the order
+schema: CheckoutUpdateRequest
+- path:tenant string
+- path:checkoutId string
+- body:customer object
+- body:customer.dateOfBirth string
+- body:customer.firstName string
+- body:customer.lastName string
+- body:customer.phoneNumber string
+- body:fulfilment object
+- body:fulfilment.location object
+- body:fulfilment.location.address object
+- body:fulfilment.location.geolocation object
+- body:fulfilment.time object
+- body:fulfilment.time.asap boolean
+- body:fulfilment.time.scheduled object
+- body:notes array<object>
+- body:notes[].note string
+- body:notes[].type string enum[delivery]
+
+## S125-0004  POST /consumers/{tenant}
+desc: Create consumer | Creates a consumer for the given tenant.
+schema: ConsumerCreate
+- path:tenant string
+- body:emailAddress string
+- body:firstName string
+- body:lastName string
+- body:marketingPreferences array<object>
+- body:marketingPreferences[].channelName string enum[Email|Push|Sms]
+- body:marketingPreferences[].dateUpdated string
+- body:marketingPreferences[].isSubscribed boolean
+- body:password string
+- body:registrationSource string enum[Native|Guest]
+
+## S125-0005  PUT /consumers/{tenant}/me/communication-preferences/{type}
+desc: Set only the channel subscriptions for a given consumer's communication preference type | Set only the channel subscriptions for a given consumer's communication preference type. E.g., An empty list of subscribed Channels implies unsubscribe from all channels.
+schema: ChannelSubscriptions
+- path:tenant string
+- path:type string enum[marketing]
+- body:subscribedChannels array<string> enum[email|sms|push]
+
+## S125-0007  POST /consumers/{tenant}/me/communication-preferences/{type}/subscribedChannels/{channel}
+desc: Subscribe to a specific communication preference channel | Subscribe to a specific communication preference channel.
+- path:tenant string
+- path:type string enum[marketing]
+- path:channel string enum[email|sms|push]
+
+## S125-0008  PUT /delivery-failed
+desc: Delivery Attempt Failed | This webhook will be invoked whenever an attempted delivery event is created from the device.
+schema: attempted-delivery-created
+- body:OrderId string
+- body:Reason string
+- body:RestaurantId number
+- body:Tenant string
+
+## S125-0009  POST /delivery/pools
+desc: Create a new delivery pool | A delivery pool is a named group of drivers which deliver food for a set of restaurants.
+schema: create-delivery-pool
+- body:name string
+- body:restaurants array<number>
+
+## S125-0021  PUT /driver-location
+desc: Driver Location | Driver Location
+schema: driver-location
+- body:Location object
+- body:Location.Latitude number
+- body:Location.Longitude number
+- body:OrderId string
+- body:TimeStamp string
+
+## S125-0025  POST /menu-ingestion-complete
+desc: Menu ingestion complete | Callback to confirm that an attempt to ingest a menu has completed either successfully or unsuccessfully
+schema: menu-ingestion-complete
+- body:correlationId string
+- body:fault object
+- body:fault.errors array<object>
+- body:fault.errors[].code string
+- body:fault.errors[].description string
+- body:fault.id string
+- body:restaurantId string
+- body:result string enum[success|fail]
+- body:tenant string enum[au|dk|es|ie|it|no|uk|nz]
+- body:timestamp string
+
+## S125-0026  POST /order-accepted
+desc: Order accepted | This webhook will be invoked whenever the order was accepted.
+schema: order-accepted
+- body:AcceptedFor string
+- body:Event string
+- body:OrderId string

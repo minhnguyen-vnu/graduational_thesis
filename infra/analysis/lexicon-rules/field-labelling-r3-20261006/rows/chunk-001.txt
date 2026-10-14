@@ -1,0 +1,582 @@
+## S100-0001  POST /file-storage/drive-groups
+desc: Create DriveGroup | Create DriveGroup
+schema: DriveGroup
+- query:raw boolean
+- body:created_at string
+- body:created_by string
+- body:description string
+- body:display_name string
+- body:id string
+- body:name string
+- body:updated_at string
+- body:updated_by string
+
+## S100-0002  DELETE /file-storage/drive-groups/{id}
+desc: Delete DriveGroup | Delete DriveGroup
+- path:id string
+- query:raw boolean
+
+## S100-0003  PATCH /file-storage/drive-groups/{id}
+desc: Update DriveGroup | Update DriveGroup
+schema: DriveGroup
+- path:id string
+- query:raw boolean
+- body:created_at string
+- body:created_by string
+- body:description string
+- body:display_name string
+- body:id string
+- body:name string
+- body:updated_at string
+- body:updated_by string
+
+## S100-0004  POST /file-storage/drives
+desc: Create Drive | Create Drive
+schema: Drive
+- query:raw boolean
+- body:created_at string
+- body:created_by string
+- body:description string
+- body:id string
+- body:name string
+- body:updated_at string
+- body:updated_by string
+
+## S100-0005  DELETE /file-storage/drives/{id}
+desc: Delete Drive | Delete Drive
+- path:id string
+- query:raw boolean
+
+## S100-0007  POST /file-storage/files
+desc: Upload file | Upload file (max 100MB). Please use the [Upload Sessions API](#operation/uploadSessionsStart) to upload bigger files. For more information on uploads, refer to the [file upload guide](/guides/file-upload).
+- query:raw boolean
+- body:(body) string
+
+## S100-0010  PATCH /file-storage/files/{id}
+desc: Rename or move File | Rename or move File
+schema: UpdateFileRequest
+- path:id string
+- query:raw boolean
+- body:description string
+- body:name string
+- body:parent_folder_id string
+
+## S100-0011  POST /file-storage/folders
+desc: Create Folder | Create Folder
+schema: CreateFolderRequest
+- query:raw boolean
+- query:fields string
+- body:description string
+- body:drive_id string
+- body:id string
+- body:name string
+- body:parent_folder_id string
+
+## S100-0013  PATCH /file-storage/folders/{id}
+desc: Rename or move Folder | Rename or move Folder
+schema: UpdateFolderRequest
+- path:id string
+- query:raw boolean
+- body:description string
+- body:id string
+- body:name string
+- body:parent_folder_id string
+
+## S100-0014  POST /file-storage/folders/{id}/copy
+desc: Copy Folder | Copy Folder
+schema: CopyFolderRequest
+- path:id string
+- query:raw boolean
+- query:fields string
+- body:id string
+- body:name string
+- body:parent_folder_id string
+
+## S100-0015  POST /file-storage/shared-links
+desc: Create Shared Link | Create Shared Link
+schema: SharedLink
+- query:raw boolean
+- body:created_at string
+- body:download_url string
+- body:expires_at string
+- body:password string
+- body:password_protected boolean
+- body:scope string enum[public|company]
+- body:target object
+- body:target.id string
+- body:target.name string
+- body:target.type string enum[file|folder|url]
+- body:target_id string
+- body:updated_at string
+- body:url string
+
+## S100-0016  DELETE /file-storage/shared-links/{id}
+desc: Delete Shared Link | Delete Shared Link
+- path:id string
+- query:raw boolean
+
+## S100-0017  PATCH /file-storage/shared-links/{id}
+desc: Update Shared Link | Update Shared Link
+schema: SharedLink
+- path:id string
+- query:raw boolean
+- body:created_at string
+- body:download_url string
+- body:expires_at string
+- body:password string
+- body:password_protected boolean
+- body:scope string enum[public|company]
+- body:target object
+- body:target.id string
+- body:target.name string
+- body:target.type string enum[file|folder|url]
+- body:target_id string
+- body:updated_at string
+- body:url string
+
+## S100-0019  DELETE /file-storage/upload-sessions/{id}
+desc: Abort Upload Session | Abort Upload Session. Note that the base URL is upload.apideck.com instead of unify.apideck.com. For more information on uploads, refer to the [file upload guide](/guides/file-upload).
+- path:id string
+- query:raw boolean
+
+## S100-0020  PUT /file-storage/upload-sessions/{id}
+desc: Upload part of File to Upload Session | Upload part of File to Upload Session (max 100MB). Get `part_size` from [Get Upload Session](#operation/uploadSessionsOne) first. Every File part (except the last one) uploaded to this endpoint should have Content-Length equal to `part_size`. Note that the base URL is upload.apideck.com instead of unify.apideck.com. For more information on uploads, refer to 
+- path:id string
+- query:part_number number
+- query:raw boolean
+- body:(body) string
+
+## S101-0002  DELETE /v0.1/api_tokens/{api_token_id}
+desc: Delete the user api_token object with the specific id
+- path:api_token_id string
+
+## S101-0008  PUT /v0.1/apps/{owner_name}/{app_name}/analytics/audiences/{audience_name}
+desc: Creates or updates audience definition.
+- path:audience_name string
+- path:owner_name string
+- path:app_name string
+- body:custom_properties object
+- body:definition string
+- body:description string
+- body:enabled boolean
+
+## S101-0009  POST /v0.1/apps/{owner_name}/{app_name}/analytics/crash_groups
+desc: Overall crashes and affected users count of the selected crash groups with selected versions.
+- path:owner_name string
+- path:app_name string
+- body:crash_groups array<object>
+- body:crash_groups[].app_version string
+- body:crash_groups[].crash_group_id string
+
+## S101-0016  POST /v0.1/apps/{owner_name}/{app_name}/apple_mapping
+desc: Create a mapping for an existing app in apple store for the specified application.
+- path:owner_name string
+- path:app_name string
+- body:apple_id string
+- body:bundle_identifier string
+- body:service_connection_id string
+- body:team_identifier string
+
+## S101-0018  POST /v0.1/apps/{owner_name}/{app_name}/avatar
+desc: Sets the app avatar
+- path:owner_name string
+- path:app_name string
+- body:avatar string
+
+## S101-0026  POST /v0.1/apps/{owner_name}/{app_name}/builds/{build_id}/distribute
+desc: Distribute a build
+- path:build_id integer
+- path:owner_name string
+- path:app_name string
+- body:destinations array<object>
+- body:destinations[].id string
+- body:destinations[].type string enum[store|group|tester]
+- body:mandatoryUpdate boolean
+- body:notifyTesters boolean
+- body:releaseNotes string
+
+## S101-0028  DELETE /v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes/{crash_id}
+desc: Delete a specific crash and related attachments and blobs for an app.
+- path:crash_group_id string
+- path:crash_id string
+- path:owner_name string
+- path:app_name string
+- query:retention_delete boolean
+
+## S101-0031  PATCH /v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}
+desc: Modifies a CodePush Deployment for the given app
+- path:deployment_name string
+- path:owner_name string
+- path:app_name string
+- body:name string
+
+## S101-0036  POST /v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/rollback_release
+desc: Rollback the latest or a specific release for an app deployment
+- path:deployment_name string
+- path:owner_name string
+- path:app_name string
+- body:label string
+
+## S101-0040  PUT /v0.1/apps/{owner_name}/{app_name}/devices/block_logs/{install_id}
+desc: **Warning, this operation is not reversible.** A successful call to this API will permanently stop ingesting any logs received via SDK for the given installation ID, and cannot be restored. We advise caution when using this API, it is designed to permanently disable collection from a specific installation of the app on a device, usually following the request from a user.
+- path:install_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-0041  POST /v0.1/apps/{owner_name}/{app_name}/distribution_groups
+desc: Creates a new distribution group and returns it to the caller
+- path:owner_name string
+- path:app_name string
+- body:display_name string
+- body:name string
+
+## S101-0043  PATCH /v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}
+desc: Updates the attributes of distribution group
+- path:owner_name string
+- path:app_name string
+- path:distribution_group_name string
+- body:is_public boolean
+- body:name string
+
+## S101-0044  POST /v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/members
+desc: Adds the members to the specified distribution group
+- path:owner_name string
+- path:app_name string
+- path:distribution_group_name string
+- body:user_emails array<string>
+
+## S101-0047  POST /v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/resend_invite
+desc: Resend distribution group app invite notification to previously invited testers
+- path:owner_name string
+- path:app_name string
+- path:distribution_group_name string
+- body:user_emails array<string>
+
+## S101-0048  POST /v0.1/apps/{owner_name}/{app_name}/distribution_stores
+desc: Create a new external store for the specified application.
+- path:owner_name string
+- path:app_name string
+- body:intune_details object
+- body:intune_details.app_category object
+- body:intune_details.app_category.name string
+- body:intune_details.secret_json object
+- body:intune_details.secret_json.id_token string
+- body:intune_details.secret_json.refresh_token string
+- body:intune_details.secret_json.refresh_token_expiry string
+- body:intune_details.target_audience object
+- body:intune_details.target_audience.name string
+- body:intune_details.tenant_id string
+- body:name string
+- body:service_connection_id string
+- body:track string enum[production|alpha|beta|testflight-internal|testflight-external]
+- body:type string enum[googleplay|apple|intune]
+
+## S101-0055  DELETE /v0.1/apps/{owner_name}/{app_name}/export_configurations/{export_configuration_id}
+desc: Delete export configuration.
+- path:export_configuration_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-0056  PATCH /v0.1/apps/{owner_name}/{app_name}/export_configurations/{export_configuration_id}
+desc: Partially update export configuration.
+- path:export_configuration_id string
+- path:owner_name string
+- path:app_name string
+- body:backfill boolean
+- body:export_entities array<string> enum[crashes|errors|attachments|no_logs]
+- body:resource_group string
+- body:resource_name string
+- body:type string enum[blob_storage_connection_string|application_insights_instrumentation_key|blob_storage_linked_subscription|application_insights_linked_subscription]
+
+## S101-0063  POST /v0.1/apps/{owner_name}/{app_name}/invitations/{user_email}
+desc: Invites a new or existing user to an app
+- path:owner_name string
+- path:app_name string
+- path:user_email string
+- body:role string enum[admin|collaborator|member]
+
+## S101-0069  PUT /v0.1/apps/{owner_name}/{app_name}/releases/{release_id}
+desc: Update details of a release.
+- path:release_id integer
+- path:owner_name string
+- path:app_name string
+- body:build object
+- body:build.branch_name string
+- body:build.commit_hash string
+- body:build.commit_message string
+- body:enabled boolean
+- body:release_notes string
+
+## S101-0075  POST /v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/testers
+desc: Distributes a release to a user
+- path:release_id integer
+- path:owner_name string
+- path:app_name string
+- body:email string
+- body:mandatory_update boolean
+- body:notify_testers boolean
+
+## S101-0076  DELETE /v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/testers/{tester_id}
+desc: Delete the given tester from the release
+- path:release_id integer
+- path:tester_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-0083  PATCH /v0.1/apps/{owner_name}/{app_name}/symbol_uploads/{symbol_upload_id}
+desc: Commits or aborts the symbol upload process for a new set of symbols for the specified application
+- path:symbol_upload_id string
+- path:owner_name string
+- path:app_name string
+- body:status string enum[committed|aborted]
+
+## S101-0090  POST /v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/start
+desc: Starts test run
+- path:test_run_id string
+- path:owner_name string
+- path:app_name string
+- body:device_selection string
+- body:language string
+- body:locale string
+- body:test_framework string
+- body:test_parameters object
+- body:test_series string
+
+## S101-0102  PUT /v0.1/apps/{owner_name}/{app_name}/user/device_sets/{id}
+desc: Updates a device set belonging to the user
+- path:id string
+- path:owner_name string
+- path:app_name string
+- body:devices array<string>
+- body:name string
+
+## S101-0103  DELETE /v0.1/apps/{owner_name}/{app_name}/users/{user_email}
+desc: Removes the user from the app
+- path:owner_name string
+- path:app_name string
+- path:user_email string
+
+## S101-0104  PATCH /v0.1/apps/{owner_name}/{app_name}/users/{user_email}
+desc: Update user permission for the app
+- path:owner_name string
+- path:app_name string
+- path:user_email string
+- body:permissions array<string> enum[manager|developer|viewer]
+
+## S101-0112  POST /v0.1/orgs/{org_name}/avatar
+desc: Sets the organization avatar
+- path:org_name string
+- body:avatar string
+
+## S101-0113  POST /v0.1/orgs/{org_name}/distribution_groups
+desc: Creates a disribution goup which can be shared across apps under an organization
+- path:org_name string
+- body:display_name string
+- body:name string
+
+## S101-0117  POST /v0.1/orgs/{org_name}/distribution_groups/{distribution_group_name}/apps/bulk_delete
+desc: Delete apps from distribution group in an org
+- path:org_name string
+- path:distribution_group_name string
+- body:apps array<object>
+- body:apps[].name string
+
+## S101-0121  DELETE /v0.1/orgs/{org_name}/invitations
+desc: Removes a user's invitation to an organization
+- path:org_name string
+- body:user_email string
+
+## S101-0125  POST /v0.1/orgs/{org_name}/invitations/{email}/revoke
+desc: Removes a user's invitation to an organization
+- path:org_name string
+- path:email string
+- body:(body) object
+
+## S101-0132  POST /v0.1/orgs/{org_name}/teams/{team_name}/users
+desc: Adds a new user to a team that is owned by an organization
+- path:org_name string
+- path:team_name string
+- body:user_email string
+
+## S101-0138  POST /v0.1/public/codepush/report_status/download
+desc: Report download of specified release
+- body:app_version string
+- body:client_unique_id string
+- body:deployment_key string
+- body:label string
+- body:previous_deployment_key string
+- body:previous_label_or_app_version string
+- body:status string
+
+## S101-0139  POST /v0.1/public/hooks
+desc: Public webhook sink
+- body:(body) object
+
+## S101-0140  PATCH /v0.1/user
+desc: Updates the user profile and returns the updated user data
+- body:display_name string
+
+## S101-0151  POST /v0.1/users/{user_id}/devices/register
+desc: Registers a user for an existing device
+- path:user_id string
+- body:imei string
+- body:model string
+- body:os_build string
+- body:os_version string
+- body:owner_id string
+- body:serial string
+- body:udid string
+
+## S102-0001  POST /client
+desc: Register a client | Register a new client with this Authentiq Connect provider. This endpoint is compatible with [OIDC's Client Registration](http://openid.net/specs/openid-connect-registration-1_0.html) extension.
+schema: Client
+- body:application_type string
+- body:client_id string
+- body:client_name string
+- body:client_uri string
+- body:contacts array<string>
+- body:default_max_age integer
+- body:default_scopes array<string>
+- body:grant_types array<string>
+- body:logo_uri string
+- body:policy_uri string
+- body:redirect_uris array<string>
+- body:response_types array<string>
+- body:tos_uri string
+
+## S102-0002  DELETE /client/{client_id}
+desc: Delete a client | Delete a previously registered client.
+- path:client_id string
+
+## S102-0003  PUT /client/{client_id}
+desc: Update a client | Update the configuration of a previously registered client.
+schema: Client
+- path:client_id string
+- body:application_type string
+- body:client_id string
+- body:client_name string
+- body:client_uri string
+- body:contacts array<string>
+- body:default_max_age integer
+- body:default_scopes array<string>
+- body:grant_types array<string>
+- body:logo_uri string
+- body:policy_uri string
+- body:redirect_uris array<string>
+- body:response_types array<string>
+- body:tos_uri string
+
+## S102-0004  POST /token
+desc: Obtain an ID Token | Exchange en authorization code for an ID Token or Access Token. This endpoint supports both `client_secret_basic` (default) and `client_secret_basic` authentication methods, as specified by the client's `token_endpoint_auth_method`.
+- body:client_id string
+- body:client_secret string
+- body:code string
+- body:grant_type string
+- body:redirect_uri string
+
+## S103-0001  POST /build
+desc: Build a Docker image from a Dockerfile | This API builds a new container image from a Dockerfile that is stored on your local machine and pushes the image to the private Bluemix registry (corresponding IBM Containers command: `cf ic build`). To push an image to your Bluemix registry, a namespace must be set for the organization. Run `cf ic namespace get` or call the `GET /registry/namespaces` API 
+- query:t string
+- query:q boolean
+- query:nocache boolean
+- query:pull boolean
+- body:(body) string
+
+## S103-0003  POST /containers/floating-ips/request
+desc: Request a public IP address for a space | This endpoint requests a new public IP address for a space (corresponding IBM Containers command: `cf ic ip request`). The number of public IP addresses depends on the quota that is assigned to the space. If there is not enough quota left to request a new public IP address, you can either contact your organization manager to increase the quota, or unbind a
+
+## S103-0004  POST /containers/floating-ips/{ip}/release
+desc: Release public IP address | This endpoint releases a public IP address from a space (corresponding IBM Containers command: `cf ic ip release <ip_adress>`). The public IP address is no longer allocated to the space. If a container was bound to the IP address, it is automatically unbound.
+- path:ip string
+
+## S103-0006  DELETE /containers/groups/{name_or_id}
+desc: Stop and delete all container instances in a container group. | Stops and deletes the container instances that run in a container group (corresponding IBM Containers command: `cf ic group rm <group_name>`). When you delete a container group, all floating private IP addresses are released.
+- path:name_or_id string
+- query:force string
+
+## S103-0007  PATCH /containers/groups/{name_or_id}
+desc: Update a container group. | Update the number of container instances that run in a container group (corresponding IBM Containers command: `cf ic group update <option> <group>`). Note: You can run only one update at a time. The desired number is the number of container instances that you require. It must be within the current limits of Max and Min. To increase the number of desired container instan
+schema: ContainersGroupsNameOrIdPatchUpdatedInfo
+- path:name_or_id string
+- body:Autorecovery string
+- body:Environment array<string>
+- body:NumberInstances object
+- body:NumberInstances.Desired integer
+- body:NumberInstances.Max integer
+- body:NumberInstances.Min integer
+
+## S103-0008  POST /containers/groups/{name_or_id}/maproute
+desc: Map a public route to a container group. | If you want your container group to be accessible from the Internet, you need to expose a public port and map a public route to it (corresponding IBM Containers command: `cf ic route map -n <host> -d <domain> <group>`). Every route consists of the host name and domain.
+schema: Route
+- path:name_or_id string
+- body:domain string
+- body:host string
+
+## S103-0009  POST /containers/groups/{name_or_id}/unmaproute
+desc: Unmap a public route from a container group | This endpoint unmaps a public route from a container group (corresponding IBM Containers command: `cf ic route unmap -n <host> -d <domain> <group>`). If no other public route is mapped to the container group, then the container group is no longer available from the internet. When you unmap a route from a container group, the route is not deleted and ca
+schema: Route
+- path:name_or_id string
+- body:domain string
+- body:host string
+
+## S103-0010  PUT /containers/quota
+desc: Update space quota | This endpoint updates the quota that is allocated to a Bluemix space. **Note**: Only paid accounts are eligbile to update the space quota. If you are using a free-trial account, upgrade to a paid account first.
+schema: ContainersQuotaList
+- body:floating_ips integer
+- body:ram integer
+
+## S103-0011  DELETE /containers/{name_or_id}
+desc: Remove a single container | Remove a single container that is identified by container ID or name from a space (corresponding IBM Containers command: `cf ic delete <container>`). The container must be stopped before it can be deleted, unless the `force` query parameter is set to true.
+- path:name_or_id string
+- query:force boolean
+
+## S103-0013  POST /containers/{name_or_id}/floating-ips/{ip}/unbind
+desc: Unbind a public IP address from a container | This endpoint unbinds a public IP address from a container (corresponding IBM Containers command: `cf ic ip unbind <ip_adress> <container>`). The container that is unbound from the IP address will not be accessible from the internet anymore. The public IP address will be further allocated to the space and can be used to be bound to other containers.
+- path:name_or_id string
+- path:ip string
+
+## S103-0015  POST /containers/{name_or_id}/rename
+desc: Rename a single container | Change the current name of an existing single container that is identified by the container ID or name (corresponding IBM Containers command: `cf ic rename <old_name> <new_name>`).
+- path:name_or_id string
+- query:name string
+
+## S103-0016  POST /containers/{name_or_id}/restart
+desc: Restart a single container | Restart a container with a given container ID or name (corresponding IBM Containers command: `cf ic restart <container>`).
+- path:name_or_id string
+- query:t integer
+
+## S103-0018  POST /containers/{name_or_id}/stop
+desc: Stop a single container | Stop a single container with a given container name or ID (corresponding IBM Containers command: `cf ic stop <container>`).
+- path:name_or_id string
+- query:t integer
+
+## S103-0019  POST /containers/{name_or_id}/unpause
+desc: Unpause a single container | Unpause all processes that are currently stopped inside a single containers with a given container ID or name (corresponding IBM Containers command: `cf ic unpause <container>`).
+- path:name_or_id string
+
+## S103-0021  PUT /registry/namespaces/{namespace}
+desc: Set a namespace for your private Bluemix registry. | Set up your own Docker images registry in Bluemix by defining a namespace for your organization (corresponding IBM Containers command: `cf ic namespace set <namespace>`). The namespace is used to generate a unique URL to your private Bluemix registry. In your private registry you store all Docker images that you want to share across your organiz
+- path:namespace string
+
+## S103-0022  PUT /tlskey/refresh
+desc: Refresh the TLS Certificate | This endpoint requests to generate a new TLS (Transport Layer Security) certificate on the server and to update the existing user TLS certificate (corresponding IBM Containers command: `cf ic init`).
+
+## S103-0023  POST /volumes/create
+desc: Create a volume in a space | This endpoints creates a new volume in your space (corresponding IBM Containers command: `cf ic volume create VOLNAME`). A volume is used to persist and access app data between container restarts. Volumes are hosted on file shares that define the available actual storage in Bluemix and the number of input and output transactions per second (IOPS). After you have create
+- query:name string
+- query:fsName string
+
+## S103-0024  POST /volumes/fs/create
+desc: Create a file share in a space | This endpoint creates a new file share in a space (corresponding IBM Containers command: `cf ic volume fs-create FSNAME FSSIZE FSIOPS`). A file share is a persistent NFS-based (Network File System) storage system that hosts Docker volumes in a Bluemix space and allows a user to store and access container and app-related files. To store files in a file share, you mu
+schema: FileshareParam
+- body:fsIOPS number
+- body:fsName string
+- body:fsSize integer
+
+## S103-0025  DELETE /volumes/fs/{name}
+desc: Delete a file share | This endpoint deletes a file share from a space (corresponding IBM Containers command: `cf ic volume fs-rm FSNAME`). Before you can delete a file share, all mounted volumes must be deleted first. To delete a volume, run `cf ic volume rm VOLNAME` or call the `DELETE /volumes/{name}` API endpoint. **Note:** To delete a file share you must have been granted organization develope
+- path:name string
+
+## S103-0026  DELETE /volumes/{name}
+desc: Delete a volume | Delete a volume with a given name from a space (corresponding IBM Containers command: `cf ic volume rm VOLNAME`). To delete a volume, all mounted containers must be unmounted first. After the volume is deleted, the data that are stored in the volume are lost.
+- path:name string

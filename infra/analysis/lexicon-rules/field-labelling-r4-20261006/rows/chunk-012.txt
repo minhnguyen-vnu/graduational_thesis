@@ -1,0 +1,570 @@
+## S112-N0108  DELETE /{realm}/roles-by-id/{role-id}
+desc: Delete the role
+- path:realm string
+- path:role-id string
+
+## S112-N0109  PUT /{realm}/roles-by-id/{role-id}
+desc: Update the role
+schema: RoleRepresentation
+- path:realm string
+- path:role-id string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0110  DELETE /{realm}/roles-by-id/{role-id}/composites
+desc: Remove a set of roles from the role’s composite
+schema: RoleRepresentation
+- path:realm string
+- path:role-id string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0111  POST /{realm}/roles-by-id/{role-id}/composites
+desc: Make the role a composite role by associating some child roles
+schema: RoleRepresentation
+- path:realm string
+- path:role-id string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0112  PUT /{realm}/roles-by-id/{role-id}/management/permissions
+desc: Return object stating whether role Authoirzation permissions have been initialized or not and a reference
+schema: ManagementPermissionReference
+- path:realm string
+- path:role-id string
+- body:enabled boolean
+- body:resource string
+- body:scopePermissions object
+
+## S112-N0113  DELETE /{realm}/roles/{role-name}
+desc: Delete a role by name
+- path:realm string
+- path:role-name string
+
+## S112-N0114  PUT /{realm}/roles/{role-name}
+desc: Update a role by name
+schema: RoleRepresentation
+- path:realm string
+- path:role-name string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0115  DELETE /{realm}/roles/{role-name}/composites
+desc: Remove roles from the role’s composite
+schema: RoleRepresentation
+- path:realm string
+- path:role-name string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0116  POST /{realm}/roles/{role-name}/composites
+desc: Add a composite to the role
+schema: RoleRepresentation
+- path:realm string
+- path:role-name string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0117  PUT /{realm}/roles/{role-name}/management/permissions
+desc: Return object stating whether role Authoirzation permissions have been initialized or not and a reference
+schema: ManagementPermissionReference
+- path:realm string
+- path:role-name string
+- body:enabled boolean
+- body:resource string
+- body:scopePermissions object
+
+## S112-N0118  DELETE /{realm}/sessions/{session}
+desc: Remove a specific user session.
+- path:realm string
+- path:session string
+
+## S112-N0119  POST /{realm}/testLDAPConnection
+desc: Test LDAP connection
+schema: TestLdapConnectionRepresentation
+- path:realm string
+- body:action string
+- body:bindCredential string
+- body:bindDn string
+- body:componentId string
+- body:connectionTimeout string
+- body:connectionUrl string
+- body:startTls string
+- body:useTruststoreSpi string
+
+## S112-N0120  POST /{realm}/testSMTPConnection
+- path:realm string
+- body:(body) object
+
+## S112-N0121  POST /{realm}/user-storage/{id}/remove-imported-users
+desc: Remove imported users
+- path:realm string
+- path:id string
+
+## S112-N0122  POST /{realm}/user-storage/{id}/sync
+desc: Trigger sync of users Action can be "triggerFullSync" or "triggerChangedUsersSync"
+- path:realm string
+- path:id string
+- query:action string
+
+## S112-N0123  POST /{realm}/user-storage/{id}/unlink-users
+desc: Unlink imported users from a storage provider
+- path:realm string
+- path:id string
+
+## S112-N0127  DELETE /{realm}/users/{id}
+desc: Delete the user
+- path:realm string
+- path:id string
+
+## S112-N0128  PUT /{realm}/users/{id}
+desc: Update the user
+schema: UserRepresentation
+- path:realm string
+- path:id string
+- body:access object
+- body:attributes object
+- body:clientConsents array<object>
+- body:clientConsents[].clientId string
+- body:clientConsents[].createdDate integer
+- body:clientConsents[].grantedClientScopes array<string>
+- body:clientConsents[].lastUpdatedDate integer
+- body:clientRoles object
+- body:createdTimestamp integer
+- body:credentials array<object>
+- body:credentials[].createdDate integer
+- body:credentials[].credentialData string
+- body:credentials[].id string
+- body:credentials[].priority integer
+- body:credentials[].secretData string
+- body:credentials[].temporary boolean
+- body:credentials[].type string
+- body:credentials[].userLabel string
+- body:credentials[].value string
+- body:disableableCredentialTypes array<string>
+- body:email string
+- body:emailVerified boolean
+- body:enabled boolean
+- body:federatedIdentities array<object>
+- body:federatedIdentities[].identityProvider string
+- body:federatedIdentities[].userId string
+- body:federatedIdentities[].userName string
+- body:federationLink string
+- body:firstName string
+- body:groups array<string>
+- body:id string
+- body:lastName string
+- body:notBefore integer
+- body:origin string
+- body:realmRoles array<string>
+- body:requiredActions array<string>
+- body:self string
+- body:serviceAccountClientId string
+- body:username string
+
+## S112-N0130  DELETE /{realm}/users/{id}/credentials/{credentialId}
+desc: Remove a credential for a user
+- path:realm string
+- path:id string
+- path:credentialId string
+
+## S112-N0131  POST /{realm}/users/{id}/credentials/{credentialId}/moveAfter/{newPreviousCredentialId}
+desc: Move a credential to a position behind another credential
+- path:realm string
+- path:id string
+- path:credentialId string
+- path:newPreviousCredentialId string
+
+## S112-N0132  POST /{realm}/users/{id}/credentials/{credentialId}/moveToFirst
+desc: Move a credential to a first position in the credentials list of the user
+- path:realm string
+- path:id string
+- path:credentialId string
+
+## S112-N0134  PUT /{realm}/users/{id}/disable-credential-types
+desc: Disable all credentials for a user of a specific type
+- path:realm string
+- path:id string
+- body:(body) string
+
+## S112-N0135  PUT /{realm}/users/{id}/execute-actions-email
+desc: Send a update account email to the user An email contains a link the user can click to perform a set of required actions.
+- path:realm string
+- path:id string
+- query:client_id string
+- query:lifespan integer
+- query:redirect_uri string
+- body:(body) string
+
+## S112-N0136  DELETE /{realm}/users/{id}/federated-identity/{provider}
+desc: Remove a social login provider from user
+- path:realm string
+- path:id string
+- path:provider string
+
+## S112-N0137  POST /{realm}/users/{id}/federated-identity/{provider}
+desc: Add a social login provider to the user
+schema: FederatedIdentityRepresentation
+- path:realm string
+- path:id string
+- path:provider string
+- body:identityProvider string
+- body:userId string
+- body:userName string
+
+## S112-N0138  DELETE /{realm}/users/{id}/groups/{groupId}
+- path:realm string
+- path:id string
+- path:groupId string
+
+## S112-N0139  PUT /{realm}/users/{id}/groups/{groupId}
+- path:realm string
+- path:id string
+- path:groupId string
+
+## S112-N0142  PUT /{realm}/users/{id}/reset-password
+desc: Set up a new password for the user.
+schema: CredentialRepresentation
+- path:realm string
+- path:id string
+- body:createdDate integer
+- body:credentialData string
+- body:id string
+- body:priority integer
+- body:secretData string
+- body:temporary boolean
+- body:type string
+- body:userLabel string
+- body:value string
+
+## S112-N0143  DELETE /{realm}/users/{id}/role-mappings/clients/{client}
+desc: Delete client-level roles from user role mapping
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- path:client string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0147  PUT /{realm}/users/{id}/send-verify-email
+desc: Send an email-verification email to the user An email contains a link the user can click to verify their email address.
+- path:realm string
+- path:id string
+- query:client_id string
+- query:redirect_uri string
+
+## S358-N0001  POST /v2/1-clicks/kubernetes
+desc: Install Kubernetes 1-Click Applications | To install a Kubernetes 1-Click application on a cluster, send a POST request to `/v2/1-clicks/kubernetes`. The `addon_slugs` and `cluster_uuid` must be provided as body parameter in order to specify which 1-Click application(s) to install. To list all available 1-Click Kubernetes applications, send a request to `/v2/1-clicks?type=kubernetes`.
+- body:addon_slugs array<string>
+- body:cluster_uuid string
+
+## S358-N0004  PUT /v2/account/keys/{ssh_key_identifier}
+desc: Update an SSH Key's Name | To update the name of an SSH key, send a PUT request to either `/v2/account/keys/$SSH_KEY_ID` or `/v2/account/keys/$SSH_KEY_FINGERPRINT`. Set the `name` attribute to the new name you want to use.
+- body:name any
+
+## S358-N0005  POST /v2/apps
+desc: Create a New App | Create a new app by submitting an app specification. For documentation on app specifications (`AppSpec` objects), please refer to [the product documentation](https://docs.digitalocean.com/products/app-platform/reference/app-spec/).
+- body:project_id string
+- body:spec any
+
+## S358-N0006  POST /v2/apps/metrics/bandwidth_daily
+desc: Retrieve Multiple Apps' Daily Bandwidth Metrics | Retrieve daily bandwidth usage metrics for multiple apps.
+- body:app_ids array<string>
+- body:date string
+
+## S358-N0007  POST /v2/apps/propose
+desc: Propose an App Spec | To propose and validate a spec for a new or existing app, send a POST request to the `/v2/apps/propose` endpoint. The request returns some information about the proposed app, including app cost and upgrade cost. If an existing app ID is specified, the app spec is treated as a proposed update to the existing app.
+- body:app_id string
+- body:spec any
+
+## S358-N0008  POST /v2/apps/{app_id}/alerts/{alert_id}/destinations
+desc: Update destinations for alerts | Updates the emails and slack webhook destinations for app alerts. Emails must be associated to a user with access to the app.
+- path:alert_id string
+- body:emails array<any>
+- body:slack_webhooks array<any>
+
+## S358-N0009  POST /v2/apps/{app_id}/deployments
+desc: Create an App Deployment | Creating an app deployment will pull the latest changes from your repository and schedule a new deployment for your app.
+- body:force_build boolean
+
+## S358-N0011  POST /v2/apps/{app_id}/rollback
+desc: Rollback App | Rollback an app to a previous deployment. A new deployment will be created to perform the rollback. The app will be pinned to the rollback deployment preventing any new deployments from being created, either manually or through Auto Deploy on Push webhooks. To resume deployments, the rollback must be either committed or reverted. It is recommended to use the Validate App Rollback en
+- body:deployment_id string
+- body:skip_pin boolean
+
+## S358-N0012  POST /v2/apps/{app_id}/rollback/commit
+desc: Commit App Rollback | Commit an app rollback. This action permanently applies the rollback and unpins the app to resume new deployments.
+
+## S358-N0013  POST /v2/apps/{app_id}/rollback/revert
+desc: Revert App Rollback | Revert an app rollback. This action reverts the active rollback by creating a new deployment from the latest app spec prior to the rollback and unpins the app to resume new deployments.
+
+## S358-N0015  DELETE /v2/apps/{id}
+desc: Delete an App | Delete an existing app. Once deleted, all active deployments will be permanently shut down and the app deleted. If needed, be sure to back up your app specification so that you may re-create it at a later time.
+- path:id string
+
+## S358-N0016  PUT /v2/apps/{id}
+desc: Update an App | Update an existing app by submitting a new app specification. For documentation on app specifications (`AppSpec` objects), please refer to [the product documentation](https://docs.digitalocean.com/products/app-platform/reference/app-spec/).
+- body:spec any
+
+## S358-N0017  POST /v2/cdn/endpoints
+desc: Create a New CDN Endpoint | To create a new CDN endpoint, send a POST request to `/v2/cdn/endpoints`. The origin attribute must be set to the fully qualified domain name (FQDN) of a DigitalOcean Space. Optionally, the TTL may be configured by setting the `ttl` attribute. A custom subdomain may be configured by specifying the `custom_domain` and `certificate_id` attributes.
+schema: items
+- body:(body) any
+
+## S358-N0018  DELETE /v2/cdn/endpoints/{cdn_id}
+desc: Delete a CDN Endpoint | To delete a specific CDN endpoint, send a DELETE request to `/v2/cdn/endpoints/$ENDPOINT_ID`. A status of 204 will be given. This indicates that the request was processed successfully, but that no response body is needed.
+
+## S358-N0019  PUT /v2/cdn/endpoints/{cdn_id}
+desc: Update a CDN Endpoint | To update the TTL, certificate ID, or the FQDN of the custom subdomain for an existing CDN endpoint, send a PUT request to `/v2/cdn/endpoints/$ENDPOINT_ID`.
+- body:certificate_id string
+- body:custom_domain string
+- body:ttl integer enum[60|600|3600|86400|604800]
+
+## S358-N0021  POST /v2/certificates
+desc: Create a New Certificate | To upload new SSL certificate which you have previously generated, send a POST request to `/v2/certificates`. When uploading a user-generated certificate, the `private_key`, `leaf_certificate`, and optionally the `certificate_chain` attributes should be provided. The type must be set to `custom`. When using Let's Encrypt to create a certificate, the `dns_names` attribute
+schema: 0
+- body:name string
+- body:type string enum[custom|lets_encrypt]
+- body:dns_names array<string>
+- body:certificate_chain string
+- body:leaf_certificate string
+- body:private_key string
+
+## S358-N0023  POST /v2/databases
+desc: Create a New Database Cluster | To create a database cluster, send a POST request to `/v2/databases`. The response will be a JSON object with a key called `database`. The value of this will be an object that contains the standard attributes associated with a database cluster. The initial value of the database cluster's `status` attribute will be `creating`. When the cluster is ready to receive tra
+schema: items
+- body:connection object
+- body:connection.database string
+- body:connection.host string
+- body:connection.password string
+- body:connection.port integer
+- body:connection.ssl boolean
+- body:connection.uri string
+- body:connection.user string
+- body:created_at string
+- body:db_names array<string>
+- body:engine string enum[pg|mysql|redis|mongodb]
+- body:id string
+- body:maintenance_window object
+- body:maintenance_window.day string
+- body:maintenance_window.description array<string>
+- body:maintenance_window.hour string
+- body:maintenance_window.pending boolean
+- body:name string
+- body:num_nodes integer
+- body:private_connection any
+- body:private_network_uuid string
+- body:project_id string
+- body:region string
+- body:rules array<object>
+- body:rules[].cluster_uuid string
+- body:rules[].created_at string
+- body:rules[].type string enum[droplet|k8s|ip_addr|tag|app]
+- body:rules[].uuid string
+- body:rules[].value string
+- body:size string
+- body:status string enum[creating|online|resizing|migrating|forking]
+- body:tags array<string>
+- body:users array<object>
+- body:users[].mysql_settings object
+- body:users[].mysql_settings.auth_plugin string enum[mysql_native_password|caching_sha2_password]
+- body:users[].name string
+- body:users[].password string
+- body:users[].role string enum[primary|normal]
+- body:version string
+- body:version_end_of_availability string
+- body:version_end_of_life string
+- body:backup_restore object
+- body:backup_restore.backup_created_at string
+- body:backup_restore.database_name string
+
+## S358-N0024  DELETE /v2/databases/{database_cluster_uuid}
+desc: Destroy a Database Cluster | To destroy a specific database, send a DELETE request to `/v2/databases/$DATABASE_ID`. A status of 204 will be given. This indicates that the request was processed successfully, but that no response body is needed.
+
+## S358-N0025  PATCH /v2/databases/{database_cluster_uuid}/config
+desc: Update the Database Configuration for an Existing Database | To update the configuration for an existing database cluster, send a PATCH request to `/v2/databases/$DATABASE_ID/config`.
+- body:config any
+
+## S358-N0026  POST /v2/databases/{database_cluster_uuid}/dbs
+desc: Add a New Database | To add a new database to an existing cluster, send a POST request to `/v2/databases/$DATABASE_ID/dbs`. Note: Database management is not supported for Redis clusters. The response will be a JSON object with a key called `db`. The value of this will be an object that contains the standard attributes associated with a database.
+schema: items
+- body:(body) any
+
+## S358-N0027  DELETE /v2/databases/{database_cluster_uuid}/dbs/{database_name}
+desc: Delete a Database | To delete a specific database, send a DELETE request to `/v2/databases/$DATABASE_ID/dbs/$DB_NAME`. A status of 204 will be given. This indicates that the request was processed successfully, but that no response body is needed. Note: Database management is not supported for Redis clusters.
+
+## S358-N0028  PUT /v2/databases/{database_cluster_uuid}/eviction_policy
+desc: Configure the Eviction Policy for a Redis Cluster | To configure an eviction policy for an existing Redis cluster, send a PUT request to `/v2/databases/$DATABASE_ID/eviction_policy` specifying the desired policy.
+- body:eviction_policy any
+
+## S358-N0029  PUT /v2/databases/{database_cluster_uuid}/firewall
+desc: Update Firewall Rules (Trusted Sources) for a Database | To update a database cluster's firewall rules (known as "trusted sources" in the control panel), send a PUT request to `/v2/databases/$DATABASE_ID/firewall` specifying which resources should be able to open connections to the database. You may limit connections to specific Droplets, Kubernetes clusters, or IP addresses. When a tag is provide
+- body:rules array<object>
+- body:rules[].cluster_uuid string
+- body:rules[].created_at string
+- body:rules[].type string enum[droplet|k8s|ip_addr|tag|app]
+- body:rules[].uuid string
+- body:rules[].value string
+
+## S358-N0030  PUT /v2/databases/{database_cluster_uuid}/maintenance
+desc: Configure a Database Cluster's Maintenance Window | To configure the window when automatic maintenance should be performed for a database cluster, send a PUT request to `/v2/databases/$DATABASE_ID/maintenance`. A successful request will receive a 204 No Content status code with no body in response.
+schema: 0
+- body:(body) any
+
+## S358-N0032  PUT /v2/databases/{database_cluster_uuid}/online-migration
+desc: Start an Online Migration | To start an online migration, send a PUT request to `/v2/databases/$DATABASE_ID/online-migration` endpoint. Migrating a cluster establishes a connection with an existing cluster and replicates its contents to the target cluster. Online migration is only available for MySQL, PostgreSQL, and Redis clusters.
+- body:disable_ssl boolean
+- body:source any
+
+## S358-N0033  DELETE /v2/databases/{database_cluster_uuid}/online-migration/{migration_id}
+desc: Stop an Online Migration | To stop an online migration, send a DELETE request to `/v2/databases/$DATABASE_ID/online-migration/$MIGRATION_ID`. A status of 204 will be given. This indicates that the request was processed successfully, but that no response body is needed.
+- path:migration_id string
+
+## S358-N0034  POST /v2/databases/{database_cluster_uuid}/pools
+desc: Add a New Connection Pool (PostgreSQL) | For PostgreSQL database clusters, connection pools can be used to allow a database to share its idle connections. The popular PostgreSQL connection pooling utility PgBouncer is used to provide this service. [See here for more information](https://www.digitalocean.com/docs/databases/postgresql/how-to/manage-connection-pools/) about how and why to use PgBounc
+schema: items
+- body:(body) any
+
+## S358-N0035  DELETE /v2/databases/{database_cluster_uuid}/pools/{pool_name}
+desc: Delete a Connection Pool (PostgreSQL) | To delete a specific connection pool for a PostgreSQL database cluster, send a DELETE request to `/v2/databases/$DATABASE_ID/pools/$POOL_NAME`. A status of 204 will be given. This indicates that the request was processed successfully, but that no response body is needed.
+
+## S358-N0037  POST /v2/databases/{database_cluster_uuid}/replicas
+desc: Create a Read-only Replica | To create a read-only replica for a PostgreSQL or MySQL database cluster, send a POST request to `/v2/databases/$DATABASE_ID/replicas` specifying the name it should be given, the size of the node to be used, and the region where it will be located. **Note**: Read-only replicas are not supported for Redis clusters. The response will be a JSON object with a key called `r
+schema: items
+- body:(body) any
+
+## S358-N0039  PUT /v2/databases/{database_cluster_uuid}/replicas/{replica_name}/promote
+desc: Promote a Read-only Replica to become a Primary Cluster | To promote a specific read-only replica, send a PUT request to `/v2/databases/$DATABASE_ID/replicas/$REPLICA_NAME/promote`. **Note**: Read-only replicas are not supported for Redis clusters. A status of 204 will be given. This indicates that the request was processed successfully, but that no response body is needed.
+
+## S358-N0040  PUT /v2/databases/{database_cluster_uuid}/resize
+desc: Resize a Database Cluster | To resize a database cluster, send a PUT request to `/v2/databases/$DATABASE_ID/resize`. The body of the request must specify both the size and num_nodes attributes. A successful request will receive a 202 Accepted status code with no body in response. Querying the database cluster will show that its status attribute will now be set to resizing. This will transition bac
+- body:num_nodes integer
+- body:size string
+
+## S358-N0043  POST /v2/databases/{database_cluster_uuid}/users
+desc: Add a Database User | To add a new database user, send a POST request to `/v2/databases/$DATABASE_ID/users` with the desired username. Note: User management is not supported for Redis clusters. When adding a user to a MySQL cluster, additional options can be configured in the `mysql_settings` object. The response will be a JSON object with a key called `user`. The value of this will be an object t
+schema: items
+- body:mysql_settings object
+- body:mysql_settings.auth_plugin string enum[mysql_native_password|caching_sha2_password]
+- body:name string
+- body:password string
+- body:role string enum[primary|normal]
+
+## S358-N0044  DELETE /v2/databases/{database_cluster_uuid}/users/{username}
+desc: Remove a Database User | To remove a specific database user, send a DELETE request to `/v2/databases/$DATABASE_ID/users/$USERNAME`. A status of 204 will be given. This indicates that the request was processed successfully, but that no response body is needed. Note: User management is not supported for Redis clusters.
+
+## S358-N0045  POST /v2/databases/{database_cluster_uuid}/users/{username}/reset_auth
+desc: Reset a Database User's Password or Authentication Method | To reset the password for a database user, send a POST request to `/v2/databases/$DATABASE_ID/users/$USERNAME/reset_auth`. For `mysql` databases, the authentication method can be specifying by including a key in the JSON body called `mysql_settings` with the `auth_plugin` value specified. The response will be a JSON object with a `user` k
+- body:mysql_settings object
+- body:mysql_settings.auth_plugin string enum[mysql_native_password|caching_sha2_password]
+
+## S358-N0046  POST /v2/domains
+desc: Create a New Domain | To create a new domain, send a POST request to `/v2/domains`. Set the "name" attribute to the domain name you are adding. Optionally, you may set the "ip_address" attribute, and an A record will be automatically created pointing to the apex domain.
+schema: items
+- body:(body) any
+
+## S358-N0047  DELETE /v2/domains/{domain_name}
+desc: Delete a Domain | To delete a domain, send a DELETE request to `/v2/domains/$DOMAIN_NAME`.
+
+## S358-N0048  POST /v2/domains/{domain_name}/records
+desc: Create a New Domain Record | To create a new record to a domain, send a POST request to `/v2/domains/$DOMAIN_NAME/records`. The request must include all of the required fields for the domain record type being added. See the [attribute table](#tag/Domain-Records) for details regarding record types and their respective required attributes.
+schema: items
+- body:(body) any
+
+## S358-N0049  DELETE /v2/domains/{domain_name}/records/{domain_record_id}
+desc: Delete a Domain Record | To delete a record for a domain, send a DELETE request to `/v2/domains/$DOMAIN_NAME/records/$DOMAIN_RECORD_ID`. The record will be deleted and the response status will be a 204. This indicates a successful request with no body returned.
+
+## S358-N0051  PUT /v2/domains/{domain_name}/records/{domain_record_id}
+desc: Update a Domain Record | To update an existing record, send a PUT request to `/v2/domains/$DOMAIN_NAME/records/$DOMAIN_RECORD_ID`. Any attribute valid for the record type can be set to a new value for the record. See the [attribute table](#tag/Domain-Records) for details regarding record types and their respective attributes.
+schema: items
+- body:(body) any
+
+## S358-N0054  POST /v2/droplets/actions
+desc: Acting on Tagged Droplets | Some actions can be performed in bulk on tagged Droplets. The actions can be initiated by sending a POST to `/v2/droplets/actions?tag_name=$TAG_NAME` with the action arguments. Only a sub-set of action types are supported: - `power_cycle` - `power_on` - `power_off` - `shutdown` - `enable_ipv6` - `enable_backups` - `disable_backups` - `snapshot`
+schema: 0
+- body:(body) any
+
+## S358-N0055  DELETE /v2/droplets/{droplet_id}
+desc: Delete an Existing Droplet | To delete a Droplet, send a DELETE request to `/v2/droplets/$DROPLET_ID`. A successful request will receive a 204 status code with no body in response. This indicates that the request was processed successfully.
+
+## S358-N0056  POST /v2/droplets/{droplet_id}/actions
+desc: Initiate a Droplet Action | To initiate an action on a Droplet send a POST request to `/v2/droplets/$DROPLET_ID/actions`. In the JSON body to the request, set the `type` attribute to on of the supported action types: | Action | Details | | ---------------------------------------- | ----------- | | <nobr>`enable_backups`</nobr> | Enables backups for a Droplet | | <nobr>`disable_backups`</nobr> | Di
+schema: 0
+- body:type string enum[enable_backups|disable_backups|reboot|power_cycle|shutdown|power_off|power_on|restore|password_reset|resize|rebuild|rename]
+- body:image integer
+- body:disk boolean
+- body:size string
+- body:name string
+- body:kernel integer
+
+## S358-N0058  POST /v2/droplets/{droplet_id}/destroy_with_associated_resources/retry
+desc: Retry a Droplet Destroy with Associated Resources Request | If the status of a request to destroy a Droplet with its associated resources reported any errors, it can be retried by sending a POST request to the `/v2/droplets/$DROPLET_ID/destroy_with_associated_resources/retry` endpoint. Only one destroy can be active at a time per Droplet. If a retry is issued while another destroy is in progress f
+
+## S358-N0059  DELETE /v2/droplets/{droplet_id}/destroy_with_associated_resources/selective
+desc: Selectively Destroy a Droplet and its Associated Resources | To destroy a Droplet along with a sub-set of its associated resources, send a DELETE request to the `/v2/droplets/$DROPLET_ID/destroy_with_associated_resources/selective` endpoint. The JSON body of the request should include `reserved_ips`, `snapshots`, `volumes`, or `volume_snapshots` keys each set to an array of IDs for the associated 
+- body:floating_ips array<string>
+- body:reserved_ips array<string>
+- body:snapshots array<string>
+- body:volume_snapshots array<string>
+- body:volumes array<string>
+
+## S358-N0060  POST /v2/firewalls
+desc: Create a New Firewall | To create a new firewall, send a POST request to `/v2/firewalls`. The request must contain at least one inbound or outbound access rule.
+schema: items
+- body:(body) any

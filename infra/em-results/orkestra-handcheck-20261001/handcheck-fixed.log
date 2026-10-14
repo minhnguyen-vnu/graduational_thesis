@@ -1,0 +1,14 @@
+AIR rebuilt (Starting server count=2) after ~2s
+health OK
+=== run cache-aware hand-check on FIXED version ===
+[PRE] promote victim->administrator
+  promote -> 200
+[A] victim login -> V_OLD
+  V_OLD srole=administrator
+[B] source write V_OLD (expect 200) -> 200
+[D] demote victim->guest (step-up)
+  demote -> 200
+[poll] fresh(guest) vs V_OLD write, until fresh flips to 403 (cache expiry)
+  t=0s fresh(srole=guest)=403  old(srole=administrator)=401
+[FLIP] fresh->403 at t=0s ; old=401
+[DONE]

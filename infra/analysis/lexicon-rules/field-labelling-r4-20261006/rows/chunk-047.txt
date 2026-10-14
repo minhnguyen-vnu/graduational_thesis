@@ -1,0 +1,521 @@
+## S136-N0083  DELETE /apps/{appId}/purchases/{id}/attach
+desc: Detach a file at a purchase
+- path:appId integer
+- path:id integer
+- query:file_id integer
+
+## S136-N0085  DELETE /apps/{appId}/purchases/{id}/tag
+desc: Delete a tag on a purchase
+- path:appId integer
+- path:id integer
+- query:tag string
+
+## S136-N0086  POST /apps/{appId}/purchases/{id}/tag
+desc: Add a tag on a purchase
+- path:appId integer
+- path:id integer
+- query:tag string
+
+## S136-N0087  POST /apps/{appId}/purchases/{id}/updatestatus
+desc: Update the status of an invoice
+- path:appId integer
+- path:id integer
+- query:status string enum[completed|paid]
+
+## S136-N0089  DELETE /apps/{appId}/quotes/batch
+desc: Delete many quotes | Delete many quotes
+- path:appId integer
+- query:ids array<integer>
+
+## S136-N0090  POST /apps/{appId}/quotes/batch
+desc: Create or update many quotes | Create or update many quotes
+- path:appId integer
+- query:data array<object>
+
+## S136-N0091  POST /apps/{appId}/quotes/fresh
+desc: Regenerate pdf and recalcul amounts of quote
+- path:appId integer
+- query:ids array<integer>
+
+## S136-N0092  POST /apps/{appId}/quotes/invoice
+desc: Create or update many quotes | Create or update many quotes
+- path:appId integer
+- query:ids array<integer>
+
+## S136-N0093  DELETE /apps/{appId}/quotes/{id}
+desc: Remove a quote | Remove a quote by id : only for draft
+- path:appId integer
+- path:id integer
+
+## S136-N0096  POST /apps/{appId}/quotes/{id}/attach
+desc: Attach a file at a quote
+- path:appId integer
+- path:id integer
+- query:file string
+
+## S136-N0097  POST /apps/{appId}/quotes/{id}/downpayment
+desc: Transform the quote in a downpayment invoice
+- path:appId integer
+- path:id integer
+- query:percent integer
+
+## S136-N0098  POST /apps/{appId}/quotes/{id}/duplicate
+desc: Duplicate a quote
+- path:appId integer
+- path:id integer
+
+## S136-N0099  POST /apps/{appId}/quotes/{id}/finalize
+desc: Finalize a quote
+- path:appId integer
+- path:id integer
+
+## S136-N0100  POST /apps/{appId}/quotes/{id}/invoice
+desc: Transform the quote in invoice
+- path:appId integer
+- path:id integer
+
+## S136-N0101  POST /apps/{appId}/quotes/{id}/situation_invoice
+desc: Transform the quote into a situation invoice
+- path:appId integer
+- path:id integer
+- query:progress integer
+
+## S136-N0102  DELETE /apps/{appId}/quotes/{id}/tag
+desc: Delete a tag on a quote
+- path:appId integer
+- path:id integer
+- query:tag string
+
+## S136-N0103  POST /apps/{appId}/quotes/{id}/tag
+desc: Add a tag on an quote
+- path:appId integer
+- path:id integer
+- query:tag string
+
+## S136-N0104  POST /apps/{appId}/quotes/{id}/updatestatus
+desc: Update the status of a quote
+- path:appId integer
+- path:id integer
+- query:status string enum[waiting|goodforagreement|refused|transformed|deleted]
+
+## S136-N0105  DELETE /apps/{appId}/reconcile
+desc: Remove payments by an object | Remove all payments of a parent object
+- path:appId integer
+- query:type string enum[transaction|sales|purchase]
+- query:id integer
+
+## S136-N0106  POST /apps/{appId}/reconcile
+desc: Reconcile a transaction or a document | Create a new payments and categorizations by one-to-many
+- path:appId integer
+- query:replace_all boolean
+- query:type string enum[transaction|sales|purchase]
+- query:id integer
+- query:movements object
+- query:paid_at string
+- query:rule object
+
+## S136-N0109  DELETE /apps/{appId}/recurringinvoices/batch
+desc: Delete many RecurringInvoice | Delete many RecurringInvoice
+- path:appId integer
+- query:ids array<integer>
+
+## S136-N0110  POST /apps/{appId}/recurringinvoices/batch
+desc: Create or update many RecurringInvoice | Create or update many RecurringInvoice
+- path:appId integer
+- query:data array<object>
+
+## S136-N0111  DELETE /apps/{appId}/recurringinvoices/{id}
+desc: Remove a RecurringInvoice
+- path:appId integer
+- path:id integer
+
+## S136-N0113  POST /apps/{appId}/relationships/{id}
+desc: Update a relationship | Update a relationship by id
+- path:appId integer
+- path:id integer
+- query:is_customer boolean
+- query:is_supplier boolean
+- query:is_prospect boolean
+- query:importance_level integer
+- query:rating integer
+- query:balance_initial_amount integer
+- query:is_notifying boolean
+- query:note string
+- query:reference string
+- query:tags string
+- query:discount string
+- query:details string
+- query:metadata array<any>
+
+## S136-N0114  DELETE /apps/{appId}/relationships/{id}/attach
+desc: Detach a file
+- path:appId integer
+- path:id integer
+- query:file_id integer
+
+## S136-N0115  POST /apps/{appId}/relationships/{id}/attach
+desc: Attach a file
+- path:appId integer
+- path:id integer
+- query:file string
+
+## S136-N0116  POST /apps/{appId}/reset
+desc: Reset all data | Reset everything
+- path:appId integer
+
+## S136-N0117  POST /apps/{appId}/rules/
+desc: Create a rule
+- path:appId integer
+- query:conditions array<array>
+- query:on_event string
+- query:parameter string
+- query:value string
+- query:priority integer
+
+## S136-N0118  POST /apps/{appId}/rules/execute_on
+desc: Execute all rules
+- path:appId integer
+- query:model string
+
+## S136-N0119  DELETE /apps/{appId}/rules/{id}
+desc: Remove a rule
+- path:appId integer
+- path:id integer
+
+## S136-N0120  POST /apps/{appId}/rules/{id}
+desc: Update a rule
+- path:appId integer
+- path:id integer
+- query:conditions array<array>
+- query:on_event string
+- query:parameter string
+- query:value string
+- query:priority integer
+
+## S136-N0121  POST /apps/{appId}/salesdocumentmodels
+desc: Create a sales document model
+- path:appId integer
+- query:name string
+- query:title string
+- query:content array<object>
+- query:columns object
+
+## S136-N0122  DELETE /apps/{appId}/salesdocumentmodels/{id}
+desc: Remove a sales document model
+- path:appId integer
+- path:id integer
+
+## S136-N0123  POST /apps/{appId}/salesdocumentmodels/{id}
+desc: Update a sales document model
+- path:appId integer
+- path:id integer
+- query:name string
+- query:title string
+- query:content array<object>
+- query:columns object
+
+## S136-N0125  POST /apps/{appId}/sepamandates/credittransfer
+desc: Preview sepa credit transfer file
+- path:appId integer
+- query:ids array<integer>
+- query:amounts array<integer>
+- query:debtor_name string
+- query:debtor_iban string
+- query:debtor_bic string
+- query:btchBookg integer
+
+## S136-N0126  POST /apps/{appId}/sepamandates/directdebit
+desc: Download sepa direct debit file
+- path:appId integer
+- query:invoices_ids array<integer>
+- query:amounts array<integer>
+- query:creditor_name string
+- query:creditor_iban string
+- query:creditor_bic string
+- query:creditor_ics string
+- query:date string
+
+## S136-N0127  DELETE /apps/{appId}/sepamandates/{id}
+desc: Remove a SEPAMandate
+- path:appId integer
+- path:id integer
+
+## S136-N0128  POST /apps/{appId}/sepamandates/{id}
+desc: Update a SEPAMandate
+- path:appId integer
+- path:id integer
+- query:customer_organization_id integer
+- query:customer_person_id integer
+- query:old_mandate_id integer
+- query:mandate_id string
+- query:signed_at string
+- query:electronic_signature string
+- query:customer_name string
+- query:iban string
+- query:bic string
+- query:is_first boolean
+
+## S136-N0129  POST /apps/{appId}/services/stripe/webhook
+desc: Webhook for Stripe
+- path:appId integer
+
+## S136-N0130  POST /apps/{appId}/services/yousign/webhook
+desc: Webhook for Yousign
+- path:appId integer
+
+## S136-N0131  POST /apps/{appId}/settings
+desc: Update app config | General settings of an app. Can be modified in app
+- path:appId integer
+- query:settings object
+- query:key string
+- query:value string
+
+## S136-N0132  POST /apps/{appId}/signature
+desc: Create a signature | Create a new signature
+- path:appId integer
+- query:documentId integer
+- query:email string
+- query:firstname string
+- query:lastname string
+- query:phone string
+
+## S136-N0133  POST /apps/{appId}/subscription/anchordate
+desc: Update anchor date
+- path:appId integer
+
+## S136-N0134  POST /apps/{appId}/subscription/coupon
+desc: Add coupon
+- path:appId integer
+- query:code string
+
+## S136-N0135  POST /apps/{appId}/subscription/extend_trial
+desc: Extend trial period
+- path:appId integer
+
+## S136-N0136  POST /apps/{appId}/subscription/extra/{stripe_plan}
+desc: Enable plan
+- path:appId integer
+- path:stripe_plan string
+
+## S136-N0137  POST /apps/{appId}/subscription/pay_all
+desc: Pay all due invoices
+- path:appId integer
+
+## S136-N0138  DELETE /apps/{appId}/subscription/plan
+desc: End current plan
+- path:appId integer
+
+## S136-N0139  POST /apps/{appId}/subscription/plans/{stripe_plan}
+desc: Change plan
+- path:appId integer
+- path:stripe_plan string
+- query:stripe_source string
+- query:stripe_coupon string
+
+## S136-N0140  DELETE /apps/{appId}/subscription/source
+desc: Remove creditcard or sepadebit
+- path:appId integer
+- query:stripe_source string
+
+## S136-N0142  POST /apps/{appId}/subscription/source/default
+desc: Change default source
+- path:appId integer
+- query:stripe_source string
+
+## S136-N0143  POST /apps/{appId}/templates
+desc: Create a template | Create a template
+- path:appId integer
+
+## S136-N0144  POST /apps/{appId}/templates/batch
+desc: Create multiple templates | Create multiple templates
+- path:appId integer
+- query:data array<any>
+
+## S136-N0145  POST /apps/{appId}/templates/{id}
+desc: Update a template | Update a template
+- path:appId integer
+- path:id string
+
+## S136-N0146  POST /apps/{appId}/transactions/
+desc: Create a Transaction
+- path:appId integer
+- query:contact_organization_id integer
+- query:contact_person_id integer
+- query:account_id integer
+- query:cashflow_source_id integer
+- query:contact_name string
+- query:amount integer
+- query:method string enum[check|transfer|cash|creditcard|automatic_debit|creditnote]
+- query:received_at string
+- query:label string
+- query:details string
+
+## S136-N0148  DELETE /apps/{appId}/transactions/{id}
+desc: Remove a Transaction
+- path:appId integer
+- path:id integer
+
+## S136-N0150  DELETE /apps/{appId}/transactions/{id}/attach
+desc: Detach a file
+- path:appId integer
+- path:id integer
+- query:file_id integer
+
+## S136-N0151  POST /apps/{appId}/transactions/{id}/attach
+desc: Attach a file
+- path:appId integer
+- path:id integer
+- query:file string
+
+## S136-N0152  POST /apps/{appId}/urssaf/auth
+desc: Login URSSAF
+- path:appId integer
+- query:client_id string
+- query:client_secret string
+
+## S136-N0153  POST /apps/{appId}/urssaf/payment
+desc: Send URSSAF request payment
+- path:appId integer
+
+## S136-N0154  POST /apps/{appId}/urssaf/register_customer
+desc: Register a person to URSSAF and create him a mandate
+- path:appId integer
+
+## S136-N0155  POST /changepassword
+desc: Change password | Change password by email forgotten_password_token
+- query:forgotten_password_token string
+- query:password string
+
+## S136-N0156  POST /login
+desc: Login | User login by email and password. Used only on Sinao API. CloudAccounting API needs a different API key
+- query:email string
+- query:password string
+
+## S136-N0157  POST /logout
+desc: Logout | Log the user out (Invalidate the token)
+
+## S136-N0158  POST /me
+desc: Update current user | Update current user informations
+- query:civility string
+- query:firstname string
+- query:lastname string
+- query:password string
+- query:email string
+- query:image string
+- query:metadata array<any>
+
+## S136-N0160  POST /sendpassword
+desc: Password recover by email | Send a forgotten_password_token by email to recover password
+- query:email string
+
+## S136-N0161  POST /services/collector
+desc: Push to purchase collector
+- query:app_identifiant string
+- query:collector_key string
+- query:invoice string
+
+## S116-N0001  DELETE /analyses/{webId}
+desc: Delete an Analysis.
+- path:webId string
+
+## S116-N0003  POST /analyses/{webId}/securityentries
+desc: Create a security entry owned by the analysis.
+schema: SecurityEntry
+- path:webId string
+- query:applyToChildren boolean
+- query:webIdType string
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0004  DELETE /analyses/{webId}/securityentries/{name}
+desc: Delete a security entry owned by the analysis.
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+
+## S116-N0005  PUT /analyses/{webId}/securityentries/{name}
+desc: Update a security entry owned by the analysis.
+schema: SecurityEntry
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0007  PATCH /analysiscategories/{webId}
+desc: Update an analysis category by replacing items in its definition.
+schema: AnalysisCategory
+- path:webId string
+- body:Description string
+- body:Id string
+- body:Links object
+- body:Links.Database string
+- body:Links.Security string
+- body:Links.SecurityEntries string
+- body:Links.Self string
+- body:Name string
+- body:Path string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0008  POST /analysiscategories/{webId}/securityentries
+desc: Create a security entry owned by the analysis category.
+schema: SecurityEntry
+- path:webId string
+- query:applyToChildren boolean
+- query:webIdType string
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0009  DELETE /analysiscategories/{webId}/securityentries/{name}
+desc: Delete a security entry owned by the analysis category.
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+
+## S116-N0010  PUT /analysiscategories/{webId}/securityentries/{name}
+desc: Update a security entry owned by the analysis category.
+schema: SecurityEntry
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]

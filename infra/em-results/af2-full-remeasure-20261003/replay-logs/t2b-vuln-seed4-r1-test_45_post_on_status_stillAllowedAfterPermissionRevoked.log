@@ -1,0 +1,43 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ EvoMaster_faults_Test.test_45_post_on_status_stillAllowedAfterPermissionRevoked _
+
+self = <EvoMaster_faults_Test.EvoMaster_faults_Test testMethod=test_45_post_on_status_stillAllowedAfterPermissionRevoked>
+
+    @timeout_decorator.timeout(60)
+    def test_45_post_on_status_stillAllowedAfterPermissionRevoked(self):
+    
+        headers = {}
+        headers["content-type"] = "application/x-www-form-urlencoded"
+        body = "username=pyload&password=pyload"
+        cookies_pyload_jar = requests \
+                .post(self.baseUrlOfSut + "/login",
+                    headers=headers, data=body, allow_redirects=False, verify=False).cookies
+        cookies_pyload = requests.utils.dict_from_cookiejar(cookies_pyload_jar)
+    
+        headers = {}
+        headers["content-type"] = "application/x-www-form-urlencoded"
+        body = "username=alice&password=alicepass"
+        cookies_alice_jar = requests \
+                .post(self.baseUrlOfSut + "/login",
+                    headers=headers, data=body, allow_redirects=False, verify=False).cookies
+        cookies_alice = requests.utils.dict_from_cookiejar(cookies_alice_jar)
+    
+    
+        headers = {}
+        headers['Accept'] = "*/*"
+        res_0 = requests \
+                .post(self.baseUrlOfSut + "/json/status",
+                    headers=headers, cookies=cookies_pyload, timeout=EM_HTTP_TIMEOUT_S, verify=False)
+    
+        assert res_0.status_code == 200
+        assert "application/json" in res_0.headers["content-type"]
+        assert res_0.json()["pause"] == False
+        assert res_0.json()["active"] == 0
+>       assert res_0.json()["queue"] == 225
+E       assert 291 == 225
+
+EvoMaster_faults_Test.py:1426: AssertionError
+=========================== short test summary info ============================
+FAILED EvoMaster_faults_Test.py::EvoMaster_faults_Test::test_45_post_on_status_stillAllowedAfterPermissionRevoked
+1 failed in 0.24s

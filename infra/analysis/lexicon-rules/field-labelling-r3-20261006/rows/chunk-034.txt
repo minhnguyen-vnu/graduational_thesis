@@ -1,0 +1,451 @@
+## S507-0013  PATCH /groups/{ID}
+desc: Modify a group you previously created.
+- path:ID integer
+- body:description string
+- body:name string
+- body:passphrase string
+- body:privacy string enum[Public|Unlisted|Private]
+- body:slug string
+
+## S507-0014  DELETE /groups/{ID}/memberships
+desc: Leave a group that you are a member of and that was created by a user who exists within the current access token's bubble.
+- path:ID integer
+
+## S507-0015  PATCH /groups/{ID}/memberships
+desc: Promote or demote a member's privileges within a group that you created. The user must exist within the current access token's bubble and be an existing member of the group.
+- path:ID integer
+- body:moderator boolean
+- body:user_id integer
+
+## S507-0016  POST /groups/{ID}/memberships
+desc: Join a group that was created by a user who exists within the current access token's bubble, or join other users into a group that you created. If you are the group owner, you can pass in a user_id to create membership records for a user you are in a conversation with. The user must exist within the current access token's bubble. If the group is private, you must successfully pass in its passphras
+- path:ID integer
+- body:passphrase string
+- body:user_id integer
+
+## S507-0017  POST /groups/{ID}/messages
+desc: Post a message to a group that you are a member of and that was created by a user who exists within the current access token's bubble. Optionally specify whether emoticons should be parsed into smiley images. Additionally, optionally attach a single metadata key/value pair to the group message upon submission.
+- path:ID integer
+- body:metadata_0_key string
+- body:metadata_0_privacy string enum[Public|Private|Bubbled|User]
+- body:metadata_0_values[] array<string>
+- body:metadata_1_key string
+- body:metadata_1_privacy string enum[Public|Private|Bubbled|User]
+- body:metadata_1_values[] array<string>
+- body:metadata_2_key string
+- body:metadata_2_privacy string enum[Public|Private|Bubbled|User]
+- body:metadata_2_values[] array<string>
+- body:text_emoticons boolean
+- body:text_raw string
+
+## S507-0018  POST /groups/{ID}/schedules
+desc: Paginated report of information about group messages contributed by conversation and date. Only groups you're a member of and group messages authored by users existing within the current access token's bubble are considered in the calculations. Optionally roll up all groups to retrieve one record per date. Optionally specify a date formatted as YYYY-MM-DD to retrieve information just from the sing
+- path:ID array<integer>
+- body:date string
+- body:limit integer
+- body:offset integer
+- body:roll_up boolean
+- body:sort string enum[asc|desc]
+
+## S507-0019  POST /markdown
+- body:text_emoticons boolean
+- body:text_raw string
+
+## S507-0020  POST /messages/metadata/filters
+desc: Paginated listing of messages filtered by arbitrary metadata criteria. Messages must match on all key/value pairs passed in. Messages may only match on one value of an array passed in. However, messages are sorted based on how many distinct values they match on (most matches first).
+- body:limit integer
+- body:metadata_0_key string
+- body:metadata_0_values[] array<string>
+- body:metadata_1_key string
+- body:metadata_1_values[] array<string>
+- body:metadata_2_key string
+- body:metadata_2_values[] array<string>
+- body:offset integer
+
+## S507-0021  POST /messages/{ID}/metadata
+desc: Attach one-to-many key/value pairs of metadata to a message, so long as the user who authored the message exists within the current access token's bubble. A key is unique for each author/bubble combination. Attaching metadata with an existing key that was previously created by you, from within the same bubble, overwrites the key with the new value or set of values. The privacy setting allows you t
+- path:ID integer
+- body:metadata_0_key string
+- body:metadata_0_privacy string enum[Public|Private|Bubbled|User]
+- body:metadata_0_values[] array<string>
+- body:metadata_1_key string
+- body:metadata_1_privacy string enum[Public|Private|Bubbled|User]
+- body:metadata_1_values[] array<string>
+- body:metadata_2_key string
+- body:metadata_2_privacy string enum[Public|Private|Bubbled|User]
+- body:metadata_2_values[] array<string>
+
+## S507-0022  POST /positions
+desc: Update the OAuth'ed end user's Curriculum Vitae by adding a position.
+- body:category string enum[Experience|Education|Awards|Affiliations|Portfolio]
+- body:end_date string
+- body:organization string
+- body:organization_size string enum[Self-employed|2 - 9 Employees|10 - 49 Employees|50 - 99 Employees|100 - 499 Employees|500 - 999 Employees|1000 - 4999 Employees|5000+ Employees|Don't Know]
+- body:position string enum[Executive Management (C-level)|VP-level Executive|Manager / Director / Supervisor|Systems Development|Software Development|Web Developer|IT Consultant|Technical Support|Sales|Other technology related|Other non-technology related|Student]
+- body:role string
+- body:start_date string
+- body:summary string
+- body:url string
+
+## S507-0023  DELETE /positions/{ID}
+desc: Remove an item from the OAuth'ed end user's Curriculum Vitae.
+- path:ID integer
+
+## S507-0024  PATCH /positions/{ID}
+desc: Update the OAuth'ed end user's Curriculum Vitae by modifying an existing position.
+- path:ID integer
+- body:category string enum[Experience|Education|Awards|Affiliations|Portfolio]
+- body:end_date string
+- body:organization string
+- body:organization_size string enum[Self-employed|2 - 9 Employees|10 - 49 Employees|50 - 99 Employees|100 - 499 Employees|500 - 999 Employees|1000 - 4999 Employees|5000+ Employees|Don't Know]
+- body:position string enum[Executive Management (C-level)|VP-level Executive|Manager / Director / Supervisor|Systems Development|Software Development|Web Developer|IT Consultant|Technical Support|Sales|Other technology related|Other non-technology related|Student]
+- body:role string
+- body:start_date string
+- body:summary string
+- body:url string
+
+## S507-0025  POST /users/invites
+desc: Invite users to into your current access token's bubble by having Dazah send out email invitations on your behalf. The invitation sends users to begin the OAuth flow for the current application (based on the settings specified in the application's profile), and therefore they will be redirected to the application upon signing up / logging in. Upon doing so, if they aren't already, they will automa
+- body:csv string
+- body:emails[] array<string>
+
+## S507-0026  POST /users/metadata/filters
+desc: Paginated listing of users filtered by arbitrary metadata criteria. Users must match on all key/value pairs passed in. Users may only match on one value of an array passed in. However, users are sorted based on how many distinct values they match on (most matches first).
+- body:limit integer
+- body:metadata_0_key string
+- body:metadata_0_values[] array<string>
+- body:metadata_1_key string
+- body:metadata_1_values[] array<string>
+- body:metadata_2_key string
+- body:metadata_2_values[] array<string>
+- body:offset integer
+
+## S507-0027  POST /users/searches
+desc: Filter and perform a weighted search against user profile fields, CV fields, and metadata by specifying a string to search on for each individual field. By default, results are filtered such that all words in the string must exist, unless you seprate the words with OR. To perform a weighted search (as opposed to filtering), specify the weight (from 0-100) the search algorithm should assign to the 
+- body:active_within_x_days integer
+- body:audience_ids[] array<integer>
+- body:bubbled boolean
+- body:exclude_connections boolean
+- body:exclude_matches boolean
+- body:exclude_muted boolean
+- body:exclude_skipped boolean
+- body:geo_latitude number
+- body:geo_longitude number
+- body:geo_miles_away number
+- body:group_id integer
+- body:limit integer
+- body:location_city_query string
+- body:location_city_weight integer
+- body:location_country_query string
+- body:location_country_weight integer
+- body:location_region_query string
+- body:location_region_weight integer
+- body:metadata_0_key string
+- body:metadata_0_query string
+- body:metadata_0_weight integer
+- body:metadata_1_key string
+- body:metadata_1_query string
+- body:metadata_1_weight integer
+- body:metadata_2_key string
+- body:metadata_2_query string
+- body:metadata_2_weight integer
+- body:offset integer
+- body:position_organization_query string
+- body:position_organization_weight integer
+- body:position_role_query string
+- body:position_role_weight integer
+- body:position_summary_query string
+- body:position_summary_weight integer
+- body:profile_first_name_query string
+- body:profile_first_name_weight integer
+- body:profile_goals_query string
+- body:profile_goals_weight string
+- body:profile_headline_query string
+- body:profile_headline_weight integer
+- body:profile_industry_query string
+- body:profile_industry_weight integer
+- body:profile_last_name_query string
+- body:profile_last_name_weight integer
+- body:profile_pitch_query string
+- body:profile_pitch_weight integer
+
+## S507-0028  POST /users/{ID}/messages
+desc: Initiate a conversation with a user who exists within the current access token's bubble by sending them an introductory message. If you aren't already in a conversation with them, this endpoint meets them first, and then sends the message. Note that if you aren't in an existing conversation, you still must meet the criteria to meet them, meaning the user must currently be free for you to meet. You
+- path:ID integer
+- body:bubbled boolean
+- body:metadata_0_key string
+- body:metadata_0_privacy string enum[Public|Private|Bubbled|User]
+- body:metadata_0_values[] array<string>
+- body:metadata_1_key string
+- body:metadata_1_privacy string enum[Public|Private|Bubbled|User]
+- body:metadata_1_values[] array<string>
+- body:metadata_2_key string
+- body:metadata_2_privacy string enum[Public|Private|Bubbled|User]
+- body:metadata_2_values[] array<string>
+- body:text_emoticons boolean
+- body:text_raw string
+
+## S507-0029  POST /users/{ID}/metadata
+desc: Attach one-to-many key/value pairs of metadata to a user, so long as the user exists within the current access token's bubble. You can set one key at a time, with one or many values. A key is unique for each author/bubble combination. Attaching metadata with an existing key that was previously created by you, from within the same bubble, overwrites the key with the new value or set of values. The 
+- path:ID integer
+- body:metadata_0_key string
+- body:metadata_0_privacy string enum[Public|Private|Bubbled|User]
+- body:metadata_0_values[] array<string>
+- body:metadata_1_key string
+- body:metadata_1_privacy string enum[Public|Private|Bubbled|User]
+- body:metadata_1_values[] array<string>
+- body:metadata_2_key string
+- body:metadata_2_privacy string enum[Public|Private|Bubbled|User]
+- body:metadata_2_values[] array<string>
+
+## S507-0030  PATCH /users/{ID}/synergies
+desc: Skip, mute or unmute a user you've been matched with. Skipped matches are only presented as algorithmic matches after all other candidates have been exhausted. You cannot be matched with or meet muted users. You can only skip, mute or unmute users existing within the same bubble.
+- path:ID integer
+- body:relationship_muted boolean
+- body:relationship_skipped boolean
+
+## S507-0031  PATCH /users/~
+desc: Update the OAuth'ed end user's account profile. At this time, for anti-spam reasons, restrictions preclude the ability to update email address and some other settings via the API.
+- body:company string
+- body:company_size string enum[Self-employed|2 - 9 Employees|10 - 49 Employees|50 - 99 Employees|100 - 499 Employees|500 - 999 Employees|1000 - 4999 Employees|5000+ Employees|Don't Know]
+- body:first_name string
+- body:goals[] array<string> enum[Find business partnerships|Find prospective clients|Hire employees|Find a job|Find a co-founder|Receive mentorship from others|Mentor others]
+- body:headline string
+- body:industry string enum[Accounting|Airlines/Aviation|Alternative Dispute Resolution|Alternative Medicine|Animation|Apparel & Fashion|Architecture & Planning|Arts and Crafts|Automotive|Aviation & Aerospace|Banking|Biotechnology]
+- body:introduction string
+- body:job_position string enum[Executive Management (C-level)|VP-level Executive|Manager / Director / Supervisor|Systems Development|Software Development|Web Developer|IT Consultant|Technical Support|Sales|Other technology related|Other non-technology related|Student]
+- body:last_name string
+- body:location_importance string enum[Yes|Somewhat|No]
+- body:match_tags[] array<string>
+- body:pitch string
+- body:tags[] array<string>
+- body:targeted_industry string enum[Accounting|Airlines/Aviation|Alternative Dispute Resolution|Alternative Medicine|Animation|Apparel & Fashion|Architecture & Planning|Arts and Crafts|Automotive|Aviation & Aerospace|Banking|Biotechnology]
+- body:url string
+
+## S507-0032  POST /webhooks
+desc: Register a new webhook for the current user/bubble combination. Specify an object_id to only be notified on an event related to that specific Conversation ID, Group ID, or User ID. Your access token must have access to the user being tracked, user you are in the conversation with, or user who created the group. You must be connected with a user in order to keep track of their online status. Altern
+- body:bubbled boolean
+- body:event string enum[conversation_message|conversation_seen|group_update|group_message|group_seen|user_online|user_update]
+- body:name string
+- body:object_id integer
+- body:uri string
+
+## S507-0033  DELETE /webhooks/{ID}
+desc: Delete a webhook that was previously registered by the current user/bubble combination.
+- path:ID integer
+
+## S508-0001  POST /appendChatMessage
+desc: appends a chat message
+- query:padID string
+- query:text string
+- query:authorID string
+- query:time string
+
+## S508-0002  POST /appendText
+- query:padID string
+- query:text string
+
+## S508-0003  POST /checkToken
+desc: returns ok when the current api token is valid
+
+## S508-0004  POST /copyPadWithoutHistory
+- query:sourceID string
+- query:destinationID string
+- query:force string
+
+## S508-0005  POST /createAuthor
+desc: creates a new author
+- query:name string
+
+## S508-0006  POST /createAuthorIfNotExistsFor
+desc: this functions helps you to map your application author ids to Etherpad author ids
+- query:authorMapper string
+- query:name string
+
+## S508-0007  POST /createGroup
+desc: creates a new group
+
+## S508-0008  POST /createGroupIfNotExistsFor
+desc: this functions helps you to map your application group ids to Etherpad group ids
+- query:groupMapper string
+
+## S508-0009  POST /createPad
+desc: creates a new (non-group) pad. Note that if you need to create a group Pad, you should call createGroupPad
+- query:padID string
+- query:text string
+
+## S508-0010  POST /createSession
+desc: creates a new session. validUntil is an unix timestamp in seconds
+- query:groupID string
+- query:authorID string
+- query:validUntil string
+
+## S508-0011  POST /deletePad
+desc: deletes a pad
+- query:padID string
+
+## S508-0012  POST /deleteSession
+desc: deletes a session
+- query:sessionID string
+
+## S508-0013  POST /getAttributePool
+- query:padID string
+
+## S508-0014  POST /getAuthorName
+desc: Returns the Author Name of the author
+- query:authorID string
+
+## S508-0015  POST /getHTML
+desc: returns the text of a pad formatted as HTML
+- query:padID string
+- query:rev string
+
+## S508-0016  POST /getLastEdited
+desc: returns the timestamp of the last revision of the pad
+- query:padID string
+
+## S508-0017  POST /getPadID
+- query:roID string
+
+## S508-0018  POST /getPublicStatus
+desc: return true of false
+- query:padID string
+
+## S508-0019  POST /getReadOnlyID
+desc: returns the read only link of a pad
+- query:padID string
+
+## S508-0020  POST /getRevisionsCount
+desc: returns the number of revisions of this pad
+- query:padID string
+
+## S508-0021  POST /getSessionInfo
+desc: returns informations about a session
+- query:sessionID string
+
+## S508-0022  POST /getStats
+
+## S508-0023  POST /getText
+desc: returns the text of a pad
+- query:padID string
+- query:rev string
+
+## S508-0024  POST /listAllGroups
+
+## S508-0025  POST /listAllPads
+desc: list all the pads
+
+## S508-0026  POST /listAuthorsOfPad
+desc: returns an array of authors who contributed to this pad
+- query:padID string
+
+## S508-0027  POST /listPads
+desc: returns all pads of this group
+- query:groupID string
+
+## S508-0028  POST /listPadsOfAuthor
+desc: returns an array of all pads this author contributed to
+- query:authorID string
+
+## S508-0029  POST /listSavedRevisions
+- query:padID string
+
+## S508-0030  POST /listSessionsOfGroup
+- query:groupID string
+
+## S508-0031  POST /padUsers
+desc: returns the list of users that are currently editing this pad
+- query:padID string
+
+## S508-0032  POST /padUsersCount
+desc: returns the number of user that are currently editing this pad
+- query:padID string
+
+## S508-0033  POST /restoreRevision
+- query:padID string
+- query:rev string
+
+## S508-0034  POST /saveRevision
+- query:padID string
+- query:rev string
+
+## S508-0035  POST /sendClientsMessage
+desc: sends a custom message of type msg to the pad
+- query:padID string
+- query:msg string
+
+## S508-0036  POST /setText
+desc: sets the text of a pad
+- query:padID string
+- query:text string
+
+## S510-0001  DELETE /rest-service-fecru/admin/groups/{name}
+desc: Deletes a group by name
+- path:name string
+
+## S510-0002  DELETE /rest-service-fecru/admin/groups/{name}/users
+desc: Removes user from group
+- path:name string
+
+## S510-0003  PUT /rest-service-fecru/admin/groups/{name}/users
+desc: Adds user to group
+- path:name string
+
+## S510-0004  POST /rest-service-fecru/admin/permission-schemes
+desc: Creates a new permission scheme. The new permission scheme is blank or can be created from another existing permission scheme.
+- query:copyFrom string
+
+## S510-0005  PUT /rest-service-fecru/admin/permission-schemes/{name}
+desc: Updates an existing permission scheme.
+- path:name string
+
+## S510-0006  PUT /rest-service-fecru/admin/permission-schemes/{name}/groups
+desc: Add group permission [group name, action name] to given permission scheme List of available action names:
+- path:name string
+
+## S510-0007  PUT /rest-service-fecru/admin/permission-schemes/{name}/logged-in-users
+desc: Add logged-in-users permission [action name] to given permission scheme List of available action names:
+- path:name string
+
+## S510-0008  PUT /rest-service-fecru/admin/permission-schemes/{name}/review-roles
+desc: Add review-role permission [role name, action name] to given permission scheme List of available action names: List of available role names:
+- path:name string
+
+## S510-0009  DELETE /rest-service-fecru/admin/permission-schemes/{name}/users
+desc: Removes user permission [username, action name] from given permission scheme
+- path:name string
+
+## S510-0010  DELETE /rest-service-fecru/admin/projects/{key}
+desc: Deletes a project by key (including all reviews in this project). Use to move reviews to another project.
+- path:key string
+- query:deleteProjectReviews boolean
+
+## S510-0011  DELETE /rest-service-fecru/admin/projects/{key}/allowed-reviewer-groups
+desc: Delete group from project's allowed reviewer group list
+- path:key string
+
+## S510-0012  DELETE /rest-service-fecru/admin/projects/{key}/allowed-reviewer-users
+desc: Remove user from project's allowed reviewer users list
+- path:key string
+
+## S510-0013  DELETE /rest-service-fecru/admin/projects/{key}/default-reviewer-groups
+desc: Delete group from project's default reviewer group list
+- path:key string
+
+## S510-0014  DELETE /rest-service-fecru/admin/projects/{key}/default-reviewer-users
+desc: Remove user from project's default reviewer users list
+- path:key string
+
+## S510-0015  POST /rest-service-fecru/admin/repositories
+desc: Creates a repository.
+
+## S510-0016  POST /rest-service-fecru/admin/repositories-v1
+desc: Adds repository
+
+## S510-0017  DELETE /rest-service-fecru/admin/repositories-v1/{repository}/
+desc: Deletes repository. Warning: you can not undo this operation
+- path:repository string
+
+## S510-0018  POST /rest-service-fecru/admin/repositories-v1/{repository}/enable
+desc: Enables repository.
+- path:repository string

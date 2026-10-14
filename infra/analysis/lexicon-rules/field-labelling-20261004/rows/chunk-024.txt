@@ -1,0 +1,1242 @@
+## S380-0001  POST /batch
+- body:defaults object
+- body:defaults.body object
+- body:defaults.headers object
+- body:defaults.method string enum[GET|HEAD|DELETE|TRACE|POST|PUT|PATCH]
+- body:defaults.path string
+- body:requests array<object>
+- body:requests[].body object
+- body:requests[].headers object
+- body:requests[].method string enum[GET|HEAD|DELETE|TRACE|POST|PUT|PATCH]
+- body:requests[].path string
+
+## S380-0002  DELETE /buckets/{bucket_id}/collections/{collection_id}/records/{id}/attachment
+- path:bucket_id string
+- path:collection_id string
+- path:id string
+
+## S380-0003  POST /buckets/{bucket_id}/collections/{collection_id}/records/{id}/attachment
+- path:bucket_id string
+- path:collection_id string
+- path:id string
+
+## S381-0001  POST /auth/default/login
+desc: Returns Native Ads Publisher API token
+- body:username string
+- body:password string
+
+## S382-0001  POST /account-access-consents
+summary: Create Account Access Consents
+desc: Create Account Access Consents
+- body:Data object
+- body:Data.ExpirationDateTime string
+- body:Data.Permissions array<string> enum[ReadAccountsBasic|ReadAccountsDetail|ReadBalances|ReadBeneficiariesBasic|ReadBeneficiariesDetail|ReadDirectDebits|ReadOffers|ReadPAN|ReadParty|ReadPartyPSU|ReadProducts|ReadScheduledPaymentsBasic]
+- body:Data.TransactionFromDateTime string
+- body:Data.TransactionToDateTime string
+- body:Risk object
+
+## S382-0002  DELETE /account-access-consents/{consentId}
+summary: Delete Account Access Consents
+desc: Delete Account Access Consents by Consent ID
+- path:consentId string
+
+## S382-0003  POST /sandbox
+summary: Create Sandbox
+desc: Create Sandbox
+- body:sandboxId string
+
+## S382-0004  PUT /sandbox
+summary: Import Sandbox
+desc: Import Sandbox
+- body:sandboxId string
+- body:users array<object>
+- body:users[].accounts array<object>
+- body:users[].accounts[].beneficiaries array<object>
+- body:users[].accounts[].info object
+- body:users[].accounts[].party object
+- body:users[].accounts[].scheduledPayments array<object>
+- body:users[].accounts[].standingOrders array<object>
+- body:users[].accounts[].statements array<object>
+- body:users[].accounts[].transactions array<object>
+- body:users[].cards array<object>
+- body:users[].cards[].info object
+- body:users[].cards[].party object
+- body:users[].cards[].statements array<object>
+- body:users[].cards[].transactions array<object>
+- body:users[].retryCacheEntries array<object>
+- body:users[].retryCacheEntries[].cacheKey string
+- body:users[].retryCacheEntries[].count integer
+- body:users[].retryCacheEntries[].expirationTimestamp string
+- body:users[].userId string
+
+## S382-0005  DELETE /sandbox/{sandboxId}
+summary: Delete Sandbox
+desc: Delete Sandbox
+- path:sandboxId string
+
+## S383-0001  POST /api/v2/agreements/enduser/
+desc: Create an end user agreement
+- body:access_scope array<array>
+- body:access_valid_for_days integer
+- body:institution_id string
+- body:max_historical_days integer
+
+## S383-0002  DELETE /api/v2/agreements/enduser/{id}/
+desc: Delete an end user agreement
+- path:id string
+
+## S383-0003  PUT /api/v2/agreements/enduser/{id}/accept/
+desc: Accept an end-user agreement via the API
+- path:id string
+- body:ip_address string
+- body:user_agent string
+
+## S383-0004  POST /api/v2/payments/
+desc: Create payment
+- body:creditor_account string
+- body:custom_payment_id string
+- body:debtor_account object
+- body:debtor_account.account string
+- body:debtor_account.address_country string
+- body:debtor_account.address_street string
+- body:debtor_account.currency string
+- body:debtor_account.name string
+- body:debtor_account.post_code string
+- body:debtor_account.type string enum[IBAN|SCAN]
+- body:debtor_account.type_number string
+- body:description string
+- body:institution_id string
+- body:instructed_amount object
+- body:instructed_amount.amount string
+- body:instructed_amount.currency string
+- body:payment_product string enum[T2P|SCT|ISCT|CBCT]
+- body:periodic_payment object
+- body:periodic_payment.day_of_execution string
+- body:periodic_payment.end_date string
+- body:periodic_payment.execution_rule string enum[following|preceding]
+- body:periodic_payment.frequency string enum[Daily|Weekly|EveryTwoWeeks|Monthly|EveryTwoMonths|Quarterly|SemiAnnual|Annual|MonthlyVariable]
+- body:periodic_payment.start_date string
+- body:redirect string
+- body:requested_execution_date string
+
+## S383-0005  POST /api/v2/payments/creditors/
+desc: API endpoints related to creditor accounts.
+- body:account string
+- body:address_country string enum[AT|BE|BG|HR|CY|CZ|DK|EE|FI|FR|DE|GR]
+- body:address_street string
+- body:agent string
+- body:agent_name string
+- body:currency string
+- body:institution_id string
+- body:name string
+- body:post_code string
+- body:type string enum[IBAN|SCAN]
+
+## S383-0006  DELETE /api/v2/payments/creditors/{id}/
+desc: API endpoints related to creditor accounts.
+- path:id string
+
+## S383-0007  DELETE /api/v2/payments/{id}/
+desc: Delete periodic payment
+- path:id string
+
+## S383-0008  POST /api/v2/requisitions/
+desc: Create a new requisition
+- body:account_selection boolean
+- body:agreement string
+- body:institution_id string
+- body:redirect string
+- body:redirect_immediate boolean
+- body:reference string
+- body:ssn string
+- body:user_language string
+
+## S383-0009  DELETE /api/v2/requisitions/{id}/
+desc: Delete requisition and its end user agreement
+- path:id string
+
+## S383-0010  POST /api/v2/token/new/
+desc: Obtain JWT pair
+- body:secret_id string
+- body:secret_key string
+
+## S383-0011  POST /api/v2/token/refresh/
+desc: Refresh access token
+- body:refresh string
+
+## S384-0001  POST /recognize
+desc: Send an image for OpenALPR to analyze and provide metadata back The image is sent as a file using a form data POST
+- query:secret_key string
+- query:recognize_vehicle integer enum[0|1]
+- query:country string
+- query:return_image integer enum[0|1]
+- query:topn integer
+- query:is_cropped integer enum[0|1]
+- body:image file
+
+## S384-0002  POST /recognize_bytes
+desc: Send an image for OpenALPR to analyze and provide metadata back The image is sent as base64 encoded bytes.
+- query:secret_key string
+- query:recognize_vehicle integer enum[0|1]
+- query:country string
+- query:return_image integer enum[0|1]
+- query:topn integer
+- body:(body) string
+
+## S384-0003  POST /recognize_url
+desc: Send an image for OpenALPR to analyze and provide metadata back The image is sent as a URL. The OpenALPR service will download the image and process it
+- query:image_url string
+- query:secret_key string
+- query:recognize_vehicle integer enum[0|1]
+- query:country string
+- query:return_image integer enum[0|1]
+- query:topn integer
+
+## S386-0001  POST /auth/login
+summary: Log In
+desc: Authenticate using username and password, returns token, which must be added to X-Auth-Token in header of all future requests
+- body:apiKey string
+- body:password string
+- body:username string
+
+## S386-0002  DELETE /auth/logout/{token}
+summary: Log Out
+desc: Log Out
+- path:token string
+
+## S386-0003  POST /patientmanagement/validate
+summary: validatePatientManagement
+desc: validatePatientManagement
+- body:condition object
+- body:condition.asserter string
+- body:condition.category string
+- body:condition.code string
+- body:condition.date string
+- body:condition.description string
+- body:condition.fullDescription string
+- body:condition.group object
+- body:condition.group.address1 string
+- body:condition.group.address2 string
+- body:condition.group.address3 string
+- body:condition.group.childGroups array<object>
+- body:condition.group.code string
+- body:condition.group.contactPoints array<object>
+- body:condition.group.created string
+- body:condition.group.fhirResourceId string
+- body:condition.group.groupFeatures array<object>
+- body:condition.group.groupType object
+- body:condition.group.id integer
+- body:condition.group.lastImportDate string
+- body:condition.group.lastUpdate string
+- body:condition.group.links array<object>
+- body:condition.group.locations array<object>
+- body:condition.group.name string
+- body:condition.group.parentGroups array<object>
+- body:condition.group.postcode string
+- body:condition.group.sftpUser string
+- body:condition.group.shortName string
+- body:condition.group.visible boolean
+- body:condition.group.visibleToJoin boolean
+- body:condition.id integer
+- body:condition.identifier string
+- body:condition.links array<object>
+- body:condition.links[].created string
+- body:condition.links[].displayOrder integer
+- body:condition.links[].id integer
+- body:condition.links[].lastUpdate string
+- body:condition.links[].link string
+- body:condition.links[].linkType object
+- body:condition.links[].name string
+- body:condition.notes string
+- body:condition.severity string
+- body:condition.status string
+- body:encounters array<object>
+- body:encounters[].date string
+- body:encounters[].encounterType string
+- body:encounters[].group object
+- body:encounters[].group.address1 string
+- body:encounters[].group.address2 string
+- body:encounters[].group.address3 string
+- body:encounters[].group.childGroups array<object>
+- body:encounters[].group.code string
+- body:encounters[].group.contactPoints array<object>
+- body:encounters[].group.created string
+- body:encounters[].group.fhirResourceId string
+- body:encounters[].group.groupFeatures array<object>
+- body:encounters[].group.groupType object
+- body:encounters[].group.id integer
+- body:encounters[].group.lastImportDate string
+- body:encounters[].group.lastUpdate string
+- body:encounters[].group.links array<object>
+- body:encounters[].group.locations array<object>
+- body:encounters[].group.name string
+- body:encounters[].group.parentGroups array<object>
+- body:encounters[].group.postcode string
+- body:encounters[].group.sftpUser string
+- body:encounters[].group.shortName string
+- body:encounters[].group.visible boolean
+- body:encounters[].group.visibleToJoin boolean
+- body:encounters[].id integer
+- body:encounters[].identifier string
+- body:encounters[].links array<object>
+- body:encounters[].links[].created string
+- body:encounters[].links[].displayOrder integer
+- body:encounters[].links[].id integer
+- body:encounters[].links[].lastUpdate string
+- body:encounters[].links[].link string
+- body:encounters[].links[].linkType object
+- body:encounters[].links[].name string
+- body:encounters[].observations array<object>
+- (133 truong bi cat)
+
+## S386-0004  POST /patientmanagement/{userId}/group/{groupId}/identifier/{identifierId}
+summary: savePatientManagement
+desc: savePatientManagement
+- path:userId integer
+- path:groupId integer
+- path:identifierId integer
+- body:condition object
+- body:condition.asserter string
+- body:condition.category string
+- body:condition.code string
+- body:condition.date string
+- body:condition.description string
+- body:condition.fullDescription string
+- body:condition.group object
+- body:condition.group.address1 string
+- body:condition.group.address2 string
+- body:condition.group.address3 string
+- body:condition.group.childGroups array<object>
+- body:condition.group.code string
+- body:condition.group.contactPoints array<object>
+- body:condition.group.created string
+- body:condition.group.fhirResourceId string
+- body:condition.group.groupFeatures array<object>
+- body:condition.group.groupType object
+- body:condition.group.id integer
+- body:condition.group.lastImportDate string
+- body:condition.group.lastUpdate string
+- body:condition.group.links array<object>
+- body:condition.group.locations array<object>
+- body:condition.group.name string
+- body:condition.group.parentGroups array<object>
+- body:condition.group.postcode string
+- body:condition.group.sftpUser string
+- body:condition.group.shortName string
+- body:condition.group.visible boolean
+- body:condition.group.visibleToJoin boolean
+- body:condition.id integer
+- body:condition.identifier string
+- body:condition.links array<object>
+- body:condition.links[].created string
+- body:condition.links[].displayOrder integer
+- body:condition.links[].id integer
+- body:condition.links[].lastUpdate string
+- body:condition.links[].link string
+- body:condition.links[].linkType object
+- body:condition.links[].name string
+- body:condition.notes string
+- body:condition.severity string
+- body:condition.status string
+- body:encounters array<object>
+- body:encounters[].date string
+- body:encounters[].encounterType string
+- body:encounters[].group object
+- body:encounters[].group.address1 string
+- body:encounters[].group.address2 string
+- body:encounters[].group.address3 string
+- body:encounters[].group.childGroups array<object>
+- body:encounters[].group.code string
+- body:encounters[].group.contactPoints array<object>
+- body:encounters[].group.created string
+- body:encounters[].group.fhirResourceId string
+- body:encounters[].group.groupFeatures array<object>
+- body:encounters[].group.groupType object
+- body:encounters[].group.id integer
+- body:encounters[].group.lastImportDate string
+- body:encounters[].group.lastUpdate string
+- body:encounters[].group.links array<object>
+- body:encounters[].group.locations array<object>
+- body:encounters[].group.name string
+- body:encounters[].group.parentGroups array<object>
+- body:encounters[].group.postcode string
+- body:encounters[].group.sftpUser string
+- body:encounters[].group.shortName string
+- body:encounters[].group.visible boolean
+- body:encounters[].group.visibleToJoin boolean
+- body:encounters[].id integer
+- body:encounters[].identifier string
+- body:encounters[].links array<object>
+- body:encounters[].links[].created string
+- body:encounters[].links[].displayOrder integer
+- body:encounters[].links[].id integer
+- body:encounters[].links[].lastUpdate string
+- body:encounters[].links[].link string
+- (136 truong bi cat)
+
+## S386-0005  POST /patientmanagement/{userId}/group/{groupId}/identifier/{identifierId}/surgeries
+summary: savePatientManagementSurgeries
+desc: savePatientManagementSurgeries
+- path:userId integer
+- path:groupId integer
+- path:identifierId integer
+- body:condition object
+- body:condition.asserter string
+- body:condition.category string
+- body:condition.code string
+- body:condition.date string
+- body:condition.description string
+- body:condition.fullDescription string
+- body:condition.group object
+- body:condition.group.address1 string
+- body:condition.group.address2 string
+- body:condition.group.address3 string
+- body:condition.group.childGroups array<object>
+- body:condition.group.code string
+- body:condition.group.contactPoints array<object>
+- body:condition.group.created string
+- body:condition.group.fhirResourceId string
+- body:condition.group.groupFeatures array<object>
+- body:condition.group.groupType object
+- body:condition.group.id integer
+- body:condition.group.lastImportDate string
+- body:condition.group.lastUpdate string
+- body:condition.group.links array<object>
+- body:condition.group.locations array<object>
+- body:condition.group.name string
+- body:condition.group.parentGroups array<object>
+- body:condition.group.postcode string
+- body:condition.group.sftpUser string
+- body:condition.group.shortName string
+- body:condition.group.visible boolean
+- body:condition.group.visibleToJoin boolean
+- body:condition.id integer
+- body:condition.identifier string
+- body:condition.links array<object>
+- body:condition.links[].created string
+- body:condition.links[].displayOrder integer
+- body:condition.links[].id integer
+- body:condition.links[].lastUpdate string
+- body:condition.links[].link string
+- body:condition.links[].linkType object
+- body:condition.links[].name string
+- body:condition.notes string
+- body:condition.severity string
+- body:condition.status string
+- body:encounters array<object>
+- body:encounters[].date string
+- body:encounters[].encounterType string
+- body:encounters[].group object
+- body:encounters[].group.address1 string
+- body:encounters[].group.address2 string
+- body:encounters[].group.address3 string
+- body:encounters[].group.childGroups array<object>
+- body:encounters[].group.code string
+- body:encounters[].group.contactPoints array<object>
+- body:encounters[].group.created string
+- body:encounters[].group.fhirResourceId string
+- body:encounters[].group.groupFeatures array<object>
+- body:encounters[].group.groupType object
+- body:encounters[].group.id integer
+- body:encounters[].group.lastImportDate string
+- body:encounters[].group.lastUpdate string
+- body:encounters[].group.links array<object>
+- body:encounters[].group.locations array<object>
+- body:encounters[].group.name string
+- body:encounters[].group.parentGroups array<object>
+- body:encounters[].group.postcode string
+- body:encounters[].group.sftpUser string
+- body:encounters[].group.shortName string
+- body:encounters[].group.visible boolean
+- body:encounters[].group.visibleToJoin boolean
+- body:encounters[].id integer
+- body:encounters[].identifier string
+- body:encounters[].links array<object>
+- body:encounters[].links[].created string
+- body:encounters[].links[].displayOrder integer
+- body:encounters[].links[].id integer
+- body:encounters[].links[].lastUpdate string
+- body:encounters[].links[].link string
+- (136 truong bi cat)
+
+## S388-0001  POST /ardef
+summary: Get Card type Information for Visa, Mastercard, and Discover
+desc: Gets Card type information for Visa, Mastercard, and Discover. Useful if you prohibit or allow certain activity based on card type. For example, you may not want to allow a subscription to be created using a prepaid card.
+- body:card_number string
+- body:merchant_id integer
+
+## S388-0002  POST /auth
+summary: Authorize Transaction
+desc: Authorizes a credit card for capture at a later time. An authorized transaction will continue to be open until it expires or a capture message is received. Authorizations are automatically voided if they are not captured within 28 days, although most issuing banks will release the hold after 24 hours in retail environments or 7 days in card not present environments.
+- body:amt_convenience_fee number
+- body:amt_fbo number
+- body:amt_tax number
+- body:amt_tran number
+- body:amt_tran_fee number
+- body:auth_code string
+- body:avs_address string
+- body:avs_zip string
+- body:card_id string
+- body:card_number string
+- body:card_swipe string
+- body:cardholder_name string
+- body:cavv_3ds string
+- body:client_ip string
+- body:customer object
+- body:customer.billing_addr1 string
+- body:customer.billing_addr2 string
+- body:customer.billing_city string
+- body:customer.billing_country string
+- body:customer.billing_country_code string
+- body:customer.billing_state string
+- body:customer.billing_zip string
+- body:customer.billing_zip4 string
+- body:customer.customer_email string
+- body:customer.customer_firm_name string
+- body:customer.customer_first_name string
+- body:customer.customer_last_name string
+- body:customer.customer_phone string
+- body:customer.shipping_addresses array<object>
+- body:customer.shipping_addresses[].primary boolean
+- body:customer.shipping_addresses[].shipping_addr1 string
+- body:customer.shipping_addresses[].shipping_addr2 string
+- body:customer.shipping_addresses[].shipping_city string
+- body:customer.shipping_addresses[].shipping_country string
+- body:customer.shipping_addresses[].shipping_country_code string
+- body:customer.shipping_addresses[].shipping_firm_name string
+- body:customer.shipping_addresses[].shipping_first_name string
+- body:customer.shipping_addresses[].shipping_last_name string
+- body:customer.shipping_addresses[].shipping_state string
+- body:customer.shipping_addresses[].shipping_zip string
+- body:customer.shipping_addresses[].shipping_zip4 string
+- body:customer_code string
+- body:customer_email string
+- body:customer_id string
+- body:cvv2 string
+- body:dba_name string
+- body:dba_suffix string
+- body:dda_number string
+- body:developer_id string
+- body:duplicate_seconds integer
+- body:echo_fields string
+- body:email_address array<string>
+- body:email_receipt boolean
+- body:emv_tran_id string
+- body:exp_date string
+- body:fbo_id integer
+- body:line_items string
+- body:loc_id string
+- body:mc_ucaf_data string
+- body:mc_ucaf_ind string
+- body:merch_ref_num string
+- body:merchant_id integer
+- body:moto_ecomm_ind string
+- body:partial_auth boolean
+- body:payload_apple_pay string
+- body:payload_google_pay string
+- body:pg_id string
+- body:profile_id string
+- body:purchase_id string
+- body:report_data string
+- body:retry_attempt integer
+- body:retry_id integer
+- body:session_id string
+- body:subscription_id integer
+- body:tokenize boolean
+- body:tr_number string
+- body:tran_currency integer
+- body:type_id string
+- body:user_id integer
+- body:vendor_id integer
+- (1 truong bi cat)
+
+## S388-0003  POST /batchClose
+summary: Close Batch
+desc: Closes a batch. Use this request when the timing of the batch close needs to be controlled rather than relying on the once-daily automatic batch close which is 9 PM Pacific by default, and can be changed in the Qualpay Manager administration settings.
+- body:developer_id string
+- body:echo_fields string
+- body:loc_id string
+- body:merchant_id integer
+- body:profile_id string
+- body:report_data string
+- body:retry_attempt integer
+- body:retry_id integer
+- body:session_id string
+- body:tran_currency integer
+- body:user_id integer
+
+## S388-0004  POST /capture/{pgIdOrig}
+summary: Capture an Authorized Transaction
+desc: Captures an authorized transaction for any amount up to the amount originally authorized. An authorized transaction can only be captured once.
+- path:pgIdOrig string
+- body:amt_tran number
+- body:developer_id string
+- body:echo_fields string
+- body:loc_id string
+- body:merchant_id integer
+- body:profile_id string
+- body:report_data string
+- body:retry_attempt integer
+- body:retry_id integer
+- body:session_id string
+- body:user_id integer
+- body:vendor_id integer
+
+## S388-0005  POST /credit
+summary: Issue Credit to Cardholder
+desc: Issues an unlinked credit. Credit requests require that the cardholder data is provided in the request. Credits are only available during the first 30 days of account opening unless you contact Qualpay support to make other arrangements. The refund request should generally be used to return money to the cardholder, as it is a reversal of a previously captured transaction. A refund request is linke
+- body:amt_convenience_fee number
+- body:amt_fbo number
+- body:amt_tax number
+- body:amt_tran number
+- body:amt_tran_fee number
+- body:auth_code string
+- body:avs_address string
+- body:avs_zip string
+- body:card_id string
+- body:card_number string
+- body:card_swipe string
+- body:cardholder_name string
+- body:cavv_3ds string
+- body:client_ip string
+- body:customer object
+- body:customer.billing_addr1 string
+- body:customer.billing_addr2 string
+- body:customer.billing_city string
+- body:customer.billing_country string
+- body:customer.billing_country_code string
+- body:customer.billing_state string
+- body:customer.billing_zip string
+- body:customer.billing_zip4 string
+- body:customer.customer_email string
+- body:customer.customer_firm_name string
+- body:customer.customer_first_name string
+- body:customer.customer_last_name string
+- body:customer.customer_phone string
+- body:customer.shipping_addresses array<object>
+- body:customer.shipping_addresses[].primary boolean
+- body:customer.shipping_addresses[].shipping_addr1 string
+- body:customer.shipping_addresses[].shipping_addr2 string
+- body:customer.shipping_addresses[].shipping_city string
+- body:customer.shipping_addresses[].shipping_country string
+- body:customer.shipping_addresses[].shipping_country_code string
+- body:customer.shipping_addresses[].shipping_firm_name string
+- body:customer.shipping_addresses[].shipping_first_name string
+- body:customer.shipping_addresses[].shipping_last_name string
+- body:customer.shipping_addresses[].shipping_state string
+- body:customer.shipping_addresses[].shipping_zip string
+- body:customer.shipping_addresses[].shipping_zip4 string
+- body:customer_code string
+- body:customer_email string
+- body:customer_id string
+- body:cvv2 string
+- body:dba_name string
+- body:dba_suffix string
+- body:dda_number string
+- body:developer_id string
+- body:duplicate_seconds integer
+- body:echo_fields string
+- body:email_address array<string>
+- body:email_receipt boolean
+- body:emv_tran_id string
+- body:exp_date string
+- body:fbo_id integer
+- body:line_items string
+- body:loc_id string
+- body:mc_ucaf_data string
+- body:mc_ucaf_ind string
+- body:merch_ref_num string
+- body:merchant_id integer
+- body:moto_ecomm_ind string
+- body:partial_auth boolean
+- body:payload_apple_pay string
+- body:payload_google_pay string
+- body:pg_id string
+- body:profile_id string
+- body:purchase_id string
+- body:report_data string
+- body:retry_attempt integer
+- body:retry_id integer
+- body:session_id string
+- body:subscription_id integer
+- body:tokenize boolean
+- body:tr_number string
+- body:tran_currency integer
+- body:type_id string
+- body:user_id integer
+- body:vendor_id integer
+- (1 truong bi cat)
+
+## S388-0006  POST /emailReceipt/{pgId}
+summary: Send Transaction Receipt Email
+desc: Sends the transaction receipt to multiple email addresses. Receipts can be sent only for successful transactions.
+- path:pgId string
+- body:developer_id string
+- body:email_address array<string>
+- body:logo_url string
+- body:merchant_id integer
+- body:vendor_id integer
+
+## S388-0007  POST /expireToken
+summary: Expire Token
+desc: Once expired, the token (card_id) is no longer valid for use in future transactions.
+- body:card_id string
+- body:developer_id string
+- body:echo_fields string
+- body:loc_id string
+- body:merchant_id integer
+- body:profile_id string
+- body:report_data string
+- body:retry_attempt integer
+- body:retry_id integer
+- body:session_id string
+- body:user_id integer
+- body:vendor_id integer
+
+## S388-0008  POST /force
+summary: Force Transaction Approval
+desc: Forces an approval, used when an online authorization request received a 'declined' reason code and you have received an authorization from a voice or automated response (ARU) system. The required fields are the same as a sale or authorization request, except that the expiration date (exp_date) is not required, and the 6-character authorization code (auth_code) is required.
+- body:amt_convenience_fee number
+- body:amt_fbo number
+- body:amt_tax number
+- body:amt_tran number
+- body:amt_tran_fee number
+- body:auth_code string
+- body:avs_address string
+- body:avs_zip string
+- body:card_id string
+- body:card_number string
+- body:card_swipe string
+- body:cardholder_name string
+- body:cavv_3ds string
+- body:client_ip string
+- body:customer object
+- body:customer.billing_addr1 string
+- body:customer.billing_addr2 string
+- body:customer.billing_city string
+- body:customer.billing_country string
+- body:customer.billing_country_code string
+- body:customer.billing_state string
+- body:customer.billing_zip string
+- body:customer.billing_zip4 string
+- body:customer.customer_email string
+- body:customer.customer_firm_name string
+- body:customer.customer_first_name string
+- body:customer.customer_last_name string
+- body:customer.customer_phone string
+- body:customer.shipping_addresses array<object>
+- body:customer.shipping_addresses[].primary boolean
+- body:customer.shipping_addresses[].shipping_addr1 string
+- body:customer.shipping_addresses[].shipping_addr2 string
+- body:customer.shipping_addresses[].shipping_city string
+- body:customer.shipping_addresses[].shipping_country string
+- body:customer.shipping_addresses[].shipping_country_code string
+- body:customer.shipping_addresses[].shipping_firm_name string
+- body:customer.shipping_addresses[].shipping_first_name string
+- body:customer.shipping_addresses[].shipping_last_name string
+- body:customer.shipping_addresses[].shipping_state string
+- body:customer.shipping_addresses[].shipping_zip string
+- body:customer.shipping_addresses[].shipping_zip4 string
+- body:customer_code string
+- body:customer_email string
+- body:customer_id string
+- body:cvv2 string
+- body:dba_name string
+- body:dba_suffix string
+- body:dda_number string
+- body:developer_id string
+- body:duplicate_seconds integer
+- body:echo_fields string
+- body:email_address array<string>
+- body:email_receipt boolean
+- body:emv_tran_id string
+- body:exp_date string
+- body:fbo_id integer
+- body:line_items string
+- body:loc_id string
+- body:mc_ucaf_data string
+- body:mc_ucaf_ind string
+- body:merch_ref_num string
+- body:merchant_id integer
+- body:moto_ecomm_ind string
+- body:partial_auth boolean
+- body:payload_apple_pay string
+- body:payload_google_pay string
+- body:pg_id string
+- body:profile_id string
+- body:purchase_id string
+- body:report_data string
+- body:retry_attempt integer
+- body:retry_id integer
+- body:session_id string
+- body:subscription_id integer
+- body:tokenize boolean
+- body:tr_number string
+- body:tran_currency integer
+- body:type_id string
+- body:user_id integer
+- body:vendor_id integer
+- (1 truong bi cat)
+
+## S388-0009  POST /recharge/{pgIdOrig}
+summary: Recharge Previously Settled Transaction
+desc: Creates a new sale transaction using the cardholder data from a previous successful transaction.
+- path:pgIdOrig string
+- body:amt_tran number
+- body:developer_id string
+- body:echo_fields string
+- body:loc_id string
+- body:merchant_id integer
+- body:profile_id string
+- body:report_data string
+- body:retry_attempt integer
+- body:retry_id integer
+- body:session_id string
+- body:user_id integer
+
+## S388-0010  POST /refund/{pgIdOrig}
+summary: Refund Previously Captured Transaction
+desc: Returns money to the cardholder from a previously captured transaction. Multiple refunds are allowed per captured transaction, provided that the sum of all refunds does not exceed the original captured transaction amount. Authorizations that have not been captured are not eligible for a refund.
+- path:pgIdOrig string
+- body:amt_tran number
+- body:developer_id string
+- body:echo_fields string
+- body:loc_id string
+- body:merchant_id integer
+- body:profile_id string
+- body:report_data string
+- body:retry_attempt integer
+- body:retry_id integer
+- body:session_id string
+- body:user_id integer
+- body:vendor_id integer
+
+## S388-0011  POST /sale
+summary: Sale (Auth + Capture)
+desc: Requests authorization, and, if approved, will immediately capture the transaction to be included in the next batch close. This transaction type is used in card-present environments, and also card-not-present environments where no physical goods are being shipped.
+- body:amt_convenience_fee number
+- body:amt_fbo number
+- body:amt_tax number
+- body:amt_tran number
+- body:amt_tran_fee number
+- body:auth_code string
+- body:avs_address string
+- body:avs_zip string
+- body:card_id string
+- body:card_number string
+- body:card_swipe string
+- body:cardholder_name string
+- body:cavv_3ds string
+- body:client_ip string
+- body:customer object
+- body:customer.billing_addr1 string
+- body:customer.billing_addr2 string
+- body:customer.billing_city string
+- body:customer.billing_country string
+- body:customer.billing_country_code string
+- body:customer.billing_state string
+- body:customer.billing_zip string
+- body:customer.billing_zip4 string
+- body:customer.customer_email string
+- body:customer.customer_firm_name string
+- body:customer.customer_first_name string
+- body:customer.customer_last_name string
+- body:customer.customer_phone string
+- body:customer.shipping_addresses array<object>
+- body:customer.shipping_addresses[].primary boolean
+- body:customer.shipping_addresses[].shipping_addr1 string
+- body:customer.shipping_addresses[].shipping_addr2 string
+- body:customer.shipping_addresses[].shipping_city string
+- body:customer.shipping_addresses[].shipping_country string
+- body:customer.shipping_addresses[].shipping_country_code string
+- body:customer.shipping_addresses[].shipping_firm_name string
+- body:customer.shipping_addresses[].shipping_first_name string
+- body:customer.shipping_addresses[].shipping_last_name string
+- body:customer.shipping_addresses[].shipping_state string
+- body:customer.shipping_addresses[].shipping_zip string
+- body:customer.shipping_addresses[].shipping_zip4 string
+- body:customer_code string
+- body:customer_email string
+- body:customer_id string
+- body:cvv2 string
+- body:dba_name string
+- body:dba_suffix string
+- body:dda_number string
+- body:developer_id string
+- body:duplicate_seconds integer
+- body:echo_fields string
+- body:email_address array<string>
+- body:email_receipt boolean
+- body:emv_tran_id string
+- body:exp_date string
+- body:fbo_id integer
+- body:line_items string
+- body:loc_id string
+- body:mc_ucaf_data string
+- body:mc_ucaf_ind string
+- body:merch_ref_num string
+- body:merchant_id integer
+- body:moto_ecomm_ind string
+- body:partial_auth boolean
+- body:payload_apple_pay string
+- body:payload_google_pay string
+- body:pg_id string
+- body:profile_id string
+- body:purchase_id string
+- body:report_data string
+- body:retry_attempt integer
+- body:retry_id integer
+- body:session_id string
+- body:subscription_id integer
+- body:tokenize boolean
+- body:tr_number string
+- body:tran_currency integer
+- body:type_id string
+- body:user_id integer
+- body:vendor_id integer
+- (1 truong bi cat)
+
+## S388-0012  POST /tokenize
+summary: Tokenize Card
+desc: Once stored, a unique card_id is returned for use in future transactions. Optionally, tokenization can be requested in an authorization, verify, force, credit, or sale request by sending the tokenize field set to true.
+- body:avs_address string
+- body:avs_zip string
+- body:card_id string
+- body:card_number string
+- body:card_swipe string
+- body:cardholder_name string
+- body:client_ip string
+- body:cvv2 string
+- body:dda_number string
+- body:developer_id string
+- body:echo_fields string
+- body:email_address array<string>
+- body:exp_date string
+- body:loc_id string
+- body:merchant_id integer
+- body:payload_apple_pay string
+- body:payload_google_pay string
+- body:profile_id string
+- body:report_data string
+- body:retry_attempt integer
+- body:retry_id integer
+- body:session_id string
+- body:single_use boolean
+- body:tr_number string
+- body:type_id string
+- body:user_id integer
+- body:vendor_id integer
+
+## S388-0013  POST /verify
+summary: Verify Card
+desc: A verify request will return success if the cardholder information was verified by the issuer. If AVS or CVV data is included in the message, then the AVS or CVV result code will be returned in the response message. This is useful if you want to determine if you have been presented with a valid card, but are not ready to authorize the card.
+- body:avs_address string
+- body:avs_zip string
+- body:card_id string
+- body:card_number string
+- body:card_swipe string
+- body:cardholder_name string
+- body:client_ip string
+- body:customer object
+- body:customer.billing_addr1 string
+- body:customer.billing_addr2 string
+- body:customer.billing_city string
+- body:customer.billing_country string
+- body:customer.billing_country_code string
+- body:customer.billing_state string
+- body:customer.billing_zip string
+- body:customer.billing_zip4 string
+- body:customer.customer_email string
+- body:customer.customer_firm_name string
+- body:customer.customer_first_name string
+- body:customer.customer_last_name string
+- body:customer.customer_phone string
+- body:customer.shipping_addresses array<object>
+- body:customer.shipping_addresses[].primary boolean
+- body:customer.shipping_addresses[].shipping_addr1 string
+- body:customer.shipping_addresses[].shipping_addr2 string
+- body:customer.shipping_addresses[].shipping_city string
+- body:customer.shipping_addresses[].shipping_country string
+- body:customer.shipping_addresses[].shipping_country_code string
+- body:customer.shipping_addresses[].shipping_firm_name string
+- body:customer.shipping_addresses[].shipping_first_name string
+- body:customer.shipping_addresses[].shipping_last_name string
+- body:customer.shipping_addresses[].shipping_state string
+- body:customer.shipping_addresses[].shipping_zip string
+- body:customer.shipping_addresses[].shipping_zip4 string
+- body:customer_code string
+- body:cvv2 string
+- body:dda_number string
+- body:developer_id string
+- body:echo_fields string
+- body:email_address array<string>
+- body:exp_date string
+- body:loc_id string
+- body:merch_ref_num string
+- body:merchant_id integer
+- body:moto_ecomm_ind string
+- body:payload_apple_pay string
+- body:payload_google_pay string
+- body:profile_id string
+- body:report_data string
+- body:retry_attempt integer
+- body:retry_id integer
+- body:session_id string
+- body:tokenize boolean
+- body:tr_number string
+- body:type_id string
+- body:user_id integer
+
+## S388-0014  POST /void/{pgIdOrig}
+summary: Void a Previously Authorized Transaction
+desc: Authorizations can be voided at any time until Qualpay automatically voids them at 28 days. Captured transactions can be voided until the batch is closed. If your batch closes and you did not void the transaction in time, you may make a refund request.
+- path:pgIdOrig string
+- body:developer_id string
+- body:echo_fields string
+- body:loc_id string
+- body:merchant_id integer
+- body:profile_id string
+- body:report_data string
+- body:retry_attempt integer
+- body:retry_id integer
+- body:session_id string
+- body:user_id integer
+- body:vendor_id integer
+
+## S390-0001  POST /agent-flush-aggregate-requests
+summary: Creates a AgentFlushAggregateRequest resource.
+- body:instanceName any
+- body:instanceTime any
+- body:logs any
+
+## S390-0002  POST /agent-flush-requests
+summary: Creates a AgentFlushRequest resource.
+- body:instanceName any
+- body:instanceTime integer
+- body:logs array<string>
+
+## S390-0003  POST /agent-instance-updates
+summary: Creates a Instance resource.
+- body:agentDuration integer
+- body:message string
+- body:rulesCount integer
+- body:rulesHash string
+
+## S390-0004  PUT /agent-instance-updates/{id}
+summary: Replaces the Instance resource.
+- path:id string
+- body:agentDuration integer
+- body:message string
+- body:rulesCount integer
+- body:rulesHash string
+
+## S390-0005  POST /crawls
+summary: Creates a Crawl resource.
+- body:concurrency integer
+- body:firstUrl any
+- body:headers array<string>
+- body:httpBasicPassword any
+- body:httpBasicUser any
+- body:maxDepth integer
+- body:maxDuration integer
+- body:maxUrls integer
+- body:otherDomains array<string>
+- body:project string
+- body:sslCheckingDisabled boolean
+- body:subdomainIncluded boolean
+- body:userAgent any
+
+## S390-0006  POST /explain-urls
+summary: Creates a ExplainUrl resource.
+- body:project string
+- body:url string
+
+## S390-0007  POST /impact-rule-changes
+summary: Creates a ImpactRuleChange resource.
+- body:project string
+- body:ruleChange string
+
+## S390-0008  POST /impact-smart-lists
+summary: Creates a ImpactSmartList resource.
+- body:project string
+- body:smartListId string
+- body:smartListVersion string
+
+## S390-0009  PUT /instances/{id}/live
+summary: Replaces the Instance resource.
+- path:id string
+- body:agentDuration integer
+- body:message string
+- body:rulesCount integer
+- body:rulesHash string
+
+## S390-0010  POST /invitations
+summary: Creates a Invitation resource.
+- body:email string
+- body:target string
+
+## S390-0011  POST /invitations/accept/{token}
+summary: Creates a Invitation resource.
+- path:token string
+- body:createdAt string
+- body:email string
+- body:id string
+
+## S390-0012  DELETE /invitations/{id}
+summary: Removes the Invitation resource.
+- path:id string
+
+## S390-0013  POST /markers
+summary: Creates a Marker resource.
+- body:maximumOccurrence integer
+- body:minimumOccurrence integer
+- body:name string
+- body:options array<string>
+- body:transformers array<string>
+- body:type string
+
+## S390-0014  DELETE /markers/{id}
+summary: Removes the Marker resource.
+- path:id string
+
+## S390-0015  PUT /markers/{id}
+summary: Replaces the Marker resource.
+- path:id string
+- body:id string
+- body:maximumOccurrence integer
+- body:minimumOccurrence integer
+- body:name string
+- body:options array<string>
+- body:regex string
+- body:transformers array<string>
+- body:type string
+
+## S390-0016  POST /matching-urls
+summary: Creates a MatchingUrl resource.
+- body:project string
+- body:ruleChange string
+
+## S390-0017  POST /organizations
+summary: Creates a Organization resource.
+- body:name string
+
+## S390-0018  DELETE /organizations/{id}
+summary: Removes the Organization resource.
+- path:id string
+
+## S390-0019  PUT /organizations/{id}
+summary: Replaces the Organization resource.
+- path:id string
+- body:name string
+
+## S390-0020  POST /post-logs
+summary: Creates a AgentFlushRequest resource.
+- body:instanceName any
+- body:instanceTime integer
+- body:logs array<string>
+
+## S390-0021  POST /projects
+summary: Creates a Project resource.
+- body:ignoreProjectTypes array<string>
+- body:name string
+- body:onboardingCompletedDemos array<string>
+- body:organization object
+
+## S390-0022  DELETE /projects/{id}
+summary: Removes the Project resource.
+- path:id string
+
+## S390-0023  POST /rule-changes
+summary: Creates a RuleChange resource.
+- body:action string
+- body:actions array<string>
+- body:examples array<string>
+- body:formattedSource string
+- body:markers array<object>
+- body:markers[].maximumOccurrence integer
+- body:markers[].minimumOccurrence integer
+- body:markers[].name string
+- body:markers[].options array<string>
+- body:markers[].transformers array<string>
+- body:markers[].type string
+- body:matchOnResponseStatus integer
+- body:rank integer
+- body:ruleId string
+- body:source string
+
+## S390-0024  DELETE /rule-changes/{id}
+summary: Removes the RuleChange resource.
+- path:id string
+
+## S390-0025  POST /rule-set-versions/{id}/clear
+summary: Clear a version
+- path:id string
+- body:createdAt string
+- body:current boolean
+- body:id string
+- body:isSnapshot boolean
+- body:mergedRulesCount integer
+- body:name string
+- body:publishedAt string
+- body:working boolean
+
+## S390-0026  POST /rule-set-versions/{id}/publish
+summary: Publish a version
+- path:id string
+- body:createdAt string
+- body:current boolean
+- body:id string
+- body:isSnapshot boolean
+- body:mergedRulesCount integer
+- body:name string
+- body:publishedAt string
+- body:working boolean
+
+## S390-0027  POST /user-organizations
+summary: Creates a UserOrganization resource.
+- body:functionalRoles array<string>
+- body:organization string
+- body:user string
+
+## S390-0028  DELETE /user-organizations/{id}
+summary: Removes the UserOrganization resource.
+- path:id string
+
+## S390-0029  PUT /user-organizations/{id}
+summary: Replaces the UserOrganization resource.
+- path:id string
+- body:functionalRoles array<string>
+
+## S390-0030  POST /user-projects
+summary: Creates a UserProject resource.
+- body:functionalRoles array<string>
+- body:project string
+- body:user string
+
+## S390-0031  DELETE /user-projects/{id}
+summary: Removes the UserProject resource.
+- path:id string
+
+## S390-0032  PUT /user-projects/{id}
+summary: Replaces the UserProject resource.
+- path:id string
+- body:functionalRoles array<string>
+
+## S390-0033  POST /users
+summary: Creates a User resource.
+- body:email string
+- body:name string
+
+## S390-0034  POST /users/forgot-password-request
+summary: Creates a ForgotPasswordRequest resource.
+- body:email string
+
+## S390-0035  PUT /users/{id}/edit-info
+summary: Replaces the User resource.
+- path:id string
+- body:name string
+
+## S390-0036  PUT /users/{id}/edit-password
+summary: Replaces the User resource.
+- path:id string
+- body:name string

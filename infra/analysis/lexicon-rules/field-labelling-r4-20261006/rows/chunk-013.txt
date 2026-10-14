@@ -1,0 +1,474 @@
+## S358-N0062  PUT /v2/firewalls/{firewall_id}
+desc: Update a Firewall | To update the configuration of an existing firewall, send a PUT request to `/v2/firewalls/$FIREWALL_ID`. The request should contain a full representation of the firewall including existing attributes. **Note that any attributes that are not provided will be reset to their default values.**
+schema: items
+- body:(body) any
+
+## S358-N0064  POST /v2/firewalls/{firewall_id}/droplets
+desc: Add Droplets to a Firewall | To assign a Droplet to a firewall, send a POST request to `/v2/firewalls/$FIREWALL_ID/droplets`. In the body of the request, there should be a `droplet_ids` attribute containing a list of Droplet IDs. No response body will be sent back, but the response code will indicate success. Specifically, the response code will be a 204, which means that the action was successful
+- body:droplet_ids array<integer>
+
+## S358-N0065  DELETE /v2/firewalls/{firewall_id}/rules
+desc: Remove Rules from a Firewall | To remove access rules from a firewall, send a DELETE request to `/v2/firewalls/$FIREWALL_ID/rules`. The body of the request may include an `inbound_rules` and/or `outbound_rules` attribute containing an array of rules to be removed. No response body will be sent back, but the response code will indicate success. Specifically, the response code will be a 204, which m
+schema: 1
+- body:(body) any
+
+## S358-N0066  POST /v2/firewalls/{firewall_id}/rules
+desc: Add Rules to a Firewall | To add additional access rules to a firewall, send a POST request to `/v2/firewalls/$FIREWALL_ID/rules`. The body of the request may include an inbound_rules and/or outbound_rules attribute containing an array of rules to be added. No response body will be sent back, but the response code will indicate success. Specifically, the response code will be a 204, which means th
+schema: 1
+- body:(body) any
+
+## S358-N0067  DELETE /v2/firewalls/{firewall_id}/tags
+desc: Remove Tags from a Firewall | To remove a tag representing a group of Droplets from a firewall, send a DELETE request to `/v2/firewalls/$FIREWALL_ID/tags`. In the body of the request, there should be a `tags` attribute containing a list of tag names. No response body will be sent back, but the response code will indicate success. Specifically, the response code will be a 204, which means that the 
+- body:tags any
+
+## S358-N0068  POST /v2/firewalls/{firewall_id}/tags
+desc: Add Tags to a Firewall | To assign a tag representing a group of Droplets to a firewall, send a POST request to `/v2/firewalls/$FIREWALL_ID/tags`. In the body of the request, there should be a `tags` attribute containing a list of tag names. No response body will be sent back, but the response code will indicate success. Specifically, the response code will be a 204, which means that the action wa
+- body:tags any
+
+## S358-N0070  DELETE /v2/floating_ips/{floating_ip}
+desc: Delete a Floating IP | To delete a floating IP and remove it from your account, send a DELETE request to `/v2/floating_ips/$FLOATING_IP_ADDR`. A successful request will receive a 204 status code with no body in response. This indicates that the request was processed successfully.
+
+## S358-N0071  POST /v2/floating_ips/{floating_ip}/actions
+desc: Initiate a Floating IP Action | To initiate an action on a floating IP send a POST request to `/v2/floating_ips/$FLOATING_IP/actions`. In the JSON body to the request, set the `type` attribute to on of the supported action types: | Action | Details |------------|-------- | `assign` | Assigns a floating IP to a Droplet | `unassign` | Unassign a floating IP from a Droplet
+schema: 0
+- body:type string enum[assign|unassign]
+- body:droplet_id integer
+
+## S358-N0072  POST /v2/functions/namespaces
+desc: Create Namespace | Creates a new serverless functions namespace in the desired region and associates it with the provided label. A namespace is a collection of functions and their associated packages, triggers, and project specifications. To create a namespace, send a POST request to `/v2/functions/namespaces` with the `region` and `label` properties.
+- body:label string
+- body:region string
+
+## S358-N0073  DELETE /v2/functions/namespaces/{namespace_id}
+desc: Delete Namespace | Deletes the given namespace. When a namespace is deleted all assets, in the namespace are deleted, this includes packages, functions and triggers. Deleting a namespace is a destructive operation and assets in the namespace are not recoverable after deletion. Some metadata is retained, such as activations, or soft deleted for reporting purposes. To delete namespace, send a DELETE
+
+## S358-N0075  DELETE /v2/functions/namespaces/{namespace_id}/triggers/{trigger_name}
+desc: Delete Trigger | Deletes the given trigger. To delete trigger, send a DELETE request to `/v2/functions/namespaces/$NAMESPACE_ID/triggers/$TRIGGER_NAME`. A successful deletion returns a 204 response.
+
+## S358-N0076  PUT /v2/functions/namespaces/{namespace_id}/triggers/{trigger_name}
+desc: Update Trigger | Updates the details of the given trigger. To update a trigger, send a PUT request to `/v2/functions/namespaces/$NAMESPACE_ID/triggers/$TRIGGER_NAME` with new values for the `is_enabled ` or `scheduled_details` properties.
+- body:is_enabled boolean
+- body:scheduled_details any
+
+## S358-N0078  DELETE /v2/images/{image_id}
+desc: Delete an Image | To delete a snapshot or custom image, send a `DELETE` request to `/v2/images/$IMAGE_ID`.
+
+## S358-N0079  PUT /v2/images/{image_id}
+desc: Update an Image | To update an image, send a `PUT` request to `/v2/images/$IMAGE_ID`. Set the `name` attribute to the new value you would like to use. For custom images, the `description` and `distribution` attributes may also be updated.
+schema: 0
+- path:image_id integer
+- body:(body) any
+
+## S358-N0080  POST /v2/images/{image_id}/actions
+desc: Initiate an Image Action | The following actions are available on an Image. ## Convert an Image to a Snapshot To convert an image, for example, a backup to a snapshot, send a POST request to `/v2/images/$IMAGE_ID/actions`. Set the `type` attribute to `convert`. ## Transfer an Image To transfer an image to another region, send a POST request to `/v2/images/$IMAGE_ID/actions`. Set the `type` attribu
+schema: 0
+- body:type string enum[convert|transfer]
+- body:region any
+
+## S358-N0081  POST /v2/kubernetes/clusters
+desc: Create a New Kubernetes Cluster | To create a new Kubernetes cluster, send a POST request to `/v2/kubernetes/clusters`. The request must contain at least one node pool with at least one worker. The request may contain a maintenance window policy describing a time period when disruptive maintenance tasks may be carried out. Omitting the policy implies that a window will be chosen automatically. See
+schema: items
+- body:(body) any
+
+## S358-N0082  DELETE /v2/kubernetes/clusters/{cluster_id}
+desc: Delete a Kubernetes Cluster | To delete a Kubernetes cluster and all services deployed to it, send a DELETE request to `/v2/kubernetes/clusters/$K8S_CLUSTER_ID`. A 204 status code with no body will be returned in response to a successful request.
+
+## S358-N0083  PUT /v2/kubernetes/clusters/{cluster_id}
+desc: Update a Kubernetes Cluster | To update a Kubernetes cluster, send a PUT request to `/v2/kubernetes/clusters/$K8S_CLUSTER_ID` and specify one or more of the attributes below.
+- body:auto_upgrade boolean
+- body:ha boolean
+- body:maintenance_policy any
+- body:name string
+- body:surge_upgrade boolean
+- body:tags array<string>
+
+## S358-N0086  DELETE /v2/kubernetes/clusters/{cluster_id}/destroy_with_associated_resources/selective
+desc: Selectively Delete a Cluster and its Associated Resources | To delete a Kubernetes cluster along with a subset of its associated resources, send a DELETE request to `/v2/kubernetes/clusters/$K8S_CLUSTER_ID/destroy_with_associated_resources/selective`. The JSON body of the request should include `load_balancers`, `volumes`, or `volume_snapshots` keys each set to an array of IDs for the associated r
+- body:load_balancers array<string>
+- body:volume_snapshots array<string>
+- body:volumes array<string>
+
+## S358-N0087  POST /v2/kubernetes/clusters/{cluster_id}/node_pools
+desc: Add a Node Pool to a Kubernetes Cluster | To add an additional node pool to a Kubernetes clusters, send a POST request to `/v2/kubernetes/clusters/$K8S_CLUSTER_ID/node_pools` with the following attributes.
+schema: items
+- body:(body) any
+
+## S358-N0088  DELETE /v2/kubernetes/clusters/{cluster_id}/node_pools/{node_pool_id}
+desc: Delete a Node Pool in a Kubernetes Cluster | To delete a node pool, send a DELETE request to `/v2/kubernetes/clusters/$K8S_CLUSTER_ID/node_pools/$NODE_POOL_ID`. A 204 status code with no body will be returned in response to a successful request. Nodes in the pool will subsequently be drained and deleted.
+
+## S358-N0089  PUT /v2/kubernetes/clusters/{cluster_id}/node_pools/{node_pool_id}
+desc: Update a Node Pool in a Kubernetes Cluster | To update the name of a node pool, edit the tags applied to it, or adjust its number of nodes, send a PUT request to `/v2/kubernetes/clusters/$K8S_CLUSTER_ID/node_pools/$NODE_POOL_ID` with the following attributes.
+schema: 1
+- body:(body) object
+
+## S358-N0090  DELETE /v2/kubernetes/clusters/{cluster_id}/node_pools/{node_pool_id}/nodes/{node_id}
+desc: Delete a Node in a Kubernetes Cluster | To delete a single node in a pool, send a DELETE request to `/v2/kubernetes/clusters/$K8S_CLUSTER_ID/node_pools/$NODE_POOL_ID/nodes/$NODE_ID`. Appending the `skip_drain=1` query parameter to the request causes node draining to be skipped. Omitting the query parameter or setting its value to `0` carries out draining prior to deletion. Appending the `replace=1
+- path:node_id string
+- query:skip_drain integer
+- query:replace integer
+
+## S358-N0092  POST /v2/kubernetes/clusters/{cluster_id}/upgrade
+desc: Upgrade a Kubernetes Cluster | To immediately upgrade a Kubernetes cluster to a newer patch release of Kubernetes, send a POST request to `/v2/kubernetes/clusters/$K8S_CLUSTER_ID/upgrade`. The body of the request must specify a version attribute. Available upgrade versions for a cluster can be fetched from `/v2/kubernetes/clusters/$K8S_CLUSTER_ID/upgrades`.
+- body:version string
+
+## S358-N0093  DELETE /v2/kubernetes/registry
+desc: Remove Container Registry from Kubernetes Clusters | To remove the container registry from Kubernetes clusters, send a DELETE request to `/v2/kubernetes/registry`.
+schema: schema
+- body:cluster_uuids array<string>
+
+## S358-N0094  POST /v2/kubernetes/registry
+desc: Add Container Registry to Kubernetes Clusters | To integrate the container registry with Kubernetes clusters, send a POST request to `/v2/kubernetes/registry`.
+- body:cluster_uuids array<string>
+
+## S358-N0095  POST /v2/load_balancers
+desc: Create a New Load Balancer | To create a new load balancer instance, send a POST request to `/v2/load_balancers`. You can specify the Droplets that will sit behind the load balancer using one of two methods: * Set `droplet_ids` to a list of specific Droplet IDs. * Set `tag` to the name of a tag. All Droplets with this tag applied will be assigned to the load balancer. Additional Droplets will be a
+schema: 2
+- body:droplet_ids array<integer>
+- body:region any
+- body:algorithm string enum[round_robin|least_connections]
+- body:created_at string
+- body:disable_lets_encrypt_dns_records boolean
+- body:enable_backend_keepalive boolean
+- body:enable_proxy_protocol boolean
+- body:firewall object
+- body:firewall.allow array<string>
+- body:firewall.deny array<string>
+- body:forwarding_rules array<object>
+- body:forwarding_rules[].certificate_id string
+- body:forwarding_rules[].entry_port integer
+- body:forwarding_rules[].entry_protocol string enum[http|https|http2|http3|tcp|udp]
+- body:forwarding_rules[].target_port integer
+- body:forwarding_rules[].target_protocol string enum[http|https|http2|tcp|udp]
+- body:forwarding_rules[].tls_passthrough boolean
+- body:health_check object
+- body:health_check.check_interval_seconds integer
+- body:health_check.healthy_threshold integer
+- body:health_check.path string
+- body:health_check.port integer
+- body:health_check.protocol string enum[http|https|tcp]
+- body:health_check.response_timeout_seconds integer
+- body:health_check.unhealthy_threshold integer
+- body:http_idle_timeout_seconds integer
+- body:id string
+- body:ip string
+- body:name string
+- body:project_id string
+- body:redirect_http_to_https boolean
+- body:size string enum[lb-small|lb-medium|lb-large]
+- body:size_unit integer
+- body:status string enum[new|active|errored]
+- body:sticky_sessions object
+- body:sticky_sessions.cookie_name string
+- body:sticky_sessions.cookie_ttl_seconds integer
+- body:sticky_sessions.type string enum[cookies|none]
+- body:vpc_uuid string
+- body:tag string
+
+## S358-N0097  PUT /v2/load_balancers/{lb_id}
+desc: Update a Load Balancer | To update a load balancer's settings, send a PUT request to `/v2/load_balancers/$LOAD_BALANCER_ID`. The request should contain a full representation of the load balancer including existing attributes. It may contain _one of_ the `droplets_ids` or `tag` attributes as they are mutually exclusive. **Note that any attribute that is not provided will be reset to its default val
+schema: schema
+- body:droplet_ids array<integer>
+- body:region any
+- body:algorithm string enum[round_robin|least_connections]
+- body:created_at string
+- body:disable_lets_encrypt_dns_records boolean
+- body:enable_backend_keepalive boolean
+- body:enable_proxy_protocol boolean
+- body:firewall object
+- body:firewall.allow array<string>
+- body:firewall.deny array<string>
+- body:forwarding_rules array<object>
+- body:forwarding_rules[].certificate_id string
+- body:forwarding_rules[].entry_port integer
+- body:forwarding_rules[].entry_protocol string enum[http|https|http2|http3|tcp|udp]
+- body:forwarding_rules[].target_port integer
+- body:forwarding_rules[].target_protocol string enum[http|https|http2|tcp|udp]
+- body:forwarding_rules[].tls_passthrough boolean
+- body:health_check object
+- body:health_check.check_interval_seconds integer
+- body:health_check.healthy_threshold integer
+- body:health_check.path string
+- body:health_check.port integer
+- body:health_check.protocol string enum[http|https|tcp]
+- body:health_check.response_timeout_seconds integer
+- body:health_check.unhealthy_threshold integer
+- body:http_idle_timeout_seconds integer
+- body:id string
+- body:ip string
+- body:name string
+- body:project_id string
+- body:redirect_http_to_https boolean
+- body:size string enum[lb-small|lb-medium|lb-large]
+- body:size_unit integer
+- body:status string enum[new|active|errored]
+- body:sticky_sessions object
+- body:sticky_sessions.cookie_name string
+- body:sticky_sessions.cookie_ttl_seconds integer
+- body:sticky_sessions.type string enum[cookies|none]
+- body:vpc_uuid string
+- body:tag string
+
+## S358-N0098  DELETE /v2/load_balancers/{lb_id}/droplets
+desc: Remove Droplets from a Load Balancer | To remove a Droplet from a load balancer instance, send a DELETE request to `/v2/load_balancers/$LOAD_BALANCER_ID/droplets`. In the body of the request, there should be a `droplet_ids` attribute containing a list of Droplet IDs. No response body will be sent back, but the response code will indicate success. Specifically, the response code will be a 204, whic
+schema: 0
+- body:(body) any
+
+## S358-N0100  DELETE /v2/load_balancers/{lb_id}/forwarding_rules
+desc: Remove Forwarding Rules from a Load Balancer | To remove forwarding rules from a load balancer instance, send a DELETE request to `/v2/load_balancers/$LOAD_BALANCER_ID/forwarding_rules`. In the body of the request, there should be a `forwarding_rules` attribute containing an array of rules to be removed. No response body will be sent back, but the response code will indicate success. Specifically,
+- body:forwarding_rules array<any>
+
+## S358-N0101  POST /v2/load_balancers/{lb_id}/forwarding_rules
+desc: Add Forwarding Rules to a Load Balancer | To add an additional forwarding rule to a load balancer instance, send a POST request to `/v2/load_balancers/$LOAD_BALANCER_ID/forwarding_rules`. In the body of the request, there should be a `forwarding_rules` attribute containing an array of rules to be added. No response body will be sent back, but the response code will indicate success. Specifically, 
+- body:forwarding_rules array<any>
+
+## S358-N0102  POST /v2/monitoring/alerts
+desc: Create Alert Policy | To create a new alert, send a POST request to `/v2/monitoring/alerts`.
+- body:alerts any
+- body:compare string enum[GreaterThan|LessThan]
+- body:description string
+- body:enabled boolean
+- body:entities array<string>
+- body:tags array<string>
+- body:type string enum[v1/insights/droplet/load_1|v1/insights/droplet/load_5|v1/insights/droplet/load_15|v1/insights/droplet/memory_utilization_percent|v1/insights/droplet/disk_utilization_percent|v1/insights/droplet/cpu|v1/insights/droplet/disk_read|v1/insights/droplet/disk_write|v1/insights/droplet/public_outbound_bandwidth|v1/insights/droplet/public_inbound_bandwidth|v1/insights/droplet/private_outbound_bandwidth|v1/insights/droplet/private_inbound_bandwidth]
+- body:value number
+- body:window string enum[5m|10m|30m|1h]
+
+## S358-N0103  DELETE /v2/monitoring/alerts/{alert_uuid}
+desc: Delete an Alert Policy | To delete an alert policy, send a DELETE request to `/v2/monitoring/alerts/{alert_uuid}`
+
+## S358-N0104  PUT /v2/monitoring/alerts/{alert_uuid}
+desc: Update an Alert Policy | To update en existing policy, send a PUT request to `v2/monitoring/alerts/{alert_uuid}`.
+schema: schema
+- body:alerts any
+- body:compare string enum[GreaterThan|LessThan]
+- body:description string
+- body:enabled boolean
+- body:entities array<string>
+- body:tags array<string>
+- body:type string enum[v1/insights/droplet/load_1|v1/insights/droplet/load_5|v1/insights/droplet/load_15|v1/insights/droplet/memory_utilization_percent|v1/insights/droplet/disk_utilization_percent|v1/insights/droplet/cpu|v1/insights/droplet/disk_read|v1/insights/droplet/disk_write|v1/insights/droplet/public_outbound_bandwidth|v1/insights/droplet/public_inbound_bandwidth|v1/insights/droplet/private_outbound_bandwidth|v1/insights/droplet/private_inbound_bandwidth]
+- body:value number
+- body:window string enum[5m|10m|30m|1h]
+
+## S358-N0106  PATCH /v2/projects/default
+desc: Patch the Default Project | To update only specific attributes of your default project, send a PATCH request to `/v2/projects/default`. At least one of the following attributes needs to be sent.
+schema: items
+- body:(body) any
+
+## S358-N0107  PUT /v2/projects/default
+desc: Update the Default Project | To update you default project, send a PUT request to `/v2/projects/default`. All of the following attributes must be sent.
+schema: items
+- body:(body) any
+
+## S358-N0108  POST /v2/projects/default/resources
+desc: Assign Resources to Default Project | To assign resources to your default project, send a POST request to `/v2/projects/default/resources`.
+schema: schema
+- body:(body) any
+
+## S358-N0109  DELETE /v2/projects/{project_id}
+desc: Delete an Existing Project | To delete a project, send a DELETE request to `/v2/projects/$PROJECT_ID`. To be deleted, a project must not have any resources assigned to it. Any existing resources must first be reassigned or destroyed, or you will receive a 412 error. A successful request will receive a 204 status code with no body in response. This indicates that the request was processed successfu
+
+## S358-N0110  PATCH /v2/projects/{project_id}
+desc: Patch a Project | To update only specific attributes of a project, send a PATCH request to `/v2/projects/$PROJECT_ID`. At least one of the following attributes needs to be sent.
+schema: items
+- body:(body) any
+
+## S358-N0111  PUT /v2/projects/{project_id}
+desc: Update a Project | To update a project, send a PUT request to `/v2/projects/$PROJECT_ID`. All of the following attributes must be sent.
+schema: items
+- body:(body) any
+
+## S358-N0112  POST /v2/projects/{project_id}/resources
+desc: Assign Resources to a Project | To assign resources to a project, send a POST request to `/v2/projects/$PROJECT_ID/resources`.
+- body:resources array<any>
+
+## S358-N0116  POST /v2/registry/validate-name
+desc: Validate a Container Registry Name | To validate that a container registry name is available for use, send a POST request to `/v2/registry/validate-name`. If the name is both formatted correctly and available, the response code will be 204 and contain no body. If the name is already in use, the response will be a 409 Conflict.
+- body:name string
+
+## S358-N0117  POST /v2/registry/{registry_name}/garbage-collection
+desc: Start Garbage Collection | Garbage collection enables users to clear out unreferenced blobs (layer & manifest data) after deleting one or more manifests from a repository. If there are no unreferenced blobs resulting from the deletion of one or more manifests, garbage collection is effectively a noop. [See here for more information](https://www.digitalocean.com/docs/container-registry/how-to/clean
+
+## S358-N0118  PUT /v2/registry/{registry_name}/garbage-collection/{garbage_collection_uuid}
+desc: Update Garbage Collection | To cancel the currently-active garbage collection for a registry, send a PUT request to `/v2/registry/$REGISTRY_NAME/garbage-collection/$GC_UUID` and specify one or more of the attributes below.
+- path:garbage_collection_uuid string
+- body:cancel boolean
+
+## S358-N0119  DELETE /v2/registry/{registry_name}/{repository_name}/digests/{manifest_digest}
+desc: Delete Container Registry Repository Manifest | To delete a container repository manifest by digest, send a DELETE request to `/v2/registry/$REGISTRY_NAME/repositories/$REPOSITORY_NAME/digests/$MANIFEST_DIGEST`. Note that if your repository name contains `/` characters, it must be URL-encoded in the request URL. For example, to delete `registry.digitalocean.com/example/my/repo@sha256:abcd`, the pa
+- path:manifest_digest string
+
+## S358-N0120  DELETE /v2/registry/{registry_name}/{repository_name}/tags/{repository_tag}
+desc: Delete Container Registry Repository Tag | To delete a container repository tag, send a DELETE request to `/v2/registry/$REGISTRY_NAME/repositories/$REPOSITORY_NAME/tags/$TAG`. Note that if your repository name contains `/` characters, it must be URL-encoded in the request URL. For example, to delete `registry.digitalocean.com/example/my/repo:mytag`, the path would be `/v2/registry/example/reposit
+- path:repository_tag string
+
+## S358-N0123  POST /v2/reserved_ips/{reserved_ip}/actions
+desc: Initiate a Reserved IP Action | To initiate an action on a reserved IP send a POST request to `/v2/reserved_ips/$RESERVED_IP/actions`. In the JSON body to the request, set the `type` attribute to on of the supported action types: | Action | Details |------------|-------- | `assign` | Assigns a reserved IP to a Droplet | `unassign` | Unassign a reserved IP from a Droplet
+schema: 0
+- body:type string enum[assign|unassign]
+- body:droplet_id integer
+
+## S358-N0124  DELETE /v2/snapshots/{snapshot_id}
+desc: Delete a Snapshot | Both Droplet and volume snapshots are managed through the `/v2/snapshots/` endpoint. To delete a snapshot, send a DELETE request to `/v2/snapshots/$SNAPSHOT_ID`. A status of 204 will be given. This indicates that the request was processed successfully, but that no response body is needed.
+
+## S358-N0125  POST /v2/tags
+desc: Create a New Tag | To create a tag you can send a POST request to `/v2/tags` with a `name` attribute.
+schema: items
+- body:(body) any
+
+## S358-N0126  DELETE /v2/tags/{tag_id}
+desc: Delete a Tag | A tag can be deleted by sending a `DELETE` request to `/v2/tags/$TAG_NAME`. Deleting a tag also untags all the resources that have previously been tagged by the Tag
+
+## S358-N0127  DELETE /v2/tags/{tag_id}/resources
+desc: Untag a Resource | Resources can be untagged by sending a DELETE request to `/v2/tags/$TAG_NAME/resources` with an array of json objects containing `resource_id` and `resource_type` attributes. Currently only untagging of Droplets, Databases, Images, Volumes, and Volume Snapshots is supported. `resource_type` is expected to be the string `droplet`, `database`, `image`, `volume` or `volume_snapshot
+schema: schema
+- body:(body) any
+
+## S358-N0128  POST /v2/tags/{tag_id}/resources
+desc: Tag a Resource | Resources can be tagged by sending a POST request to `/v2/tags/$TAG_NAME/resources` with an array of json objects containing `resource_id` and `resource_type` attributes. Currently only tagging of Droplets, Databases, Images, Volumes, and Volume Snapshots is supported. `resource_type` is expected to be the string `droplet`, `database`, `image`, `volume` or `volume_snapshot`. `reso
+- body:resources array<object>
+- body:resources[].resource_id string
+- body:resources[].resource_type string enum[droplet|image|volume|volume_snapshot]
+
+## S358-N0129  POST /v2/uptime/checks
+desc: Create a New Check | To create an Uptime check, send a POST request to `/v2/uptime/checks` specifying the attributes in the table below in the JSON body.
+schema: 1
+- body:(body) object
+
+## S358-N0131  PUT /v2/uptime/checks/{check_id}
+desc: Update a Check | To update the settings of an Uptime check, send a PUT request to `/v2/uptime/checks/$CHECK_ID`.
+schema: 1
+- body:(body) object
+
+## S358-N0132  POST /v2/uptime/checks/{check_id}/alerts
+desc: Create a New Alert | To create an Uptime alert, send a POST request to `/v2/uptime/checks/$CHECK_ID/alerts` specifying the attributes in the table below in the JSON body.
+schema: items
+- body:(body) object
+
+## S358-N0133  DELETE /v2/uptime/checks/{check_id}/alerts/{alert_id}
+desc: Delete an Alert | To delete an Uptime alert, send a DELETE request to `/v2/uptime/checks/$CHECK_ID/alerts/$ALERT_ID`. A 204 status code with no body will be returned in response to a successful request.
+
+## S358-N0135  DELETE /v2/volumes
+desc: Delete a Block Storage Volume by Name | Block storage volumes may also be deleted by name by sending a DELETE request with the volume's **name** and the **region slug** for the region it is located in as query parameters to `/v2/volumes?name=$VOLUME_NAME&region=nyc1`. No response body will be sent back, but the response code will indicate success. Specifically, the response code will be a 204, whi
+
+## S358-N0137  POST /v2/volumes/actions
+desc: Initiate A Block Storage Action By Volume Name | To initiate an action on a block storage volume by Name, send a POST request to `~/v2/volumes/actions`. The body should contain the appropriate attributes for the respective action. ## Attach a Block Storage Volume to a Droplet | Attribute | Details | | ----------- | ------------------------------------------------------------------- | | type | This
+schema: 0
+- body:region any
+- body:type string enum[attach|detach|resize]
+- body:droplet_id integer
+- body:tags any
+
+## S358-N0138  DELETE /v2/volumes/snapshots/{snapshot_id}
+desc: Delete a Volume Snapshot | To delete a volume snapshot, send a DELETE request to `/v2/snapshots/$SNAPSHOT_ID`. A status of 204 will be given. This indicates that the request was processed successfully, but that no response body is needed.
+
+## S358-N0139  DELETE /v2/volumes/{volume_id}
+desc: Delete a Block Storage Volume | To delete a block storage volume, destroying all data and removing it from your account, send a DELETE request to `/v2/volumes/$VOLUME_ID`. No response body will be sent back, but the response code will indicate success. Specifically, the response code will be a 204, which means that the action was successful with no returned body data.
+
+## S358-N0141  POST /v2/volumes/{volume_id}/snapshots
+desc: Create Snapshot from a Volume | To create a snapshot from a volume, sent a POST request to `/v2/volumes/$VOLUME_ID/snapshots`.
+- body:name string
+- body:tags any
+
+## S358-N0142  POST /v2/vpcs
+desc: Create a New VPC | To create a VPC, send a POST request to `/v2/vpcs` specifying the attributes in the table below in the JSON body. **Note:** If you do not currently have a VPC network in a specific datacenter region, the first one that you create will be set as the default for that region. The default VPC for a region cannot be changed or deleted.
+schema: 0
+- body:(body) object
+
+## S358-N0143  DELETE /v2/vpcs/{vpc_id}
+desc: Delete a VPC | To delete a VPC, send a DELETE request to `/v2/vpcs/$VPC_ID`. A 204 status code with no body will be returned in response to a successful request. The default VPC for a region can not be deleted. Additionally, a VPC can only be deleted if it does not contain any member resources. Attempting to delete a region's default VPC or a VPC that still has members will result in a 403 Forbidd
+
+## S358-N0144  PATCH /v2/vpcs/{vpc_id}
+desc: Partially Update a VPC | To update a subset of information about a VPC, send a PATCH request to `/v2/vpcs/$VPC_ID`.
+schema: 0
+- body:(body) any
+
+## S342-N0006  POST /apis/{owner}/{api}/{version}/clone
+desc: Create a new API version | Use this operation to clone an existing API version as a new version. The new version will have the same YAML content but with updated `info.version`. **Note:** Comments, integrations, and codegen options are not copied to the new version. The default version also remains unchanged.
+schema: NewVersion
+- path:owner string
+- path:api string
+- path:version string
+- body:private boolean
+- body:version string
+
+## S342-N0013  PATCH /apis/{owner}/{api}/{version}/comments/{comment}/replies/{reply}
+desc: Update a comment reply
+schema: CommentPatch
+- path:owner string
+- path:api string
+- path:version string
+- path:comment string
+- path:reply string
+- body:body string
+
+## S342-N0014  PUT /apis/{owner}/{api}/{version}/comments/{comment}/status/{status}
+desc: Resolve or reopen a comment
+- path:owner string
+- path:api string
+- path:version string
+- path:comment string
+- path:status string enum[OPEN|RESOLVED]
+
+## S342-N0019  PUT /apis/{owner}/{api}/{version}/integrations/{integrationId}
+desc: Update integration settings | Updates integration settings for the specified API and integration ID. The integration type is determined by which object is passed in the request body. The request body must contain a **full representation** of an integration object. If you want to update just a few parameters, use the PATCH operation instead. For a list of fields that need to be provided in the requ
+- path:owner string
+- path:api string
+- path:version string
+- path:integrationId string
+- body:(body) object
+
+## S342-N0022  PUT /apis/{owner}/{api}/{version}/settings/private
+desc: Set the visibility (public or private) of an API version
+schema: VisibilitySettings
+- path:owner string
+- path:api string
+- path:version string
+- body:private boolean
+
+## S342-N0024  POST /domains/{owner}/{domain}
+desc: Create or update a domain
+- path:owner string
+- path:domain string
+- query:isPrivate boolean
+- query:version string
+- query:force boolean
+- body:(body) string
+
+## S342-N0026  PUT /domains/{owner}/{domain}/settings/default
+desc: Set the default version for a domain
+schema: DefaultVersion
+- path:owner string
+- path:domain string
+- body:version string
+
+## S342-N0028  POST /domains/{owner}/{domain}/{version}/clone
+desc: Create a new domain version | Use this operation to clone an existing domain version as a new version. Note that the new version is not automatically set as the default version.
+schema: NewVersion
+- path:owner string
+- path:domain string
+- path:version string
+- body:private boolean
+- body:version string
+
+## S342-N0032  PATCH /domains/{owner}/{domain}/{version}/comments/{comment}
+desc: Update a comment
+schema: ClosableCommentPatch
+- path:owner string
+- path:domain string
+- path:version string
+- path:comment string
+- body:body string
+- body:position integer
+
+## S342-N0036  PUT /domains/{owner}/{domain}/{version}/comments/{comment}/status/{status}
+desc: Resolve or reopen a comment
+- path:owner string
+- path:domain string
+- path:version string
+- path:comment string
+- path:status string enum[OPEN|RESOLVED]
+
+## S342-N0041  DELETE /projects/{owner}/{projectId}
+desc: Delete a project
+- path:owner string
+- path:projectId string

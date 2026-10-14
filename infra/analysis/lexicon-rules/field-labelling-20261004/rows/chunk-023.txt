@@ -1,0 +1,549 @@
+## S367-0001  PUT /api/hotel/v0/hotels/{hotelId}/rateplans/batch/$rates
+summary: Update a list of base rateplans for a given period and a given base price for single occupancy.
+desc: Currently this call only allows to set the base price for non-derived rateplans if the rateplan is active and already loaded for the specified time period. <br /><br /> A request example:<br /><pre> [ { "rateplan": "STDN01", "from": "2018-01-01", "to": "2018-01-30", "base_price": 120.00 } ] </pre><br /> For more details on how the API responds to errors please check our documentation on <a href="h
+- path:hotelId integer
+- body:base_price number
+- body:from string
+- body:rateplan string
+- body:to string
+
+## S367-0002  PATCH /api/hotel/v0/hotels/{hotelId}/rateplans/{rateplanCode}/rates
+summary: Partially update a rate of the specified rateplan for the defined time period.
+desc: The hetras API is using this <a href="https://developer.hetras.com/docs/patch" onfocus="this.blur()" target="_blank">Patch Specification</a> to partially update an existing resource. Currently this call only allows to set the base price for non-derived rateplans if the rateplan is active and already loaded for the specified time period. <br /><br /> A request example:<br /><pre> [ { "op": "replace
+- path:hotelId integer
+- path:rateplanCode string
+- query:from string
+- query:to string
+- body:from string
+- body:op string
+- body:path string
+- body:value object
+
+## S367-0003  PATCH /api/hotel/v0/hotels/{hotelId}/rateplans/{rateplanCode}/rates/{businessDay}
+summary: Partially update a rate of the specified rateplan for a defined business day.
+desc: The hetras API is using this <a href="https://developer.hetras.com/docs/patch" onfocus="this.blur()" target="_blank">Patch Specification</a> to partially update an existing resource. Currently this call only allows to set the base price for non-derived rateplans if the rateplan is active and already loaded for the specified business day. <br /><br /> A request example:<br /><pre> [ { "op": "replac
+- path:hotelId integer
+- path:rateplanCode string
+- path:businessDay string
+- body:from string
+- body:op string
+- body:path string
+- body:value object
+
+## S367-0004  PATCH /api/hotel/v0/hotels/{hotelId}/rooms/{roomNumber}
+summary: Partially updates a room.
+desc: The hetras API is using this <a href="https://developer.hetras.com/docs/patch" onfocus="this.blur()" target="_blank">Patch Specification</a> to partially update an existing resource. Currently this call only allows to modify condition and housekeeping occupancy status of the room. <br /><br /> A request example:<br /><pre> [ { "op": "replace", "path": "/status/condition", "value": "CleanNotInspect
+- path:hotelId integer
+- path:roomNumber string
+- body:from string
+- body:op string
+- body:path string
+- body:value object
+
+## S367-0005  PUT /api/hotel/v0/hotels/{hotelId}/yieldable_rateplans/{rateplanCode}/$rates
+summary: Saves Yieldable Rate Prices for existing Yieldable Rateplan.
+desc: Saves Yieldable Rate Prices for existing Yieldable Rateplan. The rateplan has been created before and with this End Point we create or update the rate prices. If the Yieldable rateplan prices exist it updates them with the new price if not it creates new price entries.<br /> For more details on how the API responds to errors please check our documentation on <a href="https://developer.hetras.com/d
+- path:hotelId integer
+- path:rateplanCode string
+- body:date string
+- body:number_of_persons integer
+- body:rate_value number
+- body:room_type string
+
+## S368-0001  POST /certificates/{id}/actions/retry
+summary: Retry Issuance or Renewal
+desc: Retry a failed Certificate issuance or renewal. Only applicable if the type of the Certificate is `managed` and the issuance or renewal status is `failed`. #### Call specific error codes | Code | Description | |---------------------------------------------------------|---------------------------------------------------------------------------| | `caa_record_does_not_allow_ca` | CAA record does not
+- path:id integer
+
+## S368-0002  POST /floating_ips
+summary: Create a Floating IP
+desc: Creates a new Floating IP assigned to a Server. If you want to create a Floating IP that is not bound to a Server, you need to provide the `home_location` key instead of `server`. This can be either the ID or the name of the Location this IP shall be created in. Note that a Floating IP can be assigned to a Server in any Location later on. For optimal routing it is advised to use the Floating IP in
+- body:description string
+- body:home_location string
+- body:labels object
+- body:name string
+- body:server integer
+- body:type string enum[ipv4|ipv6]
+
+## S368-0003  POST /floating_ips/{id}/actions/change_dns_ptr
+summary: Change reverse DNS entry for a Floating IP
+desc: Changes the hostname that will appear when getting the hostname belonging to this Floating IP.
+- path:id integer
+- body:dns_ptr string
+- body:ip string
+
+## S368-0004  PUT /images/{id}
+summary: Update an Image
+desc: Updates the Image. You may change the description, convert a Backup Image to a Snapshot Image or change the Image labels. Only Images of type `snapshot` and `backup` can be updated. Note that when updating labels, the current set of labels will be replaced with the labels provided in the request body. So, for example, if you want to add a new label, you have to provide all existing labels plus the
+- path:id integer
+- body:description string
+- body:labels object
+- body:type string enum[snapshot]
+
+## S368-0005  DELETE /load_balancers/{id}
+summary: Delete a Load Balancer
+desc: Deletes a Load Balancer.
+- path:id integer
+
+## S368-0006  PUT /load_balancers/{id}
+summary: Update a Load Balancer
+desc: Updates a Load Balancer. You can update a Load Balancer’s name and a Load Balancer’s labels. Note that when updating labels, the Load Balancer’s current set of labels will be replaced with the labels provided in the request body. So, for example, if you want to add a new label, you have to provide all existing labels plus the new label in the request body. Note: if the Load Balancer object changes
+- path:id integer
+- body:labels object
+- body:name string
+
+## S368-0007  POST /load_balancers/{id}/actions/add_target
+summary: Add Target
+desc: Adds a target to a Load Balancer. #### Call specific error codes | Code | Description | |-----------------------------------------|-------------------------------------------------------------------------------------------------------| | `cloud_resource_ip_not_allowed` | The IP you are trying to add as a target belongs to a Hetzner Cloud resource | | `ip_not_owned` | The IP you are trying to add a
+- path:id integer
+- body:ip object
+- body:ip.ip string
+- body:label_selector object
+- body:label_selector.selector string
+- body:server object
+- body:server.id number
+- body:type string enum[server|label_selector|ip]
+- body:use_private_ip boolean
+
+## S368-0008  POST /load_balancers/{id}/actions/change_dns_ptr
+summary: Change reverse DNS entry for this Load Balancer
+desc: Changes the hostname that will appear when getting the hostname belonging to the public IPs (IPv4 and IPv6) of this Load Balancer. Floating IPs assigned to the Server are not affected by this.
+- path:id integer
+- body:dns_ptr string
+- body:ip string
+
+## S368-0009  POST /load_balancers/{id}/actions/delete_service
+summary: Delete Service
+desc: Delete a service of a Load Balancer.
+- path:id integer
+- body:listen_port number
+
+## S368-0010  POST /load_balancers/{id}/actions/disable_public_interface
+summary: Disable the public interface of a Load Balancer
+desc: Disable the public interface of a Load Balancer. The Load Balancer will be not accessible from the internet via its public IPs. #### Call specific error codes | Code | Description | |-------------------------------------------|--------------------------------------------------------------------------------| | `load_balancer_not_attached_to_network` | The Load Balancer is not attached to a network 
+- path:id integer
+
+## S368-0011  DELETE /networks/{id}
+summary: Delete a Network
+desc: Deletes a network. If there are Servers attached they will be detached in the background. Note: if the network object changes during the request, the response will be a “conflict” error.
+- path:id integer
+
+## S368-0012  POST /networks/{id}/actions/change_protection
+summary: Change Network Protection
+desc: Changes the protection configuration of a Network. Note: if the Network object changes during the request, the response will be a “conflict” error.
+- path:id integer
+- body:delete boolean
+
+## S368-0013  POST /networks/{id}/actions/delete_route
+summary: Delete a route from a Network
+desc: Delete a route entry from a Network. Note: if the Network object changes during the request, the response will be a “conflict” error.
+- path:id integer
+- body:destination string
+- body:gateway string
+
+## S368-0014  POST /networks/{id}/actions/delete_subnet
+summary: Delete a subnet from a Network
+desc: Deletes a single subnet entry from a Network. You cannot delete subnets which still have Servers attached. If you have Servers attached you first need to detach all Servers that use IPs from this subnet before you can delete the subnet. Note: if the Network object changes during the request, the response will be a “conflict” error.
+- path:id integer
+- body:ip_range string
+
+## S368-0015  DELETE /placement_groups/{id}
+summary: Delete a PlacementGroup
+desc: Deletes a PlacementGroup.
+- path:id integer
+
+## S368-0016  DELETE /primary_ips/{id}
+summary: Delete a Primary IP
+desc: Deletes a Primary IP. The Primary IP may be assigned to a Server. In this case it is unassigned automatically. The Server must be powered off (status `off`) in order for this operation to succeed.
+- path:id integer
+
+## S368-0017  POST /primary_ips/{id}/actions/assign
+summary: Assign a Primary IP to a resource
+desc: Assigns a Primary IP to a Server. A Server can only have one Primary IP of type `ipv4` and one of type `ipv6` assigned. If you need more IPs use Floating IPs. The Server must be powered off (status `off`) in order for this operation to succeed. #### Call specific error codes | Code | Description | |------------------------------ |-------------------------------------------------------------- | | `
+- path:id integer
+- body:assignee_id integer
+- body:assignee_type string enum[server]
+
+## S368-0018  POST /primary_ips/{id}/actions/change_protection
+summary: Change Primary IP Protection
+desc: Changes the protection configuration of a Primary IP. A Primary IP can only be delete protected if its `auto_delete` property is set to `false`.
+- path:id integer
+- body:delete boolean
+
+## S368-0019  POST /primary_ips/{id}/actions/unassign
+summary: Unassign a Primary IP from a resource
+desc: Unassigns a Primary IP from a Server. The Server must be powered off (status `off`) in order for this operation to succeed. Note that only Servers that have at least one network interface (public or private) attached can be powered on. #### Call specific error codes | Code | Description | |---------------------------------- |-------------------------------------------------------------- | | `serve
+- path:id integer
+
+## S368-0020  DELETE /servers/{id}
+summary: Delete a Server
+desc: Deletes a Server. This immediately removes the Server from your account, and it is no longer accessible.
+- path:id integer
+
+## S368-0021  PUT /servers/{id}
+summary: Update a Server
+desc: Updates a Server. You can update a Server’s name and a Server’s labels. Please note that Server names must be unique per Project and valid hostnames as per RFC 1123 (i.e. may only contain letters, digits, periods, and dashes). Also note that when updating labels, the Server’s current set of labels will be replaced with the labels provided in the request body. So, for example, if you want to add a 
+- path:id integer
+- body:labels object
+- body:name string
+
+## S368-0022  POST /servers/{id}/actions/add_to_placement_group
+summary: Add a Server to a Placement Group
+desc: Adds a Server to a Placement Group. Server must be powered off for this command to succeed. #### Call specific error codes | Code | Description | |-------------------------------|----------------------------------------------------------------------| | `server_not_stopped` | The action requires a stopped server |
+- path:id integer
+- body:placement_group integer
+
+## S368-0023  POST /servers/{id}/actions/attach_iso
+summary: Attach an ISO to a Server
+desc: Attaches an ISO to a Server. The Server will immediately see it as a new disk. An already attached ISO will automatically be detached before the new ISO is attached. Servers with attached ISOs have a modified boot order: They will try to boot from the ISO first before falling back to hard disk.
+- path:id integer
+- body:iso string
+
+## S368-0024  POST /servers/{id}/actions/change_dns_ptr
+summary: Change reverse DNS entry for this Server
+desc: Changes the hostname that will appear when getting the hostname belonging to the primary IPs (IPv4 and IPv6) of this Server. Floating IPs assigned to the Server are not affected by this.
+- path:id integer
+- body:dns_ptr string
+- body:ip string
+
+## S368-0025  POST /servers/{id}/actions/create_image
+summary: Create Image from a Server
+desc: Creates an Image (snapshot) from a Server by copying the contents of its disks. This creates a snapshot of the current state of the disk and copies it into an Image. If the Server is currently running you must make sure that its disk content is consistent. Otherwise, the created Image may not be readable. To make sure disk content is consistent, we recommend to shut down the Server prior to creati
+- path:id integer
+- body:description string
+- body:labels object
+- body:labels.labelkey string
+- body:type string enum[snapshot|backup]
+
+## S368-0026  POST /servers/{id}/actions/detach_from_network
+summary: Detach a Server from a Network
+desc: Detaches a Server from a network. The interface for this network will vanish.
+- path:id integer
+- body:network integer
+
+## S368-0027  POST /servers/{id}/actions/detach_iso
+summary: Detach an ISO from a Server
+desc: Detaches an ISO from a Server. In case no ISO Image is attached to the Server, the status of the returned Action is immediately set to `success`
+- path:id integer
+
+## S368-0028  POST /servers/{id}/actions/enable_backup
+summary: Enable and Configure Backups for a Server
+desc: Enables and configures the automatic daily backup option for the Server. Enabling automatic backups will increase the price of the Server by 20%. In return, you will get seven slots where Images of type backup can be stored. Backups are automatically created daily.
+- path:id integer
+
+## S368-0029  POST /servers/{id}/actions/remove_from_placement_group
+summary: Remove from Placement Group
+desc: Removes a Server from a Placement Group.
+- path:id integer
+
+## S368-0030  POST /servers/{id}/actions/request_console
+summary: Request Console for a Server
+desc: Requests credentials for remote access via VNC over websocket to keyboard, monitor, and mouse for a Server. The provided URL is valid for 1 minute, after this period a new url needs to be created to connect to the Server. How long the connection is open after the initial connect is not subject to this timeout.
+- path:id integer
+
+## S368-0031  POST /ssh_keys
+summary: Create an SSH key
+desc: Creates a new SSH key with the given `name` and `public_key`. Once an SSH key is created, it can be used in other calls such as creating Servers.
+- body:labels object
+- body:name string
+- body:public_key string
+
+## S368-0032  POST /volumes
+summary: Create a Volume
+desc: Creates a new Volume attached to a Server. If you want to create a Volume that is not attached to a Server, you need to provide the `location` key instead of `server`. This can be either the ID or the name of the Location this Volume will be created in. Note that a Volume can be attached to a Server only in the same Location as the Volume itself. Specifying the Server during Volume creation will a
+- body:automount boolean
+- body:format string
+- body:labels object
+- body:location string
+- body:name string
+- body:server integer
+- body:size integer
+
+## S368-0033  DELETE /volumes/{id}
+summary: Delete a Volume
+desc: Deletes a volume. All Volume data is irreversibly destroyed. The Volume must not be attached to a Server and it must not have delete protection enabled.
+- path:id string
+
+## S368-0034  PUT /volumes/{id}
+summary: Update a Volume
+desc: Updates the Volume properties. Note that when updating labels, the volume’s current set of labels will be replaced with the labels provided in the request body. So, for example, if you want to add a new label, you have to provide all existing labels plus the new label in the request body.
+- path:id string
+- body:labels object
+- body:labels.labelkey string
+- body:name string
+
+## S368-0035  POST /volumes/{id}/actions/change_protection
+summary: Change Volume Protection
+desc: Changes the protection configuration of a Volume.
+- path:id integer
+- body:delete boolean
+
+## S368-0036  POST /volumes/{id}/actions/detach
+summary: Detach Volume
+desc: Detaches a Volume from the Server it’s attached to. You may attach it to a Server again at a later time.
+- path:id integer
+
+## S370-0001  POST /contacts/lists
+desc: Add a new contact list
+- body:customfields array<object>
+- body:customfields[].key string
+- body:customfields[].label string
+- body:customfields[].required boolean
+- body:customfields[].type integer
+- body:eventcustomizations array<object>
+- body:eventcustomizations[].redirecturl string
+- body:eventcustomizations[].type integer
+- body:name string
+
+## S370-0002  DELETE /contacts/lists/{listid}
+desc: Delete an existing contact list
+- path:listid string
+
+## S370-0003  PUT /contacts/lists/{listid}
+desc: Update an existing contact list
+- path:listid string
+- body:customfields array<object>
+- body:customfields[].key string
+- body:customfields[].label string
+- body:customfields[].required boolean
+- body:customfields[].type integer
+- body:eventcustomizations array<object>
+- body:eventcustomizations[].redirecturl string
+- body:eventcustomizations[].type integer
+- body:name string
+
+## S370-0004  DELETE /contacts/{contactid}
+desc: Delete an existing contact
+- path:contactid string
+
+## S370-0005  PUT /contacts/{contactid}
+desc: Update an existing contact
+- path:contactid string
+- body:confirmed string
+- body:customfields any
+- body:email string
+- body:ip string
+- body:status integer
+
+## S370-0006  POST /subscription/{listid}
+desc: Subscribe an email address to a list. This api call has the same behavior as a regular subscribe form. However, single opt-in is allowed for system integration purposes. - If email address does not exist, a new contact will be added to the list. - If email address exists custom fields will be updated and status will be put to unconfirmed or active depending of singleoptin value. - If current statu
+- path:listid string
+- body:confirmed string
+- body:email string
+- body:fullname string
+- body:ip string
+- body:lang string
+- body:singleoptin boolean
+
+## S371-0001  POST /media/{media-id}/comments
+summary: Create a comment on a media object.
+desc: Create a comment on a media object with the following rules: * The total length of the comment cannot exceed 300 characters. * The comment cannot contain more than 4 hashtags. * The comment cannot contain more than 1 URL. * The comment cannot consist of all capital letters.
+- path:media-id string
+- query:text string
+
+## S371-0002  DELETE /media/{media-id}/comments/{comment-id}
+summary: Remove a comment.
+desc: Remove a comment either on the authenticated user's media object or authored by the authenticated user.
+- path:media-id string
+- path:comment-id string
+
+## S371-0003  DELETE /media/{media-id}/likes
+summary: Remove a like on this media by the current user.
+desc: Remove a like on this media by the currently authenticated user.
+- path:media-id string
+
+## S371-0004  POST /media/{media-id}/likes
+summary: Set a like on this media by the current user.
+desc: Set a like on this media by the currently authenticated user.
+- path:media-id string
+
+## S371-0005  POST /users/{user-id}/relationship
+summary: Modify the relationship between the current user and the target user.
+desc: Modify the relationship between the current user and the target user.
+- path:user-id string
+- query:action string enum[follow|unfollow|block|unblock|approve|ignore]
+
+## S374-0001  DELETE /joke
+desc: Delete a joke. The user needs to be the owner of the joke to be able to delete it.
+- query:id string
+
+## S374-0002  PATCH /joke
+desc: Update a joke
+- query:id string
+- query:title string
+- query:text string
+- query:author string
+- query:tags string
+
+## S374-0003  PUT /joke
+desc: Add a new joke to your private collection.
+- query:title string
+- query:text string
+- query:author string
+- query:tags string
+
+## S374-0004  POST /joke/tags/add
+desc: Add a tag to a given Joke.
+- query:id string
+- query:tags string
+
+## S374-0005  POST /joke/tags/remove
+desc: Remove a tag from a given joke.
+- query:id string
+- query:tags string
+
+## S377-0001  POST /actions
+summary: Add an action
+- body:list array<string>
+- body:name string
+- body:config object
+- body:config.number string
+- body:config.text string
+- body:type string enum[sms]
+
+## S377-0002  DELETE /actions/{action}
+summary: Delete an action
+- path:action string
+
+## S377-0003  PUT /actions/{action}
+summary: Update an action key
+- path:action string
+- body:list array<string>
+- body:name string
+- body:config object
+- body:config.number string
+- body:config.text string
+- body:type string enum[sms]
+
+## S377-0004  POST /addresses
+summary: Claim a new Mailscript address
+- body:address string
+
+## S377-0005  DELETE /addresses/{address}
+summary: Delete a mailscript address
+- path:address string
+
+## S377-0006  POST /addresses/{address}/keys
+summary: Add address key
+- path:address string
+- body:name string
+- body:read boolean
+- body:write boolean
+
+## S377-0007  DELETE /addresses/{address}/keys/{key}
+summary: Delete address key
+- path:address string
+- path:key string
+
+## S377-0008  PUT /addresses/{address}/keys/{key}
+summary: Update an address key
+- path:address string
+- path:key string
+- body:name string
+- body:read boolean
+- body:write boolean
+
+## S377-0009  POST /domains
+summary: Claim a new Domain
+- body:domain string
+
+## S377-0010  POST /domains/verify/{domain}
+summary: Check a new Domain
+- path:domain string
+
+## S377-0011  DELETE /domains/{domain}
+summary: Remove a domain
+- path:domain string
+
+## S377-0012  DELETE /integrations/{integration}
+summary: Delete an integration
+- path:integration string
+
+## S377-0013  POST /send
+summary: Send an email
+- body:from string
+- body:html string
+- body:subject string
+- body:text string
+- body:to string
+
+## S377-0014  POST /triggers
+summary: Setup a trigger
+- body:criteria object
+- body:criteria.domain string
+- body:criteria.from string
+- body:criteria.hasAttachments boolean
+- body:criteria.hasTheWords string
+- body:criteria.sentTo string
+- body:criteria.subjectContains string
+- body:criteria.and array<string>
+- body:criteria.or array<string>
+- body:name string
+
+## S377-0015  DELETE /triggers/{trigger}
+summary: Delete a trigger
+- path:trigger string
+
+## S377-0016  PUT /triggers/{trigger}
+summary: Update a trigger
+- path:trigger string
+- body:criteria object
+- body:criteria.domain string
+- body:criteria.from string
+- body:criteria.hasAttachments boolean
+- body:criteria.hasTheWords string
+- body:criteria.sentTo string
+- body:criteria.subjectContains string
+- body:criteria.and array<string>
+- body:criteria.or array<string>
+- body:name string
+
+## S377-0017  PUT /user
+summary: Update a user
+- body:displayName string
+
+## S377-0018  POST /verifications
+summary: Start verification process for external email address or sms number
+- body:email string
+- body:type string enum[email]
+- body:sms string
+
+## S377-0019  POST /verifications/{verification}/verify
+summary: Verify an email address or sms number with a code
+- path:verification string
+- body:code string
+- body:email string
+- body:sms string
+
+## S377-0020  POST /workflows
+summary: Setup workflow
+- body:action string
+- body:active boolean
+- body:input string
+- body:name string
+- body:trigger string
+
+## S377-0021  POST /workflows/set
+summary: Set a property on a workflow
+- body:id string
+- body:pairs array<object>
+- body:pairs[].key string
+- body:pairs[].value string
+
+## S377-0022  DELETE /workflows/{workflow}
+summary: Delete a workflow
+- path:workflow string
+
+## S377-0023  PUT /workflows/{workflow}
+summary: Update an workflow
+- path:workflow string
+- body:action string
+- body:active boolean
+- body:input string
+- body:name string
+- body:trigger string
+
+## S377-0024  POST /workspaces
+summary: Claim a Mailscript workspace
+desc: An attendant address will be created as well
+- body:workspace string

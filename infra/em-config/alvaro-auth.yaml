@@ -1,0 +1,32 @@
+# EvoMaster black-box auth config for the alvaro held-out target (WFC format, jar P2e).
+#
+# alvaromrveiga/ecommerce-backend: JWT bearer carrying claim userRole (C-JWT), access 15m.
+# Login: POST /login  body {email,password}  -> JSON accessToken.
+# externalEndpointURL points at the capture proxy (:8212) so logins are recorded.
+# File order = [low, operator, victim]; RestSampler processes the LAST entry first.
+#
+# Accounts seeded by infra/em-results/alvaro-heldout-20261014/reseed.sh
+# (register via POST /user, then DB UPDATE role: admin+victim=ADMIN, plain=USER).
+
+auth:
+  - name: low             # USER role, negative control
+    loginEndpointAuth:
+      payloadRaw: '{"email":"plain@test.com","password":"Passw0rd1"}'
+  - name: operator        # ADMIN, performs PATCH /user/role demotion (by email)
+    loginEndpointAuth:
+      payloadRaw: '{"email":"admin@test.com","password":"Passw0rd1"}'
+  - name: victim          # ADMIN, the A1 demotion victim
+    loginEndpointAuth:
+      payloadRaw: '{"email":"victim@test.com","password":"Passw0rd1"}'
+
+authTemplate:
+  loginEndpointAuth:
+    externalEndpointURL: http://localhost:8212/login
+    verb: POST
+    contentType: application/json
+    token:
+      extractFrom: body
+      extractSelector: /accessToken
+      sendIn: header
+      sendName: Authorization
+      sendTemplate: "Bearer {token}"

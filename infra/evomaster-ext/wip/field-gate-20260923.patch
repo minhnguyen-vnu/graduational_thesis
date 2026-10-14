@@ -1,0 +1,46 @@
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt	2026-09-21 21:46:00
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt	2026-09-23 12:50:47
+@@ -36,6 +36,7 @@
+ 
+ import org.evomaster.core.search.*
+ import org.evomaster.core.search.gene.Gene
++import org.evomaster.core.search.gene.ObjectGene
+ import org.evomaster.core.search.gene.collection.EnumGene
+ import org.evomaster.core.search.gene.numeric.IntegerGene
+ import org.evomaster.core.search.gene.numeric.LongGene
+@@ -93,6 +94,15 @@
+ 
+         fun transitionPathScore(hay: String): Double =
+             TRANSITION_PATH_LEXICON.filter { hay.contains(it.first) }.maxOfOrNull { it.second } ?: 0.0
++
++        private fun bodyFieldNames(a: RestCallAction): List<String> =
++            a.parameters.filterIsInstance<BodyParam>()
++                .mapNotNull { it.primaryGene().flatView().filterIsInstance<ObjectGene>().firstOrNull() }
++                .flatMap { it.fields }
++                .map { it.name }
++
++        fun transitionHay(a: RestCallAction): String =
++            (a.path.toString() + " " + a.getName() + " " + bodyFieldNames(a).joinToString(" ")).lowercase()
+ 
+         private val TRANSITION_VERBS =
+             listOf(HttpVerb.PUT, HttpVerb.PATCH, HttpVerb.POST, HttpVerb.DELETE)
+@@ -110,8 +120,7 @@
+             if (a.verb !in TRANSITION_VERBS) {
+                 return false
+             }
+-            val hay = (a.path.toString() + " " + a.getName()).lowercase()
+-            return transitionPathScore(hay) > 0.0
++            return transitionPathScore(transitionHay(a)) > 0.0
+         }
+ 
+         data class DeclaredTransition(
+@@ -848,9 +857,6 @@
+         return lastObserved == 403
+     }
+ 
+-    private fun transitionHay(a: RestCallAction) =
+-        (a.path.toString() + " " + a.getName()).lowercase()
+-
+     private fun hasUserParam(a: RestCallAction) = allGenes(a).any { g ->
+         val n = g.name.lowercase()
+         TRANSITION_USER_PARAM_LEXICON.any { n == it.first || n.contains(it.first) }

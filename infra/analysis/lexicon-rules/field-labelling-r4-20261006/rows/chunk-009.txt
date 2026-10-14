@@ -1,0 +1,1281 @@
+## S330-N0336  PUT /api/v1/sites/{site_id}/psks
+desc: updateSitePsks | Update multi PSKs
+schema: psk
+- path:site_id string
+- body:admin_sso_id string
+- body:created_time number
+- body:email string
+- body:expire_time integer
+- body:expiry_notification_time integer
+- body:id string
+- body:mac string
+- body:max_usage integer
+- body:modified_time number
+- body:name string
+- body:note string
+- body:notify_expiry boolean
+- body:notify_on_create_or_edit boolean
+- body:old_passphrase string
+- body:org_id string
+- body:passphrase string
+- body:role string
+- body:site_id string
+- body:ssid string
+- body:usage string enum[multi|single]
+- body:vlan_id integer
+
+## S330-N0337  POST /api/v1/sites/{site_id}/psks/import
+desc: importSitePsks | Import PSK from CSV file or JSON ## CSV File Format ```csv PSK Import CSV File Format: name,ssid,passphrase,usage,vlan_id,mac Common,warehouse,foryoureyesonly,single,35,a31425f31278 Justin,reception,visible,multi,1002 ```
+schema: psk
+- path:site_id string
+- body:admin_sso_id string
+- body:created_time number
+- body:email string
+- body:expire_time integer
+- body:expiry_notification_time integer
+- body:id string
+- body:mac string
+- body:max_usage integer
+- body:modified_time number
+- body:name string
+- body:note string
+- body:notify_expiry boolean
+- body:notify_on_create_or_edit boolean
+- body:old_passphrase string
+- body:org_id string
+- body:passphrase string
+- body:role string
+- body:site_id string
+- body:ssid string
+- body:usage string enum[multi|single]
+- body:vlan_id integer
+
+## S330-N0338  DELETE /api/v1/sites/{site_id}/psks/{psk_id}
+desc: deleteSitePsk | Delete Site PSK
+- path:site_id string
+- path:psk_id string
+
+## S330-N0339  PUT /api/v1/sites/{site_id}/psks/{psk_id}
+desc: updateSitePsk | Update Site PSK
+schema: psk
+- path:site_id string
+- path:psk_id string
+- body:admin_sso_id string
+- body:created_time number
+- body:email string
+- body:expire_time integer
+- body:expiry_notification_time integer
+- body:id string
+- body:mac string
+- body:max_usage integer
+- body:modified_time number
+- body:name string
+- body:note string
+- body:notify_expiry boolean
+- body:notify_on_create_or_edit boolean
+- body:old_passphrase string
+- body:org_id string
+- body:passphrase string
+- body:role string
+- body:site_id string
+- body:ssid string
+- body:usage string enum[multi|single]
+- body:vlan_id integer
+
+## S330-N0340  POST /api/v1/sites/{site_id}/rfdiags
+desc: startSiteRecording | Start RF Glass Recording
+schema: rfdiag
+- path:site_id string
+- body:duration integer
+- body:mac string
+- body:name string
+- body:sdkclient_id string
+- body:type string enum[sdkclient|client|asset]
+
+## S330-N0341  DELETE /api/v1/sites/{site_id}/rfdiags/{rfdiag_id}
+desc: deleteSiteRfdiagRecording | Delete Recording
+- path:site_id string
+- path:rfdiag_id string
+
+## S330-N0342  PUT /api/v1/sites/{site_id}/rfdiags/{rfdiag_id}
+desc: updateSiteRfdiagRecording | Update Recording
+schema: rfdiag
+- path:site_id string
+- path:rfdiag_id string
+- body:duration integer
+- body:mac string
+- body:name string
+- body:sdkclient_id string
+- body:type string enum[sdkclient|client|asset]
+
+## S330-N0343  POST /api/v1/sites/{site_id}/rfdiags/{rfdiag_id}/stop
+desc: stopSiteRfdiagRecording | If the recording session is active for the given rfdiag_id, it will finish the recording. duration and end_time will be updated to reflect the correct values.
+- path:site_id string
+- path:rfdiag_id string
+
+## S330-N0344  POST /api/v1/sites/{site_id}/rogues/{rogue_bssid}/deauth_clients
+desc: deauthSiteClientsConnectedToARogue | Send Deauth frame to clients connected to a Rogue AP
+- path:site_id string
+- path:rogue_bssid string
+
+## S330-N0346  POST /api/v1/sites/{site_id}/rssizones
+desc: createSiteRssiZone | Create RSSI Zone
+schema: rssizone
+- path:site_id string
+- body:created_time number
+- body:devices array<object>
+- body:devices[].device_id string
+- body:devices[].rssi integer
+- body:for_site boolean
+- body:id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:site_id string
+
+## S330-N0347  DELETE /api/v1/sites/{site_id}/rssizones/{rssizone_id}
+desc: deleteSiteRssiZone | Delete Site RSSI Zone
+- path:site_id string
+- path:rssizone_id string
+
+## S330-N0348  PUT /api/v1/sites/{site_id}/rssizones/{rssizone_id}
+desc: updateSiteRssiZone | Update Site RSSI Zone
+schema: rssizone
+- path:site_id string
+- path:rssizone_id string
+- body:created_time number
+- body:devices array<object>
+- body:devices[].device_id string
+- body:devices[].rssi integer
+- body:for_site boolean
+- body:id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:site_id string
+
+## S330-N0349  PUT /api/v1/sites/{site_id}/setting
+desc: updateSiteSettings | Update Site Settings
+schema: site_setting
+- path:site_id string
+- body:additional_config_cmds array<string>
+- body:analytic object
+- body:analytic.enabled boolean
+- body:ap_matching object
+- body:ap_matching.enabled boolean
+- body:ap_matching.rules array<object>
+- body:ap_matching.rules[].match_model string
+- body:ap_matching.rules[].name string
+- body:ap_matching.rules[].port_config object
+- body:ap_port_config object
+- body:ap_port_config.model_specific object
+- body:auto_placement object
+- body:auto_placement.orientation number
+- body:auto_placement.x number
+- body:auto_placement.y number
+- body:auto_preemption object
+- body:auto_preemption.day_of_week string enum[any|mon|tue|wed|thu|fri|sat|sun]
+- body:auto_preemption.enabled boolean
+- body:auto_preemption.time_of_day string
+- body:auto_upgrade object
+- body:auto_upgrade.custom_versions object
+- body:auto_upgrade.day_of_week string enum[any|mon|tue|wed|thu|fri|sat|sun|]
+- body:auto_upgrade.enabled boolean
+- body:auto_upgrade.time_of_day string
+- body:auto_upgrade.version string enum[beta|stable|custom]
+- body:blacklist_url string
+- body:ble_config object
+- body:ble_config.beacon_enabled boolean
+- body:ble_config.beacon_rate integer
+- body:ble_config.beacon_rate_mode string enum[default|custom]
+- body:ble_config.beam_disabled array<integer>
+- body:ble_config.eddystone_uid_adv_power integer
+- body:ble_config.eddystone_uid_beams string
+- body:ble_config.eddystone_uid_enabled boolean
+- body:ble_config.eddystone_uid_freq_msec integer
+- body:ble_config.eddystone_uid_instance string
+- body:ble_config.eddystone_uid_namespace string
+- body:ble_config.eddystone_url_adv_power integer
+- body:ble_config.eddystone_url_beams string
+- body:ble_config.eddystone_url_enabled boolean
+- body:ble_config.eddystone_url_freq_msec integer
+- body:ble_config.eddystone_url_url string
+- body:ble_config.ibeacon_adv_power integer
+- body:ble_config.ibeacon_beams string
+- body:ble_config.ibeacon_enabled boolean
+- body:ble_config.ibeacon_freq_msec integer
+- body:ble_config.ibeacon_major integer
+- body:ble_config.ibeacon_minor integer
+- body:ble_config.ibeacon_uuid string
+- body:ble_config.power integer
+- body:ble_config.power_mode string
+- body:config_auto_revert boolean
+- body:created_time number
+- body:device_updown_threshold integer
+- body:dns_servers array<string>
+- body:dns_suffix array<string>
+- body:enable_channel_144 boolean
+- body:engagement object
+- body:engagement.dwell_tag_names object
+- body:engagement.dwell_tag_names.bounce string
+- body:engagement.dwell_tag_names.engaged string
+- body:engagement.dwell_tag_names.passerby string
+- body:engagement.dwell_tag_names.stationed string
+- body:engagement.dwell_tags object
+- body:engagement.dwell_tags.bounce string
+- body:engagement.dwell_tags.engaged string
+- body:engagement.dwell_tags.passerby string
+- body:engagement.dwell_tags.stationed string
+- body:engagement.hours object
+- body:engagement.hours.fri string
+- body:engagement.hours.mon string
+- body:engagement.hours.sta string
+- body:engagement.hours.sun string
+- body:engagement.hours.thu string
+- body:engagement.hours.tue string
+- body:engagement.hours.wed string
+- body:engagement.max_dwell integer
+- body:engagement.min_dwell integer
+- body:evpn_options object
+(+306 fields cut)
+
+## S330-N0350  DELETE /api/v1/sites/{site_id}/setting/blacklist
+desc: deleteSiteClientsBlocklist | Delete Site Blacklist Station Clients
+- path:site_id string
+
+## S330-N0352  DELETE /api/v1/sites/{site_id}/setting/watched_station
+desc: deleteSiteWatchedStations | Delete Site Watched Station Clients
+- path:site_id string
+
+## S330-N0353  POST /api/v1/sites/{site_id}/setting/watched_station
+desc: createSiteWatchedStations | This endpoint is to provide list of client macs for annotation as watched station. Retrieve the current clients list from `watched_station_url` under Site:Setting
+schema: Model_object_macs_array_string
+- path:site_id string
+- body:macs array<string>
+
+## S330-N0355  POST /api/v1/sites/{site_id}/setting/whitelist
+desc: createSiteClientsAllowlist | This endpoint is to provide list of client macs for annotation as whitelist. Retrieve the current clients list from `whitelist_url` under Site:Setting
+schema: Model_object_macs_array_string
+- path:site_id string
+- body:macs array<string>
+
+## S330-N0356  POST /api/v1/sites/{site_id}/sle/{scope}/{scope_id}/metric/{metric}/threshold
+desc: replaceSiteSleThreshold | Replace the SLE threshold
+schema: sle_threshold
+- path:site_id string
+- path:scope string enum[site|ap|switch|gateway|client]
+- path:scope_id string
+- path:metric string
+- body:default number
+- body:direction string
+- body:maximum number
+- body:metric string
+- body:minimum number
+- body:threshold string
+- body:units string
+
+## S330-N0357  PUT /api/v1/sites/{site_id}/sle/{scope}/{scope_id}/metric/{metric}/threshold
+desc: updateSiteSleThreshold | Update the SLE threshold
+schema: sle_threshold
+- path:site_id string
+- path:scope string enum[site|ap|switch|gateway|client]
+- path:scope_id string
+- path:metric string
+- body:default number
+- body:direction string
+- body:maximum number
+- body:metric string
+- body:minimum number
+- body:threshold string
+- body:units string
+
+## S330-N0358  POST /api/v1/sites/{site_id}/ssr/{device_id}/upgrade
+desc: upgradeSiteSsr | Upgrade Site SSR device
+- path:site_id string
+- path:device_id string
+- body:channel string enum[stable|beta|alpha]
+- body:reboot_at integer
+- body:start_time integer
+- body:version string
+
+## S330-N0359  DELETE /api/v1/sites/{site_id}/subscriptions
+desc: UnsubscribeSite | Unsubscribe to Site Alarms
+- path:site_id string
+
+## S330-N0361  POST /api/v1/sites/{site_id}/synthetic_test
+desc: triggerSiteSyntheticTest | Trigger Synthetic Testing
+- path:site_id string
+- body:email string
+
+## S330-N0362  POST /api/v1/sites/{site_id}/uisettings
+desc: createSiteCurdSettings | CURD site UI settings
+schema: curd_ui_settings
+- path:site_id string
+- body:created_time number
+- body:defaultScopeId string
+- body:defaultScopeType string
+- body:defaultTimeRange object
+- body:defaultTimeRange.end integer
+- body:defaultTimeRange.endDate string
+- body:defaultTimeRange.interval string
+- body:defaultTimeRange.name string
+- body:defaultTimeRange.shortName string
+- body:defaultTimeRange.start integer
+- body:defaultTimeRange.usePreset boolean
+- body:description string
+- body:for_site boolean
+- body:id string
+- body:isCustomDataboard boolean
+- body:isScopeLinked boolean
+- body:isTimeRangeLinked boolean
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:purpose string
+- body:site_id string
+- body:tiles array<object>
+- body:tiles[].chartBand string
+- body:tiles[].chartColor string
+- body:tiles[].chartDirection string
+- body:tiles[].chartRankBy string
+- body:tiles[].chartType string
+- body:tiles[].colspan integer
+- body:tiles[].column integer
+- body:tiles[].hideEmptyRows boolean
+- body:tiles[].id string
+- body:tiles[].metric object
+- body:tiles[].metric.apiName string
+- body:tiles[].name string
+- body:tiles[].row integer
+- body:tiles[].rowspan integer
+- body:tiles[].scopeId string
+- body:tiles[].scopeType string
+- body:tiles[].sortedColumns any
+- body:tiles[].timeRange object
+- body:tiles[].timeRange.end number
+- body:tiles[].timeRange.endDate string
+- body:tiles[].timeRange.interval string
+- body:tiles[].timeRange.name string
+- body:tiles[].timeRange.shortName string
+- body:tiles[].timeRange.start integer
+- body:tiles[].timeRange.usePreset boolean
+- body:tiles[].trendType string
+- body:tiles[].vizType string
+
+## S330-N0363  DELETE /api/v1/sites/{site_id}/uisettings/{uisetting_id}
+desc: deleteSiteCurdSetting | CURD site UI settings
+- path:site_id string
+- path:uisetting_id string
+
+## S330-N0365  POST /api/v1/sites/{site_id}/vbeacons
+desc: createSiteVBeacon | Create Virtual Beacon
+schema: vbeacon
+- path:site_id string
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:major integer
+- body:map_id string
+- body:message string
+- body:minor integer
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:power integer
+- body:power_mode string enum[default|custom]
+- body:site_id string
+- body:url string
+- body:uuid string
+- body:wayfinding_nodename string
+- body:x number
+- body:y number
+
+## S330-N0366  DELETE /api/v1/sites/{site_id}/vbeacons/{vbeacon_id}
+desc: deleteSiteVBeacon | Delete Site Virtual Beacon
+- path:site_id string
+- path:vbeacon_id string
+
+## S330-N0367  PUT /api/v1/sites/{site_id}/vbeacons/{vbeacon_id}
+desc: updateSiteVBeacon | Update Site Virtual Beacon
+schema: vbeacon
+- path:site_id string
+- path:vbeacon_id string
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:major integer
+- body:map_id string
+- body:message string
+- body:minor integer
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:power integer
+- body:power_mode string enum[default|custom]
+- body:site_id string
+- body:url string
+- body:uuid string
+- body:wayfinding_nodename string
+- body:x number
+- body:y number
+
+## S330-N0368  POST /api/v1/sites/{site_id}/webhooks
+desc: createSiteWebhook | Webhook defines a webhook, modeled after [github’s model](https://developer.github.com/webhooks/). There is two types of webhooks: * webhooks ([examples](https://www.postman.com/juniper-mist/workspace/mist-systems-s-public-workspace/folder/224925-be01e694-7253-4195-8563-78e2a745e114)) * raw data webhooks ([examples](https://www.postman.com/juniper-mist/workspace/mist-systems-s-
+schema: webhook
+- path:site_id string
+- body:created_time number
+- body:enabled boolean
+- body:for_site boolean
+- body:headers object
+- body:id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:secret string
+- body:site_id string
+- body:splunk_token string
+- body:topics array<string> enum[alarms|asset-raw|asset-raw-rssi|audits|client-join|client-sessions|device-events|device-updowns|discovered-raw-rssi|location|mxedge-events|nac-sessions]
+- body:type string enum[http-post|splunk]
+- body:url string
+- body:verify_cert boolean
+
+## S330-N0369  DELETE /api/v1/sites/{site_id}/webhooks/{webhook_id}
+desc: deleteSiteWebhook | Delete Site Webhook
+- path:site_id string
+- path:webhook_id string
+
+## S330-N0370  PUT /api/v1/sites/{site_id}/webhooks/{webhook_id}
+desc: updateSiteWebhook | Update Site Webhook
+schema: webhook
+- path:site_id string
+- path:webhook_id string
+- body:created_time number
+- body:enabled boolean
+- body:for_site boolean
+- body:headers object
+- body:id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:secret string
+- body:site_id string
+- body:splunk_token string
+- body:topics array<string> enum[alarms|asset-raw|asset-raw-rssi|audits|client-join|client-sessions|device-events|device-updowns|discovered-raw-rssi|location|mxedge-events|nac-sessions]
+- body:type string enum[http-post|splunk]
+- body:url string
+- body:verify_cert boolean
+
+## S330-N0371  POST /api/v1/sites/{site_id}/webhooks/{webhook_id}/ping
+desc: pingSiteWebhook | send a Ping event to the webhook
+- path:site_id string
+- path:webhook_id string
+
+## S330-N0373  DELETE /api/v1/sites/{site_id}/wlans/{wlan_id}
+desc: deleteSiteWlan | Delete Site WLAN
+- path:site_id string
+- path:wlan_id string
+
+## S330-N0374  PUT /api/v1/sites/{site_id}/wlans/{wlan_id}
+desc: updateSiteWlan | Update Site WLAN
+schema: wlan
+- path:site_id string
+- path:wlan_id string
+- body:acct_interim_interval integer
+- body:acct_servers array<object>
+- body:acct_servers[].host string
+- body:acct_servers[].keywrap_enabled boolean
+- body:acct_servers[].keywrap_format string
+- body:acct_servers[].keywrap_kek string
+- body:acct_servers[].keywrap_mack string
+- body:acct_servers[].port integer
+- body:acct_servers[].secret string
+- body:airwatch object
+- body:airwatch.api_key string
+- body:airwatch.console_url string
+- body:airwatch.enabled boolean
+- body:airwatch.password string
+- body:airwatch.username string
+- body:allow_ipv6_ndp boolean
+- body:allow_mdns boolean
+- body:allow_ssdp boolean
+- body:ap_ids array<string>
+- body:app_limit object
+- body:app_limit.apps object
+- body:app_limit.enabled boolean
+- body:app_limit.wxtag_ids object
+- body:app_qos object
+- body:app_qos.apps object
+- body:app_qos.apps.skype-business-video object
+- body:app_qos.apps.skype-business-voice object
+- body:app_qos.enabled boolean
+- body:app_qos.others array<object>
+- body:app_qos.others[].dscp integer
+- body:app_qos.others[].dst_subnet string
+- body:app_qos.others[].port_ranges string
+- body:app_qos.others[].protocol string
+- body:app_qos.others[].src_subnet string
+- body:apply_to string enum[site|wxtags|aps]
+- body:arp_filter boolean
+- body:auth object
+- body:auth.anticlog_threshold integer
+- body:auth.eap_reauth boolean
+- body:auth.enable_mac_auth boolean
+- body:auth.key_idx integer
+- body:auth.keys array<string>
+- body:auth.multi_psk_only boolean
+- body:auth.owe string
+- body:auth.pairwise array<string>
+- body:auth.private_wlan boolean
+- body:auth.psk string
+- body:auth.type string enum[open|psk|wep|eap|psk-tkip|psk-wpa2-tkip]
+- body:auth.wep_as_secondary_auth boolean
+- body:auth_server_selection string enum[ordered|unordered]
+- body:auth_servers array<object>
+- body:auth_servers[].host string
+- body:auth_servers[].keywrap_enabled boolean
+- body:auth_servers[].keywrap_format string
+- body:auth_servers[].keywrap_kek string
+- body:auth_servers[].keywrap_mack string
+- body:auth_servers[].port integer
+- body:auth_servers[].secret string
+- body:auth_servers_nas_id string
+- body:auth_servers_nas_ip string
+- body:auth_servers_retries integer
+- body:auth_servers_timeout integer
+- body:band string
+- body:band_steer boolean
+- body:band_steer_force_band5 boolean
+- body:bands array<string> enum[24|5|6]
+- body:block_blacklist_clients boolean
+- body:bonjour object
+- body:bonjour.additional_vlan_ids array<integer>
+- body:bonjour.enabled boolean
+- body:bonjour.services object
+- body:cisco_cwa object
+- body:cisco_cwa.allowed_hostnames array<string>
+- body:cisco_cwa.allowed_subnets array<string>
+- body:cisco_cwa.blocked_subnets array<string>
+- body:cisco_cwa.enabled boolean
+- body:client_limit_down integer
+- body:client_limit_down_enabled boolean
+(+184 fields cut)
+
+## S330-N0375  POST /api/v1/sites/{site_id}/wlans/{wlan_id}/portal_image
+desc: uploadSiteWlanPortalImage | Wlan Portal Image Upload
+schema: image_upload
+- path:site_id string
+- path:wlan_id string
+- body:file string
+- body:json string
+
+## S330-N0376  PUT /api/v1/sites/{site_id}/wlans/{wlan_id}/portal_template
+desc: updateSiteWlanPortalTemplate | Update a Portal Template
+schema: wlan_portal_template
+- path:site_id string
+- path:wlan_id string
+- body:accessCodeAlternateEmail string
+- body:alignment string
+- body:authButtonAmazon string
+- body:authButtonAzure string
+- body:authButtonEmail string
+- body:authButtonFacebook string
+- body:authButtonGoogle string
+- body:authButtonMicrosoft string
+- body:authButtonPassphrase string
+- body:authButtonSms string
+- body:authButtonSponsor string
+- body:authLabel string
+- body:backLink string
+- body:color string
+- body:colorDark string
+- body:colorLight string
+- body:company boolean
+- body:companyError string
+- body:companyLabel string
+- body:email boolean
+- body:emailAccessDomainError string
+- body:emailCancel string
+- body:emailCodeCancel string
+- body:emailCodeError string
+- body:emailCodeFieldLabel string
+- body:emailCodeMessage string
+- body:emailCodeSubmit string
+- body:emailCodeTitle string
+- body:emailError string
+- body:emailFieldLabel string
+- body:emailLabel string
+- body:emailMessage string
+- body:emailSubmit string
+- body:emailTitle string
+- body:field1 boolean
+- body:field1Error string
+- body:field1Label string
+- body:field1Required boolean
+- body:field2 boolean
+- body:field2Error string
+- body:field2Label string
+- body:field2Required boolean
+- body:field3 boolean
+- body:field3Error string
+- body:field3Label string
+- body:field3Required boolean
+- body:field4 boolean
+- body:field4Error string
+- body:field4Label string
+- body:field4Required boolean
+- body:message string
+- body:name boolean
+- body:nameError string
+- body:nameLabel string
+- body:optout boolean
+- body:optoutLabel string
+- body:pageTitle string
+- body:passphraseCancel string
+- body:passphraseError string
+- body:passphraseLabel string
+- body:passphraseMessage string
+- body:passphraseSubmit string
+- body:passphraseTitle string
+- body:poweredBy boolean
+- body:requiredFieldLabel string
+- body:signInLabel string
+- body:smsCarrierDefault string
+- body:smsCarrierError string
+- body:smsCarrierFieldLabel string
+- body:smsCodeCancel string
+- body:smsCodeError string
+- body:smsCodeFieldLabel string
+- body:smsCodeMessage string
+- body:smsCodeSubmit string
+- body:smsCodeTitle string
+- body:smsCountryFieldLabel string
+- body:smsCountryFormat string
+- body:smsHaveAccessCode string
+(+36 fields cut)
+
+## S330-N0377  POST /api/v1/sites/{site_id}/wxrules
+desc: createSiteWxRule | Create Site WxLan Rule
+schema: wxlan_rule
+- path:site_id string
+- body:action string enum[allow|block]
+- body:blocked_apps array<string>
+- body:created_time number
+- body:dst_allow_wxtags array<string>
+- body:dst_deny_wxtags array<string>
+- body:enabled boolean
+- body:for_site boolean
+- body:id string
+- body:modified_time number
+- body:order number
+- body:org_id string
+- body:site_id string
+- body:src_wxtags array<string>
+
+## S330-N0378  DELETE /api/v1/sites/{site_id}/wxrules/{wxrules_id}
+desc: deleteSiteWxRule | Delete Site WxLan Rule
+- path:site_id string
+- path:wxrules_id string
+
+## S330-N0379  PUT /api/v1/sites/{site_id}/wxrules/{wxrules_id}
+desc: updateSiteWxRule | Update Site WxLan Rule
+schema: wxlan_rule
+- path:site_id string
+- path:wxrules_id string
+- body:action string enum[allow|block]
+- body:blocked_apps array<string>
+- body:created_time number
+- body:dst_allow_wxtags array<string>
+- body:dst_deny_wxtags array<string>
+- body:enabled boolean
+- body:for_site boolean
+- body:id string
+- body:modified_time number
+- body:order number
+- body:org_id string
+- body:site_id string
+- body:src_wxtags array<string>
+
+## S330-N0381  DELETE /api/v1/sites/{site_id}/wxtags/{wxtag_id}
+desc: deleteSiteWxTag | Delete Site WxTag
+- path:site_id string
+- path:wxtag_id string
+
+## S330-N0382  PUT /api/v1/sites/{site_id}/wxtags/{wxtag_id}
+desc: updateSiteWxTag | Update Site WxTag
+schema: wxlan_tag
+- path:site_id string
+- path:wxtag_id string
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:last_ips array<string>
+- body:mac string
+- body:match string enum[ap_id|app|asset_mac|client_mac|hostname|ip_range_subnet|port|radius_attr|radius_group|radius_username|wlan_id|psk_name]
+- body:modified_time number
+- body:name string
+- body:op string enum[in|not_in]
+- body:org_id string
+- body:resource_mac string
+- body:services array<string>
+- body:site_id string
+- body:specs array<object>
+- body:specs[].port_range string
+- body:specs[].protocol string
+- body:specs[].subnets array<string>
+- body:subnet string
+- body:type string enum[match|client|resource|subnet|spec]
+- body:values array<string>
+
+## S330-N0383  POST /api/v1/sites/{site_id}/wxtunnels
+desc: createSiteWxTunnel | Create Site WxLan Tunnel
+schema: wxlan_tunnel
+- path:site_id string
+- body:created_time number
+- body:dmvpn object
+- body:dmvpn.enabled boolean
+- body:dmvpn.holding_time integer
+- body:dmvpn.host_routes array<string>
+- body:for_mgmt boolean
+- body:for_site boolean
+- body:hello_interval integer
+- body:hello_retries integer
+- body:hostname string
+- body:id string
+- body:ipsec object
+- body:ipsec.enabled boolean
+- body:ipsec.psk string
+- body:is_static boolean
+- body:modified_time number
+- body:mtu integer
+- body:name string
+- body:org_id string
+- body:peers array<string>
+- body:router_id string
+- body:secret string
+- body:sessions array<object>
+- body:sessions[].ap_as_session_id string
+- body:sessions[].comment string
+- body:sessions[].enable_cookie boolean
+- body:sessions[].ethertype string enum[ethernet|vlan]
+- body:sessions[].local_session_id integer
+- body:sessions[].pseudo_802.1ad_enabled boolean
+- body:sessions[].remote_id string
+- body:sessions[].remote_session_id integer
+- body:sessions[].use_ap_as_session_ids boolean
+- body:site_id string
+- body:udp_port integer
+- body:use_udp boolean
+
+## S330-N0384  DELETE /api/v1/sites/{site_id}/wxtunnels/{wxtunnel_id}
+desc: deleteSiteWxTunnel | Delete Site WxLan Tunnel
+- path:site_id string
+- path:wxtunnel_id string
+
+## S330-N0385  PUT /api/v1/sites/{site_id}/wxtunnels/{wxtunnel_id}
+desc: updateSiteWxTunnel | Update Site WxLan Tunnel
+schema: wxlan_tunnel
+- path:site_id string
+- path:wxtunnel_id string
+- body:created_time number
+- body:dmvpn object
+- body:dmvpn.enabled boolean
+- body:dmvpn.holding_time integer
+- body:dmvpn.host_routes array<string>
+- body:for_mgmt boolean
+- body:for_site boolean
+- body:hello_interval integer
+- body:hello_retries integer
+- body:hostname string
+- body:id string
+- body:ipsec object
+- body:ipsec.enabled boolean
+- body:ipsec.psk string
+- body:is_static boolean
+- body:modified_time number
+- body:mtu integer
+- body:name string
+- body:org_id string
+- body:peers array<string>
+- body:router_id string
+- body:secret string
+- body:sessions array<object>
+- body:sessions[].ap_as_session_id string
+- body:sessions[].comment string
+- body:sessions[].enable_cookie boolean
+- body:sessions[].ethertype string enum[ethernet|vlan]
+- body:sessions[].local_session_id integer
+- body:sessions[].pseudo_802.1ad_enabled boolean
+- body:sessions[].remote_id string
+- body:sessions[].remote_session_id integer
+- body:sessions[].use_ap_as_session_ids boolean
+- body:site_id string
+- body:udp_port integer
+- body:use_udp boolean
+
+## S330-N0386  POST /api/v1/sites/{site_id}/zones
+desc: createSiteZone | Create Site Zone
+schema: zone
+- path:site_id string
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:map_id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:site_id string
+- body:vertices array<object>
+- body:vertices[].x number
+- body:vertices[].y number
+
+## S330-N0387  DELETE /api/v1/sites/{site_id}/zones/{zone_id}
+desc: deleteSiteZone | Delete Site Zone
+- path:site_id string
+- path:zone_id string
+
+## S330-N0388  PUT /api/v1/sites/{site_id}/zones/{zone_id}
+desc: updateSiteZone | Update Site Zone
+schema: zone
+- path:site_id string
+- path:zone_id string
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:map_id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:site_id string
+- body:vertices array<object>
+- body:vertices[].x number
+- body:vertices[].y number
+
+## S330-N0389  POST /api/v1/utils/test_twilio
+desc: testSiteWlanTwilioSetup | Allows validation of twilio setup In case of success, a text message confirming successful setup should be received. In case of error, twilio error code and message are returned.
+- body:from string
+- body:to string
+- body:twilio_auth_token string
+- body:twilio_sid string
+
+## S330-N0390  POST /webhook_example/_alarm_
+desc: alarms | Webhook sample for `alarm` topic **Note**: The server host will be your own server FQDN where the Mist Cloud is sending the webhook messages
+schema: webhook_alarms
+- body:events array<object>
+- body:events[].aps array<string>
+- body:events[].bssids array<string>
+- body:events[].count integer
+- body:events[].event_id string
+- body:events[].for_site boolean
+- body:events[].id string
+- body:events[].last_seen number
+- body:events[].org_id string
+- body:events[].site_id string
+- body:events[].ssids array<string>
+- body:events[].timestamp integer
+- body:events[].type string
+- body:events[].update boolean
+- body:topic string
+
+## S330-N0391  POST /webhook_example/_asset_raw_
+desc: assetRaw | Webhook sample for `asset_raw` topic **Note**: The server host will be your own server FQDN where the Mist Cloud is sending the webhook messages
+schema: webhook_asset_raw
+- body:events array<object>
+- body:events[].asset_id string
+- body:events[].beam integer
+- body:events[].device_id string
+- body:events[].ibeacon_major integer
+- body:events[].ibeacon_minor integer
+- body:events[].ibeacon_uuid string
+- body:events[].mac string
+- body:events[].map_id string
+- body:events[].mfg_company_id number
+- body:events[].mfg_data string
+- body:events[].rssi number
+- body:events[].service_data_data string
+- body:events[].service_data_last_rx_time integer
+- body:events[].service_data_rx_cnt integer
+- body:events[].service_data_uuid string
+- body:events[].service_packets array<object>
+- body:events[].service_packets[].service_data string
+- body:events[].service_packets[].service_uuid string
+- body:events[].site_id string
+- body:events[].timestamp number
+- body:topic string
+
+## S330-N0392  POST /webhook_example/_audit_
+desc: audits | Webhook sample for `audit` topic **Note**: The server host will be your own server FQDN where the Mist Cloud is sending the webhook messages
+schema: webhook_audits
+- body:events array<object>
+- body:events[].admin_name string
+- body:events[].device_id string
+- body:events[].id string
+- body:events[].message string
+- body:events[].org_id string
+- body:events[].site_id string
+- body:events[].src_ip string
+- body:events[].timestamp number
+- body:topic string
+
+## S330-N0393  POST /webhook_example/_client_join_
+desc: clientJoin | Webhook sample for `client_join` topic **Note**: The server host will be your own server FQDN where the Mist Cloud is sending the webhook messages
+schema: webhook_client_join
+- body:events array<object>
+- body:events[].ap string
+- body:events[].ap_name string
+- body:events[].band string
+- body:events[].bssid string
+- body:events[].connect integer
+- body:events[].connect_float number
+- body:events[].mac string
+- body:events[].org_id string
+- body:events[].rssi number
+- body:events[].site_id string
+- body:events[].site_name string
+- body:events[].ssid string
+- body:events[].timestamp number
+- body:events[].version number
+- body:events[].wlan_id string
+- body:topic string
+
+## S330-N0394  POST /webhook_example/_client_sessions_
+desc: clientSessions | Webhook sample for `client_sessions` topic **Note**: The server host will be your own server FQDN where the Mist Cloud is sending the webhook messages
+schema: webhook_client_sessions
+- body:events array<object>
+- body:events[].ap string
+- body:events[].ap_name string
+- body:events[].band string
+- body:events[].bssid string
+- body:events[].client_family string
+- body:events[].client_manufacture string
+- body:events[].client_model string
+- body:events[].client_os string
+- body:events[].connect integer
+- body:events[].connect_float number
+- body:events[].disconnect integer
+- body:events[].disconnect_float number
+- body:events[].duration integer
+- body:events[].mac string
+- body:events[].next_ap string
+- body:events[].org_id string
+- body:events[].rssi number
+- body:events[].site_id string
+- body:events[].site_name string
+- body:events[].ssid string
+- body:events[].termination_reason integer
+- body:events[].timestamp number
+- body:events[].version number
+- body:events[].wlan_id string
+- body:topic string
+
+## S330-N0395  POST /webhook_example/_device_events_
+desc: deviceEvents | Webhook sample for `device_events` topic **Note**: The server host will be your own server FQDN where the Mist Cloud is sending the webhook messages
+schema: webhook_device_events
+- body:events array<object>
+- body:events[].ap string
+- body:events[].ap_name string
+- body:events[].audit_id string
+- body:events[].device_name string
+- body:events[].device_type string enum[ap|switch|gateway]
+- body:events[].ev_type string enum[notice|warn]
+- body:events[].mac string
+- body:events[].org_id string
+- body:events[].reason string
+- body:events[].site_id string
+- body:events[].site_name string
+- body:events[].text string
+- body:events[].timestamp integer
+- body:events[].type string
+- body:topic string
+
+## S330-N0396  POST /webhook_example/_device_updowns_
+desc: deviceUpDown | Webhook sample for `device_updowns` topic **Note**: The server host will be your own server FQDN where the Mist Cloud is sending the webhook messages
+schema: webhook_device_updowns
+- body:events array<object>
+- body:events[].ap string
+- body:events[].ap_name string
+- body:events[].for_site boolean
+- body:events[].org_id string
+- body:events[].site_id string
+- body:events[].site_name string
+- body:events[].timestamp number
+- body:events[].type string
+- body:topic string
+
+## S330-N0397  POST /webhook_example/_discovered_raw_rssi_
+desc: discovered-raw-rssi | Webhook sample for `discovered-raw-rssi` topic **Note**: The server host will be your own server FQDN where the Mist Cloud is sending the webhook messages
+schema: webhook_discovered_raw_rssi
+- body:events array<object>
+- body:events[].ap_loc array<number>
+- body:events[].beam integer
+- body:events[].device_id string
+- body:events[].ibeacon_major integer
+- body:events[].ibeacon_minor integer
+- body:events[].ibeacon_uuid string
+- body:events[].is_asset boolean
+- body:events[].mac string
+- body:events[].map_id string
+- body:events[].mfg_company_id string
+- body:events[].mfg_data string
+- body:events[].org_id string
+- body:events[].rssi number
+- body:events[].service_packets array<object>
+- body:events[].service_packets[].service_data string
+- body:events[].service_packets[].service_uuid string
+- body:events[].site_id string
+- body:events[].timestamp integer
+- body:topic string
+
+## S330-N0399  POST /webhook_example/_occupancy_alerts_
+desc: occupancyAlerts | Webhook sample for `occupancy_alerts` topic **Note**: The server host will be your own server FQDN where the Mist Cloud is sending the webhook messages
+schema: webhook_occupancy_alerts
+- body:events array<object>
+- body:events[].alert_events array<object>
+- body:events[].alert_events[].current_occupancy integer
+- body:events[].alert_events[].map_id string
+- body:events[].alert_events[].occupancy_limit integer
+- body:events[].alert_events[].org_id string
+- body:events[].alert_events[].timestamp number
+- body:events[].alert_events[].type string enum[COMPLIANCE-VIOLATION|COMPLIANCE-OK]
+- body:events[].alert_events[].zone_id string
+- body:events[].alert_events[].zone_name string
+- body:events[].for_site boolean
+- body:events[].site_id string
+- body:events[].site_name string
+- body:topic string
+
+## S330-N0401  POST /webhook_example/_sdkclient_scan_data
+desc: sdkclientScanData | Webhook sample for `sdkclient_scan_data` topic **Note**: The server host will be your own server FQDN where the Mist Cloud is sending the webhook messages
+schema: webhook_sdkclient-scan-data
+- body:events array<object>
+- body:events[].connection_ap string
+- body:events[].connection_band string
+- body:events[].connection_bssid string
+- body:events[].connection_channel integer
+- body:events[].connection_rssi number
+- body:events[].last_seen number
+- body:events[].mac string
+- body:events[].scan_data array<object>
+- body:events[].scan_data[].ap string
+- body:events[].scan_data[].band string enum[2.4|5]
+- body:events[].scan_data[].bssid string
+- body:events[].scan_data[].channel integer
+- body:events[].scan_data[].rssi number
+- body:events[].scan_data[].ssid string
+- body:events[].scan_data[].timestamp number
+- body:events[].site_id string
+- body:topic string enum[sdkclient-scan-data]
+
+## S532-N0001  POST /group/{groupId}/audit
+desc: Get group level audit logs
+- path:groupId string
+- query:from string
+- query:to string
+- query:page number
+- query:sortOrder string
+- body:filters object
+- body:filters.email string
+- body:filters.event string enum[api.access|group.cloud_config.settings.edit|group.create|group.delete|group.edit|group.feature_flags.edit|group.notification_settings.edit|group.org.add|group.org.remove|group.policy.create|group.policy.delete|group.policy.edit]
+- body:filters.excludeEvent string enum[api.access|group.cloud_config.settings.edit|group.create|group.delete|group.edit|group.feature_flags.edit|group.notification_settings.edit|group.org.add|group.org.remove|group.policy.create|group.policy.delete|group.policy.edit]
+- body:filters.projectId string
+- body:filters.userId string
+
+## S532-N0002  POST /group/{groupId}/org/{orgId}/members
+desc: Add a member to an organization within a group
+- path:groupId string
+- path:orgId string
+- body:role string
+- body:userId string
+
+## S532-N0004  POST /group/{groupId}/tags/delete
+desc: Delete tag from group
+- path:groupId string
+- body:force boolean
+- body:key string
+- body:value string
+
+## S532-N0006  POST /org
+desc: Create a new organization
+- body:groupId string
+- body:name string
+- body:sourceOrgId string
+
+## S532-N0007  DELETE /org/{orgId}
+desc: Remove organization
+- path:orgId string
+
+## S532-N0010  POST /org/{orgId}/integrations
+desc: Add new integration | Add new integration for given organization.
+- path:orgId string
+- body:credentials object
+- body:credentials.AcrCredentials object
+- body:credentials.AcrCredentials.password string
+- body:credentials.AcrCredentials.registryBase string
+- body:credentials.AcrCredentials.username string
+- body:credentials.ArtifactoryCrCredentials object
+- body:credentials.ArtifactoryCrCredentials.password string
+- body:credentials.ArtifactoryCrCredentials.registryBase string
+- body:credentials.ArtifactoryCrCredentials.username string
+- body:credentials.AzureReposCredentials object
+- body:credentials.AzureReposCredentials.url string
+- body:credentials.AzureReposCredentials.username string
+- body:credentials.BitbucketCloudCredentials object
+- body:credentials.BitbucketCloudCredentials.password string
+- body:credentials.BitbucketCloudCredentials.username string
+- body:credentials.BitbucketServerCredentials object
+- body:credentials.BitbucketServerCredentials.password string
+- body:credentials.BitbucketServerCredentials.url string
+- body:credentials.BitbucketServerCredentials.username string
+- body:credentials.DigitalOceanCrCredentials object
+- body:credentials.DigitalOceanCrCredentials.token string
+- body:credentials.DockerHubCredentials object
+- body:credentials.DockerHubCredentials.password string
+- body:credentials.DockerHubCredentials.username string
+- body:credentials.EcrCredentials object
+- body:credentials.EcrCredentials.region string
+- body:credentials.EcrCredentials.roleArn string
+- body:credentials.GcrCredentials object
+- body:credentials.GcrCredentials.password string
+- body:credentials.GcrCredentials.registryBase string
+- body:credentials.GitHubCredentials object
+- body:credentials.GitHubCredentials.token string
+- body:credentials.GitHubCrCredentials object
+- body:credentials.GitHubCrCredentials.password string
+- body:credentials.GitHubCrCredentials.registryBase string
+- body:credentials.GitHubCrCredentials.username string
+- body:credentials.GitHubEnterpriseCredentials object
+- body:credentials.GitHubEnterpriseCredentials.token string
+- body:credentials.GitHubEnterpriseCredentials.url string
+- body:credentials.GitLabCredentials object
+- body:credentials.GitLabCredentials.token string
+- body:credentials.GitLabCredentials.url string
+- body:credentials.GitLabCrCredentials object
+- body:credentials.GitLabCrCredentials.password string
+- body:credentials.GitLabCrCredentials.registryBase string
+- body:credentials.GitLabCrCredentials.username string
+- body:credentials.GoogleArtifactCrCredentials object
+- body:credentials.GoogleArtifactCrCredentials.password string
+- body:credentials.GoogleArtifactCrCredentials.registryBase string
+- body:credentials.HarborCrCredentials object
+- body:credentials.HarborCrCredentials.password string
+- body:credentials.HarborCrCredentials.registryBase string
+- body:credentials.HarborCrCredentials.username string
+- body:credentials.NexusCrCredentials object
+- body:credentials.NexusCrCredentials.password string
+- body:credentials.NexusCrCredentials.registryBase string
+- body:credentials.NexusCrCredentials.username string
+- body:credentials.QuayCrCredentials object
+- body:credentials.QuayCrCredentials.password string
+- body:credentials.QuayCrCredentials.registryBase string
+- body:credentials.QuayCrCredentials.username string
+- body:type string enum[acr|artifactory-cr|azure-repos|bitbucket-cloud|bitbucket-server|digitalocean-cr|docker-hub|ecr|gcr|github|github-cr|github-enterprise]
+- body:broker object
+- body:broker.enabled boolean
+
+## S532-N0012  DELETE /org/{orgId}/integrations/{integrationId}/authentication
+desc: Delete credentials | Removes any credentials set for this integration. If this is a brokered connection the operation will have no effect.
+- path:orgId string
+- path:integrationId string
+
+## S532-N0015  POST /org/{orgId}/integrations/{integrationId}/clone
+desc: Clone an integration (with settings and credentials) | Clone an integration, including all of its settings and credentials from one organization to another organization in the same group. This API supports both brokered and non-brokered integrations. Use this API for when you want to share a Broker token between several Snyk organizations (integrations).
+- path:orgId string
+- path:integrationId string
+- body:destinationOrgPublicId string
+
+## S532-N0019  POST /org/{orgId}/licenses
+desc: List all licenses
+- path:orgId string
+- query:sortBy string enum[license|dependencies|projects|severity]
+- query:order string enum[asc|desc]
+- body:filters object
+- body:filters.dependencies any
+- body:filters.languages array<any>
+- body:filters.licenses any
+- body:filters.projects any
+- body:filters.severity array<any>
+
+## S532-N0020  PUT /org/{orgId}/members/update/{userId}
+desc: Update a member's role in the organization
+- path:orgId string
+- path:userId string
+- body:rolePublicId string
+
+## S532-N0023  PUT /org/{orgId}/notification-settings
+desc: Set notification settings
+- path:orgId string
+- body:new-issues-remediations object
+- body:new-issues-remediations.enabled boolean
+- body:new-issues-remediations.issueSeverity string enum[all|high]
+- body:new-issues-remediations.issueType string enum[all|vuln|license|none]
+- body:project-imported object
+- body:project-imported.enabled boolean
+- body:test-limit object
+- body:test-limit.enabled boolean
+- body:weekly-report object
+- body:weekly-report.enabled boolean
+
+## S532-N0027  POST /org/{orgId}/project/{projectId}/aggregated-issues
+desc: List all Aggregated issues
+- path:orgId string
+- path:projectId string
+- body:filters object
+- body:filters.exploitMaturity array<any>
+- body:filters.ignored boolean
+- body:filters.patched boolean
+- body:filters.priority object
+- body:filters.priority.score object
+- body:filters.severities array<any>
+- body:filters.types array<any>
+- body:includeDescription boolean
+- body:includeIntroducedThrough boolean
+
+## S532-N0029  POST /org/{orgId}/project/{projectId}/deactivate
+desc: Deactivate | Deactivating a project will: - Disable pull request tests for new vulnerabilities. - Disable Fix pull request from being opened for newly disclosed vulnerabilities. - Disable recurring tests - email alerts about newly disclosed vulnerabilities will be turned off. - If the repository has no other active projects, then remove any webhooks related to the project.
+- path:orgId string
+- path:projectId string
+
+## S532-N0030  POST /org/{orgId}/project/{projectId}/history
+desc: List all project snapshots
+- path:orgId string
+- path:projectId string
+- query:perPage number
+- query:page number
+- body:filters object
+- body:filters.imageId string
+
+## S532-N0034  PUT /org/{orgId}/project/{projectId}/ignore/{issueId}
+desc: Replace ignores
+- path:orgId string
+- path:projectId string
+- path:issueId string
+
+## S532-N0036  PUT /org/{orgId}/project/{projectId}/move
+desc: Move project to a different organization | Note: when moving a project to a new organization, the historical data used for reporting does not move with it.
+- path:orgId string
+- path:projectId string
+- body:targetOrgId string
+
+## S532-N0037  DELETE /org/{orgId}/project/{projectId}/settings
+desc: Delete project settings | Deleting project settings will set the project to inherit default settings from its integration.
+- path:orgId string
+- path:projectId string
+
+## S532-N0038  PUT /org/{orgId}/project/{projectId}/settings
+desc: Update project settings
+- path:orgId string
+- path:projectId string
+- body:autoDepUpgradeEnabled boolean
+- body:autoDepUpgradeIgnoredDependencies array<any>
+- body:autoDepUpgradeLimit number
+- body:autoDepUpgradeMinAge number
+- body:autoRemediationPrs object
+- body:autoRemediationPrs.backlogPrsEnabled boolean
+- body:autoRemediationPrs.freshPrsEnabled boolean
+- body:autoRemediationPrs.usePatchRemediation boolean
+- body:pullRequestAssignment object
+- body:pullRequestAssignment.assignees array<any>
+- body:pullRequestAssignment.enabled boolean
+- body:pullRequestAssignment.type string enum[auto|manual]
+- body:pullRequestFailOnAnyVulns boolean
+- body:pullRequestFailOnlyForHighSeverity boolean
+- body:pullRequestTestEnabled boolean

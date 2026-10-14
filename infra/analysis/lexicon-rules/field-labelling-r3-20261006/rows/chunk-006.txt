@@ -1,0 +1,820 @@
+## S125-0032  POST /order-rejected
+desc: Order rejected | This webhook will be invoked whenever the order was rejected.
+schema: order-rejected
+- body:Event string
+- body:RejectedAt string
+- body:RejectedBy string
+- body:RejectedReason string
+
+## S125-0033  PUT /order-requires-delivery-acceptance
+desc: Order requires delivery acceptance | This webhook will be invoked when we have determined that an order is required acceptance for delivery. Upon receiving the request, the order should be scheduled for pickup by a courier/driver. We expect an immediate `201` response from this webhook to denote that you have received the request.
+schema: connectorder-list
+- body:BasketInfo object
+- body:BasketInfo.BasketId string
+- body:BasketInfo.DeliveryCharge number
+- body:BasketInfo.Discount number
+- body:BasketInfo.Discounts array<object>
+- body:BasketInfo.Discounts[].Discount number
+- body:BasketInfo.Discounts[].DiscountType string
+- body:BasketInfo.Discounts[].Id number
+- body:BasketInfo.Discounts[].QualifyingValue number
+- body:BasketInfo.GroupedBasketItems array<object>
+- body:BasketInfo.GroupedBasketItems[].BasketItem object
+- body:BasketInfo.GroupedBasketItems[].CombinedPrice number
+- body:BasketInfo.GroupedBasketItems[].MenuCardNumber string
+- body:BasketInfo.GroupedBasketItems[].OrderSubId number
+- body:BasketInfo.GroupedBasketItems[].Quantity number
+- body:BasketInfo.MenuId number
+- body:BasketInfo.MultiBuyDiscount number
+- body:BasketInfo.SubTotal number
+- body:BasketInfo.ToSpend number
+- body:BasketInfo.Total number
+- body:CustomerInfo object
+- body:CustomerInfo.Address string
+- body:CustomerInfo.City string
+- body:CustomerInfo.DisplayPhoneNumber string
+- body:CustomerInfo.Email string
+- body:CustomerInfo.Id string
+- body:CustomerInfo.Latitude number
+- body:CustomerInfo.LocationAccuracyDescription string
+- body:CustomerInfo.LocationAccuracyInMeters number
+- body:CustomerInfo.LocationSource string
+- body:CustomerInfo.Longitude number
+- body:CustomerInfo.Name string
+- body:CustomerInfo.PhoneMaskingCode string
+- body:CustomerInfo.PhoneNumber string
+- body:CustomerInfo.Postcode string
+- body:CustomerInfo.PreviousRestuarantOrderCount number
+- body:CustomerInfo.TimeZone string
+- body:CustomerOrderId number
+- body:FriendlyOrderReference string
+- body:Id string
+- body:IsAMiniFistPumpOrder boolean
+- body:Order object
+- body:Order.DueDate string
+- body:Order.DueDateWithUtcOffset string
+- body:Order.InitialDueDate string
+- body:Order.InitialDueDateWithUtcOffset string
+- body:Order.NoteToRestaurant string
+- body:Order.PickupNoticePeriod string
+- body:Order.PlacedDate string
+- body:Order.PromptAsap boolean
+- body:Order.RdsPickupTimeWithUtcOffset string
+- body:Order.ServiceType string enum[Collection|Delivery]
+- body:OrderId string
+- body:OrderReference string
+- body:PaymentInfo object
+- body:PaymentInfo.CashOnDelivery boolean
+- body:PaymentInfo.DriverTipValue number
+- body:PaymentInfo.PaidDate string
+- body:PaymentInfo.PaymentLines array<object>
+- body:PaymentInfo.PaymentLines[].CardFee number
+- body:PaymentInfo.PaymentLines[].Type string enum[Card]
+- body:PaymentInfo.PaymentLines[].Value number
+- body:PaymentInfo.Total number
+- body:PaymentInfo.TotalComplementary number
+- body:RestaurantInfo object
+- body:RestaurantInfo.AddressLines array<string>
+- body:RestaurantInfo.City string
+- body:RestaurantInfo.DispatchMethod string
+- body:RestaurantInfo.EmailAddress string
+- body:RestaurantInfo.Id string
+- body:RestaurantInfo.Latitude number
+- body:RestaurantInfo.Longitude number
+- body:RestaurantInfo.Name string
+- body:RestaurantInfo.PhoneNumber string
+- body:RestaurantInfo.PickupNotes string
+- body:RestaurantInfo.Postcode string
+- body:Restrictions array<object>
+- body:Restrictions[].Type string enum[Alcohol]
+
+## S125-0034  POST /order-time-updated
+desc: Order time updated | Callback to notify recipients that there has been a change to the restaurant order times for a given day and service type
+schema: order-time-updated
+- body:dayOfWeek string enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:lowerBoundMinutes integer
+- body:restaurantId string
+- body:serviceType string enum[Delivery|Collection]
+- body:upperBoundMinutes integer
+
+## S125-0039  POST /orders/{orderId}/complete
+desc: Complete order | Call when an order is complete. An order can only be marked as complete if it hasn't already been marked as cancelled or complete.
+- path:orderId string
+
+## S125-0045  PUT /orders/{orderId}/deliverystate/driverlocation
+desc: Update the driver's current location | <p>Just Eat requires all delivery partners to send regular driver location callbacks, that record the GPS location of the drivers assigned to each order</p><p>Partners should aim to supply this callback approximately every 10 seconds.</p><p>Please provide an up-to-date ETA for when the driver will reach the restaurant in this request - this value is significa
+schema: delivery-driver-location
+- path:orderId string
+- body:EtaAtDeliveryAddress string
+- body:EtaAtRestaurant string
+- body:Location object
+- body:Location.Accuracy number
+- body:Location.Heading number
+- body:Location.Latitude number
+- body:Location.Longitude number
+- body:Location.Speed number
+- body:TimeStampWithUtcOffset string
+
+## S125-0050  POST /orders/{orderId}/readyforcollection
+desc: Mark order as ready for collection | Call when a collection order is ready to be collected by the customer. An order can only be marked as ready for collection if it is a collection order in the accepted state.
+- path:orderId string
+
+## S125-0051  PUT /orders/{orderId}/reject
+desc: Reject order | Call when an order has been rejected. An order can only be rejected if it hasn't previously been accepted, rejected, cancelled or ignored
+schema: order-reject-request
+- path:orderId string
+- body:Message string
+
+## S125-0052  POST /orders/{tenant}/{orderId}/consumerqueries/lateorder/restaurantresponse
+desc: Response to Late Order Update Request | If a customer has requested an update on the status of a late order, a response can be given by calling this endpoint.
+schema: LateOrderRestaurantResponse
+- path:tenant string
+- path:orderId string
+- body:additionalDeliveryTimeToAddMinutes integer
+- body:lateOrderStatus string enum[Preparing|OnItsWay|Delivered]
+
+## S125-0053  POST /orders/{tenant}/{orderId}/consumerqueries/lateordercompensation/restaurantresponse
+desc: Update late order compensation request with Restaurant response | If a customer has requested compensation for a late order, a restaurant response is given by calling this endpoint.
+schema: LateOrderCompensationRestaurantResolution
+- path:tenant string
+- path:orderId string
+- body:acceptedAmount integer
+- body:isAccepted boolean
+- body:orderId string
+- body:rejectedReasonCode string enum[BadTraffic|BadWeather|BusierThanExpected|CompensatedWithItem|NoReason]
+
+## S125-0054  POST /orders/{tenant}/{orderId}/restaurantqueries/compensation
+desc: Create Compensation requests | When an order is cancelled the restaurant might be eligible for compensation, this endpoint allows a request for compensation to be created.
+schema: CreateRestaurantCompensationQuery
+- path:tenant string
+- path:orderId string
+- body:Comments string
+- body:ReasonCode string enum[NotSet|BeingPrepared|OnItsWay|Delivered|Unknown]
+
+## S125-0056  PUT /restaurant-offline-status
+desc: Restaurant Offline Status | Callback to notify that a restaurant has been taken offline through an active Restaurant Event or there's been a change in whether the restaurant can override a previous offline status.
+schema: RestaurantOfflineStatus
+- body:AllowRestaurantOverride boolean
+- body:IsOffline boolean
+- body:RestaurantId string
+- body:Tenant string enum[au|dk|es|ie|it|no|uk|nz]
+
+## S125-0057  PUT /restaurant-online-status
+desc: Restaurant Online Status | Callback to notify that a restaurant is now able to come back online as there are no longer any active offline Restaurant Events
+schema: RestaurantOfflineStatus
+- body:AllowRestaurantOverride boolean
+- body:IsOffline boolean
+- body:RestaurantId string
+- body:Tenant string enum[au|dk|es|ie|it|no|uk|nz]
+
+## S125-0059  POST /restaurants/{tenant}/{restaurantId}/customerclaims/{id}/restaurantresponse
+desc: Submit a restaurant response for the claim | Submit a restaurant response for the claim, where the restaurant can tell us if they accept or reject the claim
+schema: OrderClaimRestaurantResponse
+- path:tenant string
+- path:restaurantId string
+- path:id string
+- body:decision string enum[Accepted|Rejected|PartiallyAccepted]
+- body:items array<object>
+- body:items[].decision string enum[Accepted|Rejected]
+- body:items[].id string
+- body:justification object
+- body:justification.comments string
+- body:justification.reason string enum[AlreadyRefunded|ItemReplaced|PartialRefundRequired|WasNotMissing|WillRedeliver|OrderWasHot|OrderWasOnTime|OrderWasPacked|FoodWasIntact|AddExtraItem|Other]
+
+## S125-0060  PUT /restaurants/{tenant}/{restaurantId}/customerclaims/{id}/restaurantresponse/justification
+desc: Add reason and comments to the response | Add reason and optional comments in case of rejection of order claim
+schema: Justification
+- path:tenant string
+- path:restaurantId string
+- path:id string
+- body:comments string
+- body:reason string enum[AlreadyRefunded|ItemReplaced|PartialRefundRequired|WasNotMissing|WillRedeliver|OrderWasHot|OrderWasOnTime|OrderWasPacked|FoodWasIntact|AddExtraItem|Other]
+
+## S125-0062  PUT /restaurants/{tenant}/{restaurantId}/menu
+desc: Create or update a menu | This will begin an asynchronous process that will lead to that menu becoming live on the Just Eat platform
+schema: Menu
+- path:tenant string
+- path:restaurantId string
+- body:currency string
+- body:description string
+- body:name string
+- body:restaurantId string
+- body:availabilities array<object>
+- body:availabilities[].description string
+- body:availabilities[].id string
+- body:availabilities[].name string
+- body:availabilities[].serviceTypes array<string> enum[collection|delivery]
+- body:availabilities[].times array<object>
+- body:availabilities[].times[].daysOfTheWeek array<string> enum[monday|tuesday|wednesday|thursday|friday|saturday|sunday]
+- body:availabilities[].times[].fromDateTime string
+- body:availabilities[].times[].toDateTime string
+- body:categories array<object>
+- body:categories[].description string
+- body:categories[].id string
+- body:categories[].name string
+- body:categories[].itemIds array<string>
+- body:items array<object>
+- body:items[].description string
+- body:items[].id string
+- body:items[].labels array<string> enum[hot|vegetarian|alcohol]
+- body:items[].name string
+- body:items[].requireOtherProducts boolean
+- body:items[].type string enum[menuItem|deal]
+- body:items[].dealGroups array<object>
+- body:items[].dealGroups[].id string
+- body:items[].dealGroups[].name string
+- body:items[].dealGroups[].numberOfChoices integer
+- body:items[].dealGroups[].dealItemVariations array<object>
+- body:items[].imageUrl string
+- body:items[].modifierGroups array<object>
+- body:items[].modifierGroups[].id string
+- body:items[].modifierGroups[].maxChoices integer
+- body:items[].modifierGroups[].minChoices integer
+- body:items[].modifierGroups[].modifiers array<object>
+- body:items[].modifierGroups[].name string
+- body:items[].variations array<object>
+- body:items[].variations[].availabilityIds array<string>
+- body:items[].variations[].basePrice number
+- body:items[].variations[].dealGroupsIds array<string>
+- body:items[].variations[].dealOnly boolean
+- body:items[].variations[].id string
+- body:items[].variations[].kitchenNumber string
+- body:items[].variations[].modifierGroupsIds array<string>
+- body:items[].variations[].name string
+- body:items[].variations[].type string enum[noVariation|variation]
+
+## S125-0063  PUT /restaurants/{tenant}/{restaurantId}/ordertimes/{dayOfWeek}/{serviceType}
+desc: Update the restaurant's delivery and collection lead times | Update the restaurant's delivery and collection lead times
+schema: updateOrderTimeRequest
+- path:tenant string
+- path:restaurantId string
+- path:dayOfWeek string enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- path:serviceType string enum[Delivery|Collection]
+- body:lowerBoundMinutes integer
+- body:upperBoundMinutes integer
+
+## S125-0064  PUT /restaurants/{tenant}/{restaurantId}/servicetimes
+desc: Create or update service times | Creates or updates the service times (the weekly times at which a restaurant is in service for delivery or collection) for a restaurant
+schema: ServiceTimes
+- path:tenant string
+- path:restaurantId string
+- body:serviceTimes object
+- body:serviceTimes.friday object
+- body:serviceTimes.friday.collection array<object>
+- body:serviceTimes.friday.delivery array<object>
+- body:serviceTimes.monday object
+- body:serviceTimes.monday.collection array<object>
+- body:serviceTimes.monday.delivery array<object>
+- body:serviceTimes.saturday object
+- body:serviceTimes.saturday.collection array<object>
+- body:serviceTimes.saturday.delivery array<object>
+- body:serviceTimes.sunday object
+- body:serviceTimes.sunday.collection array<object>
+- body:serviceTimes.sunday.delivery array<object>
+- body:serviceTimes.thursday object
+- body:serviceTimes.thursday.collection array<object>
+- body:serviceTimes.thursday.delivery array<object>
+- body:serviceTimes.tuesday object
+- body:serviceTimes.tuesday.collection array<object>
+- body:serviceTimes.tuesday.delivery array<object>
+- body:serviceTimes.wednesday object
+- body:serviceTimes.wednesday.collection array<object>
+- body:serviceTimes.wednesday.delivery array<object>
+
+## S125-0066  POST /v1/{tenant}/restaurants/event/offline
+desc: Create Offline Event | Creates an event for the specified restaurants that indicates a reason for those restaurants to be offline.
+schema: OfflineRestaurantsRequestModel
+- path:tenant string
+- body:allowRestaurantOverride boolean
+- body:category string
+- body:duration string
+- body:endDate string
+- body:legacyTempOfflineType string enum[Unset|None|TempOffline|ClosedToday|ClosedDueToEvent|FailedJctConnection|NoTrOverride|IgnoredOrders]
+- body:name string
+- body:reason string
+- body:restaurantIds string
+- body:startDate string
+
+## S125-0067  DELETE /v1/{tenant}/restaurants/{id}/event/offline
+desc: Delete Offline Event | Removes specified restaurant from offline events. If role header is `System` or `Operations` only events created by the specified role will be affected. If role header is `Restaurant` then all events that have `allowRestaurantOverride=true` will be affected.
+- path:tenant string
+- path:id string
+
+## S125-0068  POST /{tenant}/orders/{orderId}/queries/attempteddelivery
+desc: Delivery Attempt Failed | If the customer hasn't answered the door to collect the order, then an attempted delivery event can be created using this endpoint.
+schema: create-attempted-delivery
+- path:tenant string
+- path:orderId string
+- body:ReasonCode string enum[problem_with_address|no_answer]
+
+## S125-0069  POST /{tenant}/orders/{orderId}/queries/attempteddelivery/resolution/redeliverorder
+desc: Request Redelivery of the Order | If the customer responds, then you can trigger the redelivery of an order through this endpoint
+schema: resolve-attempted-delivery-redeliver
+- path:tenant string
+- path:orderId string
+- body:NewDueDate string
+- body:Status string enum[driver_at_address|repreparing]
+
+## S128-0001  DELETE /assets/{id}
+desc: Delete Asset | Delete an asset by its asset id. If a render creates multiple assets, such as thumbnail and poster images, each asset must be deleted individually by the asset id. **base URL:** https://api.shotstack.io/serve/{version}
+- path:id string
+
+## S128-0002  POST /render
+desc: Render Asset | Queue and render the contents of a timeline as a video, image or audio file.
+schema: Edit
+- body:callback string
+- body:disk string enum[local|mount]
+- body:output object
+- body:output.aspectRatio string enum[16:9|9:16|1:1|4:5|4:3]
+- body:output.destinations array<object>
+- body:output.destinations[].exclude boolean
+- body:output.destinations[].provider string
+- body:output.format string enum[mp4|gif|mp3|jpg|png|bmp]
+- body:output.fps integer enum[12|15|24|25|30]
+- body:output.poster object
+- body:output.poster.capture number
+- body:output.quality string enum[low|medium|high]
+- body:output.range object
+- body:output.range.length number
+- body:output.range.start number
+- body:output.resolution string enum[preview|mobile|sd|hd|1080]
+- body:output.scaleTo string enum[preview|mobile|sd|hd|1080]
+- body:output.size object
+- body:output.size.height integer
+- body:output.size.width integer
+- body:output.thumbnail object
+- body:output.thumbnail.capture number
+- body:output.thumbnail.scale number
+- body:timeline object
+- body:timeline.background string
+- body:timeline.cache boolean
+- body:timeline.fonts array<object>
+- body:timeline.fonts[].src string
+- body:timeline.soundtrack object
+- body:timeline.soundtrack.effect string enum[fadeIn|fadeOut|fadeInFadeOut]
+- body:timeline.soundtrack.src string
+- body:timeline.soundtrack.volume number
+- body:timeline.tracks array<object>
+- body:timeline.tracks[].clips array<object>
+
+## S130-0001  POST /auth
+desc: Request Authentication Token
+- query:client_id string
+- query:client_secret string
+
+## S131-0027  POST /v1/appStoreVersionLocalizations
+schema: AppStoreVersionLocalizationCreateRequest
+- body:description string
+- body:keywords string
+- body:locale string
+- body:marketingUrl string
+- body:promotionalText string
+- body:supportUrl string
+- body:whatsNew string
+- body:appStoreVersion object
+- body:appStoreVersion.data object
+- body:appStoreVersion.data.id string
+- body:appStoreVersion.data.type string enum[appStoreVersions]
+
+## S131-0030  POST /v1/appStoreVersionPhasedReleases
+schema: AppStoreVersionPhasedReleaseCreateRequest
+- body:phasedReleaseState string enum[INACTIVE|ACTIVE|PAUSED|COMPLETE]
+- body:appStoreVersion object
+- body:appStoreVersion.data object
+- body:appStoreVersion.data.id string
+- body:appStoreVersion.data.type string enum[appStoreVersions]
+
+## S131-0032  PATCH /v1/appStoreVersionPhasedReleases/{id}
+schema: AppStoreVersionPhasedReleaseUpdateRequest
+- path:id string
+- body:phasedReleaseState string enum[INACTIVE|ACTIVE|PAUSED|COMPLETE]
+
+## S131-0039  PATCH /v1/apps/{id}
+schema: AppUpdateRequest
+- path:id string
+- body:availableInNewTerritories boolean
+- body:bundleId string
+- body:contentRightsDeclaration string enum[DOES_NOT_USE_THIRD_PARTY_CONTENT|USES_THIRD_PARTY_CONTENT]
+- body:primaryLocale string
+- body:availableTerritories object
+- body:availableTerritories.data array<object>
+- body:availableTerritories.data[].id string
+- body:availableTerritories.data[].type string enum[territories]
+- body:prices object
+- body:prices.data array<object>
+- body:prices.data[].id string
+- body:prices.data[].type string enum[appPrices]
+
+## S131-0048  PATCH /v1/betaBuildLocalizations/{id}
+schema: BetaBuildLocalizationUpdateRequest
+- path:id string
+- body:whatsNew string
+
+## S131-0053  POST /v1/betaGroups/{id}/relationships/betaTesters
+schema: BetaGroupBetaTestersLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[betaTesters]
+
+## S131-0058  POST /v1/betaTesters
+schema: BetaTesterCreateRequest
+- body:email string
+- body:firstName string
+- body:lastName string
+- body:betaGroups object
+- body:betaGroups.data array<object>
+- body:betaGroups.data[].id string
+- body:betaGroups.data[].type string enum[betaGroups]
+- body:builds object
+- body:builds.data array<object>
+- body:builds.data[].id string
+- body:builds.data[].type string enum[builds]
+
+## S131-0065  PATCH /v1/buildBetaDetails/{id}
+schema: BuildBetaDetailUpdateRequest
+- path:id string
+- body:autoNotifyEnabled boolean
+
+## S131-0071  DELETE /v1/builds/{id}/relationships/individualTesters
+schema: BuildIndividualTestersLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[betaTesters]
+
+## S131-0073  POST /v1/bundleIdCapabilities
+schema: BundleIdCapabilityCreateRequest
+- body:capabilityType string enum[ICLOUD|IN_APP_PURCHASE|GAME_CENTER|PUSH_NOTIFICATIONS|WALLET|INTER_APP_AUDIO|MAPS|ASSOCIATED_DOMAINS|PERSONAL_VPN|APP_GROUPS|HEALTHKIT|HOMEKIT]
+- body:settings array<object>
+- body:settings[].allowedInstances string enum[ENTRY|SINGLE|MULTIPLE]
+- body:settings[].description string
+- body:settings[].enabledByDefault boolean
+- body:settings[].key string enum[ICLOUD_VERSION|DATA_PROTECTION_PERMISSION_LEVEL|APPLE_ID_AUTH_APP_CONSENT]
+- body:settings[].minInstances integer
+- body:settings[].name string
+- body:settings[].options array<object>
+- body:settings[].options[].description string
+- body:settings[].options[].enabled boolean
+- body:settings[].options[].enabledByDefault boolean
+- body:settings[].options[].key string enum[XCODE_5|XCODE_6|COMPLETE_PROTECTION|PROTECTED_UNLESS_OPEN|PROTECTED_UNTIL_FIRST_USER_AUTH|PRIMARY_APP_CONSENT]
+- body:settings[].options[].name string
+- body:settings[].options[].supportsWildcard boolean
+- body:settings[].visible boolean
+- body:bundleId object
+- body:bundleId.data object
+- body:bundleId.data.id string
+- body:bundleId.data.type string enum[bundleIds]
+
+## S131-0075  PATCH /v1/bundleIdCapabilities/{id}
+schema: BundleIdCapabilityUpdateRequest
+- path:id string
+- body:capabilityType string enum[ICLOUD|IN_APP_PURCHASE|GAME_CENTER|PUSH_NOTIFICATIONS|WALLET|INTER_APP_AUDIO|MAPS|ASSOCIATED_DOMAINS|PERSONAL_VPN|APP_GROUPS|HEALTHKIT|HOMEKIT]
+- body:settings array<object>
+- body:settings[].allowedInstances string enum[ENTRY|SINGLE|MULTIPLE]
+- body:settings[].description string
+- body:settings[].enabledByDefault boolean
+- body:settings[].key string enum[ICLOUD_VERSION|DATA_PROTECTION_PERMISSION_LEVEL|APPLE_ID_AUTH_APP_CONSENT]
+- body:settings[].minInstances integer
+- body:settings[].name string
+- body:settings[].options array<object>
+- body:settings[].options[].description string
+- body:settings[].options[].enabled boolean
+- body:settings[].options[].enabledByDefault boolean
+- body:settings[].options[].key string enum[XCODE_5|XCODE_6|COMPLETE_PROTECTION|PROTECTED_UNLESS_OPEN|PROTECTED_UNTIL_FIRST_USER_AUTH|PRIMARY_APP_CONSENT]
+- body:settings[].options[].name string
+- body:settings[].options[].supportsWildcard boolean
+- body:settings[].visible boolean
+
+## S131-0082  PATCH /v1/devices/{id}
+schema: DeviceUpdateRequest
+- path:id string
+- body:name string
+- body:status string enum[ENABLED|DISABLED]
+
+## S131-0092  POST /v1/profiles
+schema: ProfileCreateRequest
+- body:name string
+- body:profileType string enum[IOS_APP_DEVELOPMENT|IOS_APP_STORE|IOS_APP_ADHOC|IOS_APP_INHOUSE|MAC_APP_DEVELOPMENT|MAC_APP_STORE|MAC_APP_DIRECT|TVOS_APP_DEVELOPMENT|TVOS_APP_STORE|TVOS_APP_ADHOC|TVOS_APP_INHOUSE|MAC_CATALYST_APP_DEVELOPMENT]
+- body:bundleId object
+- body:bundleId.data object
+- body:bundleId.data.id string
+- body:bundleId.data.type string enum[bundleIds]
+- body:certificates object
+- body:certificates.data array<object>
+- body:certificates.data[].id string
+- body:certificates.data[].type string enum[certificates]
+- body:devices object
+- body:devices.data array<object>
+- body:devices.data[].id string
+- body:devices.data[].type string enum[devices]
+
+## S131-0097  POST /v1/userInvitations
+schema: UserInvitationCreateRequest
+- body:allAppsVisible boolean
+- body:email string
+- body:firstName string
+- body:lastName string
+- body:provisioningAllowed boolean
+- body:roles array<string> enum[ADMIN|FINANCE|TECHNICAL|ACCOUNT_HOLDER|READ_ONLY|SALES|MARKETING|APP_MANAGER|DEVELOPER|ACCESS_TO_REPORTS|CUSTOMER_SUPPORT|CREATE_APPS]
+- body:visibleApps object
+- body:visibleApps.data array<object>
+- body:visibleApps.data[].id string
+- body:visibleApps.data[].type string enum[apps]
+
+## S131-0100  PATCH /v1/users/{id}
+schema: UserUpdateRequest
+- path:id string
+- body:allAppsVisible boolean
+- body:provisioningAllowed boolean
+- body:roles array<string> enum[ADMIN|FINANCE|TECHNICAL|ACCOUNT_HOLDER|READ_ONLY|SALES|MARKETING|APP_MANAGER|DEVELOPER|ACCESS_TO_REPORTS|CUSTOMER_SUPPORT|CREATE_APPS]
+- body:visibleApps object
+- body:visibleApps.data array<object>
+- body:visibleApps.data[].id string
+- body:visibleApps.data[].type string enum[apps]
+
+## S131-0101  DELETE /v1/users/{id}/relationships/visibleApps
+schema: UserVisibleAppsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[apps]
+
+## S131-0103  POST /v1/users/{id}/relationships/visibleApps
+schema: UserVisibleAppsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[apps]
+
+## S132-0001  DELETE /actions/{idAction}
+desc: deleteActionsByIdAction()
+- path:idAction string
+- query:key string
+- query:token string
+
+## S132-0006  POST /boards/{idBoard}/calendarKey/generate
+desc: addBoardsCalendarKeyGenerateByIdBoard()
+- path:idBoard string
+- query:key string
+- query:token string
+
+## S132-0021  PUT /boards/{idBoard}/members
+desc: updateBoardsMembersByIdBoard()
+schema: boards_members
+- path:idBoard string
+- query:key string
+- query:token string
+- body:email string
+- body:fullName string
+- body:type string
+
+## S132-0022  DELETE /boards/{idBoard}/members/{idMember}
+desc: deleteBoardsMembersByIdBoardByIdMember()
+- path:idBoard string
+- path:idMember string
+- query:key string
+- query:token string
+
+## S132-0023  PUT /boards/{idBoard}/members/{idMember}
+desc: updateBoardsMembersByIdBoardByIdMember()
+schema: boards_members
+- path:idBoard string
+- path:idMember string
+- query:key string
+- query:token string
+- body:email string
+- body:fullName string
+- body:type string
+
+## S132-0035  PUT /boards/{idBoard}/prefs/background
+desc: updateBoardsPrefsBackgroundByIdBoard()
+schema: prefs_background
+- path:idBoard string
+- query:key string
+- query:token string
+- body:value string
+
+## S132-0043  PUT /boards/{idBoard}/prefs/voting
+desc: updateBoardsPrefsVotingByIdBoard()
+schema: prefs_voting
+- path:idBoard string
+- query:key string
+- query:token string
+- body:value string
+
+## S132-0049  DELETE /cards/{idCard}/actions/{idAction}/comments
+desc: deleteCardsActionsCommentsByIdCardByIdAction() | This can only be done by the original author of the comment, or someone with higher permissions than the original author.
+- path:idCard string
+- path:idAction string
+- query:key string
+- query:token string
+
+## S132-0060  POST /cards/{idCard}/checklists
+desc: addCardsChecklistsByIdCard()
+schema: cards_checklists
+- path:idCard string
+- query:key string
+- query:token string
+- body:idChecklistSource string
+- body:name string
+- body:value string
+
+## S132-0064  PUT /cards/{idCard}/due
+desc: updateCardsDueByIdCard()
+schema: cards_due
+- path:idCard string
+- query:key string
+- query:token string
+- body:value string
+
+## S132-0081  POST /cards/{idCard}/stickers
+desc: addCardsStickersByIdCard()
+schema: cards_stickers
+- path:idCard string
+- query:key string
+- query:token string
+- body:image string
+- body:left string
+- body:rotate string
+- body:top string
+- body:zIndex string
+
+## S132-0105  PUT /lists/{idList}/name
+desc: updateListsNameByIdList()
+schema: lists_name
+- path:idList string
+- query:key string
+- query:token string
+- body:value string
+
+## S132-0116  DELETE /members/{idMember}/boardStars/{idBoardStar}
+desc: deleteMembersBoardStarsByIdMemberByIdBoardStar()
+- path:idMember string
+- path:idBoardStar string
+- query:key string
+- query:token string
+
+## S132-0122  PUT /members/{idMember}/customBoardBackgrounds/{idBoardBackground}
+desc: updateMembersCustomBoardBackgroundsByIdMemberByIdBoardBackground()
+schema: members_customBoardBackgrounds
+- path:idMember string
+- path:idBoardBackground string
+- query:key string
+- query:token string
+- body:brightness string
+- body:file string
+- body:tile string
+
+## S132-0141  PUT /notifications/{idNotification}/unread
+desc: updateNotificationsUnreadByIdNotification()
+schema: notifications_unread
+- path:idNotification string
+- query:key string
+- query:token string
+- body:value string
+
+## S132-0147  DELETE /organizations/{idOrg}/logo
+desc: deleteOrganizationsLogoByIdOrg()
+- path:idOrg string
+- query:key string
+- query:token string
+
+## S132-0151  PUT /organizations/{idOrg}/members/{idMember}
+desc: updateOrganizationsMembersByIdOrgByIdMember()
+schema: organizations_members
+- path:idOrg string
+- path:idMember string
+- query:key string
+- query:token string
+- body:email string
+- body:fullName string
+- body:type string
+
+## S132-0152  DELETE /organizations/{idOrg}/members/{idMember}/all
+desc: deleteOrganizationsMembersAllByIdOrgByIdMember()
+- path:idOrg string
+- path:idMember string
+- query:key string
+- query:token string
+
+## S132-0158  PUT /organizations/{idOrg}/prefs/boardVisibilityRestrict/org
+desc: updateOrganizationsPrefsBoardVisibilityRestrictOrgByIdOrg()
+schema: prefs_boardVisibilityRestrict
+- path:idOrg string
+- query:key string
+- query:token string
+- body:value string
+
+## S132-0164  PUT /organizations/{idOrg}/prefs/orgInviteRestrict
+desc: updateOrganizationsPrefsOrgInviteRestrictByIdOrg()
+schema: prefs_orgInviteRestrict
+- path:idOrg string
+- query:key string
+- query:token string
+- body:value string
+
+## S132-0176  DELETE /webhooks/{idWebhook}
+desc: deleteWebhooksByIdWebhook()
+- path:idWebhook string
+- query:key string
+- query:token string
+
+## S133-0002  DELETE /apis/{apiId}
+desc: Delete an API | This call deletes an existing API having the specified id. Response contains an `api` object with `id` of the API which was deleted. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query parameter.
+- path:apiId string
+
+## S133-0003  PUT /apis/{apiId}
+desc: Update an API | This call updates an existing API . Request body should contain an `api` object which should have the fields to be updated. Only `name`, `summary` and `description` fields can be edited for an API. Response contains an `api` object with all the details related to the created API, namely, `id`, `name`, `summary`, `description` etc. > Requires <a href="#authentication">API Key</a> as
+- path:apiId string
+- body:api object
+- body:api.description string
+- body:api.name string
+
+## S133-0004  POST /apis/{apiId}/versions
+desc: Create API Version | This call creates a new API version in the specified API. Request body should contain a `version` object which should have fields: <table> <tr> <td>name</td> <td>Required. Name of the API Version</td> </tr> <tr> <td>source</td> <td> If specified, it will copy the contents of the specified api version to create a new api verison. <table> <tr> <td>id</td> <td>Required. Id of the
+- path:apiId string
+- body:version object
+- body:version.name string
+- body:version.source object
+- body:version.source.id string
+- body:version.source.relations object
+- body:version.source.schema boolean
+
+## S133-0007  POST /apis/{apiId}/versions/{apiVersionId}/relations
+desc: Create relations | This call allows you to add existing Postman entities as new relations to an API. The request body should contain the relations to be created along with an array of entity IDs. <table> <tr> <th>Relation</th> <th>Entity ID type</th> <tr> <tr> <td>contracttest</td> <td>Collection UIDs</td> </tr> <tr> <td>integrationtest</td> <td>Collection UIDs</td> </tr> <tr> <td>documentation</t
+- path:apiId string
+- path:apiVersionId string
+- body:contracttest array<string>
+- body:documentation array<string>
+- body:mock array<string>
+- body:testsuite array<string>
+
+## S133-0008  POST /apis/{apiId}/versions/{apiVersionId}/schemas
+desc: Create Schema | This call creates a new schema. Request body should contain a `schema` object which should atleast have these properties with `string` values: - **`type`**: Allowed types are `openapi3`, `openapi2`, `openapi1`, `raml` and `graphql`. - **`language`** : Allowed languages are `json` and `yaml` for OpenAPI and RAML schema types. GraphQL schema type accepts only `graphql` language. - **
+- path:apiId string
+- path:apiVersionId string
+- body:schema object
+- body:schema.language string
+- body:schema.schema string
+- body:schema.type string
+
+## S133-0014  POST /collections/merge
+desc: Merge a Fork | This endpoint allows you to merge a forked collection back to its destination collection. On successful creation of the collection, the response returns the collection `name`, `id` and `uid`. You need to specify the fork UID (as `source`) and destination collection UID (as `destination`) in the request body. Optionally, you can also specify the merge strategy as either `deleteSource
+- body:destination string
+- body:source string
+- body:strategy string
+
+## S133-0016  PUT /collections/{collection_uid}
+desc: Update Collection | This endpoint allows you to update an existing collection using the Postman Collection v2 format. For more information about the v2 schema, check the format [here](https://schema.getpostman.com/json/collection/v2.0.0/docs/index.html). On successful updation of the collection, the response returns the collection `name`, `id` and `uid`. > Requires <a href="#authentication">API Ke
+- path:collection_uid string
+- body:collection object
+- body:collection.info object
+- body:collection.info._postman_id string
+- body:collection.info.description string
+- body:collection.info.name string
+- body:collection.info.schema string
+- body:collection.item array<object>
+- body:collection.item[].item array<object>
+- body:collection.item[].name string
+
+## S133-0019  PUT /environments/{environment_uid}
+desc: Update Environment | This endpoint replaces an existing environment. A sample body is added to the request that conforms to the following JSON schema: ```json { "type": "object", "properties": { "environment": { "type": "object", "properties": { "name": { "type": "string", "maxLength": 254, "minLength": 1 }, "values": { "type": "array", "maxItems": 100, "additionalItems": false, "items": { "type":
+- path:environment_uid string
+- body:environment object
+- body:environment.name string
+- body:environment.values array<object>
+- body:environment.values[].key string
+- body:environment.values[].value string
+
+## S133-0021  POST /import/openapi
+desc: Import external API specification | This endpoint allows you to import external API specifications into Postman. Currently, this endpoint only supports the <a href="https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md">OpenAPI</a> specification, for which the `importType` will be `openapi`. On a successful import, the response will be an array with each element contaning `id`
+- body:input object
+- body:input.info object
+- body:input.info.license object
+- body:input.info.title string
+- body:input.info.version string
+- body:input.openapi string
+- body:input.paths object
+- body:input.paths./pets object
+- body:input.servers array<object>
+- body:input.servers[].url string
+- body:type string
+
+## S133-0023  DELETE /mocks/{mock_uid}
+desc: Delete Mock | This endpoint allows you to delete an existing mock using its `uid`. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query parameter.
+- path:mock_uid string
+
+## S133-0024  PUT /mocks/{mock_uid}
+desc: Update Mock | This endpoint allows you to update a mock you have created using its `uid`. The endpoint allows you to edit fields, * name * environment * description * private * versionTag > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query parameter.
+- path:mock_uid string
+- body:mock object
+- body:mock.description string
+- body:mock.environment string
+- body:mock.name string
+- body:mock.private boolean
+- body:mock.versionTag string
+
+## S133-0025  POST /mocks/{mock_uid}/publish
+desc: Publish Mock | This endpoint publishes the mock you have created using its `uid` > Requires <a href="#authentication">API Key</a> as `X-Api-Key ` request header or `apikey` URL query parameter.
+- path:mock_uid string
+
+## S133-0030  POST /monitors/{monitor_uid}/run
+desc: Run a Monitor | This endpoint will run the monitor instantly and wait for the monitor to run completely. It responds with the run results. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query parameter.
+- path:monitor_uid string

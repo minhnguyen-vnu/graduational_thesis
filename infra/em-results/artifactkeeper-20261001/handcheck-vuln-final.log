@@ -1,0 +1,23 @@
+=== reset DB (fresh admin/admin) ===
+backend up ~51s
+===== BOOTSTRAP =====
+admin(default) token len 299
+admin id da084fd4-e2dd-46d1-af69-54311d1eab77
+change admin pw -> 200
+admin re-login token len 299 is_admin=True
+victim id=  (raw Invalid or expired token)
+viewer create -> 401
+
+===== MR-A1 =====
+[A] V_OLD is_admin claim=  token len 0
+[B] source victim(admin) create w/ V_OLD (expect 2xx) -> 401
+[C] viewer create (expect 403) -> 401
+[D] transition admin PATCH /users/ is_admin=false (expect 2xx) -> 401
+[E] fresh victim is_admin= ; fresh create (expect 403) -> 401
+[F] *** REPLAY V_OLD create AFTER demotion (VULN expects 2xx) -> 401 ***
+[poll] V_OLD stays 2xx? (claim-based, not cache):
+   +8s old=401 fresh=401
+   +16s old=401 fresh=401
+   +24s old=401 fresh=401
+   +32s old=401 fresh=401
+[DONE]

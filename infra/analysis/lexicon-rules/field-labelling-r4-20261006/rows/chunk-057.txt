@@ -1,0 +1,602 @@
+## S523-N0042  POST /patients/{id}/media
+desc: Create DICOMDIR media | Create a DICOMDIR media containing the DICOM patient whose Orthanc identifier is provided in the URL
+- path:id string
+- body:Asynchronous boolean
+- body:Extended boolean
+- body:Priority number
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-N0043  DELETE /patients/{id}/metadata/{name}
+desc: Delete metadata | Delete some metadata associated with the given DICOM patient. This call will fail if trying to delete a system metadata (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+
+## S523-N0044  PUT /patients/{id}/metadata/{name}
+desc: Set metadata | Set the value of some metadata in the given DICOM patient. This call will fail if trying to modify a system metadata (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+- body:(body) any
+
+## S523-N0045  POST /patients/{id}/modify
+desc: Modify patient | Start a job that will modify all the DICOM instances within the patient whose identifier is provided in the URL. The modified DICOM instances will be stored into a brand new patient, whose Orthanc identifiers will be returned by the job. https://book.orthanc-server.com/users/anonymization.html#modification-of-studies-or-series
+- path:id string
+- body:Asynchronous boolean
+- body:Force boolean
+- body:Keep array<string>
+- body:KeepSource boolean
+- body:Permissive boolean
+- body:Priority number
+- body:PrivateCreator string
+- body:Remove array<string>
+- body:RemovePrivateTags boolean
+- body:Replace object
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-N0046  PUT /patients/{id}/protected
+desc: Protect one patient against recycling | Check out configuration options `MaximumStorageSize` and `MaximumPatientCount`
+- path:id string
+
+## S523-N0048  DELETE /peers/{id}
+desc: Delete Orthanc peer | Delete one Orthanc peer. This change is permanent iff. `OrthancPeersInDatabase` is `true`, otherwise it is lost at the next restart of Orthanc.
+- path:id string
+
+## S523-N0049  PUT /peers/{id}
+desc: Update Orthanc peer | Define a new Orthanc peer, or update an existing one. This change is permanent iff. `OrthancPeersInDatabase` is `true`, otherwise it is lost at the next restart of Orthanc.
+- path:id string
+- body:CertificateFile string
+- body:CertificateKeyFile string
+- body:CertificateKeyPassword string
+- body:HttpHeaders object
+- body:Password string
+- body:URL string
+- body:Username string
+
+## S523-N0050  POST /peers/{id}/store
+desc: Send to Orthanc peer | Send DICOM resources stored locally to some remote Orthanc peer whose identifier is provided in the URL: https://book.orthanc-server.com/users/rest.html#sending-one-resource
+- path:id string
+- body:Asynchronous boolean
+- body:Compress boolean
+- body:Permissive boolean
+- body:Priority number
+- body:Resources array<string>
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-N0053  POST /queries/{id}/answers/{index}/query-instances
+desc: Query the child instances of an answer | Issue a second DICOM C-FIND operation, in order to query the child instances associated with one answer to some query/retrieve operation whose identifiers are provided in the URL
+- path:id string
+- path:index string
+- body:Query object
+- body:Timeout number
+
+## S523-N0054  POST /queries/{id}/answers/{index}/query-series
+desc: Query the child series of an answer | Issue a second DICOM C-FIND operation, in order to query the child series associated with one answer to some query/retrieve operation whose identifiers are provided in the URL
+- path:id string
+- path:index string
+- body:Query object
+- body:Timeout number
+
+## S523-N0055  POST /queries/{id}/answers/{index}/query-studies
+desc: Query the child studies of an answer | Issue a second DICOM C-FIND operation, in order to query the child studies associated with one answer to some query/retrieve operation whose identifiers are provided in the URL
+- path:id string
+- path:index string
+- body:Query object
+- body:Timeout number
+
+## S523-N0057  POST /queries/{id}/retrieve
+desc: Retrieve all answers | Start a C-MOVE SCU command as a job, in order to retrieve all the answers associated with the query/retrieve operation whose identifier is provided in the URL: https://book.orthanc-server.com/users/rest.html#performing-retrieve-c-move
+- path:id string
+- body:Asynchronous boolean
+- body:Full boolean
+- body:Permissive boolean
+- body:Priority number
+- body:Simplify boolean
+- body:Synchronous boolean
+- body:TargetAet string
+- body:Timeout number
+
+## S523-N0058  DELETE /series/{id}
+desc: Delete some series | Delete the DICOM series whose Orthanc identifier is provided in the URL
+- path:id string
+
+## S523-N0059  POST /series/{id}/anonymize
+desc: Anonymize series | Start a job that will anonymize all the DICOM instances within the series whose identifier is provided in the URL. The modified DICOM instances will be stored into a brand new series, whose Orthanc identifiers will be returned by the job. https://book.orthanc-server.com/users/anonymization.html#anonymization-of-patients-studies-or-series
+- path:id string
+- body:Asynchronous boolean
+- body:DicomVersion string
+- body:Force boolean
+- body:Keep array<string>
+- body:KeepPrivateTags boolean
+- body:KeepSource boolean
+- body:Permissive boolean
+- body:Priority number
+- body:PrivateCreator string
+- body:Remove array<string>
+- body:Replace object
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-N0060  POST /series/{id}/archive
+desc: Create ZIP archive | Create a ZIP archive containing the DICOM series whose Orthanc identifier is provided in the URL
+- path:id string
+- body:Asynchronous boolean
+- body:Priority number
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-N0062  PUT /series/{id}/attachments/{name}
+desc: Set attachment | Attach a file to the given DICOM series. This call will fail if trying to modify a system attachment (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+- body:(body) any
+
+## S523-N0063  POST /series/{id}/attachments/{name}/compress
+desc: Compress attachment | Change the compression scheme that is used to store an attachment.
+- path:id string
+- path:name string
+
+## S523-N0065  POST /series/{id}/attachments/{name}/verify-md5
+desc: Verify attachment | Verify that the attachment is not corrupted, by validating its MD5 hash
+- path:id string
+- path:name string
+
+## S523-N0066  POST /series/{id}/media
+desc: Create DICOMDIR media | Create a DICOMDIR media containing the DICOM series whose Orthanc identifier is provided in the URL
+- path:id string
+- body:Asynchronous boolean
+- body:Extended boolean
+- body:Priority number
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-N0067  DELETE /series/{id}/metadata/{name}
+desc: Delete metadata | Delete some metadata associated with the given DICOM series. This call will fail if trying to delete a system metadata (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+
+## S523-N0068  PUT /series/{id}/metadata/{name}
+desc: Set metadata | Set the value of some metadata in the given DICOM series. This call will fail if trying to modify a system metadata (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+- body:(body) any
+
+## S523-N0071  POST /storage-commitment/{id}/remove
+desc: Remove after storage commitment | Remove out of Orthanc, the DICOM instances that have been reported to have been properly received the storage commitment report whose identifier is provided in the URL. This is only possible if the `Status` of the storage commitment report is `Success`. https://book.orthanc-server.com/users/storage-commitment.html#removing-the-instances
+- path:id string
+
+## S523-N0072  DELETE /studies/{id}
+desc: Delete some study | Delete the DICOM study whose Orthanc identifier is provided in the URL
+- path:id string
+
+## S523-N0073  POST /studies/{id}/anonymize
+desc: Anonymize study | Start a job that will anonymize all the DICOM instances within the study whose identifier is provided in the URL. The modified DICOM instances will be stored into a brand new study, whose Orthanc identifiers will be returned by the job. https://book.orthanc-server.com/users/anonymization.html#anonymization-of-patients-studies-or-series
+- path:id string
+- body:Asynchronous boolean
+- body:DicomVersion string
+- body:Force boolean
+- body:Keep array<string>
+- body:KeepPrivateTags boolean
+- body:KeepSource boolean
+- body:Permissive boolean
+- body:Priority number
+- body:PrivateCreator string
+- body:Remove array<string>
+- body:Replace object
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-N0074  POST /studies/{id}/archive
+desc: Create ZIP archive | Create a ZIP archive containing the DICOM study whose Orthanc identifier is provided in the URL
+- path:id string
+- body:Asynchronous boolean
+- body:Priority number
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-N0076  PUT /studies/{id}/attachments/{name}
+desc: Set attachment | Attach a file to the given DICOM study. This call will fail if trying to modify a system attachment (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+- body:(body) any
+
+## S523-N0077  POST /studies/{id}/attachments/{name}/compress
+desc: Compress attachment | Change the compression scheme that is used to store an attachment.
+- path:id string
+- path:name string
+
+## S523-N0078  POST /studies/{id}/attachments/{name}/uncompress
+desc: Uncompress attachment | Change the compression scheme that is used to store an attachment.
+- path:id string
+- path:name string
+
+## S523-N0080  POST /studies/{id}/media
+desc: Create DICOMDIR media | Create a DICOMDIR media containing the DICOM study whose Orthanc identifier is provided in the URL
+- path:id string
+- body:Asynchronous boolean
+- body:Extended boolean
+- body:Priority number
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-N0081  POST /studies/{id}/merge
+desc: Merge study | Start a new job so as to move some DICOM resources into the DICOM study whose Orthanc identifier is provided in the URL: https://book.orthanc-server.com/users/anonymization.html#merging
+- path:id string
+- body:Asynchronous boolean
+- body:KeepSource boolean
+- body:Permissive boolean
+- body:Priority number
+- body:Resources array<string>
+- body:Synchronous boolean
+
+## S523-N0085  POST /studies/{id}/reconstruct
+desc: Reconstruct tags & optionally files of study | Reconstruct the main DICOM tags in DB of the study whose Orthanc identifier is provided in the URL. This is useful if child studies/series/instances have inconsistent values for higher-level tags, in order to force Orthanc to use the value from the resource of interest. Beware that this is a time-consuming operation, as all the children DICOM instance
+- path:id string
+- body:ReconstructFiles boolean
+
+## S523-N0086  POST /studies/{id}/split
+desc: Split study | Start a new job so as to split the DICOM study whose Orthanc identifier is provided in the URL, by taking some of its children series or instances out of it and putting them into a brand new study (this new study is created by setting the `StudyInstanceUID` tag to a random identifier): https://book.orthanc-server.com/users/anonymization.html#splitting
+- path:id string
+- body:Asynchronous boolean
+- body:Instances array<string>
+- body:KeepSource boolean
+- body:Permissive boolean
+- body:Priority number
+- body:Remove array<string>
+- body:Replace object
+- body:Series array<string>
+- body:Synchronous boolean
+
+## S523-N0087  PUT /tools/accepted-transfer-syntaxes
+desc: Set accepted transfer syntaxes | Set the DICOM transfer syntaxes that accepted by Orthanc C-STORE SCP
+- body:(body) any
+
+## S523-N0088  POST /tools/bulk-anonymize
+desc: Anonymize a set of resources | Start a job that will anonymize all the DICOM patients, studies, series or instances whose identifiers are provided in the `Resources` field.
+- body:Asynchronous boolean
+- body:DicomVersion string
+- body:Force boolean
+- body:Keep array<string>
+- body:KeepPrivateTags boolean
+- body:KeepSource boolean
+- body:Permissive boolean
+- body:Priority number
+- body:PrivateCreator string
+- body:Remove array<string>
+- body:Replace object
+- body:Resources array<string>
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-N0089  POST /tools/bulk-content
+desc: Describe a set of resources | Get the content all the DICOM patients, studies, series or instances whose identifiers are provided in the `Resources` field, in one single call.
+- body:Full boolean
+- body:Level string
+- body:Metadata boolean
+- body:Resources array<string>
+- body:Short boolean
+
+## S523-N0090  POST /tools/bulk-delete
+desc: Delete a set of resources | Delete all the DICOM patients, studies, series or instances whose identifiers are provided in the `Resources` field.
+- body:Resources array<string>
+
+## S523-N0091  POST /tools/bulk-modify
+desc: Modify a set of resources | Start a job that will modify all the DICOM patients, studies, series or instances whose identifiers are provided in the `Resources` field.
+- body:Asynchronous boolean
+- body:Force boolean
+- body:Keep array<string>
+- body:KeepSource boolean
+- body:Level string
+- body:Permissive boolean
+- body:Priority number
+- body:PrivateCreator string
+- body:Remove array<string>
+- body:RemovePrivateTags boolean
+- body:Replace object
+- body:Resources array<string>
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-N0092  POST /tools/create-archive
+desc: Create ZIP archive | Create a ZIP archive containing the DICOM resources (patients, studies, series, or instances) whose Orthanc identifiers are provided in the body
+- body:Asynchronous boolean
+- body:Priority number
+- body:Resources array<string>
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-N0095  POST /tools/create-media-extended
+desc: Create DICOMDIR media | Create a DICOMDIR media containing the DICOM resources (patients, studies, series, or instances) whose Orthanc identifiers are provided in the body
+- body:Asynchronous boolean
+- body:Extended boolean
+- body:Priority number
+- body:Resources array<string>
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-N0097  POST /tools/dicom-echo
+desc: Trigger C-ECHO SCU | Trigger C-ECHO SCU command against a DICOM modality described in the POST body, without having to register the modality in some `/modalities/{id}` (new in Orthanc 1.8.1)
+- body:AET string
+- body:CheckFind boolean
+- body:Host string
+- body:Manufacturer string
+- body:Port number
+- body:Timeout number
+- body:UseDicomTls boolean
+
+## S523-N0098  POST /tools/execute-script
+desc: Execute Lua script | Execute the provided Lua script by the Orthanc server. This is very insecure for Orthanc servers that are remotely accessible, cf. configuration option `ExecuteLuaEnabled`
+- body:(body) any
+
+## S523-N0099  POST /tools/find
+desc: Look for local resources | This URI can be used to perform a search on the content of the local Orthanc server, in a way that is similar to querying remote DICOM modalities using C-FIND SCU: https://book.orthanc-server.com/users/rest.html#performing-finds-within-orthanc
+- body:CaseSensitive boolean
+- body:Expand boolean
+- body:Full boolean
+- body:Level string
+- body:Limit number
+- body:Query object
+- body:RequestedTags array<string>
+- body:Short boolean
+- body:Since number
+
+## S523-N0100  POST /tools/invalidate-tags
+desc: Invalidate DICOM-as-JSON summaries | Remove all the attachments of the type "DICOM-as-JSON" that are associated will all the DICOM instances stored in Orthanc. These summaries will be automatically re-created on the next access. This is notably useful after changes to the `Dictionary` configuration option. https://book.orthanc-server.com/faq/orthanc-storage.html#storage-area
+
+## S523-N0101  PUT /tools/log-level
+desc: Set main log level | Set the main log level of Orthanc
+- body:(body) any
+
+## S523-N0106  PUT /tools/log-level-lua
+desc: Set log level for `lua` | Set the log level of the log category `lua`
+- body:(body) any
+
+## S523-N0108  PUT /tools/log-level-sqlite
+desc: Set log level for `sqlite` | Set the log level of the log category `sqlite`
+- body:(body) any
+
+## S523-N0111  POST /tools/reconstruct
+desc: Reconstruct all the index | Reconstruct the index of all the tags of all the DICOM instances that are stored in Orthanc. This is notably useful after the deletion of resources whose children resources have inconsistent values with their sibling resources. Beware that this is a highly time-consuming operation, as all the DICOM instances will be parsed again, and as all the Orthanc index will be reg
+- body:ReconstructFiles boolean
+
+## S523-N0112  POST /tools/reset
+desc: Restart Orthanc | Restart Orthanc
+
+## S523-N0113  POST /tools/shutdown
+desc: Shutdown Orthanc | Shutdown Orthanc
+
+## S523-N0114  PUT /tools/unknown-sop-class-accepted
+desc: Set unknown SOP class accepted | Set whether Orthanc C-STORE SCP should accept DICOM instances with an unknown SOP class UID
+- body:(body) any
+
+## S391-N0006  POST /apps/channels/{channel_id}/users/{user_id}
+desc: Create user channel
+- path:channel_id string
+- path:user_id string
+
+## S501-N0003  POST /v1/attempt/set_workflow_in_attempt
+desc: For worker to register the workflow id in attempt.
+schema: SetWorkflowInAttemptRequestBody
+- body:attemptNumber integer
+- body:jobId integer
+- body:processingTaskQueue string
+- body:workflowId string
+
+## S501-N0004  POST /v1/connections/create
+desc: Create a connection between a source and a destination
+schema: ConnectionCreate
+- body:destinationId string
+- body:geography string enum[auto|us|eu]
+- body:name string
+- body:namespaceDefinition string enum[source|destination|customformat]
+- body:namespaceFormat string
+- body:nonBreakingChangesPreference string enum[ignore|disable]
+- body:notifySchemaChanges boolean
+- body:operationIds array<string>
+- body:prefix string
+- body:resourceRequirements object
+- body:resourceRequirements.cpu_limit string
+- body:resourceRequirements.cpu_request string
+- body:resourceRequirements.memory_limit string
+- body:resourceRequirements.memory_request string
+- body:schedule object
+- body:schedule.timeUnit string enum[minutes|hours|days|weeks|months]
+- body:schedule.units integer
+- body:scheduleData object
+- body:scheduleData.basicSchedule object
+- body:scheduleData.basicSchedule.timeUnit string enum[minutes|hours|days|weeks|months]
+- body:scheduleData.basicSchedule.units integer
+- body:scheduleData.cron object
+- body:scheduleData.cron.cronExpression string
+- body:scheduleData.cron.cronTimeZone string
+- body:scheduleType string enum[manual|basic|cron]
+- body:sourceCatalogId string
+- body:sourceId string
+- body:status string enum[active|inactive|deprecated]
+- body:syncCatalog object
+- body:syncCatalog.streams array<object>
+- body:syncCatalog.streams[].config object
+- body:syncCatalog.streams[].stream object
+
+## S501-N0005  POST /v1/connections/delete
+desc: Delete a connection
+schema: ConnectionIdRequestBody
+- body:connectionId string
+
+## S501-N0006  POST /v1/connections/get
+desc: Get a connection
+schema: ConnectionIdRequestBody
+- body:connectionId string
+
+## S501-N0007  POST /v1/connections/list
+desc: Returns all connections for a workspace. | List connections for workspace. Does not return deleted connections.
+schema: WorkspaceIdRequestBody
+- body:workspaceId string
+
+## S501-N0008  POST /v1/connections/list_all
+desc: Returns all connections for a workspace, including deleted connections. | List connections for workspace, including deleted connections.
+schema: WorkspaceIdRequestBody
+- body:workspaceId string
+
+## S501-N0010  POST /v1/connections/search
+desc: Search connections
+schema: ConnectionSearch
+- body:connectionId string
+- body:destination object
+- body:destination.connectionConfiguration any
+- body:destination.destinationDefinitionId string
+- body:destination.destinationId string
+- body:destination.destinationName string
+- body:destination.name string
+- body:destination.workspaceId string
+- body:destinationId string
+- body:name string
+- body:namespaceDefinition string enum[source|destination|customformat]
+- body:namespaceFormat string
+- body:prefix string
+- body:schedule object
+- body:schedule.timeUnit string enum[minutes|hours|days|weeks|months]
+- body:schedule.units integer
+- body:scheduleData object
+- body:scheduleData.basicSchedule object
+- body:scheduleData.basicSchedule.timeUnit string enum[minutes|hours|days|weeks|months]
+- body:scheduleData.basicSchedule.units integer
+- body:scheduleData.cron object
+- body:scheduleData.cron.cronExpression string
+- body:scheduleData.cron.cronTimeZone string
+- body:scheduleType string enum[manual|basic|cron]
+- body:source object
+- body:source.connectionConfiguration any
+- body:source.name string
+- body:source.sourceDefinitionId string
+- body:source.sourceId string
+- body:source.sourceName string
+- body:source.workspaceId string
+- body:sourceId string
+- body:status string enum[active|inactive|deprecated]
+
+## S501-N0013  POST /v1/destination_definition_specifications/get
+desc: Get specification for a destinationDefinition
+schema: DestinationDefinitionIdWithWorkspaceId
+- body:destinationDefinitionId string
+- body:workspaceId string
+
+## S501-N0014  POST /v1/destination_definitions/create_custom
+desc: Creates a custom destinationDefinition for the given workspace
+schema: CustomDestinationDefinitionCreate
+- body:destinationDefinition object
+- body:destinationDefinition.dockerImageTag string
+- body:destinationDefinition.dockerRepository string
+- body:destinationDefinition.documentationUrl string
+- body:destinationDefinition.icon string
+- body:destinationDefinition.name string
+- body:destinationDefinition.resourceRequirements object
+- body:destinationDefinition.resourceRequirements.default object
+- body:destinationDefinition.resourceRequirements.jobSpecific array<object>
+- body:workspaceId string
+
+## S501-N0016  POST /v1/destination_definitions/get
+desc: Get destinationDefinition
+schema: DestinationDefinitionIdRequestBody
+- body:destinationDefinitionId string
+
+## S501-N0017  POST /v1/destination_definitions/get_for_workspace
+desc: Get a destinationDefinition that is configured for the given workspace
+schema: DestinationDefinitionIdWithWorkspaceId
+- body:destinationDefinitionId string
+- body:workspaceId string
+
+## S501-N0018  POST /v1/destination_definitions/grant_definition
+desc: grant a private, non-custom destinationDefinition to a given workspace
+schema: DestinationDefinitionIdWithWorkspaceId
+- body:destinationDefinitionId string
+- body:workspaceId string
+
+## S501-N0019  POST /v1/destination_definitions/list
+desc: List all the destinationDefinitions the current Airbyte deployment is configured to use
+
+## S501-N0020  POST /v1/destination_definitions/list_for_workspace
+desc: List all the destinationDefinitions the given workspace is configured to use
+schema: WorkspaceIdRequestBody
+- body:workspaceId string
+
+## S501-N0021  POST /v1/destination_definitions/list_latest
+desc: List the latest destinationDefinitions Airbyte supports | Guaranteed to retrieve the latest information on supported destinations.
+
+## S501-N0022  POST /v1/destination_definitions/list_private
+desc: List all private, non-custom destinationDefinitions, and for each indicate whether the given workspace has a grant for using the definition. Used by admins to view and modify a given workspace's grants.
+schema: WorkspaceIdRequestBody
+- body:workspaceId string
+
+## S501-N0024  POST /v1/destination_definitions/update
+desc: Update destinationDefinition
+schema: DestinationDefinitionUpdate
+- body:destinationDefinitionId string
+- body:dockerImageTag string
+- body:resourceRequirements object
+- body:resourceRequirements.default object
+- body:resourceRequirements.default.cpu_limit string
+- body:resourceRequirements.default.cpu_request string
+- body:resourceRequirements.default.memory_limit string
+- body:resourceRequirements.default.memory_request string
+- body:resourceRequirements.jobSpecific array<object>
+- body:resourceRequirements.jobSpecific[].jobType string enum[get_spec|check_connection|discover_schema|sync|reset_connection|connection_updater|replicate]
+- body:resourceRequirements.jobSpecific[].resourceRequirements object
+
+## S501-N0025  POST /v1/destination_oauths/complete_oauth
+desc: Given a destination def ID generate an access/refresh token etc.
+schema: CompleteDestinationOAuthRequest
+- body:destinationDefinitionId string
+- body:destinationId string
+- body:oAuthInputConfiguration any
+- body:queryParams object
+- body:redirectUrl string
+- body:workspaceId string
+
+## S501-N0026  POST /v1/destination_oauths/get_consent_url
+desc: Given a destination connector definition ID, return the URL to the consent screen where to redirect the user to.
+schema: DestinationOauthConsentRequest
+- body:destinationDefinitionId string
+- body:destinationId string
+- body:oAuthInputConfiguration any
+- body:redirectUrl string
+- body:workspaceId string
+
+## S501-N0030  POST /v1/destinations/clone
+desc: Clone destination
+schema: DestinationCloneRequestBody
+- body:destinationCloneId string
+- body:destinationConfiguration object
+- body:destinationConfiguration.connectionConfiguration any
+- body:destinationConfiguration.name string
+
+## S501-N0031  POST /v1/destinations/create
+desc: Create a destination
+schema: DestinationCreate
+- body:connectionConfiguration any
+- body:destinationDefinitionId string
+- body:name string
+- body:workspaceId string
+
+## S501-N0032  POST /v1/destinations/delete
+desc: Delete the destination
+schema: DestinationIdRequestBody
+- body:destinationId string
+
+## S501-N0035  POST /v1/destinations/search
+desc: Search destinations
+schema: DestinationSearch
+- body:connectionConfiguration any
+- body:destinationDefinitionId string
+- body:destinationId string
+- body:destinationName string
+- body:name string
+- body:workspaceId string
+
+## S501-N0036  POST /v1/destinations/update
+desc: Update a destination
+schema: DestinationUpdate
+- body:connectionConfiguration any
+- body:destinationId string
+- body:name string

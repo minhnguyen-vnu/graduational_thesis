@@ -1,0 +1,21 @@
+auth:
+  - name: victim
+    loginEndpointAuth:
+      payloadRaw: '{"email":"victim","password":"V1ctim-Bamf-Thesis-2026"}'
+  - name: admin
+    loginEndpointAuth:
+      payloadRaw: '{"email":"admin","password":"Adm1n-Bamf-Thesis-2026"}'
+  - name: viewer
+    loginEndpointAuth:
+      payloadRaw: '{"email":"viewer","password":"V1ewer-Bamf-Thesis-2026"}'
+authTemplate:
+  loginEndpointAuth:
+    externalEndpointURL: http://localhost:8221/login
+    verb: POST
+    contentType: application/json
+    token:
+      extractFrom: body
+      extractSelector: /token
+      sendIn: header
+      sendName: Authorization
+      sendTemplate: "Bearer {token}"

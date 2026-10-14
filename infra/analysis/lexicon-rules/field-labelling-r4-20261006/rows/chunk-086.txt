@@ -1,0 +1,277 @@
+## S571-N0030  POST /messages/info.json
+desc: Get the information for a single recently sent message
+schema: id
+- body:id string
+- body:key string
+
+## S571-N0032  POST /messages/parse.json
+desc: Parse the full MIME document for an email message, returning the content of the message broken into its constituent pieces
+schema: messages_parse
+- body:key string
+- body:raw_message string
+
+## S571-N0034  POST /messages/search-time-series.json
+desc: Search the content of recently sent messages and return the aggregated hourly stats for matching messages
+schema: messages_search-time-series
+- body:date_from string
+- body:date_to string
+- body:key string
+- body:query string
+- body:senders array<string>
+- body:tags array<string>
+
+## S571-N0035  POST /messages/search.json
+desc: Search the content of recently sent messages and optionally narrow by date range, tags and senders. This method may be called up to 20 times per minute. If you need the data more often, you can use /messages/info.json to get the information for a single message, or webhooks to push activity to your own application for querying.
+schema: messages_search
+- body:api_keys array<string>
+- body:date_from string
+- body:date_to string
+- body:key string
+- body:limit integer
+- body:query string
+- body:senders array<string>
+- body:tags array<string>
+
+## S571-N0036  POST /messages/send-raw.json
+desc: Take a raw MIME document for a message, and send it exactly as if it were sent through Mandrill's SMTP servers
+schema: messages_send-raw
+- body:async boolean
+- body:from_email string
+- body:from_name string
+- body:ip_pool string
+- body:key string
+- body:raw_message string
+- body:return_path_domain null
+- body:send_at string
+- body:to array<string>
+
+## S571-N0038  POST /messages/send.json
+desc: Send a new transactional message through Mandrill
+schema: messages_send
+- body:async boolean
+- body:ip_pool string
+- body:key string
+- body:message object
+- body:message.attachments array<object>
+- body:message.attachments[].content string
+- body:message.attachments[].name string
+- body:message.attachments[].type string
+- body:message.auto_html null
+- body:message.auto_text null
+- body:message.bcc_address string
+- body:message.from_email string
+- body:message.from_name string
+- body:message.global_merge_vars array<object>
+- body:message.global_merge_vars[].content string
+- body:message.global_merge_vars[].name string
+- body:message.google_analytics_campaign string
+- body:message.google_analytics_domains array<string>
+- body:message.headers object
+- body:message.headers.Reply-To string
+- body:message.html string
+- body:message.images array<object>
+- body:message.images[].content string
+- body:message.images[].name string
+- body:message.images[].type string
+- body:message.important boolean
+- body:message.inline_css null
+- body:message.merge boolean
+- body:message.merge_vars array<object>
+- body:message.merge_vars[].rcpt string
+- body:message.merge_vars[].vars array<object>
+- body:message.metadata object
+- body:message.metadata.website string
+- body:message.preserve_recipients null
+- body:message.recipient_metadata array<object>
+- body:message.recipient_metadata[].rcpt string
+- body:message.recipient_metadata[].values object
+- body:message.return_path_domain null
+- body:message.signing_domain null
+- body:message.subaccount string
+- body:message.subject string
+- body:message.tags array<string>
+- body:message.text string
+- body:message.to array<object>
+- body:message.to[].email string
+- body:message.to[].name string
+- body:message.to[].type string
+- body:message.track_clicks null
+- body:message.track_opens null
+- body:message.tracking_domain null
+- body:message.url_strip_qs null
+- body:message.view_content_link null
+- body:send_at string
+
+## S571-N0039  POST /metadata/add.json
+desc: Add a new custom metadata field to be indexed for the account.
+schema: metadata_template
+- body:key string
+- body:name string
+- body:view_template string
+
+## S571-N0041  POST /metadata/list.json
+desc: Get the list of custom metadata fields indexed for the account.
+schema: api_key
+- body:key string
+
+## S571-N0042  POST /metadata/update.json
+desc: Update an existing custom metadata field.
+schema: metadata_template
+- body:key string
+- body:name string
+- body:view_template string
+
+## S571-N0043  POST /rejects/add.json
+desc: Adds an email to your email rejection blacklist. Addresses that you add manually will never expire and there is no reputation penalty for removing them from your blacklist. Attempting to blacklist an address that has been whitelisted will have no effect.
+schema: rejects_add
+- body:comment string
+- body:email string
+- body:key string
+- body:subaccount string
+
+## S571-N0045  POST /rejects/list.json
+desc: Retrieves your email rejection blacklist. You can provide an email address to limit the results. Returns up to 1000 results. By default, entries that have expired are excluded from the results; set include_expired to true to include them.
+schema: rejects_list
+- body:email string
+- body:include_expired boolean
+- body:key string
+- body:subaccount string
+
+## S571-N0046  POST /senders/add-domain.json
+desc: Adds a sender domain to your account. Sender domains are added automatically as you send, but you can use this call to add them ahead of time.
+schema: domain
+- body:domain string
+- body:key string
+
+## S571-N0047  POST /senders/check-domain.json
+desc: Checks the SPF and DKIM settings for a domain. If you haven't already added this domain to your account, it will be added automatically.
+schema: domain
+- body:domain string
+- body:key string
+
+## S571-N0048  POST /senders/domains.json
+desc: Returns the sender domains that have been added to this account.
+schema: api_key
+- body:key string
+
+## S571-N0049  POST /senders/info.json
+desc: Return more detailed information about a single sender, including aggregates of recent stats
+schema: sender_address
+- body:address string
+- body:key string
+
+## S571-N0050  POST /senders/list.json
+desc: Return the senders that have tried to use this account.
+schema: api_key
+- body:key string
+
+## S571-N0051  POST /senders/time-series.json
+desc: Return the recent history (hourly stats for the last 30 days) for a sender
+schema: sender_address
+- body:address string
+- body:key string
+
+## S571-N0054  POST /subaccounts/delete.json
+desc: Delete an existing subaccount. Any email related to the subaccount will be saved, but stats will be removed and any future sending calls to this subaccount will fail.
+schema: id
+- body:id string
+- body:key string
+
+## S571-N0055  POST /subaccounts/info.json
+desc: Given the ID of an existing subaccount, return the data about it
+schema: id
+- body:id string
+- body:key string
+
+## S571-N0058  POST /subaccounts/resume.json
+desc: Resume a paused subaccount's sending
+schema: id
+- body:id string
+- body:key string
+
+## S571-N0060  POST /tags/all-time-series.json
+desc: Return the recent history (hourly stats for the last 30 days) for all tags
+schema: api_key
+- body:key string
+
+## S571-N0064  POST /tags/time-series.json
+desc: Return the recent history (hourly stats for the last 30 days) for a tag
+schema: tag_key
+- body:key string
+- body:tag string
+
+## S571-N0066  POST /templates/delete.json
+desc: Delete a template
+schema: name
+- body:key string
+- body:name string
+
+## S571-N0067  POST /templates/info.json
+desc: Get the information for an existing template
+schema: name
+- body:key string
+- body:name string
+
+## S571-N0068  POST /templates/list.json
+desc: Return a list of all the templates available to this user
+schema: templates_list
+- body:key string
+- body:label string
+
+## S571-N0070  POST /templates/render.json
+desc: Inject content and optionally merge fields into a template, returning the HTML that results
+schema: templates_render
+- body:key string
+- body:merge_vars array<object>
+- body:merge_vars[].content string
+- body:merge_vars[].name string
+- body:template_content array<object>
+- body:template_content[].content string
+- body:template_content[].name string
+- body:template_name string
+
+## S571-N0071  POST /templates/time-series.json
+desc: Return the recent history (hourly stats for the last 30 days) for a template
+schema: name
+- body:key string
+- body:name string
+
+## S571-N0073  POST /urls/add-tracking-domain.json
+desc: Add a tracking domain to your account
+schema: domain
+- body:domain string
+- body:key string
+
+## S571-N0078  POST /urls/tracking-domains.json
+desc: Get the list of tracking domains set up for this account
+schema: api_key
+- body:key string
+
+## S571-N0081  POST /users/ping2.json
+desc: Validate an API key and respond to a ping (anal JSON parser version)
+schema: api_key
+- body:key string
+
+## S571-N0082  POST /users/senders.json
+desc: Return the senders that have tried to use this account, both verified and unverified
+schema: api_key
+- body:key string
+
+## S571-N0083  POST /webhooks/add.json
+desc: Add a new webhook
+schema: webhooks_add
+- body:description string
+- body:events array<string>
+- body:key string
+- body:url string
+
+## S571-N0085  POST /webhooks/info.json
+desc: Given the ID of an existing webhook, return the data about it
+schema: webhook_key
+- body:id integer
+- body:key string
+
+## S571-N0086  POST /webhooks/list.json
+desc: Get the list of all webhooks defined on the account
+schema: api_key
+- body:key string

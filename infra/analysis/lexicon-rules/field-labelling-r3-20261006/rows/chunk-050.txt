@@ -1,0 +1,828 @@
+## S606-0026  PATCH /rest/v1.1/stream/start
+desc: Start existing stream
+- query:accessKey string
+- query:secretKey string
+- query:streamId string
+
+## S606-0027  PATCH /rest/v1.1/stream/stop
+desc: Stop existing stream
+- query:accessKey string
+- query:secretKey string
+- query:streamId string
+
+## S606-0028  POST /rest/v1.1/stream/stream
+desc: Create new stream with given name
+- query:accessKey string
+- query:secretKey string
+- query:name string
+- query:url string
+- query:method string enum[WEBRTC_PULL|WEBRTC_PUSH|INGESTION_ENDPOINT]
+- query:username string
+- query:password string
+- query:skipFramesWithNoFaces boolean
+- query:retentionTime integer
+- query:storeOriginalFrames boolean
+- query:storeAttendanceFaces boolean
+- query:storeAttendanceFrames boolean
+- query:isActive boolean
+- query:associatedCollections array<string>
+- query:attributes string
+
+## S606-0029  DELETE /rest/v1.1/stream/{id}
+desc: Delete existing stream
+- path:id string
+- query:accessKey string
+- query:secretKey string
+
+## S606-0030  PATCH /rest/v1.1/stream/{streamId}
+desc: Update an existing stream with a given ID
+- path:streamId string
+- query:accessKey string
+- query:secretKey string
+- query:name string
+- query:url string
+- query:method string enum[WEBRTC_PULL|WEBRTC_PUSH|INGESTION_ENDPOINT]
+- query:username string
+- query:password string
+- query:skipFramesWithNoFaces boolean
+- query:retentionTime integer
+- query:storeOriginalFrames boolean
+- query:storeAttendanceFaces boolean
+- query:storeAttendanceFrames boolean
+- query:isActive boolean
+- query:associatedCollections array<string>
+- query:attributes string
+
+## S608-0001  POST /{tenantID}/applications
+desc: Create a new application.
+schema: ApplicationCreateParameters
+- path:tenantID string
+- query:api-version string
+- body:displayName string
+- body:identifierUris array<string>
+- body:allowGuestsSignIn boolean
+- body:allowPassthroughUsers boolean
+- body:appLogoUrl string
+- body:appPermissions array<string>
+- body:appRoles array<object>
+- body:appRoles[].allowedMemberTypes array<string>
+- body:appRoles[].description string
+- body:appRoles[].displayName string
+- body:appRoles[].id string
+- body:appRoles[].isEnabled boolean
+- body:appRoles[].value string
+- body:availableToOtherTenants boolean
+- body:errorUrl string
+- body:groupMembershipClaims string enum[None|SecurityGroup|All]
+- body:homepage string
+- body:informationalUrls object
+- body:informationalUrls.marketing string
+- body:informationalUrls.privacy string
+- body:informationalUrls.support string
+- body:informationalUrls.termsOfService string
+- body:isDeviceOnlyAuthSupported boolean
+- body:keyCredentials array<object>
+- body:keyCredentials[].customKeyIdentifier string
+- body:keyCredentials[].endDate string
+- body:keyCredentials[].keyId string
+- body:keyCredentials[].startDate string
+- body:keyCredentials[].type string
+- body:keyCredentials[].usage string
+- body:keyCredentials[].value string
+- body:knownClientApplications array<string>
+- body:logoutUrl string
+- body:oauth2AllowImplicitFlow boolean
+- body:oauth2AllowUrlPathMatching boolean
+- body:oauth2Permissions array<object>
+- body:oauth2Permissions[].adminConsentDescription string
+- body:oauth2Permissions[].adminConsentDisplayName string
+- body:oauth2Permissions[].id string
+- body:oauth2Permissions[].isEnabled boolean
+- body:oauth2Permissions[].type string
+- body:oauth2Permissions[].userConsentDescription string
+- body:oauth2Permissions[].userConsentDisplayName string
+- body:oauth2Permissions[].value string
+- body:oauth2RequirePostResponse boolean
+- body:optionalClaims object
+- body:optionalClaims.accessToken array<object>
+- body:optionalClaims.accessToken[].additionalProperties object
+- body:optionalClaims.accessToken[].essential boolean
+- body:optionalClaims.accessToken[].name string
+- body:optionalClaims.accessToken[].source string
+- body:optionalClaims.idToken array<object>
+- body:optionalClaims.idToken[].additionalProperties object
+- body:optionalClaims.idToken[].essential boolean
+- body:optionalClaims.idToken[].name string
+- body:optionalClaims.idToken[].source string
+- body:optionalClaims.samlToken array<object>
+- body:optionalClaims.samlToken[].additionalProperties object
+- body:optionalClaims.samlToken[].essential boolean
+- body:optionalClaims.samlToken[].name string
+- body:optionalClaims.samlToken[].source string
+- body:orgRestrictions array<string>
+- body:passwordCredentials array<object>
+- body:passwordCredentials[].customKeyIdentifier string
+- body:passwordCredentials[].endDate string
+- body:passwordCredentials[].keyId string
+- body:passwordCredentials[].startDate string
+- body:passwordCredentials[].value string
+- body:preAuthorizedApplications array<object>
+- body:preAuthorizedApplications[].appId string
+- body:preAuthorizedApplications[].extensions array<object>
+- body:preAuthorizedApplications[].extensions[].conditions array<string>
+- body:preAuthorizedApplications[].permissions array<object>
+- body:preAuthorizedApplications[].permissions[].accessGrants array<string>
+- body:preAuthorizedApplications[].permissions[].directAccessGrant boolean
+- body:publicClient boolean
+- body:publisherDomain string
+- body:replyUrls array<string>
+(+8 fields cut)
+
+## S608-0002  DELETE /{tenantID}/applications/{applicationObjectId}
+desc: Delete an application.
+- path:applicationObjectId string
+- path:tenantID string
+- query:api-version string
+
+## S608-0003  PATCH /{tenantID}/applications/{applicationObjectId}
+desc: Update an existing application.
+schema: ApplicationUpdateParameters
+- path:applicationObjectId string
+- path:tenantID string
+- query:api-version string
+- body:displayName string
+- body:identifierUris array<string>
+- body:allowGuestsSignIn boolean
+- body:allowPassthroughUsers boolean
+- body:appLogoUrl string
+- body:appPermissions array<string>
+- body:appRoles array<object>
+- body:appRoles[].allowedMemberTypes array<string>
+- body:appRoles[].description string
+- body:appRoles[].displayName string
+- body:appRoles[].id string
+- body:appRoles[].isEnabled boolean
+- body:appRoles[].value string
+- body:availableToOtherTenants boolean
+- body:errorUrl string
+- body:groupMembershipClaims string enum[None|SecurityGroup|All]
+- body:homepage string
+- body:informationalUrls object
+- body:informationalUrls.marketing string
+- body:informationalUrls.privacy string
+- body:informationalUrls.support string
+- body:informationalUrls.termsOfService string
+- body:isDeviceOnlyAuthSupported boolean
+- body:keyCredentials array<object>
+- body:keyCredentials[].customKeyIdentifier string
+- body:keyCredentials[].endDate string
+- body:keyCredentials[].keyId string
+- body:keyCredentials[].startDate string
+- body:keyCredentials[].type string
+- body:keyCredentials[].usage string
+- body:keyCredentials[].value string
+- body:knownClientApplications array<string>
+- body:logoutUrl string
+- body:oauth2AllowImplicitFlow boolean
+- body:oauth2AllowUrlPathMatching boolean
+- body:oauth2Permissions array<object>
+- body:oauth2Permissions[].adminConsentDescription string
+- body:oauth2Permissions[].adminConsentDisplayName string
+- body:oauth2Permissions[].id string
+- body:oauth2Permissions[].isEnabled boolean
+- body:oauth2Permissions[].type string
+- body:oauth2Permissions[].userConsentDescription string
+- body:oauth2Permissions[].userConsentDisplayName string
+- body:oauth2Permissions[].value string
+- body:oauth2RequirePostResponse boolean
+- body:optionalClaims object
+- body:optionalClaims.accessToken array<object>
+- body:optionalClaims.accessToken[].additionalProperties object
+- body:optionalClaims.accessToken[].essential boolean
+- body:optionalClaims.accessToken[].name string
+- body:optionalClaims.accessToken[].source string
+- body:optionalClaims.idToken array<object>
+- body:optionalClaims.idToken[].additionalProperties object
+- body:optionalClaims.idToken[].essential boolean
+- body:optionalClaims.idToken[].name string
+- body:optionalClaims.idToken[].source string
+- body:optionalClaims.samlToken array<object>
+- body:optionalClaims.samlToken[].additionalProperties object
+- body:optionalClaims.samlToken[].essential boolean
+- body:optionalClaims.samlToken[].name string
+- body:optionalClaims.samlToken[].source string
+- body:orgRestrictions array<string>
+- body:passwordCredentials array<object>
+- body:passwordCredentials[].customKeyIdentifier string
+- body:passwordCredentials[].endDate string
+- body:passwordCredentials[].keyId string
+- body:passwordCredentials[].startDate string
+- body:passwordCredentials[].value string
+- body:preAuthorizedApplications array<object>
+- body:preAuthorizedApplications[].appId string
+- body:preAuthorizedApplications[].extensions array<object>
+- body:preAuthorizedApplications[].extensions[].conditions array<string>
+- body:preAuthorizedApplications[].permissions array<object>
+- body:preAuthorizedApplications[].permissions[].accessGrants array<string>
+- body:preAuthorizedApplications[].permissions[].directAccessGrant boolean
+- body:publicClient boolean
+- body:publisherDomain string
+(+9 fields cut)
+
+## S608-0004  POST /{tenantID}/applications/{applicationObjectId}/$links/owners
+desc: Add an owner to an application.
+schema: AddOwnerParameters
+- path:applicationObjectId string
+- path:tenantID string
+- query:api-version string
+- body:url string
+
+## S608-0005  DELETE /{tenantID}/applications/{applicationObjectId}/$links/owners/{ownerObjectId}
+desc: Remove a member from owners.
+- path:applicationObjectId string
+- path:ownerObjectId string
+- path:tenantID string
+- query:api-version string
+
+## S608-0006  PATCH /{tenantID}/applications/{applicationObjectId}/keyCredentials
+desc: Update the keyCredentials associated with an application.
+schema: KeyCredentialsUpdateParameters
+- path:applicationObjectId string
+- path:tenantID string
+- query:api-version string
+- body:value array<object>
+- body:value[].customKeyIdentifier string
+- body:value[].endDate string
+- body:value[].keyId string
+- body:value[].startDate string
+- body:value[].type string
+- body:value[].usage string
+- body:value[].value string
+
+## S608-0007  PATCH /{tenantID}/applications/{applicationObjectId}/passwordCredentials
+desc: Update passwordCredentials associated with an application.
+schema: PasswordCredentialsUpdateParameters
+- path:applicationObjectId string
+- path:tenantID string
+- query:api-version string
+- body:value array<object>
+- body:value[].customKeyIdentifier string
+- body:value[].endDate string
+- body:value[].keyId string
+- body:value[].startDate string
+- body:value[].value string
+
+## S608-0008  DELETE /{tenantID}/deletedApplications/{applicationObjectId}
+desc: Hard-delete an application.
+- path:applicationObjectId string
+- path:tenantID string
+- query:api-version string
+
+## S608-0009  POST /{tenantID}/deletedApplications/{objectId}/restore
+desc: Restores the deleted application in the directory.
+- path:objectId string
+- path:tenantID string
+- query:api-version string
+
+## S608-0010  POST /{tenantID}/getObjectsByObjectIds
+desc: Gets the directory objects specified in a list of object IDs. You can also specify which resource collections (users, groups, etc.) should be searched by specifying the optional types parameter.
+schema: GetObjectsParameters
+- path:tenantID string
+- query:api-version string
+- body:includeDirectoryObjectReferences boolean
+- body:objectIds array<string>
+- body:types array<string>
+
+## S608-0011  POST /{tenantID}/groups
+desc: Create a group in the directory.
+schema: GroupCreateParameters
+- path:tenantID string
+- query:api-version string
+- body:displayName string
+- body:mailEnabled boolean enum[False]
+- body:mailNickname string
+- body:securityEnabled boolean enum[True]
+
+## S608-0012  POST /{tenantID}/groups/{groupObjectId}/$links/members
+desc: Add a member to a group.
+schema: GroupAddMemberParameters
+- path:groupObjectId string
+- path:tenantID string
+- query:api-version string
+- body:url string
+
+## S608-0013  DELETE /{tenantID}/groups/{groupObjectId}/$links/members/{memberObjectId}
+desc: Remove a member from a group.
+- path:groupObjectId string
+- path:memberObjectId string
+- path:tenantID string
+- query:api-version string
+
+## S608-0014  DELETE /{tenantID}/groups/{objectId}
+desc: Delete a group from the directory.
+- path:objectId string
+- path:tenantID string
+- query:api-version string
+
+## S608-0015  POST /{tenantID}/groups/{objectId}/$links/owners
+desc: Add an owner to a group.
+schema: AddOwnerParameters
+- path:objectId string
+- path:tenantID string
+- query:api-version string
+- body:url string
+
+## S608-0016  DELETE /{tenantID}/groups/{objectId}/$links/owners/{ownerObjectId}
+desc: Remove a member from owners.
+- path:objectId string
+- path:ownerObjectId string
+- path:tenantID string
+- query:api-version string
+
+## S608-0017  POST /{tenantID}/groups/{objectId}/getMemberGroups
+desc: Gets a collection of object IDs of groups of which the specified group is a member.
+schema: GroupGetMemberGroupsParameters
+- path:objectId string
+- path:tenantID string
+- query:api-version string
+- body:securityEnabledOnly boolean
+
+## S608-0018  POST /{tenantID}/isMemberOf
+desc: Checks whether the specified user, group, contact, or service principal is a direct or transitive member of the specified group.
+schema: CheckGroupMembershipParameters
+- path:tenantID string
+- query:api-version string
+- body:groupId string
+- body:memberId string
+
+## S608-0019  POST /{tenantID}/oauth2PermissionGrants
+desc: Grants OAuth2 permissions for the relevant resource Ids of an app.
+schema: OAuth2PermissionGrant
+- path:tenantID string
+- query:api-version string
+- body:clientId string
+- body:consentType string enum[AllPrincipals|Principal]
+- body:expiryTime string
+- body:objectId string
+- body:odata.type string
+- body:principalId string
+- body:resourceId string
+- body:scope string
+- body:startTime string
+
+## S608-0020  DELETE /{tenantID}/oauth2PermissionGrants/{objectId}
+desc: Delete a OAuth2 permission grant for the relevant resource Ids of an app.
+- path:objectId string
+- path:tenantID string
+- query:api-version string
+
+## S608-0021  POST /{tenantID}/servicePrincipals
+desc: Creates a service principal in the directory.
+schema: ServicePrincipalCreateParameters
+- path:tenantID string
+- query:api-version string
+- body:appId string
+- body:accountEnabled boolean
+- body:appRoleAssignmentRequired boolean
+- body:keyCredentials array<object>
+- body:keyCredentials[].customKeyIdentifier string
+- body:keyCredentials[].endDate string
+- body:keyCredentials[].keyId string
+- body:keyCredentials[].startDate string
+- body:keyCredentials[].type string
+- body:keyCredentials[].usage string
+- body:keyCredentials[].value string
+- body:passwordCredentials array<object>
+- body:passwordCredentials[].customKeyIdentifier string
+- body:passwordCredentials[].endDate string
+- body:passwordCredentials[].keyId string
+- body:passwordCredentials[].startDate string
+- body:passwordCredentials[].value string
+- body:servicePrincipalType string
+- body:tags array<string>
+
+## S608-0022  DELETE /{tenantID}/servicePrincipals/{objectId}
+desc: Deletes a service principal from the directory.
+- path:objectId string
+- path:tenantID string
+- query:api-version string
+
+## S608-0023  PATCH /{tenantID}/servicePrincipals/{objectId}
+desc: Updates a service principal in the directory.
+schema: ServicePrincipalUpdateParameters
+- path:objectId string
+- path:tenantID string
+- query:api-version string
+- body:accountEnabled boolean
+- body:appRoleAssignmentRequired boolean
+- body:keyCredentials array<object>
+- body:keyCredentials[].customKeyIdentifier string
+- body:keyCredentials[].endDate string
+- body:keyCredentials[].keyId string
+- body:keyCredentials[].startDate string
+- body:keyCredentials[].type string
+- body:keyCredentials[].usage string
+- body:keyCredentials[].value string
+- body:passwordCredentials array<object>
+- body:passwordCredentials[].customKeyIdentifier string
+- body:passwordCredentials[].endDate string
+- body:passwordCredentials[].keyId string
+- body:passwordCredentials[].startDate string
+- body:passwordCredentials[].value string
+- body:servicePrincipalType string
+- body:tags array<string>
+
+## S608-0024  POST /{tenantID}/servicePrincipals/{objectId}/$links/owners
+desc: Add an owner to a service principal.
+schema: AddOwnerParameters
+- path:objectId string
+- path:tenantID string
+- query:api-version string
+- body:url string
+
+## S608-0025  DELETE /{tenantID}/servicePrincipals/{objectId}/$links/owners/{ownerObjectId}
+desc: Remove a member from owners.
+- path:objectId string
+- path:ownerObjectId string
+- path:tenantID string
+- query:api-version string
+
+## S608-0026  PATCH /{tenantID}/servicePrincipals/{objectId}/keyCredentials
+desc: Update the keyCredentials associated with a service principal.
+schema: KeyCredentialsUpdateParameters
+- path:objectId string
+- path:tenantID string
+- query:api-version string
+- body:value array<object>
+- body:value[].customKeyIdentifier string
+- body:value[].endDate string
+- body:value[].keyId string
+- body:value[].startDate string
+- body:value[].type string
+- body:value[].usage string
+- body:value[].value string
+
+## S608-0027  PATCH /{tenantID}/servicePrincipals/{objectId}/passwordCredentials
+desc: Updates the passwordCredentials associated with a service principal.
+schema: PasswordCredentialsUpdateParameters
+- path:objectId string
+- path:tenantID string
+- query:api-version string
+- body:value array<object>
+- body:value[].customKeyIdentifier string
+- body:value[].endDate string
+- body:value[].keyId string
+- body:value[].startDate string
+- body:value[].value string
+
+## S608-0028  POST /{tenantID}/users
+desc: Create a new user.
+schema: UserCreateParameters
+- path:tenantID string
+- query:api-version string
+- body:accountEnabled boolean
+- body:displayName string
+- body:mail string
+- body:mailNickname string
+- body:passwordProfile object
+- body:passwordProfile.forceChangePasswordNextLogin boolean
+- body:passwordProfile.password string
+- body:userPrincipalName string
+- body:givenName string
+- body:immutableId string
+- body:surname string
+- body:usageLocation string
+- body:userType string enum[Member|Guest]
+
+## S608-0029  POST /{tenantID}/users/{objectId}/getMemberGroups
+desc: Gets a collection that contains the object IDs of the groups of which the user is a member.
+schema: UserGetMemberGroupsParameters
+- path:objectId string
+- path:tenantID string
+- query:api-version string
+- body:securityEnabledOnly boolean
+
+## S608-0030  DELETE /{tenantID}/users/{upnOrObjectId}
+desc: Delete a user.
+- path:upnOrObjectId string
+- path:tenantID string
+- query:api-version string
+
+## S608-0031  PATCH /{tenantID}/users/{upnOrObjectId}
+desc: Updates a user.
+schema: UserUpdateParameters
+- path:upnOrObjectId string
+- path:tenantID string
+- query:api-version string
+- body:accountEnabled boolean
+- body:displayName string
+- body:mail string
+- body:mailNickname string
+- body:passwordProfile object
+- body:passwordProfile.forceChangePasswordNextLogin boolean
+- body:passwordProfile.password string
+- body:userPrincipalName string
+- body:givenName string
+- body:immutableId string
+- body:surname string
+- body:usageLocation string
+- body:userType string enum[Member|Guest]
+
+## S612-0001  POST /client
+desc: Create a Client Selfie | To create a selfie token from the client data, you need an opaqe string token, which contains the encoded client properties sent in the request. Later, the selfie token can be used as a client ID. In this case, the client data is included in the selfie token, that is, the client properties are taken from the token. By the use of a selfie token, you can use your own client 
+- body:@id string
+- body:client_id string
+- body:client_name string
+- body:client_secret string
+- body:client_uri string
+- body:contacts array<any>
+- body:grant_types array<any>
+- body:jwks array<any>
+- body:jwks_uri string
+- body:logo_email string
+- body:logo_uri string
+- body:policy_uri string
+- body:redirect_uris array<any>
+- body:response_types array<any>
+- body:scope string
+- body:software_id string
+- body:software_version string
+- body:token_endpoint_auth_method string
+- body:tos_uri string
+
+## S612-0002  POST /user
+desc: Create a User Selfie | To create a selfie token from the user data, you need an opaqe string token, which contains the encoded user properties sent in the request. Later, the selfie token can be used as a login name. In this case, the user data is included in the selfie token, that is, the user properties are taken from the token. By the use of a selfie token, you can use your own user objects dur
+- body:@id string
+- body:address object
+- body:address.country string
+- body:address.formatted string
+- body:address.locality string
+- body:address.postal_code string
+- body:address.region string
+- body:address.street_address string
+- body:birthdate string
+- body:email string
+- body:email_verified boolean
+- body:family_name string
+- body:gender string
+- body:given_name string
+- body:locale string
+- body:me string
+- body:middle_name string
+- body:name string
+- body:nickname string
+- body:password string
+- body:phone_number string
+- body:phone_number_verified boolean
+- body:picture string
+- body:preferred_username string
+- body:profile string
+- body:sub string
+- body:uid string
+- body:updated_at number
+- body:webmail string
+- body:website string
+- body:zoneinfo string
+
+## S613-0001  POST /oauth2/token
+desc: Get token for accessing APIs
+schema: TokenRequest
+- body:client_id string
+- body:client_secret string
+- body:grant_type string
+
+## S613-0002  POST /v1/accounts/{accountId}/campaigns
+desc: Create campaign
+schema: CampaignRequest
+- path:accountId string
+- body:filters object
+- body:filters.attributes array<string>
+- body:filters.contacts array<string>
+- body:filters.tags array<string>
+- body:template string
+- body:trigger object
+- body:trigger.code string enum[M|S|FU]
+
+## S613-0003  DELETE /v1/accounts/{accountId}/campaigns/{campaignId}
+desc: Deletes a campaign
+- path:accountId string
+- path:campaignId string
+
+## S613-0004  PUT /v1/accounts/{accountId}/campaigns/{campaignId}
+desc: Updates a campaign
+- path:accountId string
+- path:campaignId string
+
+## S613-0005  POST /v1/accounts/{accountId}/contacts
+desc: Create contact
+schema: ContactRequest
+- path:accountId string
+- query:mergeStrategy string enum[append|core|remove]
+- body:email string
+- body:firstName string
+- body:id string
+- body:lastName string
+- body:mobile object
+- body:mobile.country string
+- body:mobile.number string
+- body:attributes object
+- body:tags array<object>
+- body:tags[].tag string
+- body:tags[].visible boolean
+
+## S613-0006  DELETE /v1/accounts/{accountId}/contacts/{contactId}
+desc: Deletes a contact
+- path:accountId string
+- path:contactId string
+
+## S613-0007  PUT /v1/accounts/{accountId}/contacts/{contactId}
+desc: Updates a contact
+- path:accountId string
+- path:contactId string
+
+## S613-0008  PUT /v1/accounts/{accountId}/conversations/{conversationId}/close
+desc: Closes a conversation
+- path:accountId string
+- path:conversationId string
+
+## S613-0009  POST /v1/accounts/{accountId}/messages
+desc: Send Messages
+schema: SendMessagesRequest
+- path:accountId string
+- body:contacts array<object>
+- body:contacts[].email string
+- body:contacts[].firstName string
+- body:contacts[].id string
+- body:contacts[].lastName string
+- body:contacts[].mobile object
+- body:contacts[].mobile.country string
+- body:contacts[].mobile.number string
+- body:contacts[].attributes object
+- body:contacts[].tags array<object>
+- body:contacts[].tags[].tag string
+- body:contacts[].tags[].visible boolean
+- body:conversationStrategy string
+- body:conversations array<string>
+- body:filters object
+- body:filters.attributes array<object>
+- body:filters.tags array<string>
+- body:media array<object>
+- body:media[].url string
+- body:phoneNumberFilter object
+- body:phoneNumberFilter.group object
+- body:phoneNumberFilter.group.id string
+- body:template string
+- body:type string enum[SMS|MMS]
+
+## S613-0010  POST /v1/accounts/{accountId}/templates
+desc: Create template
+schema: TemplateRequest
+- path:accountId string
+- body:name string
+- body:template string
+- body:type string enum[SMS|Web]
+
+## S613-0011  DELETE /v1/accounts/{accountId}/templates/{templateId}
+desc: Deletes a template
+- path:accountId string
+- path:templateId string
+
+## S613-0012  PUT /v1/accounts/{accountId}/templates/{templateId}
+desc: Updates a template
+- path:accountId string
+- path:templateId string
+
+## S613-0013  POST /v1/accounts/{accountId}/webhooks
+desc: Subscribe to message events | When messages are acknowledge by carriers, a notification is sent to the specified URL
+- path:accountId string
+- body:eventTypes array<string> enum[contact-created|contact-updated|contact-removed|message-received|message-sent|message-status|conversation-started|contact-opt-out|contact-opt-in|list-opt-out|list-opt-in]
+- body:url string
+
+## S613-0014  DELETE /v1/accounts/{accountId}/webhooks/{url}
+desc: Unsubscribe to message events | Delete subscription for receiving notifications
+- path:accountId string
+- path:url string
+
+## S613-0015  POST /v1/tools/sharefile
+desc: Share file - use to host a file and generate a short link to be used directly in a message or as a link to media for a MMS
+- body:(body) string
+
+## S615-0001  POST /conversations/community/{convId}/join
+desc: Adds the authenticated user to a community | Adds the authenticated user to the given community (i.e., allows the user to join this community). Contrary to the operation of adding a new participant, this operation can only be performed by a user who is not yet a member of the community. OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS
+- path:convId string
+
+## S615-0002  POST /conversations/community/{convId}/participants
+desc: Adds participants to a community | Adds one or more participants to the given community. This operation can only be performed by a user who is already a member of the community. OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS
+- path:convId string
+- body:participants array<string>
+
+## S615-0003  POST /conversations/direct
+desc: Creates a 1-to-1 conversation | Creates a 1-to-1 conversation between the authenticated user and the user with the provided userId. In case there is already an existing 1-to-1 conversation between these users, the endpoint returns the existing conversation. OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS
+- body:participant string
+
+## S615-0004  POST /conversations/group
+desc: Creates a group conversation | Creates a group conversation between three or more users. The authenticated user is directly added to this conversation. OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS
+- body:participants array<string>
+- body:topic string
+
+## S615-0005  PUT /conversations/group/{convId}
+desc: Updates the information of a group conversation | Updates the information of the given group conversation. OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS
+- path:convId string
+- body:topic string
+
+## S615-0006  DELETE /conversations/group/{convId}/participants
+desc: Removes participants from a group conversation | Removes one or more participants from the given group conversation. The last participant of a group conversation cannot be removed. This operation can only be performed on behalf of a user who is already a member of the conversation. OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS
+- path:convId string
+- query:participants array<string>
+
+## S615-0007  DELETE /conversations/{convId}/favorite
+desc: Removes a conversation from favorites | Removes a conversation from favorites. Favorites can be displayed in a separate side tab inside of the Circuit client to have a better overview of important conversations. OauthScopes: WRITE_CONVERSATIONS
+- path:convId string
+
+## S615-0008  POST /conversations/{convId}/favorite
+desc: Adds a conversation to the favorites | Adds a conversation to the favorites. Favorites can be displayed in a separate side tab inside of the Circuit client to have a better overview of important conversations. OauthScopes: WRITE_CONVERSATIONS
+- path:convId string
+
+## S615-0009  POST /conversations/{convId}/label
+desc: Adds a label to a conversation | Adds a label to a conversation, you can search and organize your conversations based on these labels OauthScopes: WRITE_CONVERSATIONS, ORGANIZE_CONVERSATIONS
+- path:convId string
+- body:label string
+
+## S615-0010  POST /conversations/{convId}/messages
+desc: Adds a message to a conversation | Adds a message to the given conversation. This operation can be only performed on behalf of a user who is already a member of the conversation. OauthScopes: WRITE_CONVERSATIONS, CREATE_CONVERSATIONS_CONTENT
+- path:convId string
+- body:attachments array<string>
+- body:content string
+- body:formMetaData string
+- body:subject string
+
+## S615-0011  DELETE /conversations/{convId}/messages/{itemId}
+desc: Deletes a message from a conversation | Marks a message in the given conversation as deleted. Deleted messages are still part of the conversation, but their content is no more visible. This operation can only be performed on behalf of the message's creator. OauthScopes: WRITE_CONVERSATIONS, DELETE_CONVERSATIONS_CONTENT
+- path:convId string
+- path:itemId string
+
+## S615-0012  POST /conversations/{convId}/messages/{itemId}
+desc: Adds a message to an item | Adds a message to the existing item. The added message will be a child item of the message with the given itemId. OauthScopes: WRITE_CONVERSATIONS
+- path:convId string
+- path:itemId string
+- body:attachments array<string>
+- body:content string
+- body:formMetaData string
+- body:subject string
+
+## S615-0013  PUT /conversations/{convId}/messages/{itemId}
+desc: Updates a message | Updates the content or subject of the existing message. Only the creator of the message is allowed to perform this operation. OauthScopes: WRITE_CONVERSATIONS, UPDATE_CONVERSATION_CONTENT
+- path:convId string
+- path:itemId string
+- body:attachments array<string>
+- body:content string
+- body:formMetaData string
+- body:subject string
+
+## S615-0014  DELETE /conversations/{convId}/messages/{itemId}/flag
+desc: Removes the flag from a message | Removes the flag from a given message that is posted to the given conversation. OauthScopes: WRITE_CONVERSATIONS, ORGANIZE_CONVERSATIONS
+- path:convId string
+- path:itemId string
+
+## S615-0015  POST /conversations/{convId}/messages/{itemId}/flag
+desc: Adds a flag to a message in a conversation | Adds a flag to the given message in the given conversation. OauthScopes: WRITE_CONVERSATIONS, ORGANIZE_CONVERSATIONS
+- path:convId string
+- path:itemId string
+- body:itemCreationTime string
+- body:parentId string
+
+## S615-0016  POST /conversations/{convId}/messages/{itemId}/like
+desc: Adds a "like" to a message | Adds a "like" to the given message in the given conversation OauthScopes: WRITE_CONVERSATIONS, UPDATE_CONVERSATION_CONTENT
+- path:convId string
+- path:itemId string
+
+## S615-0017  DELETE /conversations/{convId}/moderators
+desc: Remove moderators | Removes a list of moderators from a conversation OauthScopes: WRITE_CONVERSATIONS, MODERATE_CONVERSATIONS
+- path:convId string
+- body:moderators array<string>
+
+## S615-0018  POST /conversations/{convId}/moderators
+desc: Add moderators | Adds a list of moderators to a conversation OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS
+- path:convId string
+- body:moderators array<string>
+
+## S615-0019  DELETE /conversations/{convId}/pins/{itemId}
+desc: Unpins a topic of a conversation | Unpins a topic of a conversation OauthScopes: READ_CONVERSATIONS
+- path:convId string
+- path:itemId string
+
+## S615-0020  POST /conversations/{convId}/pins/{itemId}
+desc: Pins a topic of a conversation | Pins a topic of a conversation OauthScopes: READ_CONVERSATIONS
+- path:convId string
+- path:itemId string
+
+## S615-0021  PUT /spaces/search/add/recent
+desc: Add recent search | Add recent search of a client to search controller. OauthScopes: WRITE_SPACE, MANAGE_SPACE, ORGANIZE_SPACE
+- body:endTime string
+- body:scope string enum[ALL|SPACES|TOPICBY|FILES|TAGS|LABELS|DATE]
+- body:searchTerm string
+- body:startTime string
+
+## S615-0022  PUT /spaces/search/cancel/{searchId}
+desc: Cancels a space search of a client. | Cancels a space search of a client. OauthScopes: WRITE_SPACE, MANAGE_SPACE
+- path:searchId string

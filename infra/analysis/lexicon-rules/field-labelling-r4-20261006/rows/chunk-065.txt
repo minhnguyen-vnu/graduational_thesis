@@ -1,0 +1,791 @@
+## S624-N0016  DELETE /v4/nodes/deleted_nodes
+desc: Remove nodes from recycle bin | ### Description: Permanently remove a list of nodes from the recycle bin. ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; delete recycle bin</span> permissions in parent room. ### Postcondition: All provided nodes are removed. ### Further Information: The removal
+schema: DeleteDeletedNodesRequest
+- body:deletedNodeIds array<integer>
+
+## S624-N0018  PUT /v4/nodes/favorites
+desc: Mark or unmark a list of nodes (room, folder or file) as favorite | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.25.0</h3> ### Description: Marks or unmarks a list of nodes (room, folder or file) as favorite. ### Precondition: Authenticated user is allowed to <span style='padding: 3px; background-color: #F6
+schema: UpdateFavoritesBulkRequest
+- body:isFavorite boolean
+- body:objectIds array<integer>
+
+## S624-N0019  PUT /v4/nodes/files
+desc: Updates a list of file’s metadata | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.25.0</h3> ### Description: Updates a list of file’s metadata. ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change</span
+schema: UpdateFilesBulkRequest
+- body:classification integer
+- body:expiration object
+- body:expiration.enableExpiration boolean
+- body:expiration.expireAt string
+- body:objectIds array<integer>
+
+## S624-N0020  POST /v4/nodes/files/keys
+desc: Set file keys for a list of users and files | ### Description: Sets symmetric file keys for several users and files. ### Precondition: User has file keys for the files. Only settable by users that own one of the following permissions: <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; manage</span>, <span style='padding: 3p
+schema: UserFileKeySetBatchRequest
+- body:items array<object>
+- body:items[].fileId integer
+- body:items[].fileKey object
+- body:items[].fileKey.iv string
+- body:items[].fileKey.key string
+- body:items[].fileKey.tag string
+- body:items[].fileKey.version string
+- body:items[].userId integer
+
+## S624-N0021  POST /v4/nodes/files/uploads
+desc: Create new file upload channel | ### Description: This endpoint creates a new upload channel which is the first step in any file upload workflow. ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; create</span> permissions in the parent container (room or folder). ### Postcondition: A new upload c
+schema: CreateFileUploadRequest
+- body:classification integer enum[1|2|3|4]
+- body:directS3Upload boolean
+- body:expiration object
+- body:expiration.enableExpiration boolean
+- body:expiration.expireAt string
+- body:name string
+- body:notes string
+- body:parentId integer
+- body:size integer
+- body:timestampCreation string
+- body:timestampModification string
+
+## S624-N0023  POST /v4/nodes/files/uploads/{upload_id}
+desc: Upload file | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128679; Deprecated since v4.9.0</h3> ### Use `uploads` API ### Description: Uploads a file or parts of it in an active upload channel. ### Precondition: An upload channel has been created. ### Postcondition: A file or parts of it are uploaded to a temporary location
+- path:upload_id string
+- body:file string
+
+## S624-N0024  PUT /v4/nodes/files/uploads/{upload_id}
+desc: Complete file upload | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128679; Deprecated since v4.9.0</h3> ### Use `uploads` API ### Description: Finishes an upload and closes the corresponding upload channel. ### Precondition: An upload channel has been created and data has been transmitted. ### Postcondition: The upload is 
+schema: CompleteUploadRequest
+- path:upload_id string
+- body:fileKey object
+- body:fileKey.iv string
+- body:fileKey.key string
+- body:fileKey.tag string
+- body:fileKey.version string
+- body:fileName string
+- body:keepShareLinks boolean
+- body:resolutionStrategy string enum[autorename|overwrite|fail]
+- body:userFileKeyList object
+- body:userFileKeyList.items array<object>
+- body:userFileKeyList.items[].fileKey object
+- body:userFileKeyList.items[].userId integer
+
+## S624-N0025  PUT /v4/nodes/files/uploads/{upload_id}/s3
+desc: Complete S3 file upload | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.15.0</h3> ### Description: Finishes a S3 file upload and closes the corresponding upload channel. ### Precondition: An upload channel has been created, data has been transmitted and user has to be the creator of the upload channel ### Po
+schema: CompleteS3FileUploadRequest
+- path:upload_id string
+- body:fileKey object
+- body:fileKey.iv string
+- body:fileKey.key string
+- body:fileKey.tag string
+- body:fileKey.version string
+- body:fileName string
+- body:keepShareLinks boolean
+- body:parts array<object>
+- body:parts[].partEtag string
+- body:parts[].partNumber integer
+- body:resolutionStrategy string enum[autorename|overwrite|fail]
+
+## S624-N0026  POST /v4/nodes/files/uploads/{upload_id}/s3_urls
+desc: Generate presigned URLs for S3 file upload | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.15.0</h3> ### Description: Generate presigned URLs for S3 file upload. ### Precondition: An upload channel has been created and user has to be the creator of the upload channel. ### Postcondition: List of presigned URL
+schema: GeneratePresignedUrlsRequest
+- path:upload_id string
+- body:firstPartNumber integer
+- body:lastPartNumber integer
+- body:size integer
+
+## S624-N0027  PUT /v4/nodes/files/{file_id}
+desc: Updates a file’s metadata | ### Description: Updates a list of file’s metadata. ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change</span> permissions in parent room. ### Postcondition: File's metadata is changed.
+schema: UpdateFileRequest
+- path:file_id integer
+- body:classification integer
+- body:expiration object
+- body:expiration.enableExpiration boolean
+- body:expiration.expireAt string
+- body:name string
+- body:notes string
+- body:timestampCreation string
+- body:timestampModification string
+
+## S624-N0028  POST /v4/nodes/files/{file_id}/downloads
+desc: Generate download URL | ### Description: Create a download URL to retrieve a file without `X-Sds-Auth-Token` Header. ### Precondition: User with <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; read</span> permissions in parent room. ### Postcondition: Download token is generated and returned. ### Further Information: The
+- path:file_id integer
+
+## S624-N0029  POST /v4/nodes/folders
+desc: Create new folder | ### Description: Create a new folder. ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; create</span> permissions in current room. ### Postcondition: New folder is created. ### Further Information: Folders **CANNOT** be created on top level (without parent element). Notes are 
+schema: CreateFolderRequest
+- body:classification integer enum[1|2|3|4]
+- body:name string
+- body:notes string
+- body:parentId integer
+- body:timestampCreation string
+- body:timestampModification string
+
+## S624-N0030  PUT /v4/nodes/folders/{folder_id}
+desc: Updates folder’s metadata | ### Description: Updates folder’s metadata. ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change</span> permissions in parent room. ### Postcondition: Folder's metadata is changed. ### Further Information: Notes are limited to **255** characters. ### Node naming co
+schema: UpdateFolderRequest
+- path:folder_id integer
+- body:classification integer enum[1|2|3|4]
+- body:name string
+- body:notes string
+- body:timestampCreation string
+- body:timestampModification string
+
+## S624-N0031  POST /v4/nodes/rooms
+desc: Create new room | ### Description: Creates a new room at the provided parent node. Creation of top level rooms provided. ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; manage</span> permissions in the parent room. ### Postcondition: A new room is created. ### Further Information: Rooms may onl
+schema: CreateRoomRequest
+- body:adminGroupIds array<integer>
+- body:adminIds array<integer>
+- body:classification integer enum[1|2|3|4]
+- body:hasActivitiesLog boolean
+- body:hasRecycleBin boolean
+- body:inheritPermissions boolean
+- body:name string
+- body:newGroupMemberAcceptance string enum[autoallow|pending]
+- body:notes string
+- body:parentId integer
+- body:quota integer
+- body:recycleBinRetentionPeriod integer
+- body:timestampCreation string
+- body:timestampModification string
+
+## S624-N0032  PUT /v4/nodes/rooms/pending
+desc: Handle user-room assignments per group | ### Description: Handles a list of user-room assignments by groups that have **NOT** been approved yet **WAITING** or **DENIED** assignments can be **ACCEPTED**. ### Precondition: None. ### Postcondition: User-room assignment is approved and the user gets access to the group. ### Further Information: Room administrators should **SHOULD** handle pending assi
+schema: PendingAssignmentsRequest
+- body:items array<object>
+- body:items[].groupId integer
+- body:items[].roomId integer
+- body:items[].roomName string
+- body:items[].state string enum[ACCEPTED|DENIED|WAITING]
+- body:items[].userId integer
+
+## S624-N0033  PUT /v4/nodes/rooms/{room_id}
+desc: Updates room’s metadata | ### Description: Updates room’s metadata. ### Precondition: User is a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Room Administrator</span> at superordinated level. ### Postcondition: Room's metadata is changed. ### Further Information: Notes are limited to **255** characters. ### Node namin
+schema: UpdateRoomRequest
+- path:room_id integer
+- body:name string
+- body:notes string
+- body:quota integer
+- body:timestampCreation string
+- body:timestampModification string
+
+## S624-N0034  PUT /v4/nodes/rooms/{room_id}/config
+desc: Configure room | ### Description: Configure a room. ### Precondition: User needs to be a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Room Administrator</span>. ### Postcondition: Room's configuration is changed. ### Further Information: Provided (or default) classification is taken from room when file gets uploaded w
+schema: ConfigRoomRequest
+- path:room_id integer
+- body:adminGroupIds array<integer>
+- body:adminIds array<integer>
+- body:classification integer enum[1|2|3|4]
+- body:hasActivitiesLog boolean
+- body:inheritPermissions boolean
+- body:newGroupMemberAcceptance string enum[autoallow|pending]
+- body:recycleBinRetentionPeriod integer
+- body:takeOverPermissions boolean
+
+## S624-N0035  PUT /v4/nodes/rooms/{room_id}/encrypt
+desc: Encrypt room | ### Description: Activates the client-side encryption for a room. ### Precondition: User needs to be a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Room Administrator</span>. ### Postcondition: Encryption of room is activated. ### Further Information: Only empty rooms at the top level may be encrypted. 
+schema: EncryptRoomRequest
+- path:room_id integer
+- body:dataRoomRescueKey object
+- body:dataRoomRescueKey.privateKeyContainer object
+- body:dataRoomRescueKey.privateKeyContainer.createdAt string
+- body:dataRoomRescueKey.privateKeyContainer.createdBy integer
+- body:dataRoomRescueKey.privateKeyContainer.privateKey string
+- body:dataRoomRescueKey.privateKeyContainer.version string
+- body:dataRoomRescueKey.publicKeyContainer object
+- body:dataRoomRescueKey.publicKeyContainer.createdAt string
+- body:dataRoomRescueKey.publicKeyContainer.createdBy integer
+- body:dataRoomRescueKey.publicKeyContainer.publicKey string
+- body:dataRoomRescueKey.publicKeyContainer.version string
+- body:isEncrypted boolean
+- body:useDataSpaceRescueKey boolean
+
+## S624-N0036  DELETE /v4/nodes/rooms/{room_id}/groups
+desc: Revoke granted group(s) from room | ### Description: Revoke granted groups from room. ### Precondition: User needs to be a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Room Administrator</span>. ### Postcondition: Group's permissions are revoked. ### Further Information: Batch function.
+schema: RoomGroupsDeleteBatchRequest
+- path:room_id integer
+- body:ids array<integer>
+
+## S624-N0037  PUT /v4/nodes/rooms/{room_id}/groups
+desc: Add or change room granted group(s) | ### Description: All existing group permissions will be overwritten. ### Precondition: User needs to be a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Room Administrator</span>. To add new members, the user needs the right <span style='padding: 3px; background-color: #F6F7F8; bord
+schema: RoomGroupsAddBatchRequest
+- path:room_id integer
+- body:items array<object>
+- body:items[].id integer
+- body:items[].newGroupMemberAcceptance string enum[autoallow|pending]
+- body:items[].permissions object
+- body:items[].permissions.change boolean
+- body:items[].permissions.create boolean
+- body:items[].permissions.delete boolean
+- body:items[].permissions.deleteRecycleBin boolean
+- body:items[].permissions.manage boolean
+- body:items[].permissions.manageDownloadShare boolean
+- body:items[].permissions.manageUploadShare boolean
+- body:items[].permissions.read boolean
+- body:items[].permissions.readRecycleBin boolean
+- body:items[].permissions.restoreRecycleBin boolean
+
+## S624-N0039  DELETE /v4/nodes/rooms/{room_id}/keypair
+desc: Remove rooms's rescue key pair | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.24.0</h3> ### Description: Delete room rescue key pair. ### Precondition: Authenticated user. ### Postcondition: Key pair is removed (cf. further information below). ### Further Information: Please set a new room rescue key pair f
+- path:room_id integer
+- query:version string
+
+## S624-N0040  POST /v4/nodes/rooms/{room_id}/keypair
+desc: Set room's rescue key pair | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.24.0</h3> ### Description: Set room rescue key pair. ### Precondition: User needs to be a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Room Administrator
+schema: UserKeyPairContainer
+- path:room_id integer
+- body:privateKeyContainer object
+- body:privateKeyContainer.createdAt string
+- body:privateKeyContainer.createdBy integer
+- body:privateKeyContainer.privateKey string
+- body:privateKeyContainer.version string
+- body:publicKeyContainer object
+- body:publicKeyContainer.createdAt string
+- body:publicKeyContainer.createdBy integer
+- body:publicKeyContainer.publicKey string
+- body:publicKeyContainer.version string
+
+## S624-N0041  POST /v4/nodes/rooms/{room_id}/keypairs
+desc: Create key pair and preserve copy of old private key | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.24.0</h3> ### Description: Create room rescue key pair and preserve copy of old private key. ### Precondition: User needs to be a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; 
+schema: CreateKeyPairRequest
+- path:room_id integer
+- body:previousPrivateKey object
+- body:previousPrivateKey.createdAt string
+- body:previousPrivateKey.createdBy integer
+- body:previousPrivateKey.privateKey string
+- body:previousPrivateKey.version string
+- body:privateKeyContainer object
+- body:privateKeyContainer.createdAt string
+- body:privateKeyContainer.createdBy integer
+- body:privateKeyContainer.privateKey string
+- body:privateKeyContainer.version string
+- body:publicKeyContainer object
+- body:publicKeyContainer.createdAt string
+- body:publicKeyContainer.createdBy integer
+- body:publicKeyContainer.publicKey string
+- body:publicKeyContainer.version string
+
+## S624-N0042  PUT /v4/nodes/rooms/{room_id}/policies
+desc: Set room policies | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.32.0</h3> ### Description: Retrieve the room policies: * `defaultExpirationPeriod` ### Precondition: User needs to be a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#12810
+schema: RoomPoliciesRequest
+- path:room_id integer
+- body:defaultExpirationPeriod integer
+
+## S624-N0043  POST /v4/nodes/rooms/{room_id}/s3_tags
+desc: Set S3 tags for a room | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.9.0</h3> ### Description: Set S3 tags to a room. ### Precondition: User needs to be a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Room Administrator</span>.
+schema: S3TagIds
+- path:room_id integer
+- body:ids array<integer>
+
+## S624-N0044  DELETE /v4/nodes/rooms/{room_id}/users
+desc: Revoke granted user(s) from room | ### Description: Revoke granted users from room. ### Precondition: User needs to be a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Room Administrator</span>. ### Postcondition: User's permissions are revoked. ### Further Information: Batch function.
+schema: RoomUsersDeleteBatchRequest
+- path:room_id integer
+- body:ids array<integer>
+
+## S624-N0046  PUT /v4/nodes/rooms/{room_id}/webhooks
+desc: Assign or unassign webhooks to room | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.19.0</h3> ### Description: Handle room webhook assignments. ### Precondition: User needs to be a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Ro
+schema: UpdateRoomWebhookRequest
+- path:room_id integer
+- body:items array<object>
+- body:items[].isAssigned boolean
+- body:items[].webhookId integer
+
+## S624-N0047  POST /v4/nodes/zip
+desc: Generate download URL for ZIP download | ### Description: Create a download URL to retrieve several files in one ZIP archive. ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; read</span> permissions in parent room. ### Postcondition: Download URL is generated and returned. ### Further Informatio
+schema: ZipDownloadRequest
+- body:nodeIds array<integer>
+
+## S624-N0049  DELETE /v4/nodes/{node_id}
+desc: Remove node | ### Description: Delete node (room, folder or file). ### Precondition: Authenticated user with <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; delete</span> permissions on supplied nodes (for folders or files) or on superordinated node (for rooms). ### Postcondition: Node gets deleted. ### Further Informati
+- path:node_id integer
+
+## S624-N0050  POST /v4/nodes/{node_id}/comments
+desc: Create node comment | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.10.0</h3> ### Description: Create a comment for a specific node. ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; read</span> permissions
+schema: CreateNodeCommentRequest
+- path:node_id integer
+- body:text string
+
+## S624-N0051  POST /v4/nodes/{node_id}/copy_to
+desc: Copy node(s) | ### Description: Copies nodes (folder, file) to another parent. ### Precondition: Authenticated user with <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; read</span> permissions in the source parent and <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; displa
+schema: CopyNodesRequest
+- path:node_id integer
+- body:items array<object>
+- body:items[].id integer
+- body:items[].name string
+- body:items[].timestampCreation string
+- body:items[].timestampModification string
+- body:keepShareLinks boolean
+- body:nodeIds array<integer>
+- body:resolutionStrategy string enum[autorename|overwrite|fail]
+
+## S624-N0052  DELETE /v4/nodes/{node_id}/deleted_nodes
+desc: Empty recycle bin | ### Description: Empty a recycle bin. ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; delete recycle bin</span> permissions in parent room. ### Postcondition: All files in the recycle bin are permanently removed. ### Further Information: Actually removes the previously delet
+- path:node_id integer
+
+## S624-N0054  POST /v4/nodes/{node_id}/favorite
+desc: Mark a node (room, folder or file) as favorite | ### Description: Marks a node (room, folder or file) as favorite. ### Precondition: Authenticated user is allowed to <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128065; see</span> the node (i.e. `isBrowsable = true`). ### Postcondition: A node gets marked as favorite. ### Furt
+- path:node_id integer
+
+## S624-N0055  POST /v4/nodes/{node_id}/move_to
+desc: Move node(s) | ### Description: Moves nodes (folder, file) to another parent. ### Precondition: Authenticated user with <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; read</span> and <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; delete</span
+schema: MoveNodesRequest
+- path:node_id integer
+- body:items array<object>
+- body:items[].id integer
+- body:items[].name string
+- body:items[].timestampCreation string
+- body:items[].timestampModification string
+- body:keepShareLinks boolean
+- body:nodeIds array<integer>
+- body:resolutionStrategy string enum[autorename|overwrite|fail]
+
+## S624-N0056  POST /v4/provisioning/customers
+desc: Create customer | ### Description: Create a new customer. ### Precondition: Authentication with `X-Sds-Service-Token` required. ### Postcondition: A new customer is created. ### Further Information: If no company name is set, first letter of the first name separated by dot followed by last name of the first administrator is used (e.g. `J.Doe`). Max quota has to be at least `1 MB` (= `1.048.576 B`)
+schema: NewCustomerRequest
+- body:activationCode string
+- body:companyName string
+- body:customerAttributes object
+- body:customerAttributes.items array<object>
+- body:customerAttributes.items[].key string
+- body:customerAttributes.items[].value string
+- body:customerContractType string enum[demo|free|pay]
+- body:firstAdminUser object
+- body:firstAdminUser.authData object
+- body:firstAdminUser.authData.adConfigId integer
+- body:firstAdminUser.authData.login string
+- body:firstAdminUser.authData.method string
+- body:firstAdminUser.authData.mustChangePassword boolean
+- body:firstAdminUser.authData.oidConfigId integer
+- body:firstAdminUser.authData.password string
+- body:firstAdminUser.authMethods array<object>
+- body:firstAdminUser.authMethods[].authId string
+- body:firstAdminUser.authMethods[].isEnabled boolean
+- body:firstAdminUser.authMethods[].options array<object>
+- body:firstAdminUser.email string
+- body:firstAdminUser.firstName string
+- body:firstAdminUser.gender string
+- body:firstAdminUser.language string
+- body:firstAdminUser.lastName string
+- body:firstAdminUser.login string
+- body:firstAdminUser.needsToChangePassword boolean
+- body:firstAdminUser.needsToChangeUserName boolean
+- body:firstAdminUser.notifyUser boolean
+- body:firstAdminUser.password string
+- body:firstAdminUser.phone string
+- body:firstAdminUser.receiverLanguage string
+- body:firstAdminUser.title string
+- body:firstAdminUser.userName string
+- body:isLocked boolean
+- body:lockStatus boolean
+- body:providerCustomerId string
+- body:quotaMax integer
+- body:trialDays integer
+- body:userMax integer
+- body:webhooksMax integer
+
+## S624-N0057  DELETE /v4/provisioning/customers/{customer_id}
+desc: Remove customer | ### Description: Delete a customer. ### Precondition: Authentication with `X-Sds-Service-Token` required. ### Postcondition: Customer is deleted. ### Further Information: None.
+- path:customer_id integer
+
+## S624-N0059  POST /v4/provisioning/customers/{customer_id}/customerAttributes
+desc: Set customer attributes | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128679; Deprecated since v4.28.0</h3> ### Description: Set custom customer attributes. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global con
+schema: CustomerAttributes
+- path:customer_id integer
+- body:items array<object>
+- body:items[].key string
+- body:items[].value string
+
+## S624-N0060  PUT /v4/provisioning/customers/{customer_id}/customerAttributes
+desc: Add or edit customer attributes | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.4.0</h3> ### Description: Add or edit custom customer attributes. <br/><br/><span style="font-weight: bold; color: red;"> &#128679; **Warning: Please note that the response with HTTP status code 200 (OK) is deprecated and will be
+schema: CustomerAttributes
+- path:customer_id integer
+- body:items array<object>
+- body:items[].key string
+- body:items[].value string
+
+## S624-N0061  DELETE /v4/provisioning/customers/{customer_id}/customerAttributes/{key}
+desc: Remove customer attribute | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.4.0</h3> ### Description: Delete a custom customer attribute. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</s
+- path:customer_id integer
+- path:key string
+
+## S624-N0064  PUT /v4/provisioning/webhooks/{webhook_id}
+desc: Update tenant webhook | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.19.0</h3> ### Description: Update an existing webhook for the tenant scope. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; manage webhoo
+schema: UpdateWebhookRequest
+- path:webhook_id integer
+- body:eventTypeNames array<string>
+- body:isEnabled boolean
+- body:name string
+- body:secret string
+- body:triggerExampleEvent boolean
+- body:url string
+
+## S624-N0065  POST /v4/provisioning/webhooks/{webhook_id}/reset_lifetime
+desc: Reset tenant webhook lifetime | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.19.0</h3> ### Description: Reset the lifetime of a webhook for the tenant scope. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; 
+- path:webhook_id integer
+
+## S624-N0066  POST /v4/public/shares/downloads/{access_key}
+desc: Generate download URL | ### Description: Generate a download URL to retrieve a shared file. ### Precondition: None. ### Postcondition: Download URL and token are generated and returned. ### Further Information: Use `downloadUrl` the download `token` is deprecated.
+schema: PublicDownloadTokenGenerateRequest
+- path:access_key string
+- body:password string
+
+## S624-N0068  DELETE /v4/public/shares/uploads/{access_key}/{upload_id}
+desc: Cancel file upload | ### Description: Abort (chunked) upload via Upload Share. ### Precondition: Valid Upload ID. ### Postcondition: Aborts upload and invalidates upload ID / token. ### Further Information: None.
+- path:access_key string
+- path:upload_id string
+
+## S624-N0069  POST /v4/public/shares/uploads/{access_key}/{upload_id}
+desc: Upload file | ### Description: Chunked upload of files via Upload Share. ### Precondition: Valid upload ID. ### Postcondition: Chunk of file is uploaded. ### Further Information: Chunked uploads (range requests) are supported. Following `Content-Types` are supported by this API: * `multipart/form-data` * provided `Content-Type` For both file upload types set the correct `Content-Type` header and b
+- path:access_key string
+- path:upload_id string
+- body:file string
+
+## S624-N0070  PUT /v4/public/shares/uploads/{access_key}/{upload_id}
+desc: Complete file upload | ### Description: Finalize (chunked) upload via Upload Share. ### Precondition: Valid upload ID. Only returns users that owns one of the following permissions: <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; manage</span>, <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000;
+schema: UserFileKeyList
+- path:access_key string
+- path:upload_id string
+- body:items array<object>
+- body:items[].fileKey object
+- body:items[].fileKey.iv string
+- body:items[].fileKey.key string
+- body:items[].fileKey.tag string
+- body:items[].fileKey.version string
+- body:items[].userId integer
+
+## S624-N0071  PUT /v4/public/shares/uploads/{access_key}/{upload_id}/s3
+desc: Complete S3 file upload | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.15.0</h3> ### Description: Finishes a S3 file upload and closes the corresponding upload channel. ### Precondition: Valid upload ID. Only returns users that owns one of the following permissions: <span style='padding: 3px; background-col
+schema: CompleteS3ShareUploadRequest
+- path:access_key string
+- path:upload_id string
+- body:parts array<object>
+- body:parts[].partEtag string
+- body:parts[].partNumber integer
+- body:userFileKeyList array<object>
+- body:userFileKeyList[].fileKey object
+- body:userFileKeyList[].fileKey.iv string
+- body:userFileKeyList[].fileKey.key string
+- body:userFileKeyList[].fileKey.tag string
+- body:userFileKeyList[].fileKey.version string
+- body:userFileKeyList[].userId integer
+
+## S624-N0072  POST /v4/public/shares/uploads/{access_key}/{upload_id}/s3_urls
+desc: Generate presigned URLs for S3 file upload | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.15.0</h3> ### Description: Generate presigned URLs for S3 file upload. ### Precondition: Valid upload ID ### Postcondition: List of presigned URLs is returned. ### Further Information: The size for each part must be >=
+schema: GeneratePresignedUrlsRequest
+- path:access_key string
+- path:upload_id string
+- body:firstPartNumber integer
+- body:lastPartNumber integer
+- body:size integer
+
+## S624-N0073  DELETE /v4/roles/{role_id}/groups
+desc: Revoke granted role from group(s) | ### Description: Revoke granted group(s) from a role. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; grant permission on desired role</span> required. For each role, at least one non-expiring user **MUST** remain who may grant the role. ### Postcondition: One o
+schema: GroupIds
+- path:role_id integer
+- body:ids array<integer>
+
+## S624-N0074  POST /v4/roles/{role_id}/groups
+desc: Assign group(s) to the role | ### Description: Assign group(s) to a role. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; grant permission on desired role</span> required. ### Postcondition: One or more groups will be added to a role. ### Further Information: None.
+schema: GroupIds
+- path:role_id integer
+- body:ids array<integer>
+
+## S624-N0075  DELETE /v4/roles/{role_id}/users
+desc: Revoke granted role from user(s) | ### Description: Revoke granted user(s) from a role. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; grant permission on desired role</span> required. For each role, at least one non-expiring user **MUST** remain who may grant the role. ### Postcondition: One or 
+schema: UserIds
+- path:role_id integer
+- body:ids array<integer>
+
+## S624-N0076  POST /v4/roles/{role_id}/users
+desc: Assign user(s) to the role | ### Description: Assign user(s) to a role. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; grant permission on desired role</span> required. ### Postcondition: One or more users will be added to a role. ### Further Information: None.
+schema: UserIds
+- path:role_id integer
+- body:ids array<integer>
+
+## S624-N0077  PUT /v4/settings
+desc: Set customer settings | ### Description: Set customer related settings. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Config Manager<
+schema: CustomerSettingsRequest
+- body:homeRoomParentName string
+- body:homeRoomQuota integer
+- body:homeRoomsActive boolean
+
+## S624-N0078  DELETE /v4/settings/keypair
+desc: Remove system rescue key pair | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.24.0</h3> ### Description: Remove the system rescue key pair. ### Precondition: * Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change config</sp
+- query:version string
+
+## S624-N0079  POST /v4/settings/keypair
+desc: Activate client-side encryption for customer | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.24.0</h3> ### Description: Set the system rescue key pair and activate client-side encryption for according customer. ### Precondition: * Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid 
+schema: UserKeyPairContainer
+- body:privateKeyContainer object
+- body:privateKeyContainer.createdAt string
+- body:privateKeyContainer.createdBy integer
+- body:privateKeyContainer.privateKey string
+- body:privateKeyContainer.version string
+- body:publicKeyContainer object
+- body:publicKeyContainer.createdAt string
+- body:publicKeyContainer.createdBy integer
+- body:publicKeyContainer.publicKey string
+- body:publicKeyContainer.version string
+
+## S624-N0081  PUT /v4/settings/notifications/channels
+desc: Toggle notification channels | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.20.0</h3> ### Description: Toggle configured notification channels. ### Precondition: Right _"change config"_ required. ### Postcondition: Channel status is switched. ### Further Information: None.
+schema: NotificationChannelActivationRequest
+- body:channelId integer
+- body:isEnabled boolean
+
+## S624-N0082  POST /v4/settings/webhooks
+desc: Create webhook | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.19.0</h3> ### Description: Create a new webhook for the customer scope. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change config</span> req
+schema: CreateWebhookRequest
+- body:eventTypeNames array<string>
+- body:isEnabled boolean
+- body:name string
+- body:secret string
+- body:triggerExampleEvent boolean
+- body:url string
+
+## S624-N0084  PUT /v4/settings/webhooks/{webhook_id}
+desc: Update webhook | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.19.0</h3> ### Description: Update an existing webhook for the customer scope. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change config</spa
+schema: UpdateWebhookRequest
+- path:webhook_id integer
+- body:eventTypeNames array<string>
+- body:isEnabled boolean
+- body:name string
+- body:secret string
+- body:triggerExampleEvent boolean
+- body:url string
+
+## S624-N0085  POST /v4/settings/webhooks/{webhook_id}/reset_lifetime
+desc: Reset webhook lifetime | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.19.0</h3> ### Description: Reset the lifetime of a webhook for the customer scope. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; chang
+- path:webhook_id integer
+
+## S624-N0086  DELETE /v4/shares/downloads
+desc: Remove Download Shares | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.21.0</h3> ### Functional Description: Delete multiple Download Shares. ### Precondition: User with _"manage download share"_ permissions on target nodes. ### Postcondition: Download Shares are deleted. ### Further Information: Only the Do
+schema: DeleteDownloadSharesRequest
+- body:shareIds array<integer>
+
+## S624-N0087  POST /v4/shares/downloads
+desc: Create new Download Share | ### Description: Create a new Download Share. ### Precondition: User with <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; manage download share</span> permissions on target node. ### Postcondition: Download Share is created. ### Further Information: If the target node is a room: subordinary ro
+schema: CreateDownloadShareRequest
+- body:creatorLanguage string
+- body:expiration object
+- body:expiration.enableExpiration boolean
+- body:expiration.expireAt string
+- body:fileKey object
+- body:fileKey.iv string
+- body:fileKey.key string
+- body:fileKey.tag string
+- body:fileKey.version string
+- body:internalNotes string
+- body:keyPair object
+- body:keyPair.privateKeyContainer object
+- body:keyPair.privateKeyContainer.createdAt string
+- body:keyPair.privateKeyContainer.createdBy integer
+- body:keyPair.privateKeyContainer.privateKey string
+- body:keyPair.privateKeyContainer.version string
+- body:keyPair.publicKeyContainer object
+- body:keyPair.publicKeyContainer.createdAt string
+- body:keyPair.publicKeyContainer.createdBy integer
+- body:keyPair.publicKeyContainer.publicKey string
+- body:keyPair.publicKeyContainer.version string
+- body:mailBody string
+- body:mailRecipients string
+- body:mailSubject string
+- body:maxDownloads integer
+- body:name string
+- body:nodeId integer
+- body:notes string
+- body:notifyCreator boolean
+- body:password string
+- body:receiverLanguage string
+- body:sendMail boolean
+- body:sendSms boolean
+- body:showCreatorName boolean
+- body:showCreatorUsername boolean
+- body:smsRecipients string
+- body:textMessageRecipients array<string>
+
+## S624-N0088  PUT /v4/shares/downloads
+desc: Update a list of Download Shares | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.25.0</h3> ### Description: Update a list of existing Download Shares. ### Precondition: User with <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; mana
+schema: UpdateDownloadSharesBulkRequest
+- body:expiration object
+- body:expiration.enableExpiration boolean
+- body:expiration.expireAt string
+- body:maxDownloads integer
+- body:objectIds array<integer>
+- body:resetMaxDownloads boolean
+- body:showCreatorName boolean
+- body:showCreatorUsername boolean
+
+## S624-N0090  PUT /v4/shares/downloads/{share_id}
+desc: Update Download Share | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.11.0</h3> ### Description: Update an existing Download Share. ### Precondition: User with <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; manage download share</
+schema: UpdateDownloadShareRequest
+- path:share_id integer
+- body:defaultCountry string
+- body:expiration object
+- body:expiration.enableExpiration boolean
+- body:expiration.expireAt string
+- body:internalNotes string
+- body:maxDownloads integer
+- body:name string
+- body:notes string
+- body:notifyCreator boolean
+- body:password string
+- body:receiverLanguage string
+- body:resetMaxDownloads boolean
+- body:resetPassword boolean
+- body:showCreatorName boolean
+- body:showCreatorUsername boolean
+- body:textMessageRecipients array<string>
+
+## S624-N0092  DELETE /v4/shares/uploads
+desc: Remove Upload Shares | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.21.0</h3> ### Functional Description: Delete multiple Upload Shares (aka Upload Accounts). ### Precondition: User has _"manage upload share"_ permissions on target containers. ### Postcondition: Upload Shares are deleted. ### Further Inform
+schema: DeleteUploadSharesRequest
+- body:shareIds array<integer>
+
+## S624-N0093  POST /v4/shares/uploads
+desc: Create new Upload Share | ### Description: Create a new Upload Share (aka File Request). ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; manage upload share</span> permissions on target container. ### Postcondition: Upload Share is created. ### Further Information: * `name` is limited to **150*
+schema: CreateUploadShareRequest
+- body:creatorLanguage string
+- body:expiration object
+- body:expiration.enableExpiration boolean
+- body:expiration.expireAt string
+- body:filesExpiryPeriod integer
+- body:internalNotes string
+- body:mailBody string
+- body:mailRecipients string
+- body:mailSubject string
+- body:maxSize integer
+- body:maxSlots integer
+- body:name string
+- body:notes string
+- body:notifyCreator boolean
+- body:password string
+- body:receiverLanguage string
+- body:sendMail boolean
+- body:sendSms boolean
+- body:showCreatorName boolean
+- body:showCreatorUsername boolean
+- body:showUploadedFiles boolean
+- body:smsRecipients string
+- body:targetId integer
+- body:textMessageRecipients array<string>
+
+## S624-N0094  PUT /v4/shares/uploads
+desc: Update List of Upload Shares | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.25.0</h3> ### Description: Update a list of existing Upload Shares (aka File Request). ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#
+schema: UpdateUploadSharesBulkRequest
+- body:expiration object
+- body:expiration.enableExpiration boolean
+- body:expiration.expireAt string
+- body:filesExpiryPeriod integer
+- body:maxSize integer
+- body:maxSlots integer
+- body:objectIds array<integer>
+- body:resetFilesExpiryPeriod boolean
+- body:resetMaxSize boolean
+- body:resetMaxSlots boolean
+- body:showCreatorName boolean
+- body:showCreatorUsername boolean
+- body:showUploadedFiles boolean
+
+## S624-N0095  DELETE /v4/shares/uploads/{share_id}
+desc: Remove Upload Share | ### Description: Delete an Upload Share (aka File Request). ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; manage upload share</span> permissions on target container. ### Postcondition: Upload Share is deleted. ### Further Information: Only the Upload Share is removed; al
+- path:share_id integer
+
+## S624-N0096  PUT /v4/shares/uploads/{share_id}
+desc: Update Upload Share | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.11.0</h3> ### Description: Update existing Upload Share (aka File Request). ### Precondition: User has <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; manage uploa
+schema: UpdateUploadShareRequest
+- path:share_id integer
+- body:defaultCountry string
+- body:expiration object
+- body:expiration.enableExpiration boolean
+- body:expiration.expireAt string
+- body:filesExpiryPeriod integer
+- body:internalNotes string
+- body:maxSize integer
+- body:maxSlots integer
+- body:name string
+- body:notes string
+- body:notifyCreator boolean
+- body:password string
+- body:receiverLanguage string
+- body:resetFilesExpiryPeriod boolean
+- body:resetMaxSize boolean
+- body:resetMaxSlots boolean
+- body:resetPassword boolean
+- body:showCreatorName boolean
+- body:showCreatorUsername boolean
+- body:showUploadedFiles boolean
+- body:textMessageRecipients array<string>
+
+## S624-N0097  POST /v4/shares/uploads/{share_id}/email
+desc: Send an existing Upload Share link via email | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.11.0</h3> ### Description: Send an email to specific recipients for existing Upload Share. ### Precondition: User with <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px;
+schema: UploadShareLinkEmail
+- path:share_id integer
+- body:body string
+- body:receiverLanguage string
+- body:recipients array<string>
+
+## S624-N0098  POST /v4/system/config/actions/test/ad
+desc: Test Active Directory configuration | ### Description: Test Active Directory configuration. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> of the Provider Customer required. ### Postcondition: Active Directory configuration is returned if successful. ### Further Inform
+schema: TestActiveDirectoryConfigRequest
+- body:ldapUsersDomain string
+- body:serverAdminName string
+- body:serverAdminPassword string
+- body:serverIp string
+- body:serverPort integer
+- body:sslFingerPrint string
+- body:useLdaps boolean
+
+## S624-N0099  POST /v4/system/config/actions/test/radius
+desc: Test RADIUS server availability | ### Description: Test RADIUS configuration. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; read global config</span> of the Provider Customer required. ### Postcondition: RADIUS configuration is returned if successful. ### Further Information: DRACOON tries to es
+
+## S624-N0100  POST /v4/system/config/auth/ads
+desc: Create Active Directory configuration | ### Description: Create a new Active Directory configuration. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> of the Provider Customer required. ### Postcondition: New Active Directory configuration created. ### Further Informatio
+schema: CreateActiveDirectoryConfigRequest
+- body:adExportGroup string
+- body:alias string
+- body:createHomeFolder boolean
+- body:homeFolderParent integer
+- body:ldapUsersDomain string
+- body:sdsImportGroup integer
+- body:serverAdminName string
+- body:serverAdminPassword string
+- body:serverIp string
+- body:serverPort integer
+- body:sslFingerPrint string
+- body:useLdaps boolean
+- body:userFilter string
+- body:userImport boolean
+
+## S624-N0101  DELETE /v4/system/config/auth/ads/{ad_id}
+desc: Remove Active Directory configuration | ### Description: Delete an existing Active Directory configuration. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> of the Provider Customer required. ### Postcondition: Active Directory configuration is removed. ### Further Infor
+- path:ad_id integer
+
+## S624-N0103  POST /v4/system/config/auth/openid/idps
+desc: Create OpenID Connect IDP configuration | ### Description: Create new OpenID Connect IDP configuration. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: in
+schema: CreateOpenIdIdpConfigRequest
+- body:authorizationEndPointUrl string
+- body:clientId string
+- body:clientSecret string
+- body:fallbackMappingClaim string
+- body:flow string enum[authorization_code|hybrid]
+- body:issuer string
+- body:jwksEndPointUrl string
+- body:mappingClaim string
+- body:name string
+- body:pkceChallengeMethod string
+- body:pkceEnabled boolean
+- body:redirectUris array<string>
+- body:scopes array<string>
+- body:tokenEndPointUrl string
+- body:userImportEnabled boolean
+- body:userImportGroup integer
+- body:userInfoEndPointUrl string
+- body:userInfoSource string enum[user_info_endpoint|id_token]
+- body:userManagementUrl string
+- body:userUpdateEnabled boolean
+
+## S624-N0104  DELETE /v4/system/config/auth/openid/idps/{idp_id}
+desc: Remove OpenID Connect IDP configuration | ### Description: Delete an existing OpenID Connect IDP configuration. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; dis
+- path:idp_id integer
+
+## S624-N0106  DELETE /v4/system/config/auth/radius
+desc: Remove RADIUS configuration | ### Description: Delete existing RADIUS configuration. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Co

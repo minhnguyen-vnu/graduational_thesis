@@ -1,0 +1,1133 @@
+## S513-0033  POST /api/2/workflowscheme/{id}/createdraft
+desc: Create a draft for the passed scheme. The draft will be a copy of the state of the parent.
+- path:id integer
+
+## S513-0034  PUT /api/2/workflowscheme/{id}/default
+desc: Set the default workflow for the passed workflow scheme. <p/> The passed representation can have its updateDraftIfNeeded flag set to true to indicate that the draft should be created/updated when the actual scheme cannot be edited.
+- path:id integer
+
+## S513-0035  DELETE /api/2/workflowscheme/{id}/draft
+desc: Delete the passed draft workflow scheme.
+- path:id integer
+
+## S513-0036  POST /api/2/worklog/list
+desc: Returns worklogs for given worklog ids. Only worklogs to which the calling user has permissions, will be included in the result. The returns set of worklogs is limited to 1000 elements.
+
+## S514-0001  DELETE /providers/applicationsets/{applicationSetId}
+desc: Delete a specific applicationset | __Activity name:__ DeleteProviderApplicationSetByApplicationSetId Delete an applicationset for the provider
+- path:applicationSetId string
+
+## S514-0002  DELETE /providers/emailidentities/{emailIdentityId}
+desc: Delete an EmailIdentity for a provider | __Activity name:__ DeleteEmailIdentityByEmailIdentityId Delete an EmailIdentity for a provider. An EmailIdentity can only be deleted when it's not used in an emailTemplate.
+- path:emailIdentityId string
+
+## S514-0003  DELETE /providers/employers/customholidays/{customHolidayId}
+desc: Delete a custom holiday record | __Activity name :__ DeleteCustomHolidayByCustomHolidayId Delete an existing custom holiday record
+- path:customHolidayId string
+
+## S514-0004  POST /providers/employers/employees/absences/{absenceId}/absencecontactHistory
+desc: Create a contact history for an Absence | __Activity name :__ PostAbsenceContactHistoryByAbsenceId __Metadata :__ Possible options for fields of the type 'metadata' can be acquired (GET) by adding `/metadata` to the POST URL. __Defaults :__ Default values for a new object can be acquired by adding `/defaults' to the POST URL.
+- path:absenceId string
+- body:contactDate string
+- body:contactMethod object
+- body:contactMethod.key integer
+- body:contactMethod.value string
+- body:id string
+- body:summary string
+
+## S514-0005  POST /providers/employers/employees/absences/{absenceId}/absenceprogress
+desc: Create an Absence Progress for an Absence | __Activity name :__ PostAbsenceProgressByAbsenceId __Metadata :__ Possible options for fields of the type 'metadata' can be acquired (GET) by adding `/metadata` to the POST URL. __Defaults :__ Default values for a new object can be acquired by adding `/defaults' to the POST URL. Add an Absence Progress (=Ziekteverloop) for an employee. As is common with 
+- path:absenceId string
+- body:comments string
+- body:endDate string
+- body:id string
+- body:incapacityPercentage integer
+- body:startDate string
+- body:typeOfWorkResumption object
+- body:typeOfWorkResumption.key integer
+- body:typeOfWorkResumption.value string
+
+## S514-0006  PUT /providers/employers/employees/children/{childId}
+desc: Edit the details of a child | __Activity name :__ PutChildByChildId __Metadata :__ Possible options for fields of the type 'metadata' can be acquired (GET) by adding `/metadata` to the PUT URL. Edit the details of a child
+- path:childId string
+- body:dateOfBirth string
+- body:dateOfDeath string
+- body:firstName string
+- body:gender object
+- body:gender.key integer
+- body:gender.value string
+- body:id string
+- body:initials string
+- body:lastName string
+- body:prefix string
+- body:residenceStatus object
+- body:residenceStatus.key integer
+- body:residenceStatus.value string
+
+## S514-0007  PUT /providers/employers/employees/employments/benefitsinkind/{benefitInKindId}
+desc: Edit a benefit in kind record | __Activity name :__ PutBenefitInKindByBenefitInKindId __Metadata :__ Possible options for fields of the type 'metadata' can be acquired (GET) by adding ` / metadata ` to the PUT URL.
+- path:benefitInKindId string
+- body:benefitInKindType object
+- body:benefitInKindType.description string
+- body:benefitInKindType.id string
+- body:brand string
+- body:endDate string
+- body:id string
+- body:particularities string
+- body:startDate string
+- body:supplier string
+- body:type string
+- body:value number
+
+## S514-0008  PUT /providers/employers/employees/employments/customnotifications/{customNotificationId}
+desc: Edit a custom notification record | __Activity name :__ PutCustomNotificationByCustomNotificationId __Metadata :__ Possible options for fields of the type 'metadata' can be acquired (GET) by adding ` / metadata ` to the PUT URL.
+- path:customNotificationId string
+- body:expirationDate string
+- body:id string
+- body:notificationDate string
+- body:notificationText string
+- body:recurrencePattern object
+- body:recurrencePattern.numberOfRepetitionsAfterFirstNotification integer
+- body:recurrencePattern.recurrenceNumber integer
+- body:recurrencePattern.recurrencePeriod object
+- body:recurrencePattern.recurrencePeriod.key integer
+- body:recurrencePattern.recurrencePeriod.value string
+
+## S514-0009  PATCH /providers/employers/employees/employments/declarations/process
+desc: Process approved declarations | __Activity name :__ PatchProcessDeclarationsByDeclarationId Process approved declarations into the payrolling data. Please check the description of the status-field in this resource to read about the workflow of declarations.
+- body:id string
+- body:payrollPeriodId integer
+
+## S514-0010  DELETE /providers/employers/employees/employments/journalallocations/{journalAllocationId}
+desc: Delete a specific journal allocation record | __Activity name:__ DeleteJournalAllocationByJournalAllocationId Delete a journal allocation record
+- path:journalAllocationId string
+
+## S514-0011  DELETE /providers/employers/employees/employments/protectedearnings/{protectedEarningsId}
+desc: Delete an protected earnings record | __Activity name :__ DeleteProtectedEarningsByProtectedEarningsId Delete an existing protected earnings record
+- path:protectedEarningsId string
+
+## S514-0012  PUT /providers/employers/employees/employments/wages/{wageId}
+desc: Edit a wage | __Activity name :__ PutWageByWageId Edit the details of a wage __Metadata :__ Possible options for fields of the type 'metadata' can be acquired (GET) by adding `/metadata` to the PUT wage URL. The possible options for `payGrade` are scoped by a `payScale`. To obtain the pay grades for a pay scale a metadata call has to be performed with the following format `../wages/metadata/paysca
+- path:wageId string
+- body:applyPayGrade boolean
+- body:employerCosts number
+- body:employerCostsType object
+- body:employerCostsType.key integer
+- body:employerCostsType.value string
+- body:endDate string
+- body:grossWage number
+- body:grossWageType object
+- body:grossWageType.key integer
+- body:grossWageType.value string
+- body:id string
+- body:isGrossWageFullTime boolean
+- body:netWage number
+- body:netWageType object
+- body:netWageType.key integer
+- body:netWageType.value string
+- body:payGrade object
+- body:payGrade.key integer
+- body:payGrade.value string
+- body:payScale object
+- body:payScale.key integer
+- body:payScale.value string
+- body:payrollPeriodType object
+- body:payrollPeriodType.key integer
+- body:payrollPeriodType.value string
+- body:startDate string
+
+## S514-0013  PUT /providers/employers/employees/employments/workinghours/{workinghoursId}
+desc: Edit the working hours | __Activity name :__ PutWorkingHoursByWorkingHoursId <br/> <br/> Create a new working hours record for an employment<br/> Please note that so-called chain validation exists for working hours records. In other words, the time periods of records for an employment cannot overlap with each other.<br/> A new or changed startDate affects the endDate of its preceding record.<br/> 
+- path:workinghoursId string
+- body:aggregatedHoursPerWeek number
+- body:averageHoursPerWeek number
+- body:averageParttimeFactor number
+- body:calculateUsingWorkPattern object
+- body:calculateUsingWorkPattern.daysDailyRate boolean
+- body:calculateUsingWorkPattern.deviatingDaysAndHours boolean
+- body:calculateUsingWorkPattern.hoursBrokenPeriod boolean
+- body:calculateUsingWorkPattern.hoursRegularPeriod boolean
+- body:calculateUsingWorkPattern.leaveHours boolean
+- body:contractCode object
+- body:contractCode.code integer
+- body:contractCode.description string
+- body:contractCode.key string
+- body:deviatingHoursPerWeek number
+- body:deviatingSvDaysPerPeriod integer
+- body:endDate string
+- body:flexibleHoursContract object
+- body:flexibleHoursContract.key integer
+- body:flexibleHoursContract.value string
+- body:id string
+- body:regularWorkPattern boolean
+- body:shift object
+- body:shift.bonusPercentage number
+- body:shift.fullTimeHoursPerWeek number
+- body:shift.shiftNumber integer
+- body:shiftRateSickLeave object
+- body:shiftRateSickLeave.bonusPercentage number
+- body:shiftRateSickLeave.fullTimeHoursPerWeek number
+- body:shiftRateSickLeave.shiftNumber integer
+- body:startDate string
+- body:workPattern object
+- body:workPattern.evenWeeks object
+- body:workPattern.evenWeeks.friday number
+- body:workPattern.evenWeeks.monday number
+- body:workPattern.evenWeeks.saturday number
+- body:workPattern.evenWeeks.sunday number
+- body:workPattern.evenWeeks.thursday number
+- body:workPattern.evenWeeks.tuesday number
+- body:workPattern.evenWeeks.wednesday number
+- body:workPattern.oddWeeks object
+- body:workPattern.oddWeeks.friday number
+- body:workPattern.oddWeeks.monday number
+- body:workPattern.oddWeeks.saturday number
+- body:workPattern.oddWeeks.sunday number
+- body:workPattern.oddWeeks.thursday number
+- body:workPattern.oddWeeks.tuesday number
+- body:workPattern.oddWeeks.wednesday number
+
+## S514-0014  PATCH /providers/employers/employees/employments/{employmentId}/correctstartdate
+desc: Correct the start (employment) date for an employment. | __Activity name :__ PatchCorrectStartDateByEmploymentId Edit the starting date (i.e. the official first day of a contract) of an employment. Please note that changing the starting data for an employment affects multiple entities in Loket (e.g. wage-records etc). * With a correction of the starting date, you are responsible for the associated
+- path:employmentId string
+- body:startDate string
+
+## S514-0015  POST /providers/employers/employees/employments/{employmentId}/deviatinghourlywages
+desc: Add a deviating hourly wage for an employment | __Activity name :__ PostDeviatingHourlyWageByEmploymentId __Metadata:__ Possible options for fields of the type 'metadata' can be acquired(GET)by adding `/metadata` to the POST URL. __Defaults:__ Default values for a new object can be acquired by adding `/defaults' to the POST URL.
+- path:employmentId string
+- body:endDate string
+- body:id string
+- body:payrollComponent object
+- body:payrollComponent.description string
+- body:payrollComponent.key integer
+- body:startDate string
+- body:value number
+
+## S514-0016  POST /providers/employers/employees/employments/{employmentId}/documents
+desc: Upload a document to the employment dossier | __Activity name :__ PostDocumentByEmploymentId __Metadata:__ Possible options for fields of the type 'metadata' can be acquired(GET)by adding `/metadata` to the POST URL. Upload a document within the employee's employment dossier (werknemerdossier). Via Qwoater.
+- path:employmentId string
+- body:attribute string
+- body:category string
+- body:dateOfAlert string
+- body:dateOfSubmission string
+- body:description string
+- body:isReadBy object
+- body:isReadBy.departmentManager boolean
+- body:isReadBy.employee boolean
+- body:isReadBy.employer boolean
+- body:isReadBy.provider boolean
+- body:qwoaterDocumentId string
+- body:submittedBy string
+- body:year integer
+- body:filename string
+- body:file string
+- body:sendEmailNotification boolean
+
+## S514-0017  POST /providers/employers/employees/employments/{employmentId}/transitioncompensation
+desc: Create transition compensation employment for existing employment | __Activity name :__ PostTransitionCompensationEmploymentByEmploymentId Create an additional employment for an already existing and terminated employment with the sole purpose to pay out a transition compensation.
+- path:employmentId string
+- body:(body) object
+
+## S514-0018  POST /providers/employers/employees/employments/{employmentId}/workinghours
+desc: Create the working hours for an employment | __Activity name :__ PostWorkingHoursByEmploymentId <br/> <br/> Create a new working hours record for an employment<br/> Please note that so-called chain validation exists for working hours records. In other words, the time periods of records for an employment cannot overlap with each other.<br/> A new or changed startDate affects the endDate of its prec
+- path:employmentId string
+- body:aggregatedHoursPerWeek number
+- body:averageHoursPerWeek number
+- body:averageParttimeFactor number
+- body:calculateUsingWorkPattern object
+- body:calculateUsingWorkPattern.daysDailyRate boolean
+- body:calculateUsingWorkPattern.deviatingDaysAndHours boolean
+- body:calculateUsingWorkPattern.hoursBrokenPeriod boolean
+- body:calculateUsingWorkPattern.hoursRegularPeriod boolean
+- body:calculateUsingWorkPattern.leaveHours boolean
+- body:contractCode object
+- body:contractCode.code integer
+- body:contractCode.description string
+- body:contractCode.key string
+- body:deviatingHoursPerWeek number
+- body:deviatingSvDaysPerPeriod integer
+- body:endDate string
+- body:flexibleHoursContract object
+- body:flexibleHoursContract.key integer
+- body:flexibleHoursContract.value string
+- body:id string
+- body:regularWorkPattern boolean
+- body:shift object
+- body:shift.bonusPercentage number
+- body:shift.fullTimeHoursPerWeek number
+- body:shift.shiftNumber integer
+- body:shiftRateSickLeave object
+- body:shiftRateSickLeave.bonusPercentage number
+- body:shiftRateSickLeave.fullTimeHoursPerWeek number
+- body:shiftRateSickLeave.shiftNumber integer
+- body:startDate string
+- body:workPattern object
+- body:workPattern.evenWeeks object
+- body:workPattern.evenWeeks.friday number
+- body:workPattern.evenWeeks.monday number
+- body:workPattern.evenWeeks.saturday number
+- body:workPattern.evenWeeks.sunday number
+- body:workPattern.evenWeeks.thursday number
+- body:workPattern.evenWeeks.tuesday number
+- body:workPattern.evenWeeks.wednesday number
+- body:workPattern.oddWeeks object
+- body:workPattern.oddWeeks.friday number
+- body:workPattern.oddWeeks.monday number
+- body:workPattern.oddWeeks.saturday number
+- body:workPattern.oddWeeks.sunday number
+- body:workPattern.oddWeeks.thursday number
+- body:workPattern.oddWeeks.tuesday number
+- body:workPattern.oddWeeks.wednesday number
+
+## S514-0019  DELETE /providers/employers/employees/partners/{partnerId}
+desc: Delete a specific partner record | __Activity name :__ DeletePartnerByPartnerId Delete an existing partner
+- path:partnerId string
+
+## S514-0020  PUT /providers/employers/leavePolicies/wagebasedleave/{wageBasedLeaveId}
+desc: Edit the details of a wage based leave | __Activity name :__ PutWageBasedLeaveByWageBasedLeaveId Edit the details of a wage based leave record
+- path:wageBasedLeaveId string
+- body:fromWage number
+- body:id string
+- body:leaveEntitlement object
+- body:leaveEntitlement.excessLeaveToStatutory number
+- body:leaveEntitlement.wtr number
+- body:upToAndIncludingWage number
+
+## S514-0021  DELETE /providers/employers/leavePolicies/yearsofservicebasedleave/{yearsOfServiceBasedLeaveId}
+desc: Delete an years of service based leave record | __Activity name :__ DeleteYearsOfServiceBasedLeaveByYearsOfServiceBasedLeaveId Delete an years of service based leave record
+- path:yearsOfServiceBasedLeaveId string
+
+## S514-0022  DELETE /providers/employers/leavePolicies/{leavePolicyId}
+desc: Delete a leave policy | __Activity name :__ DeleteLeavePolicyByLeavePolicyId Delete a Leave policy
+- path:leavePolicyId string
+
+## S514-0023  PUT /providers/employers/notes/{noteId}
+desc: Edit an employer note record | __Activity name :__ PutEmployerNoteByNoteId __Metadata :__ Possible options for fields of the type 'metadata' can be acquired (GET) by adding ` / metadata ` to the PUT URL.
+- path:noteId string
+- body:accessibleBy object
+- body:accessibleBy.key integer
+- body:accessibleBy.value string
+- body:createdBy object
+- body:createdBy.formattedName string
+- body:createdBy.id string
+- body:createdBy.initials string
+- body:createdBy.lastName string
+- body:createdBy.prefix string
+- body:createdOn string
+- body:id string
+- body:lastModifiedBy object
+- body:lastModifiedBy.formattedName string
+- body:lastModifiedBy.id string
+- body:lastModifiedBy.initials string
+- body:lastModifiedBy.lastName string
+- body:lastModifiedBy.prefix string
+- body:lastModifiedOn string
+- body:note string
+- body:subject string
+
+## S514-0024  PATCH /providers/employers/payrolladministrations/apgpensiondeclarations/{apgPensionDeclarationId}
+desc: Change the status of a apg pension declaration | __Activity name :__ PatchApgPensionDeclarationByApgPensionDeclarationId This endpoints changes the status of the Apg pensiondeclaration based on the provided action.
+- path:apgPensionDeclarationId string
+- body:action string enum[confirm|cancel]
+
+## S514-0025  PATCH /providers/employers/payrolladministrations/journalruns/{journalrunId}
+desc: Change the status of a journal run | __Activity name :__ PatchJournalRunByJournalRunId Update the status of a journal run * Action 'markAsSuccessfullyExported'; will change the status of the journal run to 'exported'. Please note this action will not perform an actual export, but simply allows the user the manage status to match their actualities.</br> * Action 'MarkAsProcessingFailed'; will chang
+- path:journalrunId string
+- body:action string enum[MarkAsProcessed|MarkAsProcessingFailed]
+- body:application object
+- body:application.key integer
+- body:application.value string
+- body:message string
+
+## S514-0026  POST /providers/employers/payrolladministrations/journalruns/{journalrunId}/send
+desc: Send the journal run | __Activity name :__ PostSendJournalRunExportByJournalRunId Send a journal run to a journal application. Use the defaults and metadata to acquire the journal application settings. The defaults endpoint contains values for all required fields. There are two metadata endpoints: - /journalruns/{journalrunId}/send/metadata - /journalruns/{journalrunId}/send/metadata/accountId/{ac
+- path:journalrunId string
+- body:account object
+- body:account.id integer
+- body:account.value string
+- body:accountKey string
+- body:administration object
+- body:administration.id integer
+- body:administration.value string
+- body:date string
+- body:description string
+- body:deviatingJournalSeries string
+- body:financialYear integer
+- body:includeCostCenter boolean
+- body:includeCostUnit boolean
+- body:journalCode string
+- body:journalNumber integer
+- body:linkCostCenterToGroup string
+- body:linkCostUnitToGroup string
+- body:period integer
+- body:subAdministration object
+- body:subAdministration.Id integer
+- body:subAdministration.Name string
+- body:user string
+
+## S514-0027  POST /providers/employers/payrolladministrations/{payrollAdministrationId}/payrolltaxreturns/initiate
+desc: Initiate payroll tax return (aanmaken loonaangifte) | __Activity name :__ PostInitiatePayrollTaxReturnByPayrollAdministrationId This is a controller endpoint to perform an action. __Metadata :__ There is a metadata endpoint that will return process information rather then true metadata. This endpoint is available by simply adding /metadata behind the URI. __Defaults :__ Default values for a new ob
+- path:payrollAdministrationId string
+- body:notifyOfInitiation string
+
+## S514-0028  PUT /providers/employers/workflowtriggermappings/{workflowTriggerMappingId}
+desc: Edit the details of a workflow trigger mapping record | __Activity name:__ PutWorkflowTriggerMappingByWorkflowTriggerMappingId Edit the details for a workflow trigger mapping record Possible options for fields of the type 'metadata' can be acquired (GET) by adding `/metadata` to the PUT URL.
+- path:workflowTriggerMappingId string
+- body:createdBy object
+- body:createdBy.formattedName string
+- body:createdBy.id string
+- body:createdBy.initials string
+- body:createdBy.lastName string
+- body:createdBy.prefix string
+- body:createdOn string
+- body:id string
+- body:lastModifiedBy object
+- body:lastModifiedBy.formattedName string
+- body:lastModifiedBy.id string
+- body:lastModifiedBy.initials string
+- body:lastModifiedBy.lastName string
+- body:lastModifiedBy.prefix string
+- body:lastModifiedOn string
+- body:trigger object
+- body:trigger.description string
+- body:trigger.id string
+- body:workflowTemplate object
+- body:workflowTemplate.description string
+- body:workflowTemplate.id string
+
+## S514-0029  PUT /providers/employers/{employerId}
+desc: Edit the details of an employer | __Activity name:__ PutEmployerByEmployerId Edit the details of an employer Possible options for fields of the type 'metadata' can be acquired (GET) by adding `/metadata` to the PUT URL.
+- path:employerId string
+- body:address object
+- body:address.city string
+- body:address.country object
+- body:address.country.isoCode string
+- body:address.country.key integer
+- body:address.country.value string
+- body:address.furtherIndication object
+- body:address.furtherIndication.key integer
+- body:address.furtherIndication.value string
+- body:address.houseNumber integer
+- body:address.houseNumberAddition string
+- body:address.location string
+- body:address.postalCode string
+- body:address.province object
+- body:address.province.key integer
+- body:address.province.value string
+- body:address.street string
+- body:branch object
+- body:branch.key integer
+- body:branch.value string
+- body:chamberOfCommerceNumber string
+- body:companyName string
+- body:contact object
+- body:contact.function string
+- body:contact.name string
+- body:contact.phoneNumber string
+- body:contactInformation object
+- body:contactInformation.emailAddress string
+- body:contactInformation.faxNumber string
+- body:contactInformation.phoneNumber string
+- body:contactInformation.website string
+- body:deviatingPostalAddress object
+- body:deviatingPostalAddress.city string
+- body:deviatingPostalAddress.country object
+- body:deviatingPostalAddress.country.isoCode string
+- body:deviatingPostalAddress.country.key integer
+- body:deviatingPostalAddress.country.value string
+- body:deviatingPostalAddress.furtherIndication object
+- body:deviatingPostalAddress.furtherIndication.key integer
+- body:deviatingPostalAddress.furtherIndication.value string
+- body:deviatingPostalAddress.houseNumber integer
+- body:deviatingPostalAddress.houseNumberAddition string
+- body:deviatingPostalAddress.location string
+- body:deviatingPostalAddress.poBox integer
+- body:deviatingPostalAddress.postalCode string
+- body:deviatingPostalAddress.street string
+- body:employerLogo string
+- body:employerNumber integer
+- body:id string
+- body:legalForm object
+- body:legalForm.key integer
+- body:legalForm.value string
+- body:providerLogo string
+- body:providerSettings object
+- body:providerSettings.administrationNumber string
+- body:providerSettings.groupCode integer
+- body:providerSettings.parentEmployerForConsolidatedOverviews integer
+- body:providerSettings.sendEmailWhenSalarySlipIsAvailable boolean
+- body:sbi object
+- body:sbi.key integer
+- body:sbi.sbiCode string
+- body:sbi.value string
+
+## S514-0030  POST /providers/employers/{employerId}/educationtypes
+desc: Add an education type for an employer | __Activity name :__ PostEducationTypeByEmployerId
+- path:employerId string
+- body:code string
+- body:description string
+- body:id string
+
+## S514-0031  POST /providers/employers/{employerId}/notes
+desc: Add a note for an employer | __Activity name :__ PostEmployerNoteByEmployerId __Metadata:__ Possible options for fields of the type 'metadata' can be acquired(GET)by adding `/metadata` to the POST URL. __Defaults:__ Default values for a new object can be acquired by adding `/defaults' to the POST URL.
+- path:employerId string
+- body:accessibleBy object
+- body:accessibleBy.key integer
+- body:accessibleBy.value string
+- body:createdBy object
+- body:createdBy.formattedName string
+- body:createdBy.id string
+- body:createdBy.initials string
+- body:createdBy.lastName string
+- body:createdBy.prefix string
+- body:createdOn string
+- body:id string
+- body:lastModifiedBy object
+- body:lastModifiedBy.formattedName string
+- body:lastModifiedBy.id string
+- body:lastModifiedBy.initials string
+- body:lastModifiedBy.lastName string
+- body:lastModifiedBy.prefix string
+- body:lastModifiedOn string
+- body:note string
+- body:subject string
+
+## S514-0032  POST /providers/employers/{employerId}/proforma/initialize
+desc: Initialize the proforma environment | __Activity name:__ PostInitializeProformaByEmployerId Initialize a proforma environment (request the copying of data from live to proforma). __Metadata :__ None __Defaults :__ None
+- path:employerId string
+- body:employeeId string
+- body:proformaType string enum[WithSalaryResultsWithSalaryVariables|WithSalaryResultsWithoutSalaryVariables|WithoutSalaryResultsWithSalaryVariables|WithoutSalaryResultsWithoutSalaryVariables|WithoutEmployments]
+
+## S514-0033  PATCH /providers/employers/{employerId}/users/{userId}/authorizations
+desc: Manage the employer user authorizations | __Activity name :__ PatchEmployerUserAuthorizationsByUserId Manage the employer user authorizations and `authorizationSet`. Only the changes supplied are processed existing records not supplied in the request body will be left unchanged. e.g. If three authorizations are enabled for the user and a patch is performed with in the body one new authorization wi
+- path:employerId string
+- path:userId string
+- body:authorizationSet object
+- body:authorizationSet.description string
+- body:authorizationSet.id string
+- body:authorizations array<object>
+- body:authorizations[].availableForEmployerUser boolean
+- body:authorizations[].description string
+- body:authorizations[].id string
+- body:authorizations[].isEnabled boolean
+
+## S514-0034  PATCH /providers/users/{providerUserId}/configuredexternaltenant
+desc: Add an external tenant for a provider user | __Activity name :__ PatchConfiguredExternalTenantByProviderUserId __Metadata :__ N/A. __Defaults :__ N/A. Modify an external tenant to the list of an configured external tenants for an employer user. An configured external tenant may be removed by sending a request body with both an empty externalTenant object and an empty externalUser object.
+- path:providerUserId string
+- body:externalTenant object
+- body:externalTenant.id string
+- body:externalTenant.name string
+- body:externalUser object
+- body:externalUser.id string
+
+## S514-0035  DELETE /user/photo
+desc: Delete user photo | __Activity name :__ DeleteUserPhotoByToken Photo of the user to use as an avatar/profile picture
+
+## S514-0036  POST /user/photo
+desc: Post user photo | __Activity name :__ PostUserPhotoByToken Photo of the user to use as an avatar/profile picture
+- body:data string
+- body:mimeType string
+
+## S515-0001  POST /convert
+desc: Convert a Swagger 2.0 definition passed in the body to OpenAPI 3.0.x
+- body:filename string
+- body:source string
+- body:validate string enum[on]
+
+## S515-0002  POST /validate
+desc: Validate an OpenAPI 3.0.x definition supplied in the body of the request
+- body:filename string
+- body:source string
+
+## S517-0001  PUT /dcim/cable-terminations/{id}/
+schema: CableTermination
+- path:id integer
+- body:cable integer
+- body:cable_end string enum[A|B]
+- body:display string
+- body:id integer
+- body:termination object
+- body:termination_id integer
+- body:termination_type string
+- body:url string
+
+## S517-0002  PUT /dcim/console-ports/
+schema: WritableConsolePort
+- body:_occupied boolean
+- body:cable object
+- body:cable.display string
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:cable_end string
+- body:connected_endpoints array<string>
+- body:connected_endpoints_reachable boolean
+- body:connected_endpoints_type string
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:device integer
+- body:display string
+- body:id integer
+- body:label string
+- body:last_updated string
+- body:link_peers array<string>
+- body:link_peers_type string
+- body:mark_connected boolean
+- body:module integer
+- body:name string
+- body:speed integer enum[1200|2400|4800|9600|19200|38400|57600|115200]
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:type string enum[de-9|db-25|rj-11|rj-12|rj-45|mini-din-8|usb-a|usb-b|usb-c|usb-mini-a|usb-mini-b|usb-micro-a]
+- body:url string
+
+## S517-0003  PATCH /dcim/console-server-ports/
+schema: WritableConsoleServerPort
+- body:_occupied boolean
+- body:cable object
+- body:cable.display string
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:cable_end string
+- body:connected_endpoints array<string>
+- body:connected_endpoints_reachable boolean
+- body:connected_endpoints_type string
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:device integer
+- body:display string
+- body:id integer
+- body:label string
+- body:last_updated string
+- body:link_peers array<string>
+- body:link_peers_type string
+- body:mark_connected boolean
+- body:module integer
+- body:name string
+- body:speed integer enum[1200|2400|4800|9600|19200|38400|57600|115200]
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:type string enum[de-9|db-25|rj-11|rj-12|rj-45|mini-din-8|usb-a|usb-b|usb-c|usb-mini-a|usb-mini-b|usb-micro-a]
+- body:url string
+
+## S517-0004  DELETE /dcim/device-bay-templates/{id}/
+- path:id integer
+
+## S517-0005  PATCH /dcim/device-bays/{id}/
+schema: WritableDeviceBay
+- path:id integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:device integer
+- body:display string
+- body:id integer
+- body:installed_device integer
+- body:label string
+- body:last_updated string
+- body:name string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-0006  PATCH /dcim/devices/
+schema: WritableDeviceWithConfigContext
+- body:airflow string enum[front-to-rear|rear-to-front|left-to-right|right-to-left|side-to-rear|passive|mixed]
+- body:asset_tag string
+- body:cluster integer
+- body:comments string
+- body:config_context object
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:device_role integer
+- body:device_type integer
+- body:display string
+- body:face string enum[front|rear]
+- body:id integer
+- body:last_updated string
+- body:local_context_data object
+- body:location integer
+- body:name string
+- body:parent_device object
+- body:parent_device.display string
+- body:parent_device.id integer
+- body:parent_device.name string
+- body:parent_device.url string
+- body:platform integer
+- body:position number
+- body:primary_ip string
+- body:primary_ip4 integer
+- body:primary_ip6 integer
+- body:rack integer
+- body:serial string
+- body:site integer
+- body:status string enum[offline|active|planned|staged|failed|inventory|decommissioning]
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:tenant integer
+- body:url string
+- body:vc_position integer
+- body:vc_priority integer
+- body:virtual_chassis integer
+
+## S517-0007  PUT /dcim/interface-templates/{id}/
+schema: WritableInterfaceTemplate
+- path:id integer
+- body:created string
+- body:description string
+- body:device_type integer
+- body:display string
+- body:id integer
+- body:label string
+- body:last_updated string
+- body:mgmt_only boolean
+- body:module_type integer
+- body:name string
+- body:poe_mode string enum[pd|pse]
+- body:poe_type string enum[type1-ieee802.3af|type2-ieee802.3at|type2-ieee802.3az|type3-ieee802.3bt|type4-ieee802.3bt|passive-24v-2pair|passive-24v-4pair|passive-48v-2pair|passive-48v-4pair]
+- body:type string enum[virtual|bridge|lag|100base-fx|100base-lfx|100base-tx|100base-t1|1000base-t|2.5gbase-t|5gbase-t|10gbase-t|10gbase-cx4]
+- body:url string
+
+## S517-0008  POST /dcim/manufacturers/
+schema: Manufacturer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:devicetype_count integer
+- body:display string
+- body:id integer
+- body:inventoryitem_count integer
+- body:last_updated string
+- body:name string
+- body:platform_count integer
+- body:slug string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-0009  PATCH /dcim/module-bays/
+schema: WritableModuleBay
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:device integer
+- body:display string
+- body:id integer
+- body:installed_module integer
+- body:label string
+- body:last_updated string
+- body:name string
+- body:position string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-0010  PATCH /dcim/module-types/{id}/
+schema: WritableModuleType
+- path:id integer
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:manufacturer integer
+- body:model string
+- body:part_number string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+- body:weight number
+- body:weight_unit string enum[kg|g|lb|oz]
+
+## S517-0011  PUT /dcim/modules/{id}/
+schema: WritableModule
+- path:id integer
+- body:asset_tag string
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:device integer
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:module_bay integer
+- body:module_type integer
+- body:serial string
+- body:status string enum[offline|active|planned|staged|failed|decommissioning]
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-0012  PATCH /dcim/power-outlet-templates/{id}/
+schema: WritablePowerOutletTemplate
+- path:id integer
+- body:created string
+- body:description string
+- body:device_type integer
+- body:display string
+- body:feed_leg string enum[A|B|C]
+- body:id integer
+- body:label string
+- body:last_updated string
+- body:module_type integer
+- body:name string
+- body:power_port integer
+- body:type string enum[iec-60320-c5|iec-60320-c7|iec-60320-c13|iec-60320-c15|iec-60320-c19|iec-60320-c21|iec-60309-p-n-e-4h|iec-60309-p-n-e-6h|iec-60309-p-n-e-9h|iec-60309-2p-e-4h|iec-60309-2p-e-6h|iec-60309-2p-e-9h]
+- body:url string
+
+## S517-0013  PATCH /dcim/power-panels/
+schema: WritablePowerPanel
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:location integer
+- body:name string
+- body:powerfeed_count integer
+- body:site integer
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-0014  PUT /dcim/rear-port-templates/
+schema: WritableRearPortTemplate
+- body:color string
+- body:created string
+- body:description string
+- body:device_type integer
+- body:display string
+- body:id integer
+- body:label string
+- body:last_updated string
+- body:module_type integer
+- body:name string
+- body:positions integer
+- body:type string enum[8p8c|8p6c|8p4c|8p2c|6p6c|6p4c|6p2c|4p4c|4p2c|gg45|tera-4p|tera-2p]
+- body:url string
+
+## S517-0015  PATCH /dcim/virtual-chassis/{id}/
+schema: WritableVirtualChassis
+- path:id integer
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:domain string
+- body:id integer
+- body:last_updated string
+- body:master integer
+- body:member_count integer
+- body:name string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-0016  PUT /dcim/virtual-device-contexts/{id}/
+schema: WritableVirtualDeviceContext
+- path:id integer
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:device integer
+- body:display string
+- body:id integer
+- body:identifier integer
+- body:interface_count integer
+- body:last_updated string
+- body:name string
+- body:primary_ip string
+- body:primary_ip4 integer
+- body:primary_ip6 integer
+- body:status string enum[active|planned|offline]
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:tenant integer
+- body:url string
+
+## S517-0017  DELETE /extras/config-contexts/{id}/
+- path:id integer
+
+## S517-0018  PUT /extras/custom-fields/
+schema: WritableCustomField
+- body:choices array<string>
+- body:content_types array<string>
+- body:created string
+- body:data_type string
+- body:default object
+- body:description string
+- body:display string
+- body:filter_logic string enum[disabled|loose|exact]
+- body:group_name string
+- body:id integer
+- body:label string
+- body:last_updated string
+- body:name string
+- body:object_type string
+- body:required boolean
+- body:search_weight integer
+- body:type string enum[text|longtext|integer|decimal|boolean|date|url|json|select|multiselect|object|multiobject]
+- body:ui_visibility string enum[read-write|read-only|hidden]
+- body:url string
+- body:validation_maximum integer
+- body:validation_minimum integer
+- body:validation_regex string
+- body:weight integer
+
+## S517-0019  DELETE /extras/custom-links/{id}/
+- path:id integer
+
+## S517-0020  DELETE /extras/export-templates/
+
+## S517-0021  PATCH /extras/export-templates/
+schema: ExportTemplate
+- body:as_attachment boolean
+- body:content_types array<string>
+- body:created string
+- body:description string
+- body:display string
+- body:file_extension string
+- body:id integer
+- body:last_updated string
+- body:mime_type string
+- body:name string
+- body:template_code string
+- body:url string
+
+## S517-0022  DELETE /extras/image-attachments/
+
+## S517-0023  PATCH /extras/tags/{id}/
+schema: Tag
+- path:id integer
+- body:color string
+- body:created string
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:slug string
+- body:tagged_items integer
+- body:url string
+
+## S517-0024  DELETE /ipam/asns/{id}/
+- path:id integer
+
+## S517-0025  DELETE /ipam/ip-ranges/
+
+## S517-0026  POST /ipam/l2vpn-terminations/
+schema: WritableL2VPNTermination
+- body:assigned_object object
+- body:assigned_object_id integer
+- body:assigned_object_type string
+- body:created string
+- body:custom_fields object
+- body:display string
+- body:id integer
+- body:l2vpn integer
+- body:last_updated string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-0027  POST /ipam/vrfs/
+schema: WritableVRF
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:enforce_unique boolean
+- body:export_targets array<integer>
+- body:id integer
+- body:import_targets array<integer>
+- body:ipaddress_count integer
+- body:last_updated string
+- body:name string
+- body:prefix_count integer
+- body:rd string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:tenant integer
+- body:url string
+
+## S517-0028  PATCH /tenancy/contact-groups/{id}/
+schema: WritableContactGroup
+- path:id integer
+- body:_depth integer
+- body:contact_count integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:parent integer
+- body:slug string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-0029  PATCH /tenancy/contact-roles/{id}/
+schema: ContactRole
+- path:id integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:slug string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-0030  PUT /tenancy/contact-roles/{id}/
+schema: ContactRole
+- path:id integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:slug string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-0031  PATCH /tenancy/tenants/
+schema: WritableTenant
+- body:circuit_count integer
+- body:cluster_count integer
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:device_count integer
+- body:display string
+- body:group integer
+- body:id integer
+- body:ipaddress_count integer
+- body:last_updated string
+- body:name string
+- body:prefix_count integer
+- body:rack_count integer
+- body:site_count integer
+- body:slug string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+- body:virtualmachine_count integer
+- body:vlan_count integer
+- body:vrf_count integer
+
+## S517-0032  PUT /users/groups/{id}/
+schema: Group
+- path:id integer
+- body:display string
+- body:id integer
+- body:name string
+- body:url string
+- body:user_count integer
+
+## S517-0033  DELETE /virtualization/cluster-groups/

@@ -1,0 +1,610 @@
+## S211-0039  DELETE /api/v1/organizations/{organizationId}/logo
+desc: Delete organization logo
+- path:organizationId string
+
+## S211-0042  POST /api/v1/organizations/{organizationId}/messaging/enqueueCustomMessage
+desc: Enqueue a custom message | Enqueue a custom organisation message with custom data.
+schema: SendCustomMessage
+- path:organizationId string
+- body:data object
+- body:name string
+
+## S211-0044  PUT /api/v1/organizations/{organizationId}/partner
+desc: Add partner | Adding a partner organization. If the given organization is already a partner the result will be state 200 too.
+schema: AddPartnerRequest
+- path:organizationId string
+- body:organizationId string
+
+## S211-0045  POST /api/v1/organizations/{organizationId}/users/invite
+desc: Invite Users
+schema: OrganizationUserInvitationListRequest
+- path:organizationId string
+- body:invitations array<object>
+- body:invitations[].email string
+- body:invitations[].roles array<string>
+- body:invitations[].userName string
+
+## S211-0047  POST /api/v1/organizations/{organizationId}/users/{username}/roles
+desc: Add role(s) to user
+schema: ChangeRoleRequest
+- path:organizationId string
+- path:username string
+- body:roles array<string>
+
+## S211-0048  PUT /api/v1/routingfiles/{id4n}
+desc: Store routing file
+schema: RoutingFileRequest
+- path:id4n string
+- body:organizationId string
+- body:routing object
+- body:routing.options object
+- body:routing.options.deleteOutdatedRoutes boolean
+- body:routing.routes array<object>
+- body:routing.routes[].params object
+- body:routing.routes[].priority integer
+- body:routing.routes[].public boolean
+- body:routing.routes[].type string
+- body:routing.routes[].validUntil integer
+
+## S211-0049  PUT /api/v1/transfers/{id4n}/receiveInfo
+desc: Transfer a GUID or collection, obtaining it (i.e. becoming the holder) and if allowed also taking ownership | Taking ownership can be forbidden by a previous owner. See methods prepare and getInfo
+schema: TransferReceiveInfo
+- path:id4n string
+- body:organizationId string
+
+## S211-0050  PUT /api/v1/transfers/{id4n}/sendInfo
+desc: Prepare an object for transfer
+schema: TransferSendInfo
+- path:id4n string
+- body:holderOrganizationId string
+- body:keepOwnership boolean
+- body:openForClaims boolean
+- body:ownerOrganizationId string
+- body:recipientOrganizationIds array<string>
+
+## S211-0051  POST /login
+desc: ID4i API Login
+schema: AccountCredentials
+- body:login string
+- body:password string
+
+## S212-0001  DELETE /aliases
+desc: Delete alias | Deletes a single alias by providing alias and domain. If no domain is provided the API will search for the matching alias within the Short.fyi domain
+- query:domainName string
+- query:aliasName string
+
+## S212-0002  POST /aliases
+desc: Create alias | This POST method creates a new alias under a specified domain. If no domain is specified in the request the alias will be attached to the default domain Short.fyi **NOTE:** You can override the domain level Meta Tags and Tracking Snippets by specifying them for each URL. Any variables you add to a specific URL will always override domain level settings.
+schema: CreateAliasModel
+- query:domainName string
+- query:aliasName string
+- body:destinations array<object>
+- body:destinations[].country string
+- body:destinations[].os string
+- body:destinations[].url string
+- body:metatags array<object>
+- body:metatags[].content string
+- body:metatags[].name string
+- body:snippets array<object>
+- body:snippets[].id string
+- body:snippets[].parameters object
+
+## S212-0003  PUT /aliases
+desc: Update alias | Update a single short URL by providing its alias and domain as a parameter, and the data you wish to update in the body of the request. If no domain is provided you will receive the alias found attached to the Short.fyi domain (if it exists and is linked to your account!) ### NOTE: ( * )If you add a metatag or a snippet with a same name to an alias and the domain it's related to, th
+schema: CreateAliasModel
+- query:domainName string
+- query:aliasName string
+- body:destinations array<object>
+- body:destinations[].country string
+- body:destinations[].os string
+- body:destinations[].url string
+- body:metatags array<object>
+- body:metatags[].content string
+- body:metatags[].name string
+- body:snippets array<object>
+- body:snippets[].id string
+- body:snippets[].parameters object
+
+## S212-0004  POST /clicks/pg
+desc: Get clicks statistics | Retrieve the raw click statistics for your account. Clicks are retrieved by creation date in descending order.
+schema: ClicksFilterModel
+- body:aliasId string
+- body:dateFrom string
+- body:dateTo string
+- body:domain string
+- body:lastId integer
+
+## S213-0001  POST /admin.apps.approve
+desc: Approve an app for installation on a workspace.
+- body:app_id string
+- body:request_id string
+- body:team_id string
+
+## S213-0002  POST /admin.apps.restrict
+desc: Restrict an app for installation on a workspace.
+- body:app_id string
+- body:request_id string
+- body:team_id string
+
+## S213-0004  POST /admin.conversations.convertToPrivate
+desc: Convert a public channel to a private channel.
+- body:channel_id string
+
+## S213-0013  POST /admin.conversations.setTeams
+desc: Set the workspaces in an Enterprise grid org that connect to a public or private channel.
+- body:channel_id string
+- body:org_channel boolean
+- body:target_team_ids string
+- body:team_id string
+
+## S213-0017  POST /admin.emoji.remove
+desc: Remove an emoji across an Enterprise Grid organization
+- body:name string
+- body:token string
+
+## S213-0019  POST /admin.inviteRequests.approve
+desc: Approve a workspace invite request.
+- body:invite_request_id string
+- body:team_id string
+
+## S213-0021  POST /admin.teams.create
+desc: Create an Enterprise team.
+- body:team_description string
+- body:team_discoverability string
+- body:team_domain string
+- body:team_name string
+
+## S213-0025  POST /admin.teams.settings.setIcon
+desc: Sets the icon of a workspace.
+- body:image_url string
+- body:team_id string
+- body:token string
+
+## S213-0026  POST /admin.teams.settings.setName
+desc: Set the name of a given workspace.
+- body:name string
+- body:team_id string
+
+## S213-0031  POST /admin.users.invite
+desc: Invite a user to a workspace.
+- body:channel_ids string
+- body:custom_message string
+- body:email string
+- body:guest_expiration_ts string
+- body:is_restricted boolean
+- body:is_ultra_restricted boolean
+- body:real_name string
+- body:resend boolean
+- body:team_id string
+
+## S213-0033  POST /admin.users.session.invalidate
+desc: Invalidate a single session for a user by session_id
+- body:session_id integer
+- body:team_id string
+
+## S213-0035  POST /admin.users.setAdmin
+desc: Set an existing guest, regular user, or owner to be an admin user.
+- body:team_id string
+- body:user_id string
+
+## S213-0039  POST /calls.add
+desc: Registers a new Call.
+- body:created_by string
+- body:date_start integer
+- body:desktop_app_join_url string
+- body:external_display_id string
+- body:external_unique_id string
+- body:join_url string
+- body:title string
+- body:users string
+
+## S213-0044  POST /chat.delete
+desc: Deletes a message.
+- body:as_user boolean
+- body:channel string
+- body:ts number
+
+## S213-0049  POST /chat.scheduleMessage
+desc: Schedules a message to be sent to a channel.
+- body:as_user boolean
+- body:attachments string
+- body:blocks string
+- body:channel string
+- body:link_names boolean
+- body:parse string
+- body:post_at string
+- body:reply_broadcast boolean
+- body:text string
+- body:thread_ts number
+- body:unfurl_links boolean
+- body:unfurl_media boolean
+
+## S213-0051  POST /chat.update
+desc: Updates a message.
+- body:as_user string
+- body:attachments string
+- body:blocks string
+- body:channel string
+- body:link_names string
+- body:parse string
+- body:text string
+- body:ts string
+
+## S213-0055  POST /conversations.invite
+desc: Invites users to a channel.
+- body:channel string
+- body:users string
+
+## S213-0057  POST /conversations.kick
+desc: Removes a user from a conversation.
+- body:channel string
+- body:user string
+
+## S213-0059  POST /conversations.mark
+desc: Sets the read cursor in a channel.
+- body:channel string
+- body:ts number
+
+## S213-0061  POST /conversations.rename
+desc: Renames a conversation.
+- body:channel string
+- body:name string
+
+## S213-0064  POST /conversations.unarchive
+desc: Reverses conversation archival.
+- body:channel string
+
+## S213-0065  POST /dnd.endDnd
+desc: Ends the current user's Do Not Disturb session immediately.
+
+## S213-0068  POST /files.comments.delete
+desc: Deletes an existing comment on a file.
+- body:file string
+- body:id string
+
+## S213-0072  POST /files.remote.update
+desc: Updates an existing remote file.
+- body:external_id string
+- body:external_url string
+- body:file string
+- body:filetype string
+- body:indexable_file_contents string
+- body:preview_image string
+- body:title string
+- body:token string
+
+## S213-0075  POST /files.upload
+desc: Uploads or creates a file.
+- body:channels string
+- body:content string
+- body:file string
+- body:filename string
+- body:filetype string
+- body:initial_comment string
+- body:thread_ts number
+- body:title string
+- body:token string
+
+## S213-0076  POST /pins.add
+desc: Pins an item to a channel.
+- body:channel string
+- body:timestamp string
+
+## S213-0077  POST /pins.remove
+desc: Un-pins an item from a channel.
+- body:channel string
+- body:timestamp string
+
+## S213-0079  POST /reactions.remove
+desc: Removes a reaction from an item.
+- body:channel string
+- body:file string
+- body:file_comment string
+- body:name string
+- body:timestamp string
+
+## S213-0080  POST /reminders.add
+desc: Creates a reminder.
+- body:text string
+- body:time string
+- body:user string
+
+## S213-0081  POST /reminders.complete
+desc: Marks a reminder as complete.
+- body:reminder string
+
+## S213-0082  POST /reminders.delete
+desc: Deletes a reminder.
+- body:reminder string
+
+## S213-0083  POST /stars.add
+desc: Adds a star to an item.
+- body:channel string
+- body:file string
+- body:file_comment string
+- body:timestamp string
+
+## S213-0085  POST /usergroups.create
+desc: Create a User Group
+- body:channels string
+- body:description string
+- body:handle string
+- body:include_count boolean
+- body:name string
+
+## S213-0086  POST /usergroups.disable
+desc: Disable an existing User Group
+- body:include_count boolean
+- body:usergroup string
+
+## S213-0092  POST /users.setActive
+desc: Marked a user as active. Deprecated and non-functional.
+
+## S213-0094  POST /users.setPresence
+desc: Manually sets user presence.
+- body:presence string
+
+## S214-0005  PATCH /api/v1/Environments/{environmentId}
+schema: UpdateCloudEnvironmentBody
+- path:environmentId string
+- body:autoShutdownDelayMinutes integer
+- body:failoverDetails object
+- body:failoverDetails.failoverEnabled boolean
+- body:failoverDetails.failoverRegion integer enum[101 (EastAsia)|102 (SouthEastAsia)|201 (AustraliaCentral)|202 (AustraliaCentral2)|203 (AustraliaEast)|205 (AustraliaSouthEast)|301 (BrazilSouth)|401 (CanadaCentral)|402 (CanadaEast)|501 (NorthEurope)|502 (WestEurope)|601 (FranceCentral)]
+- body:friendlyName string
+- body:planAccessToken string
+- body:planId string
+- body:skuName string
+
+## S214-0010  POST /api/v1/Environments/{environmentId}/notify
+schema: NotificationDataBody
+- path:environmentId string
+- body:details string
+- body:displayMode string
+- body:message string
+- body:modal boolean
+
+## S214-0013  PATCH /api/v1/Environments/{environmentId}/restore
+- path:environmentId string
+
+## S214-0015  POST /api/v1/Environments/{environmentId}/shutdown
+- path:environmentId string
+
+## S214-0019  POST /api/v1/GenevaActions/Configuration/{target}
+schema: UpdateSystemConfigurationBody
+- path:target string
+- body:comment string
+- body:key string
+- body:value string
+
+## S214-0022  PUT /api/v1/GenevaActions/Environments/{environmentId}/archive
+- path:environmentId string
+
+## S214-0026  POST /api/v1/GenevaActions/Pools/{poolCode}/rotate-pool
+- path:poolCode string
+
+## S214-0032  DELETE /api/v1/GenevaActions/VnetPoolDefinitions
+schema: PoolDefinitionInput
+- body:dimensions object
+- body:isEnabled boolean
+- body:location integer enum[101 (EastAsia)|102 (SouthEastAsia)|201 (AustraliaCentral)|202 (AustraliaCentral2)|203 (AustraliaEast)|205 (AustraliaSouthEast)|301 (BrazilSouth)|401 (CanadaCentral)|402 (CanadaEast)|501 (NorthEurope)|502 (WestEurope)|601 (FranceCentral)]
+- body:logicalSkus array<string>
+- body:subtype integer enum[0 (Default)|2 (ShrunkBlob)|3 (FullBlob)|4 (UserParametersBlob)|5 (PrebuildHash)|6 (VnetInjected)]
+- body:targetCount integer
+- body:type integer enum[1 (ComputeVM)|2 (StorageFileShare)|3 (StorageArchive)|4 (KeyVault)|5 (OSDisk)|6 (NetworkInterface)|7 (InputQueue)|8 (Snapshot)|9 (PoolQueue)|10 (VirtualNetwork)|11 (NetworkSecurityGroup)|12 (LiveShareWorkspace)]
+
+## S214-0034  POST /api/v1/HeartBeat
+schema: HeartBeatBody
+- body:agentVersion string
+- body:collectedDataList array<object>
+- body:collectedDataList[].environmentId string
+- body:collectedDataList[].name string
+- body:collectedDataList[].parentActivityId string
+- body:collectedDataList[].timestamp string
+- body:environmentId string
+- body:resourceId string
+- body:timeStamp string
+
+## S214-0039  PUT /api/v1/Secrets/{secretId}
+schema: ScopedUpdateSecretBody
+- path:secretId string
+- query:planId string
+- body:filters array<object>
+- body:filters[].type integer enum[1 (GitRepo)|2 (CodespaceName)]
+- body:filters[].value string
+- body:notes string
+- body:scope integer enum[1 (Plan)|2 (User)]
+- body:secretName string
+- body:value string
+
+## S214-0044  POST /api/v1/Tokens/plans/{planName}/writeCodespaces
+- path:planName string
+- query:expiration string
+
+## S214-0046  PUT /api/v1/Tokens/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/{providerNamespace}/plans/{resourceName}
+schema: PlanResource
+- path:subscriptionId string
+- path:resourceGroup string
+- path:providerNamespace string
+- path:resourceName string
+- body:id string
+- body:identity object
+- body:identity.principalId string
+- body:identity.tenantId string
+- body:identity.type string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.defaultCodespaceSku string
+- body:properties.defaultEnvironmentSku string
+- body:properties.encryption object
+- body:properties.encryption.keySource string
+- body:properties.encryption.keyVaultProperties object
+- body:properties.userId string
+- body:properties.vnetProperties object
+- body:properties.vnetProperties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-0051  POST /api/v1/Tokens/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/{providerNamespace}/plans/{resourceName}/writeCodespaces
+- path:subscriptionId string
+- path:resourceGroup string
+- path:providerNamespace string
+- path:resourceName string
+- query:expiration string
+
+## S214-0052  POST /api/v1/Tokens/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/{providerNamespace}/plans/{resourceName}/writeDelegates
+schema: IssueDelegatePlanAccessTokenBody
+- path:subscriptionId string
+- path:resourceGroup string
+- path:providerNamespace string
+- path:resourceName string
+- body:environmentIds array<string>
+- body:expiration string
+- body:identity object
+- body:identity.displayName string
+- body:identity.id string
+- body:identity.username string
+- body:portNumbers array<integer>
+- body:scope string
+
+## S214-0053  POST /api/v1/Tokens/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/{providerNamespace}/plans/{resourceName}/writeEnvironments
+- path:subscriptionId string
+- path:resourceGroup string
+- path:providerNamespace string
+- path:resourceName string
+- query:expiration string
+
+## S214-0054  DELETE /api/v1/UserSubscriptions
+- query:email string
+
+## S214-0060  PUT /api/v1/subscriptions/{subscriptionId}/providers/Microsoft.VSOnline/plans/SubscriptionLifeCycleNotification
+schema: RPSubscriptionNotification
+- path:subscriptionId string
+- body:properties object
+- body:properties.accountOwner object
+- body:properties.accountOwner.email string
+- body:properties.accountOwner.puid string
+- body:properties.additionalProperties object
+- body:properties.additionalProperties.billingProperties object
+- body:properties.additionalProperties.resourceProviderProperties string
+- body:properties.locationPlacementId string
+- body:properties.managedByTenants array<object>
+- body:properties.managedByTenants[].key string
+- body:properties.managedByTenants[].value string
+- body:properties.quotaId string
+- body:properties.registeredFeatures array<object>
+- body:properties.registeredFeatures[].key string
+- body:properties.registeredFeatures[].value string
+- body:properties.tenantId string
+- body:registrationDate string
+- body:state string
+
+## S214-0063  DELETE /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}
+schema: NetworkSettingsResource
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+- body:id string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-0065  PUT /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}
+schema: NetworkSettingsResource
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+- body:id string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-0067  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}/resourceCreationValidate
+schema: NetworkSettingsResource
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+- body:id string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-0069  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}/resourceDeletionValidate
+schema: NetworkSettingsResource
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+- body:id string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-0074  PUT /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Codespaces/plans/{resourceName}
+schema: PlanResource
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- body:id string
+- body:identity object
+- body:identity.principalId string
+- body:identity.tenantId string
+- body:identity.type string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.defaultCodespaceSku string
+- body:properties.defaultEnvironmentSku string
+- body:properties.encryption object
+- body:properties.encryption.keySource string
+- body:properties.encryption.keyVaultProperties object
+- body:properties.userId string
+- body:properties.vnetProperties object
+- body:properties.vnetProperties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-0075  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Codespaces/plans/{resourceName}/deleteAllCodespaces
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- query:expiration string
+
+## S214-0077  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Codespaces/plans/{resourceName}/readAllCodespaces
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- query:expiration string
+
+## S214-0078  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Codespaces/plans/{resourceName}/readAllEnvironments
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- query:expiration string
+
+## S214-0082  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Codespaces/plans/{resourceName}/resourceDeletionValidate
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string

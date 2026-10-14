@@ -1,0 +1,710 @@
+## S358-0018  POST /v2/floating_ips
+desc: Create a New Floating IP | On creation, a floating IP must be either assigned to a Droplet or reserved to a region. * To create a new floating IP assigned to a Droplet, send a POST request to `/v2/floating_ips` with the `droplet_id` attribute. * To create a new floating IP reserved to a region, send a POST request to `/v2/floating_ips` with the `region` attribute. **Note**: In addition to the stan
+- body:droplet_id integer
+- body:project_id string
+- body:region string
+
+## S358-0019  POST /v2/functions/namespaces/{namespace_id}/triggers
+desc: Create Trigger | Creates a new trigger for a given function in a namespace. To create a trigger, send a POST request to `/v2/functions/namespaces/$NAMESPACE_ID/triggers` with the `name`, `function`, `type`, `is_enabled` and `scheduled_details` properties.
+- body:function string
+- body:is_enabled boolean
+- body:name string
+- body:scheduled_details any
+- body:type string
+
+## S358-0020  POST /v2/images
+desc: Create a Custom Image | To create a new custom image, send a POST request to /v2/images. The body must contain a url attribute pointing to a Linux virtual machine image to be imported into DigitalOcean. The image must be in the raw, qcow2, vhdx, vdi, or vmdk format. It may be compressed using gzip or bzip2 and must be smaller than 100 GB after being decompressed.
+- body:description any
+- body:distribution any
+- body:name any
+- body:region any
+- body:tags any
+- body:url string
+
+## S358-0021  POST /v2/kubernetes/clusters/{cluster_id}/clusterlint
+desc: Run Clusterlint Checks on a Kubernetes Cluster | Clusterlint helps operators conform to Kubernetes best practices around resources, security and reliability to avoid common problems while operating or upgrading the clusters. To request a clusterlint run on your cluster, send a POST request to `/v2/kubernetes/clusters/$K8S_CLUSTER_ID/clusterlint`. This will run all checks present in the `doks` grou
+- body:exclude_checks array<string>
+- body:exclude_groups array<string>
+- body:include_checks array<string>
+- body:include_groups array<string>
+
+## S358-0022  DELETE /v2/kubernetes/clusters/{cluster_id}/destroy_with_associated_resources/dangerous
+desc: Delete a Cluster and All of its Associated Resources (Dangerous) | To delete a Kubernetes cluster with all of its associated resources, send a DELETE request to `/v2/kubernetes/clusters/$K8S_CLUSTER_ID/destroy_with_associated_resources/dangerous`. A 204 status code with no body will be returned in response to a successful request.
+
+## S358-0023  POST /v2/kubernetes/clusters/{cluster_id}/node_pools/{node_pool_id}/recycle
+desc: Recycle a Kubernetes Node Pool | The endpoint has been deprecated. Please use the DELETE `/v2/kubernetes/clusters/$K8S_CLUSTER_ID/node_pools/$NODE_POOL_ID/nodes/$NODE_ID` method instead.
+- body:nodes array<string>
+
+## S358-0024  DELETE /v2/load_balancers/{lb_id}
+desc: Delete a Load Balancer | To delete a load balancer instance, disassociating any Droplets assigned to it and removing it from your account, send a DELETE request to `/v2/load_balancers/$LOAD_BALANCER_ID`. A successful request will receive a 204 status code with no body in response. This indicates that the request was processed successfully.
+
+## S358-0025  POST /v2/load_balancers/{lb_id}/droplets
+desc: Add Droplets to a Load Balancer | To assign a Droplet to a load balancer instance, send a POST request to `/v2/load_balancers/$LOAD_BALANCER_ID/droplets`. In the body of the request, there should be a `droplet_ids` attribute containing a list of Droplet IDs. Individual Droplets can not be added to a load balancer configured with a Droplet tag. Attempting to do so will result in a "422 Unprocessabl
+schema: 0
+- body:(body) any
+
+## S358-0026  POST /v2/projects
+desc: Create a Project | To create a project, send a POST request to `/v2/projects`.
+schema: 0
+- body:(body) any
+
+## S358-0027  DELETE /v2/registry
+desc: Delete Container Registry | To delete your container registry, destroying all container image data stored in it, send a DELETE request to `/v2/registry`.
+
+## S358-0028  POST /v2/registry
+desc: Create Container Registry | To create your container registry, send a POST request to `/v2/registry`. The `name` becomes part of the URL for images stored in the registry. For example, if your registry is called `example`, an image in it will have the URL `registry.digitalocean.com/example/image:tag`.
+- body:name string
+- body:region string enum[nyc3|sfo3|ams3|sgp1|fra1]
+- body:subscription_tier_slug string enum[starter|basic|professional]
+
+## S358-0029  POST /v2/registry/subscription
+desc: Update Subscription Tier | After creating your registry, you can switch to a different subscription tier to better suit your needs. To do this, send a POST request to `/v2/registry/subscription`.
+- body:tier_slug string enum[starter|basic|professional]
+
+## S358-0030  POST /v2/reserved_ips
+desc: Create a New Reserved IP | On creation, a reserved IP must be either assigned to a Droplet or reserved to a region. * To create a new reserved IP assigned to a Droplet, send a POST request to `/v2/reserved_ips` with the `droplet_id` attribute. * To create a new reserved IP reserved to a region, send a POST request to `/v2/reserved_ips` with the `region` attribute. **Note**: In addition to the stan
+- body:droplet_id integer
+- body:project_id string
+- body:region string
+
+## S358-0031  DELETE /v2/reserved_ips/{reserved_ip}
+desc: Delete a Reserved IP | To delete a reserved IP and remove it from your account, send a DELETE request to `/v2/reserved_ips/$RESERVED_IP_ADDR`. A successful request will receive a 204 status code with no body in response. This indicates that the request was processed successfully.
+
+## S358-0032  DELETE /v2/uptime/checks/{check_id}
+desc: Delete a Check | To delete an Uptime check, send a DELETE request to `/v2/uptime/checks/$CHECK_ID`. A 204 status code with no body will be returned in response to a successful request. Deleting a check will also delete alerts associated with the check.
+
+## S358-0033  PUT /v2/uptime/checks/{check_id}/alerts/{alert_id}
+desc: Update an Alert | To update the settings of an Uptime alert, send a PUT request to `/v2/uptime/checks/$CHECK_ID/alerts/$ALERT_ID`.
+schema: 1
+- body:(body) object
+
+## S358-0034  POST /v2/volumes
+desc: Create a New Block Storage Volume | To create a new volume, send a POST request to `/v2/volumes`. Optionally, a `filesystem_type` attribute may be provided in order to automatically format the volume's filesystem. Pre-formatted volumes are automatically mounted when attached to Ubuntu, Debian, Fedora, Fedora Atomic, and CentOS Droplets created on or after April 26, 2018. Attaching pre-formatted vo
+schema: 0
+- body:snapshot_id string
+- body:filesystem_type string
+- body:filesystem_label string
+- body:region any
+
+## S358-0035  POST /v2/volumes/{volume_id}/actions
+desc: Initiate A Block Storage Action By Volume Id | To initiate an action on a block storage volume by Id, send a POST request to `~/v2/volumes/$VOLUME_ID/actions`. The body should contain the appropriate attributes for the respective action. ## Attach a Block Storage Volume to a Droplet | Attribute | Details | | ---------- | ------------------------------------------------------------------- | | type 
+schema: 0
+- body:size_gigabytes integer
+
+## S358-0036  PUT /v2/vpcs/{vpc_id}
+desc: Update a VPC | To update information about a VPC, send a PUT request to `/v2/vpcs/$VPC_ID`.
+schema: 0
+- body:(body) object
+
+## S360-0001  POST /v1/chargestations
+desc: Create a new charge station
+schema: schema1
+- body:location string
+- body:manufacturer string
+- body:model string
+- body:protocol string
+- body:public boolean
+
+## S360-0002  DELETE /v1/chargestations/{id}
+desc: Use to delete a charge station
+- path:id string
+
+## S360-0003  PATCH /v1/chargestations/{id}
+desc: Update a charge station's data
+schema: schema1
+- path:id string
+- body:location string
+- body:manufacturer string
+- body:model string
+- body:protocol string
+- body:public boolean
+
+## S360-0004  POST /v1/commands/cancelreservation
+desc: Use to request a delete an existing reservation. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- body:reservation string
+
+## S360-0005  DELETE /v1/commands/chargingschedule
+desc: Delete a smart charging schedule
+- body:id string
+
+## S360-0006  POST /v1/commands/chargingschedule
+desc: Set one of charging power or current of a specific chargestation connector
+- body:connector string
+- body:schedule array<object>
+- body:schedule[].endDate string
+- body:schedule[].limit number
+- body:schedule[].startDate string
+- body:schedule[].unit string
+
+## S360-0007  POST /v1/commands/remotestart
+desc: Use to request a remote start command. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- body:chargestation string
+- body:connector string
+- body:driver string
+- body:token string
+
+## S360-0008  POST /v1/commands/remotestop
+desc: Use to request a remote stop command. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- body:chargestation string
+- body:driver string
+- body:transaction string
+
+## S360-0009  POST /v1/commands/reserve
+desc: Use to request a reserve command. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- body:chargestation string
+- body:connector string
+- body:driver string
+- body:endDate string
+- body:token string
+
+## S360-0010  POST /v1/commands/reset
+desc: Use to request a reset command. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- body:chargestation string
+- body:type string
+
+## S360-0011  POST /v1/commands/unlockconnector
+desc: Use to request an unlock command for a connector. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- body:chargestation string
+- body:connector string
+
+## S360-0012  PATCH /v1/commands/{id}/variables
+desc: Update config variables for a chargestation
+- path:id string
+- body:value string
+- body:variable string enum[MeterValueSampleInterval|HeartbeatInterval|ConnectionTimeOut|WebSocketPingInterval|TransactionMessageRetryInterval|TransactionMessageAttempts]
+
+## S360-0013  POST /v1/configurations
+desc: Create connector with parameters
+- body:key string
+- body:value string
+
+## S360-0014  POST /v1/connectors
+desc: Create a new connector
+- body:chargestation string
+- body:format string
+- body:power integer
+- body:power_type string
+- body:rate string
+- body:type string
+
+## S360-0015  DELETE /v1/connectors/{id}
+desc: Delete a connector
+- path:id string
+
+## S360-0016  PATCH /v1/connectors/{id}
+desc: Update a connector's data
+- path:id string
+- body:chargestation string
+- body:format string
+- body:power integer
+- body:power_type string
+- body:rate string
+- body:type string
+
+## S360-0017  POST /v1/drivers
+desc: Create a new driver
+- body:active boolean
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.streetAndNumber string
+- body:email string
+- body:firstname string
+- body:lastname string
+- body:phone object
+- body:phone.home string
+- body:phone.mobile string
+- body:phone.work string
+- body:source string enum[physical|slack|telegram|sms]
+
+## S360-0018  DELETE /v1/drivers/{id}
+desc: Delete a driver
+- path:id string
+
+## S360-0019  PATCH /v1/drivers/{id}
+desc: Update a driver's data
+- path:id string
+- body:active boolean
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.streetAndNumber string
+- body:email string
+- body:firstname string
+- body:lastname string
+- body:phone object
+- body:phone.home string
+- body:phone.mobile string
+- body:phone.work string
+- body:source string
+- body:tokens array<any>
+
+## S360-0020  DELETE /v1/location/{id}
+desc: Delete a location
+- path:id string
+
+## S360-0021  PATCH /v1/location/{id}
+desc: Update a location's data
+- path:id string
+- body:active boolean
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.state string
+- body:address.streetAndNumber string
+- body:chargestations array<any>
+- body:coordinates object
+- body:coordinates.latitude number
+- body:coordinates.longitude number
+- body:openingHours object
+- body:openingHours.0 array<object>
+- body:openingHours.0[].endTime string
+- body:openingHours.0[].startTime string
+- body:openingHours.1 array<object>
+- body:openingHours.1[].endTime string
+- body:openingHours.1[].startTime string
+- body:openingHours.2 array<object>
+- body:openingHours.2[].endTime string
+- body:openingHours.2[].startTime string
+- body:openingHours.3 array<object>
+- body:openingHours.3[].endTime string
+- body:openingHours.3[].startTime string
+- body:openingHours.4 array<object>
+- body:openingHours.4[].endTime string
+- body:openingHours.4[].startTime string
+- body:openingHours.5 array<object>
+- body:openingHours.5[].endTime string
+- body:openingHours.5[].startTime string
+- body:openingHours.6 array<object>
+- body:openingHours.6[].endTime string
+- body:openingHours.6[].startTime string
+- body:operatorName string
+- body:timezone string
+
+## S360-0022  POST /v1/locations
+desc: Create a new location
+- body:active boolean
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.streetAndNumber string
+- body:chargestations array<any>
+- body:coordinates object
+- body:coordinates.latitude number
+- body:coordinates.longitude number
+- body:operatorName string
+
+## S360-0023  PATCH /v1/organizations/{id}
+desc: Update an organization's data
+- path:id string
+- body:active boolean
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.streetAndNumber string
+- body:channels object
+- body:channels.slack object
+- body:channels.telegram object
+- body:configurations object
+- body:configurations.basicAuthEnabled boolean
+- body:configurations.basicAuthPassword boolean
+- body:links object
+- body:links.about string
+- body:links.contact string
+- body:links.privacy string
+- body:links.support string
+- body:locations array<any>
+- body:logo string
+- body:name string
+- body:otp string
+- body:stripe_connected_account_id string
+- body:stripe_country string
+- body:stripe_currency string
+- body:stripe_reserve_amount integer
+- body:support object
+- body:support.business_hours string
+- body:support.chat object
+- body:support.chat.type string
+- body:support.chat.value string
+- body:support.contact_number string
+- body:support.email string
+- body:supportChat object
+- body:supportChat.id string
+- body:supportChat.name string
+- body:theme object
+- body:theme.colors object
+- body:theme.colors.primary string
+- body:theme.colors.secondary string
+
+## S360-0024  PATCH /v1/reservations/{id}
+desc: Use to request a update an existing reservation. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- path:id string
+- body:connector integer
+- body:driver string
+- body:endDate string
+- body:evse integer
+
+## S360-0025  POST /v1/tokens
+desc: Create a new token
+- body:active boolean
+- body:channel string enum[physical|slack|telegram|sms]
+- body:driver string
+- body:physicalId string
+- body:type string
+
+## S360-0026  DELETE /v1/tokens/{id}
+desc: Use to delete a token
+- path:id string
+
+## S360-0027  PATCH /v1/tokens/{id}
+desc: Update a token
+- path:id string
+- body:active boolean
+- body:channel string enum[physical|slack|telegram|sms]
+- body:driver string
+- body:physicalId string
+- body:type string
+
+## S360-0028  POST /v1/vehicles/{id}/charge
+desc: Change charge
+- path:id string
+- body:action string enum[START|STOP]
+
+## S361-0001  POST /almaws/v1/task-lists/printouts
+desc: Act on Printouts | This API performs an action on printouts: mark as printed or canceled. 10,000 records can be handled in one requests. Only printouts which were updated will be returned.
+- query:letter string
+- query:status string
+- query:printer_id string
+- query:printout_id string
+- query:op string
+
+## S361-0002  POST /almaws/v1/task-lists/printouts/{printout_id}
+desc: Printout Service | This API operates on an printout. given a Printout ID.
+- path:printout_id string
+- query:op string
+
+## S361-0003  POST /almaws/v1/task-lists/requested-resources
+desc: Act on Requested Resources | This API performs an action on requested resources that are on the shelf in Alma
+- query:library string
+- query:circ_desk string
+- query:op string
+- query:location string
+- query:pickup_inst string
+- query:reported string
+- query:printed string
+
+## S361-0004  POST /almaws/v1/task-lists/rs/lending-requests
+desc: Act on Lending Requests | This API preforms the requested action on a list (specified by given filters) of lending requests in Alma
+- query:library string
+- query:op string
+- query:status string
+- query:printed string
+- query:reported string
+- query:partner string
+- query:requested_format string
+- query:supplied_format string
+
+## S361-0005  POST /almaws/v1/task-lists/test
+desc: POST Task-lists Test API | This API is used to test if the API key was configured correctly, including read/write permissions.It returns a short XML (no schema available - the output is subject to changes) with the following structure:<test>POST - OK</test>
+
+## S363-0001  POST /combined_submissions
+desc: Merge generated PDFs together
+- body:expires_in integer
+- body:metadata object
+- body:password string
+- body:submission_ids array<string>
+- body:test boolean
+
+## S363-0002  DELETE /combined_submissions/{combined_submission_id}
+desc: Expire a combined submission
+- path:combined_submission_id string
+
+## S363-0003  POST /combined_submissions?v=2
+desc: Merge submission PDFs, template PDFs, or custom files
+- body:delete_custom_files boolean
+- body:expires_in integer
+- body:metadata object
+- body:password string
+- body:source_pdfs array<object>
+- body:source_pdfs[].id string
+- body:source_pdfs[].type string enum[submission|combined_submission|template|custom_file]
+- body:source_pdfs[].url string
+- body:test boolean
+
+## S363-0004  POST /custom_files
+desc: Create a new custom file from a cached presign upload
+- body:cache_id string
+
+## S363-0005  PUT /data_requests/{data_request_id}
+desc: Update a submission data request
+- path:data_request_id string
+- body:auth_phone_number_hash string
+- body:auth_provider string
+- body:auth_second_factor_type string enum[none|phone_number|totp|mobile_push|security_key|fingerprint]
+- body:auth_session_id_hash string
+- body:auth_session_started_at string
+- body:auth_type string enum[none|password|oauth|email_link|phone_number|ldap|saml]
+- body:auth_user_id_hash string
+- body:auth_username_hash string
+- body:email string
+- body:fields array<string>
+- body:metadata object
+- body:name string
+- body:order integer
+
+## S363-0006  POST /data_requests/{data_request_id}/tokens
+desc: Creates a new data request token for form authentication
+- path:data_request_id string
+
+## S363-0007  POST /folders/
+desc: Create a folder
+- body:folder object
+- body:folder.name string
+- body:folder.parent_folder_id string
+
+## S363-0008  DELETE /folders/{folder_id}
+desc: Delete a folder
+- path:folder_id string
+
+## S363-0009  POST /folders/{folder_id}/move
+desc: Move a folder
+- path:folder_id string
+- body:parent_folder_id string
+
+## S363-0010  POST /folders/{folder_id}/rename
+desc: Rename a folder
+- path:folder_id string
+- body:name string
+
+## S363-0011  POST /submissions/batches
+desc: Generates multiple PDFs
+- body:metadata object
+- body:submissions array<object>
+- body:submissions[].css string
+- body:submissions[].data object
+- body:submissions[].html string
+- body:submissions[].metadata object
+- body:submissions[].template_id string
+- body:submissions[].test boolean
+- body:template_id string
+- body:test boolean
+
+## S363-0012  DELETE /submissions/{submission_id}
+desc: Expire a PDF submission
+- path:submission_id string
+
+## S363-0013  POST /templates
+desc: Create a new PDF template with a form POST file upload
+- body:template[document] string
+- body:template[name] string
+- body:template[parent_folder_id] string
+
+## S363-0014  PUT /templates/{template_id}
+desc: Update a Template
+- path:template_id string
+- body:template object
+- body:template.allow_additional_properties boolean
+- body:template.description string
+- body:template.editable_submissions boolean
+- body:template.expiration_interval string enum[minutes|hours|days]
+- body:template.expire_after number
+- body:template.expire_submissions boolean
+- body:template.footer_html string
+- body:template.header_html string
+- body:template.html string
+- body:template.name string
+- body:template.public_submissions boolean
+- body:template.public_web_form boolean
+- body:template.redirect_url string
+- body:template.scss string
+- body:template.slack_webhook_url string
+- body:template.webhook_url string
+
+## S363-0015  PUT /templates/{template_id}/add_fields
+desc: Add new fields to a Template
+- path:template_id string
+- body:fields array<object>
+- body:fields[].alignment string enum[left|center|right]
+- body:fields[].autoCalculateMaxLength boolean
+- body:fields[].backgroundColor string
+- body:fields[].backgroundColorFieldName string
+- body:fields[].backgroundColorFieldRequired boolean
+- body:fields[].barcodeSymbology string
+- body:fields[].bold boolean
+- body:fields[].characterSpacing number
+- body:fields[].checkCharacter string enum[&#10003;|&#10004;|&#10006;|&#10007;|&#10008;]
+- body:fields[].checkColor string
+- body:fields[].checkColorFieldName string
+- body:fields[].checkColorFieldRequired boolean
+- body:fields[].color string
+- body:fields[].colorFieldName string
+- body:fields[].colorFieldRequired boolean
+- body:fields[].comb boolean
+- body:fields[].combNumberOfCells number
+- body:fields[].combValueOffset number
+- body:fields[].combinedFieldFormat string
+- body:fields[].combinedFieldNames string
+- body:fields[].combinedFieldSeparator string
+- body:fields[].combinedFieldType string
+- body:fields[].condition string
+- body:fields[].currency boolean
+- body:fields[].dateTimeFormat string
+- body:fields[].decimalPlaces number
+- body:fields[].default string
+- body:fields[].description string
+- body:fields[].displayType string enum[text|check|qrcode|barcode|image|shape]
+- body:fields[].exclusiveMaximum boolean
+- body:fields[].exclusiveMinimum boolean
+- body:fields[].falseText string
+- body:fields[].fontSize number
+- body:fields[].height number
+- body:fields[].hidden boolean
+- body:fields[].id number
+- body:fields[].imageGravity string enum[NorthWest|North|NorthEast|West|Center|East|SouthWest|South|SouthEast]
+- body:fields[].imageScaleType string enum[fit|fill|stretch]
+- body:fields[].includeTime boolean
+- body:fields[].integer boolean
+- body:fields[].invertBooleanCondition boolean
+- body:fields[].maxLength number
+- body:fields[].maximum number
+- body:fields[].metadata string
+- body:fields[].minLength number
+- body:fields[].minimum number
+- body:fields[].multiline boolean
+- body:fields[].multilineLines number
+- body:fields[].name string
+- body:fields[].numberConditionRangeExclusiveMax boolean
+- body:fields[].numberConditionRangeExclusiveMin boolean
+- body:fields[].numberConditionRangeMax number
+- body:fields[].numberConditionRangeMin number
+- body:fields[].numberConditionType string enum[equals|range|gte|gt|lte|lt]
+- body:fields[].opacity number
+- body:fields[].optionList string
+- body:fields[].overflow string enum[shrink_to_fit|truncate]
+- body:fields[].page number
+- body:fields[].placeholder string
+- body:fields[].qrcodeColor string
+- body:fields[].qrcodeColorFieldName string
+- body:fields[].qrcodeColorFieldRequired boolean
+- body:fields[].required boolean
+- body:fields[].rotation number
+- body:fields[].shapeBorderColor string
+- body:fields[].shapeBorderColorFieldName string
+- body:fields[].shapeBorderColorFieldRequired boolean
+- body:fields[].shapeBorderWidth number
+- body:fields[].shapeFillColor string
+- body:fields[].shapeFillColorFieldName string
+- body:fields[].shapeFillColorFieldRequired boolean
+- body:fields[].shapeType string enum[square|rectangle|circle|ellipse]
+- body:fields[].signatureAllowDraw boolean
+- body:fields[].signatureAllowType boolean
+- body:fields[].static boolean
+- body:fields[].strikethrough boolean
+- body:fields[].stringConditionType string enum[equals|contains|starts_with|ends_with|regex]
+- body:fields[].title string
+(+8 fields cut)
+
+## S363-0016  POST /templates/{template_id}/copy
+desc: Copy a Template
+- path:template_id string
+- body:name string
+- body:parent_folder_id string
+
+## S363-0017  POST /templates/{template_id}/move
+desc: Move Template to folder
+- path:template_id string
+- body:parent_folder_id string
+
+## S363-0018  POST /templates/{template_id}/submissions
+desc: Generates a new PDF
+- path:template_id string
+- body:css string
+- body:data object
+- body:data_requests array<object>
+- body:data_requests[].auth_phone_number_hash string
+- body:data_requests[].auth_provider string
+- body:data_requests[].auth_second_factor_type string enum[none|phone_number|totp|mobile_push|security_key|fingerprint]
+- body:data_requests[].auth_session_id_hash string
+- body:data_requests[].auth_session_started_at string
+- body:data_requests[].auth_type string enum[none|password|oauth|email_link|phone_number|ldap|saml]
+- body:data_requests[].auth_user_id_hash string
+- body:data_requests[].auth_username_hash string
+- body:data_requests[].email string
+- body:data_requests[].fields array<string>
+- body:data_requests[].metadata object
+- body:data_requests[].name string
+- body:data_requests[].order integer
+- body:expires_in integer
+- body:field_overrides object
+- body:html string
+- body:metadata object
+- body:password string
+- body:test boolean
+
+## S363-0019  POST /templates/{template_id}/submissions/batch
+desc: Generates multiple PDFs
+- path:template_id string
+- body:(body) object
+
+## S363-0020  POST /templates?desc=cached_upload
+desc: Create a new PDF template from a cached presign upload
+- body:template object
+- body:template.allow_additional_properties boolean
+- body:template.description string
+- body:template.document object
+- body:template.document.id string
+- body:template.document.metadata object
+- body:template.document.storage string enum[cache]
+- body:template.editable_submissions boolean
+- body:template.expiration_interval string enum[minutes|hours|days]
+- body:template.expire_after number
+- body:template.expire_submissions boolean
+- body:template.footer_html string
+- body:template.header_html string
+- body:template.html string
+- body:template.name string
+- body:template.public_submissions boolean
+- body:template.public_web_form boolean
+- body:template.redirect_url string
+- body:template.scss string
+- body:template.slack_webhook_url string
+- body:template.template_type string enum[pdf|html]
+- body:template.webhook_url string
+
+## S363-0021  POST /templates?desc=html
+desc: Create a new HTML template
+- body:template object
+- body:template.allow_additional_properties boolean
+- body:template.description string
+- body:template.editable_submissions boolean
+- body:template.expiration_interval string enum[minutes|hours|days]
+- body:template.expire_after number
+- body:template.expire_submissions boolean
+- body:template.footer_html string
+- body:template.header_html string
+- body:template.html string
+- body:template.name string
+- body:template.public_submissions boolean
+- body:template.public_web_form boolean
+- body:template.redirect_url string
+- body:template.scss string
+- body:template.slack_webhook_url string
+- body:template.template_type string enum[pdf|html]
+- body:template.webhook_url string
+
+## S366-0001  POST /auth/authorization
+desc: Logs in to an existing account
+schema: Login
+- body:login string
+- body:password string
+
+## S366-0002  POST /auth/changePassword
+desc: changes a user's password
+- body:new_password string
+- body:old_password string
+- body:uid string

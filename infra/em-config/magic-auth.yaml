@@ -1,0 +1,33 @@
+# EvoMaster black-box auth config for the magic held-out target (WFC format, jar P2e).
+#
+# magic (polterguy/magic) login is a GET with credentials in the query string:
+#   GET /magic/system/auth/authenticate?username=X&password=Y  -> JSON {ticket}
+# So each account carries its own externalEndpointURL (GET, creds baked), pointed at the
+# capture proxy (:8212) so logins are recorded. Token is the JWT "ticket", sent as Bearer.
+#
+# operator=root (performs DELETE users_roles demotion), victim=victim (granted role root,
+# does PUT roles source), low=plain (negative control). Seeded by reseed.sh.
+# File order = [low, operator, victim]; RestSampler processes the LAST entry first.
+
+auth:
+  - name: low
+    loginEndpointAuth:
+      externalEndpointURL: http://localhost:8212/magic/system/auth/authenticate?username=plain&password=PlainPass123
+      verb: GET
+  - name: operator
+    loginEndpointAuth:
+      externalEndpointURL: http://localhost:8212/magic/system/auth/authenticate?username=root&password=RootSetup123
+      verb: GET
+  - name: victim
+    loginEndpointAuth:
+      externalEndpointURL: http://localhost:8212/magic/system/auth/authenticate?username=victim&password=VictimPass123
+      verb: GET
+
+authTemplate:
+  loginEndpointAuth:
+    token:
+      extractFrom: body
+      extractSelector: /ticket
+      sendIn: header
+      sendName: Authorization
+      sendTemplate: "Bearer {token}"

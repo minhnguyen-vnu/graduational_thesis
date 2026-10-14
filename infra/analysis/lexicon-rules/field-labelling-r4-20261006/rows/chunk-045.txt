@@ -1,0 +1,1289 @@
+## S569-N0045  POST /Library/VirtualFolders
+desc: Adds a virtual folder.
+schema: AddVirtualFolderDto
+- query:name string
+- query:collectionType string
+- query:paths array<string>
+- query:refreshLibrary boolean
+- body:LibraryOptions object
+- body:LibraryOptions.AutomaticRefreshIntervalDays integer
+- body:LibraryOptions.DisabledLocalMetadataReaders array<string>
+- body:LibraryOptions.DisabledSubtitleFetchers array<string>
+- body:LibraryOptions.EnableAutomaticSeriesGrouping boolean
+- body:LibraryOptions.EnableChapterImageExtraction boolean
+- body:LibraryOptions.EnableEmbeddedEpisodeInfos boolean
+- body:LibraryOptions.EnableEmbeddedTitles boolean
+- body:LibraryOptions.EnableInternetProviders boolean
+- body:LibraryOptions.EnablePhotos boolean
+- body:LibraryOptions.EnableRealtimeMonitor boolean
+- body:LibraryOptions.ExtractChapterImagesDuringLibraryScan boolean
+- body:LibraryOptions.LocalMetadataReaderOrder array<string>
+- body:LibraryOptions.MetadataCountryCode string
+- body:LibraryOptions.MetadataSavers array<string>
+- body:LibraryOptions.PathInfos array<object>
+- body:LibraryOptions.PathInfos[].NetworkPath string
+- body:LibraryOptions.PathInfos[].Path string
+- body:LibraryOptions.PreferredMetadataLanguage string
+- body:LibraryOptions.RequirePerfectSubtitleMatch boolean
+- body:LibraryOptions.SaveLocalMetadata boolean
+- body:LibraryOptions.SaveSubtitlesWithMedia boolean
+- body:LibraryOptions.SeasonZeroDisplayName string
+- body:LibraryOptions.SkipSubtitlesIfAudioTrackMatches boolean
+- body:LibraryOptions.SkipSubtitlesIfEmbeddedSubtitlesPresent boolean
+- body:LibraryOptions.SubtitleDownloadLanguages array<string>
+- body:LibraryOptions.SubtitleFetcherOrder array<string>
+- body:LibraryOptions.TypeOptions array<object>
+- body:LibraryOptions.TypeOptions[].ImageFetcherOrder array<string>
+- body:LibraryOptions.TypeOptions[].ImageFetchers array<string>
+- body:LibraryOptions.TypeOptions[].ImageOptions array<object>
+- body:LibraryOptions.TypeOptions[].MetadataFetcherOrder array<string>
+- body:LibraryOptions.TypeOptions[].MetadataFetchers array<string>
+- body:LibraryOptions.TypeOptions[].Type string
+
+## S569-N0046  POST /Library/VirtualFolders/LibraryOptions
+desc: Update library options.
+schema: UpdateLibraryOptionsDto
+- body:Id string
+- body:LibraryOptions object
+- body:LibraryOptions.AutomaticRefreshIntervalDays integer
+- body:LibraryOptions.DisabledLocalMetadataReaders array<string>
+- body:LibraryOptions.DisabledSubtitleFetchers array<string>
+- body:LibraryOptions.EnableAutomaticSeriesGrouping boolean
+- body:LibraryOptions.EnableChapterImageExtraction boolean
+- body:LibraryOptions.EnableEmbeddedEpisodeInfos boolean
+- body:LibraryOptions.EnableEmbeddedTitles boolean
+- body:LibraryOptions.EnableInternetProviders boolean
+- body:LibraryOptions.EnablePhotos boolean
+- body:LibraryOptions.EnableRealtimeMonitor boolean
+- body:LibraryOptions.ExtractChapterImagesDuringLibraryScan boolean
+- body:LibraryOptions.LocalMetadataReaderOrder array<string>
+- body:LibraryOptions.MetadataCountryCode string
+- body:LibraryOptions.MetadataSavers array<string>
+- body:LibraryOptions.PathInfos array<object>
+- body:LibraryOptions.PathInfos[].NetworkPath string
+- body:LibraryOptions.PathInfos[].Path string
+- body:LibraryOptions.PreferredMetadataLanguage string
+- body:LibraryOptions.RequirePerfectSubtitleMatch boolean
+- body:LibraryOptions.SaveLocalMetadata boolean
+- body:LibraryOptions.SaveSubtitlesWithMedia boolean
+- body:LibraryOptions.SeasonZeroDisplayName string
+- body:LibraryOptions.SkipSubtitlesIfAudioTrackMatches boolean
+- body:LibraryOptions.SkipSubtitlesIfEmbeddedSubtitlesPresent boolean
+- body:LibraryOptions.SubtitleDownloadLanguages array<string>
+- body:LibraryOptions.SubtitleFetcherOrder array<string>
+- body:LibraryOptions.TypeOptions array<object>
+- body:LibraryOptions.TypeOptions[].ImageFetcherOrder array<string>
+- body:LibraryOptions.TypeOptions[].ImageFetchers array<string>
+- body:LibraryOptions.TypeOptions[].ImageOptions array<object>
+- body:LibraryOptions.TypeOptions[].MetadataFetcherOrder array<string>
+- body:LibraryOptions.TypeOptions[].MetadataFetchers array<string>
+- body:LibraryOptions.TypeOptions[].Type string
+
+## S569-N0048  DELETE /Library/VirtualFolders/Paths
+desc: Remove a media path.
+- query:name string
+- query:path string
+- query:refreshLibrary boolean
+
+## S569-N0049  POST /Library/VirtualFolders/Paths
+desc: Add a media path to a library.
+schema: MediaPathDto
+- query:refreshLibrary boolean
+- body:Name string
+- body:Path string
+- body:PathInfo object
+- body:PathInfo.NetworkPath string
+- body:PathInfo.Path string
+
+## S569-N0050  POST /Library/VirtualFolders/Paths/Update
+desc: Updates a media path.
+schema: MediaPathInfo
+- query:name string
+- body:NetworkPath string
+- body:Path string
+
+## S569-N0051  POST /LiveStreams/Close
+desc: Closes a media source.
+- query:liveStreamId string
+
+## S569-N0052  POST /LiveStreams/Open
+desc: Opens a media source.
+schema: OpenLiveStreamDto
+- query:openToken string
+- query:userId string
+- query:playSessionId string
+- query:maxStreamingBitrate integer
+- query:startTimeTicks integer
+- query:audioStreamIndex integer
+- query:subtitleStreamIndex integer
+- query:maxAudioChannels integer
+- query:itemId string
+- query:enableDirectPlay boolean
+- query:enableDirectStream boolean
+- body:AudioStreamIndex integer
+- body:DeviceProfile object
+- body:DeviceProfile.AlbumArtPn string
+- body:DeviceProfile.CodecProfiles array<object>
+- body:DeviceProfile.CodecProfiles[].ApplyConditions array<object>
+- body:DeviceProfile.CodecProfiles[].Codec string
+- body:DeviceProfile.CodecProfiles[].Conditions array<object>
+- body:DeviceProfile.CodecProfiles[].Container string
+- body:DeviceProfile.CodecProfiles[].Type string enum[Video|VideoAudio|Audio]
+- body:DeviceProfile.ContainerProfiles array<object>
+- body:DeviceProfile.ContainerProfiles[].Conditions array<object>
+- body:DeviceProfile.ContainerProfiles[].Container string
+- body:DeviceProfile.ContainerProfiles[].Type string enum[Audio|Video|Photo]
+- body:DeviceProfile.DirectPlayProfiles array<object>
+- body:DeviceProfile.DirectPlayProfiles[].AudioCodec string
+- body:DeviceProfile.DirectPlayProfiles[].Container string
+- body:DeviceProfile.DirectPlayProfiles[].Type string enum[Audio|Video|Photo]
+- body:DeviceProfile.DirectPlayProfiles[].VideoCodec string
+- body:DeviceProfile.EnableAlbumArtInDidl boolean
+- body:DeviceProfile.EnableMSMediaReceiverRegistrar boolean
+- body:DeviceProfile.EnableSingleAlbumArtLimit boolean
+- body:DeviceProfile.EnableSingleSubtitleLimit boolean
+- body:DeviceProfile.FriendlyName string
+- body:DeviceProfile.Id string
+- body:DeviceProfile.Identification object
+- body:DeviceProfile.Identification.FriendlyName string
+- body:DeviceProfile.Identification.Headers array<object>
+- body:DeviceProfile.Identification.Manufacturer string
+- body:DeviceProfile.Identification.ManufacturerUrl string
+- body:DeviceProfile.Identification.ModelDescription string
+- body:DeviceProfile.Identification.ModelName string
+- body:DeviceProfile.Identification.ModelNumber string
+- body:DeviceProfile.Identification.ModelUrl string
+- body:DeviceProfile.Identification.SerialNumber string
+- body:DeviceProfile.IgnoreTranscodeByteRangeRequests boolean
+- body:DeviceProfile.Manufacturer string
+- body:DeviceProfile.ManufacturerUrl string
+- body:DeviceProfile.MaxAlbumArtHeight integer
+- body:DeviceProfile.MaxAlbumArtWidth integer
+- body:DeviceProfile.MaxIconHeight integer
+- body:DeviceProfile.MaxIconWidth integer
+- body:DeviceProfile.MaxStaticBitrate integer
+- body:DeviceProfile.MaxStaticMusicBitrate integer
+- body:DeviceProfile.MaxStreamingBitrate integer
+- body:DeviceProfile.ModelDescription string
+- body:DeviceProfile.ModelName string
+- body:DeviceProfile.ModelNumber string
+- body:DeviceProfile.ModelUrl string
+- body:DeviceProfile.MusicStreamingTranscodingBitrate integer
+- body:DeviceProfile.Name string
+- body:DeviceProfile.ProtocolInfo string
+- body:DeviceProfile.RequiresPlainFolders boolean
+- body:DeviceProfile.RequiresPlainVideoItems boolean
+- body:DeviceProfile.ResponseProfiles array<object>
+- body:DeviceProfile.ResponseProfiles[].AudioCodec string
+- body:DeviceProfile.ResponseProfiles[].Conditions array<object>
+- body:DeviceProfile.ResponseProfiles[].Container string
+- body:DeviceProfile.ResponseProfiles[].MimeType string
+- body:DeviceProfile.ResponseProfiles[].OrgPn string
+- body:DeviceProfile.ResponseProfiles[].Type string enum[Audio|Video|Photo]
+- body:DeviceProfile.ResponseProfiles[].VideoCodec string
+- body:DeviceProfile.SerialNumber string
+- body:DeviceProfile.SonyAggregationFlags string
+- body:DeviceProfile.SubtitleProfiles array<object>
+- body:DeviceProfile.SubtitleProfiles[].Container string
+- body:DeviceProfile.SubtitleProfiles[].DidlMode string
+- body:DeviceProfile.SubtitleProfiles[].Format string
+- body:DeviceProfile.SubtitleProfiles[].Language string
+- body:DeviceProfile.SubtitleProfiles[].Method string enum[Encode|Embed|External|Hls]
+(+33 fields cut)
+
+## S569-N0053  POST /LiveTv/ChannelMappings
+desc: Set channel mappings.
+schema: SetChannelMappingDto
+- body:ProviderChannelId string
+- body:ProviderId string
+- body:TunerChannelId string
+
+## S569-N0054  DELETE /LiveTv/ListingProviders
+desc: Delete listing provider.
+- query:id string
+
+## S569-N0056  POST /LiveTv/Programs
+desc: Gets available live tv epgs.
+schema: GetProgramsDto
+- body:ChannelIds array<string>
+- body:EnableImageTypes array<string> enum[Primary|Art|Backdrop|Banner|Logo|Thumb|Disc|Box|Screenshot|Menu|Chapter|BoxRear]
+- body:EnableImages boolean
+- body:EnableTotalRecordCount boolean
+- body:EnableUserData boolean
+- body:Fields array<string> enum[AirTime|CanDelete|CanDownload|ChannelInfo|Chapters|ChildCount|CumulativeRunTimeTicks|CustomRating|DateCreated|DateLastMediaAdded|DisplayPreferencesId|Etag]
+- body:GenreIds array<string>
+- body:Genres array<string>
+- body:HasAired boolean
+- body:ImageTypeLimit integer
+- body:IsAiring boolean
+- body:IsKids boolean
+- body:IsMovie boolean
+- body:IsNews boolean
+- body:IsSeries boolean
+- body:IsSports boolean
+- body:LibrarySeriesId string
+- body:Limit integer
+- body:MaxEndDate string
+- body:MaxStartDate string
+- body:MinEndDate string
+- body:MinStartDate string
+- body:SeriesTimerId string
+- body:SortBy string
+- body:SortOrder string
+- body:StartIndex integer
+- body:UserId string
+
+## S569-N0057  DELETE /LiveTv/Recordings/{recordingId}
+desc: Deletes a live tv recording.
+- path:recordingId string
+
+## S569-N0058  POST /LiveTv/SeriesTimers
+desc: Creates a live tv series timer.
+schema: SeriesTimerInfoDto
+- body:ChannelId string
+- body:ChannelName string
+- body:ChannelPrimaryImageTag string
+- body:DayPattern string enum[Daily|Weekdays|Weekends]
+- body:Days array<string> enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:EndDate string
+- body:ExternalChannelId string
+- body:ExternalId string
+- body:ExternalProgramId string
+- body:Id string
+- body:ImageTags object
+- body:IsPostPaddingRequired boolean
+- body:IsPrePaddingRequired boolean
+- body:KeepUntil string enum[UntilDeleted|UntilSpaceNeeded|UntilWatched|UntilDate]
+- body:KeepUpTo integer
+- body:Name string
+- body:Overview string
+- body:ParentBackdropImageTags array<string>
+- body:ParentBackdropItemId string
+- body:ParentPrimaryImageItemId string
+- body:ParentPrimaryImageTag string
+- body:ParentThumbImageTag string
+- body:ParentThumbItemId string
+- body:PostPaddingSeconds integer
+- body:PrePaddingSeconds integer
+- body:Priority integer
+- body:ProgramId string
+- body:RecordAnyChannel boolean
+- body:RecordAnyTime boolean
+- body:RecordNewOnly boolean
+- body:ServerId string
+- body:ServiceName string
+- body:SkipEpisodesInLibrary boolean
+- body:StartDate string
+- body:Type string
+
+## S569-N0059  DELETE /LiveTv/SeriesTimers/{timerId}
+desc: Cancels a live tv series timer.
+- path:timerId string
+
+## S569-N0060  POST /LiveTv/SeriesTimers/{timerId}
+desc: Updates a live tv series timer.
+schema: SeriesTimerInfoDto
+- path:timerId string
+- body:ChannelId string
+- body:ChannelName string
+- body:ChannelPrimaryImageTag string
+- body:DayPattern string enum[Daily|Weekdays|Weekends]
+- body:Days array<string> enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:EndDate string
+- body:ExternalChannelId string
+- body:ExternalId string
+- body:ExternalProgramId string
+- body:Id string
+- body:ImageTags object
+- body:IsPostPaddingRequired boolean
+- body:IsPrePaddingRequired boolean
+- body:KeepUntil string enum[UntilDeleted|UntilSpaceNeeded|UntilWatched|UntilDate]
+- body:KeepUpTo integer
+- body:Name string
+- body:Overview string
+- body:ParentBackdropImageTags array<string>
+- body:ParentBackdropItemId string
+- body:ParentPrimaryImageItemId string
+- body:ParentPrimaryImageTag string
+- body:ParentThumbImageTag string
+- body:ParentThumbItemId string
+- body:PostPaddingSeconds integer
+- body:PrePaddingSeconds integer
+- body:Priority integer
+- body:ProgramId string
+- body:RecordAnyChannel boolean
+- body:RecordAnyTime boolean
+- body:RecordNewOnly boolean
+- body:ServerId string
+- body:ServiceName string
+- body:SkipEpisodesInLibrary boolean
+- body:StartDate string
+- body:Type string
+
+## S569-N0061  POST /LiveTv/Timers
+desc: Creates a live tv timer.
+schema: TimerInfoDto
+- body:ChannelId string
+- body:ChannelName string
+- body:ChannelPrimaryImageTag string
+- body:EndDate string
+- body:ExternalChannelId string
+- body:ExternalId string
+- body:ExternalProgramId string
+- body:ExternalSeriesTimerId string
+- body:Id string
+- body:IsPostPaddingRequired boolean
+- body:IsPrePaddingRequired boolean
+- body:KeepUntil string enum[UntilDeleted|UntilSpaceNeeded|UntilWatched|UntilDate]
+- body:Name string
+- body:Overview string
+- body:ParentBackdropImageTags array<string>
+- body:ParentBackdropItemId string
+- body:PostPaddingSeconds integer
+- body:PrePaddingSeconds integer
+- body:Priority integer
+- body:ProgramId string
+- body:ProgramInfo object
+- body:ProgramInfo.AirDays array<string> enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:ProgramInfo.AirTime string
+- body:ProgramInfo.AirsAfterSeasonNumber integer
+- body:ProgramInfo.AirsBeforeEpisodeNumber integer
+- body:ProgramInfo.AirsBeforeSeasonNumber integer
+- body:ProgramInfo.Album string
+- body:ProgramInfo.AlbumArtist string
+- body:ProgramInfo.AlbumArtists array<object>
+- body:ProgramInfo.AlbumArtists[].Id string
+- body:ProgramInfo.AlbumArtists[].Name string
+- body:ProgramInfo.AlbumCount integer
+- body:ProgramInfo.AlbumId string
+- body:ProgramInfo.AlbumPrimaryImageTag string
+- body:ProgramInfo.Altitude number
+- body:ProgramInfo.Aperture number
+- body:ProgramInfo.ArtistCount integer
+- body:ProgramInfo.ArtistItems array<object>
+- body:ProgramInfo.ArtistItems[].Id string
+- body:ProgramInfo.ArtistItems[].Name string
+- body:ProgramInfo.Artists array<string>
+- body:ProgramInfo.AspectRatio string
+- body:ProgramInfo.Audio string enum[Mono|Stereo|Dolby|DolbyDigital|Thx|Atmos]
+- body:ProgramInfo.BackdropImageTags array<string>
+- body:ProgramInfo.CameraMake string
+- body:ProgramInfo.CameraModel string
+- body:ProgramInfo.CanDelete boolean
+- body:ProgramInfo.CanDownload boolean
+- body:ProgramInfo.ChannelId string
+- body:ProgramInfo.ChannelName string
+- body:ProgramInfo.ChannelNumber string
+- body:ProgramInfo.ChannelPrimaryImageTag string
+- body:ProgramInfo.ChannelType string enum[TV|Radio]
+- body:ProgramInfo.Chapters array<object>
+- body:ProgramInfo.Chapters[].ImageDateModified string
+- body:ProgramInfo.Chapters[].ImagePath string
+- body:ProgramInfo.Chapters[].ImageTag string
+- body:ProgramInfo.Chapters[].Name string
+- body:ProgramInfo.Chapters[].StartPositionTicks integer
+- body:ProgramInfo.ChildCount integer
+- body:ProgramInfo.CollectionType string
+- body:ProgramInfo.CommunityRating number
+- body:ProgramInfo.CompletionPercentage number
+- body:ProgramInfo.Container string
+- body:ProgramInfo.CriticRating number
+- body:ProgramInfo.CumulativeRunTimeTicks integer
+- body:ProgramInfo.CurrentProgram object
+- body:ProgramInfo.CurrentProgram.AirDays array<string> enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:ProgramInfo.CurrentProgram.AirTime string
+- body:ProgramInfo.CurrentProgram.AirsAfterSeasonNumber integer
+- body:ProgramInfo.CurrentProgram.AirsBeforeEpisodeNumber integer
+- body:ProgramInfo.CurrentProgram.AirsBeforeSeasonNumber integer
+- body:ProgramInfo.CurrentProgram.Album string
+- body:ProgramInfo.CurrentProgram.AlbumArtist string
+- body:ProgramInfo.CurrentProgram.AlbumArtists array<object>
+- body:ProgramInfo.CurrentProgram.AlbumCount integer
+- body:ProgramInfo.CurrentProgram.AlbumId string
+- body:ProgramInfo.CurrentProgram.AlbumPrimaryImageTag string
+- body:ProgramInfo.CurrentProgram.Altitude number
+- body:ProgramInfo.CurrentProgram.Aperture number
+(+386 fields cut)
+
+## S569-N0062  DELETE /LiveTv/Timers/{timerId}
+desc: Cancels a live tv timer.
+- path:timerId string
+
+## S569-N0063  POST /LiveTv/Timers/{timerId}
+desc: Updates a live tv timer.
+schema: TimerInfoDto
+- path:timerId string
+- body:ChannelId string
+- body:ChannelName string
+- body:ChannelPrimaryImageTag string
+- body:EndDate string
+- body:ExternalChannelId string
+- body:ExternalId string
+- body:ExternalProgramId string
+- body:ExternalSeriesTimerId string
+- body:Id string
+- body:IsPostPaddingRequired boolean
+- body:IsPrePaddingRequired boolean
+- body:KeepUntil string enum[UntilDeleted|UntilSpaceNeeded|UntilWatched|UntilDate]
+- body:Name string
+- body:Overview string
+- body:ParentBackdropImageTags array<string>
+- body:ParentBackdropItemId string
+- body:PostPaddingSeconds integer
+- body:PrePaddingSeconds integer
+- body:Priority integer
+- body:ProgramId string
+- body:ProgramInfo object
+- body:ProgramInfo.AirDays array<string> enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:ProgramInfo.AirTime string
+- body:ProgramInfo.AirsAfterSeasonNumber integer
+- body:ProgramInfo.AirsBeforeEpisodeNumber integer
+- body:ProgramInfo.AirsBeforeSeasonNumber integer
+- body:ProgramInfo.Album string
+- body:ProgramInfo.AlbumArtist string
+- body:ProgramInfo.AlbumArtists array<object>
+- body:ProgramInfo.AlbumArtists[].Id string
+- body:ProgramInfo.AlbumArtists[].Name string
+- body:ProgramInfo.AlbumCount integer
+- body:ProgramInfo.AlbumId string
+- body:ProgramInfo.AlbumPrimaryImageTag string
+- body:ProgramInfo.Altitude number
+- body:ProgramInfo.Aperture number
+- body:ProgramInfo.ArtistCount integer
+- body:ProgramInfo.ArtistItems array<object>
+- body:ProgramInfo.ArtistItems[].Id string
+- body:ProgramInfo.ArtistItems[].Name string
+- body:ProgramInfo.Artists array<string>
+- body:ProgramInfo.AspectRatio string
+- body:ProgramInfo.Audio string enum[Mono|Stereo|Dolby|DolbyDigital|Thx|Atmos]
+- body:ProgramInfo.BackdropImageTags array<string>
+- body:ProgramInfo.CameraMake string
+- body:ProgramInfo.CameraModel string
+- body:ProgramInfo.CanDelete boolean
+- body:ProgramInfo.CanDownload boolean
+- body:ProgramInfo.ChannelId string
+- body:ProgramInfo.ChannelName string
+- body:ProgramInfo.ChannelNumber string
+- body:ProgramInfo.ChannelPrimaryImageTag string
+- body:ProgramInfo.ChannelType string enum[TV|Radio]
+- body:ProgramInfo.Chapters array<object>
+- body:ProgramInfo.Chapters[].ImageDateModified string
+- body:ProgramInfo.Chapters[].ImagePath string
+- body:ProgramInfo.Chapters[].ImageTag string
+- body:ProgramInfo.Chapters[].Name string
+- body:ProgramInfo.Chapters[].StartPositionTicks integer
+- body:ProgramInfo.ChildCount integer
+- body:ProgramInfo.CollectionType string
+- body:ProgramInfo.CommunityRating number
+- body:ProgramInfo.CompletionPercentage number
+- body:ProgramInfo.Container string
+- body:ProgramInfo.CriticRating number
+- body:ProgramInfo.CumulativeRunTimeTicks integer
+- body:ProgramInfo.CurrentProgram object
+- body:ProgramInfo.CurrentProgram.AirDays array<string> enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:ProgramInfo.CurrentProgram.AirTime string
+- body:ProgramInfo.CurrentProgram.AirsAfterSeasonNumber integer
+- body:ProgramInfo.CurrentProgram.AirsBeforeEpisodeNumber integer
+- body:ProgramInfo.CurrentProgram.AirsBeforeSeasonNumber integer
+- body:ProgramInfo.CurrentProgram.Album string
+- body:ProgramInfo.CurrentProgram.AlbumArtist string
+- body:ProgramInfo.CurrentProgram.AlbumArtists array<object>
+- body:ProgramInfo.CurrentProgram.AlbumCount integer
+- body:ProgramInfo.CurrentProgram.AlbumId string
+- body:ProgramInfo.CurrentProgram.AlbumPrimaryImageTag string
+- body:ProgramInfo.CurrentProgram.Altitude number
+(+387 fields cut)
+
+## S569-N0064  DELETE /LiveTv/TunerHosts
+desc: Deletes a tuner host.
+- query:id string
+
+## S569-N0066  POST /LiveTv/Tuners/{tunerId}/Reset
+desc: Resets a tv tuner.
+- path:tunerId string
+
+## S569-N0068  POST /Notifications/{userId}/Read
+desc: Sets notifications as read.
+- path:userId string
+
+## S569-N0069  POST /Notifications/{userId}/Unread
+desc: Sets notifications as unread.
+- path:userId string
+
+## S569-N0071  DELETE /Packages/Installing/{packageId}
+desc: Cancels a package installation.
+- path:packageId string
+
+## S569-N0073  DELETE /Playlists/{playlistId}/Items
+desc: Removes items from a playlist.
+- path:playlistId string
+- query:entryIds array<string>
+
+## S569-N0074  POST /Playlists/{playlistId}/Items
+desc: Adds items to a playlist.
+- path:playlistId string
+- query:ids array<string>
+- query:userId string
+
+## S569-N0075  POST /Playlists/{playlistId}/Items/{itemId}/Move/{newIndex}
+desc: Moves a playlist item.
+- path:playlistId string
+- path:itemId string
+- path:newIndex integer
+
+## S569-N0076  POST /Plugins/SecurityInfo
+desc: Updates plugin security info.
+schema: PluginSecurityInfo
+- body:IsMbSupporter boolean
+- body:SupporterKey string
+
+## S569-N0077  DELETE /Plugins/{pluginId}
+desc: Uninstalls a plugin.
+- path:pluginId string
+
+## S569-N0078  POST /Plugins/{pluginId}/Configuration
+desc: Updates plugin configuration. | Accepts plugin configuration as JSON body.
+- path:pluginId string
+
+## S569-N0079  POST /Plugins/{pluginId}/Manifest
+desc: Gets a plugin's manifest.
+- path:pluginId string
+
+## S569-N0081  POST /Plugins/{pluginId}/{version}/Disable
+desc: Disable a plugin.
+- path:pluginId string
+- path:version object
+
+## S569-N0084  POST /QuickConnect/Authorize
+desc: Authorizes a pending quick connect request.
+- query:code string
+
+## S569-N0087  POST /Repositories
+desc: Sets the enabled and existing package repositories.
+schema: RepositoryInfo
+- body:Enabled boolean
+- body:Name string
+- body:Url string
+
+## S569-N0089  POST /ScheduledTasks/Running/{taskId}
+desc: Start specified task.
+- path:taskId string
+
+## S569-N0090  POST /ScheduledTasks/{taskId}/Triggers
+desc: Update specified task triggers.
+schema: TaskTriggerInfo
+- path:taskId string
+- body:DayOfWeek string enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:IntervalTicks integer
+- body:MaxRuntimeTicks integer
+- body:TimeOfDayTicks integer
+- body:Type string
+
+## S569-N0091  POST /Sessions/Capabilities
+desc: Updates capabilities for a device.
+- query:id string
+- query:playableMediaTypes array<string>
+- query:supportedCommands array<string> enum[MoveUp|MoveDown|MoveLeft|MoveRight|PageUp|PageDown|PreviousLetter|NextLetter|ToggleOsd|ToggleContextMenu|Select|Back]
+- query:supportsMediaControl boolean
+- query:supportsSync boolean
+- query:supportsPersistentIdentifier boolean
+
+## S569-N0092  POST /Sessions/Capabilities/Full
+desc: Updates capabilities for a device.
+schema: ClientCapabilitiesDto
+- query:id string
+- body:AppStoreUrl string
+- body:DeviceProfile object
+- body:DeviceProfile.AlbumArtPn string
+- body:DeviceProfile.CodecProfiles array<object>
+- body:DeviceProfile.CodecProfiles[].ApplyConditions array<object>
+- body:DeviceProfile.CodecProfiles[].Codec string
+- body:DeviceProfile.CodecProfiles[].Conditions array<object>
+- body:DeviceProfile.CodecProfiles[].Container string
+- body:DeviceProfile.CodecProfiles[].Type string enum[Video|VideoAudio|Audio]
+- body:DeviceProfile.ContainerProfiles array<object>
+- body:DeviceProfile.ContainerProfiles[].Conditions array<object>
+- body:DeviceProfile.ContainerProfiles[].Container string
+- body:DeviceProfile.ContainerProfiles[].Type string enum[Audio|Video|Photo]
+- body:DeviceProfile.DirectPlayProfiles array<object>
+- body:DeviceProfile.DirectPlayProfiles[].AudioCodec string
+- body:DeviceProfile.DirectPlayProfiles[].Container string
+- body:DeviceProfile.DirectPlayProfiles[].Type string enum[Audio|Video|Photo]
+- body:DeviceProfile.DirectPlayProfiles[].VideoCodec string
+- body:DeviceProfile.EnableAlbumArtInDidl boolean
+- body:DeviceProfile.EnableMSMediaReceiverRegistrar boolean
+- body:DeviceProfile.EnableSingleAlbumArtLimit boolean
+- body:DeviceProfile.EnableSingleSubtitleLimit boolean
+- body:DeviceProfile.FriendlyName string
+- body:DeviceProfile.Id string
+- body:DeviceProfile.Identification object
+- body:DeviceProfile.Identification.FriendlyName string
+- body:DeviceProfile.Identification.Headers array<object>
+- body:DeviceProfile.Identification.Manufacturer string
+- body:DeviceProfile.Identification.ManufacturerUrl string
+- body:DeviceProfile.Identification.ModelDescription string
+- body:DeviceProfile.Identification.ModelName string
+- body:DeviceProfile.Identification.ModelNumber string
+- body:DeviceProfile.Identification.ModelUrl string
+- body:DeviceProfile.Identification.SerialNumber string
+- body:DeviceProfile.IgnoreTranscodeByteRangeRequests boolean
+- body:DeviceProfile.Manufacturer string
+- body:DeviceProfile.ManufacturerUrl string
+- body:DeviceProfile.MaxAlbumArtHeight integer
+- body:DeviceProfile.MaxAlbumArtWidth integer
+- body:DeviceProfile.MaxIconHeight integer
+- body:DeviceProfile.MaxIconWidth integer
+- body:DeviceProfile.MaxStaticBitrate integer
+- body:DeviceProfile.MaxStaticMusicBitrate integer
+- body:DeviceProfile.MaxStreamingBitrate integer
+- body:DeviceProfile.ModelDescription string
+- body:DeviceProfile.ModelName string
+- body:DeviceProfile.ModelNumber string
+- body:DeviceProfile.ModelUrl string
+- body:DeviceProfile.MusicStreamingTranscodingBitrate integer
+- body:DeviceProfile.Name string
+- body:DeviceProfile.ProtocolInfo string
+- body:DeviceProfile.RequiresPlainFolders boolean
+- body:DeviceProfile.RequiresPlainVideoItems boolean
+- body:DeviceProfile.ResponseProfiles array<object>
+- body:DeviceProfile.ResponseProfiles[].AudioCodec string
+- body:DeviceProfile.ResponseProfiles[].Conditions array<object>
+- body:DeviceProfile.ResponseProfiles[].Container string
+- body:DeviceProfile.ResponseProfiles[].MimeType string
+- body:DeviceProfile.ResponseProfiles[].OrgPn string
+- body:DeviceProfile.ResponseProfiles[].Type string enum[Audio|Video|Photo]
+- body:DeviceProfile.ResponseProfiles[].VideoCodec string
+- body:DeviceProfile.SerialNumber string
+- body:DeviceProfile.SonyAggregationFlags string
+- body:DeviceProfile.SubtitleProfiles array<object>
+- body:DeviceProfile.SubtitleProfiles[].Container string
+- body:DeviceProfile.SubtitleProfiles[].DidlMode string
+- body:DeviceProfile.SubtitleProfiles[].Format string
+- body:DeviceProfile.SubtitleProfiles[].Language string
+- body:DeviceProfile.SubtitleProfiles[].Method string enum[Encode|Embed|External|Hls]
+- body:DeviceProfile.SupportedMediaTypes string
+- body:DeviceProfile.TimelineOffsetSeconds integer
+- body:DeviceProfile.TranscodingProfiles array<object>
+- body:DeviceProfile.TranscodingProfiles[].AudioCodec string
+- body:DeviceProfile.TranscodingProfiles[].BreakOnNonKeyFrames boolean
+- body:DeviceProfile.TranscodingProfiles[].Container string
+- body:DeviceProfile.TranscodingProfiles[].Context string enum[Streaming|Static]
+- body:DeviceProfile.TranscodingProfiles[].CopyTimestamps boolean
+- body:DeviceProfile.TranscodingProfiles[].EnableMpegtsM2TsMode boolean
+- body:DeviceProfile.TranscodingProfiles[].EnableSubtitlesInManifest boolean
+(+20 fields cut)
+
+## S569-N0094  POST /Sessions/Playing
+desc: Reports playback has started within a session.
+schema: PlaybackStartInfo
+- body:AspectRatio string
+- body:AudioStreamIndex integer
+- body:Brightness integer
+- body:CanSeek boolean
+- body:IsMuted boolean
+- body:IsPaused boolean
+- body:Item object
+- body:Item.AirDays array<string> enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:Item.AirTime string
+- body:Item.AirsAfterSeasonNumber integer
+- body:Item.AirsBeforeEpisodeNumber integer
+- body:Item.AirsBeforeSeasonNumber integer
+- body:Item.Album string
+- body:Item.AlbumArtist string
+- body:Item.AlbumArtists array<object>
+- body:Item.AlbumArtists[].Id string
+- body:Item.AlbumArtists[].Name string
+- body:Item.AlbumCount integer
+- body:Item.AlbumId string
+- body:Item.AlbumPrimaryImageTag string
+- body:Item.Altitude number
+- body:Item.Aperture number
+- body:Item.ArtistCount integer
+- body:Item.ArtistItems array<object>
+- body:Item.ArtistItems[].Id string
+- body:Item.ArtistItems[].Name string
+- body:Item.Artists array<string>
+- body:Item.AspectRatio string
+- body:Item.Audio string enum[Mono|Stereo|Dolby|DolbyDigital|Thx|Atmos]
+- body:Item.BackdropImageTags array<string>
+- body:Item.CameraMake string
+- body:Item.CameraModel string
+- body:Item.CanDelete boolean
+- body:Item.CanDownload boolean
+- body:Item.ChannelId string
+- body:Item.ChannelName string
+- body:Item.ChannelNumber string
+- body:Item.ChannelPrimaryImageTag string
+- body:Item.ChannelType string enum[TV|Radio]
+- body:Item.Chapters array<object>
+- body:Item.Chapters[].ImageDateModified string
+- body:Item.Chapters[].ImagePath string
+- body:Item.Chapters[].ImageTag string
+- body:Item.Chapters[].Name string
+- body:Item.Chapters[].StartPositionTicks integer
+- body:Item.ChildCount integer
+- body:Item.CollectionType string
+- body:Item.CommunityRating number
+- body:Item.CompletionPercentage number
+- body:Item.Container string
+- body:Item.CriticRating number
+- body:Item.CumulativeRunTimeTicks integer
+- body:Item.CurrentProgram object
+- body:Item.CurrentProgram.AirDays array<string> enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:Item.CurrentProgram.AirTime string
+- body:Item.CurrentProgram.AirsAfterSeasonNumber integer
+- body:Item.CurrentProgram.AirsBeforeEpisodeNumber integer
+- body:Item.CurrentProgram.AirsBeforeSeasonNumber integer
+- body:Item.CurrentProgram.Album string
+- body:Item.CurrentProgram.AlbumArtist string
+- body:Item.CurrentProgram.AlbumArtists array<object>
+- body:Item.CurrentProgram.AlbumCount integer
+- body:Item.CurrentProgram.AlbumId string
+- body:Item.CurrentProgram.AlbumPrimaryImageTag string
+- body:Item.CurrentProgram.Altitude number
+- body:Item.CurrentProgram.Aperture number
+- body:Item.CurrentProgram.ArtistCount integer
+- body:Item.CurrentProgram.ArtistItems array<object>
+- body:Item.CurrentProgram.Artists array<string>
+- body:Item.CurrentProgram.AspectRatio string
+- body:Item.CurrentProgram.Audio string enum[Mono|Stereo|Dolby|DolbyDigital|Thx|Atmos]
+- body:Item.CurrentProgram.BackdropImageTags array<string>
+- body:Item.CurrentProgram.CameraMake string
+- body:Item.CurrentProgram.CameraModel string
+- body:Item.CurrentProgram.CanDelete boolean
+- body:Item.CurrentProgram.CanDownload boolean
+- body:Item.CurrentProgram.ChannelId string
+- body:Item.CurrentProgram.ChannelName string
+- body:Item.CurrentProgram.ChannelNumber string
+- body:Item.CurrentProgram.ChannelPrimaryImageTag string
+(+380 fields cut)
+
+## S569-N0095  POST /Sessions/Playing/Ping
+desc: Pings a playback session.
+- query:playSessionId string
+
+## S569-N0096  POST /Sessions/Playing/Progress
+desc: Reports playback progress within a session.
+schema: PlaybackProgressInfo
+- body:AspectRatio string
+- body:AudioStreamIndex integer
+- body:Brightness integer
+- body:CanSeek boolean
+- body:IsMuted boolean
+- body:IsPaused boolean
+- body:Item object
+- body:Item.AirDays array<string> enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:Item.AirTime string
+- body:Item.AirsAfterSeasonNumber integer
+- body:Item.AirsBeforeEpisodeNumber integer
+- body:Item.AirsBeforeSeasonNumber integer
+- body:Item.Album string
+- body:Item.AlbumArtist string
+- body:Item.AlbumArtists array<object>
+- body:Item.AlbumArtists[].Id string
+- body:Item.AlbumArtists[].Name string
+- body:Item.AlbumCount integer
+- body:Item.AlbumId string
+- body:Item.AlbumPrimaryImageTag string
+- body:Item.Altitude number
+- body:Item.Aperture number
+- body:Item.ArtistCount integer
+- body:Item.ArtistItems array<object>
+- body:Item.ArtistItems[].Id string
+- body:Item.ArtistItems[].Name string
+- body:Item.Artists array<string>
+- body:Item.AspectRatio string
+- body:Item.Audio string enum[Mono|Stereo|Dolby|DolbyDigital|Thx|Atmos]
+- body:Item.BackdropImageTags array<string>
+- body:Item.CameraMake string
+- body:Item.CameraModel string
+- body:Item.CanDelete boolean
+- body:Item.CanDownload boolean
+- body:Item.ChannelId string
+- body:Item.ChannelName string
+- body:Item.ChannelNumber string
+- body:Item.ChannelPrimaryImageTag string
+- body:Item.ChannelType string enum[TV|Radio]
+- body:Item.Chapters array<object>
+- body:Item.Chapters[].ImageDateModified string
+- body:Item.Chapters[].ImagePath string
+- body:Item.Chapters[].ImageTag string
+- body:Item.Chapters[].Name string
+- body:Item.Chapters[].StartPositionTicks integer
+- body:Item.ChildCount integer
+- body:Item.CollectionType string
+- body:Item.CommunityRating number
+- body:Item.CompletionPercentage number
+- body:Item.Container string
+- body:Item.CriticRating number
+- body:Item.CumulativeRunTimeTicks integer
+- body:Item.CurrentProgram object
+- body:Item.CurrentProgram.AirDays array<string> enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:Item.CurrentProgram.AirTime string
+- body:Item.CurrentProgram.AirsAfterSeasonNumber integer
+- body:Item.CurrentProgram.AirsBeforeEpisodeNumber integer
+- body:Item.CurrentProgram.AirsBeforeSeasonNumber integer
+- body:Item.CurrentProgram.Album string
+- body:Item.CurrentProgram.AlbumArtist string
+- body:Item.CurrentProgram.AlbumArtists array<object>
+- body:Item.CurrentProgram.AlbumCount integer
+- body:Item.CurrentProgram.AlbumId string
+- body:Item.CurrentProgram.AlbumPrimaryImageTag string
+- body:Item.CurrentProgram.Altitude number
+- body:Item.CurrentProgram.Aperture number
+- body:Item.CurrentProgram.ArtistCount integer
+- body:Item.CurrentProgram.ArtistItems array<object>
+- body:Item.CurrentProgram.Artists array<string>
+- body:Item.CurrentProgram.AspectRatio string
+- body:Item.CurrentProgram.Audio string enum[Mono|Stereo|Dolby|DolbyDigital|Thx|Atmos]
+- body:Item.CurrentProgram.BackdropImageTags array<string>
+- body:Item.CurrentProgram.CameraMake string
+- body:Item.CurrentProgram.CameraModel string
+- body:Item.CurrentProgram.CanDelete boolean
+- body:Item.CurrentProgram.CanDownload boolean
+- body:Item.CurrentProgram.ChannelId string
+- body:Item.CurrentProgram.ChannelName string
+- body:Item.CurrentProgram.ChannelNumber string
+- body:Item.CurrentProgram.ChannelPrimaryImageTag string
+(+380 fields cut)
+
+## S569-N0097  POST /Sessions/Playing/Stopped
+desc: Reports playback has stopped within a session.
+schema: PlaybackStopInfo
+- body:Failed boolean
+- body:Item object
+- body:Item.AirDays array<string> enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:Item.AirTime string
+- body:Item.AirsAfterSeasonNumber integer
+- body:Item.AirsBeforeEpisodeNumber integer
+- body:Item.AirsBeforeSeasonNumber integer
+- body:Item.Album string
+- body:Item.AlbumArtist string
+- body:Item.AlbumArtists array<object>
+- body:Item.AlbumArtists[].Id string
+- body:Item.AlbumArtists[].Name string
+- body:Item.AlbumCount integer
+- body:Item.AlbumId string
+- body:Item.AlbumPrimaryImageTag string
+- body:Item.Altitude number
+- body:Item.Aperture number
+- body:Item.ArtistCount integer
+- body:Item.ArtistItems array<object>
+- body:Item.ArtistItems[].Id string
+- body:Item.ArtistItems[].Name string
+- body:Item.Artists array<string>
+- body:Item.AspectRatio string
+- body:Item.Audio string enum[Mono|Stereo|Dolby|DolbyDigital|Thx|Atmos]
+- body:Item.BackdropImageTags array<string>
+- body:Item.CameraMake string
+- body:Item.CameraModel string
+- body:Item.CanDelete boolean
+- body:Item.CanDownload boolean
+- body:Item.ChannelId string
+- body:Item.ChannelName string
+- body:Item.ChannelNumber string
+- body:Item.ChannelPrimaryImageTag string
+- body:Item.ChannelType string enum[TV|Radio]
+- body:Item.Chapters array<object>
+- body:Item.Chapters[].ImageDateModified string
+- body:Item.Chapters[].ImagePath string
+- body:Item.Chapters[].ImageTag string
+- body:Item.Chapters[].Name string
+- body:Item.Chapters[].StartPositionTicks integer
+- body:Item.ChildCount integer
+- body:Item.CollectionType string
+- body:Item.CommunityRating number
+- body:Item.CompletionPercentage number
+- body:Item.Container string
+- body:Item.CriticRating number
+- body:Item.CumulativeRunTimeTicks integer
+- body:Item.CurrentProgram object
+- body:Item.CurrentProgram.AirDays array<string> enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday]
+- body:Item.CurrentProgram.AirTime string
+- body:Item.CurrentProgram.AirsAfterSeasonNumber integer
+- body:Item.CurrentProgram.AirsBeforeEpisodeNumber integer
+- body:Item.CurrentProgram.AirsBeforeSeasonNumber integer
+- body:Item.CurrentProgram.Album string
+- body:Item.CurrentProgram.AlbumArtist string
+- body:Item.CurrentProgram.AlbumArtists array<object>
+- body:Item.CurrentProgram.AlbumCount integer
+- body:Item.CurrentProgram.AlbumId string
+- body:Item.CurrentProgram.AlbumPrimaryImageTag string
+- body:Item.CurrentProgram.Altitude number
+- body:Item.CurrentProgram.Aperture number
+- body:Item.CurrentProgram.ArtistCount integer
+- body:Item.CurrentProgram.ArtistItems array<object>
+- body:Item.CurrentProgram.Artists array<string>
+- body:Item.CurrentProgram.AspectRatio string
+- body:Item.CurrentProgram.Audio string enum[Mono|Stereo|Dolby|DolbyDigital|Thx|Atmos]
+- body:Item.CurrentProgram.BackdropImageTags array<string>
+- body:Item.CurrentProgram.CameraMake string
+- body:Item.CurrentProgram.CameraModel string
+- body:Item.CurrentProgram.CanDelete boolean
+- body:Item.CurrentProgram.CanDownload boolean
+- body:Item.CurrentProgram.ChannelId string
+- body:Item.CurrentProgram.ChannelName string
+- body:Item.CurrentProgram.ChannelNumber string
+- body:Item.CurrentProgram.ChannelPrimaryImageTag string
+- body:Item.CurrentProgram.ChannelType string enum[TV|Radio]
+- body:Item.CurrentProgram.Chapters array<object>
+- body:Item.CurrentProgram.ChildCount integer
+- body:Item.CurrentProgram.CollectionType string
+- body:Item.CurrentProgram.CommunityRating number
+(+371 fields cut)
+
+## S569-N0098  POST /Sessions/Viewing
+desc: Reports that a session is viewing an item.
+- query:sessionId string
+- query:itemId string
+
+## S569-N0099  POST /Sessions/{sessionId}/Command
+desc: Issues a full general command to a client.
+schema: GeneralCommand
+- path:sessionId string
+- body:Arguments object
+- body:ControllingUserId string
+- body:Name string enum[MoveUp|MoveDown|MoveLeft|MoveRight|PageUp|PageDown|PreviousLetter|NextLetter|ToggleOsd|ToggleContextMenu|Select|Back]
+
+## S569-N0101  POST /Sessions/{sessionId}/Message
+desc: Issues a command to a client to display a message to the user.
+- path:sessionId string
+- query:text string
+- query:header string
+- query:timeoutMs integer
+
+## S569-N0102  POST /Sessions/{sessionId}/Playing
+desc: Instructs a session to play an item.
+- path:sessionId string
+- query:playCommand string enum[PlayNow|PlayNext|PlayLast|PlayInstantMix|PlayShuffle]
+- query:itemIds array<string>
+- query:startPositionTicks integer
+
+## S569-N0103  POST /Sessions/{sessionId}/Playing/{command}
+desc: Issues a playstate command to a client.
+- path:sessionId string
+- path:command string enum[Stop|Pause|Unpause|NextTrack|PreviousTrack|Seek|Rewind|FastForward|PlayPause]
+- query:seekPositionTicks integer
+- query:controllingUserId string
+
+## S569-N0105  DELETE /Sessions/{sessionId}/User/{userId}
+desc: Removes an additional user from a session.
+- path:sessionId string
+- path:userId string
+
+## S569-N0107  POST /Sessions/{sessionId}/Viewing
+desc: Instructs a session to browse to an item or view.
+- path:sessionId string
+- query:itemType string
+- query:itemId string
+- query:itemName string
+
+## S569-N0108  POST /Startup/Complete
+desc: Completes the startup wizard.
+
+## S569-N0109  POST /Startup/Configuration
+desc: Sets the initial startup wizard configuration.
+schema: StartupConfigurationDto
+- body:MetadataCountryCode string
+- body:PreferredMetadataLanguage string
+- body:UICulture string
+
+## S569-N0110  POST /Startup/RemoteAccess
+desc: Sets remote access and UPnP.
+schema: StartupRemoteAccessDto
+- body:EnableAutomaticPortMapping boolean
+- body:EnableRemoteAccess boolean
+
+## S569-N0111  POST /Startup/User
+desc: Sets the user name and password.
+schema: StartupUserDto
+- body:Name string
+- body:Password string
+
+## S569-N0112  POST /SyncPlay/Buffering
+desc: Notify SyncPlay group that member is buffering.
+schema: BufferRequestDto
+- body:IsPlaying boolean
+- body:PlaylistItemId string
+- body:PositionTicks integer
+- body:When string
+
+## S569-N0113  POST /SyncPlay/Join
+desc: Join an existing SyncPlay group.
+schema: JoinGroupRequestDto
+- body:GroupId string
+
+## S569-N0116  POST /SyncPlay/New
+desc: Create a new SyncPlay group.
+schema: NewGroupRequestDto
+- body:GroupName string
+
+## S569-N0118  POST /SyncPlay/Pause
+desc: Request pause in SyncPlay group.
+
+## S569-N0119  POST /SyncPlay/Ping
+desc: Update session ping.
+schema: PingRequestDto
+- body:Ping integer
+
+## S569-N0120  POST /SyncPlay/PreviousItem
+desc: Request previous item in SyncPlay group.
+schema: PreviousItemRequestDto
+- body:PlaylistItemId string
+
+## S569-N0121  POST /SyncPlay/Queue
+desc: Request to queue items to the playlist of a SyncPlay group.
+schema: QueueRequestDto
+- body:ItemIds array<string>
+- body:Mode string enum[Queue|QueueNext]
+
+## S569-N0122  POST /SyncPlay/Ready
+desc: Notify SyncPlay group that member is ready for playback.
+schema: ReadyRequestDto
+- body:IsPlaying boolean
+- body:PlaylistItemId string
+- body:PositionTicks integer
+- body:When string
+
+## S569-N0123  POST /SyncPlay/RemoveFromPlaylist
+desc: Request to remove items from the playlist in SyncPlay group.
+schema: RemoveFromPlaylistRequestDto
+- body:PlaylistItemIds array<string>
+
+## S569-N0124  POST /SyncPlay/Seek
+desc: Request seek in SyncPlay group.
+schema: SeekRequestDto
+- body:PositionTicks integer
+
+## S569-N0127  POST /SyncPlay/SetPlaylistItem
+desc: Request to change playlist item in SyncPlay group.
+schema: SetPlaylistItemRequestDto
+- body:PlaylistItemId string
+
+## S569-N0129  POST /SyncPlay/SetShuffleMode
+desc: Request to set shuffle mode in SyncPlay group.
+schema: SetShuffleModeRequestDto
+- body:Mode string enum[Sorted|Shuffle]
+
+## S569-N0130  POST /SyncPlay/Stop
+desc: Request stop in SyncPlay group.
+
+## S569-N0131  POST /SyncPlay/Unpause
+desc: Request unpause in SyncPlay group.
+
+## S569-N0132  POST /System/Configuration
+desc: Updates application configuration.
+schema: ServerConfiguration
+- body:ActivityLogRetentionDays integer
+- body:AutoDiscovery boolean
+- body:AutoDiscoveryTracing boolean
+- body:BaseUrl string
+- body:CachePath string
+- body:CertificatePassword string
+- body:CertificatePath string
+- body:CodecsUsed array<string>
+- body:ContentTypes array<object>
+- body:ContentTypes[].Name string
+- body:ContentTypes[].Value string
+- body:CorsHosts array<string>
+- body:DisableLiveTvChannelUserDataName boolean
+- body:DisablePluginImages boolean
+- body:DisplaySpecialsWithinSeasons boolean
+- body:EnableCaseSensitiveItemIds boolean
+- body:EnableDashboardResponseCaching boolean
+- body:EnableExternalContentInSuggestions boolean
+- body:EnableFolderView boolean
+- body:EnableGroupingIntoCollections boolean
+- body:EnableHttps boolean
+- body:EnableIPV4 boolean
+- body:EnableIPV6 boolean
+- body:EnableMetrics boolean
+- body:EnableMultiSocketBinding boolean
+- body:EnableNewOmdbSupport boolean
+- body:EnableNormalizedItemByNameIds boolean
+- body:EnableRemoteAccess boolean
+- body:EnableSSDPTracing boolean
+- body:EnableSimpleArtistDetection boolean
+- body:EnableSlowResponseWarning boolean
+- body:EnableUPnP boolean
+- body:GatewayMonitorPeriod integer
+- body:HDHomerunPortRange string
+- body:HttpServerPortNumber integer
+- body:HttpsPortNumber integer
+- body:IgnoreVirtualInterfaces boolean
+- body:ImageExtractionTimeoutMs integer
+- body:ImageSavingConvention string enum[Legacy|Compatible]
+- body:IsPortAuthorized boolean
+- body:IsRemoteIPFilterBlacklist boolean
+- body:IsStartupWizardCompleted boolean
+- body:KnownProxies array<string>
+- body:LibraryMetadataRefreshConcurrency integer
+- body:LibraryMonitorDelay integer
+- body:LibraryScanFanoutConcurrency integer
+- body:LocalNetworkAddresses array<string>
+- body:LocalNetworkSubnets array<string>
+- body:LogFileRetentionDays integer
+- body:MaxAudiobookResume integer
+- body:MaxResumePct integer
+- body:MetadataCountryCode string
+- body:MetadataNetworkPath string
+- body:MetadataOptions array<object>
+- body:MetadataOptions[].DisabledImageFetchers array<string>
+- body:MetadataOptions[].DisabledMetadataFetchers array<string>
+- body:MetadataOptions[].DisabledMetadataSavers array<string>
+- body:MetadataOptions[].ImageFetcherOrder array<string>
+- body:MetadataOptions[].ItemType string
+- body:MetadataOptions[].LocalMetadataReaderOrder array<string>
+- body:MetadataOptions[].MetadataFetcherOrder array<string>
+- body:MetadataPath string
+- body:MinAudiobookResume integer
+- body:MinResumeDurationSeconds integer
+- body:MinResumePct integer
+- body:PathSubstitutions array<object>
+- body:PathSubstitutions[].From string
+- body:PathSubstitutions[].To string
+- body:PluginRepositories array<object>
+- body:PluginRepositories[].Enabled boolean
+- body:PluginRepositories[].Name string
+- body:PluginRepositories[].Url string
+- body:PreferredMetadataLanguage string
+- body:PreviousVersion object
+- body:PreviousVersion.Build integer
+- body:PreviousVersion.Major integer
+- body:PreviousVersion.MajorRevision integer
+- body:PreviousVersion.Minor integer
+- body:PreviousVersion.MinorRevision integer
+- body:PreviousVersion.Revision integer
+(+25 fields cut)
+
+## S569-N0133  POST /System/Configuration/{key}
+desc: Updates named configuration.
+- path:key string
+
+## S569-N0134  POST /System/MediaEncoder/Path
+desc: Updates the path to the media encoder.
+schema: MediaEncoderPathDto
+- body:Path string
+- body:PathType string
+
+## S569-N0136  POST /System/Restart
+desc: Restarts the application.
+
+## S569-N0138  POST /Users/AuthenticateByName
+desc: Authenticates a user by name.
+schema: AuthenticateUserByName
+- body:Password string
+- body:Pw string
+- body:Username string
+
+## S569-N0141  POST /Users/ForgotPassword/Pin
+desc: Redeems a forgot password pin.
+- body:(body) string
+
+## S569-N0142  POST /Users/New
+desc: Creates a user.
+schema: CreateUserByName
+- body:Name string
+- body:Password string
+
+## S569-N0143  DELETE /Users/{userId}
+desc: Deletes a user.
+- path:userId string
+
+## S569-N0144  POST /Users/{userId}
+desc: Updates a user.
+schema: UserDto
+- path:userId string
+- body:Configuration object
+- body:Configuration.AudioLanguagePreference string
+- body:Configuration.DisplayCollectionsView boolean
+- body:Configuration.DisplayMissingEpisodes boolean
+- body:Configuration.EnableLocalPassword boolean
+- body:Configuration.EnableNextEpisodeAutoPlay boolean
+- body:Configuration.GroupedFolders array<string>
+- body:Configuration.HidePlayedInLatest boolean
+- body:Configuration.LatestItemsExcludes array<string>
+- body:Configuration.MyMediaExcludes array<string>
+- body:Configuration.OrderedViews array<string>
+- body:Configuration.PlayDefaultAudioTrack boolean
+- body:Configuration.RememberAudioSelections boolean
+- body:Configuration.RememberSubtitleSelections boolean
+- body:Configuration.SubtitleLanguagePreference string
+- body:Configuration.SubtitleMode string enum[Default|Always|OnlyForced|None|Smart]
+- body:EnableAutoLogin boolean
+- body:HasConfiguredEasyPassword boolean
+- body:HasConfiguredPassword boolean
+- body:HasPassword boolean
+- body:Id string
+- body:LastActivityDate string
+- body:LastLoginDate string
+- body:Name string
+- body:Policy object
+- body:Policy.AccessSchedules array<object>
+- body:Policy.AccessSchedules[].DayOfWeek string enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Everyday|Weekday|Weekend]
+- body:Policy.AccessSchedules[].EndHour number
+- body:Policy.AccessSchedules[].Id integer
+- body:Policy.AccessSchedules[].StartHour number
+- body:Policy.AccessSchedules[].UserId string
+- body:Policy.AuthenticationProviderId string
+- body:Policy.BlockUnratedItems array<string> enum[Movie|Trailer|Series|Music|Book|LiveTvChannel|LiveTvProgram|ChannelContent|Other]
+- body:Policy.BlockedChannels array<string>
+- body:Policy.BlockedMediaFolders array<string>
+- body:Policy.BlockedTags array<string>
+- body:Policy.EnableAllChannels boolean
+- body:Policy.EnableAllDevices boolean
+- body:Policy.EnableAllFolders boolean
+- body:Policy.EnableAudioPlaybackTranscoding boolean
+- body:Policy.EnableContentDeletion boolean
+- body:Policy.EnableContentDeletionFromFolders array<string>
+- body:Policy.EnableContentDownloading boolean
+- body:Policy.EnableLiveTvAccess boolean
+- body:Policy.EnableLiveTvManagement boolean
+- body:Policy.EnableMediaConversion boolean
+- body:Policy.EnableMediaPlayback boolean
+- body:Policy.EnablePlaybackRemuxing boolean
+- body:Policy.EnablePublicSharing boolean
+- body:Policy.EnableRemoteAccess boolean
+- body:Policy.EnableRemoteControlOfOtherUsers boolean
+- body:Policy.EnableSharedDeviceControl boolean
+- body:Policy.EnableSyncTranscoding boolean
+- body:Policy.EnableUserPreferenceAccess boolean
+- body:Policy.EnableVideoPlaybackTranscoding boolean
+- body:Policy.EnabledChannels array<string>
+- body:Policy.EnabledDevices array<string>
+- body:Policy.EnabledFolders array<string>
+- body:Policy.ForceRemoteSourceTranscoding boolean
+- body:Policy.InvalidLoginAttemptCount integer
+- body:Policy.IsAdministrator boolean
+- body:Policy.IsDisabled boolean
+- body:Policy.IsHidden boolean
+- body:Policy.LoginAttemptsBeforeLockout integer
+- body:Policy.MaxActiveSessions integer
+- body:Policy.MaxParentalRating integer
+- body:Policy.PasswordResetProviderId string
+- body:Policy.RemoteClientBitrateLimit integer
+- body:Policy.SyncPlayAccess string enum[CreateAndJoinGroups|JoinGroups|None]
+- body:PrimaryImageAspectRatio number
+- body:PrimaryImageTag string
+- body:ServerId string
+- body:ServerName string
+
+## S569-N0146  POST /Users/{userId}/Configuration
+desc: Updates a user configuration.
+schema: UserConfiguration
+- path:userId string
+- body:AudioLanguagePreference string
+- body:DisplayCollectionsView boolean
+- body:DisplayMissingEpisodes boolean
+- body:EnableLocalPassword boolean
+- body:EnableNextEpisodeAutoPlay boolean
+- body:GroupedFolders array<string>
+- body:HidePlayedInLatest boolean
+- body:LatestItemsExcludes array<string>
+- body:MyMediaExcludes array<string>
+- body:OrderedViews array<string>
+- body:PlayDefaultAudioTrack boolean
+- body:RememberAudioSelections boolean
+- body:RememberSubtitleSelections boolean
+- body:SubtitleLanguagePreference string
+- body:SubtitleMode string enum[Default|Always|OnlyForced|None|Smart]

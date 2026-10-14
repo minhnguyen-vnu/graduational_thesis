@@ -1,0 +1,51 @@
+# EvoMaster black-box auth config for the THESIS-SEEDED VAmPI fork (infra/vampi-seeded/).
+# Differs from vampi-auth.yaml (stock VAmPI) by adding `superadmin`, the stable admin that
+# serves as the transition *operator* so a constructed triple demoting `admin` cannot strand
+# the fuzzer without a privileged actor (tier2 plan §7).
+#
+# Login: POST /users/v1/login  body {username,password}  -> field "auth_token"
+# Sent as: Authorization: Bearer <token>   (JWT; TTL raised to 1h in the fork, see §4 of the plan)
+# Reseed with GET /createdb before every run.
+
+auth:
+  - name: admin            # ADMIN -- the demotion victim in the stateful-authz triple
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: admin
+        password: "pass1"
+        usernameField: username
+        passwordField: password
+  - name: superadmin       # ADMIN -- stable operator, never demoted by a constructed triple
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: superadmin
+        password: "pass1"
+        usernameField: username
+        passwordField: password
+  - name: name1            # regular user #1 (non-admin)
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: name1
+        password: "pass1"
+        usernameField: username
+        passwordField: password
+  - name: name2            # regular user #2 (non-admin)
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: name2
+        password: "pass2"
+        usernameField: username
+        passwordField: password
+
+# Shared settings applied to every user above (avoids repetition).
+authTemplate:
+  loginEndpointAuth:
+    endpoint: /users/v1/login
+    verb: POST
+    contentType: application/json
+    token:                       # v6.1.1 WFC TokenHandling keys
+      extractFrom: body          # token is in the JSON response body
+      extractSelector: /auth_token   # JSON Pointer to the token field
+      sendIn: header
+      sendName: Authorization
+      sendTemplate: "Bearer {token}"

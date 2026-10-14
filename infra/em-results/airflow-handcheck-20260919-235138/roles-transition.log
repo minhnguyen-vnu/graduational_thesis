@@ -1,0 +1,9 @@
+01 source   stale-token POST variables (role Op)          : 201
+02 transition PATCH users/victim roles=[Viewer]           : 200
+03 roles after transition                                 : ['Viewer'] active= True
+04 follow-up stale-token POST variables                   : 201
+05 D1 fresh-token POST variables                          : 201
+-- restart api-server process --
+06 follow-up stale-token POST variables (after restart)   : 403
+07 D1 fresh-token POST variables (after restart)          : 403
+08 roles now                                              : ['Viewer']

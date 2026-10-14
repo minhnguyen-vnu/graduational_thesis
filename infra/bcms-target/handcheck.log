@@ -1,0 +1,20 @@
+== signup-admin (server token) ==
+{"accessToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxNmJmN2VmODMzNmUyNTRiNDMyMDg3YmY3ZDA0MjZhOWFhNDkwZDQ3IiwiaXNzIjoibG9jYWxob3N0IiwiZXhwIjo2MDAwMCwiaWF0IjoxNzkxNTQxMzQ5MDg3LCJ1c2VySWQiOiI  mainadmin: rls=['ADMIN'] uid=6ac8c06566b549ec01f87d86
+== mainadmin creates victim(ADMIN), plain(USER), target(USER) ==
+  victim=200 {"item":{"_id":"6ac8c06566b549ec01f87d8a","createdAt":1791541349280,"updatedAt":1791541349
+  plain =200 {"item":{"_id":"6ac8c06566b549ec01f87d8b","createdAt":1791541349367,"updatedAt":1791541349
+  target=200 {"item":{"_id":"6ac8c06566b549ec01f87d8c","createdAt":1791541349452,"updatedAt":1791541349
+  victimId=6ac8c06566b549ec01f87d8a targetId=6ac8c06566b549ec01f87d8c
+== NEG CONTROL: plain(USER) PUT update target -> expect 403 ==
+  plain: rls=['USER'] uid=6ac8c06566b549ec01f87d8b
+  neg=403 {"message":"Token is not authorized for this action."}
+== FAST TRIPLE within 60s token (victim login -> source -> transition -> follow-up) ==
+  victim_old: rls=['ADMIN'] uid=6ac8c06566b549ec01f87d8a
+  before(source)=200 {"item":{"_id":"6ac8c06566b549ec01f87d8c","createdAt":1791541349452,"updatedAt":1791541349
+  transition(demote victim)=200 {"item":{"_id":"6ac8c06566b549ec01f87d8a","createdAt":1791541349280,"updatedAt":1791541349
+  after(bug, same token)=200 {"item":{"_id":"6ac8c06566b549ec01f87d8c","createdAt":1791541349452,"updatedAt":1791541349
+  victim_new: rls=['USER'] uid=6ac8c06566b549ec01f87d8a
+  newtok=403 {"message":"Token is not authorized for this action."}
+== VERDICT ==
+  PASS: MR-A1 confirmed on running bcms d0e643d
+  old-token(rls ADMIN) after demotion=200 vs new-token(rls USER)=403 ; neg=403

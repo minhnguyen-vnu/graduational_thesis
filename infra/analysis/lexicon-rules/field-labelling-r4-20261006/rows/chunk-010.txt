@@ -1,0 +1,739 @@
+## S532-N0046  DELETE /org/{orgId}/webhooks/{webhookId}
+desc: Delete a webhook
+- path:orgId string
+- path:webhookId string
+
+## S532-N0047  POST /org/{orgId}/webhooks/{webhookId}/ping
+desc: Ping a webhook
+- path:orgId string
+- path:webhookId string
+
+## S532-N0048  POST /reporting/counts/issues
+desc: Get issue counts
+- query:from string
+- query:to string
+- query:groupBy string enum[severity|fixable|project,[severity|fixable]]
+- body:filters object
+- body:filters.fixable boolean
+- body:filters.ignored boolean
+- body:filters.isPatchable boolean
+- body:filters.isPinnable boolean
+- body:filters.isUpgradable boolean
+- body:filters.languages array<any>
+- body:filters.orgs any
+- body:filters.patched boolean
+- body:filters.priorityScore object
+- body:filters.priorityScore.max number
+- body:filters.priorityScore.min number
+- body:filters.projects any
+- body:filters.severity array<any>
+- body:filters.types array<any>
+
+## S532-N0049  POST /reporting/counts/issues/latest
+desc: Get latest issue counts
+- query:groupBy string enum[severity|fixable|project,[severity|fixable]]
+- body:filters object
+- body:filters.fixable boolean
+- body:filters.ignored boolean
+- body:filters.isPatchable boolean
+- body:filters.isPinnable boolean
+- body:filters.isUpgradable boolean
+- body:filters.languages array<any>
+- body:filters.orgs any
+- body:filters.patched boolean
+- body:filters.priorityScore object
+- body:filters.priorityScore.max number
+- body:filters.priorityScore.min number
+- body:filters.projects any
+- body:filters.severity array<any>
+- body:filters.types array<any>
+
+## S532-N0052  POST /reporting/counts/tests
+desc: Get test counts
+- query:from string
+- query:to string
+- query:groupBy string enum[isPrivate|issuesPrevented]
+- body:filters object
+- body:filters.isPrivate boolean
+- body:filters.issuesPrevented boolean
+- body:filters.orgs any
+- body:filters.projects any
+
+## S532-N0055  POST /test/composer
+desc: Test composer.json & composer.lock file | You can test your Composer packages for issues according to their manifest file & lockfile using this action. It takes a JSON object containing a "target" `composer.json` and a `composer.lock`.
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.additional array<any>
+- body:files.target object
+- body:files.target.contents string
+
+## S532-N0059  POST /test/gradle
+desc: Test gradle file | You can test your Gradle packages for issues according to their manifest file using this action. It takes a JSON object containing the "target" `build.gradle`.
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.target object
+- body:files.target.contents string
+
+## S532-N0061  POST /test/npm
+desc: Test package.json & package-lock.json File | You can test your npm packages for issues according to their manifest file & optional lockfile using this action. It takes a JSON object containing a "target" `package.json` and optionally a `package-lock.json`.
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.additional array<any>
+- body:files.target object
+- body:files.target.contents string
+
+## S532-N0063  POST /test/rubygems
+desc: Test gemfile.lock file | You can test your rubygems applications for issues according to their lockfile using this action. It takes a JSON object containing a the "target" `Gemfile.lock`.
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.target object
+- body:files.target.contents string
+
+## S532-N0064  POST /test/sbt
+desc: Test sbt file | You can test your `sbt` packages for issues according to their manifest file using this action. It takes a JSON object containing a the "target" `build.sbt`.
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.target object
+- body:files.target.contents string
+
+## S532-N0065  POST /test/yarn
+desc: Test package.json & yarn.lock File | You can test your yarn packages for issues according to their manifest file & lockfile using this action. It takes a JSON object containing a "target" `package.json` and a `yarn.lock`.
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.additional array<any>
+- body:files.target object
+- body:files.target.contents string
+
+## S532-N0066  PUT /user/me/notification-settings/org/{orgId}
+desc: Modify organization notification settings
+- path:orgId string
+- body:new-issues-remediations object
+- body:new-issues-remediations.enabled boolean
+- body:new-issues-remediations.issueSeverity string enum[all|high]
+- body:new-issues-remediations.issueType string enum[all|vuln|license|none]
+- body:project-imported object
+- body:project-imported.enabled boolean
+- body:test-limit object
+- body:test-limit.enabled boolean
+- body:weekly-report object
+- body:weekly-report.enabled boolean
+
+## S532-N0067  PUT /user/me/notification-settings/org/{orgId}/project/{projectId}
+desc: Modify project notification settings
+- path:orgId string
+- path:projectId string
+- body:new-issues-remediations object
+- body:new-issues-remediations.enabled boolean
+- body:new-issues-remediations.issueSeverity string enum[all|high]
+- body:new-issues-remediations.issueType string enum[all|vuln|license|none]
+
+## S137-N0002  POST /api/Accounts/{accountId}/Holdings
+desc: Creates a holding and adds it to an existing Account.
+schema: AccountHoldingModel
+- path:accountId integer
+- body:costBasis number
+- body:cusip string
+- body:description string
+- body:externalDestinationId string
+- body:marketValue number
+- body:symbol string
+- body:valuationDate string
+
+## S137-N0003  PUT /api/Accounts/{accountId}/Holdings
+desc: Updates all holdings associated with an account
+schema: AccountHoldingsWithoutIdModel
+- path:accountId integer
+- body:holdings array<object>
+- body:holdings[].costBasis number
+- body:holdings[].cusip string
+- body:holdings[].description string
+- body:holdings[].externalDestinationId string
+- body:holdings[].marketValue number
+- body:holdings[].symbol string
+- body:holdings[].valuationDate string
+
+## S137-N0004  DELETE /api/Accounts/{accountId}/Holdings/{id}
+desc: Description: This operation deletes a single Account Holding for the specified Account Holding ID and Account ID.<br /> Purpose: Provides the ability to remove individual holdings from a specified Account.
+- path:accountId integer
+- path:id integer
+
+## S137-N0006  DELETE /api/Accounts/{accountId}/SavingsStrategies
+desc: Deletes all savings strategies tied to an account
+- path:accountId integer
+
+## S137-N0007  POST /api/Accounts/{accountId}/SavingsStrategies
+desc: Creates a savings strategy on a specific account
+schema: SavingsStrategyModel
+- path:accountId integer
+- body:employerSavingsAmount number
+- body:employerSavingsAmountType string enum[Dollar|Percent|Max]
+- body:endDate string
+- body:externalDestinationId string
+- body:frequencyId integer
+- body:mandatoryAmount number
+- body:mandatoryAmountType string enum[Dollar|Percent|Max]
+- body:postTaxSavingsAmount number
+- body:postTaxSavingsAmountType string enum[Dollar|Percent|Max]
+- body:preTaxSavingsAmount number
+- body:preTaxSavingsAmountType string enum[Dollar|Percent|Max]
+- body:startDate string
+
+## S137-N0008  DELETE /api/Accounts/{accountId}/SavingsStrategies/{id}
+desc: Deletes a specific savings strategy
+- path:accountId integer
+- path:id integer
+
+## S137-N0009  PUT /api/Accounts/{accountId}/SavingsStrategies/{id}
+desc: Updates a specific savings strategy
+schema: SavingsStrategyModel
+- path:accountId integer
+- path:id integer
+- body:employerSavingsAmount number
+- body:employerSavingsAmountType string enum[Dollar|Percent|Max]
+- body:endDate string
+- body:externalDestinationId string
+- body:frequencyId integer
+- body:mandatoryAmount number
+- body:mandatoryAmountType string enum[Dollar|Percent|Max]
+- body:postTaxSavingsAmount number
+- body:postTaxSavingsAmountType string enum[Dollar|Percent|Max]
+- body:preTaxSavingsAmount number
+- body:preTaxSavingsAmountType string enum[Dollar|Percent|Max]
+- body:startDate string
+
+## S137-N0010  DELETE /api/Accounts/{id}
+desc: Description: The operation removes an Account tied to a Fact Finder.<br /> Purpose: Allows for removal of an Account from a Fact Finder.
+- path:id integer
+
+## S137-N0012  POST /api/Clients
+desc: Description: This operation submits the Fact Finder data to an external system.<br /> Purpose: Allows Fact Finder data to be persisted in another system for that system's consumption and use.
+schema: ClientsModel
+- body:externalDestinationName string
+- body:factFinderId integer
+- body:planAction string enum[New|Duplicate|Project|Update]
+
+## S137-N0013  POST /api/CriticalIllnessInsurancePolicies
+desc: Description: The operation creates a Critical Illness Insurance Policy.<br /> Purpose: Allows for creation of Critical Illness Insurance Policies on a Fact Finder.
+schema: CriticalIllnessInsurancePolicyModel
+- body:benefit number
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:frequency integer
+- body:insured string enum[Client|CoClient]
+- body:policyType integer
+- body:premium number
+
+## S137-N0015  PUT /api/CriticalIllnessInsurancePolicies/{id}
+desc: Description: The operation updates a Critical Illness Insurance Policy.<br /> Purpose: Allows for complete replacement of a Critical Illness Insurance Policy on a Fact Finder.
+schema: CriticalIllnessInsurancePolicyModel
+- path:id integer
+- body:benefit number
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:frequency integer
+- body:insured string enum[Client|CoClient]
+- body:policyType integer
+- body:premium number
+
+## S137-N0016  POST /api/DefinedBenefitPensions
+desc: Description: The operation creates a Defined Benefit Pension.<br /> Purpose: Allows for creation of Defined Benefit Pensions on a Fact Finder.
+schema: DefinedBenefitPensionModel
+- body:description string
+- body:estimatedAmount number
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:member string enum[Client|CoClient]
+- body:startDate string
+
+## S137-N0017  DELETE /api/DefinedBenefitPensions/{id}
+desc: Description: The operation removes a Defined Benefit Pension tied to a Fact Finder.<br /> Purpose: Allows for removal of a Defined Benefit Pension from a Fact Finder.
+- path:id integer
+
+## S137-N0019  POST /api/Demographics
+desc: Description: The operation creates Demographic information.<br /> Purpose: Allows for creation of Demographic information on a Fact Finder.
+schema: DemographicsModel
+- body:city string
+- body:externalDestinationId string
+- body:externalSourceId string
+- body:factFinderId integer
+- body:head1 object
+- body:head1.alreadyRetired boolean
+- body:head1.birthDate string
+- body:head1.externalDestinationId string
+- body:head1.firstName string
+- body:head1.gender string enum[Male|Female|None]
+- body:head1.lastName string
+- body:head1.taxFilingStatus integer
+- body:head2 object
+- body:head2.alreadyRetired boolean
+- body:head2.birthDate string
+- body:head2.externalDestinationId string
+- body:head2.firstName string
+- body:head2.gender string enum[Male|Female|None]
+- body:head2.lastName string
+- body:head2.taxFilingStatus integer
+- body:jointAnalysis boolean
+- body:state integer
+
+## S137-N0020  POST /api/Demographics/{demographicId}/Dependents
+desc: Description: The operation creates a Dependent.<br /> Purpose: Allows for creation of Dependents on a Fact Finder.
+schema: DemographicsDependentModel
+- path:demographicId integer
+- body:birthDate string
+- body:dependentOf string enum[Client|CoClient|Joint|Other]
+- body:externalDestinationId string
+- body:firstName string
+- body:lastName string
+- body:relationship string enum[Son|Daughter|FosterSon|FosterDaughter|Grandson|Granddaughter|Nephew|Niece|MaleCousin|FemaleCousin|Father|Mother]
+
+## S137-N0021  DELETE /api/Demographics/{demographicId}/Dependents/{id}
+desc: Description: The operation removes a Dependent tied to a Fact Finder.<br /> Purpose: Allows for removal of a Dependent from a Fact Finder.
+- path:demographicId integer
+- path:id integer
+
+## S137-N0022  PUT /api/Demographics/{demographicId}/Dependents/{id}
+desc: Description: The operation updates a Dependent.<br /> Purpose: Allows for complete replacement of a Dependent on a Fact Finder.
+schema: DemographicsDependentModel
+- path:demographicId integer
+- path:id integer
+- body:birthDate string
+- body:dependentOf string enum[Client|CoClient|Joint|Other]
+- body:externalDestinationId string
+- body:firstName string
+- body:lastName string
+- body:relationship string enum[Son|Daughter|FosterSon|FosterDaughter|Grandson|Granddaughter|Nephew|Niece|MaleCousin|FemaleCousin|Father|Mother]
+
+## S137-N0025  DELETE /api/DisabilityInsurancePolicies/{id}
+desc: Description: The operation removes a Disability Insurance Policy tied to a Fact Finder.<br /> Purpose: Allows for removal of a Disability Insurance Policy from a Fact Finder.
+- path:id integer
+
+## S137-N0026  PUT /api/DisabilityInsurancePolicies/{id}
+desc: Description: The operation updates a Disability Insurance Policy.<br /> Purpose: Allows for complete replacement of a Disability Insurance Policy on a Fact Finder.
+schema: DisabilityInsurancePolicyModel
+- path:id integer
+- body:benefit number
+- body:benefitFrequency integer
+- body:benefitType string enum[Dollar|Percent]
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:insured string enum[Client|CoClient]
+- body:policyType integer
+- body:premium number
+- body:premiumFrequency integer
+
+## S137-N0029  DELETE /api/EducationGoals/{educationGoalId}/Expenses/{id}
+desc: Description: The operation removes an Education Goal Expense tied to a Fact Finder.<br /> Purpose: Allows for removal of an Education Goal Expense from a Fact Finder.
+- path:educationGoalId integer
+- path:id integer
+
+## S137-N0030  PUT /api/EducationGoals/{educationGoalId}/Expenses/{id}
+desc: Description: The operation updates an Education Goal Expense.<br /> Purpose: Allows for complete replacement of an Education Goal Expense on a Fact Finder.
+schema: EducationExpenseModel
+- path:educationGoalId integer
+- path:id integer
+- body:annualCost number
+- body:externalDestinationId string
+- body:member string enum[Client|CoClient|Dependent]
+- body:memberDependentId integer
+- body:startYear string
+- body:years integer
+
+## S137-N0031  DELETE /api/EducationGoals/{id}
+desc: Description: The operation removes an Education Goal tied to a Fact Finder.<br /> Purpose: Allows for removal of an Education Goal from a Fact Finder.
+- path:id integer
+
+## S137-N0032  PUT /api/EducationGoals/{id}
+desc: Description: The operation creates an Education Goal Expense.<br /> Purpose: Allows for creation of Education Goal Expenses on a Fact Finder.
+schema: EducationGoalModel
+- path:id integer
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:projectedCost number
+
+## S137-N0033  POST /api/Expenses
+desc: Description: The operation creates an Expense.<br /> Purpose: Allows for creation of Expenses on a Fact Finder.
+schema: ExpenseModel
+- body:annualPeriod integer
+- body:description string
+- body:endDate string
+- body:expenseAmount number
+- body:expenseTypeId integer
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:frequency integer
+- body:member string enum[Client|CoClient|Joint]
+- body:startDate string
+
+## S137-N0034  DELETE /api/Expenses/{id}
+desc: Description: The operation removes an Expense tied to a Fact Finder.<br /> Purpose: Allows for removal of an Expense from a Fact Finder.
+- path:id integer
+
+## S137-N0035  PUT /api/Expenses/{id}
+desc: Description: The operation updates an Expense.<br /> Purpose: Allows for complete replacement of an Expense on a Fact Finder. <br /><br /> Note: Expense type cannot be changed for expenses prepopulated from NaviPlan.
+schema: ExpenseModel
+- path:id integer
+- body:annualPeriod integer
+- body:description string
+- body:endDate string
+- body:expenseAmount number
+- body:expenseTypeId integer
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:frequency integer
+- body:member string enum[Client|CoClient|Joint]
+- body:startDate string
+
+## S137-N0036  POST /api/FactFinders
+desc: Description: The operation creates a completely empty draft Fact Finder.<br /> Requirements: A householdId and list of modules must be provided.<br /> Purpose: Stages a Fact Finder for population.
+schema: FactFinderEntityModel
+- body:householdId integer
+- body:modules array<string> enum[Demographics|Assets|Liabilities|Incomes|Expenses|Insurance|Retirement|Education|MajorPurchase]
+- body:planLevel string enum[Level2|Level1]
+
+## S137-N0037  POST /api/FactFinders/Populate
+desc: Description: The operation creates a new Populated Fact Finder.<br /> Requirements: A householdId and list of modules must be provided.<br /> Purpose: Creation of a Fact Finder.
+schema: FactFinderPopulatableEntityModel
+- body:householdId integer
+- body:modules array<string> enum[Demographics|Assets|Liabilities|Incomes|Expenses|Insurance|Retirement|Education|MajorPurchase]
+- body:planId integer
+- body:planLevel string enum[Level2|Level1]
+
+## S137-N0039  POST /api/FactFinders/{factFinderId}/Snapshots
+desc: Description: The operation creates a Snapshot of a Fact Finder.<br /> Purpose: Allows for advisors to compare the current fact finder to a snapshot prior to acceptance.
+- path:factFinderId integer
+
+## S137-N0040  DELETE /api/FactFinders/{id}
+desc: Description: This operation deletes a single Fact Finder for the specified Fact Finder ID.<br /> Purpose: Deletes the fact finder.
+- path:id integer
+
+## S137-N0041  PUT /api/FactFinders/{id}
+desc: Description: The operation updates a Fact Finder.<br /> Purpose: Allows for the updating of a Fact Finder.
+schema: FactFinderModel
+- path:id integer
+- body:status string enum[New|InProgress|ClientSubmitted|AdvisorAccepted|Canceled|Draft|Deleted]
+
+## S137-N0042  PUT /api/FactFinders/{id}/Populate
+desc: Description: The operation populates a fact finder.<br /> Purpose: Allows for the population of a Fact Finder based on a NaviPlan plan or client. This operation cannot be performed on a Fact Finder more than once.
+schema: FactFinderPopulationModel
+- path:id integer
+- body:planId integer
+
+## S137-N0043  POST /api/Incomes
+desc: Description: The operation creates an Income.<br /> Purpose: Allows for creation of Incomes on a Fact Finder.
+schema: IncomeModel
+- body:annualAmount number
+- body:description string
+- body:endDate string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:incomeTypeId integer
+- body:owner string enum[Client|CoClient]
+- body:startDate string
+
+## S137-N0044  DELETE /api/Incomes/{id}
+desc: Description: The operation removes an Income tied to a Fact Finder.<br /> Purpose: Allows for removal of an Income from a Fact Finder.
+- path:id integer
+
+## S137-N0047  DELETE /api/Liabilities/{id}
+desc: Description: The operation removes a Liability tied to a Fact Finder.<br /> Purpose: Allows for removal of a Liability from a Fact Finder.
+- path:id integer
+
+## S137-N0049  POST /api/LifeInsurancePolicies
+desc: Description: The operation creates a Life Insurance Policy.<br /> Purpose: Allows for creation of Life Insurance Policies on a Fact Finder.
+schema: LifeInsurancePolicyModel
+- body:beneficiary string enum[Client|CoClient|Dependent|Other]
+- body:beneficiaryDependentId integer
+- body:benefit number
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:frequency integer
+- body:generalAccountMarketValue number
+- body:insured string enum[Client|CoClient|FirstToDie|SecondToDie|Other]
+- body:payer string enum[Client|CoClient|Joint|Other]
+- body:policyType integer
+- body:premium number
+
+## S137-N0052  POST /api/LifeInsurancePolicies/{lifeInsurancePolicyId}/Subaccounts
+desc: Description: Creates a subaccount and adds it to an existing Life Insurance Policy.<br /> Purpose: Allows for creation of subaccount on a Life Insurance Policy.
+schema: LifeInsurancePolicySubaccountModel
+- path:lifeInsurancePolicyId integer
+- body:description string
+- body:externalDestinationId string
+- body:marketValue number
+- body:symbol string
+
+## S137-N0054  PUT /api/LifeInsurancePolicies/{lifeInsurancePolicyId}/Subaccounts/{id}
+desc: Description: Updates an existing Life Insurance Policy Subaccount for an existing Life Insurance Policy.<br /> Purpose: Allows for complete replacement of a subaccount on a Life Insurance Policy.
+schema: LifeInsurancePolicySubaccountModel
+- path:lifeInsurancePolicyId integer
+- path:id integer
+- body:description string
+- body:externalDestinationId string
+- body:marketValue number
+- body:symbol string
+
+## S137-N0055  POST /api/LifestyleAssets
+desc: Description: The operation creates a Lifestyle Asset.<br /> Purpose: Allows for creation of Lifestyle Assets on a Fact Finder.
+schema: LifestyleAssetModel
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:marketValue number
+- body:owner string enum[Client|CoClient|Joint]
+- body:purchaseAmount number
+- body:purchaseDate string
+- body:type integer
+
+## S137-N0056  DELETE /api/LifestyleAssets/{id}
+desc: Description: The operation removes a Lifestyle Asset tied to a Fact Finder.<br /> Purpose: Allows for removal of a Lifestyle Asset from a Fact Finder.
+- path:id integer
+
+## S137-N0059  DELETE /api/LongTermCareInsurancePolicies/{id}
+desc: Description: The operation removes a Long Term Care Insurance Policy tied to a Fact Finder.<br /> Purpose: Allows for removal of a Long Term Care Insurance Policy from a Fact Finder.
+- path:id integer
+
+## S137-N0060  PUT /api/LongTermCareInsurancePolicies/{id}
+desc: Description: The operation updates a Long Term Care Insurance Policy.<br /> Purpose: Allows for complete replacement of a Long Term Care Insurance Policy on a Fact Finder.
+schema: LongTermCareInsurancePolicyModel
+- path:id integer
+- body:benefit number
+- body:benefitFrequency integer
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:insured string enum[Client|CoClient]
+- body:premium number
+- body:premiumFrequency integer
+
+## S137-N0061  POST /api/MajorPurchaseGoals
+desc: Description: The operation creates a Major Purchase.<br /> Purpose: Allows for creation of Major Purchases on a Fact Finder.
+schema: MajorPurchaseGoalModel
+- body:amount number
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:majorPurchaseGoalTypeId integer
+- body:member string enum[Client|CoClient|Joint]
+- body:targetDate string
+
+## S137-N0062  DELETE /api/MajorPurchaseGoals/{id}
+desc: Description: The operation removes a Major Purchase tied to a Fact Finder.<br /> Purpose: Allows for removal of a Major Purchase from a Fact Finder.
+- path:id integer
+
+## S137-N0067  POST /api/RetirementGoals
+desc: Description: The operation creates a Retirement Goal.<br /> Purpose: Allows for creation of Retirement Goals on a Fact Finder.
+schema: RetirementGoalModel
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:head1RetirementDate string
+- body:head2RetirementDate string
+
+## S137-N0068  DELETE /api/RetirementGoals/{id}
+desc: Description: The operation removes a Retirement Goal tied to a Fact Finder.<br /> Purpose: Allows for removal of a Retirement Goal from a Fact Finder.
+- path:id integer
+
+## S137-N0069  PUT /api/RetirementGoals/{id}
+desc: Description: The operation updates a Retirement Goal.<br /> Purpose: Allows for complete replacement of a Retirement Goal on a Fact Finder.
+schema: RetirementGoalModel
+- path:id integer
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:head1RetirementDate string
+- body:head2RetirementDate string
+
+## S137-N0071  DELETE /api/RetirementGoals/{retirementGoalId}/Expenses/{id}
+desc: Description: The operation removes a Retirement Goal Expense tied to a Fact Finder.<br /> Purpose: Allows for removal of a Retirement Goal Expense from a Fact Finder.
+- path:retirementGoalId integer
+- path:id integer
+
+## S137-N0072  PUT /api/RetirementGoals/{retirementGoalId}/Expenses/{id}
+desc: Description: The operation updates a Retirement Goal Expense.<br /> Purpose: Allows for complete replacement of a Retirement Goal Expense on a Fact Finder.
+schema: RetirementExpenseModel
+- path:retirementGoalId integer
+- path:id integer
+- body:amount number
+- body:annualPeriod integer
+- body:description string
+- body:endDate string
+- body:externalDestinationId string
+- body:frequency integer
+- body:member string enum[Client|CoClient|Joint]
+- body:startDate string
+
+## S320-N0022  PUT /restv2/game/{apiKey}/admin/testHarness/scenarios/{scenarioName}
+desc: updateTestHarnessScenario
+schema: TestHarnessScenarioModel
+- path:apiKey string
+- path:scenarioName string
+- body:scenarioJson object
+- body:scenarioName string
+
+## S320-N0026  PUT /restv2/game/{apiKey}/manage/experiments/{id}
+desc: updateExperiment
+schema: ExperimentModel
+- path:apiKey string
+- path:id integer
+- body:active boolean
+- body:changedFieldsAndInitialValues object
+- body:complete boolean
+- body:config object
+- body:config.playerMongoQuery string
+- body:config.playerQuery string
+- body:config.variants string
+- body:endDate string
+- body:id integer
+- body:measurements string
+- body:measurementsEsQuery string
+- body:name string
+- body:percentHash string
+- body:publishedStages array<string>
+- body:startDate string
+
+## S320-N0027  POST /restv2/game/{apiKey}/manage/experiments/{id}/{action}
+desc: doActionExperiment
+- path:apiKey string
+- path:id integer
+- path:action string enum[start|stop|publish|unpublish]
+
+## S320-N0030  PUT /restv2/game/{apiKey}/manage/queries/{shortCode}
+desc: updateQuery
+schema: ManageQuery
+- path:apiKey string
+- path:shortCode string
+- body:esRules string
+- body:name string
+- body:qbRules string
+- body:shortCode string
+
+## S320-N0032  DELETE /restv2/game/{apiKey}/manage/screens/{shortCode}
+desc: deleteScreen
+- path:apiKey string
+- path:shortCode string
+
+## S320-N0036  POST /restv2/game/{apiKey}/manage/snapshots/{snapshotId}/copy/to/{targetApiKey}
+desc: copySnapshotToExistingGame
+- path:apiKey string
+- path:snapshotId string
+- path:targetApiKey string
+
+## S320-N0037  POST /restv2/game/{apiKey}/manage/snapshots/{snapshotId}/publish
+desc: publishSnapshot
+- path:apiKey string
+- path:snapshotId string
+
+## S112-N0001  POST /
+desc: Import a realm Imports a realm from a full representation of that realm.
+schema: RealmRepresentation
+- body:accessCodeLifespan integer
+- body:accessCodeLifespanLogin integer
+- body:accessCodeLifespanUserAction integer
+- body:accessTokenLifespan integer
+- body:accessTokenLifespanForImplicitFlow integer
+- body:accountTheme string
+- body:actionTokenGeneratedByAdminLifespan integer
+- body:actionTokenGeneratedByUserLifespan integer
+- body:adminEventsDetailsEnabled boolean
+- body:adminEventsEnabled boolean
+- body:adminTheme string
+- body:attributes object
+- body:authenticationFlows array<object>
+- body:authenticationFlows[].alias string
+- body:authenticationFlows[].authenticationExecutions array<object>
+- body:authenticationFlows[].authenticationExecutions[].authenticator string
+- body:authenticationFlows[].authenticationExecutions[].authenticatorConfig string
+- body:authenticationFlows[].authenticationExecutions[].authenticatorFlow boolean
+- body:authenticationFlows[].authenticationExecutions[].autheticatorFlow boolean
+- body:authenticationFlows[].authenticationExecutions[].flowAlias string
+- body:authenticationFlows[].authenticationExecutions[].priority integer
+- body:authenticationFlows[].authenticationExecutions[].requirement string
+- body:authenticationFlows[].authenticationExecutions[].userSetupAllowed boolean
+- body:authenticationFlows[].builtIn boolean
+- body:authenticationFlows[].description string
+- body:authenticationFlows[].id string
+- body:authenticationFlows[].providerId string
+- body:authenticationFlows[].topLevel boolean
+- body:authenticatorConfig array<object>
+- body:authenticatorConfig[].alias string
+- body:authenticatorConfig[].config object
+- body:authenticatorConfig[].id string
+- body:browserFlow string
+- body:browserSecurityHeaders object
+- body:bruteForceProtected boolean
+- body:clientAuthenticationFlow string
+- body:clientScopeMappings object
+- body:clientScopes array<object>
+- body:clientScopes[].attributes object
+- body:clientScopes[].description string
+- body:clientScopes[].id string
+- body:clientScopes[].name string
+- body:clientScopes[].protocol string
+- body:clientScopes[].protocolMappers array<object>
+- body:clientScopes[].protocolMappers[].config object
+- body:clientScopes[].protocolMappers[].id string
+- body:clientScopes[].protocolMappers[].name string
+- body:clientScopes[].protocolMappers[].protocol string
+- body:clientScopes[].protocolMappers[].protocolMapper string
+- body:clientSessionIdleTimeout integer
+- body:clientSessionMaxLifespan integer
+- body:clients array<object>
+- body:clients[].access object
+- body:clients[].adminUrl string
+- body:clients[].alwaysDisplayInConsole boolean
+- body:clients[].attributes object
+- body:clients[].authenticationFlowBindingOverrides object
+- body:clients[].authorizationServicesEnabled boolean
+- body:clients[].authorizationSettings object
+- body:clients[].authorizationSettings.allowRemoteResourceManagement boolean
+- body:clients[].authorizationSettings.clientId string
+- body:clients[].authorizationSettings.decisionStrategy string enum[AFFIRMATIVE|UNANIMOUS|CONSENSUS]
+- body:clients[].authorizationSettings.id string
+- body:clients[].authorizationSettings.name string
+- body:clients[].authorizationSettings.policies array<object>
+- body:clients[].authorizationSettings.policyEnforcementMode string enum[ENFORCING|PERMISSIVE|DISABLED]
+- body:clients[].authorizationSettings.resources array<object>
+- body:clients[].authorizationSettings.scopes array<object>
+- body:clients[].baseUrl string
+- body:clients[].bearerOnly boolean
+- body:clients[].clientAuthenticatorType string
+- body:clients[].clientId string
+- body:clients[].consentRequired boolean
+- body:clients[].defaultClientScopes array<string>
+- body:clients[].defaultRoles array<string>
+- body:clients[].description string
+- body:clients[].directAccessGrantsEnabled boolean
+- body:clients[].enabled boolean
+- body:clients[].frontchannelLogout boolean
+- body:clients[].fullScopeAllowed boolean
+(+269 fields cut)
+
+## S112-N0002  DELETE /{realm}
+desc: Delete the realm
+- path:realm string
+
+## S112-N0004  DELETE /{realm}/admin-events
+desc: Delete all admin events
+- path:realm string
+
+## S112-N0006  DELETE /{realm}/attack-detection/brute-force/users/{userId}
+desc: Clear any user login failures for the user This can release temporary disabled user
+- path:realm string
+- path:userId string
+
+## S112-N0007  DELETE /{realm}/authentication/config/{id}
+desc: Delete authenticator configuration
+- path:realm string
+- path:id string
+
+## S112-N0008  PUT /{realm}/authentication/config/{id}
+desc: Update authenticator configuration
+schema: AuthenticatorConfigRepresentation
+- path:realm string
+- path:id string
+- body:alias string
+- body:config object
+- body:id string

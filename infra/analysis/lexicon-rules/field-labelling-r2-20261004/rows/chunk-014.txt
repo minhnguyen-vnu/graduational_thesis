@@ -1,0 +1,1157 @@
+## S572-0001  POST /GetLocation
+desc: To retrieve a specific devices latest known location the /GetLocation method is used. Please note that the MiataruConfig portion is optional. RequestMiataruDeviceID should be the ID of the device the request is sent from (or an identifier like an URL).
+- body:MiataruConfig object
+- body:MiataruConfig.RequestMiataruDeviceID string
+- body:MiataruGetLocation array<object>
+- body:MiataruGetLocation[].Device string
+
+## S572-0002  POST /GetLocationHistory
+desc: Location History is stored on the server only if the client told the server to do so using the “EnableLocationHistory” setting in the Location Update requests. For transitions of enabling/disabling that functionality - Everytime a Location Update is received by the server with “EnableLocationHistory=false” the server removes all stored Location History till that point. There is a server-side setti
+- body:MiataruConfig object
+- body:MiataruConfig.RequestMiataruDeviceID string
+- body:MiataruGetLocationHistory object
+- body:MiataruGetLocationHistory.Amount string
+- body:MiataruGetLocationHistory.Device string
+
+## S572-0003  POST /GetVisitorHistory
+desc: Visitor History is stored on the server with every request to the location or location history information of a device. There is a server-side setting that controls up to how many Visitors the server is storing in the Visitor History before it removes the oldest one. To request the Visitor History of a particular device the client sends the following POST request to the GetVisitorHistory service U
+- body:MiataruGetVisitorHistory object
+- body:MiataruGetVisitorHistory.Amount string
+- body:MiataruGetVisitorHistory.Device string
+
+## S572-0004  POST /UpdateLocation
+desc: This method is used to update the location of a device. The device does not need to be known already to the Miataru server but it rather creates a unique identifier for itself in the client application. This unique identifier, or device ID is then used to address this particular device.
+- body:MiataruConfig object
+- body:MiataruConfig.EnableLocationHistory string
+- body:MiataruConfig.LocationDataRetentionTime string
+- body:MiataruLocation array<object>
+- body:MiataruLocation[].Device string
+- body:MiataruLocation[].HorizontalAccuracy string
+- body:MiataruLocation[].Latitude string
+- body:MiataruLocation[].Longitude string
+- body:MiataruLocation[].Timestamp string
+
+## S574-0001  PUT /circuits/circuit-types/{id}/
+- path:id integer
+- body:circuit_count integer
+- body:description string
+- body:id integer
+- body:name string
+- body:slug string
+
+## S574-0002  POST /circuits/circuits/
+- body:cid string
+- body:comments string
+- body:commit_rate integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:id integer
+- body:install_date string
+- body:last_updated string
+- body:provider integer
+- body:status string enum[planned|provisioning|active|offline|deprovisioning|decommissioned]
+- body:tags array<string>
+- body:tenant integer
+- body:termination_a string
+- body:termination_z string
+- body:type integer
+
+## S574-0003  PUT /circuits/providers/{id}/
+- path:id integer
+- body:account string
+- body:admin_contact string
+- body:asn integer
+- body:circuit_count integer
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:noc_contact string
+- body:portal_url string
+- body:slug string
+- body:tags array<string>
+
+## S574-0004  POST /dcim/console-port-templates/
+- body:device_type integer
+- body:id integer
+- body:name string
+- body:type string enum[de-9|db-25|rj-11|rj-12|rj-45|usb-a|usb-b|usb-c|usb-mini-a|usb-mini-b|usb-micro-a|usb-micro-b]
+
+## S574-0005  PUT /dcim/console-port-templates/{id}/
+- path:id integer
+- body:device_type integer
+- body:id integer
+- body:name string
+- body:type string enum[de-9|db-25|rj-11|rj-12|rj-45|usb-a|usb-b|usb-c|usb-mini-a|usb-mini-b|usb-micro-a|usb-micro-b]
+
+## S574-0006  POST /dcim/console-ports/
+- body:cable object
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:connected_endpoint object
+- body:connected_endpoint_type string
+- body:connection_status boolean enum[False|True]
+- body:description string
+- body:device integer
+- body:id integer
+- body:name string
+- body:tags array<string>
+- body:type string enum[de-9|db-25|rj-11|rj-12|rj-45|usb-a|usb-b|usb-c|usb-mini-a|usb-mini-b|usb-micro-a|usb-micro-b]
+
+## S574-0007  DELETE /dcim/device-roles/{id}/
+- path:id integer
+
+## S574-0008  POST /dcim/device-types/
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:device_count integer
+- body:display_name string
+- body:front_image string
+- body:id integer
+- body:is_full_depth boolean
+- body:last_updated string
+- body:manufacturer integer
+- body:model string
+- body:part_number string
+- body:rear_image string
+- body:slug string
+- body:subdevice_role string enum[parent|child]
+- body:tags array<string>
+- body:u_height integer
+
+## S574-0009  PUT /dcim/device-types/{id}/
+- path:id integer
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:device_count integer
+- body:display_name string
+- body:front_image string
+- body:id integer
+- body:is_full_depth boolean
+- body:last_updated string
+- body:manufacturer integer
+- body:model string
+- body:part_number string
+- body:rear_image string
+- body:slug string
+- body:subdevice_role string enum[parent|child]
+- body:tags array<string>
+- body:u_height integer
+
+## S574-0010  POST /dcim/devices/
+- body:asset_tag string
+- body:cluster integer
+- body:comments string
+- body:config_context object
+- body:created string
+- body:custom_fields object
+- body:device_role integer
+- body:device_type integer
+- body:display_name string
+- body:face string enum[front|rear]
+- body:id integer
+- body:last_updated string
+- body:local_context_data string
+- body:name string
+- body:parent_device object
+- body:parent_device.display_name string
+- body:parent_device.id integer
+- body:parent_device.name string
+- body:parent_device.url string
+- body:platform integer
+- body:position integer
+- body:primary_ip string
+- body:primary_ip4 integer
+- body:primary_ip6 integer
+- body:rack integer
+- body:serial string
+- body:site integer
+- body:status string enum[offline|active|planned|staged|failed|inventory|decommissioning]
+- body:tags array<string>
+- body:tenant integer
+- body:vc_position integer
+- body:vc_priority integer
+- body:virtual_chassis integer
+
+## S574-0011  DELETE /dcim/front-port-templates/{id}/
+- path:id integer
+
+## S574-0012  DELETE /dcim/front-ports/{id}/
+- path:id integer
+
+## S574-0013  DELETE /dcim/interface-templates/{id}/
+- path:id integer
+
+## S574-0014  PATCH /dcim/interface-templates/{id}/
+- path:id integer
+- body:device_type integer
+- body:id integer
+- body:mgmt_only boolean
+- body:name string
+- body:type string enum[virtual|lag|100base-tx|1000base-t|2.5gbase-t|5gbase-t|10gbase-t|10gbase-cx4|1000base-x-gbic|1000base-x-sfp|10gbase-x-sfpp|10gbase-x-xfp]
+
+## S574-0015  PUT /dcim/interfaces/{id}/
+- path:id integer
+- body:cable object
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:connected_endpoint object
+- body:connected_endpoint_type string
+- body:connection_status boolean enum[False|True]
+- body:count_ipaddresses integer
+- body:description string
+- body:device integer
+- body:enabled boolean
+- body:id integer
+- body:lag integer
+- body:mac_address string
+- body:mgmt_only boolean
+- body:mode string enum[access|tagged|tagged-all]
+- body:mtu integer
+- body:name string
+- body:tagged_vlans array<integer>
+- body:tags array<string>
+- body:type string enum[virtual|lag|100base-tx|1000base-t|2.5gbase-t|5gbase-t|10gbase-t|10gbase-cx4|1000base-x-gbic|1000base-x-sfp|10gbase-x-sfpp|10gbase-x-xfp]
+- body:untagged_vlan integer
+
+## S574-0016  POST /dcim/inventory-items/
+- body:asset_tag string
+- body:description string
+- body:device integer
+- body:discovered boolean
+- body:id integer
+- body:manufacturer integer
+- body:name string
+- body:parent integer
+- body:part_id string
+- body:serial string
+- body:tags array<string>
+
+## S574-0017  PUT /dcim/platforms/{id}/
+- path:id integer
+- body:description string
+- body:device_count integer
+- body:id integer
+- body:manufacturer integer
+- body:name string
+- body:napalm_args string
+- body:napalm_driver string
+- body:slug string
+- body:virtualmachine_count integer
+
+## S574-0018  PUT /dcim/power-outlet-templates/{id}/
+- path:id integer
+- body:device_type integer
+- body:feed_leg string enum[A|B|C]
+- body:id integer
+- body:name string
+- body:power_port integer
+- body:type string enum[iec-60320-c5|iec-60320-c7|iec-60320-c13|iec-60320-c15|iec-60320-c19|iec-60309-p-n-e-4h|iec-60309-p-n-e-6h|iec-60309-p-n-e-9h|iec-60309-2p-e-4h|iec-60309-2p-e-6h|iec-60309-2p-e-9h|iec-60309-3p-e-4h]
+
+## S574-0019  PATCH /dcim/power-outlets/{id}/
+- path:id integer
+- body:cable object
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:connected_endpoint object
+- body:connected_endpoint_type string
+- body:connection_status boolean enum[False|True]
+- body:description string
+- body:device integer
+- body:feed_leg string enum[A|B|C]
+- body:id integer
+- body:name string
+- body:power_port integer
+- body:tags array<string>
+- body:type string enum[iec-60320-c5|iec-60320-c7|iec-60320-c13|iec-60320-c15|iec-60320-c19|iec-60309-p-n-e-4h|iec-60309-p-n-e-6h|iec-60309-p-n-e-9h|iec-60309-2p-e-4h|iec-60309-2p-e-6h|iec-60309-2p-e-9h|iec-60309-3p-e-4h]
+
+## S574-0020  DELETE /dcim/power-panels/{id}/
+- path:id integer
+
+## S574-0021  PATCH /dcim/power-ports/{id}/
+- path:id integer
+- body:allocated_draw integer
+- body:cable object
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:connected_endpoint object
+- body:connected_endpoint_type string
+- body:connection_status boolean enum[False|True]
+- body:description string
+- body:device integer
+- body:id integer
+- body:maximum_draw integer
+- body:name string
+- body:tags array<string>
+- body:type string enum[iec-60320-c6|iec-60320-c8|iec-60320-c14|iec-60320-c16|iec-60320-c20|iec-60309-p-n-e-4h|iec-60309-p-n-e-6h|iec-60309-p-n-e-9h|iec-60309-2p-e-4h|iec-60309-2p-e-6h|iec-60309-2p-e-9h|iec-60309-3p-e-4h]
+
+## S574-0022  PUT /dcim/rear-port-templates/{id}/
+- path:id integer
+- body:device_type integer
+- body:id integer
+- body:name string
+- body:positions integer
+- body:type string enum[8p8c|110-punch|bnc|mrj21|fc|lc|lc-apc|lsh|lsh-apc|mpo|mtrj|sc]
+
+## S574-0023  DELETE /dcim/rear-ports/{id}/
+- path:id integer
+
+## S574-0024  PATCH /dcim/regions/{id}/
+- path:id integer
+- body:description string
+- body:id integer
+- body:name string
+- body:parent integer
+- body:site_count integer
+- body:slug string
+
+## S574-0025  POST /dcim/sites/
+- body:asn integer
+- body:circuit_count integer
+- body:comments string
+- body:contact_email string
+- body:contact_name string
+- body:contact_phone string
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:device_count integer
+- body:facility string
+- body:id integer
+- body:last_updated string
+- body:latitude string
+- body:longitude string
+- body:name string
+- body:physical_address string
+- body:prefix_count integer
+- body:rack_count integer
+- body:region integer
+- body:shipping_address string
+- body:slug string
+- body:status string enum[active|planned|retired]
+- body:tags array<string>
+- body:tenant integer
+- body:time_zone string
+- body:virtualmachine_count integer
+- body:vlan_count integer
+
+## S574-0026  POST /dcim/virtual-chassis/
+- body:domain string
+- body:id integer
+- body:master integer
+- body:member_count integer
+- body:tags array<string>
+
+## S574-0027  DELETE /extras/export-templates/{id}/
+- path:id integer
+
+## S574-0028  DELETE /extras/graphs/{id}/
+- path:id integer
+
+## S574-0029  PATCH /extras/image-attachments/{id}/
+- path:id integer
+- body:content_type string
+- body:created string
+- body:id integer
+- body:image string
+- body:image_height integer
+- body:image_width integer
+- body:name string
+- body:object_id integer
+- body:parent object
+
+## S574-0030  PATCH /ipam/ip-addresses/{id}/
+- path:id integer
+- body:address string
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:dns_name string
+- body:family string
+- body:id integer
+- body:interface integer
+- body:last_updated string
+- body:nat_inside integer
+- body:nat_outside integer
+- body:role string enum[loopback|secondary|anycast|vip|vrrp|hsrp|glbp|carp]
+- body:status string enum[active|reserved|deprecated|dhcp]
+- body:tags array<string>
+- body:tenant integer
+- body:vrf integer
+
+## S574-0031  POST /ipam/prefixes/{id}/available-prefixes/
+summary: A convenience method for returning available child prefixes within a parent.
+desc: The advisory lock decorator uses a PostgreSQL advisory lock to prevent this API from being invoked in parallel, which results in a race condition where multiple insertions can occur.
+- path:id integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:family string
+- body:id integer
+- body:is_pool boolean
+- body:last_updated string
+- body:prefix string
+- body:role integer
+- body:site integer
+- body:status string enum[container|active|reserved|deprecated]
+- body:tags array<string>
+- body:tenant integer
+- body:vlan integer
+- body:vrf integer
+
+## S574-0032  DELETE /ipam/services/{id}/
+- path:id integer
+
+## S574-0033  DELETE /ipam/vlan-groups/{id}/
+- path:id integer
+
+## S574-0034  PATCH /ipam/vrfs/{id}/
+- path:id integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display_name string
+- body:enforce_unique boolean
+- body:id integer
+- body:ipaddress_count integer
+- body:last_updated string
+- body:name string
+- body:prefix_count integer
+- body:rd string
+- body:tags array<string>
+- body:tenant integer
+
+## S574-0035  POST /tenancy/tenant-groups/
+- body:description string
+- body:id integer
+- body:name string
+- body:parent integer
+- body:slug string
+- body:tenant_count integer
+
+## S574-0036  POST /virtualization/cluster-types/
+- body:cluster_count integer
+- body:description string
+- body:id integer
+- body:name string
+- body:slug string
+
+## S575-0001  POST /v1/en_core_web_sm/dependencies
+summary: Read Dependencies
+- body:text string
+
+## S575-0002  POST /v1/en_core_web_sm/entities
+summary: Read Entities
+- body:text string
+
+## S575-0003  POST /v1/en_core_web_sm/sentence-dependencies
+summary: Read Sentence Dependencies
+- body:text string
+
+## S577-0001  POST /registrierkassen/{registrierkasseUuid}/abschluss
+desc: Generates an `Abschlussbeleg`.
+- path:registrierkasseUuid string
+- body:Abschluss-Beginn-Datum-Uhrzeit string
+- body:Abschluss-Ende-Datum-Uhrzeit string
+
+## S577-0002  PUT /registrierkassen/{registrierkasseUuid}/belege/{belegUuid}
+desc: Signs a receipt and stores it in the "Datenerfassungsprotokoll".
+- path:registrierkasseUuid string
+- path:belegUuid string
+- body:Externer-Beleg-Belegkreis string
+- body:Externer-Beleg-Bezeichnung string
+- body:Externer-Beleg-Referenz string
+- body:Kunde string
+- body:Notizen array<string>
+- body:Posten array<object>
+- body:Posten[].Bezeichnung string
+- body:Posten[].BruttoBetrag integer
+- body:Posten[].Externer-Beleg-Belegkreis string
+- body:Posten[].Externer-Beleg-Bezeichnung string
+- body:Posten[].Externer-Beleg-Referenz string
+- body:Posten[].Menge integer
+- body:Posten[].NettoBetrag integer
+- body:Posten[].Satz string enum[NORMAL|ERMAESSIGT1|ERMAESSIGT2|BESONDERS|NULL]
+- body:Rabatte array<object>
+- body:Rabatte[].Betrag-Brutto integer
+- body:Rabatte[].Betrag-Netto integer
+- body:Rabatte[].Bezeichnung string
+- body:Rabatte[].Satz string enum[NORMAL|ERMAESSIGT1|ERMAESSIGT2|BESONDERS|NULL]
+- body:Storno boolean
+- body:Storno-Beleg-UUID string
+- body:Storno-Text string
+- body:Training boolean
+- body:Unternehmen-Adresse1 string
+- body:Unternehmen-Adresse2 string
+- body:Unternehmen-Fusszeile string
+- body:Unternehmen-ID string
+- body:Unternehmen-ID-Typ string enum[steuernummer|uid|gln]
+- body:Unternehmen-Kopfzeile string
+- body:Unternehmen-Name string
+- body:Unternehmen-Ort string
+- body:Unternehmen-PLZ string
+- body:Zahlungen array<object>
+- body:Zahlungen[].Betrag integer
+- body:Zahlungen[].Bezeichnung string
+- body:Zahlungen[].Referenz string
+
+## S580-0001  POST /
+desc: a pure-JSON endpoint for packing requests.
+- body:allowableOverhang number
+- body:boxTypeSets array<string> enum[usps|fedex|pallet|customer]
+- body:boxTypes array<object>
+- body:boxTypes[].dimensions object
+- body:boxTypes[].dimensions.x number
+- body:boxTypes[].dimensions.y number
+- body:boxTypes[].dimensions.z number
+- body:boxTypes[].name string
+- body:boxTypes[].price integer
+- body:boxTypes[].rateTable object
+- body:boxTypes[].rateTable.basePrice number
+- body:boxTypes[].rateTable.carrier string
+- body:boxTypes[].rateTable.dimFactor number
+- body:boxTypes[].rateTable.priceIncreaseRate number
+- body:boxTypes[].rateTable.rates array<number>
+- body:boxTypes[].rateTable.service string
+- body:boxTypes[].rateTable.weights array<number>
+- body:boxTypes[].rateTable.zone string
+- body:boxTypes[].weightMax number
+- body:boxTypes[].weightTare number
+- body:cohortMax integer
+- body:cohortPacking boolean
+- body:coordOrder array<integer>
+- body:corners boolean
+- body:eye object
+- body:eye.x number
+- body:eye.y number
+- body:eye.z number
+- body:imgSize integer
+- body:includeImages boolean
+- body:includeScripts boolean
+- body:interlock boolean
+- body:itemSets array<object>
+- body:itemSets[].color string
+- body:itemSets[].dimensions object
+- body:itemSets[].dimensions.x number
+- body:itemSets[].dimensions.y number
+- body:itemSets[].dimensions.z number
+- body:itemSets[].name string
+- body:itemSets[].refId integer
+- body:itemSets[].sequence string
+- body:itemSets[].weight number
+- body:itemSets[].quantity integer
+- body:key string
+- body:layFlat boolean
+- body:maxSequenceDistance integer
+- body:n integer
+- body:packOrigin object
+- body:packOrigin.x number
+- body:packOrigin.y number
+- body:packOrigin.z number
+- body:placementStyle string enum[default|corner|wedge|mound|orb]
+- body:random boolean
+- body:randomMaxDimension integer
+- body:randomMaxWeight integer
+- body:rules array<object>
+- body:rules[].itemRefId integer
+- body:rules[].operation string enum[exclude|exclude-all|pack-as-is|irregular|lock-orientation]
+- body:rules[].options object
+- body:rules[].parameters array<string>
+- body:rules[].targetItemRefIds array<integer>
+- body:seed boolean
+- body:sequenceHeatMap boolean
+- body:sequenceSort boolean
+- body:template string enum[demo.tmpl|shipapp.tmpl|boat.tmpl]
+- body:usableSpace number
+- body:zone integer
+
+## S581-0001  PATCH /Employer/{EmployerId}
+summary: Patches the employer
+desc: Patches the specified employer with the supplied values
+- path:EmployerId string
+- body:Employer object
+- body:Employer.Address object
+- body:Employer.Address.Address1 string
+- body:Employer.Address.Address2 string
+- body:Employer.Address.Address3 string
+- body:Employer.Address.Address4 string
+- body:Employer.Address.Country string
+- body:Employer.Address.Postcode string
+- body:Employer.ApprenticeshipLevyAllowance number
+- body:Employer.AutoEnrolment object
+- body:Employer.AutoEnrolment.Pension object
+- body:Employer.AutoEnrolment.PostponementDate string
+- body:Employer.AutoEnrolment.PrimaryAddress object
+- body:Employer.AutoEnrolment.PrimaryEmail string
+- body:Employer.AutoEnrolment.PrimaryFirstName string
+- body:Employer.AutoEnrolment.PrimaryJobTitle string
+- body:Employer.AutoEnrolment.PrimaryLastName string
+- body:Employer.AutoEnrolment.PrimaryTelephone string
+- body:Employer.AutoEnrolment.ReEnrolmentDayOffset integer
+- body:Employer.AutoEnrolment.ReEnrolmentMonthOffset integer
+- body:Employer.AutoEnrolment.RecentOptOutReEnrolmentExcluded boolean
+- body:Employer.AutoEnrolment.SecondaryAddress object
+- body:Employer.AutoEnrolment.SecondaryEmail string
+- body:Employer.AutoEnrolment.SecondaryFirstName string
+- body:Employer.AutoEnrolment.SecondaryJobTitle string
+- body:Employer.AutoEnrolment.SecondaryLastName string
+- body:Employer.AutoEnrolment.SecondaryTelephone string
+- body:Employer.AutoEnrolment.StagingDate string
+- body:Employer.BacsServiceUserNumber string
+- body:Employer.BankAccount object
+- body:Employer.BankAccount.AccountName string
+- body:Employer.BankAccount.AccountNumber string
+- body:Employer.BankAccount.BranchName string
+- body:Employer.BankAccount.Reference string
+- body:Employer.BankAccount.SortCode string
+- body:Employer.CalculateApprenticeshipLevy boolean
+- body:Employer.ClaimEmploymentAllowance boolean
+- body:Employer.ClaimSmallEmployerRelief boolean
+- body:Employer.EffectiveDate string
+- body:Employer.HmrcSettings object
+- body:Employer.HmrcSettings.AccountingOfficeRef string
+- body:Employer.HmrcSettings.COTAXRef string
+- body:Employer.HmrcSettings.ContactEmail string
+- body:Employer.HmrcSettings.ContactFax string
+- body:Employer.HmrcSettings.ContactFirstName string
+- body:Employer.HmrcSettings.ContactLastName string
+- body:Employer.HmrcSettings.ContactTelephone string
+- body:Employer.HmrcSettings.EmploymentAllowanceOverride number
+- body:Employer.HmrcSettings.Password string
+- body:Employer.HmrcSettings.SAUTR string
+- body:Employer.HmrcSettings.Sender string enum[Employer|Individual|Company|Agent|Bureau|Partnership|Trust|Government|ActingInCapacity|Other]
+- body:Employer.HmrcSettings.SenderId string
+- body:Employer.HmrcSettings.StateAidSector string enum[Agriculture|FisheriesAquaculture|RoadTransport|Industrial|NotApplicable]
+- body:Employer.HmrcSettings.TaxOfficeNumber string
+- body:Employer.HmrcSettings.TaxOfficeReference string
+- body:Employer.MetaData object
+- body:Employer.Name string
+- body:Employer.NextRevisionDate string
+- body:Employer.Region string enum[NotSet|England|Scotland|Wales]
+- body:Employer.Revision integer
+- body:Employer.RuleExclusions string enum[None|NiMissingPayInstructionRule|TaxMissingPayInstructionRule|TaxCodeUpliftRule|NiSetExpectedLetterRule|NiDateOfBirthChangeRetrospectiveCRule|NiDefermentStatusChangeRule|NiEndContractedOutTransferRule|PaymentAfterLeavingTaxCodeRule|LeaverEndInstructionsRule|P45StudentLoanInstructionRule|P45TaxInstructionRule]
+- body:Employer.Territory string enum[UnitedKingdom]
+
+## S581-0002  POST /Employer/{EmployerId}/DpsMessages
+summary: Posta the DPS message
+desc: Insert new DPS message
+- path:EmployerId string
+
+## S581-0003  DELETE /Employer/{EmployerId}/Employee/{EmployeeId}
+summary: Delete an Employee
+desc: Delete the specified employee
+- path:EmployerId string
+- path:EmployeeId string
+
+## S581-0004  PATCH /Employer/{EmployerId}/Employee/{EmployeeId}
+summary: Patches the employee
+desc: Patches the specified employee with the supplied values
+- path:EmployerId string
+- path:EmployeeId string
+- body:Employee object
+- body:Employee.AEAssessmentOverride string enum[None|OptOut|OptIn|VoluntaryJoiner|ContractualPension|CeasedMembership|Leaver|Excluded]
+- body:Employee.AEAssessmentOverrideDate string
+- body:Employee.AEExclusionReasonCode string enum[OtherNotKnown|NotAWorker|NotUKWorker|TemporaryUKWorker|OutsideAgeRange|SingleEmployeeDirector|CeasedMembershipWithin12Months|CeasedMembershipBeyond12Months|WorkerWULSWithin12Month|WorkerWULSBeyond12Month|WorkerInNoticePeriod|WorkerTaxProtection]
+- body:Employee.AEPostponementDate string
+- body:Employee.Address object
+- body:Employee.Address.Address1 string
+- body:Employee.Address.Address2 string
+- body:Employee.Address.Address3 string
+- body:Employee.Address.Address4 string
+- body:Employee.Address.Country string
+- body:Employee.Address.Postcode string
+- body:Employee.BankAccount object
+- body:Employee.BankAccount.AccountName string
+- body:Employee.BankAccount.AccountNumber string
+- body:Employee.BankAccount.BranchName string
+- body:Employee.BankAccount.Reference string
+- body:Employee.BankAccount.SortCode string
+- body:Employee.Code string
+- body:Employee.DateOfBirth string
+- body:Employee.Deactivated boolean
+- body:Employee.DirectorshipAppointmentDate string
+- body:Employee.EEACitizen boolean
+- body:Employee.EPM6 boolean
+- body:Employee.EffectiveDate string
+- body:Employee.EmployeePartner object
+- body:Employee.EmployeePartner.FirstName string
+- body:Employee.EmployeePartner.Initials string
+- body:Employee.EmployeePartner.LastName string
+- body:Employee.EmployeePartner.MiddleName string
+- body:Employee.EmployeePartner.NiNumber string
+- body:Employee.FirstName string
+- body:Employee.Gender string enum[Unknown|Male|Female]
+- body:Employee.HoursPerWeek number
+- body:Employee.Initials string
+- body:Employee.IrregularEmployment boolean
+- body:Employee.IsAgencyWorker boolean
+- body:Employee.LastName string
+- body:Employee.LeaverReason string enum[Resigned|Dismissed|Redundant|Retired|Deceased|LegalCustody|Other]
+- body:Employee.LeavingDate string
+- body:Employee.MaritalStatus string enum[NotSet|Single|Married|Divorced|Widowed]
+- body:Employee.MetaData object
+- body:Employee.MiddleName string
+- body:Employee.NextRevisionDate string
+- body:Employee.NiNumber string
+- body:Employee.NicLiability string enum[HasOtherJob|IsFemaleEntitledToReducedRate|IsNotLiable|IsContractedOut|IsFullyLiable|IsApprentice|LeaverBeyond6Weeks|PaymentAfterLeavingIrregular|IsFreePortWorker|IsNotLiableForEmployerNi]
+- body:Employee.OffPayrollWorker boolean
+- body:Employee.OnStrike boolean
+- body:Employee.P45IssuedDate string
+- body:Employee.PassportNumber string
+- body:Employee.PaySchedule object
+- body:Employee.PaySchedule.@href string
+- body:Employee.PaySchedule.@rel string
+- body:Employee.PaySchedule.@title string
+- body:Employee.PaymentMethod string enum[NotSet|Cash|Cheque|BACS|FasterPayments|Other]
+- body:Employee.PaymentToANonIndividual boolean
+- body:Employee.Region string enum[NotSet|England|Scotland|Wales]
+- body:Employee.Revision integer
+- body:Employee.RuleExclusions string enum[None|NiMissingPayInstructionRule|TaxMissingPayInstructionRule|TaxCodeUpliftRule|NiSetExpectedLetterRule|NiDateOfBirthChangeRetrospectiveCRule|NiDefermentStatusChangeRule|NiEndContractedOutTransferRule|PaymentAfterLeavingTaxCodeRule|LeaverEndInstructionsRule|P45StudentLoanInstructionRule|P45TaxInstructionRule]
+- body:Employee.Seconded string enum[NotSet|Stay183DaysOrMore|StayLessThan183Days|InOutUk]
+- body:Employee.StartDate string
+- body:Employee.StarterDeclaration string enum[PreviouslyReported|A|B|C]
+- body:Employee.Territory string enum[UnitedKingdom]
+- body:Employee.Title string
+- body:Employee.VeteranPeriodStartDate string
+- body:Employee.WorkingWeek string enum[None|Monday|Tuesday|Wednesday|Thursday|Friday|AllWeekDays|Saturday|Sunday|AllDays]
+
+## S581-0005  PUT /Employer/{EmployerId}/Employee/{EmployeeId}/AEAssessment/{AEAssessmentId}
+summary: Insert new auto enrolment assessment
+desc: Creates a new auto enrolment assessment for the employee. Used to insert historical assessments
+- path:EmployerId string
+- path:EmployeeId string
+- path:AEAssessmentId string
+- body:AEAssessment object
+- body:AEAssessment.Age integer
+- body:AEAssessment.AssessmentCode string enum[Excluded|EligibleJobHolder|NonEligibleJobHolder|EntitledWorker]
+- body:AEAssessment.AssessmentDate string
+- body:AEAssessment.AssessmentEvent string enum[NonEnrolmentEvent|AutomaticEnrolment|OptIn|VoluntaryJoiner|ContractualEnrolment]
+- body:AEAssessment.AssessmentOverride string enum[None|OptOut|OptIn|VoluntaryJoiner|ContractualPension|CeasedMembership|Leaver|Excluded]
+- body:AEAssessment.AssessmentResult string enum[Inconclusive|NoChange|Enrol|Exit]
+- body:AEAssessment.IsMemberOfAlternativePensionScheme boolean
+- body:AEAssessment.OptOutWindowEndDate string
+- body:AEAssessment.QualifyingEarnings number
+- body:AEAssessment.ReenrolmentDate string
+- body:AEAssessment.StatePensionAge integer
+- body:AEAssessment.StatePensionDate string
+- body:AEAssessment.TaxPeriod integer
+- body:AEAssessment.TaxYear integer
+
+## S581-0006  PATCH /Employer/{EmployerId}/Employee/{EmployeeId}/PayInstruction/{PayInstructionId}
+summary: Sparse Update of a Pay Instruction
+desc: Patches the specified pay instruction with the supplied values
+- path:EmployerId string
+- path:EmployeeId string
+- path:PayInstructionId string
+- body:PayInstruction object
+- body:PayInstruction.Description string
+- body:PayInstruction.EndDate string
+- body:PayInstruction.PayLineTag string
+- body:PayInstruction.StartDate string
+
+## S581-0007  PUT /Employer/{EmployerId}/Employee/{EmployeeId}/PayLine/{PayLineId}/Tag/{TagId}
+summary: Insert pay line tag
+desc: Inserts a new tag on the pay line
+- path:EmployerId string
+- path:EmployeeId string
+- path:PayLineId string
+- path:TagId string
+
+## S581-0008  POST /Employer/{EmployerId}/Employee/{EmployeeId}/Secrets
+summary: Create a new employee secret
+desc: Create new employee secret using auto generated resource location key
+- path:EmployerId string
+- path:EmployeeId string
+
+## S581-0009  DELETE /Employer/{EmployerId}/Employee/{EmployeeId}/Tag/{TagId}
+summary: Delete employee tag
+desc: Deletes a tag from the employee
+- path:EmployerId string
+- path:EmployeeId string
+- path:TagId string
+
+## S581-0010  PUT /Employer/{EmployerId}/Employee/{EmployeeId}/Tag/{TagId}
+summary: Insert employee tag
+desc: Inserts a new tag on the employee
+- path:EmployerId string
+- path:EmployeeId string
+- path:TagId string
+
+## S581-0011  DELETE /Employer/{EmployerId}/HolidayScheme/{HolidaySchemeId}/Revision/{RevisionNumber}
+summary: Delete an HolidayScheme revision matching the specified revision number.
+desc: Deletes the specified holiday scheme revision for the matching revision number
+- path:EmployerId string
+- path:HolidaySchemeId string
+- path:RevisionNumber string
+
+## S581-0012  DELETE /Employer/{EmployerId}/HolidayScheme/{HolidaySchemeId}/Tag/{TagId}
+summary: Delete holiday scheme tag
+desc: Deletes a tag from the holiday scheme
+- path:EmployerId string
+- path:HolidaySchemeId string
+- path:TagId string
+
+## S581-0013  DELETE /Employer/{EmployerId}/JournalInstruction/{JournalInstructionId}
+summary: Deletes a Journal instruction
+desc: Delete the specified Journal instruction
+- path:EmployerId string
+- path:JournalInstructionId string
+
+## S581-0014  PATCH /Employer/{EmployerId}/PayCode/{PayCodeId}
+summary: Patches the pay code
+desc: Patches the specified pay code object with the supplied values
+- path:EmployerId string
+- path:PayCodeId string
+- body:PayCode object
+- body:PayCode.Benefit boolean
+- body:PayCode.Code string
+- body:PayCode.Description string
+- body:PayCode.EffectiveDate string
+- body:PayCode.MetaData object
+- body:PayCode.NextRevisionDate string
+- body:PayCode.Niable boolean
+- body:PayCode.NominalCode object
+- body:PayCode.NominalCode.@href string
+- body:PayCode.NominalCode.@rel string
+- body:PayCode.NominalCode.@title string
+- body:PayCode.NonArrestable boolean
+- body:PayCode.Notional boolean
+- body:PayCode.Readonly boolean
+- body:PayCode.Region string enum[NotSet|England|Scotland|Wales]
+- body:PayCode.Revision integer
+- body:PayCode.Taxable boolean
+- body:PayCode.Territory string enum[UnitedKingdom]
+- body:PayCode.Type string enum[NotSet|Payment|Deduction]
+
+## S581-0015  DELETE /Employer/{EmployerId}/PayCode/{PayCodeId}/Revision/{RevisionNumber}
+summary: Delete an PayCode revision matching the specified revision number.
+desc: Deletes the specified pay code revision for the matching revision number
+- path:EmployerId string
+- path:PayCodeId string
+- path:RevisionNumber string
+
+## S581-0016  DELETE /Employer/{EmployerId}/PaySchedule/{PayScheduleId}
+summary: Deletes a pay schedule
+desc: Delete the specified pay schedule
+- path:EmployerId string
+- path:PayScheduleId string
+
+## S581-0017  DELETE /Employer/{EmployerId}/Pension/{PensionId}/{EffectiveDate}
+summary: Delete an Pension revision matching the specified revision date.
+desc: Deletes the specified pension revision for the matching revision date
+- path:EmployerId string
+- path:PensionId string
+- path:EffectiveDate string
+
+## S581-0018  POST /Employer/{EmployerId}/Pensions
+summary: Create a new Pension
+desc: Create a new pension object
+- path:EmployerId string
+- body:Pension object
+- body:Pension.AECompatible boolean
+- body:Pension.Certification string enum[NotSet|Set1|Set2|Set3]
+- body:Pension.Code string
+- body:Pension.ContributionDeductionDay integer
+- body:Pension.EffectiveDate string
+- body:Pension.EmployeeContributionCash number
+- body:Pension.EmployeeContributionPercent number
+- body:Pension.EmployerContributionCash number
+- body:Pension.EmployerContributionPercent number
+- body:Pension.EmployerNiSaving boolean
+- body:Pension.EmployerNiSavingPercentage number
+- body:Pension.Group string
+- body:Pension.LowerThreshold number
+- body:Pension.MetaData object
+- body:Pension.NextRevisionDate string
+- body:Pension.PensionablePayCodes object
+- body:Pension.PensionablePayCodes.PayCode array<string>
+- body:Pension.ProRataMethod string enum[NotSet|Annual260Days|Annual365Days|AnnualQualifyingDays|DaysPerCalendarMonth|DaysPerTaxPeriod|WorkingDaysPerCalendarMonth|WeekDaysPerCalendarMonth]
+- body:Pension.ProviderEmployerRef string
+- body:Pension.ProviderName string
+- body:Pension.QualifyingPayCodes object
+- body:Pension.QualifyingPayCodes.PayCode array<string>
+- body:Pension.RasRoundingOverride string enum[NotSet|PennyUp|PennyDown|Bankers|FiveUp|FiveDown|Floor|Ceiling]
+- body:Pension.Revision integer
+- body:Pension.RoundingOption string enum[NotSet|PennyUp|PennyDown|Bankers|FiveUp|FiveDown|Floor|Ceiling]
+- body:Pension.SalarySacrifice boolean
+- body:Pension.SchemeName string
+- body:Pension.SubGroup string
+- body:Pension.TaxationMethod string enum[NotSet|NetBased|ReliefAtSource|TaxReliefExcluded]
+- body:Pension.UpperThreshold number
+- body:Pension.UseAEThresholds boolean
+
+## S581-0019  PUT /Employer/{EmployerId}/RtiTransaction/{RtiTransactionId}/Tag/{TagId}
+summary: Insert RTI transaction tag
+desc: Inserts a new tag on the RTI transaction
+- path:EmployerId string
+- path:RtiTransactionId string
+- path:TagId string
+
+## S581-0020  PUT /Employer/{EmployerId}/SubContractor/{SubContractorId}
+summary: Updates the sub contractor
+desc: Updates the existing specified sub contractor object
+- path:EmployerId string
+- path:SubContractorId string
+- body:SubContractor object
+- body:SubContractor.Address object
+- body:SubContractor.Address.Address1 string
+- body:SubContractor.Address.Address2 string
+- body:SubContractor.Address.Address3 string
+- body:SubContractor.Address.Address4 string
+- body:SubContractor.Address.Country string
+- body:SubContractor.Address.Postcode string
+- body:SubContractor.BankAccount object
+- body:SubContractor.BankAccount.AccountName string
+- body:SubContractor.BankAccount.AccountNumber string
+- body:SubContractor.BankAccount.BranchName string
+- body:SubContractor.BankAccount.Reference string
+- body:SubContractor.BankAccount.SortCode string
+- body:SubContractor.BusinessType string enum[SoleTrader|Company|Partnership|Trust]
+- body:SubContractor.CompanyName string
+- body:SubContractor.CompanyRegistrationNumber string
+- body:SubContractor.Deactivated boolean
+- body:SubContractor.EffectiveDate string
+- body:SubContractor.FirstName string
+- body:SubContractor.Initials string
+- body:SubContractor.LastName string
+- body:SubContractor.MetaData object
+- body:SubContractor.MiddleName string
+- body:SubContractor.NextRevisionDate string
+- body:SubContractor.NiNumber string
+- body:SubContractor.PartnershipName string
+- body:SubContractor.PartnershipUniqueTaxReference string
+- body:SubContractor.PayFrequency string enum[Monthly|Weekly]
+- body:SubContractor.PaymentMethod string enum[NotSet|Cash|Cheque|BACS|FasterPayments|Other]
+- body:SubContractor.Region string enum[NotSet|England|Scotland|Wales]
+- body:SubContractor.Revision integer
+- body:SubContractor.TaxationStatus string enum[Unmatched|Net|Gross]
+- body:SubContractor.Telephone string
+- body:SubContractor.Territory string enum[UnitedKingdom]
+- body:SubContractor.Title string
+- body:SubContractor.TradingName string
+- body:SubContractor.UniqueTaxReference string
+- body:SubContractor.VatRegistered boolean
+- body:SubContractor.VatRegistrationNumber string
+- body:SubContractor.VerificationDate string
+- body:SubContractor.VerificationNumber string
+- body:SubContractor.WorksNumber string
+
+## S581-0021  POST /Employer/{EmployerId}/SubContractor/{SubContractorId}/CisInstructions
+summary: Create a new CIS instruction
+desc: Create a new CIS instruction object
+- path:EmployerId string
+- path:SubContractorId string
+- body:CisInstruction object
+- body:CisInstruction.CisLineTag string
+- body:CisInstruction.CisLineType string
+- body:CisInstruction.Description string
+- body:CisInstruction.PayFrequency string enum[Monthly|Weekly]
+- body:CisInstruction.PeriodEnd integer
+- body:CisInstruction.PeriodStart integer
+- body:CisInstruction.TaxYearEnd integer
+- body:CisInstruction.TaxYearStart integer
+- body:CisInstruction.UOM string enum[NotSet|Minute|Hour|Day|Week|Month|Year|Unit]
+- body:CisInstruction.Units number
+- body:CisInstruction.VAT number
+- body:CisInstruction.Value number
+
+## S581-0022  DELETE /Employer/{EmployerId}/SubContractor/{SubContractorId}/Tag/{TagId}
+summary: Delete sub contractor tag
+desc: Deletes a tag from the sub contractor
+- path:EmployerId string
+- path:SubContractorId string
+- path:TagId string
+
+## S581-0023  DELETE /Employer/{EmployerId}/Tag/{TagId}
+summary: Delete employer tag
+desc: Deletes a tag from the employer
+- path:EmployerId string
+- path:TagId string
+
+## S581-0024  DELETE /Employer/{EmployerId}/ThirdPartyTransaction/{ThirdPartyTransactionId}
+summary: Delete third party transaction
+desc: Deletes a third party transaction record from the given resource location
+- path:EmployerId string
+- path:ThirdPartyTransactionId string
+
+## S581-0025  DELETE /Employer/{EmployerId}/ThirdPartyTransaction/{ThirdPartyTransactionId}/Tag/{TagId}
+summary: Delete third party transaction tag
+desc: Deletes a tag from the third party transaction
+- path:EmployerId string
+- path:ThirdPartyTransactionId string
+- path:TagId string
+
+## S581-0026  POST /Employers
+summary: Create a new Employer
+desc: Create a new employer object
+- body:Employer object
+- body:Employer.Address object
+- body:Employer.Address.Address1 string
+- body:Employer.Address.Address2 string
+- body:Employer.Address.Address3 string
+- body:Employer.Address.Address4 string
+- body:Employer.Address.Country string
+- body:Employer.Address.Postcode string
+- body:Employer.ApprenticeshipLevyAllowance number
+- body:Employer.AutoEnrolment object
+- body:Employer.AutoEnrolment.Pension object
+- body:Employer.AutoEnrolment.PostponementDate string
+- body:Employer.AutoEnrolment.PrimaryAddress object
+- body:Employer.AutoEnrolment.PrimaryEmail string
+- body:Employer.AutoEnrolment.PrimaryFirstName string
+- body:Employer.AutoEnrolment.PrimaryJobTitle string
+- body:Employer.AutoEnrolment.PrimaryLastName string
+- body:Employer.AutoEnrolment.PrimaryTelephone string
+- body:Employer.AutoEnrolment.ReEnrolmentDayOffset integer
+- body:Employer.AutoEnrolment.ReEnrolmentMonthOffset integer
+- body:Employer.AutoEnrolment.RecentOptOutReEnrolmentExcluded boolean
+- body:Employer.AutoEnrolment.SecondaryAddress object
+- body:Employer.AutoEnrolment.SecondaryEmail string
+- body:Employer.AutoEnrolment.SecondaryFirstName string
+- body:Employer.AutoEnrolment.SecondaryJobTitle string
+- body:Employer.AutoEnrolment.SecondaryLastName string
+- body:Employer.AutoEnrolment.SecondaryTelephone string
+- body:Employer.AutoEnrolment.StagingDate string
+- body:Employer.BacsServiceUserNumber string
+- body:Employer.BankAccount object
+- body:Employer.BankAccount.AccountName string
+- body:Employer.BankAccount.AccountNumber string
+- body:Employer.BankAccount.BranchName string
+- body:Employer.BankAccount.Reference string
+- body:Employer.BankAccount.SortCode string
+- body:Employer.CalculateApprenticeshipLevy boolean
+- body:Employer.ClaimEmploymentAllowance boolean
+- body:Employer.ClaimSmallEmployerRelief boolean
+- body:Employer.EffectiveDate string
+- body:Employer.HmrcSettings object
+- body:Employer.HmrcSettings.AccountingOfficeRef string
+- body:Employer.HmrcSettings.COTAXRef string
+- body:Employer.HmrcSettings.ContactEmail string
+- body:Employer.HmrcSettings.ContactFax string
+- body:Employer.HmrcSettings.ContactFirstName string
+- body:Employer.HmrcSettings.ContactLastName string
+- body:Employer.HmrcSettings.ContactTelephone string
+- body:Employer.HmrcSettings.EmploymentAllowanceOverride number
+- body:Employer.HmrcSettings.Password string
+- body:Employer.HmrcSettings.SAUTR string
+- body:Employer.HmrcSettings.Sender string enum[Employer|Individual|Company|Agent|Bureau|Partnership|Trust|Government|ActingInCapacity|Other]
+- body:Employer.HmrcSettings.SenderId string
+- body:Employer.HmrcSettings.StateAidSector string enum[Agriculture|FisheriesAquaculture|RoadTransport|Industrial|NotApplicable]
+- body:Employer.HmrcSettings.TaxOfficeNumber string
+- body:Employer.HmrcSettings.TaxOfficeReference string
+- body:Employer.MetaData object
+- body:Employer.Name string
+- body:Employer.NextRevisionDate string
+- body:Employer.Region string enum[NotSet|England|Scotland|Wales]
+- body:Employer.Revision integer
+- body:Employer.RuleExclusions string enum[None|NiMissingPayInstructionRule|TaxMissingPayInstructionRule|TaxCodeUpliftRule|NiSetExpectedLetterRule|NiDateOfBirthChangeRetrospectiveCRule|NiDefermentStatusChangeRule|NiEndContractedOutTransferRule|PaymentAfterLeavingTaxCodeRule|LeaverEndInstructionsRule|P45StudentLoanInstructionRule|P45TaxInstructionRule]
+- body:Employer.Territory string enum[UnitedKingdom]
+
+## S581-0027  DELETE /Jobs/Batch/{JobId}
+summary: Delete the Batch job
+desc: Deletes the the Batch job
+- path:JobId string
+
+## S581-0028  DELETE /Jobs/Cis/{JobId}
+summary: Delete the CIS job
+desc: Deletes the the CIS job
+- path:JobId string
+
+## S581-0029  POST /Jobs/Rti
+summary: Create new RTI job
+desc: Creates the new RTI job to the queue and returns the job info
+- body:RtiJobInstruction object
+- body:RtiJobInstruction.EarlierTaxYear integer
+- body:RtiJobInstruction.Employer object
+- body:RtiJobInstruction.Employer.@href string
+- body:RtiJobInstruction.Employer.@rel string
+- body:RtiJobInstruction.Employer.@title string
+- body:RtiJobInstruction.FinalSubmissionForYear boolean
+- body:RtiJobInstruction.Generate boolean
+- body:RtiJobInstruction.HoldingDate string
+- body:RtiJobInstruction.LateReason string enum[A|B|C|D|F|G|H]
+- body:RtiJobInstruction.NoPaymentForPeriodFrom string
+- body:RtiJobInstruction.NoPaymentForPeriodTo string
+- body:RtiJobInstruction.PaySchedule object
+- body:RtiJobInstruction.PaySchedule.@href string
+- body:RtiJobInstruction.PaySchedule.@rel string
+- body:RtiJobInstruction.PaySchedule.@title string
+- body:RtiJobInstruction.PaymentDate string
+- body:RtiJobInstruction.PeriodOfInactivityFrom string
+- body:RtiJobInstruction.PeriodOfInactivityTo string
+- body:RtiJobInstruction.RtiTransaction object
+- body:RtiJobInstruction.RtiTransaction.@href string
+- body:RtiJobInstruction.RtiTransaction.@rel string
+- body:RtiJobInstruction.RtiTransaction.@title string
+- body:RtiJobInstruction.RtiType string
+- body:RtiJobInstruction.SchemeCeased string
+- body:RtiJobInstruction.TaxMonth integer
+- body:RtiJobInstruction.TaxYear integer
+- body:RtiJobInstruction.Timestamp string
+- body:RtiJobInstruction.Transmit boolean
+
+## S581-0030  DELETE /JournalInstruction/{JournalInstructionId}
+summary: Deletes a Journal instruction template
+desc: Delete the specified Journal instruction template object
+- path:JournalInstructionId string
+
+## S581-0031  PUT /JournalInstruction/{JournalInstructionId}
+summary: Update a Journal Instruction template
+desc: Updates the existing specified Journal instruction template object
+- path:JournalInstructionId string
+
+## S581-0032  DELETE /Permission/{PermissionId}/Tag/{TagId}
+summary: Delete Permission tag
+desc: Deletes a tag from the Permission
+- path:PermissionId string
+- path:TagId string
+
+## S581-0033  POST /Reports
+summary: Create a new report definition
+desc: Creates a new report defintion object
+- body:ReportDefinition object
+- body:ReportDefinition.Active boolean
+- body:ReportDefinition.Readonly boolean
+- body:ReportDefinition.ReportQuery object
+- body:ReportDefinition.ReportQuery.Encoding string
+- body:ReportDefinition.ReportQuery.ExcludeNullOrEmptyElements boolean
+- body:ReportDefinition.ReportQuery.Groups object
+- body:ReportDefinition.ReportQuery.RootNodeName string
+- body:ReportDefinition.ReportQuery.SuppressMetricAttributes boolean
+- body:ReportDefinition.ReportQuery.Variables object
+- body:ReportDefinition.SupportedTransforms string
+- body:ReportDefinition.Title string
+- body:ReportDefinition.Version string
+
+## S581-0034  POST /Transforms
+summary: Create a new transform definition
+desc: Creates a new transform defintion object
+- body:TransformDefinition object
+- body:TransformDefinition.Active boolean
+- body:TransformDefinition.ContentType string
+- body:TransformDefinition.Definition string
+- body:TransformDefinition.DefinitionType string
+- body:TransformDefinition.Readonly boolean
+- body:TransformDefinition.SupportedReports string
+- body:TransformDefinition.TaxYear integer
+- body:TransformDefinition.Title string
+- body:TransformDefinition.Version string
+
+## S581-0035  PUT /User/{UserId}/Tag/{TagId}
+summary: Insert user tag
+desc: Inserts a tag on the user
+- path:UserId string
+- path:TagId string
+
+## S581-0036  POST /Users
+summary: Post user object
+desc: Post the new user object into the application

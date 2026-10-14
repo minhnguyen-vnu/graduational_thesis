@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Đề xuất đề tài khóa luận — Kiểm thử phân quyền có trạng thái cho REST API</title>
+<style>
+  @page { size: A4; margin: 18mm 17mm 20mm 17mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: "Times New Roman", Georgia, serif;
+    font-size: 11.2pt; line-height: 1.5; color: #1c1c1c; margin: 0;
+  }
+  h1, h2, h3, h4, .brand, th, .tag, .kicker, .kicker-inline, .meta, table.data th, .scenario .title, .foot {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  a { color: #1a4a86; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---- Khối tiêu đề ---- */
+  .cover { border-top: 4px solid #1a3d6d; padding-top: 14px; margin-bottom: 22px; }
+  .kicker { font-size: 8.5pt; letter-spacing: .12em; text-transform: uppercase; color: #1a3d6d; font-weight: 700; }
+  h1 { font-size: 20pt; line-height: 1.18; margin: 8px 0 4px; color: #14203a; }
+  .subtitle { font-size: 12pt; color: #445; font-style: italic; margin: 0 0 14px; }
+  .meta { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+  .meta td { padding: 3px 10px 3px 0; vertical-align: top; }
+  .meta td.k { color: #6b7280; width: 130px; font-weight: 600; }
+  .fill { color: #a33; }
+
+  /* ---- Tiêu đề mục ---- */
+  h2 {
+    font-size: 13.5pt; color: #14203a; margin: 22px 0 8px;
+    padding-bottom: 5px; border-bottom: 1.5px solid #d5dbe6;
+  }
+  h2 .num { color: #1a3d6d; }
+  h3 { font-size: 11.6pt; color: #1a3d6d; margin: 15px 0 5px; }
+  p { margin: 7px 0; }
+  ul, ol { margin: 7px 0; padding-left: 20px; }
+  li { margin: 3px 0; }
+  strong { color: #14203a; }
+
+  /* ---- Khung nhấn mạnh ---- */
+  .abstract {
+    background: #f4f7fb; border: 1px solid #dbe4f0; border-left: 4px solid #1a3d6d;
+    padding: 11px 15px; border-radius: 3px; font-size: 10.8pt;
+  }
+  .abstract p:first-child { margin-top: 0; }
+  .abstract p:last-child { margin-bottom: 0; }
+  .box {
+    border: 1px solid #e2e2e2; border-radius: 4px; padding: 4px 15px;
+    margin: 10px 0; background: #fafafa; page-break-inside: avoid;
+  }
+  .pitch {
+    border-left: 4px solid #2e7d4f; background: #f0f8f2; padding: 9px 15px;
+    margin: 12px 0; border-radius: 3px; font-size: 10.8pt;
+  }
+  .risk { border-left: 4px solid #c07a1a; background: #fdf7ee; }
+  .kicker-inline { font-weight:700; font-size:8pt; letter-spacing:.06em; text-transform:uppercase; color:#2e7d4f; }
+  .risk .kicker-inline { color:#c07a1a; }
+
+  /* ---- Khối ví dụ ---- */
+  .scenario { page-break-inside: avoid; margin: 9px 0; }
+  .scenario .title { font-weight:700; font-size:9.9pt; color:#14203a; margin-bottom:2px; }
+  pre {
+    font-family: "SF Mono", "Menlo", Consolas, monospace; font-size: 8.9pt;
+    line-height: 1.45; background: #14203a; color: #e8edf5; padding: 10px 13px;
+    border-radius: 4px; overflow-x: auto; margin: 6px 0; white-space: pre-wrap;
+  }
+  pre .c { color: #ffd479; } /* nhấn mạnh */
+  pre .g { color: #9ee6a6; } /* đúng */
+  pre .r { color: #ff9d9d; } /* sai */
+  code { font-family: "SF Mono","Menlo",Consolas,monospace; font-size: 9.4pt;
+    background: #eef1f6; padding: 1px 5px; border-radius: 3px; }
+
+  /* ---- Bảng ---- */
+  table.data { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 10pt; page-break-inside: avoid; }
+  table.data th { background: #1a3d6d; color: #fff; text-align: left; padding: 6px 9px; font-size: 9.3pt; font-weight: 600; }
+  table.data td { padding: 6px 9px; border-bottom: 1px solid #e3e7ee; vertical-align: top; }
+  table.data tr:nth-child(even) td { background: #f6f8fb; }
+
+  .refs { font-size: 9.7pt; }
+  .refs li { margin: 5px 0; }
+  hr { border: none; border-top: 1px solid #d5dbe6; margin: 18px 0; }
+  .foot { font-size: 8.2pt; color:#8a92a0; text-align:center; margin-top:14px; }
+  .avoid { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="kicker">Khóa luận tốt nghiệp · Đề xuất đề tài để phê duyệt</div>
+  <h1>Phát hiện Tự động các Lỗ hổng Phân quyền có Trạng thái trong REST API</h1>
+  <p class="subtitle">Mở rộng EvoMaster với một oracle kiểm soát truy cập theo trạng thái/thời gian</p>
+  <table class="meta">
+    <tr><td class="k">Sinh viên</td><td>Minh Nguyen <span class="fill">‹xác nhận họ tên / MSSV›</span></td>
+        <td class="k">Giảng viên hướng dẫn</td><td><span class="fill">‹tên GVHD›</span></td></tr>
+    <tr><td class="k">Ngành / Khoa</td><td><span class="fill">‹ngành / khoa›</span></td>
+        <td class="k">Ngày</td><td>12/07/2026</td></tr>
+    <tr><td class="k">Thời lượng</td><td>~3 tháng (kèm kế hoạch chi tiết)</td>
+        <td class="k">Lĩnh vực</td><td>Kiểm thử phần mềm · Bảo mật API</td></tr>
+  </table>
+</div>
+
+<div class="abstract">
+  <p><strong>Tóm tắt.</strong> Khóa luận này đề xuất một kỹ thuật tự động nhằm phát hiện một lớp lỗ hổng
+  bảo mật của REST API mà các công cụ hiện nay chưa thể tìm ra: <strong>lỗ hổng phân quyền có trạng thái</strong>
+  (<em>stateful authorization</em>) — tình huống người dùng vẫn giữ được quyền truy cập <em>sau khi</em> quyền
+  đó lẽ ra đã bị thu hồi (ví dụ: một quản trị viên đã bị hạ quyền nhưng vẫn xóa được dữ liệu). Công trình được
+  xây dựng trực tiếp trên <strong>EvoMaster</strong> — công cụ fuzzing REST API mã nguồn mở hàng đầu — và trên
+  một mở rộng rất gần đây (tháng 4/2026) đã bổ sung các kiểm tra phân quyền ở mức <em>từng yêu cầu</em>. Đóng góp
+  của tôi là một <strong>oracle phân quyền theo thời gian/trạng thái (đa bước)</strong> dựa trên
+  <em>kiểm thử biến hình</em> (metamorphic testing), cùng cơ chế sinh chuỗi lời gọi cần thiết để kích hoạt nó,
+  và được đánh giá trên các bộ dữ liệu chuẩn cùng các API cố tình chứa lỗ hổng. Một <strong>phương án dự phòng
+  rủi ro thấp (Phương án C)</strong> — nghiên cứu thực nghiệm về hiệu quả và tính tái lập của các công cụ hiện có
+  kèm một cải tiến có trọng điểm — cũng được đưa vào và dùng chung hạ tầng, nên đề tài chắc chắn có thể hoàn thành
+  theo một trong hai hướng.</p>
+</div>
+
+<h2><span class="num">1.</span> &nbsp;Bối cảnh: công cụ EvoMaster</h2>
+
+<p><strong>EvoMaster</strong> (<a href="https://github.com/WebFuzzing/EvoMaster">github.com/WebFuzzing/EvoMaster</a>)
+là một công cụ mã nguồn mở, ứng dụng AI, tự động sinh các ca kiểm thử ở mức hệ thống (“fuzzing”) cho các web API.
+Đây là nền tảng phù hợp cho khóa luận vì ba lý do: nó là công cụ tốt nhất hiện nay theo các so sánh độc lập, được
+viết bằng <strong>Kotlin/Java</strong> (đúng với nền tảng kỹ thuật của tôi), và được duy trì tích cực kèm một bộ
+ứng dụng thực tế để thử nghiệm.</p>
+
+<h3>Cách hoạt động</h3>
+<ul>
+  <li><strong>Đầu vào.</strong> Một đặc tả OpenAPI/Swagger (v2/v3). Ở chế độ <em>hộp đen</em> chỉ cần đặc tả và một
+  URL đang chạy; ở chế độ <em>hộp trắng</em> (chỉ JVM) nó còn phân tích mã bytecode của ứng dụng để sinh kiểm thử
+  hiệu quả hơn nhiều.</li>
+  <li><strong>Cơ chế.</strong> Một <em>thuật toán tiến hóa</em> dựa trên tìm kiếm, tiến hóa các chuỗi yêu cầu HTTP
+  nhằm tối đa độ bao phủ mã và khả năng phát hiện lỗi — bao gồm việc tự động <em>nối chuỗi</em> lời gọi (ví dụ
+  <code>POST /users</code> → tái sử dụng <code>id</code> trả về trong <code>GET /users/{id}</code>).</li>
+  <li><strong>Oracle (những gì nó gắn cờ là lỗi).</strong> Mặc định: lỗi máy chủ HTTP <code>500</code>, sai lệch
+  giữa phản hồi và đặc tả, và — từ 2026 — vi phạm chính sách truy cập.</li>
+  <li><strong>Đầu ra.</strong> Các ca kiểm thử JUnit (Java/Kotlin) chạy lại được để tái hiện từng lỗi, kèm một báo
+  cáo HTML tương tác.</li>
+</ul>
+
+<h3>Tôi có thể xây dựng gì trên nền tảng đó</h3>
+<p>EvoMaster đã giải quyết sẵn phần hạ tầng phức tạp mà nếu không có nó khóa luận sẽ phải tự làm lại: phân tích
+đặc tả API, sinh chuỗi yêu cầu hợp lệ, xử lý xác thực, và xuất ra kiểm thử tái lập được. Nhờ đó tôi tập trung công
+sức vào <em>câu hỏi nghiên cứu</em> — một năng lực phát hiện lỗi mới — thay vì viết lại một công cụ fuzzing. Tôi
+mở rộng nó bằng cách thêm (a) một cách <em>sinh</em> chuỗi kiểm thử mới và (b) một <em>oracle</em> mới để phán
+định xem một chuỗi có làm lộ ra lỗi hay không.</p>
+
+<h2><span class="num">2.</span> &nbsp;Phương án A (chính): phát hiện lỗ hổng phân quyền có trạng thái</h2>
+
+<h3>2.1 &nbsp;Vấn đề</h3>
+<p>Phân quyền (<em>ai được phép làm gì</em>) là <strong>lớp lỗ hổng API phổ biến nhất trong thực tế</strong>
+(OWASP API Security Top 10). Những lỗi nguy hiểm nhất không phải là dữ liệu đầu vào sai định dạng, mà là các
+<strong>thay đổi quyền theo thời gian</strong> mà máy chủ không thực thi đúng. Các công cụ tự động hiện nay chỉ
+kiểm tra phân quyền tại một thời điểm cố định, nên toàn bộ lớp lỗi này không bị phát hiện. Ba ví dụ cụ thể:</p>
+
+<div class="box avoid">
+  <div class="scenario">
+    <div class="title">Ví dụ A1 — quyền vẫn còn sau khi bị hạ cấp vai trò</div>
+<pre>1. Đăng nhập với vai trò <span class="c">ADMIN</span>       -> nhận token phiên T
+2. Admin tạo /reports/9              -> 201 Created
+3. Admin bị hạ cấp xuống <span class="c">VIEWER</span>     -> <span class="c">[CHUYỂN TRẠNG THÁI]</span>
+4. Dùng CHÍNH token T:  DELETE /reports/9
+   Kỳ vọng: <span class="g">403 Forbidden</span>  (viewer không được phép xóa)
+   Thực tế: <span class="r">204 No Content</span>  -> LỖI PHÂN QUYỀN CÓ TRẠNG THÁI</pre>
+  </div>
+  <div class="scenario">
+    <div class="title">Ví dụ A2 — quyền truy cập vẫn tồn tại sau khi chuyển quyền sở hữu</div>
+    <p style="margin:4px 0;">Người dùng A sở hữu một ví và chuyển quyền sở hữu cho B — nhưng A <em>vẫn</em> rút tiền được từ ví đó.</p>
+  </div>
+  <div class="scenario">
+    <div class="title">Ví dụ A3 — quyền lợi vẫn còn sau khi đã hết hạn</div>
+    <p style="margin:4px 0;">Một gói premium hết hạn, nhưng endpoint chỉ dành cho premium vẫn trả về <code>200 OK</code>.</p>
+  </div>
+</div>
+
+<p>Trong mọi trường hợp, lỗ hổng vô hình với một phép kiểm tra <strong>đơn yêu cầu</strong>: nó chỉ xuất hiện xuyên
+suốt một <strong>chuỗi</strong> có chứa một bước làm giảm quyền. Khoảng trống đó chính là mục tiêu của khóa luận.</p>
+
+<h3>2.2 &nbsp;Nền tảng chúng tôi kế thừa (phần đã có sẵn)</h3>
+<ul>
+  <li><strong>EvoMaster</strong> — cung cấp cơ chế sinh chuỗi, xử lý xác thực, và xuất kiểm thử.</li>
+  <li><strong>Şahin, Zhang &amp; Arcuri (2026)</strong> — “Enhancing REST API Fuzzing with Access Policy Violation
+  Checks and Injection Attacks” (<a href="https://arxiv.org/abs/2604.00702">arXiv:2604.00702</a>). Công trình này,
+  do chính nhóm EvoMaster thực hiện, đã bổ sung chín oracle bảo mật, trong đó có các kiểm tra phân quyền
+  <em>đơn yêu cầu</em> (so sánh phản hồi giữa các người dùng khác nhau cho <em>cùng một</em> yêu cầu). Đây là
+  <strong>đường cơ sở (baseline) trực tiếp</strong> của tôi.</li>
+</ul>
+<p>Điều quan trọng: cả chín oracle của bài đó đều thuộc trục <em>khác‑người / một‑thời‑điểm</em> — không oracle nào
+mô hình hóa một <strong>chuyển tiếp làm giảm quyền theo thời gian</strong>. Phần “hướng nghiên cứu tương lai” của họ
+chỉ nêu chung chung (“thiết kế thêm các oracle tự động để phát hiện những loại lỗi bảo mật khác”), <strong>không</strong>
+gọi tên phân quyền có trạng thái. Đáng chú ý, ngay trong thực nghiệm (Mục 5.4) họ gặp đúng các endpoint <em>chỉnh sửa
+thông tin đăng nhập/vai trò người dùng</em> nhưng chỉ coi đó là một trở ngại kỹ thuật (làm token đầu phiên hết hiệu
+lực), <strong>không</strong> biến nó thành phép thử phân quyền theo thời gian. Đó chính là chỗ khóa luận này bước vào —
+nền tảng vừa vững vừa mới, và bước tiếp theo này chưa ai thực hiện.</p>
+
+<h3>2.3 &nbsp;Đóng góp của chúng tôi</h3>
+<p>Tôi bổ sung <strong>chiều thời gian / trạng thái</strong> mà baseline còn thiếu, sử dụng
+<strong>kiểm thử biến hình</strong> (metamorphic testing) — một kỹ thuật đã được kiểm chứng, kiểm tra một tính chất
+dạng <em>“thay đổi đầu vào theo cách X thì đầu ra phải thay đổi theo cách Y.”</em> Tính chất ở đây mang tính phổ
+quát và độc lập với từng API:</p>
+<div class="pitch">
+  <span class="kicker-inline">Oracle cốt lõi</span><br>
+  <strong>“Việc thu hồi một quyền không bao giờ được làm tăng quyền truy cập của người dùng.”</strong> Nếu một hành
+  động được quan sát là <em>được phép</em>, và sau đó xảy ra một bước chuyển làm giảm quyền, thì cùng hành động đó
+  về sau phải <em>bị từ chối</em>. Nếu vẫn được phép, oracle báo cáo một lỗ hổng.
+</div>
+<p>Vì oracle được định nghĩa hoàn toàn trên các <em>phản hồi HTTP quan sát được</em> (được phép → bị từ chối), nó
+không phụ thuộc vào cách mỗi máy chủ hiện thực phân quyền bên trong — cùng một kỹ thuật áp dụng cho mọi REST API.
+Cụ thể, khóa luận sẽ tạo ra:</p>
+<ol>
+  <li><strong>Một tập các quan hệ biến hình về phân quyền</strong> (thu hồi quyền, chuyển quyền sở hữu, hết hạn
+  quyền lợi).</li>
+  <li><strong>Một bộ sinh chuỗi có nhận biết bước chuyển</strong> trong EvoMaster, tạo ra các chuỗi
+  <code>cấp quyền → chuyển trạng thái → thử lại</code> (thao tác chuyển trạng thái được suy ra từ đặc tả và từ các
+  tên như <em>revoke, demote, expire</em>, kèm chú thích tùy chọn ở mức nhẹ).</li>
+  <li><strong>Oracle theo thời gian</strong> đánh giá quan hệ trên các phản hồi và xuất ra một ca kiểm thử thất bại
+  tái lập được.</li>
+  <li><strong>Một bộ dữ liệu chuẩn nhỏ</strong> với các lỗi phân quyền có trạng thái được cấy sẵn (cộng đồng hiện
+  chưa có bộ này).</li>
+</ol>
+
+<table class="data avoid">
+  <tr><th>Khía cạnh</th><th>Baseline (Şahin và cs., 2026)</th><th>Khóa luận này (Phương án A)</th></tr>
+  <tr><td>Trục so sánh</td><td>Giữa các <strong>người dùng</strong> — một ảnh chụp tĩnh</td><td>Giữa <strong>thời gian / trạng thái</strong> — qua một bước chuyển</td></tr>
+  <tr><td>Dạng kiểm thử</td><td>Phát lại một yêu cầu dưới danh nghĩa người dùng khác</td><td><code>cấp quyền → chuyển trạng thái → thử lại</code></td></tr>
+  <tr><td>Loại oracle</td><td>Vi sai (người dùng A vs B, ngay lúc này)</td><td>Biến hình (trước vs sau một thay đổi)</td></tr>
+  <tr><td>Phát hiện A1–A3?</td><td>Không (mù về mặt cấu trúc)</td><td>Có (lớp mục tiêu)</td></tr>
+</table>
+
+<div class="pitch avoid">
+  <span class="kicker-inline">Diễn đạt một câu</span><br>
+  Công trình trước kiểm tra xem hiện tại <em>kẻ sai người</em> có đang giữ chìa khóa hay không. Khóa luận này kiểm
+  tra xem một chiếc chìa khóa có <em>còn mở được cửa sau khi lẽ ra đã bị thu hồi</em> hay không — tức là phân quyền
+  khi nó thay đổi theo một chuỗi, điều mà chưa công cụ fuzzing REST hộp đen nào hiện kiểm tra.
+</div>
+
+<h3>2.4 &nbsp;Kế hoạch đánh giá</h3>
+<p>Khả năng phát hiện được đo trên các API cố tình chứa lỗ hổng; tỉ lệ dương tính giả được đo trên các API thực,
+đúng đắn. Ba tầng mục tiêu, đều chạy cục bộ bằng Docker:</p>
+<table class="data avoid">
+  <tr><th>Tầng</th><th>Mục tiêu</th><th>Vai trò trong đánh giá</th></tr>
+  <tr><td>1</td><td>Một API <strong>Spring Boot</strong> nhỏ do tôi tự xây, có cấy sẵn một lỗi hạ cấp vai trò</td><td>Chân lý nền có kiểm soát; đảm bảo có một ca dương tính tiếp cận được</td></tr>
+  <tr><td>2</td><td><strong>VAmPI</strong> &amp; <strong>crAPI</strong> (các API lỗ hổng của OWASP)</td><td>Mục tiêu phát hiện chuẩn cộng đồng (độ nhạy / recall)</td></tr>
+  <tr><td>3</td><td><strong>WFD</strong> — Web Fuzzing Dataset (~45 ứng dụng thực)</td><td>Tính thực tế &amp; tỉ lệ dương tính giả (độ chính xác)</td></tr>
+</table>
+<p><strong>So sánh trực tiếp:</strong> bật các oracle của baseline và chạy cả hai công cụ trên cùng mục tiêu; thành
+công = công cụ của tôi tìm ra các lỗi <em>có trạng thái</em> mà baseline không thể, với tỉ lệ dương tính giả chấp
+nhận được. Các chỉ số chính: số lỗi phát hiện, độ chính xác / tỉ lệ dương tính giả, và độ bao phủ mã/endpoint.</p>
+
+<h3>2.5 &nbsp;Tính khả thi &amp; rủi ro</h3>
+<p><strong>Độ khó: trung bình — thử thách vừa phải, không quá sức.</strong> Phần lớn đã được giảm rủi ro sẵn (mục
+tiêu chạy bằng Docker, cơ chế sinh chuỗi có sẵn của EvoMaster, mã nguồn Kotlin, và một bài báo baseline trực tiếp
+làm khuôn mẫu). Các thách thức nghiên cứu thực sự — cũng là phần cốt lõi của khóa luận — là
+<strong>kiểm soát dương tính giả</strong> và <strong>khả năng tiếp cận</strong> (đưa bộ fuzzing đi đủ sâu để chạm
+tới trạng thái chứa lỗ hổng).</p>
+<div class="pitch risk avoid">
+  <span class="kicker-inline">Rủi ro chính &amp; cách giảm thiểu</span><br>
+  <em>Khả năng tiếp cận</em> — các API thực có thể quá sâu để bộ fuzzing chạm tới trạng thái lỗ hổng, làm giảm khả
+  năng phát hiện ở Tầng 3. <strong>Giảm thiểu:</strong> ứng dụng có kiểm soát ở Tầng 1 và các lỗi được cấy ở Tầng 2
+  đảm bảo luôn có ca dương tính tiếp cận được, nên kỹ thuật luôn có thể được minh chứng; kết quả Tầng 3 sau đó được
+  báo cáo trung thực kèm giới hạn — đúng như một chương đánh giá cần có.</div>
+
+<h2><span class="num">3.</span> &nbsp;Phương án C (dự phòng): nghiên cứu thực nghiệm + một cải tiến trọng điểm</h2>
+<p>Nếu oracle theo thời gian khó hơn dự kiến, đề tài <strong>suy giảm một cách êm đẹp</strong> thành một
+<strong>nghiên cứu thực nghiệm</strong> dùng lại <em>chính</em> hạ tầng đó (EvoMaster + WFD + VAmPI/crAPI) — nên
+không lãng phí công sức. Hai hướng khả thi:</p>
+<ul>
+  <li><strong>C1 — Tính tái lập / độ bất định (flakiness).</strong> Chạy EvoMaster trên ~10 ứng dụng WFD, lặp lại
+  nhiều lần, đo xem bao nhiêu ca kiểm thử sinh ra bị <em>bất định</em> (lần này đạt, lần sau trượt — ví dụ do kiểm
+  tra trên <code>id</code> tự tăng hoặc dấu thời gian), xây dựng phân loại nguyên nhân, và hiện thực một biện pháp
+  giảm thiểu, cho thấy tỉ lệ bất định giảm. Đây là chủ đề nghiên cứu còn nóng năm 2026 — Zhang, Shen, Arcuri &amp;
+  Yue, <a href="https://arxiv.org/abs/2603.28452">arXiv:2603.28452</a>.</li>
+  <li><strong>C2 — Hiệu quả của các oracle bảo mật.</strong> Đo mức độ các công cụ hiện có phát hiện từng hạng mục
+  OWASP API trên VAmPI/crAPI, xác định hạng mục yếu nhất, và thêm một cải tiến. Nếu hạng mục yếu nhất là phân quyền
+  có trạng thái, điều này <em>chứng minh bằng thực nghiệm</em> sự cần thiết của Phương án A.</li>
+</ul>
+<p><strong>Vì sao đây là phương án dự phòng an toàn:</strong> kết quả thực nghiệm chắc chắn tồn tại bất kể “bản sửa”
+hoạt động ra sao, nên việc hoàn thành được đảm bảo. Một mốc quyết định ở cuối Tuần 5 (bên dưới) sẽ chọn giữa tiếp
+tục A hay chuyển sang C, dựa trên dữ liệu đã thu thập.</p>
+
+<h2><span class="num">4.</span> &nbsp;Lộ trình dự kiến (~12 tuần)</h2>
+<table class="data avoid">
+  <tr><th>Tuần</th><th>Cột mốc</th></tr>
+  <tr><td>1–2</td><td>Thiết lập môi trường; tái lập EvoMaster trên WFD/VAmPI/crAPI với các oracle bảo mật baseline được bật; xây API Spring Boot Tầng 1 có cấy lỗi.</td></tr>
+  <tr><td>3–4</td><td>Hoàn thiện tổng quan tài liệu (xác nhận khoảng trống vẫn còn); hình thức hóa các quan hệ biến hình về phân quyền.</td></tr>
+  <tr><td>5</td><td><strong>Mốc quyết định:</strong> tiếp tục Phương án A, hoặc chuyển sang Phương án C dựa trên dữ liệu đã thu thập.</td></tr>
+  <tr><td>5–7</td><td>Hiện thực bộ sinh chuỗi có nhận biết bước chuyển và oracle theo thời gian trong EvoMaster (Kotlin).</td></tr>
+  <tr><td>8–9</td><td>Cấy lỗi vào bộ dữ liệu; chạy thực nghiệm; so sánh trực tiếp với baseline.</td></tr>
+  <tr><td>10–11</td><td>Phân tích (phát hiện, dương tính giả); tinh chỉnh để tăng độ chính xác.</td></tr>
+  <tr><td>12</td><td>Viết báo cáo, phần giới hạn, và chuẩn bị bảo vệ.</td></tr>
+</table>
+
+<h2><span class="num">5.</span> &nbsp;Tài liệu tham khảo &amp; nguồn lực chính</h2>
+<ol class="refs">
+  <li>A. Arcuri và cs. <em>EvoMaster: search-based fuzzing for REST, GraphQL and RPC APIs.</em> Công cụ mã nguồn mở — <a href="https://github.com/WebFuzzing/EvoMaster">github.com/WebFuzzing/EvoMaster</a>. Báo cáo công cụ: <em>Automated Software Engineering</em>, 2024, <a href="https://doi.org/10.1007/s10515-024-00478-1">doi:10.1007/s10515-024-00478-1</a>.</li>
+  <li>Ö. Şahin, M. Zhang, A. Arcuri. <em>Enhancing REST API Fuzzing with Access Policy Violation Checks and Injection Attacks.</em> 2026 — <a href="https://arxiv.org/abs/2604.00702">arXiv:2604.00702</a>. <strong>(Đường cơ sở trực tiếp.)</strong></li>
+  <li>M. Zhang, C. Shen, A. Arcuri, T. Yue. <em>Detecting and Mitigating Flakiness in REST API Fuzzing.</em> 2026 — <a href="https://arxiv.org/abs/2603.28452">arXiv:2603.28452</a>. (Nền tảng cho phương án dự phòng C1.)</li>
+  <li>M. Kim, Q. Xin, S. Sinha, A. Orso. <em>Automated Test Generation for REST APIs: No Time to Rest Yet.</em> ISSTA 2022 — <a href="https://doi.org/10.1145/3533767.3534401">doi:10.1145/3533767.3534401</a>.</li>
+  <li><em>Web Fuzzing Dataset (WFD)</em> — bộ dữ liệu chuẩn các web API thực: <a href="https://github.com/WebFuzzing/Dataset">github.com/WebFuzzing/Dataset</a>.</li>
+  <li><em>VAmPI</em> — REST API chứa lỗ hổng: <a href="https://github.com/erev0s/VAmPI">github.com/erev0s/VAmPI</a>. &nbsp;·&nbsp; <em>crAPI</em> (OWASP): <a href="https://github.com/OWASP/crAPI">github.com/OWASP/crAPI</a>.</li>
+  <li>OWASP API Security Top 10 (2023) — API1: Broken Object-Level Authorization; API5: Broken Function-Level Authorization.</li>
+</ol>
+
+<div class="foot">Soạn ngày 12/07/2026 · phục vụ việc xét duyệt của giảng viên hướng dẫn và phê duyệt đề tài · các trường đánh dấu ‹…› cần điền trước khi nộp</div>
+
+</body>
+</html>

@@ -1,0 +1,665 @@
+## S522-0027  DELETE /person/{login}/token/{id}
+desc: Delete a token of a person. | Delete a token of the specified person.
+- path:id string
+
+## S522-0028  POST /request
+desc: Create a request | Create a request
+- query:cmd string enum[create]
+- query:addrevision string enum[1]
+- query:ignore_delegate string enum[1]
+- query:ignore_build_state string enum[1]
+- body:action object
+- body:action.options object
+- body:action.options.sourceupdate string
+- body:action.source object
+- body:action.source.package string
+- body:action.source.project string
+- body:action.source.rev integer
+- body:action.target object
+- body:action.target.package string
+- body:action.target.project string
+- body:action.type string
+- body:creator string
+- body:description string
+- body:history array<object>
+- body:history[].comment string
+- body:history[].description string
+- body:history[].when string
+- body:history[].who string
+- body:id integer
+- body:review array<object>
+- body:review[].by_user string
+- body:review[].state string
+- body:review[].when string
+- body:review[].who string
+- body:review[].by_group string
+- body:review[].by_project string
+- body:review[].by_package string
+- body:state object
+- body:state.comment string
+- body:state.name string
+- body:state.when string
+- body:state.who string
+
+## S522-0029  DELETE /request/{id}
+desc: Delete a given request. | Delete a given request.
+
+## S522-0030  POST /request/{id}
+desc: Apply certain actions on a specified request. | Apply certain actions on a specified request.
+- query:cmd string
+- query:newstate string
+- query:priority string
+- query:by_user string
+- query:by_group string
+- query:by_project string
+- query:by_package string
+- query:incident string
+- query:time string
+- query:comment string
+
+## S522-0031  PUT /request/{id}
+desc: Modify a given request. | Modify a given request. **NOTE:** Certain parts of a request can only be changed by admins.
+schema: schema
+- body:(body) any
+
+## S522-0032  POST /request/{id}?cmd=diff
+desc: Get the diff for all packages affected by the request. | Get the diff for all packages affected by the request.
+- query:diff_to_superseded string
+- query:view string enum[xml]
+- query:withissues string enum[True|1]
+
+## S522-0033  POST /worker?cmd=checkconstraints
+desc: Lists workers which match a constraints filter. | Given a project, package, repository and architecture, list workers which can build with that restrictions, and also match a constraints filter. This endpoint doesn't create or modify any data. More information about constraints can be found in the [user guide](https://openbuildservice.org/help/manuals/obs-user-guide/cha.obs.build_job_constraints.h
+- query:project string
+- query:repository string
+- query:arch string
+- query:package string
+- body:hardware object
+- body:hardware.cpu object
+- body:hardware.cpu.flag array<string>
+- body:hardware.disk object
+- body:hardware.disk.size string
+- body:hardware.memory object
+- body:hardware.memory.size string
+- body:hardware.physicalmemory object
+- body:hardware.physicalmemory.size string
+- body:hardware.processors string
+- body:hostlabel string
+- body:linux object
+- body:linux.flavor string
+- body:linux.version object
+- body:linux.version.max string
+- body:linux.version.min string
+- body:sandbox string
+
+## S523-0001  DELETE /changes
+desc: Clear changes | Clear the full history stored in the changes log
+
+## S523-0002  DELETE /exports
+desc: Clear exports | Clear the full history stored in the exports log
+
+## S523-0003  DELETE /instances/{id}/attachments/{name}
+desc: Delete attachment | Delete an attachment associated with the given DICOM instance. This call will fail if trying to delete a system attachment (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+
+## S523-0004  POST /instances/{id}/attachments/{name}/uncompress
+desc: Uncompress attachment | Change the compression scheme that is used to store an attachment.
+- path:id string
+- path:name string
+
+## S523-0005  POST /instances/{id}/export
+desc: Write DICOM onto filesystem | Write the DICOM file onto the filesystem where Orthanc is running
+- path:id string
+- body:(body) any
+
+## S523-0006  POST /instances/{id}/modify
+desc: Modify instance | Download a modified version of the DICOM instance whose Orthanc identifier is provided in the URL: https://book.orthanc-server.com/users/anonymization.html#modification-of-a-single-instance
+- path:id string
+- body:Force boolean
+- body:Keep array<string>
+- body:KeepSource boolean
+- body:PrivateCreator string
+- body:Remove array<string>
+- body:RemovePrivateTags boolean
+- body:Replace object
+- body:Transcode string
+
+## S523-0007  POST /jobs/{id}/cancel
+desc: Cancel job | Cancel the job whose identifier is provided in the URL. Check out the Orthanc Book for more information about the state machine applicable to jobs: https://book.orthanc-server.com/users/advanced-rest.html#jobs
+- path:id string
+
+## S523-0008  DELETE /modalities/{id}
+desc: Delete DICOM modality | Delete one DICOM modality. This change is permanent iff. `DicomModalitiesInDatabase` is `true`, otherwise it is lost at the next restart of Orthanc.
+- path:id string
+
+## S523-0009  PUT /modalities/{id}
+desc: Update DICOM modality | Define a new DICOM modality, or update an existing one. This change is permanent iff. `DicomModalitiesInDatabase` is `true`, otherwise it is lost at the next restart of Orthanc.
+- path:id string
+- body:AET string
+- body:AllowEcho boolean
+- body:AllowFind boolean
+- body:AllowFindWorklist boolean
+- body:AllowGet boolean
+- body:AllowMove boolean
+- body:AllowStorageCommitment boolean
+- body:AllowStore boolean
+- body:AllowTranscoding boolean
+- body:Host string
+- body:Manufacturer string
+- body:Port number
+- body:UseDicomTls boolean
+
+## S523-0010  POST /modalities/{id}/find-instance
+desc: C-FIND SCU for instances | Trigger C-FIND SCU command against the DICOM modality whose identifier is provided in URL, in order to find an instance. Deprecated in favor of `/modalities/{id}/query`.
+- path:id string
+- body:(body) any
+
+## S523-0011  POST /modalities/{id}/find-patient
+desc: C-FIND SCU for patients | Trigger C-FIND SCU command against the DICOM modality whose identifier is provided in URL, in order to find a patient. Deprecated in favor of `/modalities/{id}/query`.
+- path:id string
+- body:(body) any
+
+## S523-0012  POST /modalities/{id}/find-worklist
+desc: C-FIND SCU for worklist | Trigger C-FIND SCU command against the remote worklists of the DICOM modality whose identifier is provided in URL
+- path:id string
+- body:Full boolean
+- body:Query object
+- body:Short boolean
+
+## S523-0013  POST /patients/{id}/attachments/{name}/verify-md5
+desc: Verify attachment | Verify that the attachment is not corrupted, by validating its MD5 hash
+- path:id string
+- path:name string
+
+## S523-0014  POST /patients/{id}/reconstruct
+desc: Reconstruct tags & optionally files of patient | Reconstruct the main DICOM tags in DB of the patient whose Orthanc identifier is provided in the URL. This is useful if child studies/series/instances have inconsistent values for higher-level tags, in order to force Orthanc to use the value from the resource of interest. Beware that this is a time-consuming operation, as all the children DICOM inst
+- path:id string
+- body:ReconstructFiles boolean
+
+## S523-0015  POST /peers/{id}/store-straight
+desc: Straight store to peer | Synchronously send the DICOM instance in the POST body to the Orthanc peer whose identifier is provided in URL, without having to first store it locally within Orthanc. This is an alternative to command-line tools such as `curl`.
+- path:id string
+- body:(body) any
+
+## S523-0016  DELETE /queries/{id}
+desc: Delete a query | Delete the query/retrieve operation whose identifier is provided in the URL
+- path:id string
+
+## S523-0017  POST /queries/{id}/answers/{index}/retrieve
+desc: Retrieve one answer | Start a C-MOVE SCU command as a job, in order to retrieve one answer associated with the query/retrieve operation whose identifiers are provided in the URL: https://book.orthanc-server.com/users/rest.html#performing-retrieve-c-move
+- path:id string
+- path:index string
+- body:Asynchronous boolean
+- body:Full boolean
+- body:Permissive boolean
+- body:Priority number
+- body:Simplify boolean
+- body:Synchronous boolean
+- body:TargetAet string
+- body:Timeout number
+
+## S523-0018  DELETE /series/{id}/attachments/{name}
+desc: Delete attachment | Delete an attachment associated with the given DICOM series. This call will fail if trying to delete a system attachment (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+
+## S523-0019  POST /series/{id}/attachments/{name}/uncompress
+desc: Uncompress attachment | Change the compression scheme that is used to store an attachment.
+- path:id string
+- path:name string
+
+## S523-0020  POST /series/{id}/modify
+desc: Modify series | Start a job that will modify all the DICOM instances within the series whose identifier is provided in the URL. The modified DICOM instances will be stored into a brand new series, whose Orthanc identifiers will be returned by the job. https://book.orthanc-server.com/users/anonymization.html#modification-of-studies-or-series
+- path:id string
+- body:Asynchronous boolean
+- body:Force boolean
+- body:Keep array<string>
+- body:KeepSource boolean
+- body:Permissive boolean
+- body:Priority number
+- body:PrivateCreator string
+- body:Remove array<string>
+- body:RemovePrivateTags boolean
+- body:Replace object
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-0021  POST /series/{id}/reconstruct
+desc: Reconstruct tags & optionally files of series | Reconstruct the main DICOM tags in DB of the series whose Orthanc identifier is provided in the URL. This is useful if child studies/series/instances have inconsistent values for higher-level tags, in order to force Orthanc to use the value from the resource of interest. Beware that this is a time-consuming operation, as all the children DICOM instan
+- path:id string
+- body:ReconstructFiles boolean
+
+## S523-0022  DELETE /studies/{id}/attachments/{name}
+desc: Delete attachment | Delete an attachment associated with the given DICOM study. This call will fail if trying to delete a system attachment (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+
+## S523-0023  POST /studies/{id}/attachments/{name}/verify-md5
+desc: Verify attachment | Verify that the attachment is not corrupted, by validating its MD5 hash
+- path:id string
+- path:name string
+
+## S523-0024  DELETE /studies/{id}/metadata/{name}
+desc: Delete metadata | Delete some metadata associated with the given DICOM study. This call will fail if trying to delete a system metadata (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+
+## S523-0025  PUT /studies/{id}/metadata/{name}
+desc: Set metadata | Set the value of some metadata in the given DICOM study. This call will fail if trying to modify a system metadata (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+- body:(body) any
+
+## S523-0026  POST /studies/{id}/modify
+desc: Modify study | Start a job that will modify all the DICOM instances within the study whose identifier is provided in the URL. The modified DICOM instances will be stored into a brand new study, whose Orthanc identifiers will be returned by the job. https://book.orthanc-server.com/users/anonymization.html#modification-of-studies-or-series
+- path:id string
+- body:Asynchronous boolean
+- body:Force boolean
+- body:Keep array<string>
+- body:KeepSource boolean
+- body:Permissive boolean
+- body:Priority number
+- body:PrivateCreator string
+- body:Remove array<string>
+- body:RemovePrivateTags boolean
+- body:Replace object
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-0027  POST /tools/create-dicom
+desc: Create one DICOM instance | Create one DICOM instance, and store it into Orthanc
+- body:Content string
+- body:Force boolean
+- body:InterpretBinaryTags boolean
+- body:Parent string
+- body:PrivateCreator string
+- body:Tags object
+
+## S523-0028  POST /tools/create-media
+desc: Create DICOMDIR media | Create a DICOMDIR media containing the DICOM resources (patients, studies, series, or instances) whose Orthanc identifiers are provided in the body
+- body:Asynchronous boolean
+- body:Extended boolean
+- body:Priority number
+- body:Resources array<string>
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-0029  PUT /tools/default-encoding
+desc: Set default encoding | Change the default encoding that is used by Orthanc if parsing a DICOM instance without the `SpecificCharacterEncoding` tag, or during C-FIND. This corresponds to the configuration option `DefaultEncoding`.
+- body:(body) any
+
+## S523-0030  PUT /tools/log-level-dicom
+desc: Set log level for `dicom` | Set the log level of the log category `dicom`
+- body:(body) any
+
+## S523-0031  PUT /tools/log-level-generic
+desc: Set log level for `generic` | Set the log level of the log category `generic`
+- body:(body) any
+
+## S523-0032  PUT /tools/log-level-http
+desc: Set log level for `http` | Set the log level of the log category `http`
+- body:(body) any
+
+## S523-0033  PUT /tools/log-level-jobs
+desc: Set log level for `jobs` | Set the log level of the log category `jobs`
+- body:(body) any
+
+## S523-0034  PUT /tools/log-level-plugins
+desc: Set log level for `plugins` | Set the log level of the log category `plugins`
+- body:(body) any
+
+## S523-0035  POST /tools/lookup
+desc: Look for DICOM identifiers | This URI can be used to convert one DICOM identifier to a list of matching Orthanc resources
+- body:(body) any
+
+## S523-0036  PUT /tools/metrics
+desc: Enable collection of metrics | Enable or disable the collection and publication of metrics at `/tools/metrics-prometheus`
+- body:(body) any
+
+## S524-0001  POST /api/password/generate
+- query:length integer
+- query:upperCase boolean
+- query:digits boolean
+- query:specialCharacters boolean
+
+## S524-0002  POST /api/password/validate
+- query:password string
+
+## S525-0001  PUT /servers/{server_id}/cache/flush
+desc: Flush a cache-entry by name
+- path:server_id string
+- query:domain string
+
+## S525-0002  POST /servers/{server_id}/tsigkeys
+desc: Add a TSIG key | This methods add a new TSIGKey. The actual key can be generated by the server or be provided by the client
+schema: TSIGKey
+- path:server_id string
+- body:algorithm string
+- body:id string
+- body:key string
+- body:name string
+- body:type string
+
+## S525-0003  DELETE /servers/{server_id}/tsigkeys/{tsigkey_id}
+desc: Delete the TSIGKey with tsigkey_id
+- path:server_id string
+- path:tsigkey_id string
+
+## S525-0004  PUT /servers/{server_id}/tsigkeys/{tsigkey_id}
+desc: The TSIGKey at tsigkey_id can be changed in multiple ways: * Changing the Name, this will remove the key with tsigkey_id after adding. * Changing the Algorithm * Changing the Key Only the relevant fields have to be provided in the request body.
+schema: TSIGKey
+- path:server_id string
+- path:tsigkey_id string
+- body:algorithm string
+- body:id string
+- body:key string
+- body:name string
+- body:type string
+
+## S525-0005  POST /servers/{server_id}/zones
+desc: Creates a new domain, returns the Zone on creation.
+schema: Zone
+- path:server_id string
+- query:rrsets boolean
+- body:account string
+- body:api_rectify boolean
+- body:dnssec boolean
+- body:edited_serial integer
+- body:id string
+- body:kind string enum[Native|Master|Slave]
+- body:master_tsig_key_ids array<string>
+- body:masters array<string>
+- body:name string
+- body:nameservers array<string>
+- body:notified_serial integer
+- body:nsec3narrow boolean
+- body:nsec3param string
+- body:presigned boolean
+- body:rrsets array<object>
+- body:rrsets[].changetype string
+- body:rrsets[].comments array<object>
+- body:rrsets[].comments[].account string
+- body:rrsets[].comments[].content string
+- body:rrsets[].comments[].modified_at integer
+- body:rrsets[].name string
+- body:rrsets[].records array<object>
+- body:rrsets[].records[].content string
+- body:rrsets[].records[].disabled boolean
+- body:rrsets[].ttl integer
+- body:rrsets[].type string
+- body:serial integer
+- body:slave_tsig_key_ids array<string>
+- body:soa_edit string
+- body:soa_edit_api string
+- body:type string
+- body:url string
+- body:zone string
+
+## S525-0006  DELETE /servers/{server_id}/zones/{zone_id}
+desc: Deletes this zone, all attached metadata and rrsets.
+- path:server_id string
+- path:zone_id string
+
+## S525-0007  PATCH /servers/{server_id}/zones/{zone_id}
+desc: Creates/modifies/deletes RRsets present in the payload and their comments. Returns 204 No Content on success.
+schema: Zone
+- path:server_id string
+- path:zone_id string
+- body:account string
+- body:api_rectify boolean
+- body:dnssec boolean
+- body:edited_serial integer
+- body:id string
+- body:kind string enum[Native|Master|Slave]
+- body:master_tsig_key_ids array<string>
+- body:masters array<string>
+- body:name string
+- body:nameservers array<string>
+- body:notified_serial integer
+- body:nsec3narrow boolean
+- body:nsec3param string
+- body:presigned boolean
+- body:rrsets array<object>
+- body:rrsets[].changetype string
+- body:rrsets[].comments array<object>
+- body:rrsets[].comments[].account string
+- body:rrsets[].comments[].content string
+- body:rrsets[].comments[].modified_at integer
+- body:rrsets[].name string
+- body:rrsets[].records array<object>
+- body:rrsets[].records[].content string
+- body:rrsets[].records[].disabled boolean
+- body:rrsets[].ttl integer
+- body:rrsets[].type string
+- body:serial integer
+- body:slave_tsig_key_ids array<string>
+- body:soa_edit string
+- body:soa_edit_api string
+- body:type string
+- body:url string
+- body:zone string
+
+## S525-0008  PUT /servers/{server_id}/zones/{zone_id}
+desc: Modifies basic zone data. | The only fields in the zone structure which can be modified are: kind, masters, account, soa_edit, soa_edit_api, api_rectify, dnssec, and nsec3param. All other fields are ignored.
+schema: Zone
+- path:server_id string
+- path:zone_id string
+- body:account string
+- body:api_rectify boolean
+- body:dnssec boolean
+- body:edited_serial integer
+- body:id string
+- body:kind string enum[Native|Master|Slave]
+- body:master_tsig_key_ids array<string>
+- body:masters array<string>
+- body:name string
+- body:nameservers array<string>
+- body:notified_serial integer
+- body:nsec3narrow boolean
+- body:nsec3param string
+- body:presigned boolean
+- body:rrsets array<object>
+- body:rrsets[].changetype string
+- body:rrsets[].comments array<object>
+- body:rrsets[].comments[].account string
+- body:rrsets[].comments[].content string
+- body:rrsets[].comments[].modified_at integer
+- body:rrsets[].name string
+- body:rrsets[].records array<object>
+- body:rrsets[].records[].content string
+- body:rrsets[].records[].disabled boolean
+- body:rrsets[].ttl integer
+- body:rrsets[].type string
+- body:serial integer
+- body:slave_tsig_key_ids array<string>
+- body:soa_edit string
+- body:soa_edit_api string
+- body:type string
+- body:url string
+- body:zone string
+
+## S525-0009  PUT /servers/{server_id}/zones/{zone_id}/axfr-retrieve
+desc: Retrieve slave zone from its master. | Fails when zone kind is not Slave, or slave is disabled in the configuration. Clients MUST NOT send a body.
+- path:server_id string
+- path:zone_id string
+
+## S525-0010  POST /servers/{server_id}/zones/{zone_id}/cryptokeys
+desc: Creates a Cryptokey | This method adds a new key to a zone. The key can either be generated or imported by supplying the content parameter. if content, bits and algo are null, a key will be generated based on the default-ksk-algorithm and default-ksk-size settings for a KSK and the default-zsk-algorithm and default-zsk-size options for a ZSK.
+schema: Cryptokey
+- path:server_id string
+- path:zone_id string
+- body:active boolean
+- body:algorithm string
+- body:bits integer
+- body:dnskey string
+- body:ds array<string>
+- body:id integer
+- body:keytype string enum[ksk|zsk|csk]
+- body:privatekey string
+- body:published boolean
+- body:type string
+
+## S525-0011  DELETE /servers/{server_id}/zones/{zone_id}/cryptokeys/{cryptokey_id}
+desc: This method deletes a key specified by cryptokey_id.
+- path:server_id string
+- path:zone_id string
+- path:cryptokey_id string
+
+## S525-0012  PUT /servers/{server_id}/zones/{zone_id}/cryptokeys/{cryptokey_id}
+desc: This method (de)activates a key from zone_name specified by cryptokey_id
+schema: Cryptokey
+- path:server_id string
+- path:zone_id string
+- path:cryptokey_id string
+- body:active boolean
+- body:algorithm string
+- body:bits integer
+- body:dnskey string
+- body:ds array<string>
+- body:id integer
+- body:keytype string enum[ksk|zsk|csk]
+- body:privatekey string
+- body:published boolean
+- body:type string
+
+## S525-0013  POST /servers/{server_id}/zones/{zone_id}/metadata
+desc: Creates a set of metadata entries | Creates a set of metadata entries of given kind for the zone. Existing metadata entries for the zone with the same kind are not overwritten.
+schema: Metadata
+- path:server_id string
+- path:zone_id string
+- body:kind string
+- body:metadata array<string>
+
+## S525-0014  DELETE /servers/{server_id}/zones/{zone_id}/metadata/{metadata_kind}
+desc: Delete all items of a single kind of domain metadata.
+- path:server_id string
+- path:zone_id string
+- path:metadata_kind string
+
+## S525-0015  PUT /servers/{server_id}/zones/{zone_id}/metadata/{metadata_kind}
+desc: Replace the content of a single kind of domain metadata. | Creates a set of metadata entries of given kind for the zone. Existing metadata entries for the zone with the same kind are removed.
+schema: Metadata
+- path:server_id string
+- path:zone_id string
+- path:metadata_kind string
+- body:kind string
+- body:metadata array<string>
+
+## S525-0016  PUT /servers/{server_id}/zones/{zone_id}/notify
+desc: Send a DNS NOTIFY to all slaves. | Fails when zone kind is not Master or Slave, or master and slave are disabled in the configuration. Only works for Slave if renotify is on. Clients MUST NOT send a body.
+- path:server_id string
+- path:zone_id string
+
+## S525-0017  PUT /servers/{server_id}/zones/{zone_id}/rectify
+desc: Rectify the zone data. | This does not take into account the API-RECTIFY metadata. Fails on slave zones and zones that do not have DNSSEC.
+- path:server_id string
+- path:zone_id string
+
+## S527-0001  POST /graphql
+desc: Perform a GraphQL Query | Performs a GraphQL Query
+schema: GraphQLRequest
+- body:operationName string
+- body:query string
+- body:variables object
+
+## S527-0002  POST /service_inventories/{id}/tag
+desc: Tag a ServiceInventory | Tags a ServiceInventory object
+schema: Tag
+- path:id string
+- body:tag string
+
+## S527-0003  POST /service_inventories/{id}/untag
+desc: Untag a ServiceInventory | Untags a ServiceInventory object
+schema: Tag
+- path:id string
+- body:tag string
+
+## S527-0004  POST /service_offerings/{id}/applied_inventories_tags
+desc: Invokes computing of ServiceInventories tags for given ServiceOffering | Returns an array of inventories tags
+schema: AppliedInventoriesParametersServicePlan
+- path:id string
+- body:service_parameters object
+
+## S527-0005  POST /service_offerings/{id}/order
+desc: Order an existing ServiceOffering | Returns a Task id
+schema: OrderParametersServiceOffering
+- path:id string
+- body:provider_control_parameters object
+- body:service_parameters object
+- body:service_plan_id string
+
+## S527-0006  PATCH /sources/{id}/incremental_refresh
+desc: Incremental Refresh an existing Source | Incremental Refresh a source object
+- path:id string
+
+## S527-0007  PATCH /sources/{id}/refresh
+desc: Refresh an existing Source | Refresh a source object
+- path:id string
+
+## S527-0008  PATCH /tasks/{id}
+desc: Update an existing Task | Updates a Task object
+schema: Task
+- path:id string
+- body:archived_at string
+- body:child_task_id string
+- body:completed_at string
+- body:controller_message_id string
+- body:created_at string
+- body:id string
+- body:input object
+- body:message string
+- body:name string
+- body:output object
+- body:owner string
+- body:source_id string
+- body:state string enum[pending|queued|running|timedout|completed]
+- body:status string enum[ok|warn|unchanged|error]
+- body:target_source_ref string
+- body:target_type string
+- body:type string
+- body:updated_at string
+
+## S528-0001  DELETE /api/patch/v1/systems/{inventory_id}
+desc: Delete system by inventory id | Delete system by inventory id
+- path:inventory_id string
+
+## S528-0002  POST /api/patch/v1/views/advisories/systems
+desc: View advisory-system pairs for selected systems and advisories | View advisory-system pairs for selected systems and advisories
+schema: controllers.SystemsAdvisoriesRequest
+- body:advisories array<string>
+- body:systems array<string>
+
+## S528-0003  POST /api/patch/v1/views/systems/advisories
+desc: View system-advisory pairs for selected systems and advisories | View system-advisory pairs for selected systems and advisories
+schema: controllers.SystemsAdvisoriesRequest
+- body:advisories array<string>
+- body:systems array<string>
+
+## S529-0001  POST /improve
+desc: Submit an image to the remove.bg Improvement program * Contribute an image that remove.bg is currently not able to remove the background from properly * Help us make remove.bg better * Get better results for similiar images in the future Notes: * By submitting images through the API you agree to the <a target="_blank" rel="noopener" href="/ipc">Improvement Program Conditions</a> * File size: up to
+schema: ImprovementProgramJson
+- body:image_file_b64 string
+- body:image_filename string
+- body:image_url string
+- body:tag string
+
+## S529-0002  POST /removebg
+desc: Remove the background of an image | Removes the background of a JPG/PNG image. * File size: up to 12 MB * Image source: File upload (binary or as base64 encoded string) or download from URL * Image Content: Any photo with a foreground [(e.g. people, products, animals, cars, etc.)](/supported-images) * Output resolutions available: Preview (up to 0.25 megapixels), Full (up to 25 megapixels) Require
+schema: RemoveBgJson
+- body:add_shadow boolean
+- body:bg_color string
+- body:bg_image_url string
+- body:channels string enum[rgba|alpha]
+- body:crop boolean
+- body:crop_margin string
+- body:format string enum[auto|png|jpg|zip]
+- body:image_file_b64 string
+- body:image_url string
+- body:position string
+- body:roi string
+- body:scale string
+- body:semitransparency boolean
+- body:size string enum[preview|full|auto]
+- body:type string enum[auto|person|product|car]
+- body:type_level string enum[none|1|2|latest]

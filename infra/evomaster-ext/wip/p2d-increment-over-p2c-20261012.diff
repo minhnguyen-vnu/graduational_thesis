@@ -1,0 +1,21 @@
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -1245,7 +1245,8 @@
+             "str" -> tableValues("lowstr")
+             else -> emptyList()
+         }
+-        return raw.filter { v -> current.none { it.equals(v, ignoreCase = true) } }.distinct()
++        val held = current.filter { valueScore("low", it) <= valueScore("high", it) }
++        return raw.filter { v -> held.none { it.equals(v, ignoreCase = true) } }.distinct()
+     }
+ 
+     private fun harvestReducedRoleCandidates(transition: RestCallAction): List<String> {
+@@ -1257,7 +1258,7 @@
+         schemaFields(transition).filter { it.loc != "path" && fieldScore("role", it) > 0.0 }
+ 
+     private fun restoreValues(field: SchemaField, snapshot: String?, exclude: String): List<String> {
+-        if (snapshot != null) {
++        if (snapshot != null && valueScore("low", snapshot) <= valueScore("high", snapshot)) {
+             return if (snapshot == exclude) emptyList() else listOf(snapshot)
+         }
+         val raw = when (field.kind) {

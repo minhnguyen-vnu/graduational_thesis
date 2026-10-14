@@ -1,0 +1,730 @@
+## S593-0006  PUT /v1/allowlist/private/{allowlist_id}/origin
+desc: Toogle the status of the origin in an allow list. | ### What Change the status of the origin of an allow list to ``ACTIVE``, ``INACTIVE`` or ``DELETED``. An ``ACTIVE`` origin will apply the allow list to the protocol and domain of the origin. An origin can be created and activated simply toogling the ``ACTIVE`` status. As an optional parameter it can be provided an ``ttl`` or Time To Live paramete
+schema: Body_change_status_of_the_origin_allowlist_v1_allowlist_private__allowlist_id__origin_put
+- path:allowlist_id string
+- body:origin string
+- body:status string enum[ACTIVE|INACTIVE|DELETED]
+
+## S593-0007  DELETE /v1/allowlist/public/{allowlist_id}
+desc: Delete all the bindings between a user and an allowlist. | ### What Delete all the bindings between a user and an allowlist. This will remove the allowlist from the user and also all the origins that are using the allowlist. This is an asynchronous operation. It can take several seconds until the operation completes, but the request will immediately return a 202 Accepted response. ### Parameters I
+- path:allowlist_id string
+
+## S593-0008  PUT /v1/allowlist/public/{allowlist_id}
+desc: Toogle the status of an allow list. | ### What Change the status of an allow list to ``ACTIVE`` or ``INACTIVE``. An ``INACTIVE`` list will not be used by the service. An ``ACTIVE`` list will be used by the service. As an optional parameter it can be provided an ``expiry`` date in seconds since epoch. If not provided, the list will never expire. This is an asynchronous operation. It can take severa
+schema: Body_change_status_of_the_allowlist_v1_allowlist_public__allowlist_id__put
+- path:allowlist_id string
+- body:status string enum[ACTIVE|INACTIVE]
+
+## S593-0009  PUT /v1/allowlist/public/{allowlist_id}/origin
+desc: Toogle the status of the origin in an allow list. | ### What Change the status of the origin of an allow list to ``ACTIVE``, ``INACTIVE`` or ``DELETED``. An ``ACTIVE`` origin will apply the allow list to the protocol and domain of the origin. An origin can be created and activated simply toogling the ``ACTIVE`` status. As an optional parameter it can be provided an ``ttl`` or Time To Live paramete
+schema: Body_change_status_of_the_origin_allowlist_v1_allowlist_public__allowlist_id__origin_put
+- path:allowlist_id string
+- body:origin string
+- body:status string enum[ACTIVE|INACTIVE|DELETED]
+
+## S593-0010  POST /v1/asn/prefix
+desc: Get the IPv4 or IPv6 prefix of the CIDR given. | ### What Obtain the IPv4 or IPv6 prefix and the Autonomous System information of the CIDR passed in the body as a POST method. This endpoint works around the problem of passing '/' addresses in the URI. ### Parameters The endpoint accepts only the following parameter in the body as a JSON object: - ``prefix``: (Mandatory) The CIDR v4 or v6 to be que
+schema: Body_query_asn_prefix_information_v1_asn_prefix_post
+- body:prefix string
+
+## S593-0011  POST /v1/assess/ip
+desc: Get the risk score of all IP address passed in the body and other data signals. | ### What Obtain a numerical score and a risk assessment of all the IP addresses passed as argument. ### Parameters A list of public IPv4 or IPv6 addresses is required in the body of the request. ### Result The result contains a list of the result for each IP address, with two main sets of data: - The score is a numbe
+- body:(body) string
+
+## S593-0012  POST /v1/assess/ip/csv
+desc: Get the risk score of all IP address uploaded and other data signals. | ### What Obtain a numerical score and a risk assessment of all the IP addresses uploaded with a text file. ### Parameters - A text file with a list of public IPv4 or IPv6 addresses. - A header `Content-Type: multipart/form-data` is required. - (optional) in the query string the parameeter `strict_parse`: If set to `true`, no m
+schema: Body_assess_ip_set_csv_v1_assess_ip_csv_post
+- query:strict_parse boolean
+- body:csv_file string
+
+## S593-0013  POST /v1/datacenter/prefix
+desc: Get the IPv4 or IPv6 prefix of the CIDR given. | ### What Obtain the IPv4 or IPv6 prefix and the Datacenter information of the CIDR passed in the body as a POST method. This endpoint works around the problem of passing '/' addresses in the URI. ### Parameters The endpoint accepts only the following parameter in the body as a JSON object: - ``prefix``: (Mandatory) The CIDR v4 or v6 to be queried. #
+schema: Body_query_datacenter_prefix_information_v1_datacenter_prefix_post
+- body:prefix string
+
+## S593-0014  POST /v1/denylist/private
+desc: Creates a new private denylist binded to the user. | ### What Creates a new denylist with the information given and binded to the current user. The parameters are: - name - description - tags - expiry - Time to Live (TTL) - Resource Type (`CIDR`, `AS`, `COUNTRY`, `CONTINENT`, `DATACENTER_ID` and `USER AGENT`) This is an asynchronous operation. It can take several seconds until the operation comple
+schema: Body_create_private_denylist_of_the_user_v1_denylist_private_post
+- body:payload object
+- body:payload.description string
+- body:payload.name string
+- body:payload.resource_type string enum[UNKNOWN|CIDR|COUNTRY|CONTINENT|AS|DATACENTER|USERAGENT]
+- body:payload.tags array<string>
+- body:payload.ttl integer
+
+## S593-0015  DELETE /v1/denylist/private/{denylist_id}
+desc: Delete all the bindings between a user and a private denylist. | ### What Delete all the bindings between a user and a private denylist. This will remove the content of the denylist, the denylist from the user and also all the origins that are using the denylist. This is an asynchronous operation. It can take several seconds until the operation completes, but the request willimmediately return a 2
+- path:denylist_id string
+
+## S593-0016  PUT /v1/denylist/private/{denylist_id}
+desc: Update the information of an existing private denylist of the user. | ### What Updates the information that describes the denylist of the user in the system. The parameters that can be modified are: - name - description - tags - expiry This is an asynchronous operation. It can take several seconds until the operation completes, but the request will immediately return a 202 Accepted response. The d
+schema: Body_update_private_denylist_of_the_user_v1_denylist_private__denylist_id__put
+- path:denylist_id string
+- body:description string
+- body:name string
+- body:tags array<string>
+- body:ttl integer
+
+## S593-0017  DELETE /v1/denylist/private/{denylist_id}/content
+desc: Delete all the content of a private denylist of the user. | ### What Delete all the content of a private denylist of the user. This will remove all the elements, and there is no way to recover them. ### Parameters Pass the private denylist ID as query parameter. ### Result If successful, it will return a ``202`` (Accepted) response with an empty body. The operation is asynchronous,and can take sev
+- path:denylist_id string
+
+## S593-0018  PUT /v1/denylist/private/{denylist_id}/content
+desc: Add or remove content of a private denylist of the user. | ### What Add or remove content of a private denylist of the user. The content can be CIDRs, ASNs, countries, continents or datacenter IDs. The number of elements allowed in all the lists are limited depending on the plan of the user: - Free: 100 elements - Basic: 1000 elements - Premium: 10000 elements ### Parameters Pass the private denyl
+schema: Body_update_private_content_of_the_denylist_of_the_user_v1_denylist_private__denylist_id__content_put
+- path:denylist_id string
+- body:append array<string>
+- body:remove array<string>
+
+## S593-0019  PUT /v1/denylist/private/{denylist_id}/origin
+desc: Toogle the status of the origin in a deny list. | ### What Change the status of the origin of a deny list to ``ACTIVE``, ``INACTIVE`` or ``DELETED``. An ``ACTIVE`` origin will apply the deny list to the protocol and domain of the origin. An origin can be created and activated simply toogling the ``ACTIVE`` status. As an optional parameter it can be provided an ``ttl`` or Time To Live parameter of 
+schema: Body_change_status_of_the_origin_denylist_v1_denylist_private__denylist_id__origin_put
+- path:denylist_id string
+- body:origin string
+- body:status string enum[ACTIVE|INACTIVE|DELETED]
+
+## S593-0020  DELETE /v1/denylist/public/{denylist_id}
+desc: Delete all the bindings between a user and an denylist. | ### What Delete all the bindings between a user and an denylist. This will remove the denylist from the user and also all the origins that are using the denylist. This is an asynchronous operation. It can take several seconds until the operation completes, but the request will immediately return a 202 Accepted response. ### Parameters In th
+- path:denylist_id string
+
+## S593-0021  PUT /v1/denylist/public/{denylist_id}
+desc: Toogle the status of an deny list. | ### What Change the status of an deny list to ``ACTIVE`` or ``INACTIVE``. An ``INACTIVE`` list will not be used by the service. An ``ACTIVE`` list will be used by the service. As an optional parameter it can be provided an ``expiry`` date in seconds since epoch. If not provided, the list will never expire. This is an asynchronous operation. It can take several 
+schema: Body_change_status_of_the_denylist_v1_denylist_public__denylist_id__put
+- path:denylist_id string
+- body:status string enum[ACTIVE|INACTIVE]
+
+## S593-0022  PUT /v1/denylist/public/{denylist_id}/origin
+desc: Toogle the status of the origin in a deny list. | ### What Change the status of the origin of a deny list to ``ACTIVE``, ``INACTIVE`` or ``DELETED``. An ``ACTIVE`` origin will apply the deny list to the protocol and domain of the origin. An origin can be created and activated simply toogling the ``ACTIVE`` status. As an optional parameter it can be provided an ``ttl`` or Time To Live parameter of 
+schema: Body_change_status_of_the_origin_denylist_v1_denylist_public__denylist_id__origin_put
+- path:denylist_id string
+- body:origin string
+- body:status string enum[ACTIVE|INACTIVE|DELETED]
+
+## S593-0023  DELETE /v1/denylist/reported/ip/all
+desc: Delete all the automatically reported IP addresses by the user. | ### What Delete all the IP addresses that have been automatically reported by the user. This option cannot be reverted. ### Parameters No parameters are required. ### Result A successful result is an empty response with the the HTTP status code ``204 No Content``. ### Errors It will return the API Global errors described in the API 
+
+## S593-0024  DELETE /v1/denylist/reported/ip/{ip_address}
+desc: Delete the automatically reported IP address by the user. | ### What Delete an IP address that was automatically reported by the user. This option cannot be reverted. ### Parameters The endpoint accepts the following parameters in the path: - ``ip_address``: (Mandatory) The public IPv4 or IPv6 addresses to be deleted. ### Result A successful result is an empty response with the the HTTP status cod
+- path:ip_address string
+
+## S593-0025  POST /v1/geo
+desc: Get the geolocation data of the IP addresses set. | ### What Get the geo location data of all the IP addresses passed as argument. This information includes: - Latitude and longitude - Time zone - Accuracy radius - Postal code - City name - Region - Country - Country of the service provider - Continent - Reverse PTR hostnames ### Parameters A list of public IPv4 or IPv6 addresses is required in th
+- body:(body) string
+
+## S593-0026  POST /v1/geo/csv
+desc: Get the geolocation data of all the IP addresses uploaded. | ### What Get the geo location data of all the IP addresses uploaded in a text file. This information includes: - Latitude and longitude - Time zone - Accuracy radius - Postal code - City name - Region - Country - Country of the service provider - Continent - Reverse PTR hostnames ### Parameters - A text file with a list of public IPv4 or
+schema: Body_assess_ip_set_csv_v1_geo_csv_post
+- query:strict_parse boolean
+- body:csv_file string
+
+## S593-0027  PUT /v1/origin
+desc: Update the configuration of an origin of the user in the region. | ### What Modify the configuration metadata of the origin of the user in the selected region. The origin is a combination of protocol and domain (Ex: https://example.com) and the origin token is a special key used in conjunction with javascript library used for abuse detection. This key is owned by the user and is used to identify t
+schema: Body_update_configuration_origin_v1_origin_put
+- body:config object
+- body:origin string
+
+## S593-0028  POST /v1/origin/status
+desc: Get the current cookie ID and IP address status of the origin of user in the region. | ### What Obtain the current status of the origin for a given IP address and/or cookie ID. The values can be correlated, but they are not required to be. The status will also describe the following information: - `PASS`: The traffic should not be intercepted, but should be analyzed and a positive detection should
+schema: Body_query_origin_status_v1_origin_status_post
+- query:query string
+- body:address string
+- body:cookie_id string
+
+## S593-0029  DELETE /v1/origin_token
+desc: Delete an origin token of the user in the region. | ### What Deletes the origin token passed as argument of the user in the selected region. Once the token is deleted, it will no longer be valid and the protocol and domain of the origin will no longer be under protection. To delete an origin token, the user must be the owner and the token must be ``DISABLED`` first. ### Parameters The Origin Token
+schema: Body_delete_token_v1_origin_token_delete
+- body:origin_token_id string
+
+## S593-0030  POST /v1/origin_token
+desc: Get the information of an origin token of the user in the region. | ### What Obtain the attributes of the given origin token of the user in the selected region. The purpose of this function is to show what protocol and domain is linked to the token. The origin token is a special key used in conjunction with javascript library used for abuse detection. This key is owned by the user and is used to i
+schema: Body_query_origin_token_info_v1_origin_token_post
+- body:origin_token_id string
+
+## S593-0031  PUT /v1/origin_token/disable
+desc: Disable a enabled origin token of the user in the region. | ### What Disable an enabled origin token passed as argument of the user in the selected region. When a token is enabled, it will participate in the protection of the origin protocol and domain. If the token is disabled, it will not participate in the protection of the origin protocol and domain. To disable an origin token, the user must b
+schema: Body_disable_origin_token_v1_origin_token_disable_put
+- body:origin_token_id string
+
+## S593-0032  PUT /v1/origin_token/enable
+desc: Enable a disabled origin token of the user in the region. | ### What Enable a disabled origin token passed as argument of the user in the selected region. When a token is enabled, it will participate in the protection of the origin protocol and domain. If the token is disabled, it will not participate in the protection of the origin protocol and domain. To enable an origin token, the user must be 
+schema: Body_enable_origin_token_v1_origin_token_enable_put
+- body:origin_token_id string
+
+## S593-0033  POST /v1/origin_token/new
+desc: Create an origin token of the user in the region. | ### What Creates a new origin token for the user passing as argument the origin. The origin parameter is the protocol and the domain where the origin token is valid. The origin token is a special key used in conjunction with javascript library used for abuse detection. This key is owned by the user and is used to identify the origin of the reques
+schema: OriginTokenInput
+- body:origin string
+
+## S593-0034  POST /v1/ua
+desc: Get the information found in a set of User Agents. | ### What Get the information found in the list of User Agents passed as argument. This information includes: - Type - Render Engine - Version - Vendor - Operating System - Device - How common is the agent worldwide ### Parameters A list of User Agents are required in the body of the request. ### Result The result contains a list of the result fo
+- body:(body) string
+
+## S593-0035  POST /v1/ua/csv
+desc: Get the information found in the set of User Agents uploaded. | ### What Get the information found in the list of User Agents uploaded as a CSV file. This information includes: - Type - Render Engine - Version - Vendor - Operating System - Device - How common is the agent worldwide ### Parameters - A text file with a list of User Agents. - A header `Content-Type: multipart/form-data` is required. 
+schema: Body_parse_user_agents_csv_v1_ua_csv_post
+- body:csv_file string
+
+## S595-0001  POST /v1/behavior
+desc: Report Behavior | Creates a behavior item to report employee conducts that do not or might not be included in their background check. This report includes both possitive and negative behaviors and sorts them by severity. ### Reasons to report a person <table> <tr> <td style="width: 100px"><center><b>Very High</b><br>(Score: 1)</td> <td>Rape, Drug Dealing, Sexual Harassment</td> </tr> <tr> <td><cen
+schema: CreateBehaviorInput
+- body:birth_date string
+- body:country string enum[co|ve|cl|mx|pe|do|sv|gt|bo|cr|ec|pa]
+- body:document_id string
+- body:document_type string enum[national-id|passport|foreign-id|nit|diplomatic-id|civil-registration|identity-card|foreigner-card|professional-card|military-card|pep|nis]
+- body:email string
+- body:feedback_date string
+- body:first_name string
+- body:last_name string
+- body:phone_number string
+- body:reason string enum[rape|drug-dealer|sexual-harassment|theft|fights|aggressive-behaviour|identity-fraud|drunk|drug-possession|absences|tardiness|confidentiality-breach]
+
+## S595-0002  POST /v1/checks
+desc: Create a background check | Creates a background check and queues it to start collecting information. The full details of background checks can be retrieved with their respective Check IDs using getCheck endpoint. Keep in mind that, depending on the check type, input document, and country of a search, certain inputs are required. You should always provide as many inputs as possible in order to get
+schema: CreateCheckInput
+- body:birth_certificate string
+- body:company_name string
+- body:country string enum[ALL|BR|CL|CO|CR|EC|MX|PE|AR]
+- body:date_of_birth string
+- body:diplomatic_id string
+- body:driver_license string
+- body:escrow string
+- body:first_name string
+- body:force_creation boolean
+- body:foreign_id string
+- body:issue_date string
+- body:last_name string
+- body:license_plate string
+- body:national_id string
+- body:native_country string
+- body:owner_document_id string
+- body:owner_document_type string
+- body:passport string
+- body:payment_date string
+- body:pep string
+- body:phone_number string
+- body:professional_card string
+- body:ptp string
+- body:region string enum[DF|AC|AL|AP|AM|BA|CE|ES|GO|MA|MT|MS]
+- body:report_id string
+- body:state_id string
+- body:tax_id string
+- body:type string enum[person|vehicle|company|custom_type_name]
+- body:user_authorized boolean
+- body:vehicle_id string
+- body:verification_code string
+- body:watch string
+
+## S595-0003  POST /v1/checks/{check_id}/pdf
+desc: Create PDF | Creates a PDF containing the background check results.
+- path:check_id string
+
+## S595-0004  DELETE /v1/config
+desc: Delete Custom Type | Allows deleting a custom type. Person, vehicle, and company types cannot be deleted
+- query:type string
+- query:country string enum[BR|CL|CO|CR|EC|MX|PE|ALL]
+
+## S595-0005  POST /v1/config
+desc: Create Score Configurations | Create a custom score configuration selecting the weight for each background check dataset and the country where it applies. Weights are numbers between 0 and 1 that represent how impactful the dataset is for the score. Keep in mind that the sum of all weights must equal 1.
+schema: CreateConfigInput
+- body:country string enum[ALL|BR|CL|CO|CR|EC|MX|PE|AR]
+- body:dataset_affiliations_and_insurances number
+- body:dataset_alert_in_media number
+- body:dataset_business_background number
+- body:dataset_criminal_record number
+- body:dataset_driving_licenses number
+- body:dataset_international_background number
+- body:dataset_legal_background number
+- body:dataset_personal_identity number
+- body:dataset_professional_background number
+- body:dataset_taxes_and_finances number
+- body:dataset_traffic_fines number
+- body:dataset_vehicle_information number
+- body:dataset_vehicle_permits number
+- body:type string
+
+## S595-0006  PUT /v1/config
+desc: Update Custom Type | Allows updating a custom type. Person, vehicle, and company types are not modifiable
+schema: CreateConfigInput
+- body:country string enum[ALL|BR|CL|CO|CR|EC|MX|PE|AR]
+- body:dataset_affiliations_and_insurances number
+- body:dataset_alert_in_media number
+- body:dataset_business_background number
+- body:dataset_criminal_record number
+- body:dataset_driving_licenses number
+- body:dataset_international_background number
+- body:dataset_legal_background number
+- body:dataset_personal_identity number
+- body:dataset_professional_background number
+- body:dataset_taxes_and_finances number
+- body:dataset_traffic_fines number
+- body:dataset_vehicle_information number
+- body:dataset_vehicle_permits number
+- body:type string
+
+## S595-0007  POST /v1/continuous-checks
+desc: Creates a continuous check that will run background checks recurrently according to the frequency provided.
+schema: CreateContinuousCheckInput
+- body:check_id string
+- body:frequency string
+- body:status string
+
+## S595-0008  PUT /v1/continuous-checks/{continuous_check_id}
+desc: Updates a continuous check
+schema: UpdateContinuousCheckInput
+- path:continuous_check_id number
+- body:frequency string
+- body:status string enum[enabled|disabled]
+
+## S595-0009  POST /v1/hooks
+desc: Creates a hook subscription | Creates a hook subscription to notify events in Truora plataform. Subscriptions broadcast data as events occur and additional subscription instances are not required in order to refresh the information. Events are received in an array as a JWT and are decoded using the signing key returned by this endpoint. Their structure is as follows: ``` { "events": [ { "event_act
+schema: CreateHookInput
+- body:actions array<string>
+- body:event_type string enum[all|check|continuous_check]
+- body:status string enum[enabled|disabled]
+- body:subscriber_address string
+- body:subscriber_language string enum[af|ar|ca|cs|da|de|el|en|es|fi|fr|he]
+- body:subscriber_name string
+- body:subscriber_type string enum[web|email]
+- body:subscriber_url string
+
+## S595-0010  DELETE /v1/hooks/{hook_id}
+desc: Deletes hook | Deletes hook configuration.
+- path:hook_id string
+
+## S595-0011  PUT /v1/hooks/{hook_id}
+desc: Updates hook | Updates a hook configuration.
+schema: CreateHookInput
+- path:hook_id string
+- body:actions array<string>
+- body:event_type string enum[all|check|continuous_check]
+- body:status string enum[enabled|disabled]
+- body:subscriber_address string
+- body:subscriber_language string enum[af|ar|ca|cs|da|de|el|en|es|fi|fr|he]
+- body:subscriber_name string
+- body:subscriber_type string enum[web|email]
+- body:subscriber_url string
+
+## S595-0012  POST /v1/reports
+desc: Create Report | Creates a Report to which it is possible to associate multiple Checks.
+schema: CreateReportInput
+- body:name string
+
+## S595-0013  POST /v1/reports/{report_id}/upload
+desc: Batch Upload | Upload multiple checks and associate them to the report. The inputs for these checks must be sent in an xlsx file, please use the following templates: **Person:** [Chile](https://app.truora.com/files/person/person-input-cl.xlsx), [Colombia](https://app.truora.com/files/person/person-input-co.xlsx), [Mexico](https://app.truora.com/files/person/person-input-mx.xlsx), [Peru](https://ap
+schema: BatchUploadInput
+- path:report_id string
+- body:file array<string>
+
+## S596-0001  POST /media/math/check/{type}
+desc: Check and normalize a TeX formula. | Checks the supplied TeX formula for correctness and returns the normalised formula representation as well as information about identifiers. Available types are tex and inline-tex. The response contains the `x-resource-location` header which can be used to retrieve the render of the checked formula in one of the supported rendering formats. Just append the value
+- path:type string enum[tex|inline-tex|chem]
+- body:q string
+
+## S596-0002  POST /transform/html/from/{from_lang}/to/{to_lang}
+desc: Machine-translate content | Fetches the machine translation for the posted content from the source to the destination language. Stability: [unstable](https://www.mediawiki.org/wiki/API_versioning#Unstable)
+- path:from_lang string
+- path:to_lang string
+- body:html string
+
+## S596-0003  POST /transform/html/from/{from_lang}/to/{to_lang}/{provider}
+desc: Machine-translate content | Fetches the machine translation for the posted content from the source to the destination language. Stability: [unstable](https://www.mediawiki.org/wiki/API_versioning#Unstable)
+- path:from_lang string
+- path:to_lang string
+- path:provider string enum[Apertium|Yandex|Youdao]
+- body:html string
+
+## S598-0001  POST /accounting/customers/invoices/documents
+desc: Generates client invoices' documents. | Generates client invoices' documents.
+schema: DownloadDocumentsRequestDTO
+- body:ids array<integer>
+
+## S598-0002  POST /accounting/customers/invoices/{invoiceId}/sendReminder
+desc: Sends reminder. | Sends reminder.
+- path:invoiceId integer
+
+## S598-0003  PUT /browser/views/{viewId}/filter/{filterProperty}
+desc: Updates view's filter property. | Updates view's filter property.
+schema: FilterPropertyDTO
+- path:viewId integer
+- path:filterProperty string
+- body:name string
+- body:settings object
+- body:settingsPresent boolean
+- body:type string
+
+## S598-0004  PUT /browser/views/{viewId}/settings
+desc: Updates view's settings. | Updates view's settings.
+schema: SettingsDTO
+- path:viewId integer
+- body:local object
+- body:local.maxLinesInRow integer
+- body:local.maxRows integer
+- body:name string
+
+## S598-0005  PUT /browser/views/{viewId}/settings/local
+desc: Updates view's local settings (for current user). | Updates view's local settings (for current user).
+schema: LocalSettingsDTO
+- path:viewId integer
+- body:maxLinesInRow integer
+- body:maxRows integer
+
+## S598-0006  PUT /customers/{customerId}
+desc: Updates an existing client. | Only specified fields will be changed (id is required). One may not specify embeddable fields here - use separate API calls for updating them.
+schema: CustomerDTO
+- path:customerId integer
+- body:accountOnCustomerServer string
+- body:accounting object
+- body:accounting.taxNumbers array<object>
+- body:accounting.taxNumbers[].number string
+- body:accounting.taxNumbers[].type string
+- body:billingAddress object
+- body:billingAddress.addressLine1 string
+- body:billingAddress.addressLine2 string
+- body:billingAddress.city string
+- body:billingAddress.countryId integer
+- body:billingAddress.postalCode string
+- body:billingAddress.provinceId integer
+- body:billingAddress.sameAsBillingAddress boolean
+- body:branchId integer
+- body:categoriesIds array<integer>
+- body:clientFirstProjectDate string
+- body:clientFirstQuoteDate string
+- body:clientLastProjectDate string
+- body:clientLastQuoteDate string
+- body:clientNumberOfProjects integer
+- body:clientNumberOfQuotes integer
+- body:contact object
+- body:contact.emails object
+- body:contact.emails.additional array<string>
+- body:contact.emails.cc array<string>
+- body:contact.emails.primary string
+- body:contact.fax string
+- body:contact.phones array<string>
+- body:contact.sms string
+- body:contact.websites array<string>
+- body:contractNumber string
+- body:correspondenceAddress object
+- body:correspondenceAddress.addressLine1 string
+- body:correspondenceAddress.addressLine2 string
+- body:correspondenceAddress.city string
+- body:correspondenceAddress.countryId integer
+- body:correspondenceAddress.postalCode string
+- body:correspondenceAddress.provinceId integer
+- body:correspondenceAddress.sameAsBillingAddress boolean
+- body:customFields array<object>
+- body:customFields[].key string
+- body:customFields[].name string
+- body:customFields[].type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:customFields[].value object
+- body:fullName string
+- body:id integer
+- body:idNumber string
+- body:industriesIds array<integer>
+- body:leadSourceId integer
+- body:limitAccessToPeopleResponsible boolean
+- body:name string
+- body:notes string
+- body:persons array<object>
+- body:persons[].active boolean
+- body:persons[].contact object
+- body:persons[].contact.emails object
+- body:persons[].contact.fax string
+- body:persons[].contact.phones array<string>
+- body:persons[].contact.sms string
+- body:persons[].customFields array<object>
+- body:persons[].customFields[].key string
+- body:persons[].customFields[].name string
+- body:persons[].customFields[].type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:persons[].customFields[].value object
+- body:persons[].customerId integer
+- body:persons[].firstProjectDate string
+- body:persons[].firstQuoteDate string
+- body:persons[].gender string enum[FEMALE|MALE]
+- body:persons[].id integer
+- body:persons[].lastName string
+- body:persons[].lastProjectDate string
+- body:persons[].lastQuoteDate string
+- body:persons[].motherTonguesIds array<integer>
+- body:persons[].name string
+- body:persons[].numberOfProjects integer
+- body:persons[].numberOfQuotes integer
+- body:persons[].positionId integer
+- body:responsiblePersons object
+- body:responsiblePersons.accountManagerId integer
+(+5 fields cut)
+
+## S598-0007  PUT /customers/{customerId}/customFields/{customFieldKey}
+desc: Updates given custom field of a given client. | Updates given custom field of a given client.
+schema: CustomFieldDTO
+- path:customerId integer
+- path:customFieldKey string
+- body:key string
+- body:name string
+- body:type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:value object
+
+## S598-0008  PUT /customers/{customerId}/industries
+desc: Updates industries of a given client. | Updates industries of a given client.
+schema: CategoriesDTO
+- path:customerId integer
+- body:(body) integer
+
+## S598-0009  POST /dictionaries/currency/{isoCode}/exchangeRate
+desc: Adding currency exchange rates. | Adding currency exchange rates via API
+schema: CurrencyHistoryDTO
+- path:isoCode string
+- body:dateFrom object
+- body:dateFrom.value integer
+- body:exchangeRate string
+- body:lastModification object
+- body:lastModification.value integer
+- body:originDetails string
+- body:publicationDate object
+- body:publicationDate.value integer
+
+## S598-0010  PUT /jobs/{jobId}/status
+desc: Changes job status if possible (400 Bad Request is returned otherwise). | Changes job status if possible (400 Bad Request is returned otherwise). The status has to be specified using one of the following keys:<ul><li>OPEN – available when the job has one of the following statuses: ACCEPTED, CANCELED</li><li>ACCEPTED – available when the job has one of the following statuses: OPEN (Vendor and dates
+schema: JobStatusDTO
+- path:jobId string
+- body:externalId string
+- body:status string
+
+## S598-0011  PUT /jobs/{jobId}/vendor
+desc: Assigns vendor to a job in a project. | Assigns vendor to a job in a project.
+schema: AssignVendorDTO
+- path:jobId string
+- body:recalculateRates boolean
+- body:vendorPriceProfileId integer
+
+## S598-0012  POST /license/refresh
+desc: Refreshes license content. | Refreshes license content. This method returns OK immediately and license is refreshed asynchronously. It takes a while (usually a few seconds) for the license to be actually refreshed.
+
+## S598-0013  POST /projects
+desc: Creates a new Classic Project. | Creates a new Classic Project. If the specified service ID refers to Smart Project, 400 Bad Request is returned instead.
+schema: ClassicProjectCreateDTO
+- body:categoriesIds array<integer>
+- body:customerId integer
+- body:dates object
+- body:dates.actualDeliveryDate object
+- body:dates.actualDeliveryDate.value integer
+- body:dates.actualStartDate object
+- body:dates.actualStartDate.value integer
+- body:dates.deadline object
+- body:dates.deadline.value integer
+- body:dates.startDate object
+- body:dates.startDate.value integer
+- body:inputFiles array<object>
+- body:inputFiles[].category string enum[WORKFILE|TM|DICTIONARY|REF|LOG_FILE]
+- body:inputFiles[].content string
+- body:inputFiles[].name string
+- body:inputFiles[].token string
+- body:inputFiles[].url string
+- body:instructions object
+- body:instructions.forProvider string
+- body:instructions.fromCustomer string
+- body:instructions.internal string
+- body:instructions.notes string
+- body:instructions.paymentNoteForCustomer string
+- body:instructions.paymentNoteForVendor string
+- body:name string
+- body:people object
+- body:people.customerContacts object
+- body:people.customerContacts.additionalIds array<integer>
+- body:people.customerContacts.primaryId integer
+- body:people.customerContacts.sendBackToId integer
+- body:people.responsiblePersons object
+- body:people.responsiblePersons.projectCoordinatorId integer
+- body:people.responsiblePersons.projectManagerId integer
+- body:serviceId integer
+- body:sourceLanguageId integer
+- body:specializationId integer
+- body:targetLanguagesIds array<integer>
+
+## S598-0014  DELETE /projects/{projectId}
+desc: Removes a project. | Removes a project.
+- path:projectId string
+
+## S598-0015  POST /projects/{projectId}/finance/receivables
+desc: Adds a receivable to a project. | Adds a receivable to a project.
+schema: ReceivableCreateDTO
+- path:projectId string
+- body:calculationUnitId integer
+- body:catLogFile object
+- body:catLogFile.content string
+- body:catLogFile.name string
+- body:catLogFile.token string
+- body:catLogFile.url string
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:taskId integer
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-0016  PUT /projects/{projectId}/finance/receivables/{receivableId}
+desc: Updates a receivable. | Updates a receivable.
+schema: ReceivableDTO
+- path:projectId string
+- path:receivableId integer
+- body:calculationUnitId integer
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:taskId integer
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-0017  POST /providers/{providerId}/notification/invitation
+desc: Sends invitations to Vendor Portal. | Sends invitations to Vendor Portal.
+- path:providerId integer
+
+## S598-0018  POST /quotes/{quoteId}/finance/receivables
+desc: Adds a receivable. | Adds a receivable.
+schema: ReceivableCreateDTO
+- path:quoteId string
+- body:calculationUnitId integer
+- body:catLogFile object
+- body:catLogFile.content string
+- body:catLogFile.name string
+- body:catLogFile.token string
+- body:catLogFile.url string
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:taskId integer
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-0019  PUT /quotes/{quoteId}/finance/receivables/{receivableId}
+desc: Updates a receivable. | Updates a receivable.
+schema: ReceivableDTO
+- path:quoteId string
+- path:receivableId integer
+- body:calculationUnitId integer
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:taskId integer
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-0020  PUT /quotes/{quoteId}/instructions
+desc: Updates instructions of a given quote. | Updates instructions of a given quote.
+schema: InstructionsDTO
+- path:quoteId string
+- body:forProvider string
+- body:fromCustomer string
+- body:internal string
+- body:notes string
+- body:paymentNoteForCustomer string
+- body:paymentNoteForVendor string
+
+## S598-0021  POST /quotes/{quoteId}/start
+desc: Starts a quote. | Starts a quote.
+- path:quoteId string
+
+## S598-0022  PUT /reports/{reportId}/preferred
+desc: Marks report as preferred or not. | Marks report as preferred or not.
+schema: PreferredRequestDTO
+- path:reportId integer
+- body:preferred boolean
+
+## S598-0023  DELETE /tasks/{taskId}
+desc: Removes a task. | Removes a task.
+- path:taskId string
+- query:removeFilesFromDisc boolean
+- query:removeExternalProjects boolean
+- query:forceJobsRemoval boolean
+
+## S598-0024  PUT /tasks/{taskId}/customFields
+desc: Updates custom fields of a given task. | Updates custom fields of a given task.
+schema: CustomFieldsDTO
+- path:taskId string
+- body:key string
+- body:name string
+- body:type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:value object
+
+## S598-0025  POST /tasks/{taskId}/files/input
+desc: Adds files to a given task. | Adds files to a given task.
+schema: FileDTO
+- path:taskId string
+- body:content string
+- body:name string
+- body:token string
+- body:url string
+
+## S598-0026  PUT /tasks/{taskId}/instructions
+desc: Updates instructions of a given task. | Updates instructions of a given task.
+schema: InstructionsDTO
+- path:taskId string
+- body:forProvider string
+- body:fromCustomer string
+- body:internal string
+- body:notes string
+- body:paymentNoteForCustomer string
+- body:paymentNoteForVendor string
+
+## S598-0027  POST /tasks/{taskId}/start
+desc: Starts a task. | Starts a task.
+- path:taskId string
+
+## S598-0028  PUT /users/{userId}/customFields/{customFieldKey}
+desc: Updates given custom field of a given user. | Updates given custom field of a given user.
+schema: CustomFieldDTO
+- path:userId integer
+- path:customFieldKey string
+- body:key string
+- body:name string
+- body:type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:value object
+
+## S598-0029  PUT /v2/jobs/{jobId}/vendor
+desc: Assigns vendor to a job in a project. | Assigns vendor to a job in a project.
+schema: VendorPriceProfileDTO
+- path:jobId string
+- body:vendorPriceProfileId integer

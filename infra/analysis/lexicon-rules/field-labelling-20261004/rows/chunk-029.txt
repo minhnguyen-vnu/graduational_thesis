@@ -1,0 +1,589 @@
+## S405-0001  POST /account/encrypt
+summary: Encrypt a value for use in StoredValue.
+- body:plainValue string
+
+## S405-0002  POST /builds
+summary: Start build of branch most recent commit
+- body:accountName string
+- body:branch string
+- body:commitId string
+- body:environmentVariables object
+- body:projectSlug string
+- body:pullRequestId integer
+
+## S405-0003  PUT /builds
+summary: Re-run build
+desc: If `reRunIncomplete` is `true` and all jobs in the referenced build completed successfully, a 500 Internal Server Error is returned with the message "No failed or cancelled jobs in build with ID {buildId}".
+- body:buildId integer
+- body:reRunIncomplete boolean
+
+## S405-0004  DELETE /builds/{accountName}/{projectSlug}/{buildVersion}
+summary: Cancel build
+- path:accountName string
+- path:projectSlug string
+- path:buildVersion string
+
+## S405-0005  PUT /collaborators
+summary: Update collaborator
+- body:roleId integer
+- body:userId integer
+
+## S405-0006  DELETE /collaborators/{userId}
+summary: Delete collaborator
+- path:userId integer
+
+## S405-0007  POST /deployments
+summary: Start deployment
+- body:accountName string
+- body:buildJobId string
+- body:buildVersion string
+- body:environmentName string
+- body:environmentVariables object
+- body:projectSlug string
+
+## S405-0008  PUT /deployments/stop
+summary: Cancel deployment
+- body:deploymentId integer
+
+## S405-0009  POST /environments
+summary: Add environment
+- body:name string
+- body:provider string enum[Agent|AzureBlob|AzureCS|AzureWebJob|BinTray|FTP|GitHub|NuGet|S3|SqlDatabase|WebDeploy|Webhook]
+- body:settings object
+- body:settings.environmentVariables array<object>
+- body:settings.environmentVariables[].name string
+- body:settings.environmentVariables[].value object
+- body:settings.notifications array<object>
+- body:settings.notifications[].provider string enum[Campfire|Email|GitHubPullRequest|HipChat|Slack|Webhook|VSOTeamRoom]
+- body:settings.notifications[].settings object
+- body:settings.providerSettings array<object>
+- body:settings.providerSettings[].name string
+- body:settings.providerSettings[].value object
+
+## S405-0010  PUT /environments
+summary: Update environment
+- body:deploymentEnvironmentId integer
+- body:name string
+- body:provider string enum[Agent|AzureBlob|AzureCS|AzureWebJob|BinTray|FTP|GitHub|NuGet|S3|SqlDatabase|WebDeploy|Webhook]
+- body:created string
+- body:updated string
+- body:accountId integer
+- body:projectsMode integer enum[0|1|2]
+- body:securityDescriptor object
+- body:securityDescriptor.accessRightDefinitions array<object>
+- body:securityDescriptor.accessRightDefinitions[].description string
+- body:securityDescriptor.accessRightDefinitions[].name string enum[Delete|Deploy|RunBuild|Update|View]
+- body:securityDescriptor.roleAces array<object>
+- body:securityDescriptor.roleAces[].accessRights array<object>
+- body:securityDescriptor.roleAces[].isAdmin boolean
+- body:securityDescriptor.roleAces[].name string
+- body:securityDescriptor.roleAces[].roleId integer
+- body:tags string
+- body:environmentAccessKey string
+- body:projects array<object>
+- body:projects[].isSelected boolean
+- body:projects[].name string
+- body:projects[].projectId integer
+- body:selectedProjects array<integer>
+- body:settings object
+- body:settings.environmentVariables array<object>
+- body:settings.environmentVariables[].name string
+- body:settings.environmentVariables[].value object
+- body:settings.notifications array<object>
+- body:settings.notifications[].provider string enum[Campfire|Email|GitHubPullRequest|HipChat|Slack|Webhook|VSOTeamRoom]
+- body:settings.notifications[].settings object
+- body:settings.providerSettings array<object>
+- body:settings.providerSettings[].name string
+- body:settings.providerSettings[].value object
+
+## S405-0011  DELETE /environments/{deploymentEnvironmentId}
+summary: Delete environment
+- path:deploymentEnvironmentId integer
+
+## S405-0012  POST /projects
+summary: Add project
+- body:repositoryAuthentication string enum[credentials|ssh]
+- body:repositoryName string
+- body:repositoryPassword string
+- body:repositoryProvider string enum[bitBucket|git|gitHub|gitLab|kiln|mercurial|stash|subversion|vso]
+- body:repositoryUsername string
+
+## S405-0013  PUT /projects
+summary: Update project
+- body:accountName string
+- body:name string
+- body:projectId integer
+- body:slug string
+- body:created string
+- body:updated string
+- body:accountId integer
+- body:alwaysBuildClosedPullRequests boolean
+- body:builds array<object>
+- body:builds[].branch string
+- body:builds[].buildId integer
+- body:builds[].message string
+- body:builds[].version string
+- body:builds[].created string
+- body:builds[].updated string
+- body:builds[].authorName string
+- body:builds[].authorUsername string
+- body:builds[].buildNumber integer
+- body:builds[].commitId string
+- body:builds[].committed string
+- body:builds[].committerName string
+- body:builds[].committerUsername string
+- body:builds[].finished string
+- body:builds[].isTag boolean
+- body:builds[].jobs array<object>
+- body:builds[].jobs[].created string
+- body:builds[].jobs[].updated string
+- body:builds[].jobs[].finished string
+- body:builds[].jobs[].jobId string
+- body:builds[].jobs[].name string
+- body:builds[].jobs[].started string
+- body:builds[].jobs[].status string enum[cancelled|cancelling|failed|queued|running|starting|success]
+- body:builds[].jobs[].allowFailure boolean
+- body:builds[].jobs[].artifactsCount integer
+- body:builds[].jobs[].compilationErrorsCount integer
+- body:builds[].jobs[].compilationMessagesCount integer
+- body:builds[].jobs[].compilationWarningsCount integer
+- body:builds[].jobs[].failedTestsCount integer
+- body:builds[].jobs[].messagesCount integer
+- body:builds[].jobs[].osType string enum[Ubuntu|Windows]
+- body:builds[].jobs[].passedTestsCount integer
+- body:builds[].jobs[].testsCount integer
+- body:builds[].messageExtended string
+- body:builds[].messages array<object>
+- body:builds[].messages[].category string enum[information|warning]
+- body:builds[].messages[].created string
+- body:builds[].messages[].message string
+- body:builds[].projectId integer
+- body:builds[].pullRequestId integer
+- body:builds[].pullRequestName string
+- body:builds[].started string
+- body:builds[].status string enum[cancelled|cancelling|failed|queued|running|starting|success]
+- body:currentBuildId integer
+- body:disablePullRequestWebhooks boolean
+- body:disablePushWebhooks boolean
+- body:enableDeploymentInPullRequests boolean
+- body:enableSecureVariablesInPullRequests boolean
+- body:enableSecureVariablesInPullRequestsFromSameRepo boolean
+- body:isGitHubApp boolean
+- body:isPrivate boolean
+- body:nuGetFeed object
+- body:nuGetFeed.created string
+- body:nuGetFeed.updated string
+- body:nuGetFeed.accountId integer
+- body:nuGetFeed.id string
+- body:nuGetFeed.isPrivateProject boolean
+- body:nuGetFeed.name string
+- body:nuGetFeed.nuGetFeedId integer
+- body:nuGetFeed.projectId integer
+- body:nuGetFeed.publishingEnabled boolean
+- body:repositoryBranch string
+- body:repositoryName string
+- body:repositoryScm string enum[git|mercurial|subversion]
+- body:repositoryType string enum[bitBucket|git|gitHub|gitLab|kiln|mercurial|stash|subversion|vso]
+- body:rollingBuilds boolean
+- body:rollingBuildsDoNotCancelRunningBuilds boolean
+- body:rollingBuildsOnlyForPullRequests boolean
+- body:saveBuildCacheInPullRequests boolean
+- body:securityDescriptor object
+- body:securityDescriptor.accessRightDefinitions array<object>
+- (174 truong bi cat)
+
+## S405-0014  DELETE /projects/{accountName}/{projectSlug}
+summary: Delete project
+- path:accountName string
+- path:projectSlug string
+
+## S405-0015  DELETE /projects/{accountName}/{projectSlug}/buildcache
+summary: Delete project build cache
+- path:accountName string
+- path:projectSlug string
+
+## S405-0016  PUT /projects/{accountName}/{projectSlug}/settings/build-number
+summary: Update project build number
+- path:accountName string
+- path:projectSlug string
+- body:nextBuildNumber integer
+
+## S405-0017  PUT /projects/{accountName}/{projectSlug}/settings/environment-variables
+summary: Update project environment variables
+- path:accountName string
+- path:projectSlug string
+- body:name string
+- body:value object
+- body:value.isEncrypted boolean
+- body:value.value string
+
+## S405-0018  PUT /projects/{accountName}/{projectSlug}/settings/yaml
+summary: Update project settings in YAML
+- path:accountName string
+- path:projectSlug string
+- body:(body) string
+
+## S405-0019  POST /roles
+summary: Add role
+- body:name string
+
+## S405-0020  PUT /roles
+summary: Update role
+- body:created string
+- body:updated string
+- body:isSystem boolean
+- body:name string
+- body:roleId integer
+- body:groups array<object>
+- body:groups[].name string enum[Account|BuildEnvironment|Deny|Environments|Projects|Roles|User|Users]
+- body:groups[].permissions array<object>
+- body:groups[].permissions[].allowed boolean
+- body:groups[].permissions[].description string
+- body:groups[].permissions[].name string enum[ManageApplicationAuthorizations|UpdateAccountDetails|UpdateBillingDetails|ConfigureBuildEnvironment|DenyAllProjectsEnvironments|DeployToEnvironment|ManageEnvironments|UpdateEnvironmentSettings|ManageProjects|RunProjectBuild|UpdateProjectSettings|AddRole]
+
+## S405-0021  DELETE /roles/{roleId}
+summary: Delete role
+- path:roleId integer
+
+## S405-0022  PUT /user/join-account
+summary: Join Account
+- body:invitationId string
+
+## S405-0023  PUT /users
+summary: Update user
+- body:created string
+- body:updated string
+- body:accountId integer
+- body:accountName string
+- body:email string
+- body:fullName string
+- body:isCollaborator boolean
+- body:isOwner boolean
+- body:pageSize integer
+- body:password string
+- body:roleId integer
+- body:roleName string
+- body:twoFactorAuthEnabled boolean
+- body:userId integer
+
+## S405-0024  POST /users/invitations
+summary: Invite user
+- body:email string
+- body:roleId integer
+
+## S405-0025  DELETE /users/invitations/{userInvitationId}
+summary: Cancel user invitation
+- path:userInvitationId string
+
+## S405-0026  DELETE /users/{userId}
+summary: Delete user
+- path:userId integer
+
+## S406-0001  DELETE /api/baskets/{name}
+summary: Delete basket
+desc: Permanently deletes this basket and all collected requests.
+- path:name string
+
+## S406-0002  POST /api/baskets/{name}
+summary: Create new basket
+desc: Creates a new basket with this name.
+- path:name string
+- body:capacity integer
+- body:expand_path boolean
+- body:forward_url string
+- body:insecure_tls boolean
+- body:proxy_response boolean
+
+## S406-0003  PUT /api/baskets/{name}
+summary: Update basket settings
+desc: Updates configuration settings of this basket. Special configuration parameters for request forwarding: * `insecure_tls` controls certificate verification when forwarding requests. Setting this parameter to `true` allows to forward collected HTTP requests via HTTPS protocol even if the forward end-point is configured with self-signed TLS/SSL certificate. **Warning:** enabling this feature has know
+- path:name string
+- body:capacity integer
+- body:expand_path boolean
+- body:forward_url string
+- body:insecure_tls boolean
+- body:proxy_response boolean
+
+## S406-0004  DELETE /api/baskets/{name}/requests
+summary: Delete all requests
+desc: Deletes all requests collected by this basket.
+- path:name string
+
+## S406-0005  PUT /api/baskets/{name}/responses/{method}
+summary: Update response settings
+desc: Allows to configure HTTP response of this basket. The service will reply with configured response to any HTTP request sent to the basket with appropriate HTTP method. If nothing is configured, the default response is HTTP 200 - OK with empty content.
+- path:name string
+- path:method string enum[GET|HEAD|POST|PUT|PATCH|DELETE|CONNECT|OPTIONS|TRACE]
+- body:body string
+- body:headers object
+- body:is_template boolean
+- body:status integer
+
+## S406-0006  DELETE /baskets/{name}
+summary: Delete basket
+desc: Permanently deletes this basket and all collected requests.
+- path:name string
+
+## S406-0007  POST /baskets/{name}
+summary: Create new basket
+desc: Creates a new basket with this name.
+- path:name string
+- body:capacity integer
+- body:expand_path boolean
+- body:forward_url string
+- body:insecure_tls boolean
+- body:proxy_response boolean
+
+## S406-0008  PUT /baskets/{name}
+summary: Update basket settings
+desc: Updates configuration settings of this basket. Special configuration parameters for request forwarding: * `insecure_tls` controls certificate verification when forwarding requests. Setting this parameter to `true` allows to forward collected HTTP requests via HTTPS protocol even if the forward end-point is configured with self-signed TLS/SSL certificate. **Warning:** enabling this feature has know
+- path:name string
+- body:capacity integer
+- body:expand_path boolean
+- body:forward_url string
+- body:insecure_tls boolean
+- body:proxy_response boolean
+
+## S406-0009  DELETE /baskets/{name}/requests
+summary: Delete all requests
+desc: Deletes all requests collected by this basket.
+- path:name string
+
+## S406-0010  PUT /baskets/{name}/responses/{method}
+summary: Update response settings
+desc: Allows to configure HTTP response of this basket. The service will reply with configured response to any HTTP request sent to the basket with appropriate HTTP method. If nothing is configured, the default response is HTTP 200 - OK with empty content.
+- path:name string
+- path:method string enum[GET|HEAD|POST|PUT|PATCH|DELETE|CONNECT|OPTIONS|TRACE]
+- body:body string
+- body:headers object
+- body:is_template boolean
+- body:status integer
+
+## S407-0001  POST /chart
+summary: Generate a chart (POST)
+desc: Generate a chart based on the provided configuration in the request body.
+- body:backgroundColor string
+- body:chart object
+- body:format string
+- body:height integer
+- body:width integer
+
+## S407-0002  POST /qr
+summary: Generate a QR code (POST)
+desc: Generate a QR code based on the provided configuration in the request body.
+- body:format string
+- body:height integer
+- body:margin integer
+- body:text string
+- body:width integer
+
+## S408-0001  DELETE /key
+desc: Revoke an Authentiq ID using email & phone. If called with `email` and `phone` only, a verification code will be sent by email. Do a second call adding `code` to complete the revocation.
+- query:email string
+- query:phone string
+- query:code string
+
+## S408-0002  POST /key
+desc: Register a new ID `JWT(sub, devtoken)` v5: `JWT(sub, pk, devtoken, ...)` See: https://github.com/skion/authentiq/wiki/JWT-Examples
+- body:devtoken string
+- body:sub string
+
+## S408-0003  DELETE /key/{PK}
+desc: Revoke an Identity (Key) with a revocation secret
+- path:PK string
+- query:secret string
+
+## S408-0004  POST /key/{PK}
+desc: update properties of an Authentiq ID. (not operational in v4; use PUT for now) v5: POST issuer-signed email & phone scopes in a self-signed JWT See: https://github.com/skion/authentiq/wiki/JWT-Examples
+- path:PK string
+- body:devtoken string
+- body:sub string
+
+## S408-0005  PUT /key/{PK}
+desc: Update Authentiq ID by replacing the object. v4: `JWT(sub,email,phone)` to bind email/phone hash; v5: POST issuer-signed email & phone scopes and PUT to update registration `JWT(sub, pk, devtoken, ...)` See: https://github.com/skion/authentiq/wiki/JWT-Examples
+- path:PK string
+- body:devtoken string
+- body:sub string
+
+## S408-0006  POST /login
+desc: push sign-in request See: https://github.com/skion/authentiq/wiki/JWT-Examples
+- query:callback string
+- body:aud string
+- body:exp integer
+- body:iat integer
+- body:iss string
+- body:nbf integer
+- body:sub string
+
+## S408-0007  POST /scope
+desc: scope verification request See: https://github.com/skion/authentiq/wiki/JWT-Examples
+- query:test integer
+- body:email string
+- body:phone string
+- body:scope string
+- body:sub string
+- body:type string
+
+## S408-0008  DELETE /scope/{job}
+desc: delete a verification job
+- path:job string
+
+## S408-0009  POST /scope/{job}
+desc: this is a scope confirmation
+- path:job string
+
+## S408-0010  PUT /scope/{job}
+desc: authority updates a JWT with its signature See: https://github.com/skion/authentiq/wiki/JWT-Examples
+- path:job string
+
+## S409-0001  POST /v1/accounts
+summary: Add a new account
+desc: Creates a new fire.com account. **Please note there is a charge associated with creating a new account.**
+- body:acceptFeesAndCharges boolean
+- body:accountName string
+- body:currency string enum[EUR|GBP]
+
+## S409-0002  POST /v1/apps
+summary: Create a new API Application
+desc: Create a new API Application with specified permissions
+- body:applicationName string
+- body:enabled boolean
+- body:expiry string
+- body:ican integer
+- body:numberOfPayeeApprovalsRequired integer
+- body:numberOfPaymentApprovalsRequired integer
+- body:permissions array<string>
+
+## S409-0003  POST /v1/apps/accesstokens
+summary: Authenticate with the API.
+desc: Access to the API is by Bearer Tokens. The process is somewhat similar to OAuth2.0, but with some changes to improve security. 1. You must first log into the firework online application and create a new Application in the Profile > API page. (You will need your PIN digits and 2-Factor Authentication device). 2. Give your application a Name and select the scope/permissions you need the application 
+- body:clientId string
+- body:clientSecret string
+- body:grantType string enum[AccessToken]
+- body:nonce integer
+- body:refreshToken string
+
+## S409-0004  POST /v1/batches
+summary: Create a new batch of payments
+desc: The fire.com API allows businesses to automate payments between their accounts or to third parties across the UK and Europe. For added security, the API can only set up the payments in batches. These batches must be approved by an authorised user via the firework mobile app. The process is as follows: **1.**Create a new batch **2.**Add payments to the batch **3.**Submit the batch for approval Once
+- body:batchName string
+- body:callbackUrl string
+- body:currency string
+- body:jobNumber string
+- body:type string enum[BANK_TRANSFER|INTERNAL_TRANSFER]
+
+## S409-0005  DELETE /v1/batches/{batchUuid}
+summary: Cancel a batch
+desc: Cancels the Batch. You can only cancel a batch before it is submitted for approval (while it is in the OPEN state).
+- path:batchUuid string
+
+## S409-0006  PUT /v1/batches/{batchUuid}
+summary: Submit a batch for approval
+desc: Submits the Batch (for approval in the case of a **BANK_TRANSFER**). If this is an **INTERNAL_TRANSFER** batch, the transfers are immediately queued for processing. If this is a **BANK_TRANSFER** batch, this will trigger requests for approval to the firework mobile apps of authorised users. Once those users approve the batch, it is queued for processing. You can only submit a batch while it is in 
+- path:batchUuid string
+
+## S409-0007  POST /v1/batches/{batchUuid}/banktransfers
+summary: Add a bank transfer payment to the batch.
+desc: There are two ways to process bank transfers - by Payee ID (**Mode 1**) or by Payee Account Details (**Mode 2**). **Mode 1:** Use the payee IDs of existing approved payees set up against your account. These batches can be approved in the normal manner. **Mode 2:** Use the account details of the payee. In the event that these details correspond to an existing approved payee, the batch can be approv
+- path:batchUuid string
+- body:amount integer
+- body:destAccountHolderName string
+- body:destAccountNumber string
+- body:destIban string
+- body:destNsc string
+- body:icanFrom integer
+- body:myRef string
+- body:payeeType string enum[ACCOUNT_DETAILS]
+- body:yourRef string
+- body:payeeId integer
+
+## S409-0008  DELETE /v1/batches/{batchUuid}/banktransfers/{itemUuid}
+summary: Remove a Payment from the Batch (Bank Transfers)
+desc: Removes a Payment from the Batch (Bank Transfers). You can only remove payments before the batch is submitted for approval (while it is in the OPEN state).
+- path:batchUuid string
+- path:itemUuid string
+
+## S409-0009  POST /v1/batches/{batchUuid}/internaltransfers
+summary: Add an internal transfer payment to the batch
+desc: Simply specify the source account, destination account, amount and a reference.
+- path:batchUuid string
+- body:amount integer
+- body:icanFrom integer
+- body:icanTo integer
+- body:ref string
+
+## S409-0010  DELETE /v1/batches/{batchUuid}/internaltransfers/{itemUuid}
+summary: Remove a Payment from the Batch (Internal Transfer)
+desc: Removes a Payment from the Batch (Internal Transfer). You can only remove payments before the batch is submitted for approval (while it is in the OPEN state).
+- path:batchUuid string
+- path:itemUuid string
+
+## S409-0011  POST /v1/cards
+summary: Create a new debit card.
+desc: You can create multiple debit cards which can be linked to your fire.com accounts.
+- body:acceptFeesAndCharges boolean
+- body:addressType string enum[HOME|BUSINESS]
+- body:cardPin string
+- body:eurIcan integer
+- body:gbpIcan integer
+- body:userId integer
+
+## S409-0012  POST /v1/cards/{cardId}/block
+summary: Block a card
+desc: Updates status of an existing card to block which prevents any transactions being carried out with that card.
+- path:cardId integer
+
+## S409-0013  POST /v1/cards/{cardId}/unblock
+summary: Unblock a card
+desc: Updates status of an existing card to unblock which means that transactions can be carried out with that card.
+- path:cardId integer
+
+## S409-0014  POST /v1/directdebits/{directDebitUuid}/reject
+summary: Reject a direct debit payment
+desc: This endpoint allows you to reject a direct debit payment where the status is still set to RECEIVED. Permission name PERM_BUSINESS_POST_DIRECT_DEBIT_REJECT
+- path:directDebitUuid string
+
+## S409-0015  POST /v1/mandates/{mandateUuid}
+summary: Update a direct debit mandate alias
+desc: Update Direct Debit Mandate Alias The permision needed to access this endpoint is PERM_BUSINESS_PUT_MANDATE
+- path:mandateUuid string
+
+## S409-0016  POST /v1/mandates/{mandateUuid}/activate
+summary: Activate a direct debit mandate
+desc: This endpoint can only be used to activate a direct debit mandate when it is in the status REJECT_REQUESTED (even if the account has direct debits disabled). This action will also enable the account for direct debits if it was previously set to be disabled. The permision needed to access this endpoint is PERM_BUSINESS_POST_MANDATE_ACTIVATE
+- path:mandateUuid string
+
+## S409-0017  POST /v1/mandates/{mandateUuid}/cancel
+summary: Cancel a direct debit mandate
+desc: This endpoint allows you to cancel a direct debit mandate. The permision needed to access this endpoint is PERM_BUSINESS_POST_MANDATE_CANCEL
+- path:mandateUuid string
+
+## S409-0018  POST /v1/paymentrequests
+summary: Create a Fire Open Payment request
+desc: Fire Open Payments is a feature of the fire.com business account that leverages Open Banking to allow your customers to pay you via bank transfer and to reconcile those payments as they are received into your fire.com GBP or EUR account. To set up each Fire Open Payment you first need to create a payment request. This contains the details of the payment such as the amount, destination account, des
+- body:additionalFields string
+- body:amount integer
+- body:collectFields string
+- body:currency string enum[EUR|GBP]
+- body:description string
+- body:expiry string
+- body:icanTo integer
+- body:mandatoryFields string
+- body:maxNumberPayments integer
+- body:myRef string
+- body:orderDetails object
+- body:orderDetails.comment1 string
+- body:orderDetails.comment2 string
+- body:orderDetails.customerNumber string
+- body:orderDetails.deliveryAddressLine1 string
+- body:orderDetails.deliveryAddressLine2 string
+- body:orderDetails.deliveryCity string
+- body:orderDetails.deliveryCountry string
+- body:orderDetails.deliveryPostCode string
+- body:orderDetails.merchantCustomerIdentification string
+- body:orderDetails.merchantNumber string
+- body:orderDetails.orderId string
+- body:orderDetails.productId string
+- body:orderDetails.variableReference string
+- body:returnUrl string
+- body:type string enum[OTHER]

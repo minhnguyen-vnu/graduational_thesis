@@ -1,0 +1,43 @@
+# EvoMaster black-box auth config for the Tier-2b pyLoad target (WFC format).
+#
+# pyLoad authenticates the /json/* surface with a SESSION COOKIE, not a bearer token, so this
+# config uses `expectCookies` rather than `token`. That difference matters for the thesis: it
+# shows the stale-credential replay is not an artifact of token handling. EvoMaster logs each
+# user in ONCE, up front, before the action loop of a test and reuses the resulting credential
+# for every action in it -- and that mechanism is identical for cookies and for tokens (see
+# AuthUtils.getCookies / getTokens). The pre-transition credential is therefore replayed by
+# construction on this target exactly as it is on the other two.
+#
+# Login: POST /login  form {username,password}  -> Set-Cookie: pyload_session_8000
+# Accounts are seeded by infra/pyload-cve/seed_users.py, which also resets roles between runs.
+
+auth:
+  - name: alice            # ADMIN, the A1 demotion victim
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: alice
+        password: "alicepass"
+        usernameField: username
+        passwordField: password
+  - name: superadmin       # ADMIN, stable operator that performs the demotion
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: superadmin
+        password: "superpass"
+        usernameField: username
+        passwordField: password
+  - name: pyload           # pyLoad's own default ADMIN account, kept as a third candidate
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: pyload
+        password: "pyload"
+        usernameField: username
+        passwordField: password
+
+# Shared settings applied to every user above (avoids repetition).
+authTemplate:
+  loginEndpointAuth:
+    endpoint: /login
+    verb: POST
+    contentType: application/x-www-form-urlencoded
+    expectCookies: true

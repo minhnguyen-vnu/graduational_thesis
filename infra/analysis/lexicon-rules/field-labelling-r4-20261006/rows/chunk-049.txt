@@ -1,0 +1,1126 @@
+## S116-N0099  POST /eventframes/{webId}/annotations
+desc: Create an annotation on an event frame.
+schema: Annotation
+- path:webId string
+- query:webIdType string
+- body:CreationDate string
+- body:Creator string
+- body:Description string
+- body:Errors array<object>
+- body:Errors[].FieldName string
+- body:Errors[].Message array<string>
+- body:Id string
+- body:Links object
+- body:Links.MediaData string
+- body:Links.MediaMetadata string
+- body:Links.Owner string
+- body:Links.Self string
+- body:Modifier string
+- body:ModifyDate string
+- body:Name string
+- body:Value object
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0100  DELETE /eventframes/{webId}/annotations/{id}
+desc: Delete an annotation on an event frame. If the annotation has attached media, the attached media will also be deleted.
+- path:id string
+- path:webId string
+
+## S116-N0101  PATCH /eventframes/{webId}/annotations/{id}
+desc: Update an annotation on an event frame by replacing items in its definition.
+schema: Annotation
+- path:id string
+- path:webId string
+- body:CreationDate string
+- body:Creator string
+- body:Description string
+- body:Errors array<object>
+- body:Errors[].FieldName string
+- body:Errors[].Message array<string>
+- body:Id string
+- body:Links object
+- body:Links.MediaData string
+- body:Links.MediaMetadata string
+- body:Links.Owner string
+- body:Links.Self string
+- body:Modifier string
+- body:ModifyDate string
+- body:Name string
+- body:Value object
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0102  DELETE /eventframes/{webId}/annotations/{id}/attachment/media
+desc: Delete attached media from an annotation on an event frame.
+- path:id string
+- path:webId string
+
+## S116-N0103  POST /eventframes/{webId}/attributes
+desc: Create a new attribute of the specified event frame.
+schema: Attribute
+- path:webId string
+- query:webIdType string
+- body:CategoryNames array<string>
+- body:ConfigString string
+- body:DataReference object
+- body:DataReference.PIPoint object
+- body:DataReference.PIPoint.Descriptor string
+- body:DataReference.PIPoint.DigitalSetName string
+- body:DataReference.PIPoint.DisplayDigits integer
+- body:DataReference.PIPoint.EngineeringUnits string
+- body:DataReference.PIPoint.Future boolean
+- body:DataReference.PIPoint.Id integer
+- body:DataReference.PIPoint.Name string
+- body:DataReference.PIPoint.Path string
+- body:DataReference.PIPoint.PointClass string
+- body:DataReference.PIPoint.PointType string
+- body:DataReference.PIPoint.Span number
+- body:DataReference.PIPoint.Step boolean
+- body:DataReference.PIPoint.WebId string
+- body:DataReference.PIPoint.Zero number
+- body:DataReference.Type string
+- body:DataReference.WebException object
+- body:DataReference.WebException.Errors array<string>
+- body:DataReference.WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:DataReferencePlugIn string
+- body:DefaultUnitsName string
+- body:DefaultUnitsNameAbbreviation string
+- body:Description string
+- body:DisplayDigits integer
+- body:HasChildren boolean
+- body:Id string
+- body:IsConfigurationItem boolean
+- body:IsExcluded boolean
+- body:IsHidden boolean
+- body:IsManualDataEntry boolean
+- body:Links object
+- body:Links.Attributes string
+- body:Links.Categories string
+- body:Links.Element string
+- body:Links.EndValue string
+- body:Links.EnumerationSet string
+- body:Links.EnumerationValues string
+- body:Links.EventFrame string
+- body:Links.InterpolatedData string
+- body:Links.Parent string
+- body:Links.PlotData string
+- body:Links.Point string
+- body:Links.RecordedData string
+- body:Links.Self string
+- body:Links.SummaryData string
+- body:Links.Template string
+- body:Links.Trait string
+- body:Links.Value string
+- body:Name string
+- body:Path string
+- body:Paths array<string>
+- body:Span number
+- body:Step boolean
+- body:TraitName string
+- body:Type string
+- body:TypeQualifier string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+- body:Zero number
+
+## S116-N0104  POST /eventframes/{webId}/attributes/capture
+desc: Calls the EventFrame's CaptureValues method.
+- path:webId string
+
+## S116-N0105  POST /eventframes/{webId}/config
+desc: Executes the create configuration function of the data references found within the attributes of the event frame, and optionally, its children.
+- path:webId string
+- query:includeChildElements boolean
+
+## S116-N0106  POST /eventframes/{webId}/eventframes
+desc: Create an event frame as a child of the specified event frame.
+schema: EventFrame
+- path:webId string
+- query:webIdType string
+- body:AcknowledgedBy string
+- body:AcknowledgedDate string
+- body:AreValuesCaptured boolean
+- body:CanBeAcknowledged boolean
+- body:CategoryNames array<string>
+- body:Description string
+- body:EndTime string
+- body:ExtendedProperties object
+- body:HasChildren boolean
+- body:Id string
+- body:IsAcknowledged boolean
+- body:IsAnnotated boolean
+- body:IsLocked boolean
+- body:Links object
+- body:Links.Annotations string
+- body:Links.Attributes string
+- body:Links.Categories string
+- body:Links.Database string
+- body:Links.DefaultAttribute string
+- body:Links.EndValue string
+- body:Links.EventFrames string
+- body:Links.InterpolatedData string
+- body:Links.Parent string
+- body:Links.PlotData string
+- body:Links.PrimaryReferencedElement string
+- body:Links.RecordedData string
+- body:Links.ReferencedElements string
+- body:Links.Security string
+- body:Links.SecurityEntries string
+- body:Links.Self string
+- body:Links.SummaryData string
+- body:Links.Template string
+- body:Links.Value string
+- body:Name string
+- body:Path string
+- body:RefElementWebIds array<string>
+- body:Security object
+- body:Security.CanAnnotate boolean
+- body:Security.CanDelete boolean
+- body:Security.CanExecute boolean
+- body:Security.CanRead boolean
+- body:Security.CanReadData boolean
+- body:Security.CanSubscribe boolean
+- body:Security.CanSubscribeOthers boolean
+- body:Security.CanWrite boolean
+- body:Security.CanWriteData boolean
+- body:Security.HasAdmin boolean
+- body:Security.Rights array<string>
+- body:Security.WebException object
+- body:Security.WebException.Errors array<string>
+- body:Security.WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:Severity string
+- body:StartTime string
+- body:TemplateName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0108  DELETE /eventframes/{webId}/securityentries/{name}
+desc: Delete a security entry owned by the event frame.
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+
+## S116-N0109  PUT /eventframes/{webId}/securityentries/{name}
+desc: Update a security entry owned by the event frame.
+schema: SecurityEntry
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0110  DELETE /notificationcontacttemplates/{webId}
+desc: Delete a notification contact template.
+- path:webId string
+
+## S116-N0111  PATCH /notificationcontacttemplates/{webId}
+desc: Update a notification contact template by replacing items in its definition.
+schema: NotificationContactTemplate
+- path:webId string
+- body:Available boolean
+- body:ConfigString string
+- body:ContactType string
+- body:Description string
+- body:EscalationTimeout string
+- body:HasChildren boolean
+- body:Id string
+- body:Links object
+- body:Links.AssetServer string
+- body:Links.NotificationContactTemplates string
+- body:Links.NotificationPlugIn string
+- body:Links.Security string
+- body:Links.SecurityEntries string
+- body:Links.Self string
+- body:MaximumRetries integer
+- body:MinimumAcknowledgements integer
+- body:Name string
+- body:NotifyWhenInstanceEnded boolean
+- body:Path string
+- body:PlugInName string
+- body:RetryInterval string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0112  POST /notificationcontacttemplates/{webId}/securityentries
+desc: Create a security entry owned by the notification contact template.
+schema: SecurityEntry
+- path:webId string
+- query:applyToChildren boolean
+- query:webIdType string
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0113  DELETE /notificationcontacttemplates/{webId}/securityentries/{name}
+desc: Delete a security entry owned by the notification contact template.
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+
+## S116-N0114  PUT /notificationcontacttemplates/{webId}/securityentries/{name}
+desc: Update a security entry owned by the notification contact template.
+schema: SecurityEntry
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0115  DELETE /notificationrules/{webId}
+desc: Delete a notification rule.
+- path:webId string
+
+## S116-N0116  PATCH /notificationrules/{webId}
+desc: Update a notification rule by replacing items in its definition.
+schema: NotificationRule
+- path:webId string
+- body:AutoCreated boolean
+- body:CategoryNames array<string>
+- body:Criteria string
+- body:Description string
+- body:Id string
+- body:MultiTriggerEventOption string
+- body:Name string
+- body:NonrepetitionInterval string
+- body:Path string
+- body:ResendInterval string
+- body:Status string
+- body:TemplateName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0117  POST /notificationrules/{webId}/notificationrulesubscribers
+desc: Create a notification rule subscriber.
+schema: NotificationRuleSubscriber
+- path:webId string
+- query:webIdType string
+- body:ConfigString string
+- body:ContactTemplateName string
+- body:ContactType string
+- body:DeliveryFormatName string
+- body:Description string
+- body:EscalationTimeout string
+- body:Id string
+- body:MaximumRetries integer
+- body:Name string
+- body:NotifyOption string
+- body:Path string
+- body:PlugInName string
+- body:RetryInterval string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0118  POST /notificationrules/{webId}/securityentries
+desc: Create a security entry owned by the notification rule.
+schema: SecurityEntry
+- path:webId string
+- query:applyToChildren boolean
+- query:webIdType string
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0119  DELETE /notificationrules/{webId}/securityentries/{name}
+desc: Delete a security entry owned by the notification rule.
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+
+## S116-N0120  PUT /notificationrules/{webId}/securityentries/{name}
+desc: Update a security entry owned by the notification rule.
+schema: SecurityEntry
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0121  DELETE /notificationrulesubscribers/{webId}
+desc: Delete a notification rule subscriber.
+- path:webId string
+
+## S116-N0122  PATCH /notificationrulesubscribers/{webId}
+desc: Update a notification rule subscriber.
+schema: NotificationRuleSubscriber
+- path:webId string
+- body:ConfigString string
+- body:ContactTemplateName string
+- body:ContactType string
+- body:DeliveryFormatName string
+- body:Description string
+- body:EscalationTimeout string
+- body:Id string
+- body:MaximumRetries integer
+- body:Name string
+- body:NotifyOption string
+- body:Path string
+- body:PlugInName string
+- body:RetryInterval string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0123  DELETE /notificationruletemplates/{webId}
+desc: Delete a notification rule template.
+- path:webId string
+
+## S116-N0125  POST /notificationruletemplates/{webId}/notificationrulesubscribers
+desc: Create a notification rule subscriber.
+schema: NotificationRuleSubscriber
+- path:webId string
+- query:webIdType string
+- body:ConfigString string
+- body:ContactTemplateName string
+- body:ContactType string
+- body:DeliveryFormatName string
+- body:Description string
+- body:EscalationTimeout string
+- body:Id string
+- body:MaximumRetries integer
+- body:Name string
+- body:NotifyOption string
+- body:Path string
+- body:PlugInName string
+- body:RetryInterval string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0126  POST /notificationruletemplates/{webId}/securityentries
+desc: Create a security entry owned by the notification rule template.
+schema: SecurityEntry
+- path:webId string
+- query:applyToChildren boolean
+- query:webIdType string
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0127  DELETE /notificationruletemplates/{webId}/securityentries/{name}
+desc: Delete a security entry owned by the notification rule template.
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+
+## S116-N0128  PUT /notificationruletemplates/{webId}/securityentries/{name}
+desc: Update a security entry owned by the notification rule template.
+schema: SecurityEntry
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0129  DELETE /points/{webId}
+desc: Delete a point.
+- path:webId string
+
+## S116-N0130  PATCH /points/{webId}
+desc: Update a point. The only PI Point attributes that can be updated include: Name, Descriptor, EngineeringUnits, Step, and DisplayDigits. Other PI Point attributes cannot be updated through PI Web API.
+schema: Point
+- path:webId string
+- body:Descriptor string
+- body:DigitalSetName string
+- body:DisplayDigits integer
+- body:EngineeringUnits string
+- body:Future boolean
+- body:Id integer
+- body:Links object
+- body:Links.Attributes string
+- body:Links.DataServer string
+- body:Links.EndValue string
+- body:Links.InterpolatedData string
+- body:Links.PlotData string
+- body:Links.RecordedData string
+- body:Links.Self string
+- body:Links.SummaryData string
+- body:Links.Value string
+- body:Name string
+- body:Path string
+- body:PointClass string
+- body:PointType string
+- body:Span number
+- body:Step boolean
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+- body:Zero number
+
+## S116-N0131  DELETE /securityidentities/{webId}
+desc: Delete a security identity.
+- path:webId string
+
+## S116-N0132  PATCH /securityidentities/{webId}
+desc: Update a security identity by replacing items in its definition.
+schema: SecurityIdentity
+- path:webId string
+- body:Description string
+- body:Id string
+- body:IsEnabled boolean
+- body:Links object
+- body:Links.AssetServer string
+- body:Links.Security string
+- body:Links.SecurityEntries string
+- body:Links.SecurityMappings string
+- body:Links.Self string
+- body:Name string
+- body:Path string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0133  DELETE /securitymappings/{webId}
+desc: Delete a security mapping.
+- path:webId string
+
+## S116-N0134  PATCH /securitymappings/{webId}
+desc: Update a security mapping by replacing items in its definition.
+schema: SecurityMapping
+- path:webId string
+- body:Account string
+- body:Description string
+- body:Id string
+- body:Links object
+- body:Links.AssetServer string
+- body:Links.Security string
+- body:Links.SecurityEntries string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:Path string
+- body:SecurityIdentityWebId string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0135  POST /streams/{webId}/recorded
+desc: Updates multiple values for the specified stream.
+schema: TimedValue
+- path:webId string
+- query:bufferOption string
+- query:updateOption string
+- body:Annotated boolean
+- body:Errors array<object>
+- body:Errors[].FieldName string
+- body:Errors[].Message array<string>
+- body:Good boolean
+- body:Questionable boolean
+- body:Substituted boolean
+- body:Timestamp string
+- body:UnitsAbbreviation string
+- body:Value object
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0137  POST /streams/{webId}/value
+desc: Updates a value for the specified stream.
+schema: TimedValue
+- path:webId string
+- query:bufferOption string
+- query:updateOption string
+- query:webIdType string
+- body:Annotated boolean
+- body:Errors array<object>
+- body:Errors[].FieldName string
+- body:Errors[].Message array<string>
+- body:Good boolean
+- body:Questionable boolean
+- body:Substituted boolean
+- body:Timestamp string
+- body:UnitsAbbreviation string
+- body:Value object
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0138  POST /streamsets/recorded
+desc: Updates multiple values for the specified streams.
+schema: StreamValues
+- query:bufferOption string
+- query:updateOption string
+- body:Items array<object>
+- body:Items[].Annotated boolean
+- body:Items[].Errors array<object>
+- body:Items[].Errors[].FieldName string
+- body:Items[].Errors[].Message array<string>
+- body:Items[].Good boolean
+- body:Items[].Questionable boolean
+- body:Items[].Substituted boolean
+- body:Items[].Timestamp string
+- body:Items[].UnitsAbbreviation string
+- body:Items[].Value object
+- body:Items[].WebException object
+- body:Items[].WebException.Errors array<string>
+- body:Items[].WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:Links object
+- body:Links.Source string
+- body:Name string
+- body:Path string
+- body:UnitsAbbreviation string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0140  POST /streamsets/value
+desc: Updates a single value for the specified streams.
+schema: StreamValue
+- query:bufferOption string
+- query:updateOption string
+- body:Links object
+- body:Links.Source string
+- body:Name string
+- body:Path string
+- body:Value object
+- body:Value.Annotated boolean
+- body:Value.Errors array<object>
+- body:Value.Errors[].FieldName string
+- body:Value.Errors[].Message array<string>
+- body:Value.Good boolean
+- body:Value.Questionable boolean
+- body:Value.Substituted boolean
+- body:Value.Timestamp string
+- body:Value.UnitsAbbreviation string
+- body:Value.Value object
+- body:Value.WebException object
+- body:Value.WebException.Errors array<string>
+- body:Value.WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0141  POST /streamsets/{webId}/recorded
+desc: Updates multiple values for the specified streams.
+schema: StreamValues
+- path:webId string
+- query:bufferOption string
+- query:updateOption string
+- body:Items array<object>
+- body:Items[].Annotated boolean
+- body:Items[].Errors array<object>
+- body:Items[].Errors[].FieldName string
+- body:Items[].Errors[].Message array<string>
+- body:Items[].Good boolean
+- body:Items[].Questionable boolean
+- body:Items[].Substituted boolean
+- body:Items[].Timestamp string
+- body:Items[].UnitsAbbreviation string
+- body:Items[].Value object
+- body:Items[].WebException object
+- body:Items[].WebException.Errors array<string>
+- body:Items[].WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:Links object
+- body:Links.Source string
+- body:Name string
+- body:Path string
+- body:UnitsAbbreviation string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0142  POST /streamsets/{webId}/value
+desc: Updates a single value for the specified streams.
+schema: StreamValue
+- path:webId string
+- query:bufferOption string
+- query:updateOption string
+- body:Links object
+- body:Links.Source string
+- body:Name string
+- body:Path string
+- body:Value object
+- body:Value.Annotated boolean
+- body:Value.Errors array<object>
+- body:Value.Errors[].FieldName string
+- body:Value.Errors[].Message array<string>
+- body:Value.Good boolean
+- body:Value.Questionable boolean
+- body:Value.Substituted boolean
+- body:Value.Timestamp string
+- body:Value.UnitsAbbreviation string
+- body:Value.Value object
+- body:Value.WebException object
+- body:Value.WebException.Errors array<string>
+- body:Value.WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0143  DELETE /system/configuration/{key}
+desc: Delete a configuration item.
+- path:key string
+
+## S116-N0144  DELETE /tablecategories/{webId}
+desc: Delete a table category.
+- path:webId string
+
+## S116-N0145  PATCH /tablecategories/{webId}
+desc: Update a table category by replacing items in its definition.
+schema: TableCategory
+- path:webId string
+- body:Description string
+- body:Id string
+- body:Links object
+- body:Links.Database string
+- body:Links.Security string
+- body:Links.SecurityEntries string
+- body:Links.Self string
+- body:Name string
+- body:Path string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0146  POST /tablecategories/{webId}/securityentries
+desc: Create a security entry owned by the table category.
+schema: SecurityEntry
+- path:webId string
+- query:applyToChildren boolean
+- query:webIdType string
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0147  DELETE /tablecategories/{webId}/securityentries/{name}
+desc: Delete a security entry owned by the table category.
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+
+## S116-N0148  PUT /tablecategories/{webId}/securityentries/{name}
+desc: Update a security entry owned by the table category.
+schema: SecurityEntry
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0149  DELETE /tables/{webId}
+desc: Delete a table.
+- path:webId string
+
+## S116-N0151  PUT /tables/{webId}/data
+desc: Update the table's data.
+schema: TableData
+- path:webId string
+- body:Columns object
+- body:Rows array<object>
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0152  POST /tables/{webId}/securityentries
+desc: Create a security entry owned by the table.
+schema: SecurityEntry
+- path:webId string
+- query:applyToChildren boolean
+- query:webIdType string
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0154  PUT /tables/{webId}/securityentries/{name}
+desc: Update a security entry owned by the table.
+schema: SecurityEntry
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+- body:AllowRights array<string>
+- body:DenyRights array<string>
+- body:Links object
+- body:Links.SecurableObject string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:SecurityIdentityName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+
+## S116-N0155  DELETE /timerules/{webId}
+desc: Delete a Time Rule.
+- path:webId string
+
+## S116-N0156  PATCH /timerules/{webId}
+desc: Update a Time Rule by replacing items in its definition.
+schema: TimeRule
+- path:webId string
+- body:ConfigString string
+- body:ConfigStringStored string
+- body:Description string
+- body:DisplayString string
+- body:EditorType string
+- body:Id string
+- body:IsConfigured boolean
+- body:IsInitializing boolean
+- body:Links object
+- body:Links.Analysis string
+- body:Links.AnalysisTemplate string
+- body:Links.PlugIn string
+- body:Links.Self string
+- body:MergeDuplicatedItems boolean
+- body:Name string
+- body:Path string
+- body:PlugInName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0157  DELETE /unitclasses/{webId}
+desc: Delete a unit class.
+- path:webId string
+
+## S116-N0158  PATCH /unitclasses/{webId}
+desc: Update a unit class.
+schema: UnitClass
+- path:webId string
+- body:CanonicalUnitAbbreviation string
+- body:CanonicalUnitName string
+- body:Description string
+- body:Id string
+- body:Links object
+- body:Links.AssetServer string
+- body:Links.CanonicalUnit string
+- body:Links.Self string
+- body:Links.Units string
+- body:Name string
+- body:Path string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0159  POST /unitclasses/{webId}/units
+desc: Create a unit in the specified Unit Class.
+schema: Unit
+- path:webId string
+- query:webIdType string
+- body:Abbreviation string
+- body:Description string
+- body:Factor number
+- body:Id string
+- body:Links object
+- body:Links.Class string
+- body:Links.ReferenceUnit string
+- body:Links.Self string
+- body:Name string
+- body:Offset number
+- body:Path string
+- body:ReferenceFactor number
+- body:ReferenceOffset number
+- body:ReferenceUnitAbbreviation string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-N0160  DELETE /units/{webId}
+desc: Delete a unit.
+- path:webId string
+
+## S116-N0161  PATCH /units/{webId}
+desc: Update a unit.
+schema: Unit
+- path:webId string
+- body:Abbreviation string
+- body:Description string
+- body:Factor number
+- body:Id string
+- body:Links object
+- body:Links.Class string
+- body:Links.ReferenceUnit string
+- body:Links.Self string
+- body:Name string
+- body:Offset number
+- body:Path string
+- body:ReferenceFactor number
+- body:ReferenceOffset number
+- body:ReferenceUnitAbbreviation string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S585-N0003  DELETE /v2/accounts/{id}.json
+desc: Delete an account | Deletes an account. This operation is not reversible without contacting support. This operation can be called multiple times successfully. Deleting an account will remove all connected people from that account.
+- path:id string
+
+## S585-N0005  POST /v2/activities.json
+desc: Create an activity | Creates an activity. An activity will mark the associated action as completed. Currently, only certain action types can have an activity explicitly created for them.
+- body:action_id integer
+- body:task_id integer
+
+## S585-N0007  POST /v2/bulk_jobs
+desc: Create a bulk job | Creates a bulk job. The type of the bulk job must be included when created. For additional information on creating bulk jobs, the types of supported bulk jobs, and examples of the bulk job flow, visit the <a href="/bulk.html" target="_blank" rel="noopener noreferrer">bulk job details page</a>.
+- body:name string
+- body:type string
+
+## S585-N0010  POST /v2/cadence_imports.json
+desc: Import cadences from JSON | New cadences can be created or steps can be imported onto existing cadences which do not have steps. <a href="/cadence-imports.html" target="_blank" rel="noopener noreferrer">Visit here for more details</a>.
+- body:cadence_content object
+- body:settings object
+- body:sharing_settings object
+
+## S585-N0030  PUT /v2/pending_emails/{id}.json
+desc: Updates the status of an email sent by an External Email Client | Updates the status of an email sent by an External Email Client. Does not affect lofted emails.
+- path:id string
+- body:error_message string
+- body:message_id string
+- body:sent_at string
+- body:status string
+
+## S585-N0032  DELETE /v2/people/{id}.json
+desc: Delete a person | Deletes a person. This operation is not reversible without contacting support. This operation can be called multiple times successfully.
+- path:id string
+
+## S585-N0034  POST /v2/person_stages.json
+desc: Create a person stage | Creates a person stage.
+- body:name string
+
+## S585-N0037  POST /v2/person_upserts.json
+desc: Upsert a person | Upserts a person record. The upsert_key dictates how the upsert will be performed. The create and update behavior is exactly the same as the individual create and update endpoints.
+- body:account_id integer
+- body:city string
+- body:contact_restrictions array<string>
+- body:country string
+- body:crm_id string
+- body:crm_id_type string
+- body:custom_fields object
+- body:do_not_contact boolean
+- body:email_address string
+- body:first_name string
+- body:home_phone string
+- body:id integer
+- body:import_id integer
+- body:job_seniority string
+- body:last_name string
+- body:linkedin_url string
+- body:locale string
+- body:mobile_phone string
+- body:owner_id integer
+- body:person_company_industry string
+- body:person_company_name string
+- body:person_company_website string
+- body:person_stage_id integer
+- body:personal_email_address string
+- body:personal_website string
+- body:phone string
+- body:phone_extension string
+- body:secondary_email_address string
+- body:state string
+- body:tags array<string>
+- body:title string
+- body:twitter_handle string
+- body:upsert_key string
+- body:work_city string
+- body:work_country string
+- body:work_state string
+
+## S585-N0038  POST /v2/saved_list_views.json
+desc: Create a saved list view | Creates a saved list view.
+- body:is_default boolean
+- body:name string
+- body:view string
+- body:view_params string
+
+## S585-N0045  DELETE /v2/webhook_subscriptions/{id}
+desc: Delete a webhook subscription | Deletes a webhook subscription. This operation is not reversible without contacting support. This operation can be called multiple times successfully.
+- path:id integer
+
+## S514-N0002  PUT /providers/applicationsets/{applicationSetId}
+desc: Edit the details of an applicationset | __Activity name:__ PutProviderApplicationSetByApplicationSetId Edit the details for an applicationset.
+- path:applicationSetId string
+- body:applicationSetType string enum[Products|ExportDataTemplate|Rights]
+- body:data string
+- body:id string
+- body:name string
+
+## S514-N0004  POST /providers/emailidentities/{emailIdentityId}/sendtestemail
+desc: Provider emailIdentity test email | __Activity name:__ PostSendProviderTestemailByEmailIdentityId Send an email to test the email identity configuration.
+- path:emailIdentityId string
+- body:to string
+
+## S514-N0005  PATCH /providers/employers/announcements
+desc: Mark one or more announcements as read. | __Activity name :__ PatchAnnouncementsByEmployerId Mark announcements as read
+- body:action string enum[markAsRead]
+- body:id string
+
+## S514-N0006  DELETE /providers/employers/benefitinkindtypes/{benefitInKindTypeId}
+desc: Delete an benefit in kind type record | __Activity name :__ DeleteBenefitInKindTypeByBenefitInKindTypeId Delete an existing benefit in kind type record
+- path:benefitInKindTypeId string
+
+## S514-N0007  PUT /providers/employers/benefitinkindtypes/{benefitInKindTypeId}
+desc: Edit an benefit in kind type record | __Activity name :__ PutBenefitInKindTypeByBenefitInKindTypeId
+- path:benefitInKindTypeId string
+- body:description string
+- body:id string
+
+## S514-N0008  PATCH /providers/employers/conceptemployees/import/{payrollAdministrationId}
+desc: Import concept employees via a file | __Activity name :__ PatchImportConceptEmployeesByPayrollAdministrationId __Metadata:__ No metadata Currently supported file is the payroll tax return XML (year 2022 or later).
+- path:payrollAdministrationId string
+- query:conceptEmployeeId string
+- body:(body) string
+
+## S514-N0009  PUT /providers/employers/conceptemployees/minimized/{conceptEmployeeId}
+desc: Edit the details of a concept employee with fewer fields. | __Activity name :__ PutConceptEmployeeMinimizedByConceptEmployeeId Edit the details of a concept employee with fewer fields. * Possible options (metadata) for generic fields of the type "metadata" can be acquired (GET) by adding `/metadata` to the URL.
+- path:conceptEmployeeId string
+- body:address object
+- body:address.city string
+- body:address.country object
+- body:address.country.isoCode string
+- body:address.country.key integer
+- body:address.country.value string
+- body:address.furtherIndication object
+- body:address.furtherIndication.key integer
+- body:address.furtherIndication.value string
+- body:address.houseNumber integer
+- body:address.houseNumberAddition string
+- body:address.location string
+- body:address.postalCode string
+- body:address.street string
+- body:contactInformation object
+- body:contactInformation.emailAddress string
+- body:contactInformation.faxNumber string
+- body:contactInformation.mobilePhoneNumber string
+- body:contactInformation.phoneNumber string
+- body:iban string
+- body:id string
+- body:personalDetails object
+- body:personalDetails.civilStatus object
+- body:personalDetails.civilStatus.key integer
+- body:personalDetails.civilStatus.value string
+- body:personalDetails.dateOfBirth string
+- body:personalDetails.firstName string
+- body:personalDetails.formattedName string
+- body:personalDetails.gender object
+- body:personalDetails.gender.key integer
+- body:personalDetails.gender.value string
+- body:personalDetails.howToFormatLastName object
+- body:personalDetails.howToFormatLastName.key integer
+- body:personalDetails.howToFormatLastName.value string
+- body:personalDetails.initials string
+- body:personalDetails.lastName string
+- body:personalDetails.lastNamePartner string
+- body:personalDetails.nationality object
+- body:personalDetails.nationality.key integer
+- body:personalDetails.nationality.value string
+- body:personalDetails.placeOfBirth string
+- body:personalDetails.prefix string
+- body:personalDetails.prefixPartner string
+- body:personalDetails.title object
+- body:personalDetails.title.key integer
+- body:personalDetails.title.value string
+
+## S514-N0010  DELETE /providers/employers/conceptemployees/{conceptEmployeeId}
+desc: Delete a concept employee | __Activity name :__ DeleteConceptEmployeeByConceptEmployeeId Delete a concept employee
+- path:conceptEmployeeId string

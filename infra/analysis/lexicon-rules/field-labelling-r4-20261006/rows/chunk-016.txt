@@ -1,0 +1,544 @@
+## S506-N0111  DELETE /rest/api/3/issuetype/{id}
+desc: Delete issue type | Deletes the issue type. If the issue type is in use, all uses are updated with the alternative issue type (`alternativeIssueTypeId`). A list of alternative issue types are obtained from the [Get alternative issue types](#api-rest-api-3-issuetype-id-alternatives-get) resource. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atla
+- path:id string
+- query:alternativeIssueTypeId string
+
+## S506-N0112  PUT /rest/api/3/issuetype/{id}
+desc: Update issue type | Updates the issue type. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueTypeUpdateBean
+- path:id string
+- body:avatarId integer
+- body:description string
+- body:name string
+
+## S506-N0113  POST /rest/api/3/issuetype/{id}/avatar2
+desc: Load issue type avatar | Loads an avatar for the issue type. Specify the avatar's local file location in the body of the request. Also, include the following headers: * `X-Atlassian-Token: no-check` To prevent XSRF protection blocking the request, for more information see [Special Headers](#special-request-headers). * `Content-Type: image/image type` Valid image types are JPEG, GIF, or PNG. For ex
+- path:id string
+- query:x integer
+- query:y integer
+- query:size integer
+
+## S506-N0114  DELETE /rest/api/3/issuetype/{issueTypeId}/properties/{propertyKey}
+desc: Delete issue type property | Deletes the [issue type property](https://developer.atlassian.com/cloud/jira/platform/storing-data-without-a-database/#a-id-jira-entity-properties-a-jira-entity-properties). **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:issueTypeId string
+- path:propertyKey string
+
+## S506-N0115  PUT /rest/api/3/issuetype/{issueTypeId}/properties/{propertyKey}
+desc: Set issue type property | Creates or updates the value of the [issue type property](https://developer.atlassian.com/cloud/jira/platform/storing-data-without-a-database/#a-id-jira-entity-properties-a-jira-entity-properties). Use this resource to store and update data against an issue type. The value of the request body must be a [valid](http://tools.ietf.org/html/rfc4627), non-empty JSON blob. The 
+- path:issueTypeId string
+- path:propertyKey string
+
+## S506-N0116  POST /rest/api/3/issuetypescheme
+desc: Create issue type scheme | Creates an issue type scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueTypeSchemeDetails
+- body:defaultIssueTypeId string
+- body:description string
+- body:issueTypeIds array<string>
+- body:name string
+
+## S506-N0117  PUT /rest/api/3/issuetypescheme/project
+desc: Assign issue type scheme to project | Assigns an issue type scheme to a project. If any issues in the project are assigned issue types not present in the new scheme, the operation will fail. To complete the assignment those issues must be updated to use issue types in the new scheme. Issue type schemes can only be assigned to classic projects. **[Permissions](#permissions) required:** *Administer 
+schema: IssueTypeSchemeProjectAssociation
+- body:issueTypeSchemeId string
+- body:projectId string
+
+## S506-N0118  DELETE /rest/api/3/issuetypescheme/{issueTypeSchemeId}
+desc: Delete issue type scheme | Deletes an issue type scheme. Only issue type schemes used in classic projects can be deleted. Any projects assigned to the scheme are reassigned to the default issue type scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:issueTypeSchemeId integer
+
+## S506-N0119  PUT /rest/api/3/issuetypescheme/{issueTypeSchemeId}
+desc: Update issue type scheme | Updates an issue type scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueTypeSchemeUpdateDetails
+- path:issueTypeSchemeId integer
+- body:defaultIssueTypeId string
+- body:description string
+- body:name string
+
+## S506-N0121  PUT /rest/api/3/issuetypescheme/{issueTypeSchemeId}/issuetype/move
+desc: Change order of issue types | Changes the order of issue types in an issue type scheme. The request body parameters must meet the following requirements: * all of the issue types must belong to the issue type scheme. * either `after` or `position` must be provided. * the issue type in `after` must not be in the issue type list. **[Permissions](#permissions) required:** *Administer Jira* [global pe
+schema: OrderOfIssueTypes
+- path:issueTypeSchemeId integer
+- body:after string
+- body:issueTypeIds array<string>
+- body:position string enum[First|Last]
+
+## S506-N0122  DELETE /rest/api/3/issuetypescheme/{issueTypeSchemeId}/issuetype/{issueTypeId}
+desc: Remove issue type from issue type scheme | Removes an issue type from an issue type scheme. This operation cannot remove: * any issue type used by issues. * any issue types from the default issue type scheme. * the last standard issue type from an issue type scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:issueTypeSchemeId integer
+- path:issueTypeId integer
+
+## S506-N0123  POST /rest/api/3/issuetypescreenscheme
+desc: Create issue type screen scheme | Creates an issue type screen scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueTypeScreenSchemeDetails
+- body:description string
+- body:issueTypeMappings array<object>
+- body:issueTypeMappings[].issueTypeId string
+- body:issueTypeMappings[].screenSchemeId string
+- body:name string
+
+## S506-N0124  PUT /rest/api/3/issuetypescreenscheme/project
+desc: Assign issue type screen scheme to project | Assigns an issue type screen scheme to a project. Issue type screen schemes can only be assigned to classic projects. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueTypeScreenSchemeProjectAssociation
+- body:issueTypeScreenSchemeId string
+- body:projectId string
+
+## S506-N0125  DELETE /rest/api/3/issuetypescreenscheme/{issueTypeScreenSchemeId}
+desc: Delete issue type screen scheme | Deletes an issue type screen scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:issueTypeScreenSchemeId string
+
+## S506-N0126  PUT /rest/api/3/issuetypescreenscheme/{issueTypeScreenSchemeId}
+desc: Update issue type screen scheme | Updates an issue type screen scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueTypeScreenSchemeUpdateDetails
+- path:issueTypeScreenSchemeId string
+- body:description string
+- body:name string
+
+## S506-N0127  PUT /rest/api/3/issuetypescreenscheme/{issueTypeScreenSchemeId}/mapping
+desc: Append mappings to issue type screen scheme | Appends issue type to screen scheme mappings to an issue type screen scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueTypeScreenSchemeMappingDetails
+- path:issueTypeScreenSchemeId string
+- body:issueTypeMappings array<object>
+- body:issueTypeMappings[].issueTypeId string
+- body:issueTypeMappings[].screenSchemeId string
+
+## S506-N0128  PUT /rest/api/3/issuetypescreenscheme/{issueTypeScreenSchemeId}/mapping/default
+desc: Update issue type screen scheme default screen scheme | Updates the default screen scheme of an issue type screen scheme. The default screen scheme is used for all unmapped issue types. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: UpdateDefaultScreenScheme
+- path:issueTypeScreenSchemeId string
+- body:screenSchemeId string
+
+## S506-N0129  POST /rest/api/3/issuetypescreenscheme/{issueTypeScreenSchemeId}/mapping/remove
+desc: Remove mappings from issue type screen scheme | Removes issue type to screen scheme mappings from an issue type screen scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueTypeIds
+- path:issueTypeScreenSchemeId string
+- body:issueTypeIds array<string>
+
+## S506-N0130  POST /rest/api/3/jql/autocompletedata
+desc: Get field reference data (POST) | Returns reference data for JQL searches. This is a downloadable version of the documentation provided in [Advanced searching - fields reference](https://confluence.atlassian.com/x/gwORLQ) and [Advanced searching - functions reference](https://confluence.atlassian.com/x/hgORLQ), along with a list of JQL-reserved words. Use this information to assist with the progra
+schema: SearchAutoCompleteFilter
+- body:includeCollapsedFields boolean
+- body:projectIds array<integer>
+
+## S506-N0131  POST /rest/api/3/jql/function/computation
+desc: Update precomputations
+schema: JqlFunctionPrecomputationUpdateRequestBean
+- body:values array<object>
+- body:values[].id integer
+- body:values[].value string
+
+## S506-N0132  POST /rest/api/3/jql/match
+desc: Check issues against JQL | Checks whether one or more issues would be returned by one or more JQL queries. **[Permissions](#permissions) required:** None, however, issues are only matched against JQL queries where the user has: * *Browse projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project that the issue is in. * If [issue-level security](https://confluence.atl
+schema: IssuesAndJQLQueries
+- body:issueIds array<integer>
+- body:jqls array<string>
+
+## S506-N0134  POST /rest/api/3/jql/pdcleaner
+desc: Convert user identifiers to account IDs in JQL queries | Converts one or more JQL queries with user identifiers (username or user key) to equivalent JQL queries with account IDs. You may wish to use this operation if your system stores JQL queries and you want to make them GDPR-compliant. For more information about GDPR-related changes, see the [migration guide](https://developer.atlassian.com/clo
+schema: JQLPersonalDataMigrationRequest
+- body:queryStrings array<string>
+
+## S506-N0135  POST /rest/api/3/jql/sanitize
+desc: Sanitize JQL queries | Sanitizes one or more JQL queries by converting readable details into IDs where a user doesn't have permission to view the entity. For example, if the query contains the clause *project = 'Secret project'*, and a user does not have browse permission for the project "Secret project", the sanitized query replaces the clause with *project = 12345"* (where 12345 is the ID of the
+schema: JqlQueriesToSanitize
+- body:queries array<object>
+- body:queries[].accountId string
+- body:queries[].query string
+
+## S506-N0137  PUT /rest/api/3/mypreferences
+desc: Set preference | Creates a preference for the user or updates a preference's value by sending a plain text string. For example, `false`. An arbitrary preference can be created with the value containing up to 255 characters. In addition, the following keys define system preferences that can be set or created: * *user.notifications.mimetype* The mime type used in notifications sent to the user. Defa
+- query:key string
+- body:(body) string
+
+## S506-N0138  DELETE /rest/api/3/mypreferences/locale
+desc: Delete locale | Deprecated, use [ Update a user profile](https://developer.atlassian.com/cloud/admin/user-management/rest/#api-users-account-id-manage-profile-patch) from the user management REST API instead. Deletes the locale of the user, which restores the default setting. **[Permissions](#permissions) required:** Permission to access Jira.
+
+## S506-N0139  PUT /rest/api/3/mypreferences/locale
+desc: Set locale | Deprecated, use [ Update a user profile](https://developer.atlassian.com/cloud/admin/user-management/rest/#api-users-account-id-manage-profile-patch) from the user management REST API instead. Sets the locale of the user. The locale must be one supported by the instance of Jira. **[Permissions](#permissions) required:** Permission to access Jira.
+schema: Locale
+- body:locale string
+
+## S506-N0140  POST /rest/api/3/notificationscheme
+desc: Create notification scheme | Creates a notification scheme with notifications. You can create up to 1000 notifications per request. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: CreateNotificationSchemeDetails
+- body:description string
+- body:name string
+- body:notificationSchemeEvents array<object>
+- body:notificationSchemeEvents[].event object
+- body:notificationSchemeEvents[].event.id string
+- body:notificationSchemeEvents[].notifications array<object>
+- body:notificationSchemeEvents[].notifications[].notificationType string
+- body:notificationSchemeEvents[].notifications[].parameter string
+
+## S506-N0142  PUT /rest/api/3/notificationscheme/{id}/notification
+desc: Add notifications to notification scheme | Adds notifications to a notification scheme. You can add up to 1000 notifications per request. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: AddNotificationsDetails
+- path:id string
+- body:notificationSchemeEvents array<object>
+- body:notificationSchemeEvents[].event object
+- body:notificationSchemeEvents[].event.id string
+- body:notificationSchemeEvents[].notifications array<object>
+- body:notificationSchemeEvents[].notifications[].notificationType string
+- body:notificationSchemeEvents[].notifications[].parameter string
+
+## S506-N0143  DELETE /rest/api/3/notificationscheme/{notificationSchemeId}
+desc: Delete notification scheme | Deletes a notification scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:notificationSchemeId string
+
+## S506-N0144  DELETE /rest/api/3/notificationscheme/{notificationSchemeId}/notification/{notificationId}
+desc: Remove notification from notification scheme | Removes a notification from a notification scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:notificationSchemeId string
+- path:notificationId string
+
+## S506-N0145  POST /rest/api/3/permissions/check
+desc: Get bulk permissions | Returns: * for a list of global permissions, the global permissions granted to a user. * for a list of project permissions and lists of projects and issues, for each project permission a list of the projects and issues a user can access or manipulate. If no account ID is provided, the operation returns details for the logged in user. Note that: * Invalid project and issue ID
+schema: BulkPermissionsRequestBean
+- body:accountId string
+- body:globalPermissions array<string>
+- body:projectPermissions array<object>
+- body:projectPermissions[].issues array<integer>
+- body:projectPermissions[].permissions array<string>
+- body:projectPermissions[].projects array<integer>
+
+## S506-N0146  POST /rest/api/3/permissions/project
+desc: Get permitted projects | Returns all the projects where the user is granted a list of project permissions. This operation can be accessed anonymously. **[Permissions](#permissions) required:** None.
+schema: PermissionsKeysBean
+- body:permissions array<string>
+
+## S506-N0147  POST /rest/api/3/permissionscheme
+desc: Create permission scheme | Creates a new permission scheme. You can create a permission scheme with or without defining a set of permission grants. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: PermissionScheme
+- query:expand string
+- body:description string
+- body:expand string
+- body:id integer
+- body:name string
+- body:permissions array<object>
+- body:permissions[].holder object
+- body:permissions[].holder.expand string
+- body:permissions[].holder.parameter string
+- body:permissions[].holder.type string
+- body:permissions[].holder.value string
+- body:permissions[].id integer
+- body:permissions[].permission string
+- body:permissions[].self string
+- body:scope object
+- body:scope.project object
+- body:scope.project.avatarUrls object
+- body:scope.project.id string
+- body:scope.project.key string
+- body:scope.project.name string
+- body:scope.project.projectCategory object
+- body:scope.project.projectTypeKey string enum[software|service_desk|business]
+- body:scope.project.self string
+- body:scope.project.simplified boolean
+- body:scope.type string enum[PROJECT|TEMPLATE]
+- body:self string
+
+## S506-N0148  DELETE /rest/api/3/permissionscheme/{schemeId}
+desc: Delete permission scheme | Deletes a permission scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:schemeId integer
+
+## S506-N0149  PUT /rest/api/3/permissionscheme/{schemeId}
+desc: Update permission scheme | Updates a permission scheme. Below are some important things to note when using this resource: * If a permissions list is present in the request, then it is set in the permission scheme, overwriting *all existing* grants. * If you want to update only the name and description, then do not send a permissions list in the request. * Sending an empty list will remove all perm
+schema: PermissionScheme
+- path:schemeId integer
+- query:expand string
+- body:description string
+- body:expand string
+- body:id integer
+- body:name string
+- body:permissions array<object>
+- body:permissions[].holder object
+- body:permissions[].holder.expand string
+- body:permissions[].holder.parameter string
+- body:permissions[].holder.type string
+- body:permissions[].holder.value string
+- body:permissions[].id integer
+- body:permissions[].permission string
+- body:permissions[].self string
+- body:scope object
+- body:scope.project object
+- body:scope.project.avatarUrls object
+- body:scope.project.id string
+- body:scope.project.key string
+- body:scope.project.name string
+- body:scope.project.projectCategory object
+- body:scope.project.projectTypeKey string enum[software|service_desk|business]
+- body:scope.project.self string
+- body:scope.project.simplified boolean
+- body:scope.type string enum[PROJECT|TEMPLATE]
+- body:self string
+
+## S506-N0150  POST /rest/api/3/permissionscheme/{schemeId}/permission
+desc: Create permission grant | Creates a permission grant in a permission scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: PermissionGrant
+- path:schemeId integer
+- query:expand string
+- body:holder object
+- body:holder.expand string
+- body:holder.parameter string
+- body:holder.type string
+- body:holder.value string
+- body:id integer
+- body:permission string
+- body:self string
+
+## S506-N0151  DELETE /rest/api/3/permissionscheme/{schemeId}/permission/{permissionId}
+desc: Delete permission scheme grant | Deletes a permission grant from a permission scheme. See [About permission schemes and grants](../api-group-permission-schemes/#about-permission-schemes-and-grants) for more details. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:schemeId integer
+- path:permissionId integer
+
+## S506-N0152  POST /rest/api/3/priority
+desc: Create priority | Creates an issue priority. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: CreatePriorityDetails
+- body:description string
+- body:iconUrl string enum[/images/icons/priorities/blocker.png|/images/icons/priorities/critical.png|/images/icons/priorities/high.png|/images/icons/priorities/highest.png|/images/icons/priorities/low.png|/images/icons/priorities/lowest.png|/images/icons/priorities/major.png|/images/icons/priorities/medium.png|/images/icons/priorities/minor.png|/images/icons/priorities/trivial.png]
+- body:name string
+- body:statusColor string
+
+## S506-N0153  PUT /rest/api/3/priority/default
+desc: Set default priority | Sets default issue priority. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: SetDefaultPriorityRequest
+- body:id string
+
+## S506-N0154  PUT /rest/api/3/priority/move
+desc: Move priorities | Changes the order of issue priorities. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: ReorderIssuePriorities
+- body:after string
+- body:ids array<string>
+- body:position string
+
+## S506-N0155  DELETE /rest/api/3/priority/{id}
+desc: Delete priority | Deletes an issue priority. This operation is [asynchronous](#async). Follow the `location` link in the response to determine the status of the task and use [Get task](#api-rest-api-3-task-taskId-get) to obtain subsequent updates. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id string
+- query:replaceWith string
+
+## S506-N0156  PUT /rest/api/3/priority/{id}
+desc: Update priority | Updates an issue priority. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: UpdatePriorityDetails
+- path:id string
+- body:description string
+- body:iconUrl string enum[/images/icons/priorities/blocker.png|/images/icons/priorities/critical.png|/images/icons/priorities/high.png|/images/icons/priorities/highest.png|/images/icons/priorities/low.png|/images/icons/priorities/lowest.png|/images/icons/priorities/major.png|/images/icons/priorities/medium.png|/images/icons/priorities/minor.png|/images/icons/priorities/trivial.png]
+- body:name string
+- body:statusColor string
+
+## S506-N0158  DELETE /rest/api/3/project/{projectIdOrKey}
+desc: Delete project | Deletes a project. You can't delete a project if it's archived. To delete an archived project, restore the project and then delete it. To restore a project, use the Jira UI. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:projectIdOrKey string
+- query:enableUndo boolean
+
+## S506-N0159  PUT /rest/api/3/project/{projectIdOrKey}
+desc: Update project | Updates the [project details](https://confluence.atlassian.com/x/ahLpNw) of a project. All parameters are optional in the body of the request. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: UpdateProjectDetails
+- path:projectIdOrKey string
+- query:expand string
+- body:assigneeType string enum[PROJECT_LEAD|UNASSIGNED]
+- body:avatarId integer
+- body:categoryId integer
+- body:description string
+- body:issueSecurityScheme integer
+- body:key string
+- body:lead string
+- body:leadAccountId string
+- body:name string
+- body:notificationScheme integer
+- body:permissionScheme integer
+- body:url string
+
+## S506-N0160  POST /rest/api/3/project/{projectIdOrKey}/archive
+desc: Archive project | Archives a project. You can't delete a project if it's archived. To delete an archived project, restore the project and then delete it. To restore a project, use the Jira UI. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:projectIdOrKey string
+
+## S506-N0161  PUT /rest/api/3/project/{projectIdOrKey}/avatar
+desc: Set project avatar | Sets the avatar displayed for a project. Use [Load project avatar](#api-rest-api-3-project-projectIdOrKey-avatar2-post) to store avatars against the project, before using this operation to set the displayed avatar. **[Permissions](#permissions) required:** *Administer projects* [project permission](https://confluence.atlassian.com/x/yodKLg).
+schema: Avatar
+- path:projectIdOrKey string
+- body:fileName string
+- body:id string
+- body:isDeletable boolean
+- body:isSelected boolean
+- body:isSystemAvatar boolean
+- body:owner string
+- body:urls object
+
+## S506-N0162  DELETE /rest/api/3/project/{projectIdOrKey}/avatar/{id}
+desc: Delete project avatar | Deletes a custom avatar from a project. Note that system avatars cannot be deleted. **[Permissions](#permissions) required:** *Administer projects* [project permission](https://confluence.atlassian.com/x/yodKLg).
+- path:projectIdOrKey string
+- path:id integer
+
+## S506-N0163  POST /rest/api/3/project/{projectIdOrKey}/avatar2
+desc: Load project avatar | Loads an avatar for a project. Specify the avatar's local file location in the body of the request. Also, include the following headers: * `X-Atlassian-Token: no-check` To prevent XSRF protection blocking the request, for more information see [Special Headers](#special-request-headers). * `Content-Type: image/image type` Valid image types are JPEG, GIF, or PNG. For example: `
+- path:projectIdOrKey string
+- query:x integer
+- query:y integer
+- query:size integer
+
+## S506-N0164  POST /rest/api/3/project/{projectIdOrKey}/delete
+desc: Delete project asynchronously | Deletes a project asynchronously. This operation is: * transactional, that is, if part of the delete fails the project is not deleted. * [asynchronous](#async). Follow the `location` link in the response to determine the status of the task and use [Get task](#api-rest-api-3-task-taskId-get) to obtain subsequent updates. **[Permissions](#permissions) required:** *Adm
+- path:projectIdOrKey string
+
+## S506-N0166  DELETE /rest/api/3/project/{projectIdOrKey}/properties/{propertyKey}
+desc: Delete project property | Deletes the [property](https://developer.atlassian.com/cloud/jira/platform/storing-data-without-a-database/#a-id-jira-entity-properties-a-jira-entity-properties) from a project. This operation can be accessed anonymously. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg) or *Administer Projects* [pro
+- path:projectIdOrKey string
+- path:propertyKey string
+
+## S506-N0167  PUT /rest/api/3/project/{projectIdOrKey}/properties/{propertyKey}
+desc: Set project property | Sets the value of the [project property](https://developer.atlassian.com/cloud/jira/platform/storing-data-without-a-database/#a-id-jira-entity-properties-a-jira-entity-properties). You can use project properties to store custom data against the project. The value of the request body must be a [valid](http://tools.ietf.org/html/rfc4627), non-empty JSON blob. The maximum lengt
+- path:projectIdOrKey string
+- path:propertyKey string
+
+## S506-N0168  POST /rest/api/3/project/{projectIdOrKey}/restore
+desc: Restore deleted or archived project | Restores a project that has been archived or placed in the Jira recycle bin. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:projectIdOrKey string
+
+## S506-N0169  DELETE /rest/api/3/project/{projectIdOrKey}/role/{id}
+desc: Delete actors from project role | Deletes actors from a project role for the project. To remove default actors from the project role, use [Delete default actors from project role](#api-rest-api-3-role-id-actors-delete). This operation can be accessed anonymously. **[Permissions](#permissions) required:** *Administer Projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the 
+- path:projectIdOrKey string
+- path:id integer
+- query:user string
+- query:group string
+- query:groupId string
+
+## S506-N0170  POST /rest/api/3/project/{projectIdOrKey}/role/{id}
+desc: Add actors to project role | Adds actors to a project role for the project. To replace all actors for the project, use [Set actors for project role](#api-rest-api-3-project-projectIdOrKey-role-id-put). This operation can be accessed anonymously. **[Permissions](#permissions) required:** *Administer Projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project or *Admini
+schema: ActorsMap
+- path:projectIdOrKey string
+- path:id integer
+- body:group array<string>
+- body:groupId array<string>
+- body:user array<string>
+
+## S506-N0171  PUT /rest/api/3/project/{projectIdOrKey}/role/{id}
+desc: Set actors for project role | Sets the actors for a project role for a project, replacing all existing actors. To add actors to the project without overwriting the existing list, use [Add actors to project role](#api-rest-api-3-project-projectIdOrKey-role-id-post). **[Permissions](#permissions) required:** *Administer Projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for th
+schema: ProjectRoleActorsUpdateBean
+- path:projectIdOrKey string
+- path:id integer
+- body:categorisedActors object
+- body:id integer
+
+## S506-N0172  PUT /rest/api/3/project/{projectIdOrKey}/type/{newProjectTypeKey}
+desc: Update project type | Deprecated, this feature is no longer supported and no alternatives are available, see [Convert project to a different template or type](https://confluence.atlassian.com/x/yEKeOQ). Updates a [project type](https://confluence.atlassian.com/x/GwiiLQ). The project type can be updated for classic projects only, project type cannot be updated for next-gen projects. **[Permissions]
+- path:projectIdOrKey string
+- path:newProjectTypeKey string enum[software|service_desk|business]
+
+## S506-N0173  PUT /rest/api/3/project/{projectId}/email
+desc: Set project's sender email | Sets the [project's sender email address](https://confluence.atlassian.com/x/dolKLg). If `emailAddress` is an empty string, the default email address is restored. **[Permissions](#permissions) required:** *Browse projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project.
+schema: ProjectEmailAddress
+- path:projectId integer
+- body:emailAddress string
+- body:emailAddressStatus array<string>
+
+## S506-N0175  POST /rest/api/3/projectCategory
+desc: Create project category | Creates a project category. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: ProjectCategory
+- body:description string
+- body:id string
+- body:name string
+- body:self string
+
+## S506-N0176  DELETE /rest/api/3/projectCategory/{id}
+desc: Delete project category | Deletes a project category. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id integer
+
+## S506-N0177  PUT /rest/api/3/projectCategory/{id}
+desc: Update project category | Updates a project category. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: ProjectCategory
+- path:id integer
+- body:description string
+- body:id string
+- body:name string
+- body:self string
+
+## S506-N0178  POST /rest/api/3/resolution
+desc: Create resolution | Creates an issue resolution. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: CreateResolutionDetails
+- body:description string
+- body:name string
+
+## S506-N0179  PUT /rest/api/3/resolution/default
+desc: Set default resolution | Sets default issue resolution. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: SetDefaultResolutionRequest
+- body:id string
+
+## S506-N0180  PUT /rest/api/3/resolution/move
+desc: Move resolutions | Changes the order of issue resolutions. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: ReorderIssueResolutionsRequest
+- body:after string
+- body:ids array<string>
+- body:position string
+
+## S506-N0181  DELETE /rest/api/3/resolution/{id}
+desc: Delete resolution | Deletes an issue resolution. This operation is [asynchronous](#async). Follow the `location` link in the response to determine the status of the task and use [Get task](#api-rest-api-3-task-taskId-get) to obtain subsequent updates. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id string
+- query:replaceWith string
+
+## S506-N0182  PUT /rest/api/3/resolution/{id}
+desc: Update resolution | Updates an issue resolution. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: UpdateResolutionDetails
+- path:id string
+- body:description string
+- body:name string
+
+## S506-N0183  POST /rest/api/3/role
+desc: Create project role | Creates a new project role with no [default actors](#api-rest-api-3-resolution-get). You can use the [Add default actors to project role](#api-rest-api-3-role-id-actors-post) operation to add default actors to the project role after creating it. *Note that although a new project role is available to all projects upon creation, any default actors that are associated with the p
+schema: CreateUpdateRoleRequestBean
+- body:description string
+- body:name string
+
+## S506-N0184  DELETE /rest/api/3/role/{id}
+desc: Delete project role | Deletes a project role. You must specify a replacement project role if you wish to delete a project role that is in use. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id integer
+- query:swap integer
+
+## S506-N0185  POST /rest/api/3/role/{id}
+desc: Partial update project role | Updates either the project role's name or its description. You cannot update both the name and description at the same time using this operation. If you send a request with a name and a description only the name is updated. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: CreateUpdateRoleRequestBean
+- path:id integer
+- body:description string
+- body:name string
+
+## S506-N0186  PUT /rest/api/3/role/{id}
+desc: Fully update project role | Updates the project role's name and description. You must include both a name and a description in the request. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: CreateUpdateRoleRequestBean
+- path:id integer
+- body:description string
+- body:name string
+
+## S506-N0187  DELETE /rest/api/3/role/{id}/actors
+desc: Delete default actors from project role | Deletes the [default actors](#api-rest-api-3-resolution-get) from a project role. You may delete a group or user, but you cannot delete a group and a user in the same request. Changing a project role's default actors does not affect project role members for projects already created. **[Permissions](#permissions) required:** *Administer Jira* [global permis
+- path:id integer
+- query:user string
+- query:groupId string
+- query:group string
+
+## S506-N0188  POST /rest/api/3/role/{id}/actors
+desc: Add default actors to project role | Adds [default actors](#api-rest-api-3-resolution-get) to a role. You may add groups or users, but you cannot add groups and users in the same request. Changing a project role's default actors does not affect project role members for projects already created. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlas
+schema: ActorInputBean
+- path:id integer
+- body:group array<string>
+- body:groupId array<string>
+- body:user array<string>
+
+## S506-N0189  POST /rest/api/3/screens
+desc: Create screen | Creates a screen with a default field tab. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: ScreenDetails
+- body:description string
+- body:name string
+
+## S506-N0190  POST /rest/api/3/screens/addToDefault/{fieldId}
+desc: Add field to default screen | Adds a field to the default tab of the default screen. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:fieldId string
+
+## S506-N0192  PUT /rest/api/3/screens/{screenId}
+desc: Update screen | Updates a screen. Only screens used in classic projects can be updated. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: UpdateScreenDetails
+- path:screenId integer
+- body:description string
+- body:name string
+
+## S506-N0193  POST /rest/api/3/screens/{screenId}/tabs
+desc: Create screen tab | Creates a tab for a screen. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: ScreenableTab
+- path:screenId integer
+- body:id integer
+- body:name string

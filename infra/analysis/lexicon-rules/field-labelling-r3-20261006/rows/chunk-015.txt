@@ -1,0 +1,958 @@
+## S323-0033  POST /network-services/{id}/change-request
+desc: Request a change to the network service. A participant in a network service of type `p2p_vc` can issue a change request, expressing a desired change in the capacity. The change is accepted when all sides have configured the network service configs with the new bandwidth. These changes can sometimes require a change of the product offering. The product offering may only differ in regards to bandwid
+schema: NetworkServiceChangeRequest
+- path:id string
+- body:capacity integer
+- body:product_offering string
+
+## S323-0034  POST /role-assignments
+desc: Assign a `Role` to a `Contact`. The contact needs to have all fields filled, which the role requires. If this is not the case a `400` `UnableToFulfill` will be returned.
+schema: RoleAssignmentRequest
+- body:contact string
+- body:role string
+
+## S323-0035  DELETE /role-assignments/{assignment_id}
+desc: Remove a role assignment from a contact. If the contact is still in use with a given role required, this will yield an `UnableToFulfill` error.
+- path:assignment_id string
+
+## S324-0001  POST /account/relay-auto-configs
+desc: Create a new relay proxy config.
+- body:name string
+- body:policy array<object>
+- body:policy[].actions array<string>
+- body:policy[].effect string
+- body:policy[].notActions array<string>
+- body:policy[].notResources array<string>
+- body:policy[].resources array<string>
+
+## S324-0002  PATCH /account/relay-auto-configs/{id}
+desc: Modify a relay proxy configuration by ID.
+schema: PatchOperation
+- path:id string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-0003  POST /account/relay-auto-configs/{id}/reset
+desc: Reset a relay proxy configuration's secret key with an optional expiry time for the old key.
+- path:id string
+- query:expiry integer
+
+## S324-0004  POST /destinations/{projectKey}/{environmentKey}
+desc: Create a new data export destination
+- path:projectKey string
+- path:environmentKey string
+- body:config object
+- body:kind string enum[google-pubsub|kinesis|mparticle|segment]
+- body:name string
+- body:on boolean
+
+## S324-0005  DELETE /destinations/{projectKey}/{environmentKey}/{destinationId}
+desc: Get a single data export destination by ID
+- path:projectKey string
+- path:environmentKey string
+- path:destinationId string
+
+## S324-0006  DELETE /integrations/{integrationKey}/{integrationId}
+desc: Delete an integration subscription by ID.
+- path:integrationKey string
+- path:integrationId string
+
+## S324-0007  PATCH /integrations/{integrationKey}/{integrationId}
+desc: Modify an integration subscription by ID.
+schema: PatchOperation
+- path:integrationKey string
+- path:integrationId string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-0008  DELETE /members/{memberId}
+desc: Delete a team member by ID.
+- path:memberId string
+
+## S324-0009  PATCH /members/{memberId}
+desc: Modify a team member by ID.
+schema: PatchOperation
+- path:memberId string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-0010  POST /projects
+desc: Create a new project with the given key and name.
+- body:defaultClientSideAvailability object
+- body:defaultClientSideAvailability.usingEnvironmentId boolean
+- body:defaultClientSideAvailability.usingMobileKey boolean
+- body:environments array<object>
+- body:environments[].color string
+- body:environments[].confirmChanges boolean
+- body:environments[].defaultTrackEvents boolean
+- body:environments[].defaultTtl number
+- body:environments[].key string
+- body:environments[].name string
+- body:environments[].requireComments boolean
+- body:environments[].secureMode boolean
+- body:environments[].tags array<string>
+- body:includeInSnippetByDefault boolean
+- body:key string
+- body:name string
+- body:tags array<string>
+
+## S324-0011  DELETE /projects/{projectKey}
+desc: Delete a project by key. Caution-- deleting a project will delete all associated environments and feature flags. You cannot delete the last project in an account.
+- path:projectKey string
+
+## S324-0012  PATCH /projects/{projectKey}
+desc: Modify a project by ID.
+schema: PatchOperation
+- path:projectKey string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-0013  POST /projects/{projectKey}/environments
+desc: Create a new environment in a specified project with a given name, key, and swatch color.
+schema: EnvironmentPost
+- path:projectKey string
+- body:color string
+- body:confirmChanges boolean
+- body:defaultTrackEvents boolean
+- body:defaultTtl number
+- body:key string
+- body:name string
+- body:requireComments boolean
+- body:secureMode boolean
+- body:tags array<string>
+
+## S324-0014  DELETE /projects/{projectKey}/environments/{environmentKey}
+desc: Delete an environment in a specific project.
+- path:projectKey string
+- path:environmentKey string
+
+## S324-0015  PATCH /projects/{projectKey}/environments/{environmentKey}
+desc: Modify an environment by ID. If you try to patch the environment by setting both required and requiredApprovalTags, it will result in an error. Users can specify either required approvals for all flags in an environment or those with specific tags, but not both. Only customers on an Enterprise plan can require approval for flag updates with either mechanism.
+schema: PatchOperation
+- path:projectKey string
+- path:environmentKey string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-0016  POST /projects/{projectKey}/environments/{environmentKey}/apiKey
+desc: Reset an environment's SDK key with an optional expiry time for the old key.
+- path:projectKey string
+- path:environmentKey string
+- query:expiry integer
+
+## S324-0017  POST /projects/{projectKey}/environments/{environmentKey}/mobileKey
+desc: Reset an environment's mobile key. The optional expiry for the old key is deprecated for this endpoint, so the old key will always expire immediately.
+- path:projectKey string
+- path:environmentKey string
+- query:expiry integer
+
+## S324-0018  POST /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/approval-requests/{approvalRequestId}
+desc: Create an approval request for a feature flag config
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- path:approvalRequestId string
+- body:comment string
+- body:description string
+- body:executionDate integer
+- body:instructions array<object>
+- body:instructions[].kind string
+- body:notifyMemberIds array<string>
+- body:operatingOnId string
+
+## S324-0019  POST /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/approval-requests/{approvalRequestId}/apply
+desc: Apply approval request for a feature flag config
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- path:approvalRequestId string
+- body:comment string
+
+## S324-0020  POST /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/approval-requests/{approvalRequestId}/review
+desc: Review approval request for a feature flag config
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- path:approvalRequestId string
+- body:comment string
+- body:kind string enum[approve|decline|comment]
+
+## S324-0021  POST /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/scheduled-changes
+desc: Creates a new scheduled change for a feature flag.
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- body:comment string
+- body:executionDate integer
+- body:instructions array<object>
+- body:instructions[].kind string
+
+## S324-0022  POST /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/scheduled-changes-conflicts
+desc: Lists conflicts between the given instructions and any existing scheduled changes for the feature flag. The actual HTTP verb should be REPORT, not POST.
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- body:executionDate integer
+- body:instructions array<object>
+- body:instructions[].kind string
+
+## S324-0023  DELETE /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/scheduled-changes/{scheduledChangeId}
+desc: Delete a scheduled change on a feature flag in an environment.
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- path:scheduledChangeId string
+
+## S324-0024  PATCH /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/scheduled-changes/{scheduledChangeId}
+desc: Updates an existing scheduled-change on a feature flag in an environment.
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- path:scheduledChangeId string
+- body:comment string
+- body:instructions array<object>
+- body:instructions[].kind string
+
+## S324-0025  DELETE /roles/{customRoleKey}
+desc: Delete a custom role by key.
+- path:customRoleKey string
+
+## S324-0026  POST /segments/{projectKey}/{environmentKey}
+desc: Creates a new user segment.
+- path:projectKey string
+- path:environmentKey string
+- body:description string
+- body:key string
+- body:name string
+- body:tags array<string>
+- body:unbounded boolean
+
+## S324-0027  DELETE /segments/{projectKey}/{environmentKey}/{userSegmentKey}
+desc: Delete a user segment.
+- path:projectKey string
+- path:environmentKey string
+- path:userSegmentKey string
+
+## S324-0028  POST /segments/{projectKey}/{environmentKey}/{userSegmentKey}/users
+desc: Update targets included or excluded in a big segment
+- path:projectKey string
+- path:environmentKey string
+- path:userSegmentKey string
+- body:excluded object
+- body:excluded.add array<string>
+- body:excluded.remove array<string>
+- body:included object
+- body:included.add array<string>
+- body:included.remove array<string>
+
+## S324-0029  PATCH /segments/{projectKey}/{userSegmentKey}/expiring-user-targets/{environmentKey}
+desc: Update, add, or delete expiring user targets on user segment
+- path:projectKey string
+- path:environmentKey string
+- path:userSegmentKey string
+- body:(body) object
+
+## S324-0030  POST /tokens
+desc: Create a new token.
+- body:customRoleIds array<string>
+- body:defaultApiVersion integer
+- body:inlineRole array<object>
+- body:inlineRole[].actions array<string>
+- body:inlineRole[].effect string enum[allow|deny]
+- body:inlineRole[].notActions array<string>
+- body:inlineRole[].notResources array<string>
+- body:inlineRole[].resources array<string>
+- body:name string
+- body:role string
+- body:serviceToken boolean
+
+## S324-0031  PATCH /tokens/{tokenId}
+desc: Modify an access token by ID.
+schema: PatchOperation
+- path:tokenId string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-0032  PUT /users/{projectKey}/{environmentKey}/{userKey}/flags/{featureFlagKey}
+desc: Specifically enable or disable a feature flag for a user based on their key.
+- path:projectKey string
+- path:environmentKey string
+- path:userKey string
+- path:featureFlagKey string
+- body:setting boolean
+
+## S324-0033  PATCH /users/{projectKey}/{userKey}/expiring-user-targets/{environmentKey}
+desc: Update, add, or delete expiring user targets for a single user on all flags
+- path:projectKey string
+- path:environmentKey string
+- path:userKey string
+- body:(body) object
+
+## S324-0034  POST /webhooks
+desc: Create a webhook.
+- body:name string
+- body:on boolean
+- body:secret string
+- body:sign boolean
+- body:statements array<object>
+- body:statements[].actions array<string>
+- body:statements[].effect string enum[allow|deny]
+- body:statements[].notActions array<string>
+- body:statements[].notResources array<string>
+- body:statements[].resources array<string>
+- body:tags array<string>
+- body:url string
+
+## S324-0035  DELETE /webhooks/{resourceId}
+desc: Delete a webhook by ID.
+- path:resourceId string
+
+## S324-0036  PATCH /webhooks/{resourceId}
+desc: Modify a webhook by ID.
+schema: PatchOperation
+- path:resourceId string
+- body:op string
+- body:path string
+- body:value object
+
+## S325-0001  POST /analyses/{project-id}
+desc: Run analysis of a specific commit | Trigger the analysis of a specific commit to a project. If a previous attempt to analyze that commit failed, this triggers a fresh analysis. This is supported for all LGTM projects, regardless of repository type or host. The commit must be available in the main repository, but can be on a branch that isn't tracked by LGTM. For both LGTM.com and LGTM Enterprise, 
+- path:project-id integer
+- query:commit string
+- query:language array<string>
+
+## S325-0002  POST /codereviews/{project-id}
+desc: Run code review for a patch | Trigger the code review of a patch. This is available for projects with Git repositories. Your request must include: * Identifier for the base commit * Patch generated using `git diff --binary` (see [git diff](https://git-scm.com/docs/git-diff)) * Header `Content-Type: application/octet-stream` * For both LGTM.com and LGTM Enterprise, an access token with the `coderev
+- path:project-id integer
+- query:base string
+- query:external-id integer
+- query:review-url string
+- query:callback-url string
+- query:callback-secret string
+- body:(body) string
+
+## S325-0003  POST /projects
+desc: Add a project to LGTM | LGTM administrators can add a new project to LGTM by providing a repository URL. By default, LGTM tries to build and analyze the project in the same way as for projects added through the user interface. If at least one language is successfully analyzed, and the repository doesn't already exist on LGTM, a new project is created. If the project already exists but your API cal
+- query:repository string
+- query:language array<string>
+- query:mode string enum[full|sparse|upload]
+- query:commit string
+- query:date string
+- query:worker-label array<string>
+- body:(body) string
+
+## S325-0004  DELETE /projects/{project-id}
+desc: Delete project by numeric identifier | Delete a project with a particular numeric project identifier. In addition to access to the project, administrative access to LGTM or the LGTM Enterprise instance is required to delete projects.
+- path:project-id integer
+
+## S325-0005  PUT /projects/{project-id}/settings/analysis-configuration
+desc: Set the administrator configuration for a project identified by numeric identifier | Set the administrator configuration for a specific project using the numeric project identifier.
+- path:project-id integer
+- body:(body) string
+
+## S325-0006  POST /queryjobs
+desc: Run a CodeQL query on one or more projects | Submit a query to run on one or more projects on LGTM. The query is included in the body of the request.
+- query:language string
+- query:project-id array<integer>
+- query:projects-list string
+- body:(body) string
+
+## S325-0007  DELETE /snapshots/uploads/{session-id}
+desc: Abort database upload process | Aborts the specified upload session and deletes any uploaded parts. After the session is aborted it cannot be restarted. If any part uploads are in progress when the session is aborted, their data may not be deleted. To ensure that uploaded parts are deleted correctly, you should only abort an upload session after all part uploads have completed.
+- path:session-id string
+
+## S325-0008  POST /snapshots/uploads/{session-id}
+desc: Complete snapshot upload session | Completes the database upload by closing the upload session, upgrading the database if appropriate, and scheduling analysis of that snapshot of the codebase. You can view the analysis progress and access the results using the `task-result-url`.
+- path:session-id string
+
+## S325-0009  PUT /snapshots/uploads/{session-id}
+desc: Upload snapshot | Upload a database representing a snapshot of a codebase. The database is sent in one or more parts. Each part is sent in the request body. Use the [`POST /snapshots/{project-id}/{language}`](https://lgtm.com/help/lgtm/api/api-v1#opIdinitSnapshotUpload) endpoint to start an upload session before uploading a database part. Database parts must have been generated and prepared for up
+- path:session-id string
+- body:(body) string
+
+## S325-0010  POST /snapshots/{project-id}/{language}
+desc: Start snapshot upload session | Start a session to upload an externally-built database (which represents a snapshot of a codebase) to a project on LGTM. This endpoint works for projects that are already on LGTM, and the selected language of the database must already be configured. The project must be configured with 'upload' analysis mode. You can upload a "bundled" CodeQL database or a database e
+- path:project-id integer
+- path:language string
+- query:commit string
+- query:date string
+
+## S326-0001  PATCH /api/auths/{id}
+desc: Update one global auth. module config | Update one global auth. module config
+schema: Patch
+- path:id string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0002  POST /api/certificates
+desc: Create one certificate | Create one certificate
+schema: Certificate
+- body:autoRenew string
+- body:ca string
+- body:caRef string
+- body:chain string
+- body:domain string
+- body:from string
+- body:id string
+- body:privateKey string
+- body:selfSigned string
+- body:subject string
+- body:to string
+- body:valid string
+
+## S326-0003  DELETE /api/certificates/{id}
+desc: Delete one certificate by id | Delete one certificate by id
+- path:id string
+
+## S326-0004  PATCH /api/certificates/{id}
+desc: Update one certificate by id | Update one certificate by id
+schema: Patch
+- path:id string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0005  PUT /api/certificates/{id}
+desc: Update one certificate by id | Update one certificate by id
+schema: Certificate
+- path:id string
+- body:autoRenew string
+- body:ca string
+- body:caRef string
+- body:chain string
+- body:domain string
+- body:from string
+- body:id string
+- body:privateKey string
+- body:selfSigned string
+- body:subject string
+- body:to string
+- body:valid string
+
+## S326-0006  POST /api/client-validators
+desc: Create one validation authorities | Create one validation authorities
+schema: ValidationAuthority
+- body:alwaysValid boolean
+- body:badTtl integer
+- body:description string
+- body:goodTtl integer
+- body:headers object
+- body:host string
+- body:id string
+- body:method string
+- body:name string
+- body:noCache boolean
+- body:path string
+- body:timeout integer
+- body:url string
+
+## S326-0007  PATCH /api/client-validators/{id}
+desc: Update one validation authorities by id | Update one validation authorities by id
+schema: Patch
+- path:id string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0008  PUT /api/client-validators/{id}
+desc: Update one validation authorities by id | Update one validation authorities by id
+schema: ValidationAuthority
+- path:id string
+- body:alwaysValid boolean
+- body:badTtl integer
+- body:description string
+- body:goodTtl integer
+- body:headers object
+- body:host string
+- body:id string
+- body:method string
+- body:name string
+- body:noCache boolean
+- body:path string
+- body:timeout integer
+- body:url string
+
+## S326-0009  POST /api/data-exporter-configs
+desc: Create a new data exporter config | Create a new data exporter config
+schema: DataExporterConfig
+- body:bufferSize integer
+- body:config object
+- body:config.clusterUri string
+- body:config.headers object
+- body:config.index string
+- body:config.password string
+- body:config.type string
+- body:config.user string
+- body:config.keyPass string
+- body:config.keyStore string
+- body:config.servers array<string>
+- body:config.topic string
+- body:config.trustore string
+- body:config.namespace string
+- body:config.tenant string
+- body:config.uri array<string>
+- body:config.path string
+- body:config.to array<string>
+- body:config.url string
+- body:config.apiKey string
+- body:config.domain string
+- body:config.eu boolean
+- body:config.apiKeyPrivate string
+- body:config.apiKeyPublic string
+- body:config.config object
+- body:config.ref string
+- body:desc string
+- body:enabled string
+- body:filtering object
+- body:filtering.exclude array<object>
+- body:filtering.include array<object>
+- body:groupDuration integer
+- body:groupSize integer
+- body:id string
+- body:jsonWorkers integer
+- body:location object
+- body:location.teams array<object>
+- body:location.tenant string
+- body:metadata object
+- body:name string
+- body:projection object
+- body:sendWorkers integer
+- body:typ string enum[kafka|pulsar|file|mailer|elastic|console|custom]
+
+## S326-0010  POST /api/data-exporter-configs/_bulk
+desc: Create a new data exporter configs | Create a new data exporter configs
+schema: DataExporterConfig
+- body:bufferSize integer
+- body:config object
+- body:config.clusterUri string
+- body:config.headers object
+- body:config.index string
+- body:config.password string
+- body:config.type string
+- body:config.user string
+- body:config.keyPass string
+- body:config.keyStore string
+- body:config.servers array<string>
+- body:config.topic string
+- body:config.trustore string
+- body:config.namespace string
+- body:config.tenant string
+- body:config.uri array<string>
+- body:config.path string
+- body:config.to array<string>
+- body:config.url string
+- body:config.apiKey string
+- body:config.domain string
+- body:config.eu boolean
+- body:config.apiKeyPrivate string
+- body:config.apiKeyPublic string
+- body:config.config object
+- body:config.ref string
+- body:desc string
+- body:enabled string
+- body:filtering object
+- body:filtering.exclude array<object>
+- body:filtering.include array<object>
+- body:groupDuration integer
+- body:groupSize integer
+- body:id string
+- body:jsonWorkers integer
+- body:location object
+- body:location.teams array<object>
+- body:location.tenant string
+- body:metadata object
+- body:name string
+- body:projection object
+- body:sendWorkers integer
+- body:typ string enum[kafka|pulsar|file|mailer|elastic|console|custom]
+
+## S326-0011  DELETE /api/data-exporter-configs/{dataExporterConfigId}
+desc: Delete a data exporter config | Delete a data exporter config
+- path:dataExporterConfigId string
+
+## S326-0012  PATCH /api/data-exporter-configs/{dataExporterConfigId}
+desc: Update a data exporter config with a diff | Update a data exporter config with a diff
+schema: Patch
+- path:dataExporterConfigId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0013  PUT /api/data-exporter-configs/{dataExporterConfigId}
+desc: Update a data exporter config | Update a data exporter config
+schema: DataExporterConfig
+- path:dataExporterConfigId string
+- body:bufferSize integer
+- body:config object
+- body:config.clusterUri string
+- body:config.headers object
+- body:config.index string
+- body:config.password string
+- body:config.type string
+- body:config.user string
+- body:config.keyPass string
+- body:config.keyStore string
+- body:config.servers array<string>
+- body:config.topic string
+- body:config.trustore string
+- body:config.namespace string
+- body:config.tenant string
+- body:config.uri array<string>
+- body:config.path string
+- body:config.to array<string>
+- body:config.url string
+- body:config.apiKey string
+- body:config.domain string
+- body:config.eu boolean
+- body:config.apiKeyPrivate string
+- body:config.apiKeyPublic string
+- body:config.config object
+- body:config.ref string
+- body:desc string
+- body:enabled string
+- body:filtering object
+- body:filtering.exclude array<object>
+- body:filtering.include array<object>
+- body:groupDuration integer
+- body:groupSize integer
+- body:id string
+- body:jsonWorkers integer
+- body:location object
+- body:location.teams array<object>
+- body:location.tenant string
+- body:metadata object
+- body:name string
+- body:projection object
+- body:sendWorkers integer
+- body:typ string enum[kafka|pulsar|file|mailer|elastic|console|custom]
+
+## S326-0014  PUT /api/globalconfig
+desc: Update the global configuration | Update the global configuration
+schema: GlobalConfig
+- body:alertsEmails array<string>
+- body:alertsWebhooks array<object>
+- body:alertsWebhooks[].headers object
+- body:alertsWebhooks[].url string
+- body:analyticsWebhooks array<object>
+- body:analyticsWebhooks[].headers object
+- body:analyticsWebhooks[].url string
+- body:apiReadOnly boolean
+- body:autoLinkToDefaultGroup boolean
+- body:backofficeAuth0Config object
+- body:backofficeAuth0Config.callbackUrl string
+- body:backofficeAuth0Config.clientId string
+- body:backofficeAuth0Config.clientSecret string
+- body:backofficeAuth0Config.domain string
+- body:cleverSettings object
+- body:cleverSettings.consumerKey string
+- body:cleverSettings.consumerSecret string
+- body:cleverSettings.orgaId string
+- body:cleverSettings.secret string
+- body:cleverSettings.token string
+- body:elasticReadsConfig object
+- body:elasticReadsConfig.clusterUri string
+- body:elasticReadsConfig.headers object
+- body:elasticReadsConfig.index string
+- body:elasticReadsConfig.password string
+- body:elasticReadsConfig.type string
+- body:elasticReadsConfig.user string
+- body:elasticWritesConfigs array<object>
+- body:elasticWritesConfigs[].clusterUri string
+- body:elasticWritesConfigs[].headers object
+- body:elasticWritesConfigs[].index string
+- body:elasticWritesConfigs[].password string
+- body:elasticWritesConfigs[].type string
+- body:elasticWritesConfigs[].user string
+- body:endlessIpAddresses array<string>
+- body:ipFiltering object
+- body:ipFiltering.blacklist array<string>
+- body:ipFiltering.whitelist array<string>
+- body:limitConcurrentRequests boolean
+- body:lines array<string>
+- body:mailerSettings object
+- body:mailerSettings.apiKey string
+- body:mailerSettings.apiKeyPrivate string
+- body:mailerSettings.apiKeyPublic string
+- body:mailerSettings.domain string
+- body:mailerSettings.eu boolean
+- body:mailerSettings.header object
+- body:mailerSettings.type string
+- body:mailerSettings.url string
+- body:maxConcurrentRequests integer
+- body:maxHttp10ResponseSize integer
+- body:maxLogsSize integer
+- body:middleFingers boolean
+- body:perIpThrottlingQuota integer
+- body:privateAppsAuth0Config object
+- body:privateAppsAuth0Config.callbackUrl string
+- body:privateAppsAuth0Config.clientId string
+- body:privateAppsAuth0Config.clientSecret string
+- body:privateAppsAuth0Config.domain string
+- body:streamEntityOnly boolean
+- body:throttlingQuota integer
+- body:u2fLoginOnly boolean
+- body:useCircuitBreakers boolean
+
+## S326-0015  POST /api/groups
+desc: Create a new service group | Create a new service group
+schema: Group
+- body:description string
+- body:id string
+- body:name string
+
+## S326-0016  PUT /api/groups/{groupId}/apikeys/{clientId}
+desc: Update an api key | Update an api key for a specified service group
+schema: ApiKey
+- path:groupId string
+- path:clientId string
+- body:authorizedEntities array<string>
+- body:clientId string
+- body:clientName string
+- body:clientSecret string
+- body:dailyQuota integer
+- body:enabled boolean
+- body:metadata object
+- body:monthlyQuota integer
+- body:throttlingQuota integer
+
+## S326-0017  DELETE /api/groups/{groupId}/apikeys/{clientId}/quotas
+desc: Reset the quota state of an api key | Reset the quota state of an api key
+- path:groupId string
+- path:clientId string
+
+## S326-0018  DELETE /api/groups/{serviceGroupId}
+desc: Delete a service group | Delete a service group
+- path:serviceGroupId string
+
+## S326-0019  PATCH /api/groups/{serviceGroupId}
+desc: Update a service group with a diff | Update a service group with a diff
+schema: Patch
+- path:serviceGroupId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0020  PUT /api/groups/{serviceGroupId}
+desc: Update a service group | Update a service group
+schema: Group
+- path:serviceGroupId string
+- body:description string
+- body:id string
+- body:name string
+
+## S326-0021  POST /api/otoroshi.json
+desc: Import the full state of Otoroshi | Import the full state of Otoroshi
+schema: ImportExport
+- body:admins array<object>
+- body:admins[].createdAt integer
+- body:admins[].label string
+- body:admins[].password string
+- body:admins[].registration object
+- body:admins[].username string
+- body:apiKeys array<object>
+- body:apiKeys[].authorizedEntities array<string>
+- body:apiKeys[].clientId string
+- body:apiKeys[].clientName string
+- body:apiKeys[].clientSecret string
+- body:apiKeys[].dailyQuota integer
+- body:apiKeys[].enabled boolean
+- body:apiKeys[].metadata object
+- body:apiKeys[].monthlyQuota integer
+- body:apiKeys[].throttlingQuota integer
+- body:appConfig object
+- body:config object
+- body:config.alertsEmails array<string>
+- body:config.alertsWebhooks array<object>
+- body:config.alertsWebhooks[].headers object
+- body:config.alertsWebhooks[].url string
+- body:config.analyticsWebhooks array<object>
+- body:config.analyticsWebhooks[].headers object
+- body:config.analyticsWebhooks[].url string
+- body:config.apiReadOnly boolean
+- body:config.autoLinkToDefaultGroup boolean
+- body:config.backofficeAuth0Config object
+- body:config.backofficeAuth0Config.callbackUrl string
+- body:config.backofficeAuth0Config.clientId string
+- body:config.backofficeAuth0Config.clientSecret string
+- body:config.backofficeAuth0Config.domain string
+- body:config.cleverSettings object
+- body:config.cleverSettings.consumerKey string
+- body:config.cleverSettings.consumerSecret string
+- body:config.cleverSettings.orgaId string
+- body:config.cleverSettings.secret string
+- body:config.cleverSettings.token string
+- body:config.elasticReadsConfig object
+- body:config.elasticReadsConfig.clusterUri string
+- body:config.elasticReadsConfig.headers object
+- body:config.elasticReadsConfig.index string
+- body:config.elasticReadsConfig.password string
+- body:config.elasticReadsConfig.type string
+- body:config.elasticReadsConfig.user string
+- body:config.elasticWritesConfigs array<object>
+- body:config.elasticWritesConfigs[].clusterUri string
+- body:config.elasticWritesConfigs[].headers object
+- body:config.elasticWritesConfigs[].index string
+- body:config.elasticWritesConfigs[].password string
+- body:config.elasticWritesConfigs[].type string
+- body:config.elasticWritesConfigs[].user string
+- body:config.endlessIpAddresses array<string>
+- body:config.ipFiltering object
+- body:config.ipFiltering.blacklist array<string>
+- body:config.ipFiltering.whitelist array<string>
+- body:config.limitConcurrentRequests boolean
+- body:config.lines array<string>
+- body:config.mailerSettings object
+- body:config.mailerSettings.apiKey string
+- body:config.mailerSettings.apiKeyPrivate string
+- body:config.mailerSettings.apiKeyPublic string
+- body:config.mailerSettings.domain string
+- body:config.mailerSettings.eu boolean
+- body:config.mailerSettings.header object
+- body:config.mailerSettings.type string
+- body:config.mailerSettings.url string
+- body:config.maxConcurrentRequests integer
+- body:config.maxHttp10ResponseSize integer
+- body:config.maxLogsSize integer
+- body:config.middleFingers boolean
+- body:config.perIpThrottlingQuota integer
+- body:config.privateAppsAuth0Config object
+- body:config.privateAppsAuth0Config.callbackUrl string
+- body:config.privateAppsAuth0Config.clientId string
+- body:config.privateAppsAuth0Config.clientSecret string
+- body:config.privateAppsAuth0Config.domain string
+- body:config.streamEntityOnly boolean
+- body:config.throttlingQuota integer
+- body:config.u2fLoginOnly boolean
+(+132 fields cut)
+
+## S326-0022  POST /api/scripts/_compile
+desc: Compile a script | Compile a script
+schema: Script
+- body:code object
+- body:desc object
+- body:id string
+- body:name string
+
+## S326-0023  PATCH /api/scripts/{scriptId}
+desc: Update a script with a diff | Update a script with a diff
+schema: Patch
+- path:scriptId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0024  PUT /api/services/{serviceId}
+desc: Update a service descriptor | Update a service descriptor
+schema: Service
+- path:serviceId string
+- body:Canary object
+- body:Canary.enabled boolean
+- body:Canary.root string
+- body:Canary.targets array<object>
+- body:Canary.targets[].host string
+- body:Canary.targets[].scheme string
+- body:Canary.traffic integer
+- body:additionalHeaders object
+- body:api object
+- body:api.exposeApi boolean
+- body:api.openApiDescriptorUrl string
+- body:authConfigRef string
+- body:buildMode boolean
+- body:chaosConfig object
+- body:chaosConfig.badResponsesFaultConfig object
+- body:chaosConfig.badResponsesFaultConfig.ratio number
+- body:chaosConfig.badResponsesFaultConfig.responses array<object>
+- body:chaosConfig.enabled boolean
+- body:chaosConfig.largeRequestFaultConfig object
+- body:chaosConfig.largeRequestFaultConfig.additionalRequestSize integer
+- body:chaosConfig.largeRequestFaultConfig.ratio number
+- body:chaosConfig.largeResponseFaultConfig object
+- body:chaosConfig.largeResponseFaultConfig.additionalRequestSize integer
+- body:chaosConfig.largeResponseFaultConfig.ratio number
+- body:chaosConfig.latencyInjectionFaultConfig object
+- body:chaosConfig.latencyInjectionFaultConfig.from integer
+- body:chaosConfig.latencyInjectionFaultConfig.ratio number
+- body:chaosConfig.latencyInjectionFaultConfig.to integer
+- body:clientConfig object
+- body:clientConfig.backoffFactor integer
+- body:clientConfig.callTimeout integer
+- body:clientConfig.globalTimeout integer
+- body:clientConfig.maxErrors integer
+- body:clientConfig.retries integer
+- body:clientConfig.retryInitialDelay integer
+- body:clientConfig.sampleInterval integer
+- body:clientConfig.useCircuitBreaker boolean
+- body:clientValidatorRef string
+- body:cors object
+- body:cors.allowCredentials boolean
+- body:cors.allowHeaders array<string>
+- body:cors.allowMethods array<string>
+- body:cors.allowOrigin string
+- body:cors.enabled boolean
+- body:cors.excludedPatterns array<string>
+- body:cors.exposeHeaders array<string>
+- body:cors.maxAge integer
+- body:domain string
+- body:enabled boolean
+- body:enforceSecureCommunication boolean
+- body:env string
+- body:forceHttps boolean
+- body:groups array<string>
+- body:gzip object
+- body:gzip.blackList array<string>
+- body:gzip.bufferSize integer
+- body:gzip.chunkedThreshold integer
+- body:gzip.compressionLevel integer
+- body:gzip.enabled boolean
+- body:gzip.excludedPatterns array<string>
+- body:gzip.whiteList array<string>
+- body:headersVerification object
+- body:healthCheck object
+- body:healthCheck.enabled boolean
+- body:healthCheck.url string
+- body:id string
+- body:ipFiltering object
+- body:ipFiltering.blacklist array<string>
+- body:ipFiltering.whitelist array<string>
+- body:jwtVerifier object
+- body:jwtVerifier.algoSettings object
+- body:jwtVerifier.algoSettings.secret string
+- body:jwtVerifier.algoSettings.size integer
+- body:jwtVerifier.algoSettings.type string
+- body:jwtVerifier.algoSettings.privateKey string
+- body:jwtVerifier.algoSettings.publicKey string
+- body:jwtVerifier.algoSettings.headers object
+- body:jwtVerifier.algoSettings.kty string
+- body:jwtVerifier.algoSettings.timeout integer
+(+56 fields cut)
+
+## S326-0025  PATCH /api/services/{serviceId}/apikeys/{clientId}
+desc: Update an api key with a diff | Update an api key for a specified service descriptor with a diff
+schema: Patch
+- path:serviceId string
+- path:clientId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0026  PUT /api/services/{serviceId}/apikeys/{clientId}
+desc: Update an api key | Update an api key for a specified service descriptor
+schema: ApiKey
+- path:serviceId string
+- path:clientId string
+- body:authorizedEntities array<string>
+- body:clientId string
+- body:clientName string
+- body:clientSecret string
+- body:dailyQuota integer
+- body:enabled boolean
+- body:metadata object
+- body:monthlyQuota integer
+- body:throttlingQuota integer

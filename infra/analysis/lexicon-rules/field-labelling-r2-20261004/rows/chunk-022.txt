@@ -1,0 +1,419 @@
+## S627-0001  POST /edge-config
+summary: Create an Edge Config
+desc: Creates an Edge Config.
+- query:teamId string
+- body:items object
+- body:slug string
+
+## S627-0002  DELETE /edge-config/{edgeConfigId}
+summary: Delete an Edge Config
+desc: Delete an Edge Config by id.
+- path:edgeConfigId string
+- query:teamId string
+
+## S627-0003  POST /edge-config/{edgeConfigId}/token
+summary: Create an Edge Config token
+desc: Adds a token to an existing Edge Config.
+- path:edgeConfigId string
+- query:teamId string
+- body:label string
+
+## S627-0004  POST /registration
+summary: Login with email
+desc: Request a new login for a user to get a token. This will respond with a verification token and send an email to confirm the request. Once confirmed you can use the verification token to get an authentication token.
+- body:email string
+- body:tokenName string
+
+## S627-0005  POST /v1/deployments/{deploymentId}/checks
+summary: Creates a new Check
+desc: Creates a new check. This endpoint must be called with an OAuth2 or it will produce a 400 error.
+- path:deploymentId string
+- query:teamId string
+- body:blocking boolean
+- body:detailsUrl string
+- body:externalId string
+- body:name string
+- body:path string
+- body:rerequestable boolean
+
+## S627-0006  PATCH /v1/deployments/{deploymentId}/checks/{checkId}
+summary: Update a check
+desc: Update an existing check. This endpoint must be called with an OAuth2 or it will produce a 400 error.
+- path:deploymentId string
+- path:checkId string
+- query:teamId string
+- body:conclusion string enum[canceled|failed|neutral|succeeded|skipped]
+- body:detailsUrl string
+- body:externalId string
+- body:name string
+- body:output object
+- body:output.metrics object
+- body:output.metrics.CLS object
+- body:output.metrics.FCP object
+- body:output.metrics.LCP object
+- body:output.metrics.TBT object
+- body:output.metrics.virtualExperienceScore object
+- body:path string
+- body:status string enum[running|completed]
+
+## S627-0007  DELETE /v1/integrations/log-drains/{id}
+summary: Deletes the Integration log drain with the provided `id`
+desc: Deletes the Integration log drain with the provided `id`. When using an OAuth2 Token, the log drain can be deleted only if the integration owns it.
+- path:id string
+- query:teamId string
+
+## S627-0008  POST /v1/teams
+summary: Create a Team
+desc: Create a new Team under your account. You need to send a POST request with the desired Team slug, and optionally the Team name.
+- body:name string
+- body:slug string
+
+## S627-0009  POST /v1/teams/{teamId}/members
+summary: Invite a user
+desc: Invite a user to join the team specified in the URL. The authenticated user needs to be an `OWNER` in order to successfully invoke this endpoint. The user can be specified with an email or an ID. If both email and ID are provided, ID will take priority.
+- path:teamId string
+- body:email string
+- body:role any
+- body:uid string
+
+## S627-0010  PATCH /v1/teams/{teamId}/members/{uid}
+summary: Update a Team Member
+desc: Update the membership of a Team Member on the Team specified by `teamId`, such as changing the _role_ of the member, or confirming a request to join the Team for an unconfirmed member. The authenticated user must be an `OWNER` of the Team.
+- path:uid string
+- path:teamId string
+- body:confirmed boolean enum[True]
+- body:joinedFrom object
+- body:joinedFrom.ssoUserId null
+- body:role string
+
+## S627-0011  POST /v1/teams/{teamId}/request
+summary: Request access to a team
+desc: Request access to a team as a member. An owner has to approve the request. Only 10 users can request access to a team at the same time.
+- path:teamId string
+- body:joinedFrom object
+- body:joinedFrom.commitId string
+- body:joinedFrom.gitUserId string
+- body:joinedFrom.gitUserLogin string
+- body:joinedFrom.origin string enum[import|teams|github|gitlab|bitbucket|feedback]
+- body:joinedFrom.repoId string
+- body:joinedFrom.repoPath string
+
+## S627-0012  DELETE /v1/user
+summary: Delete User Account
+desc: Initiates the deletion process for the currently authenticated User, by sending a deletion confirmation email. The email contains a link that the user needs to visit in order to proceed with the deletion process.
+- body:reasons array<object>
+- body:reasons[].description string
+- body:reasons[].slug string
+
+## S627-0013  POST /v1/webhooks
+summary: Creates a webhook
+desc: Creates a webhook
+- query:teamId string
+- body:events array<string> enum[mport("/vercel/path0/utils/webhooks/webhooks/types").WebhookName.DomainCreate|mport("/vercel/path0/utils/webhooks/webhooks/types").WebhookName.DeploymentCreate|mport("/vercel/path0/utils/webhooks/webhooks/types").WebhookName.DeploymentErro|mport("/vercel/path0/utils/webhooks/webhooks/types").WebhookName.DeploymentCancele|mport("/vercel/path0/utils/webhooks/webhooks/types").WebhookName.DeploymentSucceede|mport("/vercel/path0/utils/webhooks/webhooks/types").WebhookName.DeploymentRead|mport("/vercel/path0/utils/webhooks/webhooks/types").WebhookName.DeploymentCheckRerequeste|mport("/vercel/path0/utils/webhooks/webhooks/types").WebhookName.IntegrationConfigurationPermissionUpgrade|mport("/vercel/path0/utils/webhooks/webhooks/types").WebhookName.IntegrationConfigurationRemove|mport("/vercel/path0/utils/webhooks/webhooks/types").WebhookName.IntegrationConfigurationScopeChangeConfirme|mport("/vercel/path0/utils/webhooks/webhooks/types").WebhookName.ProjectCreate|mport("/vercel/path0/utils/webhooks/webhooks/types").WebhookName.ProjectRemove]
+- body:projectIds array<string>
+- body:url string
+
+## S627-0014  PATCH /v12/deployments/{id}/cancel
+summary: Cancel a deployment
+desc: This endpoint allows you to cancel a deployment which is currently building, by supplying its `id` in the URL.
+- path:id string
+- query:teamId string
+
+## S627-0015  POST /v13/deployments
+summary: Create a new deployment
+desc: Create a new deployment with all the required and intended data. If the deployment is not a git deployment, all files must be provided with the request, either referenced or inlined. Additionally, a deployment id can be specified to redeploy a previous deployment.
+- query:forceNew string enum[0|1]
+- query:skipAutoDetectionConfirmation string enum[0|1]
+- query:teamId string
+- body:$schema string
+- body:alias array<string>
+- body:build object
+- body:build.env object
+- body:buildCommand string
+- body:builds array<object>
+- body:builds[].config object
+- body:builds[].src string
+- body:builds[].use string
+- body:cleanUrls boolean
+- body:crons array<object>
+- body:crons[].path string
+- body:crons[].schedule string
+- body:deploymentId string
+- body:devCommand string
+- body:env object
+- body:files array<object>
+- body:files[].data string
+- body:files[].encoding string enum[base64|utf-8]
+- body:files[].file string
+- body:files[].sha string
+- body:files[].size integer
+- body:framework string enum[blitzjs|nextjs|gatsby|remix|astro|hexo|eleventy|docusaurus-2|docusaurus|preact|solidstart|dojo]
+- body:functions object
+- body:git object
+- body:git.deploymentEnabled boolean
+- body:gitMetadata object
+- body:gitMetadata.commitAuthorName string
+- body:gitMetadata.commitMessage string
+- body:gitMetadata.commitRef string
+- body:gitMetadata.commitSha string
+- body:gitMetadata.dirty boolean
+- body:gitMetadata.remoteUrl string
+- body:gitSource object
+- body:gitSource.ref string
+- body:gitSource.repoId number
+- body:gitSource.sha string
+- body:gitSource.type string enum[github]
+- body:gitSource.org string
+- body:gitSource.repo string
+- body:gitSource.projectId number
+- body:gitSource.repoUuid string
+- body:gitSource.workspaceUuid string
+- body:gitSource.owner string
+- body:gitSource.slug string
+- body:headers array<object>
+- body:headers[].has array<object>
+- body:headers[].has[].type string enum[host]
+- body:headers[].has[].value string
+- body:headers[].has[].key string
+- body:headers[].headers array<object>
+- body:headers[].headers[].key string
+- body:headers[].headers[].value string
+- body:headers[].missing array<object>
+- body:headers[].missing[].type string enum[host]
+- body:headers[].missing[].value string
+- body:headers[].missing[].key string
+- body:headers[].source string
+- body:ignoreCommand string
+- body:installCommand string
+- body:meta object
+- body:monorepoManager string
+- body:name string
+- body:outputDirectory string
+- body:project string
+- body:projectSettings object
+- body:projectSettings.buildCommand string
+- body:projectSettings.commandForIgnoringBuildStep string
+- body:projectSettings.devCommand string
+- body:projectSettings.framework string enum[blitzjs|nextjs|gatsby|remix|astro|hexo|eleventy|docusaurus-2|docusaurus|preact|solidstart|dojo]
+- body:projectSettings.installCommand string
+- body:projectSettings.outputDirectory string
+- body:projectSettings.rootDirectory string
+- body:projectSettings.serverlessFunctionRegion string
+- body:projectSettings.skipGitConnectDuringLink boolean
+- body:projectSettings.sourceFilesOutsideRootDirectory boolean
+- body:public boolean
+- (57 truong bi cat)
+
+## S627-0016  DELETE /v13/deployments/{id}
+summary: Delete a Deployment
+desc: This API allows you to delete a deployment, either by supplying its `id` in the URL or the `url` of the deployment as a query parameter. You can obtain the ID, for example, by listing all deployments.
+- path:id string
+- query:url string
+- query:teamId string
+
+## S627-0017  DELETE /v2/aliases/{aliasId}
+summary: Delete an Alias
+desc: Delete an Alias with the specified ID.
+- path:aliasId string
+- query:teamId string
+
+## S627-0018  POST /v2/files
+summary: Upload Deployment Files
+desc: Before you create a deployment you need to upload the required files for that deployment. To do it, you need to first upload each file to this endpoint. Once that's completed, you can create a new deployment with the uploaded files. The file content must be placed inside the body of the request. In the case of a successful response you'll receive a status code 200 with an empty body.
+- query:teamId string
+
+## S627-0019  POST /v2/integrations/log-drains
+summary: Creates a new Integration Log Drain
+desc: Creates an Integration log drain. This endpoint must be called with an OAuth2 client (integration), since log drains are tied to integrations. If it is called with a different token type it will produce a 400 error.
+- query:teamId string
+- body:branch string
+- body:deliveryFormat string enum[json|ndjson|syslog]
+- body:environment string enum[preview|production]
+- body:headers object
+- body:name string
+- body:projectIds array<string>
+- body:secret string
+- body:sources array<string> enum[static|lambda|build|edge|external]
+- body:url string
+
+## S627-0020  DELETE /v2/secrets/{idOrName}
+summary: Delete a secret
+desc: This deletes the user's secret defined in the URL.
+- path:idOrName string
+- query:teamId string
+
+## S627-0021  POST /v2/secrets/{name}
+summary: Create a new secret
+desc: Allows to create a new secret.
+- path:name string
+- query:teamId string
+- body:decryptable boolean
+- body:name string
+- body:projectId string
+- body:value string
+
+## S627-0022  PATCH /v2/teams/{teamId}
+summary: Update a Team
+desc: Update the information of a Team specified by the `teamId` parameter. The request body should contain the information that will be updated on the Team.
+- path:teamId string
+- body:avatar string
+- body:description string
+- body:emailDomain string
+- body:enablePreviewFeedback string
+- body:migrateExistingEnvVariablesToSensitive boolean
+- body:name string
+- body:previewDeploymentSuffix string
+- body:regenerateInviteCode boolean
+- body:remoteCaching object
+- body:remoteCaching.enabled boolean
+- body:saml object
+- body:saml.enforced boolean
+- body:saml.roles object
+- body:sensitiveEnvironmentVariablePolicy string
+- body:slug string
+
+## S627-0023  DELETE /v3/user/tokens/{tokenId}
+summary: Delete an authentication token
+desc: Invalidate an authentication token, such that it will no longer be valid for future HTTP requests.
+- path:tokenId string
+
+## S627-0024  POST /v4/domains
+summary: Register or transfer-in a new Domain
+desc: This endpoint is used for registering a new domain name with Vercel for the authenticating user, and also for initiating a domain transfer request from an external Registrar to Vercel.
+- query:teamId string
+- body:method string
+- body:name string
+- body:token string
+- body:authCode string
+- body:expectedPrice number
+- body:cdnEnabled boolean
+
+## S627-0025  POST /v4/domains/buy
+summary: Purchase a domain
+desc: Allows to purchase the specified domain.
+- query:teamId string
+- body:expectedPrice number
+- body:name string
+- body:renew boolean
+
+## S627-0026  DELETE /v6/domains/{domain}
+summary: Remove a domain by name
+desc: Delete a previously registered domain name from Vercel. Deleting a domain will automatically remove any associated aliases.
+- path:domain string
+- query:teamId string
+
+## S627-0027  POST /v7/certs
+summary: Issue a new cert
+desc: Issue a new cert
+- query:teamId string
+- body:cns array<string>
+
+## S627-0028  PUT /v7/certs
+summary: Upload a cert
+desc: Upload a cert
+- query:teamId string
+- body:ca string
+- body:cert string
+- body:key string
+- body:skipValidation boolean
+
+## S627-0029  DELETE /v7/certs/{id}
+summary: Remove cert
+desc: Remove cert
+- path:id string
+- query:teamId string
+
+## S627-0030  POST /v8/artifacts
+summary: Query information about an artifact
+desc: Query information about an array of artifacts.
+- query:teamId string
+- body:hashes array<string>
+
+## S627-0031  POST /v9/projects
+summary: Create a new project
+desc: Allows to create a new project with the provided configuration. It only requires the project `name` but more configuration can be provided to override the defaults.
+- query:teamId string
+- body:buildCommand string
+- body:commandForIgnoringBuildStep string
+- body:devCommand string
+- body:environmentVariables array<object>
+- body:environmentVariables[].gitBranch string
+- body:environmentVariables[].key string
+- body:environmentVariables[].target array<string> enum[mport("/vercel/path0/utils/env-variable-util/types").EnvTarget.Productio|mport("/vercel/path0/utils/env-variable-util/types").EnvTarget.Previe|mport("/vercel/path0/utils/env-variable-util/types").EnvTarget.Developmen]
+- body:environmentVariables[].type string enum[system|secret|encrypted|plain]
+- body:environmentVariables[].value string
+- body:framework string enum[blitzjs|nextjs|gatsby|remix|astro|hexo|eleventy|docusaurus-2|docusaurus|preact|solidstart|dojo]
+- body:gitRepository object
+- body:gitRepository.repo string
+- body:gitRepository.type string enum[github|gitlab|bitbucket]
+- body:installCommand string
+- body:name string
+- body:outputDirectory string
+- body:publicSource boolean
+- body:rootDirectory string
+- body:serverlessFunctionRegion string
+- body:skipGitConnectDuringLink boolean
+
+## S627-0032  DELETE /v9/projects/{idOrName}
+summary: Delete a Project
+desc: Delete a specific project by passing either the project `id` or `name` in the URL.
+- path:idOrName string
+- query:teamId string
+
+## S627-0033  POST /v9/projects/{idOrName}/domains
+summary: Add a domain to a project
+desc: Add a domain to the project by passing its domain name and by specifying the project by either passing the project `id` or `name` in the URL. If the domain is not yet verified to be used on this project, the request will return `verified = false`, and the domain will need to be verified according to the `verification` challenge via `POST /projects/:idOrName/domains/:domain/verify`. If the domain a
+- path:idOrName string
+- query:teamId string
+- body:gitBranch string
+- body:name string
+- body:redirect string
+- body:redirectStatusCode integer enum[301|302|307|308]
+
+## S627-0034  DELETE /v9/projects/{idOrName}/domains/{domain}
+summary: Remove a domain from a project
+desc: Remove a domain from a project by passing the domain name and by specifying the project by either passing the project `id` or `name` in the URL.
+- path:idOrName string
+- path:domain string
+- query:teamId string
+
+## S627-0035  PATCH /v9/projects/{idOrName}/domains/{domain}
+summary: Update a project domain
+desc: Update a project domain's configuration, including the name, git branch and redirect of the domain.
+- path:idOrName string
+- path:domain string
+- query:teamId string
+- body:gitBranch string
+- body:redirect string
+- body:redirectStatusCode integer enum[301|302|307|308]
+
+## S627-0036  POST /v9/projects/{idOrName}/domains/{domain}/verify
+summary: Verify project domain
+desc: Attempts to verify a project domain with `verified = false` by checking the correctness of the project domain's `verification` challenge.
+- path:idOrName string
+- path:domain string
+- query:teamId string
+
+## S628-0001  POST /record/v2/search.json
+summary: search for records post
+- query:wskey string
+- body:boost string
+- body:callback string
+- body:colourPalette array<string>
+- body:cursor string
+- body:facet array<string>
+- body:hit object
+- body:hit.fl string
+- body:hit.selectors string
+- body:landingPage boolean
+- body:media boolean
+- body:profile array<string>
+- body:qf array<string>
+- body:query string
+- body:reusability array<string>
+- body:rows integer
+- body:sort array<string>
+- body:start integer
+- body:textFulltext boolean
+- body:theme string
+- body:thumbnail boolean

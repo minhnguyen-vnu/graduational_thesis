@@ -1,0 +1,1175 @@
+## S325-0001  POST /analyses/{project-id}
+summary: Run analysis of a specific commit
+desc: Trigger the analysis of a specific commit to a project. If a previous attempt to analyze that commit failed, this triggers a fresh analysis. This is supported for all LGTM projects, regardless of repository type or host. The commit must be available in the main repository, but can be on a branch that isn't tracked by LGTM. For both LGTM.com and LGTM Enterprise, you must include an access token wit
+- path:project-id integer
+- query:commit string
+- query:language array<string>
+
+## S325-0002  POST /codereviews/{project-id}
+summary: Run code review for a patch
+desc: Trigger the code review of a patch. This is available for projects with Git repositories. Your request must include: * Identifier for the base commit * Patch generated using `git diff --binary` (see [git diff](https://git-scm.com/docs/git-diff)) * Header `Content-Type: application/octet-stream` * For both LGTM.com and LGTM Enterprise, an access token with the `codereviews:write` scope Note that if
+- path:project-id integer
+- query:base string
+- query:external-id integer
+- query:review-url string
+- query:callback-url string
+- query:callback-secret string
+- body:(body) string
+
+## S325-0003  POST /projects
+summary: Add a project to LGTM
+desc: LGTM administrators can add a new project to LGTM by providing a repository URL. By default, LGTM tries to build and analyze the project in the same way as for projects added through the user interface. If at least one language is successfully analyzed, and the repository doesn't already exist on LGTM, a new project is created. If the project already exists but your API call triggers a successful 
+- query:repository string
+- query:language array<string>
+- query:mode string enum[full|sparse|upload]
+- query:commit string
+- query:date string
+- query:worker-label array<string>
+- body:(body) string
+
+## S325-0004  DELETE /projects/{project-id}
+summary: Delete project by numeric identifier
+desc: Delete a project with a particular numeric project identifier. In addition to access to the project, administrative access to LGTM or the LGTM Enterprise instance is required to delete projects.
+- path:project-id integer
+
+## S325-0005  PUT /projects/{project-id}/settings/analysis-configuration
+summary: Set the administrator configuration for a project identified by numeric identifier
+desc: Set the administrator configuration for a specific project using the numeric project identifier.
+- path:project-id integer
+- body:(body) string
+
+## S325-0006  POST /queryjobs
+summary: Run a CodeQL query on one or more projects
+desc: Submit a query to run on one or more projects on LGTM. The query is included in the body of the request.
+- query:language string
+- query:project-id array<integer>
+- query:projects-list string
+- body:(body) string
+
+## S325-0007  DELETE /snapshots/uploads/{session-id}
+summary: Abort database upload process
+desc: Aborts the specified upload session and deletes any uploaded parts. After the session is aborted it cannot be restarted. If any part uploads are in progress when the session is aborted, their data may not be deleted. To ensure that uploaded parts are deleted correctly, you should only abort an upload session after all part uploads have completed.
+- path:session-id string
+
+## S325-0008  POST /snapshots/uploads/{session-id}
+summary: Complete snapshot upload session
+desc: Completes the database upload by closing the upload session, upgrading the database if appropriate, and scheduling analysis of that snapshot of the codebase. You can view the analysis progress and access the results using the `task-result-url`.
+- path:session-id string
+
+## S325-0009  PUT /snapshots/uploads/{session-id}
+summary: Upload snapshot
+desc: Upload a database representing a snapshot of a codebase. The database is sent in one or more parts. Each part is sent in the request body. Use the [`POST /snapshots/{project-id}/{language}`](https://lgtm.com/help/lgtm/api/api-v1#opIdinitSnapshotUpload) endpoint to start an upload session before uploading a database part. Database parts must have been generated and prepared for upload using the Cod
+- path:session-id string
+- body:(body) string
+
+## S325-0010  POST /snapshots/{project-id}/{language}
+summary: Start snapshot upload session
+desc: Start a session to upload an externally-built database (which represents a snapshot of a codebase) to a project on LGTM. This endpoint works for projects that are already on LGTM, and the selected language of the database must already be configured. The project must be configured with 'upload' analysis mode. You can upload a "bundled" CodeQL database or a database exported by the QL command-line t
+- path:project-id integer
+- path:language string
+- query:commit string
+- query:date string
+
+## S326-0001  PATCH /api/auths/{id}
+summary: Update one global auth. module config
+desc: Update one global auth. module config
+- path:id string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0002  POST /api/certificates
+summary: Create one certificate
+desc: Create one certificate
+- body:autoRenew string
+- body:ca string
+- body:caRef string
+- body:chain string
+- body:domain string
+- body:from string
+- body:id string
+- body:privateKey string
+- body:selfSigned string
+- body:subject string
+- body:to string
+- body:valid string
+
+## S326-0003  DELETE /api/certificates/{id}
+summary: Delete one certificate by id
+desc: Delete one certificate by id
+- path:id string
+
+## S326-0004  PATCH /api/certificates/{id}
+summary: Update one certificate by id
+desc: Update one certificate by id
+- path:id string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0005  PUT /api/certificates/{id}
+summary: Update one certificate by id
+desc: Update one certificate by id
+- path:id string
+- body:autoRenew string
+- body:ca string
+- body:caRef string
+- body:chain string
+- body:domain string
+- body:from string
+- body:id string
+- body:privateKey string
+- body:selfSigned string
+- body:subject string
+- body:to string
+- body:valid string
+
+## S326-0006  POST /api/client-validators
+summary: Create one validation authorities
+desc: Create one validation authorities
+- body:alwaysValid boolean
+- body:badTtl integer
+- body:description string
+- body:goodTtl integer
+- body:headers object
+- body:host string
+- body:id string
+- body:method string
+- body:name string
+- body:noCache boolean
+- body:path string
+- body:timeout integer
+- body:url string
+
+## S326-0007  PATCH /api/client-validators/{id}
+summary: Update one validation authorities by id
+desc: Update one validation authorities by id
+- path:id string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0008  PUT /api/client-validators/{id}
+summary: Update one validation authorities by id
+desc: Update one validation authorities by id
+- path:id string
+- body:alwaysValid boolean
+- body:badTtl integer
+- body:description string
+- body:goodTtl integer
+- body:headers object
+- body:host string
+- body:id string
+- body:method string
+- body:name string
+- body:noCache boolean
+- body:path string
+- body:timeout integer
+- body:url string
+
+## S326-0009  POST /api/data-exporter-configs
+summary: Create a new data exporter config
+desc: Create a new data exporter config
+- body:bufferSize integer
+- body:config object
+- body:config.clusterUri string
+- body:config.headers object
+- body:config.index string
+- body:config.password string
+- body:config.type string
+- body:config.user string
+- body:config.keyPass string
+- body:config.keyStore string
+- body:config.servers array<string>
+- body:config.topic string
+- body:config.trustore string
+- body:config.namespace string
+- body:config.tenant string
+- body:config.uri array<string>
+- body:config.path string
+- body:config.to array<string>
+- body:config.url string
+- body:config.apiKey string
+- body:config.domain string
+- body:config.eu boolean
+- body:config.apiKeyPrivate string
+- body:config.apiKeyPublic string
+- body:config.config object
+- body:config.ref string
+- body:desc string
+- body:enabled string
+- body:filtering object
+- body:filtering.exclude array<object>
+- body:filtering.include array<object>
+- body:groupDuration integer
+- body:groupSize integer
+- body:id string
+- body:jsonWorkers integer
+- body:location object
+- body:location.teams array<object>
+- body:location.tenant string
+- body:metadata object
+- body:name string
+- body:projection object
+- body:sendWorkers integer
+- body:typ string enum[kafka|pulsar|file|mailer|elastic|console|custom]
+
+## S326-0010  POST /api/data-exporter-configs/_bulk
+summary: Create a new data exporter configs
+desc: Create a new data exporter configs
+- body:bufferSize integer
+- body:config object
+- body:config.clusterUri string
+- body:config.headers object
+- body:config.index string
+- body:config.password string
+- body:config.type string
+- body:config.user string
+- body:config.keyPass string
+- body:config.keyStore string
+- body:config.servers array<string>
+- body:config.topic string
+- body:config.trustore string
+- body:config.namespace string
+- body:config.tenant string
+- body:config.uri array<string>
+- body:config.path string
+- body:config.to array<string>
+- body:config.url string
+- body:config.apiKey string
+- body:config.domain string
+- body:config.eu boolean
+- body:config.apiKeyPrivate string
+- body:config.apiKeyPublic string
+- body:config.config object
+- body:config.ref string
+- body:desc string
+- body:enabled string
+- body:filtering object
+- body:filtering.exclude array<object>
+- body:filtering.include array<object>
+- body:groupDuration integer
+- body:groupSize integer
+- body:id string
+- body:jsonWorkers integer
+- body:location object
+- body:location.teams array<object>
+- body:location.tenant string
+- body:metadata object
+- body:name string
+- body:projection object
+- body:sendWorkers integer
+- body:typ string enum[kafka|pulsar|file|mailer|elastic|console|custom]
+
+## S326-0011  DELETE /api/data-exporter-configs/{dataExporterConfigId}
+summary: Delete a data exporter config
+desc: Delete a data exporter config
+- path:dataExporterConfigId string
+
+## S326-0012  PATCH /api/data-exporter-configs/{dataExporterConfigId}
+summary: Update a data exporter config with a diff
+desc: Update a data exporter config with a diff
+- path:dataExporterConfigId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0013  PUT /api/data-exporter-configs/{dataExporterConfigId}
+summary: Update a data exporter config
+desc: Update a data exporter config
+- path:dataExporterConfigId string
+- body:bufferSize integer
+- body:config object
+- body:config.clusterUri string
+- body:config.headers object
+- body:config.index string
+- body:config.password string
+- body:config.type string
+- body:config.user string
+- body:config.keyPass string
+- body:config.keyStore string
+- body:config.servers array<string>
+- body:config.topic string
+- body:config.trustore string
+- body:config.namespace string
+- body:config.tenant string
+- body:config.uri array<string>
+- body:config.path string
+- body:config.to array<string>
+- body:config.url string
+- body:config.apiKey string
+- body:config.domain string
+- body:config.eu boolean
+- body:config.apiKeyPrivate string
+- body:config.apiKeyPublic string
+- body:config.config object
+- body:config.ref string
+- body:desc string
+- body:enabled string
+- body:filtering object
+- body:filtering.exclude array<object>
+- body:filtering.include array<object>
+- body:groupDuration integer
+- body:groupSize integer
+- body:id string
+- body:jsonWorkers integer
+- body:location object
+- body:location.teams array<object>
+- body:location.tenant string
+- body:metadata object
+- body:name string
+- body:projection object
+- body:sendWorkers integer
+- body:typ string enum[kafka|pulsar|file|mailer|elastic|console|custom]
+
+## S326-0014  PUT /api/globalconfig
+summary: Update the global configuration
+desc: Update the global configuration
+- body:alertsEmails array<string>
+- body:alertsWebhooks array<object>
+- body:alertsWebhooks[].headers object
+- body:alertsWebhooks[].url string
+- body:analyticsWebhooks array<object>
+- body:analyticsWebhooks[].headers object
+- body:analyticsWebhooks[].url string
+- body:apiReadOnly boolean
+- body:autoLinkToDefaultGroup boolean
+- body:backofficeAuth0Config object
+- body:backofficeAuth0Config.callbackUrl string
+- body:backofficeAuth0Config.clientId string
+- body:backofficeAuth0Config.clientSecret string
+- body:backofficeAuth0Config.domain string
+- body:cleverSettings object
+- body:cleverSettings.consumerKey string
+- body:cleverSettings.consumerSecret string
+- body:cleverSettings.orgaId string
+- body:cleverSettings.secret string
+- body:cleverSettings.token string
+- body:elasticReadsConfig object
+- body:elasticReadsConfig.clusterUri string
+- body:elasticReadsConfig.headers object
+- body:elasticReadsConfig.index string
+- body:elasticReadsConfig.password string
+- body:elasticReadsConfig.type string
+- body:elasticReadsConfig.user string
+- body:elasticWritesConfigs array<object>
+- body:elasticWritesConfigs[].clusterUri string
+- body:elasticWritesConfigs[].headers object
+- body:elasticWritesConfigs[].index string
+- body:elasticWritesConfigs[].password string
+- body:elasticWritesConfigs[].type string
+- body:elasticWritesConfigs[].user string
+- body:endlessIpAddresses array<string>
+- body:ipFiltering object
+- body:ipFiltering.blacklist array<string>
+- body:ipFiltering.whitelist array<string>
+- body:limitConcurrentRequests boolean
+- body:lines array<string>
+- body:mailerSettings object
+- body:mailerSettings.apiKey string
+- body:mailerSettings.apiKeyPrivate string
+- body:mailerSettings.apiKeyPublic string
+- body:mailerSettings.domain string
+- body:mailerSettings.eu boolean
+- body:mailerSettings.header object
+- body:mailerSettings.type string
+- body:mailerSettings.url string
+- body:maxConcurrentRequests integer
+- body:maxHttp10ResponseSize integer
+- body:maxLogsSize integer
+- body:middleFingers boolean
+- body:perIpThrottlingQuota integer
+- body:privateAppsAuth0Config object
+- body:privateAppsAuth0Config.callbackUrl string
+- body:privateAppsAuth0Config.clientId string
+- body:privateAppsAuth0Config.clientSecret string
+- body:privateAppsAuth0Config.domain string
+- body:streamEntityOnly boolean
+- body:throttlingQuota integer
+- body:u2fLoginOnly boolean
+- body:useCircuitBreakers boolean
+
+## S326-0015  POST /api/groups
+summary: Create a new service group
+desc: Create a new service group
+- body:description string
+- body:id string
+- body:name string
+
+## S326-0016  PUT /api/groups/{groupId}/apikeys/{clientId}
+summary: Update an api key
+desc: Update an api key for a specified service group
+- path:groupId string
+- path:clientId string
+- body:authorizedEntities array<string>
+- body:clientId string
+- body:clientName string
+- body:clientSecret string
+- body:dailyQuota integer
+- body:enabled boolean
+- body:metadata object
+- body:monthlyQuota integer
+- body:throttlingQuota integer
+
+## S326-0017  DELETE /api/groups/{groupId}/apikeys/{clientId}/quotas
+summary: Reset the quota state of an api key
+desc: Reset the quota state of an api key
+- path:groupId string
+- path:clientId string
+
+## S326-0018  DELETE /api/groups/{serviceGroupId}
+summary: Delete a service group
+desc: Delete a service group
+- path:serviceGroupId string
+
+## S326-0019  PATCH /api/groups/{serviceGroupId}
+summary: Update a service group with a diff
+desc: Update a service group with a diff
+- path:serviceGroupId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0020  PUT /api/groups/{serviceGroupId}
+summary: Update a service group
+desc: Update a service group
+- path:serviceGroupId string
+- body:description string
+- body:id string
+- body:name string
+
+## S326-0021  POST /api/otoroshi.json
+summary: Import the full state of Otoroshi
+desc: Import the full state of Otoroshi
+- body:admins array<object>
+- body:admins[].createdAt integer
+- body:admins[].label string
+- body:admins[].password string
+- body:admins[].registration object
+- body:admins[].username string
+- body:apiKeys array<object>
+- body:apiKeys[].authorizedEntities array<string>
+- body:apiKeys[].clientId string
+- body:apiKeys[].clientName string
+- body:apiKeys[].clientSecret string
+- body:apiKeys[].dailyQuota integer
+- body:apiKeys[].enabled boolean
+- body:apiKeys[].metadata object
+- body:apiKeys[].monthlyQuota integer
+- body:apiKeys[].throttlingQuota integer
+- body:appConfig object
+- body:config object
+- body:config.alertsEmails array<string>
+- body:config.alertsWebhooks array<object>
+- body:config.alertsWebhooks[].headers object
+- body:config.alertsWebhooks[].url string
+- body:config.analyticsWebhooks array<object>
+- body:config.analyticsWebhooks[].headers object
+- body:config.analyticsWebhooks[].url string
+- body:config.apiReadOnly boolean
+- body:config.autoLinkToDefaultGroup boolean
+- body:config.backofficeAuth0Config object
+- body:config.backofficeAuth0Config.callbackUrl string
+- body:config.backofficeAuth0Config.clientId string
+- body:config.backofficeAuth0Config.clientSecret string
+- body:config.backofficeAuth0Config.domain string
+- body:config.cleverSettings object
+- body:config.cleverSettings.consumerKey string
+- body:config.cleverSettings.consumerSecret string
+- body:config.cleverSettings.orgaId string
+- body:config.cleverSettings.secret string
+- body:config.cleverSettings.token string
+- body:config.elasticReadsConfig object
+- body:config.elasticReadsConfig.clusterUri string
+- body:config.elasticReadsConfig.headers object
+- body:config.elasticReadsConfig.index string
+- body:config.elasticReadsConfig.password string
+- body:config.elasticReadsConfig.type string
+- body:config.elasticReadsConfig.user string
+- body:config.elasticWritesConfigs array<object>
+- body:config.elasticWritesConfigs[].clusterUri string
+- body:config.elasticWritesConfigs[].headers object
+- body:config.elasticWritesConfigs[].index string
+- body:config.elasticWritesConfigs[].password string
+- body:config.elasticWritesConfigs[].type string
+- body:config.elasticWritesConfigs[].user string
+- body:config.endlessIpAddresses array<string>
+- body:config.ipFiltering object
+- body:config.ipFiltering.blacklist array<string>
+- body:config.ipFiltering.whitelist array<string>
+- body:config.limitConcurrentRequests boolean
+- body:config.lines array<string>
+- body:config.mailerSettings object
+- body:config.mailerSettings.apiKey string
+- body:config.mailerSettings.apiKeyPrivate string
+- body:config.mailerSettings.apiKeyPublic string
+- body:config.mailerSettings.domain string
+- body:config.mailerSettings.eu boolean
+- body:config.mailerSettings.header object
+- body:config.mailerSettings.type string
+- body:config.mailerSettings.url string
+- body:config.maxConcurrentRequests integer
+- body:config.maxHttp10ResponseSize integer
+- body:config.maxLogsSize integer
+- body:config.middleFingers boolean
+- body:config.perIpThrottlingQuota integer
+- body:config.privateAppsAuth0Config object
+- body:config.privateAppsAuth0Config.callbackUrl string
+- body:config.privateAppsAuth0Config.clientId string
+- body:config.privateAppsAuth0Config.clientSecret string
+- body:config.privateAppsAuth0Config.domain string
+- body:config.streamEntityOnly boolean
+- body:config.throttlingQuota integer
+- body:config.u2fLoginOnly boolean
+- (132 truong bi cat)
+
+## S326-0022  POST /api/scripts/_compile
+summary: Compile a script
+desc: Compile a script
+- body:code object
+- body:desc object
+- body:id string
+- body:name string
+
+## S326-0023  PATCH /api/scripts/{scriptId}
+summary: Update a script with a diff
+desc: Update a script with a diff
+- path:scriptId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0024  PUT /api/services/{serviceId}
+summary: Update a service descriptor
+desc: Update a service descriptor
+- path:serviceId string
+- body:Canary object
+- body:Canary.enabled boolean
+- body:Canary.root string
+- body:Canary.targets array<object>
+- body:Canary.targets[].host string
+- body:Canary.targets[].scheme string
+- body:Canary.traffic integer
+- body:additionalHeaders object
+- body:api object
+- body:api.exposeApi boolean
+- body:api.openApiDescriptorUrl string
+- body:authConfigRef string
+- body:buildMode boolean
+- body:chaosConfig object
+- body:chaosConfig.badResponsesFaultConfig object
+- body:chaosConfig.badResponsesFaultConfig.ratio number
+- body:chaosConfig.badResponsesFaultConfig.responses array<object>
+- body:chaosConfig.enabled boolean
+- body:chaosConfig.largeRequestFaultConfig object
+- body:chaosConfig.largeRequestFaultConfig.additionalRequestSize integer
+- body:chaosConfig.largeRequestFaultConfig.ratio number
+- body:chaosConfig.largeResponseFaultConfig object
+- body:chaosConfig.largeResponseFaultConfig.additionalRequestSize integer
+- body:chaosConfig.largeResponseFaultConfig.ratio number
+- body:chaosConfig.latencyInjectionFaultConfig object
+- body:chaosConfig.latencyInjectionFaultConfig.from integer
+- body:chaosConfig.latencyInjectionFaultConfig.ratio number
+- body:chaosConfig.latencyInjectionFaultConfig.to integer
+- body:clientConfig object
+- body:clientConfig.backoffFactor integer
+- body:clientConfig.callTimeout integer
+- body:clientConfig.globalTimeout integer
+- body:clientConfig.maxErrors integer
+- body:clientConfig.retries integer
+- body:clientConfig.retryInitialDelay integer
+- body:clientConfig.sampleInterval integer
+- body:clientConfig.useCircuitBreaker boolean
+- body:clientValidatorRef string
+- body:cors object
+- body:cors.allowCredentials boolean
+- body:cors.allowHeaders array<string>
+- body:cors.allowMethods array<string>
+- body:cors.allowOrigin string
+- body:cors.enabled boolean
+- body:cors.excludedPatterns array<string>
+- body:cors.exposeHeaders array<string>
+- body:cors.maxAge integer
+- body:domain string
+- body:enabled boolean
+- body:enforceSecureCommunication boolean
+- body:env string
+- body:forceHttps boolean
+- body:groups array<string>
+- body:gzip object
+- body:gzip.blackList array<string>
+- body:gzip.bufferSize integer
+- body:gzip.chunkedThreshold integer
+- body:gzip.compressionLevel integer
+- body:gzip.enabled boolean
+- body:gzip.excludedPatterns array<string>
+- body:gzip.whiteList array<string>
+- body:headersVerification object
+- body:healthCheck object
+- body:healthCheck.enabled boolean
+- body:healthCheck.url string
+- body:id string
+- body:ipFiltering object
+- body:ipFiltering.blacklist array<string>
+- body:ipFiltering.whitelist array<string>
+- body:jwtVerifier object
+- body:jwtVerifier.algoSettings object
+- body:jwtVerifier.algoSettings.secret string
+- body:jwtVerifier.algoSettings.size integer
+- body:jwtVerifier.algoSettings.type string
+- body:jwtVerifier.algoSettings.privateKey string
+- body:jwtVerifier.algoSettings.publicKey string
+- body:jwtVerifier.algoSettings.headers object
+- body:jwtVerifier.algoSettings.kty string
+- body:jwtVerifier.algoSettings.timeout integer
+- (56 truong bi cat)
+
+## S326-0025  PATCH /api/services/{serviceId}/apikeys/{clientId}
+summary: Update an api key with a diff
+desc: Update an api key for a specified service descriptor with a diff
+- path:serviceId string
+- path:clientId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0026  PUT /api/services/{serviceId}/apikeys/{clientId}
+summary: Update an api key
+desc: Update an api key for a specified service descriptor
+- path:serviceId string
+- path:clientId string
+- body:authorizedEntities array<string>
+- body:clientId string
+- body:clientName string
+- body:clientSecret string
+- body:dailyQuota integer
+- body:enabled boolean
+- body:metadata object
+- body:monthlyQuota integer
+- body:throttlingQuota integer
+
+## S326-0027  DELETE /api/services/{serviceId}/apikeys/{clientId}/quotas
+summary: Reset the quota state of an api key
+desc: Reset the quota state of an api key
+- path:serviceId string
+- path:clientId string
+
+## S326-0028  PATCH /api/services/{serviceId}/targets
+summary: Update a service descriptor targets
+desc: Update a service descriptor targets
+- path:serviceId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0029  POST /api/services/{serviceId}/template
+summary: Create a service descriptor error template
+desc: Update a service descriptor targets
+- path:serviceId string
+- body:messages object
+- body:serviceId string
+- body:template40x string
+- body:template50x string
+- body:templateBuild string
+- body:templateMaintenance string
+
+## S326-0030  PUT /api/services/{serviceId}/template
+summary: Update an error template to a service descriptor
+desc: Update an error template to a service descriptor
+- path:serviceId string
+- body:messages object
+- body:serviceId string
+- body:template40x string
+- body:template50x string
+- body:templateBuild string
+- body:templateMaintenance string
+
+## S326-0031  POST /api/snowmonkey/_start
+summary: Start the Snow Monkey
+desc: Start the Snow Monkey
+
+## S326-0032  POST /api/snowmonkey/_stop
+summary: Stop the Snow Monkey
+desc: Stop the Snow Monkey
+
+## S326-0033  PUT /api/snowmonkey/config
+summary: Update current Snow Monkey config
+desc: Update current Snow Monkey config
+- body:description string
+- body:id string
+- body:name string
+
+## S326-0034  DELETE /api/verifiers/{verifierId}
+summary: Delete one global JWT verifiers
+desc: Delete one global JWT verifiers
+- path:verifierId string
+
+## S326-0035  PATCH /api/verifiers/{verifierId}
+summary: Update one global JWT verifiers
+desc: Update one global JWT verifiers
+- path:verifierId string
+- body:op string enum[add|replace|remove|copy|test]
+- body:path string
+- body:value any
+
+## S326-0036  PUT /api/verifiers/{verifierId}
+summary: Update one global JWT verifiers
+desc: Update one global JWT verifiers
+- path:verifierId string
+- body:algoSettings object
+- body:algoSettings.secret string
+- body:algoSettings.size integer
+- body:algoSettings.type string
+- body:algoSettings.privateKey string
+- body:algoSettings.publicKey string
+- body:algoSettings.headers object
+- body:algoSettings.kty string
+- body:algoSettings.timeout integer
+- body:algoSettings.ttl integer
+- body:algoSettings.url string
+- body:desc string
+- body:enabled boolean
+- body:id string
+- body:name string
+- body:source object
+- body:source.name string
+- body:source.type string
+- body:source.remove string
+- body:strategy object
+- body:strategy.type string
+- body:strategy.verificationSettings object
+- body:strategy.verificationSettings.fields object
+- body:strategy.verificationSettings.mappingSettings object
+- body:strategy.algoSettings object
+- body:strategy.algoSettings.secret string
+- body:strategy.algoSettings.size integer
+- body:strategy.algoSettings.type string
+- body:strategy.algoSettings.privateKey string
+- body:strategy.algoSettings.publicKey string
+- body:strategy.algoSettings.headers object
+- body:strategy.algoSettings.kty string
+- body:strategy.algoSettings.timeout integer
+- body:strategy.algoSettings.ttl integer
+- body:strategy.algoSettings.url string
+- body:strategy.transformSettings object
+- body:strategy.transformSettings.location object
+- body:strategy.transformSettings.mappingSettings object
+- body:strict boolean
+
+## S328-0001  DELETE /networks/{networkId}
+summary: Delete a network
+desc: Delete a network
+- path:networkId string
+
+## S328-0002  PUT /networks/{networkId}/appliance/firewall/inboundFirewallRules
+summary: Update the inbound firewall rules of an MX network
+desc: Update the inbound firewall rules of an MX network
+- path:networkId string
+- body:rules array<object>
+- body:rules[].comment string
+- body:rules[].destCidr string
+- body:rules[].destPort string
+- body:rules[].policy string enum[allow|deny]
+- body:rules[].protocol string enum[any|icmp|icmp6|tcp|udp]
+- body:rules[].srcCidr string
+- body:rules[].srcPort string
+- body:rules[].syslogEnabled boolean
+- body:syslogDefaultRule boolean
+
+## S328-0003  PUT /networks/{networkId}/bluetoothSettings
+summary: Update the Bluetooth settings for a network
+desc: Update the Bluetooth settings for a network. See the docs page for <a href="https://documentation.meraki.com/MR/Bluetooth/Bluetooth_Low_Energy_(BLE)">Bluetooth settings</a>.
+- path:networkId string
+- body:advertisingEnabled boolean
+- body:major integer
+- body:majorMinorAssignmentMode string enum[Non-unique|Unique]
+- body:minor integer
+- body:scanningEnabled boolean
+- body:uuid string
+
+## S328-0004  POST /networks/{networkId}/camera/qualityRetentionProfiles
+summary: Creates new quality retention profile for this network.
+desc: Creates new quality retention profile for this network.
+- path:networkId string
+- body:audioRecordingEnabled boolean
+- body:cloudArchiveEnabled boolean
+- body:maxRetentionDays integer
+- body:motionBasedRetentionEnabled boolean
+- body:motionDetectorVersion integer
+- body:name string
+- body:restrictedBandwidthModeEnabled boolean
+- body:scheduleId string
+- body:videoSettings object
+- body:videoSettings.MV12/MV22/MV72 object
+- body:videoSettings.MV12/MV22/MV72.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV12/MV22/MV72.resolution string enum[1280x720|1920x1080]
+- body:videoSettings.MV12WE object
+- body:videoSettings.MV12WE.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV12WE.resolution string enum[1280x720|1920x1080]
+- body:videoSettings.MV13 object
+- body:videoSettings.MV13.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV13.resolution string enum[1080x1080|2688x1512]
+- body:videoSettings.MV21/MV71 object
+- body:videoSettings.MV21/MV71.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV21/MV71.resolution string enum[1280x720]
+- body:videoSettings.MV22X/MV72X object
+- body:videoSettings.MV22X/MV72X.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV22X/MV72X.resolution string enum[1280x720|1920x1080|2688x1512]
+- body:videoSettings.MV32 object
+- body:videoSettings.MV32.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV32.resolution string enum[1080x1080|2058x2058]
+- body:videoSettings.MV33 object
+- body:videoSettings.MV33.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV33.resolution string enum[1080x1080|2112x2112]
+- body:videoSettings.MV52 object
+- body:videoSettings.MV52.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV52.resolution string enum[1280x720|1920x1080|2688x1512|3840x2160]
+- body:videoSettings.MV63 object
+- body:videoSettings.MV63.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV63.resolution string enum[1920x1080|2688x1512]
+- body:videoSettings.MV63X object
+- body:videoSettings.MV63X.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV63X.resolution string enum[1920x1080|2688x1512|3840x2160]
+- body:videoSettings.MV93 object
+- body:videoSettings.MV93.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV93.resolution string enum[1080x1080|2112x2112]
+- body:videoSettings.MV93X object
+- body:videoSettings.MV93X.quality string enum[Enhanced|High|Standard]
+- body:videoSettings.MV93X.resolution string enum[1080x1080|2112x2112|2880x2880]
+
+## S328-0005  DELETE /networks/{networkId}/camera/qualityRetentionProfiles/{qualityRetentionProfileId}
+summary: Delete an existing quality retention profile for this network.
+desc: Delete an existing quality retention profile for this network.
+- path:networkId string
+- path:qualityRetentionProfileId string
+
+## S328-0006  PUT /networks/{networkId}/devices/{serial}
+summary: Update the attributes of a device
+desc: Update the attributes of a device
+- path:networkId string
+- path:serial string
+- body:address string
+- body:floorPlanId string
+- body:lat number
+- body:lng number
+- body:moveMapMarker boolean
+- body:name string
+- body:notes string
+- body:switchProfileId string
+- body:tags string
+
+## S328-0007  PUT /networks/{networkId}/l3FirewallRules
+summary: Update the L3 firewall rules of an MX network
+desc: Update the L3 firewall rules of an MX network
+- path:networkId string
+- body:rules array<object>
+- body:rules[].comment string
+- body:rules[].destCidr string
+- body:rules[].destPort string
+- body:rules[].policy string enum[allow|deny]
+- body:rules[].protocol string enum[any|icmp|icmp6|tcp|udp]
+- body:rules[].srcCidr string
+- body:rules[].srcPort string
+- body:rules[].syslogEnabled boolean
+- body:syslogDefaultRule boolean
+
+## S328-0008  PUT /networks/{networkId}/oneToManyNatRules
+summary: Set the 1:Many NAT mapping rules for an MX network
+desc: Set the 1:Many NAT mapping rules for an MX network
+- path:networkId string
+- body:rules array<object>
+- body:rules[].portRules array<object>
+- body:rules[].portRules[].allowedIps array<string>
+- body:rules[].portRules[].localIp string
+- body:rules[].portRules[].localPort string
+- body:rules[].portRules[].name string
+- body:rules[].portRules[].protocol string enum[tcp|udp]
+- body:rules[].portRules[].publicPort string
+- body:rules[].publicIp string
+- body:rules[].uplink string enum[internet1|internet2]
+
+## S328-0009  POST /networks/{networkId}/pii/requests
+summary: Submit a new delete or restrict processing PII request
+desc: Submit a new delete or restrict processing PII request ## ALTERNATE PATH ``` /organizations/{organizationId}/pii/requests ```
+- path:networkId string
+- body:datasets array<string>
+- body:email string
+- body:mac string
+- body:smDeviceId string
+- body:smUserId string
+- body:type string enum[delete|restrict processing]
+- body:username string
+
+## S328-0010  PUT /networks/{networkId}/security/malwareSettings
+summary: Set the supported malware settings for an MX network
+desc: Set the supported malware settings for an MX network
+- path:networkId string
+- body:allowedFiles array<object>
+- body:allowedFiles[].comment string
+- body:allowedFiles[].sha256 string
+- body:allowedUrls array<object>
+- body:allowedUrls[].comment string
+- body:allowedUrls[].url string
+- body:mode string enum[disabled|enabled]
+
+## S328-0011  PUT /networks/{networkId}/siteToSiteVpn
+summary: Update the site-to-site VPN settings of a network
+desc: Update the site-to-site VPN settings of a network. Only valid for MX networks in NAT mode.
+- path:networkId string
+- body:hubs array<object>
+- body:hubs[].hubId string
+- body:hubs[].useDefaultRoute boolean
+- body:mode string enum[hub|none|spoke]
+- body:subnets array<object>
+- body:subnets[].localSubnet string
+- body:subnets[].useVpn boolean
+
+## S328-0012  PUT /networks/{networkId}/sm/devices/checkin
+summary: Force check-in a set of devices
+desc: Force check-in a set of devices
+- path:networkId string
+- body:ids string
+- body:scope string
+- body:serials string
+- body:wifiMacs string
+
+## S328-0013  PUT /networks/{networkId}/sm/devices/tags
+summary: Add, delete, or update the tags of a set of devices
+desc: Add, delete, or update the tags of a set of devices
+- path:networkId string
+- body:ids string
+- body:scope string
+- body:serials string
+- body:tags string
+- body:updateAction string
+- body:wifiMacs string
+
+## S328-0014  PUT /networks/{networkId}/sm/targetGroups/{targetGroupId}
+summary: Update a target group
+desc: Update a target group
+- path:networkId string
+- path:targetGroupId string
+- body:name string
+- body:scope string
+
+## S328-0015  PUT /networks/{networkId}/ssids/{number}/splashSettings
+summary: Modify the splash page settings for the given SSID
+desc: Modify the splash page settings for the given SSID
+- path:networkId string
+- path:number string
+- body:splashUrl string
+- body:useSplashUrl boolean
+
+## S328-0016  POST /networks/{networkId}/switch/portSchedules
+summary: Add a switch port schedule
+desc: Add a switch port schedule
+- path:networkId string
+- body:name string
+- body:portSchedule object
+- body:portSchedule.friday object
+- body:portSchedule.friday.active boolean
+- body:portSchedule.friday.from string
+- body:portSchedule.friday.to string
+- body:portSchedule.monday object
+- body:portSchedule.monday.active boolean
+- body:portSchedule.monday.from string
+- body:portSchedule.monday.to string
+- body:portSchedule.saturday object
+- body:portSchedule.saturday.active boolean
+- body:portSchedule.saturday.from string
+- body:portSchedule.saturday.to string
+- body:portSchedule.sunday object
+- body:portSchedule.sunday.active boolean
+- body:portSchedule.sunday.from string
+- body:portSchedule.sunday.to string
+- body:portSchedule.thursday object
+- body:portSchedule.thursday.active boolean
+- body:portSchedule.thursday.from string
+- body:portSchedule.thursday.to string
+- body:portSchedule.tuesday object
+- body:portSchedule.tuesday.active boolean
+- body:portSchedule.tuesday.from string
+- body:portSchedule.tuesday.to string
+- body:portSchedule.wednesday object
+- body:portSchedule.wednesday.active boolean
+- body:portSchedule.wednesday.from string
+- body:portSchedule.wednesday.to string
+
+## S328-0017  PUT /networks/{networkId}/switch/settings
+summary: Update switch network settings
+desc: Update switch network settings
+- path:networkId string
+- body:powerExceptions array<object>
+- body:powerExceptions[].powerType string enum[combined|redundant|useNetworkSetting]
+- body:powerExceptions[].serial string
+- body:useCombinedPower boolean
+- body:vlan integer
+
+## S328-0018  PUT /networks/{networkId}/switch/settings/mtu
+summary: Update the MTU configuration
+desc: Update the MTU configuration
+- path:networkId string
+- body:defaultMtuSize integer
+- body:overrides array<object>
+- body:overrides[].mtuSize integer
+- body:overrides[].switchProfiles array<string>
+- body:overrides[].switches array<string>
+
+## S328-0019  PUT /networks/{networkId}/switch/settings/multicast
+summary: Update multicast settings for a network
+desc: Update multicast settings for a network
+- path:networkId string
+- body:defaultSettings object
+- body:defaultSettings.floodUnknownMulticastTrafficEnabled boolean
+- body:defaultSettings.igmpSnoopingEnabled boolean
+- body:overrides array<object>
+- body:overrides[].floodUnknownMulticastTrafficEnabled boolean
+- body:overrides[].igmpSnoopingEnabled boolean
+- body:overrides[].stacks array<string>
+- body:overrides[].switchProfiles array<string>
+- body:overrides[].switches array<string>
+
+## S328-0020  PUT /networks/{networkId}/switch/settings/qosRules/{qosRuleId}
+summary: Update a quality of service rule
+desc: Update a quality of service rule
+- path:networkId string
+- path:qosRuleId string
+- body:dscp integer
+- body:dstPort integer
+- body:dstPortRange string
+- body:protocol string enum[ANY|TCP|UDP]
+- body:srcPort integer
+- body:srcPortRange string
+- body:vlan integer
+
+## S328-0021  POST /networks/{networkId}/switchStacks
+summary: Create a stack
+desc: Create a stack
+- path:networkId string
+- body:name string
+- body:serials array<string>
+
+## S328-0022  DELETE /networks/{networkId}/switchStacks/{switchStackId}
+summary: Delete a stack
+desc: Delete a stack
+- path:networkId string
+- path:switchStackId string
+
+## S328-0023  POST /networks/{networkId}/switchStacks/{switchStackId}/remove
+summary: Remove a switch from a stack
+desc: Remove a switch from a stack
+- path:networkId string
+- path:switchStackId string
+- body:serial string
+
+## S328-0024  PUT /networks/{networkId}/syslogServers
+summary: Update the syslog servers for a network
+desc: Update the syslog servers for a network
+- path:networkId string
+- body:servers array<object>
+- body:servers[].host string
+- body:servers[].port integer
+- body:servers[].roles array<string>
+
+## S328-0025  POST /networks/{networkId}/unbind
+summary: Unbind a network from a template.
+desc: Unbind a network from a template.
+- path:networkId string
+
+## S328-0026  PUT /networks/{networkId}/vlansEnabledState
+summary: Enable/Disable VLANs for the given network
+desc: Enable/Disable VLANs for the given network
+- path:networkId string
+- body:enabled boolean
+
+## S328-0027  PUT /networks/{networkId}/wireless/settings
+summary: Update the wireless settings for a network
+desc: Update the wireless settings for a network
+- path:networkId string
+- body:ipv6BridgeEnabled boolean
+- body:ledLightsOn boolean
+- body:locationAnalyticsEnabled boolean
+- body:meshingEnabled boolean
+- body:upgradeStrategy string enum[minimizeClientDowntime|minimizeUpgradeTime]
+
+## S328-0028  PUT /networks/{network_id}/sm/devices/lock
+summary: Lock a set of devices
+desc: Lock a set of devices
+- path:network_id string
+- body:ids string
+- body:pin integer
+- body:scope string
+- body:serials string
+- body:wifiMacs string
+
+## S328-0029  POST /organizations/{organizationId}/actionBatches
+summary: Create an action batch
+desc: Create an action batch
+- path:organizationId string
+- body:actions array<object>
+- body:actions[].body object
+- body:actions[].operation string
+- body:actions[].resource string
+- body:confirmed boolean
+- body:synchronous boolean
+
+## S328-0030  DELETE /organizations/{organizationId}/actionBatches/{actionBatchId}
+summary: Delete an action batch
+desc: Delete an action batch
+- path:organizationId string
+- path:actionBatchId string
+
+## S328-0031  PUT /organizations/{organizationId}/actionBatches/{actionBatchId}
+summary: Update an action batch
+desc: Update an action batch
+- path:organizationId string
+- path:actionBatchId string
+- body:confirmed boolean
+- body:synchronous boolean
+
+## S328-0032  PUT /organizations/{organizationId}/insight/monitoredMediaServers/{monitoredMediaServerId}
+summary: Update a monitored media server for this organization
+desc: Update a monitored media server for this organization. Only valid for organizations with Meraki Insight.
+- path:organizationId string
+- path:monitoredMediaServerId string
+- body:address string
+- body:name string
+
+## S328-0033  POST /organizations/{organizationId}/licenses/assignSeats
+summary: Assign SM seats to a network
+desc: Assign SM seats to a network. This will increase the managed SM device limit of the network
+- path:organizationId string
+- body:licenseId string
+- body:networkId string
+- body:seatCount integer
+
+## S328-0034  POST /organizations/{organizationId}/networks/combine
+summary: Combine multiple networks into a single network
+desc: Combine multiple networks into a single network
+- path:organizationId string
+- body:enrollmentString string
+- body:name string
+- body:networkIds array<string>
+
+## S328-0035  PUT /organizations/{organizationId}/security/intrusionSettings
+summary: Sets supported intrusion settings for an organization
+desc: Sets supported intrusion settings for an organization
+- path:organizationId string
+- body:whitelistedRules array<object>
+- body:whitelistedRules[].message string
+- body:whitelistedRules[].ruleId string
+
+## S328-0036  PUT /organizations/{organizationId}/vpnFirewallRules
+summary: Update the firewall rules of an organization's site-to-site VPN
+desc: Update the firewall rules of an organization's site-to-site VPN
+- path:organizationId string
+- body:rules array<object>
+- body:rules[].comment string
+- body:rules[].destCidr string
+- body:rules[].destPort string
+- body:rules[].policy string enum[allow|deny]
+- body:rules[].protocol string enum[any|icmp|icmp6|tcp|udp]
+- body:rules[].srcCidr string
+- body:rules[].srcPort string
+- body:rules[].syslogEnabled boolean
+- body:syslogDefaultRule boolean

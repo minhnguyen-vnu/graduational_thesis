@@ -1,0 +1,93 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ EvoMaster_faults_Test.test_0_put_on_report_stillAllowedAfterPermissionRevoked _
+
+self = <EvoMaster_faults_Test.EvoMaster_faults_Test testMethod=test_0_put_on_report_stillAllowedAfterPermissionRevoked>
+
+    @timeout_decorator.timeout(60)
+    def test_0_put_on_report_stillAllowedAfterPermissionRevoked(self):
+    
+        headers = {}
+        headers["content-type"] = "application/json"
+        body = " { " + \
+            " \"username\" : \"alice\", " + \
+            " \"password\" : \"alicepass\" " + \
+            " } "
+        res_alice = requests \
+                .post(self.baseUrlOfSut + "/auth/login",
+                    headers=headers, data=body, allow_redirects=False, verify=False)
+        token_alice =  res_alice.json()["token"]
+    
+        auth_alice = "Bearer " + token_alice
+        headers = {}
+        headers["content-type"] = "application/json"
+        body = " { " + \
+            " \"username\" : \"bob\", " + \
+            " \"password\" : \"bobpass\" " + \
+            " } "
+        res_bob = requests \
+                .post(self.baseUrlOfSut + "/auth/login",
+                    headers=headers, data=body, allow_redirects=False, verify=False)
+        token_bob =  res_bob.json()["token"]
+    
+        auth_bob = "Bearer " + token_bob
+    
+        headers = {}
+        headers["Authorization"] = auth_alice # alice
+        headers["content-type"] = "application/json"
+        body = {}
+        body = " { " + \
+            " \"title\" : \"RdkMYEpSflz\", " + \
+            " \"classification\" : \"CONFIDENTIAL\" " + \
+            " } "
+        headers['Accept'] = "application/json"
+        res_0 = requests \
+                .post(self.baseUrlOfSut + "/reports",
+                    headers=headers, data=body, timeout=EM_HTTP_TIMEOUT_S, verify=False)
+        location_reports__2 = "/reports" + "/" + str(res_0.json()['id'])
+    
+        assert res_0.status_code == 201
+        assert "application/json" in res_0.headers["content-type"]
+        assert res_0.json()["title"] == "RdkMYEpSflz"
+        assert res_0.json()["owner"] == "alice"
+        assert res_0.json()["classification"] == "CONFIDENTIAL"
+    
+        headers = {}
+        headers["Authorization"] = auth_alice # alice
+        headers["content-type"] = "application/json"
+        body = {}
+        body = " { " + \
+            " \"title\" : \"1tWNwzClXY5zPJj\", " + \
+            " \"classification\" : \"PUBLIC\" " + \
+            " } "
+        headers['Accept'] = "application/json"
+        res_1 = requests \
+                .put(resolve_location(location_reports__2, self.baseUrlOfSut + str("/reports/65")),
+                    headers=headers, data=body, timeout=EM_HTTP_TIMEOUT_S, verify=False)
+    
+        assert res_1.status_code == 200
+        assert "application/json" in res_1.headers["content-type"]
+        assert res_1.json()["title"] == "1tWNwzClXY5zPJj"
+        assert res_1.json()["owner"] == "alice"
+        assert res_1.json()["classification"] == "PUBLIC"
+    
+        headers = {}
+        headers["Authorization"] = auth_bob # bob
+        headers["content-type"] = "application/json"
+        body = {}
+        body = " { " + \
+            " \"role\" : \"VIEWER\" " + \
+            " } "
+        headers['Accept'] = "application/json"
+        res_2 = requests \
+                .put(self.baseUrlOfSut + "/users/alice/role",
+                    headers=headers, data=body, timeout=EM_HTTP_TIMEOUT_S, verify=False)
+    
+>       assert res_2.status_code == 200
+E       assert 403 == 200
+E        +  where 403 = <Response [403]>.status_code
+
+EvoMaster_faults_Test.py:135: AssertionError
+=========================== short test summary info ============================
+FAILED EvoMaster_faults_Test.py::EvoMaster_faults_Test::test_0_put_on_report_stillAllowedAfterPermissionRevoked
+1 failed in 0.10s

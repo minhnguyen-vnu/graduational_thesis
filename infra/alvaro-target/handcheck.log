@@ -1,0 +1,25 @@
+== register admin/victim/plain ==
+  admin=201 victim=201 plain=201
+== DB-bootstrap first admins (no REST path to create admin) ==
+UPDATE 2 
+== logins ==
+  admin: userRole=ADMIN sub=a62d11f5-9640-417f-80b8-ddb4111d9cf1
+  victim(old): userRole=ADMIN sub=d5115e4e-6a22-4bf2-84ab-7d616eb6defa
+  plain: userRole=USER sub=91070efe-ea18-4136-a48c-a7249fe400e7
+== admin creates category cat1 (source target) ==
+  create: 201 {"id":"7a17ebf2-0923-44c2-8101-b4e1a9117a1a","name":"Cat1"}
+  cat1 id=7a17ebf2-0923-44c2-8101-b4e1a9117a1a
+== NEG CONTROL: plain PATCH /category/{id} -> expect 403 ==
+  neg=403 {"statusCode":403,"message":"Forbidden resource","error":"Forbidden"}
+== A/B victim_old (ADMIN) PATCH category (SOURCE before) -> expect 2xx ==
+  before=200 {"id":"7a17ebf2-0923-44c2-8101-b4e1a9117a1a","name":"Cat1"}
+== D TRANSITION admin demotes victim -> USER -> expect 2xx ==
+  transition=200 {"id":"d5115e4e-6a22-4bf2-84ab-7d616eb6defa","email":"victim@test.com","name":null,"addres
+== E BUG victim_old SAME token PATCH category (after demotion) -> expect 2xx ==
+  after=200 {"id":"7a17ebf2-0923-44c2-8101-b4e1a9117a1a","name":"Cat1"}
+== F D1 victim re-login new token -> PATCH category -> expect 403 ==
+  new: userRole=USER sub=d5115e4e-6a22-4bf2-84ab-7d616eb6defa
+  newtok=403 {"statusCode":403,"message":"Forbidden resource","error":"Forbidden"}
+== VERDICT ==
+  PASS: MR-A1 confirmed on running alvaro dbd0cd1
+  old-token(ADMIN) after demotion=200 vs new-token(USER)=403 ; neg=403

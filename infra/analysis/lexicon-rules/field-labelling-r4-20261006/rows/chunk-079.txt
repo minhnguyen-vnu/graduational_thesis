@@ -1,0 +1,680 @@
+## S108-N0040  PATCH /repos/{owner}/{repo}/branch_protections/{name}
+desc: Edit a branch protections for a repository. Only fields that are set will be changed
+schema: EditBranchProtectionOption
+- path:owner string
+- path:repo string
+- path:name string
+- body:approvals_whitelist_teams array<string>
+- body:approvals_whitelist_username array<string>
+- body:block_on_official_review_requests boolean
+- body:block_on_outdated_branch boolean
+- body:block_on_rejected_reviews boolean
+- body:dismiss_stale_approvals boolean
+- body:enable_approvals_whitelist boolean
+- body:enable_merge_whitelist boolean
+- body:enable_push boolean
+- body:enable_push_whitelist boolean
+- body:enable_status_check boolean
+- body:merge_whitelist_teams array<string>
+- body:merge_whitelist_usernames array<string>
+- body:protected_file_patterns string
+- body:push_whitelist_deploy_keys boolean
+- body:push_whitelist_teams array<string>
+- body:push_whitelist_usernames array<string>
+- body:require_signed_commits boolean
+- body:required_approvals integer
+- body:status_check_contexts array<string>
+- body:unprotected_file_patterns string
+
+## S108-N0041  POST /repos/{owner}/{repo}/branches
+desc: Create a branch
+schema: CreateBranchRepoOption
+- path:owner string
+- path:repo string
+- body:new_branch_name string
+- body:old_branch_name string
+
+## S108-N0042  DELETE /repos/{owner}/{repo}/branches/{branch}
+desc: Delete a specific branch from a repository
+- path:owner string
+- path:repo string
+- path:branch string
+
+## S108-N0044  PUT /repos/{owner}/{repo}/collaborators/{collaborator}
+desc: Add a collaborator to a repository
+schema: AddCollaboratorOption
+- path:owner string
+- path:repo string
+- path:collaborator string
+- body:permission string
+
+## S108-N0045  DELETE /repos/{owner}/{repo}/contents/{filepath}
+desc: Delete a file in a repository
+schema: DeleteFileOptions
+- path:owner string
+- path:repo string
+- path:filepath string
+- body:author object
+- body:author.email string
+- body:author.name string
+- body:branch string
+- body:committer object
+- body:committer.email string
+- body:committer.name string
+- body:dates object
+- body:dates.author string
+- body:dates.committer string
+- body:message string
+- body:new_branch string
+- body:sha string
+- body:signoff boolean
+
+## S108-N0046  POST /repos/{owner}/{repo}/contents/{filepath}
+desc: Create a file in a repository
+schema: CreateFileOptions
+- path:owner string
+- path:repo string
+- path:filepath string
+- body:author object
+- body:author.email string
+- body:author.name string
+- body:branch string
+- body:committer object
+- body:committer.email string
+- body:committer.name string
+- body:content string
+- body:dates object
+- body:dates.author string
+- body:dates.committer string
+- body:message string
+- body:new_branch string
+- body:signoff boolean
+
+## S108-N0047  PUT /repos/{owner}/{repo}/contents/{filepath}
+desc: Update a file in a repository
+schema: UpdateFileOptions
+- path:owner string
+- path:repo string
+- path:filepath string
+- body:author object
+- body:author.email string
+- body:author.name string
+- body:branch string
+- body:committer object
+- body:committer.email string
+- body:committer.name string
+- body:content string
+- body:dates object
+- body:dates.author string
+- body:dates.committer string
+- body:from_path string
+- body:message string
+- body:new_branch string
+- body:sha string
+- body:signoff boolean
+
+## S108-N0048  POST /repos/{owner}/{repo}/diffpatch
+desc: Apply diff patch to repository
+schema: UpdateFileOptions
+- path:owner string
+- path:repo string
+- body:author object
+- body:author.email string
+- body:author.name string
+- body:branch string
+- body:committer object
+- body:committer.email string
+- body:committer.name string
+- body:content string
+- body:dates object
+- body:dates.author string
+- body:dates.committer string
+- body:from_path string
+- body:message string
+- body:new_branch string
+- body:sha string
+- body:signoff boolean
+
+## S108-N0051  DELETE /repos/{owner}/{repo}/hooks/git/{id}
+desc: Delete a Git hook in a repository
+- path:owner string
+- path:repo string
+- path:id string
+
+## S108-N0052  PATCH /repos/{owner}/{repo}/hooks/git/{id}
+desc: Edit a Git hook in a repository
+schema: EditGitHookOption
+- path:owner string
+- path:repo string
+- path:id string
+- body:content string
+
+## S108-N0053  DELETE /repos/{owner}/{repo}/hooks/{id}
+desc: Delete a hook in a repository
+- path:owner string
+- path:repo string
+- path:id integer
+
+## S108-N0054  PATCH /repos/{owner}/{repo}/hooks/{id}
+desc: Edit a hook in a repository
+schema: EditHookOption
+- path:owner string
+- path:repo string
+- path:id integer
+- body:active boolean
+- body:authorization_header string
+- body:branch_filter string
+- body:config object
+- body:events array<string>
+
+## S108-N0055  POST /repos/{owner}/{repo}/hooks/{id}/tests
+desc: Test a push webhook
+- path:owner string
+- path:repo string
+- path:id integer
+- query:ref string
+
+## S108-N0056  POST /repos/{owner}/{repo}/issues
+desc: Create an issue. If using deadline only the date will be taken into account, and time of day ignored.
+schema: CreateIssueOption
+- path:owner string
+- path:repo string
+- body:assignee string
+- body:assignees array<string>
+- body:body string
+- body:closed boolean
+- body:due_date string
+- body:labels array<integer>
+- body:milestone integer
+- body:ref string
+- body:title string
+
+## S108-N0057  DELETE /repos/{owner}/{repo}/issues/comments/{id}
+desc: Delete a comment
+- path:owner string
+- path:repo string
+- path:id integer
+
+## S108-N0058  PATCH /repos/{owner}/{repo}/issues/comments/{id}
+desc: Edit a comment
+schema: EditIssueCommentOption
+- path:owner string
+- path:repo string
+- path:id integer
+- body:body string
+
+## S108-N0060  DELETE /repos/{owner}/{repo}/issues/comments/{id}/assets/{attachment_id}
+desc: Delete a comment attachment
+- path:owner string
+- path:repo string
+- path:id integer
+- path:attachment_id integer
+
+## S108-N0061  PATCH /repos/{owner}/{repo}/issues/comments/{id}/assets/{attachment_id}
+desc: Edit a comment attachment
+schema: EditAttachmentOptions
+- path:owner string
+- path:repo string
+- path:id integer
+- path:attachment_id integer
+- body:name string
+
+## S108-N0062  DELETE /repos/{owner}/{repo}/issues/comments/{id}/reactions
+desc: Remove a reaction from a comment of an issue
+schema: EditReactionOption
+- path:owner string
+- path:repo string
+- path:id integer
+- body:content string
+
+## S108-N0063  POST /repos/{owner}/{repo}/issues/comments/{id}/reactions
+desc: Add a reaction to a comment of an issue
+schema: EditReactionOption
+- path:owner string
+- path:repo string
+- path:id integer
+- body:content string
+
+## S108-N0064  DELETE /repos/{owner}/{repo}/issues/{index}
+desc: Delete an issue
+- path:owner string
+- path:repo string
+- path:index integer
+
+## S108-N0066  POST /repos/{owner}/{repo}/issues/{index}/assets
+desc: Create an issue attachment
+- path:owner string
+- path:repo string
+- path:index integer
+- query:name string
+- body:attachment string
+
+## S108-N0067  DELETE /repos/{owner}/{repo}/issues/{index}/assets/{attachment_id}
+desc: Delete an issue attachment
+- path:owner string
+- path:repo string
+- path:index integer
+- path:attachment_id integer
+
+## S108-N0068  PATCH /repos/{owner}/{repo}/issues/{index}/assets/{attachment_id}
+desc: Edit an issue attachment
+schema: EditAttachmentOptions
+- path:owner string
+- path:repo string
+- path:index integer
+- path:attachment_id integer
+- body:name string
+
+## S108-N0069  POST /repos/{owner}/{repo}/issues/{index}/comments
+desc: Add a comment to an issue
+schema: CreateIssueCommentOption
+- path:owner string
+- path:repo string
+- path:index integer
+- body:body string
+
+## S108-N0070  DELETE /repos/{owner}/{repo}/issues/{index}/comments/{id}
+desc: Delete a comment
+- path:owner string
+- path:repo string
+- path:index integer
+- path:id integer
+
+## S108-N0071  PATCH /repos/{owner}/{repo}/issues/{index}/comments/{id}
+desc: Edit a comment
+schema: EditIssueCommentOption
+- path:owner string
+- path:repo string
+- path:index integer
+- path:id integer
+- body:body string
+
+## S108-N0072  POST /repos/{owner}/{repo}/issues/{index}/deadline
+desc: Set an issue deadline. If set to null, the deadline is deleted. If using deadline only the date will be taken into account, and time of day ignored.
+schema: EditDeadlineOption
+- path:owner string
+- path:repo string
+- path:index integer
+- body:due_date string
+
+## S108-N0073  DELETE /repos/{owner}/{repo}/issues/{index}/labels
+desc: Remove all labels from an issue
+- path:owner string
+- path:repo string
+- path:index integer
+
+## S108-N0074  POST /repos/{owner}/{repo}/issues/{index}/labels
+desc: Add a label to an issue
+schema: IssueLabelsOption
+- path:owner string
+- path:repo string
+- path:index integer
+- body:labels array<integer>
+
+## S108-N0075  PUT /repos/{owner}/{repo}/issues/{index}/labels
+desc: Replace an issue's labels
+schema: IssueLabelsOption
+- path:owner string
+- path:repo string
+- path:index integer
+- body:labels array<integer>
+
+## S108-N0076  DELETE /repos/{owner}/{repo}/issues/{index}/labels/{id}
+desc: Remove a label from an issue
+- path:owner string
+- path:repo string
+- path:index integer
+- path:id integer
+
+## S108-N0077  DELETE /repos/{owner}/{repo}/issues/{index}/reactions
+desc: Remove a reaction from an issue
+schema: EditReactionOption
+- path:owner string
+- path:repo string
+- path:index integer
+- body:content string
+
+## S108-N0078  POST /repos/{owner}/{repo}/issues/{index}/reactions
+desc: Add a reaction to an issue
+schema: EditReactionOption
+- path:owner string
+- path:repo string
+- path:index integer
+- body:content string
+
+## S108-N0079  DELETE /repos/{owner}/{repo}/issues/{index}/stopwatch/delete
+desc: Delete an issue's existing stopwatch.
+- path:owner string
+- path:repo string
+- path:index integer
+
+## S108-N0080  POST /repos/{owner}/{repo}/issues/{index}/stopwatch/start
+desc: Start stopwatch on an issue.
+- path:owner string
+- path:repo string
+- path:index integer
+
+## S108-N0081  POST /repos/{owner}/{repo}/issues/{index}/stopwatch/stop
+desc: Stop an issue's existing stopwatch.
+- path:owner string
+- path:repo string
+- path:index integer
+
+## S108-N0084  DELETE /repos/{owner}/{repo}/issues/{index}/times
+desc: Reset a tracked time of an issue
+- path:owner string
+- path:repo string
+- path:index integer
+
+## S108-N0086  DELETE /repos/{owner}/{repo}/issues/{index}/times/{id}
+desc: Delete specific tracked time
+- path:owner string
+- path:repo string
+- path:index integer
+- path:id integer
+
+## S108-N0089  POST /repos/{owner}/{repo}/labels
+desc: Create a label
+schema: CreateLabelOption
+- path:owner string
+- path:repo string
+- body:color string
+- body:description string
+- body:exclusive boolean
+- body:name string
+
+## S108-N0090  DELETE /repos/{owner}/{repo}/labels/{id}
+desc: Delete a label
+- path:owner string
+- path:repo string
+- path:id integer
+
+## S108-N0092  POST /repos/{owner}/{repo}/milestones
+desc: Create a milestone
+schema: CreateMilestoneOption
+- path:owner string
+- path:repo string
+- body:description string
+- body:due_on string
+- body:state string enum[open|closed]
+- body:title string
+
+## S108-N0093  DELETE /repos/{owner}/{repo}/milestones/{id}
+desc: Delete a milestone
+- path:owner string
+- path:repo string
+- path:id string
+
+## S108-N0094  PATCH /repos/{owner}/{repo}/milestones/{id}
+desc: Update a milestone
+schema: EditMilestoneOption
+- path:owner string
+- path:repo string
+- path:id string
+- body:description string
+- body:due_on string
+- body:state string
+- body:title string
+
+## S108-N0095  POST /repos/{owner}/{repo}/mirror-sync
+desc: Sync a mirrored repository
+- path:owner string
+- path:repo string
+
+## S108-N0096  PUT /repos/{owner}/{repo}/notifications
+desc: Mark notification threads as read, pinned or unread on a specific repo
+- path:owner string
+- path:repo string
+- query:all string
+- query:status-types array<string>
+- query:to-status string
+- query:last_read_at string
+
+## S108-N0097  POST /repos/{owner}/{repo}/pulls
+desc: Create a pull request
+schema: CreatePullRequestOption
+- path:owner string
+- path:repo string
+- body:assignee string
+- body:assignees array<string>
+- body:base string
+- body:body string
+- body:due_date string
+- body:head string
+- body:labels array<integer>
+- body:milestone integer
+- body:title string
+
+## S108-N0098  PATCH /repos/{owner}/{repo}/pulls/{index}
+desc: Update a pull request. If using deadline only the date will be taken into account, and time of day ignored.
+schema: EditPullRequestOption
+- path:owner string
+- path:repo string
+- path:index integer
+- body:allow_maintainer_edit boolean
+- body:assignee string
+- body:assignees array<string>
+- body:base string
+- body:body string
+- body:due_date string
+- body:labels array<integer>
+- body:milestone integer
+- body:state string
+- body:title string
+- body:unset_due_date boolean
+
+## S108-N0099  DELETE /repos/{owner}/{repo}/pulls/{index}/merge
+desc: Cancel the scheduled auto merge for the given pull request
+- path:owner string
+- path:repo string
+- path:index integer
+
+## S108-N0100  POST /repos/{owner}/{repo}/pulls/{index}/merge
+desc: Merge a pull request
+schema: MergePullRequestOption
+- path:owner string
+- path:repo string
+- path:index integer
+- body:Do string enum[merge|rebase|rebase-merge|squash|manually-merged]
+- body:MergeCommitID string
+- body:MergeMessageField string
+- body:MergeTitleField string
+- body:delete_branch_after_merge boolean
+- body:force_merge boolean
+- body:head_commit_id string
+- body:merge_when_checks_succeed boolean
+
+## S108-N0102  POST /repos/{owner}/{repo}/pulls/{index}/requested_reviewers
+desc: create review requests for a pull request
+schema: PullReviewRequestOptions
+- path:owner string
+- path:repo string
+- path:index integer
+- body:reviewers array<string>
+- body:team_reviewers array<string>
+
+## S108-N0105  POST /repos/{owner}/{repo}/pulls/{index}/reviews/{id}
+desc: Submit a pending review to an pull request
+schema: SubmitPullReviewOptions
+- path:owner string
+- path:repo string
+- path:index integer
+- path:id integer
+- body:body string
+- body:event string
+
+## S108-N0106  POST /repos/{owner}/{repo}/pulls/{index}/reviews/{id}/dismissals
+desc: Dismiss a review for a pull request
+schema: DismissPullReviewOptions
+- path:owner string
+- path:repo string
+- path:index integer
+- path:id integer
+- body:message string
+- body:priors boolean
+
+## S108-N0107  POST /repos/{owner}/{repo}/pulls/{index}/reviews/{id}/undismissals
+desc: Cancel to dismiss a review for a pull request
+- path:owner string
+- path:repo string
+- path:index integer
+- path:id integer
+
+## S108-N0108  POST /repos/{owner}/{repo}/pulls/{index}/update
+desc: Merge PR's baseBranch into headBranch
+- path:owner string
+- path:repo string
+- path:index integer
+- query:style string enum[merge|rebase]
+
+## S108-N0109  POST /repos/{owner}/{repo}/push_mirrors
+desc: add a push mirror to the repository
+schema: CreatePushMirrorOption
+- path:owner string
+- path:repo string
+- body:interval string
+- body:remote_address string
+- body:remote_password string
+- body:remote_username string
+- body:sync_on_commit boolean
+
+## S108-N0111  DELETE /repos/{owner}/{repo}/push_mirrors/{name}
+desc: deletes a push mirror from a repository by remoteName
+- path:owner string
+- path:repo string
+- path:name string
+
+## S108-N0112  POST /repos/{owner}/{repo}/releases
+desc: Create a release
+schema: CreateReleaseOption
+- path:owner string
+- path:repo string
+- body:body string
+- body:draft boolean
+- body:name string
+- body:prerelease boolean
+- body:tag_name string
+- body:target_commitish string
+
+## S108-N0113  DELETE /repos/{owner}/{repo}/releases/tags/{tag}
+desc: Delete a release by tag name
+- path:owner string
+- path:repo string
+- path:tag string
+
+## S108-N0114  DELETE /repos/{owner}/{repo}/releases/{id}
+desc: Delete a release
+- path:owner string
+- path:repo string
+- path:id integer
+
+## S108-N0115  PATCH /repos/{owner}/{repo}/releases/{id}
+desc: Update a release
+schema: EditReleaseOption
+- path:owner string
+- path:repo string
+- path:id integer
+- body:body string
+- body:draft boolean
+- body:name string
+- body:prerelease boolean
+- body:tag_name string
+- body:target_commitish string
+
+## S108-N0116  POST /repos/{owner}/{repo}/releases/{id}/assets
+desc: Create a release attachment
+- path:owner string
+- path:repo string
+- path:id integer
+- query:name string
+- body:attachment string
+
+## S108-N0117  DELETE /repos/{owner}/{repo}/releases/{id}/assets/{attachment_id}
+desc: Delete a release attachment
+- path:owner string
+- path:repo string
+- path:id integer
+- path:attachment_id integer
+
+## S108-N0118  PATCH /repos/{owner}/{repo}/releases/{id}/assets/{attachment_id}
+desc: Edit a release attachment
+schema: EditAttachmentOptions
+- path:owner string
+- path:repo string
+- path:id integer
+- path:attachment_id integer
+- body:name string
+
+## S108-N0119  POST /repos/{owner}/{repo}/statuses/{sha}
+desc: Create a commit status
+schema: CreateStatusOption
+- path:owner string
+- path:repo string
+- path:sha string
+- body:context string
+- body:description string
+- body:state string
+- body:target_url string
+
+## S108-N0120  DELETE /repos/{owner}/{repo}/subscription
+desc: Unwatch a repo
+- path:owner string
+- path:repo string
+
+## S108-N0121  PUT /repos/{owner}/{repo}/subscription
+desc: Watch a repo
+- path:owner string
+- path:repo string
+
+## S108-N0122  POST /repos/{owner}/{repo}/tags
+desc: Create a new git tag in a repository
+schema: CreateTagOption
+- path:owner string
+- path:repo string
+- body:message string
+- body:tag_name string
+- body:target string
+
+## S108-N0123  DELETE /repos/{owner}/{repo}/tags/{tag}
+desc: Delete a repository's tag by name
+- path:owner string
+- path:repo string
+- path:tag string
+
+## S108-N0126  PUT /repos/{owner}/{repo}/topics
+desc: Replace list of topics for a repository
+schema: RepoTopicOptions
+- path:owner string
+- path:repo string
+- body:topics array<string>
+
+## S108-N0127  DELETE /repos/{owner}/{repo}/topics/{topic}
+desc: Delete a topic from a repository
+- path:owner string
+- path:repo string
+- path:topic string
+
+## S108-N0128  PUT /repos/{owner}/{repo}/topics/{topic}
+desc: Add a topic to a repository
+- path:owner string
+- path:repo string
+- path:topic string
+
+## S108-N0130  POST /repos/{owner}/{repo}/transfer/accept
+desc: Accept a repo transfer
+- path:owner string
+- path:repo string
+
+## S108-N0131  POST /repos/{owner}/{repo}/transfer/reject
+desc: Reject a repo transfer
+- path:owner string
+- path:repo string
+
+## S108-N0132  POST /repos/{owner}/{repo}/wiki/new
+desc: Create a wiki page
+schema: CreateWikiPageOptions
+- path:owner string
+- path:repo string
+- body:content_base64 string
+- body:message string
+- body:title string

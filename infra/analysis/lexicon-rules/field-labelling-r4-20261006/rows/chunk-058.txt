@@ -1,0 +1,860 @@
+## S501-N0038  POST /v1/jobs/get
+desc: Get information about a job
+schema: JobIdRequestBody
+- body:id integer
+
+## S501-N0039  POST /v1/jobs/get_debug_info
+desc: Gets all information needed to debug this job
+schema: JobIdRequestBody
+- body:id integer
+
+## S501-N0041  POST /v1/jobs/get_light
+desc: Get information about a job excluding attempt info and logs
+schema: JobIdRequestBody
+- body:id integer
+
+## S501-N0044  POST /v1/logs/get
+desc: Get logs
+schema: LogsRequestBody
+- body:logType string enum[server|scheduler]
+
+## S501-N0045  POST /v1/notifications/try
+desc: Try sending a notifications
+schema: Notification
+- body:customerioConfiguration object
+- body:notificationType string enum[slack|customerio]
+- body:sendOnFailure boolean
+- body:sendOnSuccess boolean
+- body:slackConfiguration object
+- body:slackConfiguration.webhook string
+
+## S501-N0046  POST /v1/operations/check
+desc: Check if an operation to be created is valid
+schema: OperatorConfiguration
+- body:dbt object
+- body:dbt.dbtArguments string
+- body:dbt.dockerImage string
+- body:dbt.gitRepoBranch string
+- body:dbt.gitRepoUrl string
+- body:normalization object
+- body:normalization.option string enum[basic]
+- body:operatorType string enum[normalization|dbt|webhook]
+- body:webhook object
+- body:webhook.dbtCloud object
+- body:webhook.dbtCloud.accountId integer
+- body:webhook.dbtCloud.jobId integer
+- body:webhook.executionBody string
+- body:webhook.executionUrl string
+- body:webhook.webhookConfigId string
+- body:webhook.webhookType string enum[dbtCloud]
+
+## S501-N0047  POST /v1/operations/create
+desc: Create an operation to be applied as part of a connection pipeline
+schema: OperationCreate
+- body:name string
+- body:operatorConfiguration object
+- body:operatorConfiguration.dbt object
+- body:operatorConfiguration.dbt.dbtArguments string
+- body:operatorConfiguration.dbt.dockerImage string
+- body:operatorConfiguration.dbt.gitRepoBranch string
+- body:operatorConfiguration.dbt.gitRepoUrl string
+- body:operatorConfiguration.normalization object
+- body:operatorConfiguration.normalization.option string enum[basic]
+- body:operatorConfiguration.operatorType string enum[normalization|dbt|webhook]
+- body:operatorConfiguration.webhook object
+- body:operatorConfiguration.webhook.dbtCloud object
+- body:operatorConfiguration.webhook.executionBody string
+- body:operatorConfiguration.webhook.executionUrl string
+- body:operatorConfiguration.webhook.webhookConfigId string
+- body:operatorConfiguration.webhook.webhookType string enum[dbtCloud]
+- body:workspaceId string
+
+## S501-N0049  POST /v1/operations/get
+desc: Returns an operation
+schema: OperationIdRequestBody
+- body:operationId string
+
+## S501-N0050  POST /v1/operations/list
+desc: Returns all operations for a connection. | List operations for connection.
+schema: ConnectionIdRequestBody
+- body:connectionId string
+
+## S501-N0052  POST /v1/scheduler/destinations/check_connection
+desc: Run check connection for a given destination configuration
+schema: DestinationCoreConfig
+- body:connectionConfiguration any
+- body:destinationDefinitionId string
+- body:destinationId string
+- body:workspaceId string
+
+## S501-N0054  POST /v1/scheduler/sources/discover_schema
+desc: Run discover schema for a given source a source configuration
+schema: SourceCoreConfig
+- body:connectionConfiguration any
+- body:sourceDefinitionId string
+- body:sourceId string
+- body:workspaceId string
+
+## S501-N0055  POST /v1/source_definition_specifications/get
+desc: Get specification for a SourceDefinition.
+schema: SourceDefinitionIdWithWorkspaceId
+- body:sourceDefinitionId string
+- body:workspaceId string
+
+## S501-N0056  POST /v1/source_definitions/create_custom
+desc: Creates a custom sourceDefinition for the given workspace
+schema: CustomSourceDefinitionCreate
+- body:sourceDefinition object
+- body:sourceDefinition.dockerImageTag string
+- body:sourceDefinition.dockerRepository string
+- body:sourceDefinition.documentationUrl string
+- body:sourceDefinition.icon string
+- body:sourceDefinition.name string
+- body:sourceDefinition.resourceRequirements object
+- body:sourceDefinition.resourceRequirements.default object
+- body:sourceDefinition.resourceRequirements.jobSpecific array<object>
+- body:workspaceId string
+
+## S501-N0059  POST /v1/source_definitions/get_for_workspace
+desc: Get a sourceDefinition that is configured for the given workspace
+schema: SourceDefinitionIdWithWorkspaceId
+- body:sourceDefinitionId string
+- body:workspaceId string
+
+## S501-N0060  POST /v1/source_definitions/grant_definition
+desc: grant a private, non-custom sourceDefinition to a given workspace
+schema: SourceDefinitionIdWithWorkspaceId
+- body:sourceDefinitionId string
+- body:workspaceId string
+
+## S501-N0061  POST /v1/source_definitions/list
+desc: List all the sourceDefinitions the current Airbyte deployment is configured to use
+
+## S501-N0062  POST /v1/source_definitions/list_for_workspace
+desc: List all the sourceDefinitions the given workspace is configured to use
+schema: WorkspaceIdRequestBody
+- body:workspaceId string
+
+## S501-N0063  POST /v1/source_definitions/list_latest
+desc: List the latest sourceDefinitions Airbyte supports | Guaranteed to retrieve the latest information on supported sources.
+
+## S501-N0064  POST /v1/source_definitions/list_private
+desc: List all private, non-custom sourceDefinitions, and for each indicate whether the given workspace has a grant for using the definition. Used by admins to view and modify a given workspace's grants.
+schema: WorkspaceIdRequestBody
+- body:workspaceId string
+
+## S501-N0065  POST /v1/source_definitions/revoke_definition
+desc: revoke a grant to a private, non-custom sourceDefinition from a given workspace
+schema: SourceDefinitionIdWithWorkspaceId
+- body:sourceDefinitionId string
+- body:workspaceId string
+
+## S501-N0067  POST /v1/source_oauths/complete_oauth
+desc: Given a source def ID generate an access/refresh token etc.
+schema: CompleteSourceOauthRequest
+- body:oAuthInputConfiguration any
+- body:queryParams object
+- body:redirectUrl string
+- body:sourceDefinitionId string
+- body:sourceId string
+- body:workspaceId string
+
+## S501-N0069  POST /v1/source_oauths/oauth_params/create
+desc: Sets instancewide variables to be used for the oauth flow when creating this source. When set, these variables will be injected into a connector's configuration before any interaction with the connector image itself. This enables running oauth flows with consistent variables e.g: the company's Google Ads developer_token, client_id, and client_secret without the user having to know about these vari
+schema: SetInstancewideSourceOauthParamsRequestBody
+- body:params object
+- body:sourceDefinitionId string
+
+## S501-N0072  POST /v1/sources/clone
+desc: Clone source
+schema: SourceCloneRequestBody
+- body:sourceCloneId string
+- body:sourceConfiguration object
+- body:sourceConfiguration.connectionConfiguration any
+- body:sourceConfiguration.name string
+
+## S501-N0073  POST /v1/sources/create
+desc: Create a source
+schema: SourceCreate
+- body:connectionConfiguration any
+- body:name string
+- body:sourceDefinitionId string
+- body:workspaceId string
+
+## S501-N0075  POST /v1/sources/discover_schema
+desc: Discover the schema catalog of the source
+schema: SourceDiscoverSchemaRequestBody
+- body:connectionId string
+- body:disable_cache boolean
+- body:notifySchemaChange boolean
+- body:sourceId string
+
+## S501-N0076  POST /v1/sources/get
+desc: Get source
+schema: SourceIdRequestBody
+- body:sourceId string
+
+## S501-N0077  POST /v1/sources/list
+desc: List sources for workspace | List sources for workspace. Does not return deleted sources.
+schema: WorkspaceIdRequestBody
+- body:workspaceId string
+
+## S501-N0080  POST /v1/sources/update
+desc: Update a source
+schema: SourceUpdate
+- body:connectionConfiguration any
+- body:name string
+- body:sourceId string
+
+## S501-N0082  POST /v1/state/create_or_update
+desc: Create or update the state for a connection.
+schema: ConnectionStateCreateOrUpdate
+- body:connectionId string
+- body:connectionState object
+- body:connectionState.connectionId string
+- body:connectionState.globalState object
+- body:connectionState.globalState.shared_state object
+- body:connectionState.globalState.streamStates array<object>
+- body:connectionState.state object
+- body:connectionState.stateType string enum[global|stream|legacy|not_set]
+- body:connectionState.streamState array<object>
+- body:connectionState.streamState[].streamDescriptor object
+- body:connectionState.streamState[].streamState object
+
+## S501-N0085  POST /v1/web_backend/connections/create
+desc: Create a connection
+schema: WebBackendConnectionCreate
+- body:destinationId string
+- body:geography string enum[auto|us|eu]
+- body:name string
+- body:namespaceDefinition string enum[source|destination|customformat]
+- body:namespaceFormat string
+- body:nonBreakingChangesPreference string enum[ignore|disable]
+- body:operationIds array<string>
+- body:operations array<object>
+- body:operations[].name string
+- body:operations[].operatorConfiguration object
+- body:operations[].operatorConfiguration.dbt object
+- body:operations[].operatorConfiguration.normalization object
+- body:operations[].operatorConfiguration.operatorType string enum[normalization|dbt|webhook]
+- body:operations[].operatorConfiguration.webhook object
+- body:operations[].workspaceId string
+- body:prefix string
+- body:resourceRequirements object
+- body:resourceRequirements.cpu_limit string
+- body:resourceRequirements.cpu_request string
+- body:resourceRequirements.memory_limit string
+- body:resourceRequirements.memory_request string
+- body:schedule object
+- body:schedule.timeUnit string enum[minutes|hours|days|weeks|months]
+- body:schedule.units integer
+- body:scheduleData object
+- body:scheduleData.basicSchedule object
+- body:scheduleData.basicSchedule.timeUnit string enum[minutes|hours|days|weeks|months]
+- body:scheduleData.basicSchedule.units integer
+- body:scheduleData.cron object
+- body:scheduleData.cron.cronExpression string
+- body:scheduleData.cron.cronTimeZone string
+- body:scheduleType string enum[manual|basic|cron]
+- body:sourceCatalogId string
+- body:sourceId string
+- body:status string enum[active|inactive|deprecated]
+- body:syncCatalog object
+- body:syncCatalog.streams array<object>
+- body:syncCatalog.streams[].config object
+- body:syncCatalog.streams[].stream object
+
+## S501-N0086  POST /v1/web_backend/connections/get
+desc: Get a connection
+schema: WebBackendConnectionRequestBody
+- body:connectionId string
+- body:withRefreshedCatalog boolean
+
+## S501-N0087  POST /v1/web_backend/connections/list
+desc: Returns all non-deleted connections for a workspace.
+schema: WebBackendConnectionListRequestBody
+- body:destinationId array<string>
+- body:sourceId array<string>
+- body:workspaceId string
+
+## S501-N0088  POST /v1/web_backend/connections/update
+desc: Update a connection | Apply a patch-style update to a connection. Only fields present on the update request body will be updated. Any operations that lack an ID will be created. Then, the newly created operationId will be applied to the connection along with the rest of the operationIds in the request body. Apply a patch-style update to a connection. Only fields present on the update request body 
+schema: WebBackendConnectionUpdate
+- body:connectionId string
+- body:geography string enum[auto|us|eu]
+- body:name string
+- body:namespaceDefinition string enum[source|destination|customformat]
+- body:namespaceFormat string
+- body:nonBreakingChangesPreference string enum[ignore|disable]
+- body:notifySchemaChanges boolean
+- body:operations array<object>
+- body:operations[].name string
+- body:operations[].operationId string
+- body:operations[].operatorConfiguration object
+- body:operations[].operatorConfiguration.dbt object
+- body:operations[].operatorConfiguration.normalization object
+- body:operations[].operatorConfiguration.operatorType string enum[normalization|dbt|webhook]
+- body:operations[].operatorConfiguration.webhook object
+- body:operations[].workspaceId string
+- body:prefix string
+- body:resourceRequirements object
+- body:resourceRequirements.cpu_limit string
+- body:resourceRequirements.cpu_request string
+- body:resourceRequirements.memory_limit string
+- body:resourceRequirements.memory_request string
+- body:schedule object
+- body:schedule.timeUnit string enum[minutes|hours|days|weeks|months]
+- body:schedule.units integer
+- body:scheduleData object
+- body:scheduleData.basicSchedule object
+- body:scheduleData.basicSchedule.timeUnit string enum[minutes|hours|days|weeks|months]
+- body:scheduleData.basicSchedule.units integer
+- body:scheduleData.cron object
+- body:scheduleData.cron.cronExpression string
+- body:scheduleData.cron.cronTimeZone string
+- body:scheduleType string enum[manual|basic|cron]
+- body:skipReset boolean
+- body:sourceCatalogId string
+- body:status string enum[active|inactive|deprecated]
+- body:syncCatalog object
+- body:syncCatalog.streams array<object>
+- body:syncCatalog.streams[].config object
+- body:syncCatalog.streams[].stream object
+
+## S501-N0089  POST /v1/web_backend/geographies/list
+desc: Returns available geographies can be selected to run data syncs in a particular geography. The 'auto' entry indicates that the sync will be automatically assigned to a geography according to the platform default behavior. Entries other than 'auto' are two-letter country codes that follow the ISO 3166-1 alpha-2 standard. | Returns all available geographies in which a data sync can run.
+
+## S501-N0090  POST /v1/web_backend/state/get_type
+desc: Fetch the current state type for a connection.
+schema: ConnectionIdRequestBody
+- body:connectionId string
+
+## S501-N0091  POST /v1/web_backend/workspace/state
+desc: Returns the current state of a workspace
+schema: WebBackendWorkspaceState
+- body:workspaceId string
+
+## S501-N0092  POST /v1/workspaces/create
+desc: Creates a workspace
+schema: WorkspaceCreate
+- body:anonymousDataCollection boolean
+- body:defaultGeography string enum[auto|us|eu]
+- body:displaySetupWizard boolean
+- body:email string
+- body:name string
+- body:news boolean
+- body:notifications array<object>
+- body:notifications[].customerioConfiguration object
+- body:notifications[].notificationType string enum[slack|customerio]
+- body:notifications[].sendOnFailure boolean
+- body:notifications[].sendOnSuccess boolean
+- body:notifications[].slackConfiguration object
+- body:notifications[].slackConfiguration.webhook string
+- body:securityUpdates boolean
+- body:webhookConfigs array<object>
+- body:webhookConfigs[].authToken string
+- body:webhookConfigs[].name string
+- body:webhookConfigs[].validationUrl string
+
+## S501-N0094  POST /v1/workspaces/get
+desc: Find workspace by ID
+schema: WorkspaceIdRequestBody
+- body:workspaceId string
+
+## S501-N0095  POST /v1/workspaces/get_by_connection_id
+desc: Find workspace by connection id
+schema: ConnectionIdRequestBody
+- body:connectionId string
+
+## S501-N0097  POST /v1/workspaces/list
+desc: List all workspaces registered in the current Airbyte deployment
+
+## S417-N0001  POST /api/alert-service
+desc: Creates a AlertService resource. | Creates a AlertService resource.
+schema: AlertService-post
+- body:alertServiceName string
+- body:alertServiceNotes string
+- body:alertServiceTransportCode string
+- body:dataSegmentCode string
+- body:mediaObjects array<string>
+- body:partition string
+- body:recipientEmailAddress string
+- body:recipientPhoneNumber string
+- body:transportAlerta string
+- body:transportAllMySms string
+- body:transportAmazonSns string
+- body:transportBandwidth string
+- body:transportChatwork string
+- body:transportClickSend string
+- body:transportClickatell string
+- body:transportContactEveryone string
+- body:transportDiscord string
+- body:transportEmail string
+- body:transportEngagespot string
+- body:transportEsendex string
+- body:transportExpo string
+- body:transportFirebase string
+- body:transportFortySixElks string
+- body:transportFreeMobile string
+- body:transportFreshdesk string
+- body:transportGatewayApi string
+- body:transportGitter string
+- body:transportGoogleChat string
+- body:transportGotify string
+- body:transportHelpScout string
+- body:transportInfobip string
+- body:transportIqsms string
+- body:transportKazInfoTeh string
+- body:transportLightSms string
+- body:transportLineNotify string
+- body:transportLinkedIn string
+- body:transportMailjet string
+- body:transportMastodon string
+- body:transportMattermost string
+- body:transportMercure string
+- body:transportMessageBird string
+- body:transportMessageMedia string
+- body:transportMicrosoftTeams string
+- body:transportMobyt string
+- body:transportOctopush string
+- body:transportOneSignal string
+- body:transportOpsgenie string
+- body:transportOrangeSms string
+- body:transportOvhCloud string
+- body:transportPagerDuty string
+- body:transportPagerTree string
+- body:transportPlivo string
+- body:transportPushbullet string
+- body:transportPushover string
+- body:transportPushy string
+- body:transportRingCentral string
+- body:transportRocketChat string
+- body:transportSendberry string
+- body:transportSendinblue string
+- body:transportSimpleTextin string
+- body:transportSinch string
+- body:transportSlack string
+- body:transportSms77 string
+- body:transportSmsBiuras string
+- body:transportSmsFactor string
+- body:transportSmsapi string
+- body:transportSmsc string
+- body:transportSmsmode string
+- body:transportSpotHit string
+- body:transportTelegram string
+- body:transportTelnyx string
+- body:transportTermii string
+- body:transportTrello string
+- body:transportTurboSms string
+- body:transportTwilio string
+- body:transportTwitter string
+- body:transportVonage string
+- body:transportWebhook string
+- body:transportYunpian string
+- body:transportZendesk string
+(+1 fields cut)
+
+## S417-N0002  DELETE /api/alert-service/{id}
+desc: Removes the AlertService resource. | Removes the AlertService resource.
+- path:id string
+
+## S417-N0003  PUT /api/alert-service/{id}
+desc: Replaces the AlertService resource. | Replaces the AlertService resource.
+schema: AlertService-put
+- path:id string
+- body:alertServiceName string
+- body:alertServiceNotes string
+- body:dataSegmentCode string
+- body:mediaObjects array<string>
+- body:recipientEmailAddress string
+- body:recipientPhoneNumber string
+- body:transportAlerta string
+- body:transportAllMySms string
+- body:transportAmazonSns string
+- body:transportBandwidth string
+- body:transportChatwork string
+- body:transportClickSend string
+- body:transportClickatell string
+- body:transportContactEveryone string
+- body:transportDiscord string
+- body:transportEmail string
+- body:transportEngagespot string
+- body:transportEsendex string
+- body:transportExpo string
+- body:transportFirebase string
+- body:transportFortySixElks string
+- body:transportFreeMobile string
+- body:transportFreshdesk string
+- body:transportGatewayApi string
+- body:transportGitter string
+- body:transportGoogleChat string
+- body:transportGotify string
+- body:transportHelpScout string
+- body:transportInfobip string
+- body:transportIqsms string
+- body:transportKazInfoTeh string
+- body:transportLightSms string
+- body:transportLineNotify string
+- body:transportLinkedIn string
+- body:transportMailjet string
+- body:transportMastodon string
+- body:transportMattermost string
+- body:transportMercure string
+- body:transportMessageBird string
+- body:transportMessageMedia string
+- body:transportMicrosoftTeams string
+- body:transportMobyt string
+- body:transportOctopush string
+- body:transportOneSignal string
+- body:transportOpsgenie string
+- body:transportOrangeSms string
+- body:transportOvhCloud string
+- body:transportPagerDuty string
+- body:transportPagerTree string
+- body:transportPlivo string
+- body:transportPushbullet string
+- body:transportPushover string
+- body:transportPushy string
+- body:transportRingCentral string
+- body:transportRocketChat string
+- body:transportSendberry string
+- body:transportSendinblue string
+- body:transportSimpleTextin string
+- body:transportSinch string
+- body:transportSlack string
+- body:transportSms77 string
+- body:transportSmsBiuras string
+- body:transportSmsFactor string
+- body:transportSmsapi string
+- body:transportSmsc string
+- body:transportSmsmode string
+- body:transportSpotHit string
+- body:transportTelegram string
+- body:transportTelnyx string
+- body:transportTermii string
+- body:transportTrello string
+- body:transportTurboSms string
+- body:transportTwilio string
+- body:transportTwitter string
+- body:transportVonage string
+- body:transportWebhook string
+- body:transportYunpian string
+- body:transportZendesk string
+- body:transportZulip string
+
+## S417-N0004  POST /api/media-object
+desc: Creates a MediaObject resource. | Creates a MediaObject resource.
+- body:dataSegmentCode string
+- body:file string
+- body:keywords string
+- body:partition string
+
+## S417-N0006  POST /api/monitor
+desc: Creates a Monitor resource. | Creates a Monitor resource.
+schema: Monitor-post
+- body:alertPayloadExtended string
+- body:alertPayloadShort string
+- body:alertServices array<string>
+- body:allowUnauthenticatedPings boolean
+- body:contentCheckMustNotExist boolean
+- body:contentCheckText string
+- body:contentCheckUrl string
+- body:contentCheckXpathFilter string
+- body:dataSegmentCode string
+- body:graceSeconds integer
+- body:intervalDays integer
+- body:intervalHours integer
+- body:intervalMinutes integer
+- body:intervalMonths integer
+- body:intervalSeconds integer
+- body:intervalYears integer
+- body:isMonitorPaused boolean
+- body:monitorName string
+- body:monitorNotes string
+- body:monitorTypeCode string
+- body:partition string
+- body:publicDescription string
+- body:startMonitorAt string
+- body:timezoneCode string
+- body:webResponseSecondsLimit integer
+- body:webResponseUrl string
+
+## S417-N0007  DELETE /api/monitor/{id}
+desc: Removes the Monitor resource. | Removes the Monitor resource.
+- path:id string
+
+## S417-N0008  PUT /api/monitor/{id}
+desc: Replaces the Monitor resource. | Replaces the Monitor resource.
+schema: Monitor-put
+- path:id string
+- body:alertPayloadExtended string
+- body:alertPayloadShort string
+- body:alertServices array<string>
+- body:allowUnauthenticatedPings boolean
+- body:contentCheckMustNotExist boolean
+- body:contentCheckText string
+- body:contentCheckUrl string
+- body:contentCheckXpathFilter string
+- body:dataSegmentCode string
+- body:graceSeconds integer
+- body:intervalDays integer
+- body:intervalHours integer
+- body:intervalMinutes integer
+- body:intervalMonths integer
+- body:intervalSeconds integer
+- body:intervalYears integer
+- body:isMonitorPaused boolean
+- body:monitorName string
+- body:monitorNotes string
+- body:publicDescription string
+- body:startMonitorAt string
+- body:timezoneCode string
+- body:webResponseSecondsLimit integer
+- body:webResponseUrl string
+
+## S417-N0009  POST /api/partition
+desc: Creates a Partition resource. | Creates a Partition resource.
+schema: Partition-post
+- body:dataSegmentCode string
+- body:partitionName string
+- body:partitionNotes string
+
+## S417-N0010  DELETE /api/partition/{id}
+desc: Removes the Partition resource. | Removes the Partition resource.
+- path:id string
+
+## S417-N0011  PUT /api/partition/{id}
+desc: Replaces the Partition resource. | Replaces the Partition resource.
+schema: Partition-put
+- path:id string
+- body:dataSegmentCode string
+- body:partitionName string
+- body:partitionNotes string
+
+## S417-N0012  POST /api/ping
+desc: Creates a Ping resource. | Creates a Ping resource.
+schema: Ping-post
+- body:expectNextPingAt string
+- body:expectNextPingAtEpoch integer
+- body:monitor string
+- body:pingCustomCode string
+- body:pingCustomPayload string
+
+## S417-N0013  POST /api/team-invitation
+desc: Creates a TeamInvitation resource. | Creates a TeamInvitation resource.
+schema: TeamInvitation-post
+- body:dataSegmentCode string
+- body:id string
+- body:inviteeEmail string
+- body:inviteeFirstName string
+- body:inviteeLastName string
+- body:partition string
+- body:teamMemberRoleCode string
+
+## S417-N0015  DELETE /api/team-member/{id}
+desc: Removes the TeamMember resource. | Removes the TeamMember resource.
+- path:id string
+
+## S417-N0016  PUT /api/team-member/{id}
+desc: Replaces the TeamMember resource. | Replaces the TeamMember resource.
+schema: TeamMember-put
+- path:id string
+- body:dataSegmentCode string
+- body:teamMemberRoleCode string
+
+## S417-N0017  POST /api/transport-alerta
+desc: Creates a TransportAlerta resource. | Creates a TransportAlerta resource.
+schema: TransportAlerta-post
+- body:alertaApiKey string
+- body:alertaCorrelate string
+- body:alertaEnvironment string
+- body:alertaEvent string
+- body:alertaGroup string
+- body:alertaHost string
+- body:alertaOrigin string
+- body:alertaResource string
+- body:alertaService string
+- body:alertaSeverity string
+- body:alertaStatus string
+- body:alertaTags string
+- body:alertaType string
+- body:dataSegmentCode string
+- body:partition string
+- body:transportName string
+
+## S417-N0018  DELETE /api/transport-alerta/{id}
+desc: Removes the TransportAlerta resource. | Removes the TransportAlerta resource.
+- path:id string
+
+## S417-N0019  PUT /api/transport-alerta/{id}
+desc: Replaces the TransportAlerta resource. | Replaces the TransportAlerta resource.
+schema: TransportAlerta-put
+- path:id string
+- body:alertaApiKey string
+- body:alertaCorrelate string
+- body:alertaEnvironment string
+- body:alertaEvent string
+- body:alertaGroup string
+- body:alertaHost string
+- body:alertaOrigin string
+- body:alertaResource string
+- body:alertaService string
+- body:alertaSeverity string
+- body:alertaStatus string
+- body:alertaTags string
+- body:alertaType string
+- body:dataSegmentCode string
+- body:transportName string
+
+## S417-N0020  POST /api/transport-all-my-sms
+desc: Creates a TransportAllMySms resource. | Creates a TransportAllMySms resource.
+schema: TransportAllMySms-post
+- body:allMySmsApiKey string
+- body:allMySmsFrom string
+- body:allMySmsLogin string
+- body:dataSegmentCode string
+- body:partition string
+- body:transportName string
+
+## S417-N0021  DELETE /api/transport-all-my-sms/{id}
+desc: Removes the TransportAllMySms resource. | Removes the TransportAllMySms resource.
+- path:id string
+
+## S417-N0022  PUT /api/transport-all-my-sms/{id}
+desc: Replaces the TransportAllMySms resource. | Replaces the TransportAllMySms resource.
+schema: TransportAllMySms-put
+- path:id string
+- body:allMySmsApiKey string
+- body:allMySmsFrom string
+- body:allMySmsLogin string
+- body:dataSegmentCode string
+- body:transportName string
+
+## S417-N0023  POST /api/transport-amazon-sns
+desc: Creates a TransportAmazonSns resource. | Creates a TransportAmazonSns resource.
+schema: TransportAmazonSns-post
+- body:amazonSnsAccessKey string
+- body:amazonSnsRegion string
+- body:amazonSnsSecretKey string
+- body:dataSegmentCode string
+- body:partition string
+- body:transportName string
+
+## S417-N0024  DELETE /api/transport-amazon-sns/{id}
+desc: Removes the TransportAmazonSns resource. | Removes the TransportAmazonSns resource.
+- path:id string
+
+## S417-N0025  PUT /api/transport-amazon-sns/{id}
+desc: Replaces the TransportAmazonSns resource. | Replaces the TransportAmazonSns resource.
+schema: TransportAmazonSns-put
+- path:id string
+- body:amazonSnsAccessKey string
+- body:amazonSnsRegion string
+- body:amazonSnsSecretKey string
+- body:dataSegmentCode string
+- body:transportName string
+
+## S417-N0026  POST /api/transport-bandwidth
+desc: Creates a TransportBandwidth resource. | Creates a TransportBandwidth resource.
+schema: TransportBandwidth-post
+- body:bandwidthAccountId string
+- body:bandwidthApplicationId string
+- body:bandwidthFrom string
+- body:bandwidthPassword string
+- body:bandwidthUsername string
+- body:dataSegmentCode string
+- body:partition string
+- body:transportName string
+
+## S417-N0028  PUT /api/transport-bandwidth/{id}
+desc: Replaces the TransportBandwidth resource. | Replaces the TransportBandwidth resource.
+schema: TransportBandwidth-put
+- path:id string
+- body:bandwidthAccountId string
+- body:bandwidthApplicationId string
+- body:bandwidthFrom string
+- body:bandwidthPassword string
+- body:bandwidthUsername string
+- body:dataSegmentCode string
+- body:transportName string
+
+## S417-N0029  POST /api/transport-chatwork
+desc: Creates a TransportChatwork resource. | Creates a TransportChatwork resource.
+schema: TransportChatwork-post
+- body:chatworkApiToken string
+- body:chatworkRoomId string
+- body:dataSegmentCode string
+- body:partition string
+- body:transportName string
+
+## S417-N0032  POST /api/transport-click-send
+desc: Creates a TransportClickSend resource. | Creates a TransportClickSend resource.
+schema: TransportClickSend-post
+- body:clickSendApiKey string
+- body:clickSendApiUsername string
+- body:clickSendFrom string
+- body:clickSendFromEmail string
+- body:clickSendListId string
+- body:clickSendSource string
+- body:dataSegmentCode string
+- body:partition string
+- body:transportName string
+
+## S417-N0033  DELETE /api/transport-click-send/{id}
+desc: Removes the TransportClickSend resource. | Removes the TransportClickSend resource.
+- path:id string
+
+## S417-N0035  POST /api/transport-clickatell
+desc: Creates a TransportClickatell resource. | Creates a TransportClickatell resource.
+schema: TransportClickatell-post
+- body:clickatellAccessToken string
+- body:clickatellFrom string
+- body:dataSegmentCode string
+- body:partition string
+- body:transportName string
+
+## S417-N0036  DELETE /api/transport-clickatell/{id}
+desc: Removes the TransportClickatell resource. | Removes the TransportClickatell resource.
+- path:id string
+
+## S417-N0037  PUT /api/transport-clickatell/{id}
+desc: Replaces the TransportClickatell resource. | Replaces the TransportClickatell resource.
+schema: TransportClickatell-put
+- path:id string
+- body:clickatellAccessToken string
+- body:clickatellFrom string
+- body:dataSegmentCode string
+- body:transportName string
+
+## S417-N0038  POST /api/transport-contact-everyone
+desc: Creates a TransportContactEveryone resource. | Creates a TransportContactEveryone resource.
+schema: TransportContactEveryone-post
+- body:contactEveryoneCategory string
+- body:contactEveryoneDiffusionName string
+- body:contactEveryoneToken string
+- body:dataSegmentCode string
+- body:partition string
+- body:transportName string
+
+## S417-N0039  DELETE /api/transport-contact-everyone/{id}
+desc: Removes the TransportContactEveryone resource. | Removes the TransportContactEveryone resource.
+- path:id string
+
+## S417-N0040  PUT /api/transport-contact-everyone/{id}
+desc: Replaces the TransportContactEveryone resource. | Replaces the TransportContactEveryone resource.
+schema: TransportContactEveryone-put
+- path:id string
+- body:contactEveryoneCategory string
+- body:contactEveryoneDiffusionName string
+- body:contactEveryoneToken string
+- body:dataSegmentCode string
+- body:transportName string
+
+## S417-N0041  POST /api/transport-discord
+desc: Creates a TransportDiscord resource. | Creates a TransportDiscord resource.
+schema: TransportDiscord-post
+- body:dataSegmentCode string
+- body:discordToken string
+- body:discordWebhookId string
+- body:partition string
+- body:transportName string

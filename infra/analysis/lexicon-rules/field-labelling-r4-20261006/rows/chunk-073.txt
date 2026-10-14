@@ -1,0 +1,1648 @@
+## S586-N0162  PATCH /verified_senders/{id}
+desc: Edit Verified Sender | **This endpoint allows you to update an existing Sender Identity**. Pass the `id` assigned to a Sender Identity to this endpoint as a path parameter. Include any fields you wish to update in the request body in JSON format. You can retrieve the IDs associated with Sender Identities by passing a `GET` request to the Get All Verified Senders endpoint, `/verified_senders`. **No
+schema: verified-sender-request-schema
+- path:id string
+- body:address string
+- body:address2 string
+- body:city string
+- body:country string
+- body:from_email string
+- body:from_name string
+- body:nickname string
+- body:reply_to string
+- body:reply_to_name string
+- body:state string
+- body:zip string
+
+## S586-N0164  POST /whitelabel/domains
+desc: Authenticate a domain | **This endpoint allows you to authenticate a domain.** If you are authenticating a domain for a subuser, you have two options: 1. Use the "username" parameter. This allows you to authenticate a domain on behalf of your subuser. This means the subuser is able to see and modify the authenticated domain. 2. Use the Association workflow (see Associate Domain section). This allo
+- body:automatic_security boolean
+- body:custom_dkim_selector string
+- body:custom_spf boolean
+- body:default boolean
+- body:domain string
+- body:ips array<string>
+- body:subdomain string
+- body:username string
+
+## S586-N0165  DELETE /whitelabel/domains/subuser
+desc: Disassociate an authenticated domain from a given user. | **This endpoint allows you to disassociate a specific authenticated domain from a subuser.** Authenticated domains can be associated with (i.e. assigned to) subusers from a parent account. This functionality allows subusers to send mail using their parent's domain authentication. To associate an authenticated domain with a subuser, the pare
+- query:username string
+
+## S586-N0167  PATCH /whitelabel/domains/{domain_id}
+desc: Update an authenticated domain | **This endpoint allows you to update the settings for an authenticated domain.**
+- path:domain_id string
+- body:custom_spf boolean
+- body:default boolean
+
+## S586-N0169  POST /whitelabel/domains/{id}/ips
+desc: Add an IP to an authenticated domain | **This endpoint allows you to add an IP address to an authenticated domain.**
+- path:id integer
+- body:ip string
+
+## S586-N0170  DELETE /whitelabel/domains/{id}/ips/{ip}
+desc: Remove an IP from an authenticated domain. | **This endpoint allows you to remove an IP address from that domain's authentication.**
+- path:id integer
+- path:ip string
+
+## S586-N0171  POST /whitelabel/domains/{id}/validate
+desc: Validate a domain authentication. | **This endpoint allows you to validate an authenticated domain. If it fails, it will return an error message describing why the domain could not be validated.**
+- path:id integer
+
+## S586-N0172  POST /whitelabel/ips
+desc: Set up reverse DNS | **This endpoint allows you to set up reverse DNS.**
+- body:domain string
+- body:ip string
+- body:subdomain string
+
+## S586-N0173  DELETE /whitelabel/ips/{id}
+desc: Delete a reverse DNS record | **This endpoint allows you to delete a reverse DNS record.** A call to this endpoint will respond with a 204 status code if the deletion was successful. You can retrieve the IDs associated with all your reverse DNS records using the "Retrieve all reverse DNS records" endpoint.
+- path:id string
+
+## S586-N0174  POST /whitelabel/ips/{id}/validate
+desc: Validate a reverse DNS record | **This endpoint allows you to validate a reverse DNS record.** Always check the `valid` property of the response’s `validation_results.a_record` object. This field will indicate whether it was possible to validate the reverse DNS record. If the `validation_results.a_record.valid` is `false`, this indicates only that Twilio SendGrid could not determine the validity y
+- path:id string
+
+## S586-N0175  POST /whitelabel/links
+desc: Create a branded link | **This endpoint allows you to create a new branded link.** To create the link branding, supply the root domain and, optionally, the subdomain — these go into separate fields in your request body. The root domain should match your FROM email address. If you provide a subdomain, it must be different from the subdomain you used for authenticating your domain. You can submit th
+- body:default boolean enum[True|False]
+- body:domain string
+- body:subdomain string
+
+## S586-N0176  DELETE /whitelabel/links/subuser
+desc: Disassociate a branded link from a subuser | **This endpoint allows you to take a branded link away from a subuser.** Link branding can be associated with subusers from the parent account. This functionality allows subusers to send mail using their parent's link branding. To associate link branding, the parent account must first create a branded link and validate it. The parent may then associate 
+- query:username string
+
+## S586-N0177  DELETE /whitelabel/links/{id}
+desc: Delete a branded link | **This endpoint allows you to delete a branded link.** Your request will receive a response with a 204 status code if the deletion was successful. The call does not return the link's details, so if you wish to record these make sure you call the "Retrieve a branded link" endpoint *before* you request its deletion. You can submit this request as one of your subusers if you i
+- path:id integer
+
+## S586-N0178  PATCH /whitelabel/links/{id}
+desc: Update a branded link | **This endpoint allows you to update a specific branded link. You can use this endpoint to change a branded link's default status.** You can submit this request as one of your subusers if you include their ID in the `on-behalf-of` header in the request.
+- path:id integer
+- body:default boolean enum[True|False]
+
+## S586-N0179  POST /whitelabel/links/{id}/validate
+desc: Validate a branded link | **This endpoint allows you to validate a branded link.** You can submit this request as one of your subusers if you include their ID in the `on-behalf-of` header in the request.
+- path:id integer
+
+## S586-N0180  POST /whitelabel/links/{link_id}/subuser
+desc: Associate a branded link with a subuser | **This endpoint allows you to associate a branded link with a subuser account.** Link branding can be associated with subusers from the parent account. This functionality allows subusers to send mail using their parent's link branding. To associate link branding, the parent account must first create a branded link and validate it. The parent may then assoc
+- path:link_id integer
+- body:username string
+
+## S133-N0001  POST /apis
+desc: Create API | This call creates a new API with a default API Version. Request body should contain an `api` object which should atleast have a property `name`. Response contains an `api` object with all the details related to the created API, namely, `id`, `name`, `summary`, `description`, etc. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query param
+- query:workspace string
+- body:api object
+- body:api.description string
+- body:api.name string
+- body:api.summary string
+
+## S133-N0005  DELETE /apis/{apiId}/versions/{apiVersionId}
+desc: Delete an API Version | This call deletes an existing API Version having the specified id. Response contains an `version` object with `id` of the API Version which was deleted. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query parameter.
+- path:apiId string
+- path:apiVersionId string
+
+## S133-N0006  PUT /apis/{apiId}/versions/{apiVersionId}
+desc: Update an API Version | This call updates an existing API Version. Request body should contain a `version` object with the fields which need to be updated. Only field which can be updated is `name`. Response contains a `version` object with all the details related to the created API Version, namely, `id`, `name`, `api` etc. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request he
+- path:apiId string
+- path:apiVersionId string
+- body:version object
+- body:version.name string
+
+## S133-N0009  PUT /apis/{apiId}/versions/{apiVersionId}/schemas/{schemaId}
+desc: Update Schema | This call updates an existing schema. Request body should contain a `schema` object which should atleast have these properties with `string` values: - **`type`**: Allowed types are `openapi3`, `openapi2`, `openapi1`, `raml` and `graphql`. - **`language`** : Allowed languages are `json` and `yaml` for OpenAPI and RAML schema types. GraphQL schema type accepts only `graphql` language
+- path:apiId string
+- path:apiVersionId string
+- path:schemaId string
+- body:schema object
+- body:schema.language string
+- body:schema.schema string
+- body:schema.type string
+
+## S133-N0010  POST /apis/{apiId}/versions/{apiVersionId}/schemas/{schemaId}/collections
+desc: Create collection from schema | This call creates a collection and links it to an API as one or multiple relations. Request body requires two keys: - `name` - Name of the collection to be created. - `relations` - A list of relation(s) to be created. The allowed relation types are `contracttest`, `integrationtest`, `testsuite`, and `documentation`. > Requires <a href="#authentication">API Key</a> a
+- path:apiId string
+- path:apiVersionId string
+- path:schemaId string
+- query:workspace string
+- body:name string
+- body:relations array<object>
+- body:relations[].type string
+
+## S133-N0011  PUT /apis/{apiId}/versions/{apiVersionId}/{entityType}/{entityId}/syncWithSchema
+desc: Sync relations with schema | This call allows you to keep the relation in sync with the API schema. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query parameter.
+- path:apiId string
+- path:apiVersionId string
+- path:entityType string
+- path:entityId string
+
+## S133-N0012  POST /collections
+desc: Create Collection | This endpoint allows you to create collections using the Postman Collection v2 format. For more information about the v2 schema, check the format [here](https://schema.getpostman.com/json/collection/v2.0.0/docs/index.html). On successful creation of the collection, the response returns the collection `name`, `id` and the `uid`. You can also specify the context of a workspace to
+- body:collection object
+- body:collection.info object
+- body:collection.info.description string
+- body:collection.info.name string
+- body:collection.info.schema string
+- body:collection.item array<object>
+- body:collection.item[].item array<object>
+- body:collection.item[].name string
+
+## S133-N0013  POST /collections/fork/{collection_uid}
+desc: Create a Fork | This endpoint allows you to create a fork from an existing collection. On successful creation of the collection, the response returns the collection `name`, `id`, `uid` along with `fork` information. You can also specify the context of a workspace to fork a collection in by passing the `workspace` as a query param. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` req
+- path:collection_uid string
+- query:workspace string
+- body:name string
+
+## S133-N0015  DELETE /collections/{collection_uid}
+desc: Delete Collection | This endpoint allows you to delete an existing collection. On successful deletion of the collection, the response returns the `id` and `uid`. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query parameter.
+- path:collection_uid string
+
+## S133-N0017  POST /environments
+desc: Create Environment | A sample body is added to the request that conforms to the following JSON schema: ```json { "type": "object", "properties": { "environment": { "type": "object", "properties": { "name": { "type": "string", "maxLength": 254, "minLength": 1 }, "values": { "type": "array", "maxItems": 100, "additionalItems": false, "items": { "type": "object", "properties": { "key": { "type": "str
+- body:environment object
+- body:environment.name string
+- body:environment.values array<object>
+- body:environment.values[].key string
+- body:environment.values[].value string
+
+## S133-N0018  DELETE /environments/{environment_uid}
+desc: Delete Environment | This endpoint allows you to delete a single environment based on an environment's unique `uid`. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query parameter.
+- path:environment_uid string
+
+## S133-N0020  POST /import/exported
+desc: Import exported data | This endpoint allows you to import your exported Postman data. For more information about how you can export your data, refer <a href="https://go.postman.co/me/export">Export your Postman data.</a> On successful imports, the response will be an array with Each element contaning `id`, `name` and `uid` of entities created. **Note**: Refer to examples for different scenarios. >
+
+## S133-N0022  POST /mocks
+desc: Create Mock | This endpoint allows you to create a mock on a collection. You can also provide an environment UID to resolve any environment variables in the collection. You can also specify the context of a workspace to create a mock in directly by passing the `workspace` as a query param. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query paramete
+- body:mock object
+- body:mock.collection string
+- body:mock.environment string
+
+## S133-N0026  DELETE /mocks/{mock_uid}/unpublish
+desc: Unpublish Mock | This endpoint unpublishes the mock you have created using its `uid` > Requires <a href="#authentication">API Key</a> as `X-Api-Key ` request header or `apikey` URL query parameter.
+- path:mock_uid string
+
+## S133-N0027  POST /monitors
+desc: Create Monitor | This endpoint allows you to create a monitor. Some sample `cron` values are: | Frequency | Cron Pattern | |-----------------------|----------------| | Every 5 minutes | `*/5 * * * *` | | Every 30 minutes | `*/30 * * * *` | | Every Hour | `0 */1 * * *` | | Every 6 Hours | `0 */6 * * *` | | Every day at 5pm | `0 17 * * *` | | Every Monday at 12pm | `0 12 * * MON` | | Every weekday (
+- body:monitor object
+- body:monitor.collection string
+- body:monitor.environment string
+- body:monitor.name string
+- body:monitor.schedule object
+- body:monitor.schedule.cron string
+- body:monitor.schedule.timezone string
+
+## S133-N0028  DELETE /monitors/{monitor_uid}
+desc: Delete Monitor | This endpoint can be used to delete an existing monitor using its `uid`. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query parameter.
+- path:monitor_uid string
+
+## S133-N0029  PUT /monitors/{monitor_uid}
+desc: Update Monitor | This endpoint allows you to update a monitor using its `uid`. Only the monitor name and its schedule can be updated. Some example `cron` values are: | Frequency | Cron Pattern | |-----------------------|----------------| | Every 5 minutes | `*/5 * * * *` | | Every 30 minutes | `*/30 * * * *` | | Every Hour | `0 */1 * * *` | | Every 6 Hours | `0 */6 * * *` | | Every day at 5pm | `0
+- path:monitor_uid string
+- body:monitor object
+- body:monitor.name string
+- body:monitor.schedule object
+- body:monitor.schedule.cron string
+- body:monitor.schedule.timezone string
+
+## S133-N0033  DELETE /workspaces/{workspace_id}
+desc: Delete Workspace | This endpoint allows you to delete an existing workspace. On successful deletion of the workspace, the response returns the `id`. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query parameter.
+- path:workspace_id string
+
+## S133-N0034  PUT /workspaces/{workspace_id}
+desc: Update Workspace | This endpoint allows you to update a workspace and update it's association to entities like `collections`, `environments`, `mocks` and `monitors` using their `uid`. On successful updation of the workspace, the response returns the workspcae `name` and `id`. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query parameter. **Note** : 
+- path:workspace_id string
+- body:workspace object
+- body:workspace.collections array<object>
+- body:workspace.collections[].id string
+- body:workspace.collections[].name string
+- body:workspace.collections[].uid string
+- body:workspace.description string
+- body:workspace.environments array<object>
+- body:workspace.environments[].id string
+- body:workspace.environments[].name string
+- body:workspace.environments[].uid string
+- body:workspace.mocks array<object>
+- body:workspace.mocks[].id string
+- body:workspace.monitors array<object>
+- body:workspace.monitors[].id string
+- body:workspace.name string
+
+## S400-N0002  POST /api/v1/namespaces/{namespace}/bindings
+desc: create a Binding
+schema: io.k8s.api.core.v1.Binding
+- path:namespace string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:pretty string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:target object
+- body:target.apiVersion string
+- body:target.fieldPath string
+- body:target.kind string
+- body:target.name string
+- body:target.namespace string
+- body:target.resourceVersion string
+- body:target.uid string
+
+## S400-N0003  DELETE /api/v1/namespaces/{namespace}/configmaps
+desc: delete collection of ConfigMap
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:namespace string
+- query:pretty string
+- query:continue string
+- query:dryRun string
+- query:fieldSelector string
+- query:gracePeriodSeconds integer
+- query:labelSelector string
+- query:limit integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- query:resourceVersion string
+- query:resourceVersionMatch string
+- query:sendInitialEvents boolean
+- query:timeoutSeconds integer
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-N0004  POST /api/v1/namespaces/{namespace}/configmaps
+desc: create a ConfigMap
+schema: io.k8s.api.core.v1.ConfigMap
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:binaryData object
+- body:data object
+- body:immutable boolean
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+
+## S400-N0006  PATCH /api/v1/namespaces/{namespace}/configmaps/{name}
+desc: partially update the specified ConfigMap
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-N0007  PUT /api/v1/namespaces/{namespace}/configmaps/{name}
+desc: replace the specified ConfigMap
+schema: io.k8s.api.core.v1.ConfigMap
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:binaryData object
+- body:data object
+- body:immutable boolean
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+
+## S400-N0008  DELETE /api/v1/namespaces/{namespace}/endpoints
+desc: delete collection of Endpoints
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:namespace string
+- query:pretty string
+- query:continue string
+- query:dryRun string
+- query:fieldSelector string
+- query:gracePeriodSeconds integer
+- query:labelSelector string
+- query:limit integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- query:resourceVersion string
+- query:resourceVersionMatch string
+- query:sendInitialEvents boolean
+- query:timeoutSeconds integer
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-N0009  POST /api/v1/namespaces/{namespace}/endpoints
+desc: create Endpoints
+schema: io.k8s.api.core.v1.Endpoints
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:subsets array<object>
+- body:subsets[].addresses array<object>
+- body:subsets[].addresses[].hostname string
+- body:subsets[].addresses[].ip string
+- body:subsets[].addresses[].nodeName string
+- body:subsets[].addresses[].targetRef object
+- body:subsets[].notReadyAddresses array<object>
+- body:subsets[].notReadyAddresses[].hostname string
+- body:subsets[].notReadyAddresses[].ip string
+- body:subsets[].notReadyAddresses[].nodeName string
+- body:subsets[].notReadyAddresses[].targetRef object
+- body:subsets[].ports array<object>
+- body:subsets[].ports[].appProtocol string
+- body:subsets[].ports[].name string
+- body:subsets[].ports[].port integer
+- body:subsets[].ports[].protocol string
+
+## S400-N0010  DELETE /api/v1/namespaces/{namespace}/endpoints/{name}
+desc: delete Endpoints
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:gracePeriodSeconds integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-N0011  PATCH /api/v1/namespaces/{namespace}/endpoints/{name}
+desc: partially update the specified Endpoints
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-N0012  PUT /api/v1/namespaces/{namespace}/endpoints/{name}
+desc: replace the specified Endpoints
+schema: io.k8s.api.core.v1.Endpoints
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:subsets array<object>
+- body:subsets[].addresses array<object>
+- body:subsets[].addresses[].hostname string
+- body:subsets[].addresses[].ip string
+- body:subsets[].addresses[].nodeName string
+- body:subsets[].addresses[].targetRef object
+- body:subsets[].notReadyAddresses array<object>
+- body:subsets[].notReadyAddresses[].hostname string
+- body:subsets[].notReadyAddresses[].ip string
+- body:subsets[].notReadyAddresses[].nodeName string
+- body:subsets[].notReadyAddresses[].targetRef object
+- body:subsets[].ports array<object>
+- body:subsets[].ports[].appProtocol string
+- body:subsets[].ports[].name string
+- body:subsets[].ports[].port integer
+- body:subsets[].ports[].protocol string
+
+## S400-N0013  DELETE /api/v1/namespaces/{namespace}/events
+desc: delete collection of Event
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:namespace string
+- query:pretty string
+- query:continue string
+- query:dryRun string
+- query:fieldSelector string
+- query:gracePeriodSeconds integer
+- query:labelSelector string
+- query:limit integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- query:resourceVersion string
+- query:resourceVersionMatch string
+- query:sendInitialEvents boolean
+- query:timeoutSeconds integer
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-N0014  POST /api/v1/namespaces/{namespace}/events
+desc: create an Event
+schema: io.k8s.api.core.v1.Event
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:action string
+- body:apiVersion string
+- body:count integer
+- body:eventTime string
+- body:firstTimestamp string
+- body:involvedObject object
+- body:involvedObject.apiVersion string
+- body:involvedObject.fieldPath string
+- body:involvedObject.kind string
+- body:involvedObject.name string
+- body:involvedObject.namespace string
+- body:involvedObject.resourceVersion string
+- body:involvedObject.uid string
+- body:kind string
+- body:lastTimestamp string
+- body:message string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:reason string
+- body:related object
+- body:related.apiVersion string
+- body:related.fieldPath string
+- body:related.kind string
+- body:related.name string
+- body:related.namespace string
+- body:related.resourceVersion string
+- body:related.uid string
+- body:reportingComponent string
+- body:reportingInstance string
+- body:series object
+- body:series.count integer
+- body:series.lastObservedTime string
+- body:source object
+- body:source.component string
+- body:source.host string
+- body:type string
+
+## S400-N0015  DELETE /api/v1/namespaces/{namespace}/events/{name}
+desc: delete an Event
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:gracePeriodSeconds integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-N0016  PATCH /api/v1/namespaces/{namespace}/events/{name}
+desc: partially update the specified Event
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-N0017  PUT /api/v1/namespaces/{namespace}/events/{name}
+desc: replace the specified Event
+schema: io.k8s.api.core.v1.Event
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:action string
+- body:apiVersion string
+- body:count integer
+- body:eventTime string
+- body:firstTimestamp string
+- body:involvedObject object
+- body:involvedObject.apiVersion string
+- body:involvedObject.fieldPath string
+- body:involvedObject.kind string
+- body:involvedObject.name string
+- body:involvedObject.namespace string
+- body:involvedObject.resourceVersion string
+- body:involvedObject.uid string
+- body:kind string
+- body:lastTimestamp string
+- body:message string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:reason string
+- body:related object
+- body:related.apiVersion string
+- body:related.fieldPath string
+- body:related.kind string
+- body:related.name string
+- body:related.namespace string
+- body:related.resourceVersion string
+- body:related.uid string
+- body:reportingComponent string
+- body:reportingInstance string
+- body:series object
+- body:series.count integer
+- body:series.lastObservedTime string
+- body:source object
+- body:source.component string
+- body:source.host string
+- body:type string
+
+## S400-N0018  DELETE /api/v1/namespaces/{namespace}/limitranges
+desc: delete collection of LimitRange
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:namespace string
+- query:pretty string
+- query:continue string
+- query:dryRun string
+- query:fieldSelector string
+- query:gracePeriodSeconds integer
+- query:labelSelector string
+- query:limit integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- query:resourceVersion string
+- query:resourceVersionMatch string
+- query:sendInitialEvents boolean
+- query:timeoutSeconds integer
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-N0019  POST /api/v1/namespaces/{namespace}/limitranges
+desc: create a LimitRange
+schema: io.k8s.api.core.v1.LimitRange
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.limits array<object>
+- body:spec.limits[].default object
+- body:spec.limits[].defaultRequest object
+- body:spec.limits[].max object
+- body:spec.limits[].maxLimitRequestRatio object
+- body:spec.limits[].min object
+- body:spec.limits[].type string
+
+## S400-N0020  DELETE /api/v1/namespaces/{namespace}/limitranges/{name}
+desc: delete a LimitRange
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:gracePeriodSeconds integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-N0021  PATCH /api/v1/namespaces/{namespace}/limitranges/{name}
+desc: partially update the specified LimitRange
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-N0022  PUT /api/v1/namespaces/{namespace}/limitranges/{name}
+desc: replace the specified LimitRange
+schema: io.k8s.api.core.v1.LimitRange
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.limits array<object>
+- body:spec.limits[].default object
+- body:spec.limits[].defaultRequest object
+- body:spec.limits[].max object
+- body:spec.limits[].maxLimitRequestRatio object
+- body:spec.limits[].min object
+- body:spec.limits[].type string
+
+## S400-N0023  DELETE /api/v1/namespaces/{namespace}/persistentvolumeclaims
+desc: delete collection of PersistentVolumeClaim
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:namespace string
+- query:pretty string
+- query:continue string
+- query:dryRun string
+- query:fieldSelector string
+- query:gracePeriodSeconds integer
+- query:labelSelector string
+- query:limit integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- query:resourceVersion string
+- query:resourceVersionMatch string
+- query:sendInitialEvents boolean
+- query:timeoutSeconds integer
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-N0024  POST /api/v1/namespaces/{namespace}/persistentvolumeclaims
+desc: create a PersistentVolumeClaim
+schema: io.k8s.api.core.v1.PersistentVolumeClaim
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.accessModes array<string>
+- body:spec.dataSource object
+- body:spec.dataSource.apiGroup string
+- body:spec.dataSource.kind string
+- body:spec.dataSource.name string
+- body:spec.dataSourceRef object
+- body:spec.dataSourceRef.apiGroup string
+- body:spec.dataSourceRef.kind string
+- body:spec.dataSourceRef.name string
+- body:spec.dataSourceRef.namespace string
+- body:spec.resources object
+- body:spec.resources.claims array<object>
+- body:spec.resources.limits object
+- body:spec.resources.requests object
+- body:spec.selector object
+- body:spec.selector.matchExpressions array<object>
+- body:spec.selector.matchLabels object
+- body:spec.storageClassName string
+- body:spec.volumeMode string
+- body:spec.volumeName string
+- body:status object
+- body:status.accessModes array<string>
+- body:status.allocatedResources object
+- body:status.capacity object
+- body:status.conditions array<object>
+- body:status.conditions[].lastProbeTime string
+- body:status.conditions[].lastTransitionTime string
+- body:status.conditions[].message string
+- body:status.conditions[].reason string
+- body:status.conditions[].status string
+- body:status.conditions[].type string
+- body:status.phase string
+- body:status.resizeStatus string
+
+## S400-N0025  DELETE /api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}
+desc: delete a PersistentVolumeClaim
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:gracePeriodSeconds integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-N0026  PATCH /api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}
+desc: partially update the specified PersistentVolumeClaim
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-N0027  PUT /api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}
+desc: replace the specified PersistentVolumeClaim
+schema: io.k8s.api.core.v1.PersistentVolumeClaim
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.accessModes array<string>
+- body:spec.dataSource object
+- body:spec.dataSource.apiGroup string
+- body:spec.dataSource.kind string
+- body:spec.dataSource.name string
+- body:spec.dataSourceRef object
+- body:spec.dataSourceRef.apiGroup string
+- body:spec.dataSourceRef.kind string
+- body:spec.dataSourceRef.name string
+- body:spec.dataSourceRef.namespace string
+- body:spec.resources object
+- body:spec.resources.claims array<object>
+- body:spec.resources.limits object
+- body:spec.resources.requests object
+- body:spec.selector object
+- body:spec.selector.matchExpressions array<object>
+- body:spec.selector.matchLabels object
+- body:spec.storageClassName string
+- body:spec.volumeMode string
+- body:spec.volumeName string
+- body:status object
+- body:status.accessModes array<string>
+- body:status.allocatedResources object
+- body:status.capacity object
+- body:status.conditions array<object>
+- body:status.conditions[].lastProbeTime string
+- body:status.conditions[].lastTransitionTime string
+- body:status.conditions[].message string
+- body:status.conditions[].reason string
+- body:status.conditions[].status string
+- body:status.conditions[].type string
+- body:status.phase string
+- body:status.resizeStatus string
+
+## S400-N0028  PATCH /api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}/status
+desc: partially update status of the specified PersistentVolumeClaim
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-N0029  PUT /api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}/status
+desc: replace status of the specified PersistentVolumeClaim
+schema: io.k8s.api.core.v1.PersistentVolumeClaim
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.accessModes array<string>
+- body:spec.dataSource object
+- body:spec.dataSource.apiGroup string
+- body:spec.dataSource.kind string
+- body:spec.dataSource.name string
+- body:spec.dataSourceRef object
+- body:spec.dataSourceRef.apiGroup string
+- body:spec.dataSourceRef.kind string
+- body:spec.dataSourceRef.name string
+- body:spec.dataSourceRef.namespace string
+- body:spec.resources object
+- body:spec.resources.claims array<object>
+- body:spec.resources.limits object
+- body:spec.resources.requests object
+- body:spec.selector object
+- body:spec.selector.matchExpressions array<object>
+- body:spec.selector.matchLabels object
+- body:spec.storageClassName string
+- body:spec.volumeMode string
+- body:spec.volumeName string
+- body:status object
+- body:status.accessModes array<string>
+- body:status.allocatedResources object
+- body:status.capacity object
+- body:status.conditions array<object>
+- body:status.conditions[].lastProbeTime string
+- body:status.conditions[].lastTransitionTime string
+- body:status.conditions[].message string
+- body:status.conditions[].reason string
+- body:status.conditions[].status string
+- body:status.conditions[].type string
+- body:status.phase string
+- body:status.resizeStatus string
+
+## S400-N0030  DELETE /api/v1/namespaces/{namespace}/pods
+desc: delete collection of Pod
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:namespace string
+- query:pretty string
+- query:continue string
+- query:dryRun string
+- query:fieldSelector string
+- query:gracePeriodSeconds integer
+- query:labelSelector string
+- query:limit integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- query:resourceVersion string
+- query:resourceVersionMatch string
+- query:sendInitialEvents boolean
+- query:timeoutSeconds integer
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-N0031  POST /api/v1/namespaces/{namespace}/pods
+desc: create a Pod
+schema: io.k8s.api.core.v1.Pod
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.activeDeadlineSeconds integer
+- body:spec.affinity object
+- body:spec.affinity.nodeAffinity object
+- body:spec.affinity.podAffinity object
+- body:spec.affinity.podAntiAffinity object
+- body:spec.automountServiceAccountToken boolean
+- body:spec.containers array<object>
+- body:spec.containers[].args array<string>
+- body:spec.containers[].command array<string>
+- body:spec.containers[].env array<object>
+- body:spec.containers[].envFrom array<object>
+- body:spec.containers[].image string
+- body:spec.containers[].imagePullPolicy string
+- body:spec.containers[].lifecycle object
+- body:spec.containers[].livenessProbe object
+- body:spec.containers[].name string
+- body:spec.containers[].ports array<object>
+- body:spec.containers[].readinessProbe object
+- body:spec.containers[].resizePolicy array<object>
+- body:spec.containers[].resources object
+- body:spec.containers[].securityContext object
+- body:spec.containers[].startupProbe object
+- body:spec.containers[].stdin boolean
+- body:spec.containers[].stdinOnce boolean
+- body:spec.containers[].terminationMessagePath string
+- body:spec.containers[].terminationMessagePolicy string
+- body:spec.containers[].tty boolean
+- body:spec.containers[].volumeDevices array<object>
+- body:spec.containers[].volumeMounts array<object>
+- body:spec.containers[].workingDir string
+- body:spec.dnsConfig object
+- body:spec.dnsConfig.nameservers array<string>
+- body:spec.dnsConfig.options array<object>
+- body:spec.dnsConfig.searches array<string>
+- body:spec.dnsPolicy string
+- body:spec.enableServiceLinks boolean
+- body:spec.ephemeralContainers array<object>
+- body:spec.ephemeralContainers[].args array<string>
+- body:spec.ephemeralContainers[].command array<string>
+- body:spec.ephemeralContainers[].env array<object>
+- body:spec.ephemeralContainers[].envFrom array<object>
+- body:spec.ephemeralContainers[].image string
+- body:spec.ephemeralContainers[].imagePullPolicy string
+(+188 fields cut)
+
+## S400-N0032  DELETE /api/v1/namespaces/{namespace}/pods/{name}
+desc: delete a Pod
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:gracePeriodSeconds integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-N0033  PATCH /api/v1/namespaces/{namespace}/pods/{name}
+desc: partially update the specified Pod
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-N0034  PUT /api/v1/namespaces/{namespace}/pods/{name}
+desc: replace the specified Pod
+schema: io.k8s.api.core.v1.Pod
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.activeDeadlineSeconds integer
+- body:spec.affinity object
+- body:spec.affinity.nodeAffinity object
+- body:spec.affinity.podAffinity object
+- body:spec.affinity.podAntiAffinity object
+- body:spec.automountServiceAccountToken boolean
+- body:spec.containers array<object>
+- body:spec.containers[].args array<string>
+- body:spec.containers[].command array<string>
+- body:spec.containers[].env array<object>
+- body:spec.containers[].envFrom array<object>
+- body:spec.containers[].image string
+- body:spec.containers[].imagePullPolicy string
+- body:spec.containers[].lifecycle object
+- body:spec.containers[].livenessProbe object
+- body:spec.containers[].name string
+- body:spec.containers[].ports array<object>
+- body:spec.containers[].readinessProbe object
+- body:spec.containers[].resizePolicy array<object>
+- body:spec.containers[].resources object
+- body:spec.containers[].securityContext object
+- body:spec.containers[].startupProbe object
+- body:spec.containers[].stdin boolean
+- body:spec.containers[].stdinOnce boolean
+- body:spec.containers[].terminationMessagePath string
+- body:spec.containers[].terminationMessagePolicy string
+- body:spec.containers[].tty boolean
+- body:spec.containers[].volumeDevices array<object>
+- body:spec.containers[].volumeMounts array<object>
+- body:spec.containers[].workingDir string
+- body:spec.dnsConfig object
+- body:spec.dnsConfig.nameservers array<string>
+- body:spec.dnsConfig.options array<object>
+- body:spec.dnsConfig.searches array<string>
+- body:spec.dnsPolicy string
+- body:spec.enableServiceLinks boolean
+- body:spec.ephemeralContainers array<object>
+- body:spec.ephemeralContainers[].args array<string>
+- body:spec.ephemeralContainers[].command array<string>
+- body:spec.ephemeralContainers[].env array<object>
+- body:spec.ephemeralContainers[].envFrom array<object>
+- body:spec.ephemeralContainers[].image string
+(+189 fields cut)
+
+## S400-N0035  POST /api/v1/namespaces/{namespace}/pods/{name}/attach
+desc: connect POST requests to attach of Pod
+- path:name string
+- path:namespace string
+- query:container string
+- query:stderr boolean
+- query:stdin boolean
+- query:stdout boolean
+- query:tty boolean
+
+## S400-N0037  PATCH /api/v1/namespaces/{namespace}/pods/{name}/ephemeralcontainers
+desc: partially update ephemeralcontainers of the specified Pod
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-N0038  PUT /api/v1/namespaces/{namespace}/pods/{name}/ephemeralcontainers
+desc: replace ephemeralcontainers of the specified Pod
+schema: io.k8s.api.core.v1.Pod
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.activeDeadlineSeconds integer
+- body:spec.affinity object
+- body:spec.affinity.nodeAffinity object
+- body:spec.affinity.podAffinity object
+- body:spec.affinity.podAntiAffinity object
+- body:spec.automountServiceAccountToken boolean
+- body:spec.containers array<object>
+- body:spec.containers[].args array<string>
+- body:spec.containers[].command array<string>
+- body:spec.containers[].env array<object>
+- body:spec.containers[].envFrom array<object>
+- body:spec.containers[].image string
+- body:spec.containers[].imagePullPolicy string
+- body:spec.containers[].lifecycle object
+- body:spec.containers[].livenessProbe object
+- body:spec.containers[].name string
+- body:spec.containers[].ports array<object>
+- body:spec.containers[].readinessProbe object
+- body:spec.containers[].resizePolicy array<object>
+- body:spec.containers[].resources object
+- body:spec.containers[].securityContext object
+- body:spec.containers[].startupProbe object
+- body:spec.containers[].stdin boolean
+- body:spec.containers[].stdinOnce boolean
+- body:spec.containers[].terminationMessagePath string
+- body:spec.containers[].terminationMessagePolicy string
+- body:spec.containers[].tty boolean
+- body:spec.containers[].volumeDevices array<object>
+- body:spec.containers[].volumeMounts array<object>
+- body:spec.containers[].workingDir string
+- body:spec.dnsConfig object
+- body:spec.dnsConfig.nameservers array<string>
+- body:spec.dnsConfig.options array<object>
+- body:spec.dnsConfig.searches array<string>
+- body:spec.dnsPolicy string
+- body:spec.enableServiceLinks boolean
+- body:spec.ephemeralContainers array<object>
+- body:spec.ephemeralContainers[].args array<string>
+- body:spec.ephemeralContainers[].command array<string>
+- body:spec.ephemeralContainers[].env array<object>
+- body:spec.ephemeralContainers[].envFrom array<object>
+- body:spec.ephemeralContainers[].image string
+(+189 fields cut)
+
+## S400-N0039  POST /api/v1/namespaces/{namespace}/pods/{name}/eviction
+desc: create eviction of a Pod
+schema: io.k8s.api.policy.v1.Eviction
+- path:name string
+- path:namespace string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:pretty string
+- body:apiVersion string
+- body:deleteOptions object
+- body:deleteOptions.apiVersion string
+- body:deleteOptions.dryRun array<string>
+- body:deleteOptions.gracePeriodSeconds integer
+- body:deleteOptions.kind string
+- body:deleteOptions.orphanDependents boolean
+- body:deleteOptions.preconditions object
+- body:deleteOptions.preconditions.resourceVersion string
+- body:deleteOptions.preconditions.uid string
+- body:deleteOptions.propagationPolicy string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+
+## S400-N0040  POST /api/v1/namespaces/{namespace}/pods/{name}/exec
+desc: connect POST requests to exec of Pod
+- path:name string
+- path:namespace string
+- query:command string
+- query:container string
+- query:stderr boolean
+- query:stdin boolean
+- query:stdout boolean
+- query:tty boolean
+
+## S400-N0041  POST /api/v1/namespaces/{namespace}/pods/{name}/portforward
+desc: connect POST requests to portforward of Pod
+- path:name string
+- path:namespace string
+- query:ports integer
+
+## S400-N0042  DELETE /api/v1/namespaces/{namespace}/pods/{name}/proxy
+desc: connect DELETE requests to proxy of Pod
+- path:name string
+- path:namespace string
+- query:path string
+
+## S400-N0043  PATCH /api/v1/namespaces/{namespace}/pods/{name}/proxy
+desc: connect PATCH requests to proxy of Pod
+- path:name string
+- path:namespace string
+- query:path string

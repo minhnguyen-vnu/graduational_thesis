@@ -1,0 +1,24 @@
+chuoi transition-trim lan 2 start Sun Sep 27 00:21:56 +07 2026, doi lan 1 dung sau self-test
+00:21:56 lan 1: 00:21:45 DUNG CHUOI: self-test transition-trim hong, xem logs/selftest-transtrim.log
+00:21:56 cong 8080 tra 401
+00:21:56 cong 8081 tra 401
+00:21:56 cong 5002 tra 200
+00:21:56 cong 5003 tra 200
+00:21:56 cong 8090 tra 302
+00:21:56 cong 8082 tra 200
+00:21:57 tap rollback dat: sha d046b141e9540ada truoc va sau, patch /Users/minhnguyen/IdeaProjects/graduational-thesis/infra/evomaster-ext/wip/d1-lexicon-field-harvest-rolefield-postfallback-geneguard-transtrim-20260927.patch
+00:21:57 build
+00:22:21 jar 3072fec2d13d59d5, giu o /Users/minhnguyen/IdeaProjects/EvoMaster/evomaster-TT-3072fec2.jar, class co keepOnlyTargetFields
+00:22:21 giai doan 1: self-test transition-trim
+PASS  gg-baseline-422  (jar GG, Airflow: transition cua cap victim/admin tra 422)
+PASS  airflow-exit-0  (Airflow seed 1 qua proxy, exit 0)
+PASS  airflow-fields-removed  (RestSecurityBuilder.kt keepOnlyTargetFields: removed optional fields [email, password] from PATCH:/auth/fab/v1/users/{username})
+PASS  airflow-sent-roles-only  (9 PATCH users sau 00:40:32, khoa trong body: roles, khong query)
+FAIL  airflow-no-empty-restore  --  jar GG 3 dong, jar moi 3 dong Privilege-restore
+INFO  airflow triple codes: victim 'admin', operator 'victim', codes 204/403/204;victim 'admin', operator 'viewer', codes 204/403/204;victim 'admin', operator 'victim', codes 204/403/204;victim 'admin', operator 'victim', codes 204/403/204;victim 'admin', operator 'victim', codes 204/403/204;victim 'victim', operator 'admin', codes 403/200/403;
+INFO  airflow restore: Privilege-restore accepted for 'victim' by 'admin' with role 'admin' on PATCH:/auth/fab/v1/users/{username} -> 200;Privilege-restore accepted for 'victim' by 'admin' with role 'administrator' on PATCH:/auth/fab/v1/users/{username} -> 200;Privilege-restore accepted for 'victim' by 'admin' with role 'owner' on PATCH:/auth/fab/v1/users/{username} -> 200;
+PASS  tier1-970  (Tier-1 ban loi seed 1 van no 970)
+PASS  tier1-nothing-removed  (Tier-1: transition PUT /users/{username}/role khong mat truong nao)
+PASS  tier1-fixed-no-970  (Tier-1 ban da va seed 1 khong co 970)
+00:55:49 DUNG CHUOI: self-test transition-trim hong, xem logs/selftest-transtrim.log
+CHAIN STOPPED Sun Sep 27 00:55:49 +07 2026

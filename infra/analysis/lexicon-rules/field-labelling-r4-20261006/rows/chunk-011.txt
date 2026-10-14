@@ -1,0 +1,857 @@
+## S112-N0009  POST /{realm}/authentication/executions
+desc: Add new authentication execution
+schema: AuthenticationExecutionRepresentation
+- path:realm string
+- body:authenticator string
+- body:authenticatorConfig string
+- body:authenticatorFlow boolean
+- body:autheticatorFlow boolean
+- body:flowId string
+- body:id string
+- body:parentFlow string
+- body:priority integer
+- body:requirement string
+
+## S112-N0011  POST /{realm}/authentication/executions/{executionId}/config
+desc: Update execution with new configuration
+schema: AuthenticatorConfigRepresentation
+- path:realm string
+- path:executionId string
+- body:alias string
+- body:config object
+- body:id string
+
+## S112-N0012  POST /{realm}/authentication/executions/{executionId}/lower-priority
+desc: Lower execution’s priority
+- path:realm string
+- path:executionId string
+
+## S112-N0013  POST /{realm}/authentication/executions/{executionId}/raise-priority
+desc: Raise execution’s priority
+- path:realm string
+- path:executionId string
+
+## S112-N0014  POST /{realm}/authentication/flows
+desc: Create a new authentication flow
+schema: AuthenticationFlowRepresentation
+- path:realm string
+- body:alias string
+- body:authenticationExecutions array<object>
+- body:authenticationExecutions[].authenticator string
+- body:authenticationExecutions[].authenticatorConfig string
+- body:authenticationExecutions[].authenticatorFlow boolean
+- body:authenticationExecutions[].autheticatorFlow boolean
+- body:authenticationExecutions[].flowAlias string
+- body:authenticationExecutions[].priority integer
+- body:authenticationExecutions[].requirement string
+- body:authenticationExecutions[].userSetupAllowed boolean
+- body:builtIn boolean
+- body:description string
+- body:id string
+- body:providerId string
+- body:topLevel boolean
+
+## S112-N0015  POST /{realm}/authentication/flows/{flowAlias}/copy
+desc: Copy existing authentication flow under a new name The new name is given as 'newName' attribute of the passed JSON object
+- path:realm string
+- path:flowAlias string
+- body:(body) object
+
+## S112-N0016  PUT /{realm}/authentication/flows/{flowAlias}/executions
+desc: Update authentication executions of a flow
+schema: AuthenticationExecutionInfoRepresentation
+- path:realm string
+- path:flowAlias string
+- body:alias string
+- body:authenticationConfig string
+- body:authenticationFlow boolean
+- body:configurable boolean
+- body:displayName string
+- body:flowId string
+- body:id string
+- body:index integer
+- body:level integer
+- body:providerId string
+- body:requirement string
+- body:requirementChoices array<string>
+
+## S112-N0017  POST /{realm}/authentication/flows/{flowAlias}/executions/execution
+desc: Add new authentication execution to a flow
+- path:realm string
+- path:flowAlias string
+- body:(body) object
+
+## S112-N0018  POST /{realm}/authentication/flows/{flowAlias}/executions/flow
+desc: Add new flow with new execution to existing flow
+- path:realm string
+- path:flowAlias string
+- body:(body) object
+
+## S112-N0019  DELETE /{realm}/authentication/flows/{id}
+desc: Delete an authentication flow
+- path:realm string
+- path:id string
+
+## S112-N0020  PUT /{realm}/authentication/flows/{id}
+desc: Update an authentication flow
+schema: AuthenticationFlowRepresentation
+- path:realm string
+- path:id string
+- body:alias string
+- body:authenticationExecutions array<object>
+- body:authenticationExecutions[].authenticator string
+- body:authenticationExecutions[].authenticatorConfig string
+- body:authenticationExecutions[].authenticatorFlow boolean
+- body:authenticationExecutions[].autheticatorFlow boolean
+- body:authenticationExecutions[].flowAlias string
+- body:authenticationExecutions[].priority integer
+- body:authenticationExecutions[].requirement string
+- body:authenticationExecutions[].userSetupAllowed boolean
+- body:builtIn boolean
+- body:description string
+- body:id string
+- body:providerId string
+- body:topLevel boolean
+
+## S112-N0021  POST /{realm}/authentication/register-required-action
+desc: Register a new required actions
+- path:realm string
+- body:(body) object
+
+## S112-N0022  DELETE /{realm}/authentication/required-actions/{alias}
+desc: Delete required action
+- path:realm string
+- path:alias string
+
+## S112-N0023  PUT /{realm}/authentication/required-actions/{alias}
+desc: Update required action
+schema: RequiredActionProviderRepresentation
+- path:realm string
+- path:alias string
+- body:alias string
+- body:config object
+- body:defaultAction boolean
+- body:enabled boolean
+- body:name string
+- body:priority integer
+- body:providerId string
+
+## S112-N0024  POST /{realm}/authentication/required-actions/{alias}/lower-priority
+desc: Lower required action’s priority
+- path:realm string
+- path:alias string
+
+## S112-N0025  POST /{realm}/authentication/required-actions/{alias}/raise-priority
+desc: Raise required action’s priority
+- path:realm string
+- path:alias string
+
+## S112-N0026  POST /{realm}/clear-keys-cache
+desc: Clear cache of external public keys (Public keys of clients or Identity providers)
+- path:realm string
+
+## S112-N0027  POST /{realm}/clear-realm-cache
+desc: Clear realm cache
+- path:realm string
+
+## S112-N0028  POST /{realm}/clear-user-cache
+desc: Clear user cache
+- path:realm string
+
+## S112-N0029  POST /{realm}/client-description-converter
+desc: Base path for importing clients under this realm.
+- path:realm string
+- body:(body) string
+
+## S112-N0031  DELETE /{realm}/client-scopes/{id1}/protocol-mappers/models/{id2}
+desc: Delete the mapper
+- path:realm string
+- path:id1 string
+- path:id2 string
+
+## S112-N0033  DELETE /{realm}/client-scopes/{id}
+desc: Delete the client scope
+- path:realm string
+- path:id string
+
+## S112-N0034  PUT /{realm}/client-scopes/{id}
+desc: Update the client scope
+schema: ClientScopeRepresentation
+- path:realm string
+- path:id string
+- body:attributes object
+- body:description string
+- body:id string
+- body:name string
+- body:protocol string
+- body:protocolMappers array<object>
+- body:protocolMappers[].config object
+- body:protocolMappers[].id string
+- body:protocolMappers[].name string
+- body:protocolMappers[].protocol string
+- body:protocolMappers[].protocolMapper string
+
+## S112-N0035  POST /{realm}/client-scopes/{id}/protocol-mappers/add-models
+desc: Create multiple mappers
+schema: ProtocolMapperRepresentation
+- path:realm string
+- path:id string
+- body:config object
+- body:id string
+- body:name string
+- body:protocol string
+- body:protocolMapper string
+
+## S112-N0036  POST /{realm}/client-scopes/{id}/protocol-mappers/models
+desc: Create a mapper
+schema: ProtocolMapperRepresentation
+- path:realm string
+- path:id string
+- body:config object
+- body:id string
+- body:name string
+- body:protocol string
+- body:protocolMapper string
+
+## S112-N0040  POST /{realm}/client-scopes/{id}/scope-mappings/realm
+desc: Add a set of realm-level roles to the client’s scope
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0041  POST /{realm}/clients
+desc: Create a new client Client’s client_id must be unique!
+schema: ClientRepresentation
+- path:realm string
+- body:access object
+- body:adminUrl string
+- body:alwaysDisplayInConsole boolean
+- body:attributes object
+- body:authenticationFlowBindingOverrides object
+- body:authorizationServicesEnabled boolean
+- body:authorizationSettings object
+- body:authorizationSettings.allowRemoteResourceManagement boolean
+- body:authorizationSettings.clientId string
+- body:authorizationSettings.decisionStrategy string enum[AFFIRMATIVE|UNANIMOUS|CONSENSUS]
+- body:authorizationSettings.id string
+- body:authorizationSettings.name string
+- body:authorizationSettings.policies array<object>
+- body:authorizationSettings.policies[].config object
+- body:authorizationSettings.policies[].decisionStrategy string enum[AFFIRMATIVE|UNANIMOUS|CONSENSUS]
+- body:authorizationSettings.policies[].description string
+- body:authorizationSettings.policies[].id string
+- body:authorizationSettings.policies[].logic string enum[POSITIVE|NEGATIVE]
+- body:authorizationSettings.policies[].name string
+- body:authorizationSettings.policies[].owner string
+- body:authorizationSettings.policies[].policies array<string>
+- body:authorizationSettings.policies[].resources array<string>
+- body:authorizationSettings.policies[].resourcesData array<object>
+- body:authorizationSettings.policies[].scopes array<string>
+- body:authorizationSettings.policies[].scopesData array<object>
+- body:authorizationSettings.policies[].type string
+- body:authorizationSettings.policyEnforcementMode string enum[ENFORCING|PERMISSIVE|DISABLED]
+- body:authorizationSettings.resources array<object>
+- body:authorizationSettings.resources[].attributes object
+- body:authorizationSettings.resources[].displayName string
+- body:authorizationSettings.resources[].icon_uri string
+- body:authorizationSettings.resources[].id string
+- body:authorizationSettings.resources[].name string
+- body:authorizationSettings.resources[].ownerManagedAccess boolean
+- body:authorizationSettings.resources[].scopes array<object>
+- body:authorizationSettings.resources[].type string
+- body:authorizationSettings.resources[].uris array<string>
+- body:authorizationSettings.scopes array<object>
+- body:authorizationSettings.scopes[].displayName string
+- body:authorizationSettings.scopes[].iconUri string
+- body:authorizationSettings.scopes[].id string
+- body:authorizationSettings.scopes[].name string
+- body:authorizationSettings.scopes[].policies array<object>
+- body:authorizationSettings.scopes[].resources array<object>
+- body:baseUrl string
+- body:bearerOnly boolean
+- body:clientAuthenticatorType string
+- body:clientId string
+- body:consentRequired boolean
+- body:defaultClientScopes array<string>
+- body:defaultRoles array<string>
+- body:description string
+- body:directAccessGrantsEnabled boolean
+- body:enabled boolean
+- body:frontchannelLogout boolean
+- body:fullScopeAllowed boolean
+- body:id string
+- body:implicitFlowEnabled boolean
+- body:name string
+- body:nodeReRegistrationTimeout integer
+- body:notBefore integer
+- body:optionalClientScopes array<string>
+- body:origin string
+- body:protocol string
+- body:protocolMappers array<object>
+- body:protocolMappers[].config object
+- body:protocolMappers[].id string
+- body:protocolMappers[].name string
+- body:protocolMappers[].protocol string
+- body:protocolMappers[].protocolMapper string
+- body:publicClient boolean
+- body:redirectUris array<string>
+- body:registeredNodes object
+- body:registrationAccessToken string
+- body:rootUrl string
+- body:secret string
+- body:serviceAccountsEnabled boolean
+- body:standardFlowEnabled boolean
+- body:surrogateAuthRequired boolean
+(+1 fields cut)
+
+## S112-N0043  DELETE /{realm}/clients-initial-access/{id}
+- path:realm string
+- path:id string
+
+## S112-N0044  DELETE /{realm}/clients/{id1}/protocol-mappers/models/{id2}
+desc: Delete the mapper
+- path:realm string
+- path:id1 string
+- path:id2 string
+
+## S112-N0045  PUT /{realm}/clients/{id1}/protocol-mappers/models/{id2}
+desc: Update the mapper
+schema: ProtocolMapperRepresentation
+- path:realm string
+- path:id1 string
+- path:id2 string
+- body:config object
+- body:id string
+- body:name string
+- body:protocol string
+- body:protocolMapper string
+
+## S112-N0046  DELETE /{realm}/clients/{id}
+desc: Delete the client
+- path:realm string
+- path:id string
+
+## S112-N0048  POST /{realm}/clients/{id}/certificates/{attr}/download
+desc: Get a keystore file for the client, containing private key and public certificate
+schema: KeyStoreConfig
+- path:realm string
+- path:id string
+- path:attr string
+- body:format string
+- body:keyAlias string
+- body:keyPassword string
+- body:realmAlias string
+- body:realmCertificate boolean
+- body:storePassword string
+
+## S112-N0049  POST /{realm}/clients/{id}/certificates/{attr}/generate
+desc: Generate a new certificate with new key pair
+- path:realm string
+- path:id string
+- path:attr string
+
+## S112-N0050  POST /{realm}/clients/{id}/certificates/{attr}/generate-and-download
+desc: Generate a new keypair and certificate, and get the private key file Generates a keypair and certificate and serves the private key in a specified keystore format.
+schema: KeyStoreConfig
+- path:realm string
+- path:id string
+- path:attr string
+- body:format string
+- body:keyAlias string
+- body:keyPassword string
+- body:realmAlias string
+- body:realmCertificate boolean
+- body:storePassword string
+
+## S112-N0051  POST /{realm}/clients/{id}/certificates/{attr}/upload
+desc: Upload certificate and eventually private key
+- path:realm string
+- path:id string
+- path:attr string
+
+## S112-N0052  POST /{realm}/clients/{id}/certificates/{attr}/upload-certificate
+desc: Upload only certificate, not private key
+- path:realm string
+- path:id string
+- path:attr string
+
+## S112-N0053  POST /{realm}/clients/{id}/client-secret
+desc: Generate a new secret for the client
+- path:realm string
+- path:id string
+
+## S112-N0054  DELETE /{realm}/clients/{id}/default-client-scopes/{clientScopeId}
+- path:realm string
+- path:id string
+- path:clientScopeId string
+
+## S112-N0055  PUT /{realm}/clients/{id}/default-client-scopes/{clientScopeId}
+- path:realm string
+- path:id string
+- path:clientScopeId string
+
+## S112-N0056  PUT /{realm}/clients/{id}/management/permissions
+desc: Return object stating whether client Authorization permissions have been initialized or not and a reference
+schema: ManagementPermissionReference
+- path:realm string
+- path:id string
+- body:enabled boolean
+- body:resource string
+- body:scopePermissions object
+
+## S112-N0058  DELETE /{realm}/clients/{id}/nodes/{node}
+desc: Unregister a cluster node from the client
+- path:realm string
+- path:id string
+- path:node string
+
+## S112-N0059  DELETE /{realm}/clients/{id}/optional-client-scopes/{clientScopeId}
+- path:realm string
+- path:id string
+- path:clientScopeId string
+
+## S112-N0060  PUT /{realm}/clients/{id}/optional-client-scopes/{clientScopeId}
+- path:realm string
+- path:id string
+- path:clientScopeId string
+
+## S112-N0061  POST /{realm}/clients/{id}/protocol-mappers/add-models
+desc: Create multiple mappers
+schema: ProtocolMapperRepresentation
+- path:realm string
+- path:id string
+- body:config object
+- body:id string
+- body:name string
+- body:protocol string
+- body:protocolMapper string
+
+## S112-N0062  POST /{realm}/clients/{id}/protocol-mappers/models
+desc: Create a mapper
+schema: ProtocolMapperRepresentation
+- path:realm string
+- path:id string
+- body:config object
+- body:id string
+- body:name string
+- body:protocol string
+- body:protocolMapper string
+
+## S112-N0063  POST /{realm}/clients/{id}/push-revocation
+desc: Push the client’s revocation policy to its admin URL If the client has an admin URL, push revocation policy to it.
+- path:realm string
+- path:id string
+
+## S112-N0064  POST /{realm}/clients/{id}/registration-access-token
+desc: Generate a new registration access token for the client
+- path:realm string
+- path:id string
+
+## S112-N0065  POST /{realm}/clients/{id}/roles
+desc: Create a new role for the realm or client
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0066  DELETE /{realm}/clients/{id}/roles/{role-name}
+desc: Delete a role by name
+- path:realm string
+- path:id string
+- path:role-name string
+
+## S112-N0067  PUT /{realm}/clients/{id}/roles/{role-name}
+desc: Update a role by name
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- path:role-name string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0069  POST /{realm}/clients/{id}/roles/{role-name}/composites
+desc: Add a composite to the role
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- path:role-name string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0071  DELETE /{realm}/clients/{id}/scope-mappings/clients/{client}
+desc: Remove client-level roles from the client’s scope.
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- path:client string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0072  POST /{realm}/clients/{id}/scope-mappings/clients/{client}
+desc: Add client-level roles to the client’s scope
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- path:client string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0073  DELETE /{realm}/clients/{id}/scope-mappings/realm
+desc: Remove a set of realm-level roles from the client’s scope
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0075  POST /{realm}/components
+schema: ComponentRepresentation
+- path:realm string
+- body:config object
+- body:config.empty boolean
+- body:config.loadFactor number
+- body:config.threshold integer
+- body:id string
+- body:name string
+- body:parentId string
+- body:providerId string
+- body:providerType string
+- body:subType string
+
+## S112-N0076  DELETE /{realm}/components/{id}
+- path:realm string
+- path:id string
+
+## S112-N0077  PUT /{realm}/components/{id}
+schema: ComponentRepresentation
+- path:realm string
+- path:id string
+- body:config object
+- body:config.empty boolean
+- body:config.loadFactor number
+- body:config.threshold integer
+- body:id string
+- body:name string
+- body:parentId string
+- body:providerId string
+- body:providerType string
+- body:subType string
+
+## S112-N0079  PUT /{realm}/default-default-client-scopes/{clientScopeId}
+- path:realm string
+- path:clientScopeId string
+
+## S112-N0080  DELETE /{realm}/default-groups/{groupId}
+- path:realm string
+- path:groupId string
+
+## S112-N0081  PUT /{realm}/default-groups/{groupId}
+- path:realm string
+- path:groupId string
+
+## S112-N0082  DELETE /{realm}/default-optional-client-scopes/{clientScopeId}
+- path:realm string
+- path:clientScopeId string
+
+## S112-N0084  DELETE /{realm}/events
+desc: Delete all events
+- path:realm string
+
+## S112-N0085  PUT /{realm}/events/config
+desc: Update the events provider Change the events provider and/or its configuration
+schema: RealmEventsConfigRepresentation
+- path:realm string
+- body:adminEventsDetailsEnabled boolean
+- body:adminEventsEnabled boolean
+- body:enabledEventTypes array<string>
+- body:eventsEnabled boolean
+- body:eventsExpiration integer
+- body:eventsListeners array<string>
+
+## S112-N0088  PUT /{realm}/groups/{id}
+desc: Update group, ignores subgroups.
+schema: GroupRepresentation
+- path:realm string
+- path:id string
+- body:access object
+- body:attributes object
+- body:clientRoles object
+- body:id string
+- body:name string
+- body:path string
+- body:realmRoles array<string>
+- body:subGroups array<object>
+- body:subGroups[].access object
+- body:subGroups[].attributes object
+- body:subGroups[].clientRoles object
+- body:subGroups[].id string
+- body:subGroups[].name string
+- body:subGroups[].path string
+- body:subGroups[].realmRoles array<string>
+- body:subGroups[].subGroups array<object>
+- body:subGroups[].subGroups[].access object
+- body:subGroups[].subGroups[].attributes object
+- body:subGroups[].subGroups[].clientRoles object
+- body:subGroups[].subGroups[].id string
+- body:subGroups[].subGroups[].name string
+- body:subGroups[].subGroups[].path string
+- body:subGroups[].subGroups[].realmRoles array<string>
+- body:subGroups[].subGroups[].subGroups array<object>
+
+## S112-N0089  POST /{realm}/groups/{id}/children
+desc: Set or create child.
+schema: GroupRepresentation
+- path:realm string
+- path:id string
+- body:access object
+- body:attributes object
+- body:clientRoles object
+- body:id string
+- body:name string
+- body:path string
+- body:realmRoles array<string>
+- body:subGroups array<object>
+- body:subGroups[].access object
+- body:subGroups[].attributes object
+- body:subGroups[].clientRoles object
+- body:subGroups[].id string
+- body:subGroups[].name string
+- body:subGroups[].path string
+- body:subGroups[].realmRoles array<string>
+- body:subGroups[].subGroups array<object>
+- body:subGroups[].subGroups[].access object
+- body:subGroups[].subGroups[].attributes object
+- body:subGroups[].subGroups[].clientRoles object
+- body:subGroups[].subGroups[].id string
+- body:subGroups[].subGroups[].name string
+- body:subGroups[].subGroups[].path string
+- body:subGroups[].subGroups[].realmRoles array<string>
+- body:subGroups[].subGroups[].subGroups array<object>
+
+## S112-N0092  POST /{realm}/groups/{id}/role-mappings/clients/{client}
+desc: Add client-level roles to the user role mapping
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- path:client string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-N0095  POST /{realm}/identity-provider/import-config
+desc: Import identity provider from uploaded JSON file
+- path:realm string
+
+## S112-N0099  PUT /{realm}/identity-provider/instances/{alias}/management/permissions
+desc: Return object stating whether client Authorization permissions have been initialized or not and a reference
+schema: ManagementPermissionReference
+- path:realm string
+- path:alias string
+- body:enabled boolean
+- body:resource string
+- body:scopePermissions object
+
+## S112-N0100  POST /{realm}/identity-provider/instances/{alias}/mappers
+desc: Add a mapper to identity provider
+schema: IdentityProviderMapperRepresentation
+- path:realm string
+- path:alias string
+- body:config object
+- body:id string
+- body:identityProviderAlias string
+- body:identityProviderMapper string
+- body:name string
+
+## S112-N0101  DELETE /{realm}/identity-provider/instances/{alias}/mappers/{id}
+desc: Delete a mapper for the identity provider
+- path:realm string
+- path:alias string
+- path:id string
+
+## S112-N0102  PUT /{realm}/identity-provider/instances/{alias}/mappers/{id}
+desc: Update a mapper for the identity provider
+schema: IdentityProviderMapperRepresentation
+- path:realm string
+- path:alias string
+- path:id string
+- body:config object
+- body:id string
+- body:identityProviderAlias string
+- body:identityProviderMapper string
+- body:name string
+
+## S112-N0103  POST /{realm}/logout-all
+desc: Removes all user sessions.
+- path:realm string
+
+## S112-N0104  POST /{realm}/partial-export
+desc: Partial export of existing realm into a JSON file.
+- path:realm string
+- query:exportClients boolean
+- query:exportGroupsAndRoles boolean
+
+## S112-N0105  POST /{realm}/partialImport
+desc: Partial import from a JSON file to an existing realm.
+schema: PartialImportRepresentation
+- path:realm string
+- body:clients array<object>
+- body:clients[].access object
+- body:clients[].adminUrl string
+- body:clients[].alwaysDisplayInConsole boolean
+- body:clients[].attributes object
+- body:clients[].authenticationFlowBindingOverrides object
+- body:clients[].authorizationServicesEnabled boolean
+- body:clients[].authorizationSettings object
+- body:clients[].authorizationSettings.allowRemoteResourceManagement boolean
+- body:clients[].authorizationSettings.clientId string
+- body:clients[].authorizationSettings.decisionStrategy string enum[AFFIRMATIVE|UNANIMOUS|CONSENSUS]
+- body:clients[].authorizationSettings.id string
+- body:clients[].authorizationSettings.name string
+- body:clients[].authorizationSettings.policies array<object>
+- body:clients[].authorizationSettings.policyEnforcementMode string enum[ENFORCING|PERMISSIVE|DISABLED]
+- body:clients[].authorizationSettings.resources array<object>
+- body:clients[].authorizationSettings.scopes array<object>
+- body:clients[].baseUrl string
+- body:clients[].bearerOnly boolean
+- body:clients[].clientAuthenticatorType string
+- body:clients[].clientId string
+- body:clients[].consentRequired boolean
+- body:clients[].defaultClientScopes array<string>
+- body:clients[].defaultRoles array<string>
+- body:clients[].description string
+- body:clients[].directAccessGrantsEnabled boolean
+- body:clients[].enabled boolean
+- body:clients[].frontchannelLogout boolean
+- body:clients[].fullScopeAllowed boolean
+- body:clients[].id string
+- body:clients[].implicitFlowEnabled boolean
+- body:clients[].name string
+- body:clients[].nodeReRegistrationTimeout integer
+- body:clients[].notBefore integer
+- body:clients[].optionalClientScopes array<string>
+- body:clients[].origin string
+- body:clients[].protocol string
+- body:clients[].protocolMappers array<object>
+- body:clients[].protocolMappers[].config object
+- body:clients[].protocolMappers[].id string
+- body:clients[].protocolMappers[].name string
+- body:clients[].protocolMappers[].protocol string
+- body:clients[].protocolMappers[].protocolMapper string
+- body:clients[].publicClient boolean
+- body:clients[].redirectUris array<string>
+- body:clients[].registeredNodes object
+- body:clients[].registrationAccessToken string
+- body:clients[].rootUrl string
+- body:clients[].secret string
+- body:clients[].serviceAccountsEnabled boolean
+- body:clients[].standardFlowEnabled boolean
+- body:clients[].surrogateAuthRequired boolean
+- body:clients[].webOrigins array<string>
+- body:groups array<object>
+- body:groups[].access object
+- body:groups[].attributes object
+- body:groups[].clientRoles object
+- body:groups[].id string
+- body:groups[].name string
+- body:groups[].path string
+- body:groups[].realmRoles array<string>
+- body:groups[].subGroups array<object>
+- body:groups[].subGroups[].access object
+- body:groups[].subGroups[].attributes object
+- body:groups[].subGroups[].clientRoles object
+- body:groups[].subGroups[].id string
+- body:groups[].subGroups[].name string
+- body:groups[].subGroups[].path string
+- body:groups[].subGroups[].realmRoles array<string>
+- body:groups[].subGroups[].subGroups array<object>
+- body:identityProviders array<object>
+- body:identityProviders[].addReadTokenRoleOnCreate boolean
+- body:identityProviders[].alias string
+- body:identityProviders[].config object
+- body:identityProviders[].displayName string
+- body:identityProviders[].enabled boolean
+- body:identityProviders[].firstBrokerLoginFlowAlias string
+- body:identityProviders[].internalId string
+- body:identityProviders[].linkOnly boolean
+(+57 fields cut)
+
+## S112-N0107  POST /{realm}/roles
+desc: Create a new role for the realm or client
+schema: RoleRepresentation
+- path:realm string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string

@@ -1,0 +1,1698 @@
+{
+ "openapi": "3.0.0",
+ "paths": {
+  "/health": {
+   "get": {
+    "operationId": "AppController_health",
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": ""
+     }
+    }
+   }
+  },
+  "/": {
+   "get": {
+    "operationId": "AppController_index",
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": ""
+     }
+    }
+   }
+  },
+  "/auth/register": {
+   "post": {
+    "operationId": "AuthController_register",
+    "parameters": [],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RegisterUserDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UserSerializer"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   }
+  },
+  "/auth/login": {
+   "post": {
+    "operationId": "AuthController_login",
+    "parameters": [],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UserLoginDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   }
+  },
+  "/refresh": {
+   "post": {
+    "operationId": "AuthController_refresh",
+    "parameters": [],
+    "responses": {
+     "201": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   }
+  },
+  "/auth/activate-account": {
+   "get": {
+    "operationId": "AuthController_activateAccount",
+    "parameters": [
+     {
+      "name": "token",
+      "required": true,
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   }
+  },
+  "/auth/forgot-password": {
+   "put": {
+    "operationId": "AuthController_forgotPassword",
+    "parameters": [],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ForgetPasswordDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "204": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   }
+  },
+  "/auth/reset-password": {
+   "put": {
+    "operationId": "AuthController_resetPassword",
+    "parameters": [],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ResetPasswordDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "204": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   }
+  },
+  "/auth/profile": {
+   "get": {
+    "operationId": "AuthController_profile",
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UserSerializer"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   },
+   "put": {
+    "operationId": "AuthController_updateProfile",
+    "parameters": [],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UpdateUserProfileDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UserSerializer"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   }
+  },
+  "/auth/change-password": {
+   "put": {
+    "operationId": "AuthController_changePassword",
+    "parameters": [],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ChangePasswordDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   }
+  },
+  "/users": {
+   "get": {
+    "operationId": "AuthController_findAll",
+    "parameters": [
+     {
+      "name": "keywords",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "limit",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     },
+     {
+      "name": "page",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   },
+   "post": {
+    "operationId": "AuthController_create",
+    "parameters": [],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CreateUserDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UserSerializer"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   }
+  },
+  "/users/{id}": {
+   "put": {
+    "operationId": "AuthController_update",
+    "parameters": [
+     {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UpdateUserDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UserSerializer"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   },
+   "get": {
+    "operationId": "AuthController_findOne",
+    "parameters": [
+     {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UserSerializer"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   }
+  },
+  "/auth/token-info": {
+   "get": {
+    "operationId": "AuthController_getRefreshToken",
+    "parameters": [
+     {
+      "name": "keywords",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "limit",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     },
+     {
+      "name": "page",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   }
+  },
+  "/revoke/{id}": {
+   "put": {
+    "operationId": "AuthController_revokeToken",
+    "parameters": [
+     {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RefreshToken"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "user"
+    ]
+   }
+  },
+  "/email-templates": {
+   "post": {
+    "operationId": "EmailTemplateController_create",
+    "parameters": [],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CreateEmailTemplateDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EmailTemplate"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "email-templates"
+    ]
+   },
+   "get": {
+    "operationId": "EmailTemplateController_findAll",
+    "parameters": [
+     {
+      "name": "keywords",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "limit",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     },
+     {
+      "name": "page",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "email-templates"
+    ]
+   }
+  },
+  "/email-templates/{id}": {
+   "get": {
+    "operationId": "EmailTemplateController_findOne",
+    "parameters": [
+     {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EmailTemplate"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "email-templates"
+    ]
+   },
+   "put": {
+    "operationId": "EmailTemplateController_update",
+    "parameters": [
+     {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UpdateEmailTemplateDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EmailTemplate"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "email-templates"
+    ]
+   },
+   "delete": {
+    "operationId": "EmailTemplateController_remove",
+    "parameters": [
+     {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "email-templates"
+    ]
+   }
+  },
+  "/roles": {
+   "post": {
+    "operationId": "RolesController_create",
+    "parameters": [],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CreateRoleDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RoleSerializer"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "roles"
+    ],
+    "security": [
+     {
+      "bearer": []
+     }
+    ]
+   },
+   "get": {
+    "operationId": "RolesController_findAll",
+    "parameters": [
+     {
+      "name": "keywords",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "limit",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     },
+     {
+      "name": "page",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     },
+     {
+      "required": false,
+      "name": "keywords",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "required": false,
+      "name": "limit",
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     },
+     {
+      "required": false,
+      "name": "page",
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "roles"
+    ],
+    "security": [
+     {
+      "bearer": []
+     }
+    ]
+   }
+  },
+  "/roles/{id}": {
+   "get": {
+    "operationId": "RolesController_findOne",
+    "parameters": [
+     {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RoleSerializer"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "roles"
+    ],
+    "security": [
+     {
+      "bearer": []
+     }
+    ]
+   },
+   "put": {
+    "operationId": "RolesController_update",
+    "parameters": [
+     {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UpdateRoleDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RoleSerializer"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "roles"
+    ],
+    "security": [
+     {
+      "bearer": []
+     }
+    ]
+   },
+   "delete": {
+    "operationId": "RolesController_remove",
+    "parameters": [
+     {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "roles"
+    ],
+    "security": [
+     {
+      "bearer": []
+     }
+    ]
+   }
+  },
+  "/permissions": {
+   "post": {
+    "operationId": "PermissionsController_create",
+    "parameters": [],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CreatePermissionDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Permission"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "permissions"
+    ],
+    "security": [
+     {
+      "bearer": []
+     }
+    ]
+   },
+   "get": {
+    "operationId": "PermissionsController_findAll",
+    "parameters": [
+     {
+      "name": "keywords",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "limit",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     },
+     {
+      "name": "page",
+      "required": false,
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     },
+     {
+      "required": false,
+      "name": "keywords",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "required": false,
+      "name": "limit",
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     },
+     {
+      "required": false,
+      "name": "page",
+      "in": "query",
+      "schema": {
+       "minimum": 1,
+       "type": "number"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "permissions"
+    ],
+    "security": [
+     {
+      "bearer": []
+     }
+    ]
+   }
+  },
+  "/permissions/{id}": {
+   "get": {
+    "operationId": "PermissionsController_findOne",
+    "parameters": [
+     {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Permission"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "permissions"
+    ],
+    "security": [
+     {
+      "bearer": []
+     }
+    ]
+   },
+   "put": {
+    "operationId": "PermissionsController_update",
+    "parameters": [
+     {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UpdatePermissionDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Permission"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "permissions"
+    ],
+    "security": [
+     {
+      "bearer": []
+     }
+    ]
+   },
+   "delete": {
+    "operationId": "PermissionsController_remove",
+    "parameters": [
+     {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "permissions"
+    ],
+    "security": [
+     {
+      "bearer": []
+     }
+    ]
+   }
+  },
+  "/permissions/sync": {
+   "post": {
+    "operationId": "PermissionsController_syncPermission",
+    "parameters": [],
+    "responses": {
+     "204": {
+      "description": ""
+     }
+    },
+    "tags": [
+     "permissions"
+    ],
+    "security": [
+     {
+      "bearer": []
+     }
+    ]
+   }
+  },
+  "/twofa/authenticate": {
+   "post": {
+    "operationId": "TwofaController_authenticate",
+    "parameters": [],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TwofaCodeDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": ""
+     }
+    }
+   }
+  },
+  "/dashboard/users": {
+   "get": {
+    "operationId": "DashboardController_userStat",
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "dashboard"
+    ]
+   }
+  },
+  "/dashboard/os": {
+   "get": {
+    "operationId": "DashboardController_osStat",
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "object"
+         }
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "dashboard"
+    ]
+   }
+  },
+  "/dashboard/browser": {
+   "get": {
+    "operationId": "DashboardController_browserStat",
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "object"
+         }
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "dashboard"
+    ]
+   }
+  }
+ },
+ "info": {
+  "title": "Truthy",
+  "description": "Official Truthy API",
+  "version": "v0.1",
+  "contact": {}
+ },
+ "tags": [],
+ "servers": [],
+ "components": {
+  "securitySchemes": {
+   "bearer": {
+    "scheme": "bearer",
+    "bearerFormat": "JWT",
+    "type": "http"
+   }
+  },
+  "schemas": {
+   "RegisterUserDto": {
+    "type": "object",
+    "properties": {
+     "username": {
+      "type": "string"
+     },
+     "email": {
+      "type": "string"
+     },
+     "password": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 20
+     },
+     "name": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "username",
+     "email",
+     "password",
+     "name"
+    ]
+   },
+   "UserSerializer": {
+    "type": "object",
+    "properties": {
+     "username": {
+      "type": "string"
+     },
+     "email": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "address": {
+      "type": "string"
+     },
+     "isTwoFAEnabled": {
+      "type": "boolean"
+     },
+     "contact": {
+      "type": "string"
+     },
+     "avatar": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string"
+     },
+     "createdAt": {
+      "format": "date-time",
+      "type": "string"
+     },
+     "updatedAt": {
+      "format": "date-time",
+      "type": "string"
+     }
+    },
+    "required": [
+     "username",
+     "email",
+     "name",
+     "address",
+     "isTwoFAEnabled",
+     "contact",
+     "avatar"
+    ]
+   },
+   "UserLoginDto": {
+    "type": "object",
+    "properties": {
+     "username": {
+      "type": "string"
+     },
+     "password": {
+      "type": "string"
+     },
+     "remember": {
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "username",
+     "password",
+     "remember"
+    ]
+   },
+   "ForgetPasswordDto": {
+    "type": "object",
+    "properties": {
+     "email": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "email"
+    ]
+   },
+   "ResetPasswordDto": {
+    "type": "object",
+    "properties": {
+     "token": {
+      "type": "string"
+     },
+     "password": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 20
+     },
+     "confirmPassword": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "token",
+     "password",
+     "confirmPassword"
+    ]
+   },
+   "UpdateUserProfileDto": {
+    "type": "object",
+    "properties": {
+     "username": {
+      "type": "string"
+     },
+     "email": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "address": {
+      "type": "string"
+     },
+     "contact": {
+      "type": "string"
+     },
+     "avatar": {
+      "type": "string"
+     }
+    }
+   },
+   "ChangePasswordDto": {
+    "type": "object",
+    "properties": {
+     "oldPassword": {
+      "type": "string"
+     },
+     "password": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 20
+     },
+     "confirmPassword": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "oldPassword",
+     "password",
+     "confirmPassword"
+    ]
+   },
+   "CreateUserDto": {
+    "type": "object",
+    "properties": {
+     "status": {
+      "type": "string",
+      "enum": [
+       "active",
+       "inactive",
+       "blocked"
+      ]
+     },
+     "roleId": {
+      "type": "number"
+     },
+     "username": {
+      "type": "string"
+     },
+     "email": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "status",
+     "roleId",
+     "username",
+     "email",
+     "name"
+    ]
+   },
+   "UpdateUserDto": {
+    "type": "object",
+    "properties": {
+     "username": {
+      "type": "string"
+     },
+     "email": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "address": {
+      "type": "string"
+     },
+     "contact": {
+      "type": "string"
+     },
+     "status": {
+      "enum": [
+       "active",
+       "inactive",
+       "blocked"
+      ],
+      "type": "string"
+     },
+     "roleId": {
+      "type": "number"
+     }
+    }
+   },
+   "RefreshToken": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "number"
+     },
+     "userId": {
+      "type": "number"
+     },
+     "ip": {
+      "type": "string"
+     },
+     "userAgent": {
+      "type": "string"
+     },
+     "browser": {
+      "type": "string"
+     },
+     "os": {
+      "type": "string"
+     },
+     "isRevoked": {
+      "type": "boolean"
+     },
+     "expires": {
+      "format": "date-time",
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "userId",
+     "ip",
+     "userAgent",
+     "browser",
+     "os",
+     "isRevoked",
+     "expires"
+    ]
+   },
+   "CreateEmailTemplateDto": {
+    "type": "object",
+    "properties": {
+     "title": {
+      "type": "string",
+      "maxLength": 100
+     },
+     "sender": {
+      "type": "string"
+     },
+     "subject": {
+      "type": "string"
+     },
+     "body": {
+      "type": "string",
+      "minLength": 50
+     },
+     "isDefault": {
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "title",
+     "sender",
+     "subject",
+     "body",
+     "isDefault"
+    ]
+   },
+   "EmailTemplate": {
+    "type": "object",
+    "properties": {
+     "title": {
+      "type": "string"
+     },
+     "slug": {
+      "type": "string"
+     },
+     "sender": {
+      "type": "string"
+     },
+     "subject": {
+      "type": "string"
+     },
+     "body": {
+      "type": "string"
+     },
+     "isDefault": {
+      "type": "boolean"
+     },
+     "createdAt": {
+      "format": "date-time",
+      "type": "string"
+     },
+     "updatedAt": {
+      "format": "date-time",
+      "type": "string"
+     }
+    },
+    "required": [
+     "title",
+     "slug",
+     "sender",
+     "subject",
+     "body",
+     "isDefault"
+    ]
+   },
+   "UpdateEmailTemplateDto": {
+    "type": "object",
+    "properties": {
+     "title": {
+      "type": "string",
+      "maxLength": 100
+     },
+     "sender": {
+      "type": "string"
+     },
+     "subject": {
+      "type": "string"
+     },
+     "body": {
+      "type": "string",
+      "minLength": 50
+     },
+     "isDefault": {
+      "type": "boolean"
+     }
+    }
+   },
+   "CreateRoleDto": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 100
+     },
+     "description": {
+      "type": "string"
+     },
+     "permissions": {
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     }
+    },
+    "required": [
+     "name",
+     "description",
+     "permissions"
+    ]
+   },
+   "RoleSerializer": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string"
+     },
+     "description": {
+      "type": "string"
+     },
+     "createdAt": {
+      "format": "date-time",
+      "type": "string"
+     },
+     "updatedAt": {
+      "format": "date-time",
+      "type": "string"
+     }
+    },
+    "required": [
+     "name"
+    ]
+   },
+   "UpdateRoleDto": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 100
+     },
+     "description": {
+      "type": "string"
+     },
+     "permissions": {
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     }
+    }
+   },
+   "CreatePermissionDto": {
+    "type": "object",
+    "properties": {
+     "resource": {
+      "type": "string",
+      "maxLength": 50
+     },
+     "description": {
+      "type": "string"
+     },
+     "path": {
+      "type": "string",
+      "maxLength": 50
+     },
+     "method": {
+      "type": "string",
+      "enum": [
+       "get",
+       "post",
+       "put",
+       "delete",
+       "any",
+       "options"
+      ]
+     }
+    },
+    "required": [
+     "resource",
+     "description",
+     "path",
+     "method"
+    ]
+   },
+   "Permission": {
+    "type": "object",
+    "properties": {
+     "resource": {
+      "type": "string"
+     },
+     "description": {
+      "type": "string"
+     },
+     "path": {
+      "type": "string"
+     },
+     "method": {
+      "type": "string"
+     },
+     "isDefault": {
+      "type": "boolean"
+     },
+     "createdAt": {
+      "format": "date-time",
+      "type": "string"
+     },
+     "updatedAt": {
+      "format": "date-time",
+      "type": "string"
+     }
+    },
+    "required": [
+     "resource",
+     "description",
+     "path",
+     "method",
+     "isDefault"
+    ]
+   },
+   "UpdatePermissionDto": {
+    "type": "object",
+    "properties": {
+     "description": {
+      "type": "string"
+     },
+     "resource": {
+      "type": "string",
+      "maxLength": 50
+     },
+     "path": {
+      "type": "string",
+      "maxLength": 50
+     },
+     "method": {
+      "type": "string",
+      "enum": [
+       "get",
+       "post",
+       "put",
+       "delete",
+       "any",
+       "options"
+      ]
+     }
+    }
+   },
+   "TwofaCodeDto": {
+    "type": "object",
+    "properties": {
+     "code": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "code"
+    ]
+   },
+   "TwoFaStatusUpdateDto": {
+    "type": "object",
+    "properties": {
+     "isTwoFAEnabled": {
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "isTwoFAEnabled"
+    ]
+   }
+  }
+ }
+}

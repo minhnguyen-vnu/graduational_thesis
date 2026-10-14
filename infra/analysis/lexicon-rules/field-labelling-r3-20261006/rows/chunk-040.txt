@@ -1,0 +1,733 @@
+## S532-0026  PUT /org/{orgId}/settings
+desc: Update organization settings | Settings that are not provided will not be modified.
+- path:orgId string
+- body:requestAccess object
+- body:requestAccess.enabled boolean
+
+## S532-0027  POST /org/{orgId}/webhooks
+desc: Create a webhook
+- path:orgId string
+- body:secret string
+- body:url string
+
+## S532-0028  POST /reporting/counts/projects
+desc: Get project counts
+- query:from string
+- query:to string
+- body:filters object
+- body:filters.languages array<any>
+- body:filters.orgs any
+- body:filters.projects any
+
+## S532-0029  POST /reporting/counts/projects/latest
+desc: Get latest project counts
+- body:filters object
+- body:filters.languages array<any>
+- body:filters.orgs any
+- body:filters.projects any
+
+## S532-0030  POST /reporting/issues/
+desc: Get list of issues
+- query:from string
+- query:to string
+- query:page number
+- query:perPage number
+- query:sortBy string enum[severity|issueTitle|projectName|isFixed|isPatched|isIgnored|introducedDate|isUpgradable|isPatchable|priorityScore]
+- query:order string
+- query:groupBy string enum[issue]
+- body:filters object
+- body:filters.exploitMaturity array<any>
+- body:filters.fixable boolean
+- body:filters.identifier string
+- body:filters.ignored boolean
+- body:filters.isFixed boolean
+- body:filters.isPatchable boolean
+- body:filters.isPinnable boolean
+- body:filters.isUpgradable boolean
+- body:filters.issues any
+- body:filters.languages array<any>
+- body:filters.orgs any
+- body:filters.patched boolean
+- body:filters.priorityScore object
+- body:filters.priorityScore.max number
+- body:filters.priorityScore.min number
+- body:filters.projects any
+- body:filters.severity array<any>
+- body:filters.types array<any>
+
+## S532-0031  POST /reporting/issues/latest
+desc: Get list of latest issues
+- query:page number
+- query:perPage number
+- query:sortBy string enum[severity|issueTitle|projectName|isFixed|isPatched|isIgnored|introducedDate|isUpgradable|isPatchable|priorityScore]
+- query:order string
+- query:groupBy string enum[issue]
+- body:filters object
+- body:filters.exploitMaturity array<any>
+- body:filters.fixable boolean
+- body:filters.identifier string
+- body:filters.ignored boolean
+- body:filters.isFixed boolean
+- body:filters.isPatchable boolean
+- body:filters.isPinnable boolean
+- body:filters.isUpgradable boolean
+- body:filters.issues any
+- body:filters.languages array<any>
+- body:filters.orgs any
+- body:filters.patched boolean
+- body:filters.priorityScore object
+- body:filters.priorityScore.max number
+- body:filters.priorityScore.min number
+- body:filters.projects any
+- body:filters.severity array<any>
+- body:filters.types array<any>
+
+## S532-0032  POST /test/dep-graph
+desc: Test Dep Graph | Use this endpoint to find issues in a [DepGraph data object](https://github.com/snyk/dep-graph#depgraphdata).
+- query:org string
+- body:depGraph object
+- body:depGraph.graph object
+- body:depGraph.graph.nodes array<any>
+- body:depGraph.graph.rootNodeId string
+- body:depGraph.pkgManager object
+- body:depGraph.pkgManager.name string
+- body:depGraph.pkgManager.repositories array<any>
+- body:depGraph.pkgs array<any>
+- body:depGraph.schemaVersion string
+
+## S532-0033  POST /test/golangdep
+desc: Test Gopkg.toml & Gopkg.lock File | You can test your Go dep packages for issues according to their manifest file & lockfile using this action. It takes a JSON object containing a "target" `Gopkg.toml` and a `Gopkg.lock`.
+- query:org string
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.additional array<any>
+- body:files.target object
+- body:files.target.contents string
+
+## S532-0034  POST /test/govendor
+desc: Test vendor.json File | You can test your Go vendor packages for issues according to their manifest file using this action. It takes a JSON object containing a "target" `vendor.json`.
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.target object
+- body:files.target.contents string
+
+## S532-0035  POST /test/maven
+desc: Test maven file | You can test your Maven packages for issues according to their manifest file using this action. It takes a JSON object containing a the "target" `pom.xml`. Additional manifest files, if they are needed, like parent `pom.xml` files, child poms, etc., according the the definitions in the target `pom.xml` file, should be supplied in the `additional` body parameter.
+- query:org string
+- query:repository string
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.additional array<any>
+- body:files.target object
+- body:files.target.contents string
+
+## S532-0036  POST /test/pip
+desc: Test requirements.txt file | You can test your pip packages for issues according to their manifest file using this action. It takes a JSON object containing a the "target" `requirements.txt`.
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.target object
+- body:files.target.contents string
+
+## S533-0001  POST /versions/publish/anon
+desc: Publish Anonymous | Anonymously publish to API Docs. This endpoint will take a JSON spec or a URL to a swagger or raml spec. ``` { "specData": {...} } ``` or ``` { "url": "http://petstore.swagger.io/v2/swagger.json" } ``` The spec will be published to api-docs.io anonymously, which means you will not be able to update or remove this documentation. The response will contain a url to the published d
+- body:specData object
+- body:url string
+
+## S533-0002  PUT /versions/{versionId}/import
+desc: Import | Import the given specification into an existing version. **Warning, this is a destructive action! Any resources present in both the existing version, and the specification being imported, will be overwritten.** This endpoint is particularly useful when you manage a specification file (Swagger or RAML) outside of Stoplight, and want to keep your Stoplight API version up to date as that spe
+- path:versionId string
+- body:options object
+- body:options.removeExtraEndpoints boolean
+- body:options.removeExtraSchemas boolean
+- body:options.removeExtraTextSections boolean
+- body:options.removeExtraTraits boolean
+- body:specData object
+- body:url string
+
+## S533-0003  POST /versions/{versionId}/publish
+desc: Publish | Re-publish an API version in Stoplight. This will re-publish the given API version, with whatever publish settings have already been setup in the app. This will only work with APIs that have previously been published at least once. This works well with the #endpoint:957qEfc97BB5XGAeZ endpoint to augment your continuous integration processes, and automatically re-publish your documentatio
+- path:versionId string
+
+## S533-0004  PUT /versions/{versionId}/unpublish
+desc: Unpublish | Unpublish the documentation associated with the given API version.
+- path:versionId string
+
+## S534-0001  POST /api-public/v1/incidents
+desc: Create a new incident | Create a new incident. This call replicates the function of our <a href="https://help.victorops.com/knowledge-base/manual-incident-creation/">manual incident creation process</a>. Monitoring tools and custom integrations should be configured using our <a href="https://help.victorops.com/knowledge-base/victorops-restendpoint-integration/">REST Endpoint</a>. This API may be c
+schema: CreateIncidentRequest
+- body:details string
+- body:summary string
+- body:targets array<object>
+- body:targets[].slug string
+- body:targets[].type string enum[User|EscalationPolicy]
+- body:userName string
+
+## S534-0002  PATCH /api-public/v1/incidents/ack
+desc: Acknowledge an incident or list of incidents | The incident(s) must be currently open. The user supplied must be a valid VictorOps user and a member of your organization. This API may be called a maximum of 60 times per minute.
+schema: AckOrResolveRequest
+- body:incidentNames array<string>
+- body:message string
+- body:userName string
+
+## S534-0003  PATCH /api-public/v1/incidents/byUser/ack
+desc: Acknowledge all incidents for which a user was paged. | The incident(s) must be currently open. The user supplied must be a valid VictorOps user and a member of your organization. This API may be called a maximum of 60 times per minute.
+schema: AckOrResolveByUserRequest
+- body:message string
+- body:userName string
+
+## S534-0004  PATCH /api-public/v1/incidents/byUser/resolve
+desc: Resolve all incidents for which a user was paged. | The incident(s) must be currently open. The user supplied must be a valid VictorOps user and a member of your organization. This API may be called a maximum of 60 times per minute.
+schema: AckOrResolveByUserRequest
+- body:message string
+- body:userName string
+
+## S534-0005  POST /api-public/v1/incidents/reroute
+desc: Reroute one or more incidents to one or more new routable destinations. | Reroute one or more incidents to one or more users and/or escalation policies This API may be called a maximum of 60 times per minute.
+schema: RerouteCollection
+- body:reroutes array<object>
+- body:reroutes[].incidentNumber string
+- body:reroutes[].targets array<object>
+- body:reroutes[].targets[].slug string
+- body:reroutes[].targets[].type string enum[User|EscalationPolicy]
+- body:userName string
+
+## S534-0006  PATCH /api-public/v1/incidents/resolve
+desc: Resolve an incident or list of incidents | The incident(s) must be currently open. The user supplied must be a valid VictorOps user and a member of your organization. This API may be called a maximum of 60 times per minute.
+schema: AckOrResolveRequest
+- body:incidentNames array<string>
+- body:message string
+- body:userName string
+
+## S534-0007  POST /api-public/v1/maintenancemode/start
+desc: Start maintenance mode for routing keys
+- body:names array<string>
+- body:purpose string
+- body:type string enum[RoutingKeys]
+
+## S534-0008  PUT /api-public/v1/maintenancemode/{maintenancemodeid}/end
+desc: End maintenance mode for routing keys
+- path:maintenancemodeid string
+
+## S534-0009  POST /api-public/v1/overrides
+desc: Creates a new scheduled override | Creates a new scheduled override. Start and end dates are in ISO8601 format. E.g. `2018-09-28'T'05:00:00Z` This API may be called a maximum of 60 times per minute.
+schema: ScheduledOverridePayload
+- body:end string
+- body:start string
+- body:timezone string
+- body:username string
+
+## S534-0010  DELETE /api-public/v1/overrides/{publicId}
+desc: Deletes a scheduled override | Deletes a scheduled override This API may be called a maximum of 60 times per minute.
+- path:publicId string
+
+## S534-0011  DELETE /api-public/v1/overrides/{publicId}/assignments/{policySlug}
+desc: Delete the scheduled override assignment | Delete the scheduled override assignment This API may be called a maximum of 60 times per minute.
+- path:publicId string
+- path:policySlug string
+
+## S534-0012  PUT /api-public/v1/overrides/{publicId}/assignments/{policySlug}
+desc: Update the scheduled override assignment | Update the scheduled override assignment This API may be called a maximum of 60 times per minute.
+schema: UpdateAssignment
+- path:publicId string
+- path:policySlug string
+- body:policy string
+- body:username string
+
+## S534-0013  PATCH /api-public/v1/policies/{policy}/oncall/user
+desc: Create an on-call override (take on-call) | Replaces a currently on-call user in the escalation policy with another. In many cases, the policy slug will match the slug of the team that contains it. This API may be called a maximum of 60 times per minute.
+schema: TakeRequest
+- path:policy string
+- body:fromUser string
+- body:toUser string
+
+## S534-0014  POST /api-public/v1/profile/{username}/policies
+desc: Create a paging policy step | Create a paging policy step This API may be called a maximum of 60 times per minute.
+schema: AddGroupPayload
+- path:username string
+- body:rules array<object>
+- body:rules[].contact object
+- body:rules[].contact.id number
+- body:rules[].contact.type string enum[email|phone]
+- body:rules[].type string enum[push|email|sms|phone]
+- body:timeout integer enum[1|5|10|15|20|25|30|45|60]
+
+## S534-0015  POST /api-public/v1/profile/{username}/policies/{step}
+desc: Create a rule for a paging policy step | Create a rule for a paging policy step This API may be called a maximum of 60 times per minute.
+schema: AddStepPayload
+- path:username string
+- path:step number
+- body:contact object
+- body:contact.id number
+- body:contact.type string enum[email|phone]
+- body:type string enum[push|email|sms|phone]
+
+## S534-0016  PUT /api-public/v1/profile/{username}/policies/{step}
+desc: Update a paging policy step | Update a paging policy step This API may be called a maximum of 60 times per minute.
+schema: AddGroupPayload
+- path:username string
+- path:step number
+- body:rules array<object>
+- body:rules[].contact object
+- body:rules[].contact.id number
+- body:rules[].contact.type string enum[email|phone]
+- body:rules[].type string enum[push|email|sms|phone]
+- body:timeout integer enum[1|5|10|15|20|25|30|45|60]
+
+## S534-0017  DELETE /api-public/v1/profile/{username}/policies/{step}/{rule}
+desc: Delete a rule from a paging policy step | Delete a rule from a paging policy step This API may be called a maximum of 60 times per minute.
+- path:username string
+- path:step number
+- path:rule number
+
+## S534-0018  PUT /api-public/v1/profile/{username}/policies/{step}/{rule}
+desc: Update a rule for a paging policy step | Update a rule for a paging policy step This API may be called a maximum of 60 times per minute.
+schema: AddStepPayload
+- path:username string
+- path:step number
+- path:rule number
+- body:contact object
+- body:contact.id number
+- body:contact.type string enum[email|phone]
+- body:type string enum[push|email|sms|phone]
+
+## S534-0019  POST /api-public/v1/team
+desc: Add a team | Add a team to your organization. This API may be called a maximum of 60 times per minute.
+schema: AddTeamPayload
+- body:name string
+
+## S534-0020  DELETE /api-public/v1/team/{team}
+desc: Remove a team | Remove a team from your organization. This API may be called a maximum of 60 times per minute.
+- path:team string
+
+## S534-0021  PUT /api-public/v1/team/{team}
+desc: Update a team | Update the designated team This API may be called a maximum of 60 times per minute.
+schema: AddTeamPayload
+- path:team string
+- body:name string
+
+## S534-0022  POST /api-public/v1/team/{team}/members
+desc: Add a team member | Add a team member to your team. This API may be called a maximum of 60 times per minute.
+schema: AddTeamMemberPayload
+- path:team string
+- body:username string
+
+## S534-0023  DELETE /api-public/v1/team/{team}/members/{user}
+desc: Remove a team member | Remove a team from your organization. This API may be called a maximum of 60 times per minute.
+schema: RemoveTeamMemberPayload
+- path:team string
+- path:user string
+- body:replacement string
+
+## S534-0024  PATCH /api-public/v1/team/{team}/oncall/user
+desc: Create an on-call override (take on-call) | __NOTE: This API call is deprecated. Please use `PATCH /api-public/v2/policies/{policy}/oncall/user`__ Replaces a currently on-call user on the team with another. This API may be called a maximum of 60 times per minute.
+schema: TakeRequest
+- path:team string
+- body:fromUser string
+- body:toUser string
+
+## S534-0025  POST /api-public/v1/user
+desc: Add a user | Add a user to your organization This API may be called a maximum of 60 times per minute.
+schema: AddUserPayload
+- body:admin boolean
+- body:email string
+- body:expirationHours number
+- body:firstName string
+- body:lastName string
+- body:username string
+
+## S534-0026  DELETE /api-public/v1/user/{user}
+desc: Remove a user | Remove a user from your organization. If no replacement is specified, an empty JSON payload ("{}") is still required. This API may be called a maximum of 60 times per minute.
+schema: DeleteUserPayload
+- path:user string
+- body:replacement string
+
+## S534-0027  PUT /api-public/v1/user/{user}
+desc: Update a user | Update the designated user This API may be called a maximum of 60 times per minute.
+schema: AddUserPayload
+- path:user string
+- body:admin boolean
+- body:email string
+- body:expirationHours number
+- body:firstName string
+- body:lastName string
+- body:username string
+
+## S534-0028  DELETE /api-public/v1/user/{user}/contact-methods/devices/{contactId}
+desc: Delete a contact device for a user | Delete a contact device for a user This API may be called a maximum of 60 times per minute.
+- path:user string
+- path:contactId string
+
+## S534-0029  PUT /api-public/v1/user/{user}/contact-methods/devices/{contactId}
+desc: Update a contact device for a user | Update a contact device for a user This API may be called a maximum of 60 times per minute.
+schema: ContactDeviceAdd
+- path:user string
+- path:contactId string
+- body:chat_escalation_sound string
+- body:device_label string
+- body:escalation_notification_sound string
+- body:resolved_notification_sound string
+
+## S534-0030  POST /api-public/v1/user/{user}/contact-methods/emails
+desc: Create a contact emails for a user | Create a contact email for a user This API may be called a maximum of 60 times per minute.
+schema: ContactEmailAdd
+- path:user string
+- body:email string
+- body:label string
+- body:rank integer
+
+## S534-0031  DELETE /api-public/v1/user/{user}/contact-methods/emails/{contactId}
+desc: Delete a contact email for a user | Delete the indicated contact email for the user This API may be called a maximum of 60 times per minute.
+- path:user string
+- path:contactId string
+
+## S534-0032  POST /api-public/v1/user/{user}/contact-methods/phones
+desc: Create a contact phones for a user | Create a contact phone for a user This API may be called a maximum of 60 times per minute.
+schema: ContactPhoneAdd
+- path:user string
+- body:label string
+- body:phone string
+- body:rank integer
+
+## S534-0033  DELETE /api-public/v1/user/{user}/contact-methods/phones/{contactId}
+desc: Delete a contact phone for a user | Delete the indicated contact phone for the user This API may be called a maximum of 60 times per minute.
+- path:user string
+- path:contactId string
+
+## S535-0001  DELETE /__admin/mappings
+desc: Delete all stub mappings
+
+## S535-0002  POST /__admin/mappings
+desc: Create a new stub mapping
+- body:id string
+- body:metadata object
+- body:name string
+- body:newScenarioState string
+- body:persistent boolean
+- body:postServeActions object
+- body:priority integer
+- body:request object
+- body:request.basicAuthCredentials object
+- body:request.basicAuthCredentials.password string
+- body:request.basicAuthCredentials.username string
+- body:request.bodyPatterns array<object>
+- body:request.cookies object
+- body:request.headers object
+- body:request.method string
+- body:request.queryParameters object
+- body:request.url string
+- body:request.urlPath string
+- body:request.urlPathPattern string
+- body:request.urlPattern string
+- body:requiredScenarioState string
+- body:response object
+- body:response.additionalProxyRequestHeaders object
+- body:response.base64Body string
+- body:response.body string
+- body:response.bodyFileName string
+- body:response.delayDistribution object
+- body:response.delayDistribution.median integer
+- body:response.delayDistribution.sigma number
+- body:response.delayDistribution.type string enum[lognormal]
+- body:response.delayDistribution.lower integer
+- body:response.delayDistribution.upper integer
+- body:response.fault string enum[CONNECTION_RESET_BY_PEER|EMPTY_RESPONSE|MALFORMED_RESPONSE_CHUNK|RANDOM_DATA_THEN_CLOSE]
+- body:response.fixedDelayMilliseconds integer
+- body:response.fromConfiguredStub boolean
+- body:response.headers object
+- body:response.jsonBody object
+- body:response.proxyBaseUrl string
+- body:response.status integer
+- body:response.statusMessage string
+- body:response.transformerParameters object
+- body:response.transformers array<string>
+- body:scenarioName string
+- body:uuid string
+
+## S535-0003  POST /__admin/mappings/find-by-metadata
+desc: Find stubs by matching on their metadata
+- body:caseInsensitive boolean
+- body:equalTo boolean
+- body:contains string
+- body:matches string
+- body:doesNotMatch string
+- body:equalToJson string
+- body:ignoreArrayOrder boolean
+- body:ignoreExtraElements boolean
+- body:matchesJsonPath string
+- body:equalToXml string
+- body:matchesXpath string
+- body:namespaces object
+- body:valuePattern object
+
+## S535-0004  POST /__admin/mappings/import
+desc: Import stub mappings | Import given stub mappings to the backing store
+
+## S535-0005  POST /__admin/mappings/remove-by-metadata
+desc: Delete stub mappings matching metadata
+- body:caseInsensitive boolean
+- body:equalTo boolean
+- body:contains string
+- body:matches string
+- body:doesNotMatch string
+- body:equalToJson string
+- body:ignoreArrayOrder boolean
+- body:ignoreExtraElements boolean
+- body:matchesJsonPath string
+- body:equalToXml string
+- body:matchesXpath string
+- body:namespaces object
+- body:valuePattern object
+
+## S535-0006  POST /__admin/mappings/reset
+desc: Reset stub mappings | Restores stub mappings to the defaults defined back in the backing store
+
+## S535-0007  POST /__admin/mappings/save
+desc: Persist stub mappings | Save all persistent stub mappings to the backing store
+
+## S535-0008  DELETE /__admin/mappings/{stubMappingId}
+desc: Delete a stub mapping
+- path:stubMappingId string
+
+## S535-0009  PUT /__admin/mappings/{stubMappingId}
+desc: Update a stub mapping
+- path:stubMappingId string
+- body:id string
+- body:metadata object
+- body:name string
+- body:newScenarioState string
+- body:persistent boolean
+- body:postServeActions object
+- body:priority integer
+- body:request object
+- body:request.basicAuthCredentials object
+- body:request.basicAuthCredentials.password string
+- body:request.basicAuthCredentials.username string
+- body:request.bodyPatterns array<object>
+- body:request.cookies object
+- body:request.headers object
+- body:request.method string
+- body:request.queryParameters object
+- body:request.url string
+- body:request.urlPath string
+- body:request.urlPathPattern string
+- body:request.urlPattern string
+- body:requiredScenarioState string
+- body:response object
+- body:response.additionalProxyRequestHeaders object
+- body:response.base64Body string
+- body:response.body string
+- body:response.bodyFileName string
+- body:response.delayDistribution object
+- body:response.delayDistribution.median integer
+- body:response.delayDistribution.sigma number
+- body:response.delayDistribution.type string enum[lognormal]
+- body:response.delayDistribution.lower integer
+- body:response.delayDistribution.upper integer
+- body:response.fault string enum[CONNECTION_RESET_BY_PEER|EMPTY_RESPONSE|MALFORMED_RESPONSE_CHUNK|RANDOM_DATA_THEN_CLOSE]
+- body:response.fixedDelayMilliseconds integer
+- body:response.fromConfiguredStub boolean
+- body:response.headers object
+- body:response.jsonBody object
+- body:response.proxyBaseUrl string
+- body:response.status integer
+- body:response.statusMessage string
+- body:response.transformerParameters object
+- body:response.transformers array<string>
+- body:scenarioName string
+- body:uuid string
+
+## S535-0010  POST /__admin/near-misses/request
+desc: Find near misses matching specific request | Find at most 3 near misses for closest stub mappings to the specified request
+- body:absoluteUrl string
+- body:body string
+- body:cookies object
+- body:headers object
+- body:method string
+- body:url string
+
+## S535-0011  POST /__admin/near-misses/request-pattern
+desc: Find near misses matching request pattern | Find at most 3 near misses for closest logged requests to the specified request pattern
+- body:basicAuthCredentials object
+- body:basicAuthCredentials.password string
+- body:basicAuthCredentials.username string
+- body:bodyPatterns array<object>
+- body:cookies object
+- body:headers object
+- body:method string
+- body:queryParameters object
+- body:url string
+- body:urlPath string
+- body:urlPathPattern string
+- body:urlPattern string
+
+## S535-0012  POST /__admin/recordings/snapshot
+desc: Take a snapshot recording
+- body:captureHeaders object
+- body:extractBodyCriteria object
+- body:extractBodyCriteria.binarySizeThreshold string
+- body:extractBodyCriteria.textSizeThreshold string
+- body:persist boolean
+- body:repeatsAsScenarios boolean
+- body:requestBodyPattern object
+- body:requestBodyPattern.caseInsensitive boolean
+- body:requestBodyPattern.ignoreArrayOrder boolean
+- body:requestBodyPattern.ignoreExtraElements boolean
+- body:requestBodyPattern.matcher string enum[auto]
+- body:transformerParameters object
+- body:transformers array<string>
+- body:filters object
+- body:filters.ids array<string>
+- body:filters.basicAuthCredentials object
+- body:filters.basicAuthCredentials.password string
+- body:filters.basicAuthCredentials.username string
+- body:filters.bodyPatterns array<object>
+- body:filters.cookies object
+- body:filters.headers object
+- body:filters.method string
+- body:filters.queryParameters object
+- body:filters.url string
+- body:filters.urlPath string
+- body:filters.urlPathPattern string
+- body:filters.urlPattern string
+
+## S535-0013  POST /__admin/recordings/start
+desc: Start recording | Begin recording stub mappings
+- body:captureHeaders object
+- body:extractBodyCriteria object
+- body:extractBodyCriteria.binarySizeThreshold string
+- body:extractBodyCriteria.textSizeThreshold string
+- body:persist boolean
+- body:repeatsAsScenarios boolean
+- body:requestBodyPattern object
+- body:requestBodyPattern.caseInsensitive boolean
+- body:requestBodyPattern.ignoreArrayOrder boolean
+- body:requestBodyPattern.ignoreExtraElements boolean
+- body:requestBodyPattern.matcher string enum[auto]
+- body:transformerParameters object
+- body:transformers array<string>
+- body:filters object
+- body:filters.basicAuthCredentials object
+- body:filters.basicAuthCredentials.password string
+- body:filters.basicAuthCredentials.username string
+- body:filters.bodyPatterns array<object>
+- body:filters.cookies object
+- body:filters.headers object
+- body:filters.method string
+- body:filters.queryParameters object
+- body:filters.url string
+- body:filters.urlPath string
+- body:filters.urlPathPattern string
+- body:filters.urlPattern string
+- body:targetBaseUrl string
+
+## S535-0014  POST /__admin/recordings/stop
+desc: Stop recording | End recording of stub mappings
+
+## S535-0015  DELETE /__admin/requests
+desc: Delete all requests in journal
+
+## S535-0016  POST /__admin/requests/count
+desc: Count requests by criteria | Count requests logged in the journal matching the specified criteria
+- body:basicAuthCredentials object
+- body:basicAuthCredentials.password string
+- body:basicAuthCredentials.username string
+- body:bodyPatterns array<object>
+- body:cookies object
+- body:headers object
+- body:method string
+- body:queryParameters object
+- body:url string
+- body:urlPath string
+- body:urlPathPattern string
+- body:urlPattern string
+
+## S535-0017  POST /__admin/requests/find
+desc: Find requests by criteria | Retrieve details of requests logged in the journal matching the specified criteria
+- body:basicAuthCredentials object
+- body:basicAuthCredentials.password string
+- body:basicAuthCredentials.username string
+- body:bodyPatterns array<object>
+- body:cookies object
+- body:headers object
+- body:method string
+- body:queryParameters object
+- body:url string
+- body:urlPath string
+- body:urlPathPattern string
+- body:urlPattern string
+
+## S535-0018  POST /__admin/requests/remove
+desc: Remove requests by criteria | Removed requests logged in the journal matching the specified criteria
+- body:basicAuthCredentials object
+- body:basicAuthCredentials.password string
+- body:basicAuthCredentials.username string
+- body:bodyPatterns array<object>
+- body:cookies object
+- body:headers object
+- body:method string
+- body:queryParameters object
+- body:url string
+- body:urlPath string
+- body:urlPathPattern string
+- body:urlPattern string
+
+## S535-0019  POST /__admin/requests/remove-by-metadata
+desc: Delete requests mappings matching metadata
+- body:caseInsensitive boolean
+- body:equalTo boolean
+- body:contains string
+- body:matches string
+- body:doesNotMatch string
+- body:equalToJson string
+- body:ignoreArrayOrder boolean
+- body:ignoreExtraElements boolean
+- body:matchesJsonPath string
+- body:equalToXml string
+- body:matchesXpath string
+- body:namespaces object
+- body:valuePattern object
+
+## S535-0020  POST /__admin/requests/reset
+desc: Empty the request journal
+
+## S535-0021  DELETE /__admin/requests/{requestId}
+desc: Delete request by ID
+- path:requestId string
+
+## S535-0022  POST /__admin/reset
+desc: Reset mappings and request journal | Reset mappings to the default state and reset the request journal
+
+## S535-0023  POST /__admin/scenarios/reset
+desc: Reset the state of all scenarios
+
+## S535-0024  POST /__admin/settings
+desc: Update global settings
+- body:median integer
+- body:sigma number
+- body:type string enum[lognormal]
+- body:lower integer
+- body:upper integer
+- body:fixedDelay number
+
+## S535-0025  POST /__admin/shutdown
+desc: Shutdown the WireMock server
+
+## S537-0001  POST /accounts/{account_id}/apps
+desc: Creates an app | Creates an application with the specified properties.
+schema: app_post
+- path:account_id string
+- body:apnsCertificate string
+- body:apnsPrivateKey string
+- body:apnsUseSandboxEndpoint boolean
+- body:fcmKey string
+- body:name string
+- body:status string enum[enabled|disabled]
+- body:tlsOnly boolean
+
+## S537-0002  POST /apps/{app_id}/keys
+desc: Creates a key | Creates an API key for the application specified.
+schema: key_post
+- path:app_id string
+- body:capabilities array<string> enum[publish|subscribe|history|presence|channel-metadata|push-admin|push-subscribe|statistics]
+- body:channels string
+- body:name string

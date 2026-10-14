@@ -1,0 +1,379 @@
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+index e699abb238..bac9875f6d 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -73,8 +73,6 @@ class RestSecurityBuilder : TimeBoxedPhase {
+ 
+         private const val LEXICON_RESOURCE = "/stateful-authz-lexicon.csv"
+ 
+-        private const val MAX_TRANSITION_CANDIDATES = 8
+-
+         private fun loadLexicon(kind: String): List<Pair<String, Double>> {
+             val stream = RestSecurityBuilder::class.java.getResourceAsStream(LEXICON_RESOURCE)
+             if (stream == null) {
+@@ -123,7 +121,9 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         private val TRANSITION_VERBS =
+             listOf(HttpVerb.PUT, HttpVerb.PATCH, HttpVerb.POST, HttpVerb.DELETE)
+ 
+-        private const val MAX_STATEFUL_TRIPLE_ATTEMPTS = 8
++        private const val MAX_STATEFUL_TRIPLE_ATTEMPTS = 20
++
++        private const val MAX_UNPROVEN_CANDIDATE_ATTEMPTS = 5
+ 
+         private const val MAX_STATEFUL_TRIPLE_ATTEMPTS_DECLARED = 40
+ 
+@@ -428,12 +428,20 @@ class RestSecurityBuilder : TimeBoxedPhase {
+ 
+     private val privilegeReducedInPhase = mutableSetOf<String>()
+ 
++    private val privilegeReducedByProof = mutableSetOf<String>()
++
++    private val refusedTransitionVictims = mutableSetOf<Pair<String, String>>()
++
+     private var statefulTripleAttempts = 0
+ 
+     private var maxStatefulAttempts = MAX_STATEFUL_TRIPLE_ATTEMPTS
+ 
+     private var privilegeRestoreAttempts = 0
+ 
++    private var candidateAttempts = 0
++    private var candidateProven = false
++    private var candidateIsLast = true
++
+     private var lastSourceCode: Int? = null
+     private var lastTransitionCode: Int? = null
+     private var transitionNotFoundSeen = false
+@@ -479,9 +487,16 @@ class RestSecurityBuilder : TimeBoxedPhase {
+ 
+         if (status in 200..299) {
+             privilegeReducedInPhase.clear()
++            privilegeReducedByProof.clear()
+         }
+     }
+ 
++    private fun candidateCapReached(): Boolean =
++        !candidateProven && !candidateIsLast && candidateAttempts >= MAX_UNPROVEN_CANDIDATE_ATTEMPTS
++
++    private fun attemptAllowed(): Boolean =
++        statefulTripleAttempts < maxStatefulAttempts && !candidateCapReached()
++
+     private fun addForStatefulAccessControl() {
+ 
+         if (!config.isEnabledFaultCategory(ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION)) {
+@@ -514,7 +529,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 return
+             }
+             val viable = mutableListOf<Pair<RestCallAction, List<String>>>()
+-            for (candidate in ranked.take(MAX_TRANSITION_CANDIDATES)) {
++            for (candidate in ranked) {
+                 if (routeLooksMissing(candidate)) {
+                     log.debug("Stateful-authorization transition candidate ${candidate.getName()}" +
+                             " skipped: every call on its path and parent path returned 404")
+@@ -543,12 +558,19 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             MAX_STATEFUL_TRIPLE_ATTEMPTS
+         }
+ 
+-        for ((transitionOp, reducedRoleCandidates) in queue) {
++        for ((index, entry) in queue.withIndex()) {
++            val (transitionOp, reducedRoleCandidates) = entry
+             if (declared == null) {
+-                log.debug("Stateful-authorization transition chosen: ${transitionOp.getName()}")
++                log.debug("Stateful-authorization transition chosen: ${transitionOp.getName()}" +
++                        " (candidate ${index + 1} of ${queue.size})")
+                 log.debug("Stateful-authorization reduced role values: $reducedRoleCandidates")
+             }
+             transitionNotFoundSeen = false
++            candidateAttempts = 0
++            candidateProven = false
++            candidateIsLast = index == queue.lastIndex
++            privilegeRestoreAttempts = 0
++            privilegeReducedInPhase.retainAll(privilegeReducedByProof)
+ 
+             fun guardedCandidatesFor(verbs: List<HttpVerb>) = verbs.flatMap { verb ->
+                 RestIndividualSelectorUtils.getAllActionDefinitions(actionDefinitions, verb)
+@@ -605,6 +627,9 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                             log.debug("Stateful-authorization: attempt cap $maxStatefulAttempts reached")
+                             return
+                         }
++                        if (candidateCapReached()) {
++                            break@sources
++                        }
+                         if (buildStatefulAuthzTriple(victimSlice, transitionOp, reducedRoleCandidates, declared)) break
+                         if (declared == null && transitionNotFoundSeen) {
+                             break@sources
+@@ -612,11 +637,22 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                     }
+                 }
+             }
+-            if (!transitionNotFoundSeen) {
+-                break
++            if (statefulTripleAttempts >= maxStatefulAttempts) {
++                log.debug("Stateful-authorization: attempt cap $maxStatefulAttempts reached")
++                return
++            }
++            if (candidateCapReached()) {
++                LoggingUtil.getInfoLogger().info(
++                    "Stateful-authorization transition ${transitionOp.getName()} not proven after" +
++                        " $candidateAttempts attempts; trying the next candidate"
++                )
++            } else if (transitionNotFoundSeen) {
++                log.debug("Stateful-authorization transition ${transitionOp.getName()} returned 404 after a 2xx source;" +
++                        " trying the next candidate")
++            } else {
++                log.debug("Stateful-authorization transition ${transitionOp.getName()} exhausted its sources after" +
++                        " $candidateAttempts attempts, proven $candidateProven")
+             }
+-            log.debug("Stateful-authorization transition ${transitionOp.getName()} returned 404 after a 2xx source;" +
+-                    " trying the next candidate")
+         }
+         log.debug("Stateful-authorization: sources exhausted after $statefulTripleAttempts triple attempts")
+     }
+@@ -630,6 +666,12 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         val victimAuth = victimSlice.seeMainExecutableActions().lastOrNull()?.auth ?: return false
+         if (victimAuth is NoAuth) return false
+ 
++        val pair = transitionDef.getName() to victimAuth.name
++        if (refusedTransitionVictims.contains(pair)) {
++            log.debug("Stateful-authorization: ${transitionDef.getName()} already refused victim '${victimAuth.name}'")
++            return false
++        }
++
+         resetSutState()
+ 
+         if (privilegeReducedInPhase.contains(victimAuth.name)) {
+@@ -653,10 +695,12 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 .also { log.debug("Stateful-authorization victim '${victimAuth.name}' current roles $current, reduced role values $it") }
+         }
+ 
++        var refused = false
++
+         for (operator in operators) {
+             for (reducedRole in roleValues) {
+                 if (hasPhaseTimedOut()) return false
+-                if (statefulTripleAttempts >= maxStatefulAttempts) return false
++                if (!attemptAllowed()) return false
+ 
+                 val before = statefulTripleAttempts
+                 if (executeStatefulAuthzTriple(victimSlice, transitionDef, reducedRole, operator, declared)) {
+@@ -665,7 +709,14 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 if (statefulTripleAttempts == before) {
+                     continue
+                 }
+-                if (privilegeReducedInPhase.contains(victimAuth.name)) {
++                if (lastSourceCode == null) {
++                    noStatusRecorded(transitionDef, victimAuth.name, operator.name)
++                    return false
++                }
++                if (transitionRefusedAfterSource()) {
++                    refused = true
++                }
++                if (privilegeReducedInPhase.contains(victimAuth.name) || refusedTransitionVictims.contains(pair)) {
+                     return false
+                 }
+                 if (!transitionRejectedRoleValue()) {
+@@ -680,32 +731,74 @@ class RestSecurityBuilder : TimeBoxedPhase {
+ 
+             val elevatedCandidates =
+                 harvestElevatedRoleCandidates(transitionDef, roleValues.firstOrNull() ?: "")
++            if (elevatedCandidates.isEmpty()) {
++                LoggingUtil.getInfoLogger().info(
++                    "Stateful-authorization restore unavailable on ${transitionDef.getName()}:" +
++                        " no elevated role value for the operators of victim '${victimAuth.name}'"
++                )
++            }
+ 
+-            for (operator in operators) {
++            restore@ for (operator in operators) {
+                 for (elevated in elevatedCandidates) {
+                     if (hasPhaseTimedOut()) return false
+-                    if (statefulTripleAttempts >= maxStatefulAttempts) return false
+-                    if (privilegeRestoreAttempts >= MAX_PRIVILEGE_RESTORES) return false
++                    if (!attemptAllowed()) return false
++                    if (privilegeRestoreAttempts >= MAX_PRIVILEGE_RESTORES) {
++                        LoggingUtil.getInfoLogger().info(
++                            "Stateful-authorization restore budget of $MAX_PRIVILEGE_RESTORES spent on" +
++                                " ${transitionDef.getName()}"
++                        )
++                        break@restore
++                    }
+ 
+                     if (!restorePrivilege(transitionDef, operator.name, victimAuth, elevated, victimSlice)) {
+                         continue
+                     }
+ 
+                     for (reducedRole in roleValues) {
++                        if (hasPhaseTimedOut()) return false
++                        if (!attemptAllowed()) return false
+                         val before = statefulTripleAttempts
+                         if (executeStatefulAuthzTriple(victimSlice, transitionDef, reducedRole, operator, declared)) {
+                             return true
+                         }
+                         if (statefulTripleAttempts == before) continue
+-                        if (privilegeReducedInPhase.contains(victimAuth.name)) return false
++                        if (lastSourceCode == null) {
++                            noStatusRecorded(transitionDef, victimAuth.name, operator.name)
++                            return false
++                        }
++                        if (transitionRefusedAfterSource()) refused = true
++                        if (privilegeReducedInPhase.contains(victimAuth.name) || refusedTransitionVictims.contains(pair)) {
++                            return false
++                        }
+                         if (!transitionRejectedRoleValue()) break
+                     }
+                 }
+             }
+         }
++
++        if (refused) {
++            refusedTransitionVictims.add(pair)
++            LoggingUtil.getInfoLogger().info(
++                "Stateful-authorization: ${transitionDef.getName()} refused or rejected every attempt on victim" +
++                    " '${victimAuth.name}'; that victim is skipped for this transition"
++            )
++        }
+         return false
+     }
+ 
++    private fun noStatusRecorded(transitionDef: RestCallAction, victim: String, operator: String) {
++        LoggingUtil.getInfoLogger().warn(
++            "Stateful-authorization attempt on ${transitionDef.getName()} recorded no status code" +
++                " (victim '$victim', operator '$operator'); trying the next victim or source"
++        )
++    }
++
++    private fun transitionRefusedAfterSource(): Boolean {
++        val src = lastSourceCode ?: return false
++        val code = lastTransitionCode ?: return false
++        return StatusGroup.G_2xx.isInGroup(src) && (code == 401 || code == 403 || transitionRejectedRoleValue())
++    }
++
+     private fun isLowPrivRole(value: String): Boolean {
+         val lv = value.lowercase()
+         return roleLowPrivSignals.any { lv.contains(it) } && roleHighPrivSignals.none { lv.contains(it) }
+@@ -780,6 +873,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return false
+         }
+         statefulTripleAttempts++
++        candidateAttempts++
+ 
+         fun statusOf(a: RestCallAction): Int? =
+             (ei.seeResult(a.getLocalId()) as? RestCallResult)?.getStatusCode()
+@@ -789,7 +883,15 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         lastSourceCode = sourceCode
+         lastTransitionCode = transitionCode
+         if (transitionCode == 404 && sourceCode != null && StatusGroup.G_2xx.isInGroup(sourceCode)) {
+-            transitionNotFoundSeen = true
++            if (candidateProven) {
++                refusedTransitionVictims.add(transitionDef.getName() to victimAuth.name)
++                LoggingUtil.getInfoLogger().info(
++                    "Stateful-authorization: proven transition ${transitionDef.getName()} returned 404 for victim" +
++                        " '${victimAuth.name}'; that victim is skipped for this transition"
++                )
++            } else {
++                transitionNotFoundSeen = true
++            }
+         }
+         val observed = listOf(sourceCode, transitionCode, followUpCode)
+             .joinToString("/") { it?.toString() ?: "-" }
+@@ -803,9 +905,13 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             && followUpCode != null && followUpCode != 401
+ 
+         if (!valid) {
++            val revoked = followUpCode == 401
++                && sourceCode != null && StatusGroup.G_2xx.isInGroup(sourceCode)
++                && transitionCode != null && StatusGroup.G_2xx.isInGroup(transitionCode)
+             LoggingUtil.getInfoLogger().info(
+                 "Discarded a VOID stateful-authorization (MR-A1) attempt on ${source.getName()}" +
+-                    " (victim '${victimAuth.name}', operator '${operator.name}', codes $observed)"
++                    " (victim '${victimAuth.name}', operator '${operator.name}', codes $observed)" +
++                    (if (revoked) " REVOKED: the old victim credential was rejected after the transition" else "")
+             )
+             return false
+         }
+@@ -825,6 +931,16 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 " (victim '${victimAuth.name}', operator '${operator.name}'," +
+                 " transition ${transition.getName()}, statuses $observed)"
+         )
++        if (followUpCode == 403 || StatusGroup.G_2xx.isInGroup(followUpCode)) {
++            if (!candidateProven) {
++                LoggingUtil.getInfoLogger().info(
++                    "Stateful-authorization transition ${transitionDef.getName()} proven by an attempt with" +
++                        " statuses $observed"
++                )
++            }
++            candidateProven = true
++            privilegeReducedByProof.add(victimAuth.name)
++        }
+         if (ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION in DetectedFaultUtils.getDetectedFaultCategories(ei)) {
+             LoggingUtil.getInfoLogger().info(
+                 "Constructed a stateful-authorization (MR-A1) test revealing privilege persistence" +
+@@ -927,16 +1043,22 @@ class RestSecurityBuilder : TimeBoxedPhase {
+ 
+         val probe = victimSlice.copy() as RestIndividual
+         probe.modifySampleType(SampleType.SECURITY)
+-        val ei = fitness.computeWholeAchievedCoverageForPostProcessing(probe) ?: return false
++        val ei = fitness.computeWholeAchievedCoverageForPostProcessing(probe)
++            ?: return reLoginProbeInconclusive("the probe could not be evaluated")
+ 
+         val lastObserved = probe.seeMainExecutableActions()
+             .mapNotNull { (ei.seeResult(it.getLocalId()) as? RestCallResult)?.getStatusCode() }
+             .lastOrNull()
+-            ?: return false
++            ?: return reLoginProbeInconclusive("no call of the replayed slice recorded a status code")
+ 
+         return lastObserved == 403
+     }
+ 
++    private fun reLoginProbeInconclusive(reason: String): Boolean {
++        LoggingUtil.getInfoLogger().info("Stateful-authorization re-login probe INCONCLUSIVE: $reason")
++        return false
++    }
++
+     private fun hasUserParam(a: RestCallAction) = allGenes(a).any { g ->
+         val n = g.name.lowercase()
+         TRANSITION_USER_PARAM_LEXICON.any { n == it.first || n.contains(it.first) }
+@@ -1020,8 +1142,12 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         action.forceNewTaints()
+         action.doInitialize(randomness)
+         action.auth = restorer
+-        if (!setUserTargetToVictim(action, target)) return false
+-        if (!setAllRoleFieldsTo(action, elevatedRole)) return false
++        if (!setUserTargetToVictim(action, target)) {
++            return restoreSkipped(action, target, "the account could not be placed in the call")
++        }
++        if (!setAllRoleFieldsTo(action, elevatedRole)) {
++            return restoreSkipped(action, target, "no role field accepts '$elevatedRole'")
++        }
+         keepOnlyTargetFields(action)
+         setUserNameFieldsToVictim(action, target)
+ 
+@@ -1032,7 +1158,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         base.ensureFlattenedStructure()
+         base.fixResourceForwardLinks()
+ 
+-        val ei = fitness.computeWholeAchievedCoverageForPostProcessing(base) ?: return false
++        val ei = fitness.computeWholeAchievedCoverageForPostProcessing(base)
++            ?: return restoreSkipped(action, target, "the call could not be evaluated")
+         privilegeRestoreAttempts++
+ 
+         val code = (ei.seeResult(action.getLocalId()) as? RestCallResult)?.getStatusCode()
+@@ -1043,10 +1170,19 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         )
+         if (accepted) {
+             privilegeReducedInPhase.remove(target)
++            privilegeReducedByProof.remove(target)
++            refusedTransitionVictims.clear()
+         }
+         return accepted
+     }
+ 
++    private fun restoreSkipped(action: RestCallAction, target: String, reason: String): Boolean {
++        LoggingUtil.getInfoLogger().info(
++            "Stateful-authorization restore skipped for '$target' on ${action.getName()}: $reason"
++        )
++        return false
++    }
++
+     private fun allGenes(action: RestCallAction): List<Gene> =
+         action.seeTopGenes().flatMap { it.flatView() }
+ 

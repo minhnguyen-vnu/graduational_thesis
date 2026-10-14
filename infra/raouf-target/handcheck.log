@@ -1,0 +1,24 @@
+== obtain clean admin tokens (login -> change password) ==
+  superadmin: role=SUPER_ADMIN sub=1 mustChange=None
+  admin(victim): role=ADMIN sub=2 mustChange=None
+  customer: role=CUSTOMER sub=3 mustChange=None
+== user ids ==
+  3 customer@store.local None
+  2 admin@store.local None
+  1 superadmin@store.local None
+  ADMINID=2 CUSTID=3
+== NEG CONTROL: customer PATCH /users/{cust} -> expect 403 ==
+  neg=403 {"success":false,"statusCode":403,"message":"Forbidden resource","code":"Forbidden","times
+== A/B victim_old (ADMIN) PATCH /users/{cust} (SOURCE before) -> expect 2xx ==
+  victim token: role=ADMIN sub=2 mustChange=None
+  before=204 
+== D TRANSITION superadmin demotes admin -> CUSTOMER -> expect 2xx ==
+  transition=204 
+== E BUG victim_old SAME token PATCH /users/{cust} (after demotion) -> expect 2xx ==
+  after=204 
+== F D1 admin re-login (new pw) new token -> PATCH -> expect 403 ==
+  new token: role=CUSTOMER sub=2 mustChange=None
+  newtok=403 {"success":false,"statusCode":403,"message":"Forbidden resource","code":"Forbidden","times
+== VERDICT ==
+  PASS: MR-A1 confirmed on running raouf 08b0760
+  old-token(role ADMIN) after demotion=204 vs new-token(role CUSTOMER)=403 ; neg=403

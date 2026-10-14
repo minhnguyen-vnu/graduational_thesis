@@ -1,0 +1,780 @@
+## S214-0087  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Codespaces/plans/{resourceName}/writeDelegates
+schema: IssueDelegatePlanAccessTokenBody
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- body:environmentIds array<string>
+- body:expiration string
+- body:identity object
+- body:identity.displayName string
+- body:identity.id string
+- body:identity.username string
+- body:portNumbers array<integer>
+- body:scope string
+
+## S214-0089  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.VSOnline/plans/resourceReadBegin
+schema: PlanResourceList
+- path:subscriptionId string
+- path:resourceGroup string
+- body:value array<object>
+- body:value[].id string
+- body:value[].identity object
+- body:value[].identity.principalId string
+- body:value[].identity.tenantId string
+- body:value[].identity.type string
+- body:value[].location string
+- body:value[].name string
+- body:value[].properties object
+- body:value[].properties.defaultCodespaceSku string
+- body:value[].properties.defaultEnvironmentSku string
+- body:value[].properties.encryption object
+- body:value[].properties.userId string
+- body:value[].properties.vnetProperties object
+- body:value[].provisioningState string
+- body:value[].tags object
+- body:value[].type string
+
+## S214-0094  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.VSOnline/plans/{resourceName}/readAllEnvironments
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- query:expiration string
+
+## S214-0096  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.VSOnline/plans/{resourceName}/resourceCreationCompleted
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+
+## S214-0098  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.VSOnline/plans/{resourceName}/resourceDeletionValidate
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+
+## S214-0099  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.VSOnline/plans/{resourceName}/resourcePatchCompleted
+schema: PlanResourceUpdateBody
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+- body:identity object
+- body:identity.principalId string
+- body:identity.tenantId string
+- body:identity.type string
+- body:properties object
+- body:properties.defaultCodespaceSku string
+- body:properties.defaultEnvironmentSku string
+- body:properties.encryption object
+- body:properties.encryption.keySource string
+- body:properties.encryption.keyVaultProperties object
+- body:properties.userId string
+- body:properties.vnetProperties object
+- body:properties.vnetProperties.subnetId string
+
+## S214-0106  POST /api/v1/subscriptions/{subscriptionId}/{resourceGroup}/providers/Microsoft.VSOnline/plans/{resourceName}/deleteDelegates
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceName string
+
+## S214-0111  PATCH /api/v1/tenant/{tenantId}/PoolGroup/{poolGroupName}
+schema: UpdatePoolGroupBody
+- path:tenantId string
+- path:poolGroupName string
+- body:displayName string
+- body:tags object
+
+## S214-0112  PUT /api/v1/tenant/{tenantId}/PoolGroup/{poolGroupName}
+schema: CreatePoolGroupBody
+- path:tenantId string
+- path:poolGroupName string
+- body:displayName string
+- body:region integer enum[101 (EastAsia)|102 (SouthEastAsia)|201 (AustraliaCentral)|202 (AustraliaCentral2)|203 (AustraliaEast)|205 (AustraliaSouthEast)|301 (BrazilSouth)|401 (CanadaCentral)|402 (CanadaEast)|501 (NorthEurope)|502 (WestEurope)|601 (FranceCentral)]
+- body:tags object
+
+## S214-0120  POST /api/v2/prebuilds/templates/updatemaxversions
+schema: UpdatePrebuildTemplateVersionsBody
+- body:branchName string
+- body:devContainerPath string
+- body:maxPrebuildTemplateVersions integer
+- body:repoId integer
+
+## S300-0001  POST /vaults/{vaultUuid}/items
+desc: Create a new Item
+schema: FullItem
+- path:vaultUuid string
+- body:category string enum[LOGIN|PASSWORD|API_CREDENTIAL|SERVER|DATABASE|CREDIT_CARD|MEMBERSHIP|PASSPORT|SOFTWARE_LICENSE|OUTDOOR_LICENSE|SECURE_NOTE|WIRELESS_ROUTER]
+- body:createdAt string
+- body:favorite boolean
+- body:id string
+- body:lastEditedBy string
+- body:state string enum[ARCHIVED|DELETED]
+- body:tags array<string>
+- body:title string
+- body:updatedAt string
+- body:urls array<object>
+- body:urls[].href string
+- body:urls[].label string
+- body:urls[].primary boolean
+- body:vault object
+- body:vault.id string
+- body:version integer
+- body:fields array<object>
+- body:fields[].entropy number
+- body:fields[].generate boolean
+- body:fields[].id string
+- body:fields[].label string
+- body:fields[].purpose string enum[|USERNAME|PASSWORD|NOTES]
+- body:fields[].recipe object
+- body:fields[].recipe.characterSets array<string> enum[LETTERS|DIGITS|SYMBOLS]
+- body:fields[].recipe.excludeCharacters string
+- body:fields[].recipe.length integer
+- body:fields[].section object
+- body:fields[].section.id string
+- body:fields[].type string enum[STRING|EMAIL|CONCEALED|URL|TOTP|DATE|MONTH_YEAR|MENU]
+- body:fields[].value string
+- body:files array<object>
+- body:files[].content string
+- body:files[].content_path string
+- body:files[].id string
+- body:files[].name string
+- body:files[].section object
+- body:files[].section.id string
+- body:files[].size integer
+- body:sections array<object>
+- body:sections[].id string
+- body:sections[].label string
+
+## S300-0002  DELETE /vaults/{vaultUuid}/items/{itemUuid}
+desc: Delete an Item
+- path:vaultUuid string
+- path:itemUuid string
+
+## S300-0003  PATCH /vaults/{vaultUuid}/items/{itemUuid}
+desc: Update a subset of Item attributes | Applies a modified [RFC6902 JSON Patch](https://tools.ietf.org/html/rfc6902) document to an Item or ItemField. This endpoint only supports `add`, `remove` and `replace` operations. When modifying a specific ItemField, the ItemField's ID in the `path` attribute of the operation object: `/fields/{fieldId}`
+schema: Patch
+- path:vaultUuid string
+- path:itemUuid string
+- body:op string enum[add|remove|replace]
+- body:path string
+- body:value object
+
+## S300-0004  PUT /vaults/{vaultUuid}/items/{itemUuid}
+desc: Update an Item
+schema: FullItem
+- path:vaultUuid string
+- path:itemUuid string
+- body:category string enum[LOGIN|PASSWORD|API_CREDENTIAL|SERVER|DATABASE|CREDIT_CARD|MEMBERSHIP|PASSPORT|SOFTWARE_LICENSE|OUTDOOR_LICENSE|SECURE_NOTE|WIRELESS_ROUTER]
+- body:createdAt string
+- body:favorite boolean
+- body:id string
+- body:lastEditedBy string
+- body:state string enum[ARCHIVED|DELETED]
+- body:tags array<string>
+- body:title string
+- body:updatedAt string
+- body:urls array<object>
+- body:urls[].href string
+- body:urls[].label string
+- body:urls[].primary boolean
+- body:vault object
+- body:vault.id string
+- body:version integer
+- body:fields array<object>
+- body:fields[].entropy number
+- body:fields[].generate boolean
+- body:fields[].id string
+- body:fields[].label string
+- body:fields[].purpose string enum[|USERNAME|PASSWORD|NOTES]
+- body:fields[].recipe object
+- body:fields[].recipe.characterSets array<string> enum[LETTERS|DIGITS|SYMBOLS]
+- body:fields[].recipe.excludeCharacters string
+- body:fields[].recipe.length integer
+- body:fields[].section object
+- body:fields[].section.id string
+- body:fields[].type string enum[STRING|EMAIL|CONCEALED|URL|TOTP|DATE|MONTH_YEAR|MENU]
+- body:fields[].value string
+- body:files array<object>
+- body:files[].content string
+- body:files[].content_path string
+- body:files[].id string
+- body:files[].name string
+- body:files[].section object
+- body:files[].section.id string
+- body:files[].size integer
+- body:sections array<object>
+- body:sections[].id string
+- body:sections[].label string
+
+## S301-0001  POST /v1/projects/{project}/locations/{location}/apis
+desc: CreateApi creates a specified API.
+schema: Api
+- path:project string
+- path:location string
+- query:apiId string
+- body:annotations object
+- body:availability string
+- body:createTime string
+- body:description string
+- body:displayName string
+- body:labels object
+- body:name string
+- body:recommendedDeployment string
+- body:recommendedVersion string
+- body:updateTime string
+
+## S301-0002  DELETE /v1/projects/{project}/locations/{location}/apis/{api}
+desc: DeleteApi removes a specified API and all of the resources that it owns.
+- path:project string
+- path:location string
+- path:api string
+- query:force boolean
+
+## S301-0003  PATCH /v1/projects/{project}/locations/{location}/apis/{api}
+desc: UpdateApi can be used to modify a specified API.
+schema: Api
+- path:project string
+- path:location string
+- path:api string
+- query:updateMask string
+- query:allowMissing boolean
+- body:annotations object
+- body:availability string
+- body:createTime string
+- body:description string
+- body:displayName string
+- body:labels object
+- body:name string
+- body:recommendedDeployment string
+- body:recommendedVersion string
+- body:updateTime string
+
+## S301-0004  POST /v1/projects/{project}/locations/{location}/apis/{api}/deployments
+desc: CreateApiDeployment creates a specified deployment.
+schema: ApiDeployment
+- path:project string
+- path:location string
+- path:api string
+- query:apiDeploymentId string
+- body:accessGuidance string
+- body:annotations object
+- body:apiSpecRevision string
+- body:createTime string
+- body:description string
+- body:displayName string
+- body:endpointUri string
+- body:externalChannelUri string
+- body:intendedAudience string
+- body:labels object
+- body:name string
+- body:revisionCreateTime string
+- body:revisionId string
+- body:revisionUpdateTime string
+
+## S301-0005  DELETE /v1/projects/{project}/locations/{location}/apis/{api}/deployments/{deployment}
+desc: DeleteApiDeployment removes a specified deployment, all revisions, and all child resources (e.g. artifacts).
+- path:project string
+- path:location string
+- path:api string
+- path:deployment string
+- query:force boolean
+
+## S301-0006  PATCH /v1/projects/{project}/locations/{location}/apis/{api}/deployments/{deployment}
+desc: UpdateApiDeployment can be used to modify a specified deployment.
+schema: ApiDeployment
+- path:project string
+- path:location string
+- path:api string
+- path:deployment string
+- query:updateMask string
+- query:allowMissing boolean
+- body:accessGuidance string
+- body:annotations object
+- body:apiSpecRevision string
+- body:createTime string
+- body:description string
+- body:displayName string
+- body:endpointUri string
+- body:externalChannelUri string
+- body:intendedAudience string
+- body:labels object
+- body:name string
+- body:revisionCreateTime string
+- body:revisionId string
+- body:revisionUpdateTime string
+
+## S301-0007  DELETE /v1/projects/{project}/locations/{location}/apis/{api}/deployments/{deployment}:deleteRevision
+desc: DeleteApiDeploymentRevision deletes a revision of a deployment.
+- path:project string
+- path:location string
+- path:api string
+- path:deployment string
+
+## S301-0008  POST /v1/projects/{project}/locations/{location}/apis/{api}/deployments/{deployment}:rollback
+desc: RollbackApiDeployment sets the current revision to a specified prior revision. Note that this creates a new revision with a new revision ID.
+schema: RollbackApiDeploymentRequest
+- path:project string
+- path:location string
+- path:api string
+- path:deployment string
+- body:name string
+- body:revisionId string
+
+## S301-0009  POST /v1/projects/{project}/locations/{location}/apis/{api}/deployments/{deployment}:tagRevision
+desc: TagApiDeploymentRevision adds a tag to a specified revision of a deployment.
+schema: TagApiDeploymentRevisionRequest
+- path:project string
+- path:location string
+- path:api string
+- path:deployment string
+- body:name string
+- body:tag string
+
+## S301-0010  POST /v1/projects/{project}/locations/{location}/apis/{api}/versions
+desc: CreateApiVersion creates a specified version.
+schema: ApiVersion
+- path:project string
+- path:location string
+- path:api string
+- query:apiVersionId string
+- body:annotations object
+- body:createTime string
+- body:description string
+- body:displayName string
+- body:labels object
+- body:name string
+- body:state string
+- body:updateTime string
+
+## S301-0011  DELETE /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}
+desc: DeleteApiVersion removes a specified version and all of the resources that it owns.
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- query:force boolean
+
+## S301-0012  PATCH /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}
+desc: UpdateApiVersion can be used to modify a specified version.
+schema: ApiVersion
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- query:updateMask string
+- query:allowMissing boolean
+- body:annotations object
+- body:createTime string
+- body:description string
+- body:displayName string
+- body:labels object
+- body:name string
+- body:state string
+- body:updateTime string
+
+## S301-0013  POST /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}/specs
+desc: CreateApiSpec creates a specified spec.
+schema: ApiSpec
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- query:apiSpecId string
+- body:annotations object
+- body:contents string
+- body:createTime string
+- body:description string
+- body:filename string
+- body:hash string
+- body:labels object
+- body:mimeType string
+- body:name string
+- body:revisionCreateTime string
+- body:revisionId string
+- body:revisionUpdateTime string
+- body:sizeBytes integer
+- body:sourceUri string
+
+## S301-0014  DELETE /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}/specs/{spec}
+desc: DeleteApiSpec removes a specified spec, all revisions, and all child resources (e.g. artifacts).
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- path:spec string
+- query:force boolean
+
+## S301-0015  PATCH /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}/specs/{spec}
+desc: UpdateApiSpec can be used to modify a specified spec.
+schema: ApiSpec
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- path:spec string
+- query:updateMask string
+- query:allowMissing boolean
+- body:annotations object
+- body:contents string
+- body:createTime string
+- body:description string
+- body:filename string
+- body:hash string
+- body:labels object
+- body:mimeType string
+- body:name string
+- body:revisionCreateTime string
+- body:revisionId string
+- body:revisionUpdateTime string
+- body:sizeBytes integer
+- body:sourceUri string
+
+## S301-0016  DELETE /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}/specs/{spec}:deleteRevision
+desc: DeleteApiSpecRevision deletes a revision of a spec.
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- path:spec string
+
+## S301-0017  POST /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}/specs/{spec}:rollback
+desc: RollbackApiSpec sets the current revision to a specified prior revision. Note that this creates a new revision with a new revision ID.
+schema: RollbackApiSpecRequest
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- path:spec string
+- body:name string
+- body:revisionId string
+
+## S301-0018  POST /v1/projects/{project}/locations/{location}/apis/{api}/versions/{version}/specs/{spec}:tagRevision
+desc: TagApiSpecRevision adds a tag to a specified revision of a spec.
+schema: TagApiSpecRevisionRequest
+- path:project string
+- path:location string
+- path:api string
+- path:version string
+- path:spec string
+- body:name string
+- body:tag string
+
+## S301-0019  POST /v1/projects/{project}/locations/{location}/artifacts
+desc: CreateArtifact creates a specified artifact.
+schema: Artifact
+- path:project string
+- path:location string
+- query:artifactId string
+- body:contents string
+- body:createTime string
+- body:hash string
+- body:mimeType string
+- body:name string
+- body:sizeBytes integer
+- body:updateTime string
+
+## S301-0020  DELETE /v1/projects/{project}/locations/{location}/artifacts/{artifact}
+desc: DeleteArtifact removes a specified artifact.
+- path:project string
+- path:location string
+- path:artifact string
+
+## S301-0021  PUT /v1/projects/{project}/locations/{location}/artifacts/{artifact}
+desc: ReplaceArtifact can be used to replace a specified artifact.
+schema: Artifact
+- path:project string
+- path:location string
+- path:artifact string
+- body:contents string
+- body:createTime string
+- body:hash string
+- body:mimeType string
+- body:name string
+- body:sizeBytes integer
+- body:updateTime string
+
+## S303-0001  POST /CalculateAddition
+desc: Math - Calculate Addition | Calculate the sum of two numbers
+schema: inputCalculateNumbers
+- body:decimals number
+- body:input number
+- body:value number
+
+## S303-0002  POST /CalculateDivision
+desc: Math - Calculate Division | Calculate the quotient of two numbers
+schema: inputCalculateNumbers
+- body:decimals number
+- body:input number
+- body:value number
+
+## S303-0003  POST /CalculateLogarithm
+desc: Math - Calculate Logarithm | Calculate the logarithm of a number
+schema: inputCalculateNumber
+- body:decimals number
+- body:input number
+
+## S303-0004  POST /CalculateMinMax
+desc: Math - Calculate minimum or maximum | Calculate the minimum or maximum value in a sequence of numbers
+schema: inputCalculateMinMax
+- body:input array<number>
+- body:type string enum[Minimum|Maximum]
+
+## S303-0005  POST /CalculateNthRoot
+desc: Math - Calculate Nth Root | Calculate the n-th root of a number
+schema: inputCalculateNumbers
+- body:decimals number
+- body:input number
+- body:value number
+
+## S303-0006  POST /CalculateSubtraction
+desc: Math - Calculate Subtraction | Calculate the difference between two numbers
+schema: inputCalculateNumbers
+- body:decimals number
+- body:input number
+- body:value number
+
+## S303-0007  POST /CalculateTangent
+desc: Math - Calculate Tangent | Calculate the tangent value of an angle
+schema: inputCalculateNumber
+- body:decimals number
+- body:input number
+
+## S303-0008  POST /CollectionEndsWithString
+desc: Collections - Ends with string | Determine if any items in a collection end with a specific string
+schema: inputCollectionSearch
+- body:ignorecase string enum[True|False]
+- body:input array<string>
+- body:match string
+- body:trim string enum[True|False]
+
+## S303-0009  POST /CollectionToJSON
+desc: Collections - Collection to JSON | Convert a collection to a named JSON object
+schema: inputCollectionConversion
+- body:input array<string>
+- body:name string
+
+## S303-0010  POST /CompareStrings
+desc: Text - Compare strings | Perform a comparison of two strings
+schema: inputStringComparison
+- body:compare string
+- body:input string
+- body:lower string enum[True|False]
+- body:trim string enum[True|False]
+
+## S303-0011  POST /ConvertAngle
+desc: Math - Convert angle | Convert value from one angle measurement to another
+schema: inputConvertAngle
+- body:input number
+- body:source string enum[Arcminute|Arcsecond|Centiradian|Deciradian|Degree|Gradian|Microdegree|Microradian|Millidegree|Milliradian|Nanodegree|Nanoradian]
+- body:target string enum[Arcminute|Arcsecond|Centiradian|Deciradian|Degree|Gradian|Microdegree|Microradian|Millidegree|Milliradian|Nanodegree|Nanoradian]
+
+## S303-0012  POST /ConvertDistance
+desc: Math - Convert distance | Convert value from one distance measurement to another
+schema: inputConvertDistance
+- body:input number
+- body:source string enum[Centimeter|Decimeter|Fathom|Foot|Hectometer|Inch|Kilometer|LightYear|Meter|Micrometer|Mile|Millimeter]
+- body:target string enum[Centimeter|Decimeter|Fathom|Foot|Hectometer|Inch|Kilometer|LightYear|Meter|Micrometer|Mile|Millimeter]
+
+## S303-0013  POST /ConvertDuration
+desc: Math - Convert duration | Convert value from one duration measurement to another
+schema: inputConvertDuration
+- body:input number
+- body:source string enum[Day|Hour|Microsecond|Millisecond|Minute|Month|Nanosecond|Second|Week|Year]
+- body:target string enum[Day|Hour|Microsecond|Millisecond|Minute|Month|Nanosecond|Second|Week|Year]
+
+## S303-0014  POST /ConvertImage
+desc: Files - Convert Image | Convert an image from one format to another
+- body:file string
+- body:format string enum[PNG|JPG|GIF|BMP|TIF]
+
+## S303-0015  POST /ConvertPower
+desc: Math - Convert power | Convert value from one power measurement to another
+schema: inputConvertPower
+- body:input number
+- body:source string enum[BritishThermalUnitPerHour|Decawatt|Deciwatt|ElectricalHorsepower|Femtowatt|Gigawatt|HydraulicHorsepower|Kilowatt|MechanicalHorsepower|Megawatt|Microwatt|Milliwatt]
+- body:target string enum[BritishThermalUnitPerHour|Decawatt|Deciwatt|ElectricalHorsepower|Femtowatt|Gigawatt|HydraulicHorsepower|Kilowatt|MechanicalHorsepower|Megawatt|Microwatt|Milliwatt]
+
+## S303-0016  POST /CountCollection
+desc: Collections - Count collection | Count a collection of items
+schema: inputCollectionCount
+- body:input array<string>
+
+## S303-0017  POST /CropImage
+desc: Files - Crop Image | Crop an image
+- body:Height number
+- body:Width number
+- body:file string
+- body:position string enum[TopLeft|TopCenter|TopRight|MiddleLeft|MiddleCenter|MiddleRight|BottomLeft|BottomCenter|BottomRight]
+
+## S303-0018  POST /DateTimeDifference
+desc: DateTime - DateTime difference | Calculate the difference between two dates
+schema: inputDateTimeDifference
+- body:dateTime1 string
+- body:dateTime2 string
+
+## S303-0019  POST /FilterCollection
+desc: Collections - Filter collection | Filter a collection of strings by keyword
+schema: inputCollectionFilter
+- body:input array<string>
+- body:keywords string
+- body:match string enum[Any|All|None]
+
+## S303-0020  POST /FlipImage
+desc: Files - Flip Image | Flip an image (horizontal or vertical)
+- body:file string
+- body:orientation string enum[Horizontal|Vertical]
+
+## S303-0021  POST /GenerateHash
+desc: Text - Generate hash | Generate a hash value from a string
+schema: inputGenerateHash
+- body:algorithm string enum[MD5|SHA1|SHA256|SHA384|SHA512]
+- body:input string
+
+## S303-0022  POST /JSONtoCSV
+desc: Data - JSON to CSV | Convert a JSON array to CSV string
+schema: inputJsonConversionCSV
+- body:header boolean
+- body:input string
+- body:omit string
+- body:order string
+
+## S303-0023  POST /JSONtoHTML
+desc: Data - JSON to HTML Table | Convert a JSON array to an HTML table
+schema: inputJsonConversionHTML
+- body:alternate string
+- body:attributes string
+- body:header boolean
+- body:input string
+- body:omit string
+- body:order string
+
+## S303-0024  POST /JoinStrings
+desc: Text - Join strings | Join a collection of strings
+schema: inputJoinStrings
+- body:input array<string>
+- body:lower string enum[True|False]
+- body:separator string
+- body:trim string enum[True|False]
+
+## S303-0025  POST /QueryJSON
+desc: Data - Query JSON | Query a JSON object using a JSONPath expression
+schema: inputDataQuery
+- body:input string
+- body:query string
+
+## S303-0026  POST /RedactString
+desc: Text - Redact string | Redact a strng containing sensitive content
+schema: inputRedactString
+- body:regex string
+- body:source string
+- body:value string
+- body:values array<string>
+
+## S303-0027  POST /ReplaceValuesInCollection
+desc: Collections - Replace values in collection | Replace whole or partial strings in a collection
+schema: inputCollectionReplace
+- body:ignoreCase string enum[True|False]
+- body:input array<string>
+- body:match string
+- body:replacement string
+
+## S303-0028  POST /ResizeImage
+desc: Files - Resize Image | Resize an image
+- body:algorithm string enum[Bicubic (default)|Bilinear|Cubic (Box)|Cubic (Catmull-Rom)|Cubic (Hermite)|Cubic (Spline)|Nearest Neighbor|Sinc (Lanczos2)|Sinc (Lanczos3)|Sinc (Lanczos5)|Sinc (Lanczos8)|Robidoux]
+- body:file string
+- body:height number
+- body:units string enum[Pixels|Percent]
+- body:width number
+
+## S303-0029  POST /RotateImage
+desc: Files - Rotate Image | Rotate an image by specified number of degrees
+- body:degrees string
+- body:file string
+
+## S303-0030  POST /ShortenLink
+desc: Text - Shorten hyperlink | Generate a simple, short URL from a complex URL
+- body:source string
+
+## S303-0031  POST /SortCollection
+desc: Collections - Sort collection | Sort a collection of strings
+schema: inputCollectionSort
+- body:input array<string>
+- body:order string enum[Ascending|Descending]
+
+## S303-0032  POST /StockPrices
+desc: Finance - Stock prices | Get current and historical stock price information
+schema: inputStockPrices
+- body:date string
+- body:exchange string enum[XNYS (New York Stock Exchange)|XNAS (NASDAQ Stock Exchange)|XBRU (Euronext Brussels)|XTSE (Toronto Stock Exchange)|XCNQ (Candadian Securities Exchange)|XSHG (Shanghai Stock Exchange)|XCSE (Copenhagen Stock Exchange)|XPAR (Euronext Paris)|XFRA (Deutsche Borse)|XHKG (Hong Kong Stock Exchange)|XNSE (National Stock Exchange India)|XTAE (Tel Aviv Stock Exchange)]
+- body:symbols string
+
+## S303-0033  POST /StringToFile
+desc: Text - String to File | Convert text string to file
+schema: inputStringToFile
+- body:extension string enum[TXT|CSV|HTML|XML|CSS|JSON|JS]
+- body:filename string
+- body:input string
+
+## S303-0034  POST /TextToSpeech
+desc: Text - Text to Speech | Convert text to an audio file using AI-driven speech synthesis.
+schema: inputTextToSpeech
+- body:text string
+- body:type string enum[PlainText|SSML]
+- body:voice string enum[ar-EG, Hoda (Female)|ar-SA, Naayf (Male)|bg-BG, Ivan (Male)|ca-ES, Herena (Female)|cs-CZ, Jakub (Male)|da-DK, Helle (Female)|de-AT, Michael (Male)|de-CH, Karsten (Male)|de-DE, Hedda (Female)|de-DE, Stefan (Male)|el-GR, Stefanos (Male)|en-AU, Catherine (Female)]
+
+## S303-0035  POST /TranslateString
+desc: Text - Translate string | Translate a string into a different language
+schema: inputTranslateString
+- body:input string
+- body:language string enum[Arabic|Chinese (Simplified)|Czech|Danish|Dutch|English|Finnish|French|German|Greek|Hindi|Hungarian]
+
+## S303-0036  POST /WorldTime
+desc: DateTime - Get world time | Convert date and time from one time zone to another
+schema: inputDateTimeConversion
+- body:format string
+- body:input string
+- body:source string enum[GMT Standard Time - (GMT) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London|Greenwich Standard Time - (GMT) Monrovia, Reykjavik|W. Europe Standard Time - (GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna|Central Europe Standard Time - (GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague|Central European Standard Time - (GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb|W. Central Africa Standard Time - (GMT+01:00) West Central Africa|GTB Standard Time - (GMT+02:00) Athens, Bucharest, Istanbul|Middle East Standard Time - (GMT+02:00) Beirut|Egypt Standard Time - (GMT+02:00) Cairo|South Africa Standard Time - (GMT+02:00) Harare, Pretoria|FLE Standard Time - (GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius|Israel Standard Time - (GMT+02:00) Jerusalem]
+- body:target string enum[GMT Standard Time - (GMT) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London|Greenwich Standard Time - (GMT) Monrovia, Reykjavik|W. Europe Standard Time - (GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna|Central Europe Standard Time - (GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague|Central European Standard Time - (GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb|W. Central Africa Standard Time - (GMT+01:00) West Central Africa|GTB Standard Time - (GMT+02:00) Athens, Bucharest, Istanbul|Middle East Standard Time - (GMT+02:00) Beirut|Egypt Standard Time - (GMT+02:00) Cairo|South Africa Standard Time - (GMT+02:00) Harare, Pretoria|FLE Standard Time - (GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius|Israel Standard Time - (GMT+02:00) Jerusalem]
+
+## S304-0001  DELETE /custom_fields/{custom_field_gid}
+desc: Delete a custom field | A specific, existing custom field can be deleted by making a DELETE request on the URL for that custom field. Locked custom fields can only be deleted by the user who locked the field. Returns an empty data record.
+- path:custom_field_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+
+## S304-0002  PUT /enum_options/{enum_option_gid}
+desc: Update an enum option | Updates an existing enum option. Enum custom fields require at least one enabled enum option. Locked custom fields can only be updated by the user who locked the field. Returns the full record of the updated enum option.
+- path:enum_option_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.color string
+- body:data.enabled boolean
+- body:data.name string
+- body:data.insert_after string
+- body:data.insert_before string
+
+## S304-0003  PUT /goal_relationships/{goal_relationship_gid}
+desc: Update a goal relationship | An existing goal relationship can be updated by making a PUT request on the URL for that goal relationship. Only the fields provided in the `data` block will be updated; any unspecified fields will remain unchanged. Returns the complete updated goal relationship record.
+- path:goal_relationship_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:data object
+- body:data.gid string
+- body:data.resource_type string
+- body:data.contribution_weight number
+- body:data.resource_subtype string enum[subgoal|supporting_work]
+- body:data.supporting_resource object
+- body:data.supporting_resource.gid string
+- body:data.supporting_resource.resource_type string
+- body:data.supporting_resource.name string
+- body:data.supported_goal object
+- body:data.supported_goal.gid string
+- body:data.supported_goal.resource_type string
+- body:data.supported_goal.name string
+- body:data.supported_goal.owner object
+
+## S304-0004  DELETE /goals/{goal_gid}
+desc: Delete a goal | A specific, existing goal can be deleted by making a DELETE request on the URL for that goal. Returns an empty data record.
+- path:goal_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>

@@ -1,0 +1,489 @@
+## S598-N0164  PUT /v2/quotes/{quoteId}/status
+desc: Changes quote status if possible (400 Bad Request is returned otherwise). | Changes quote status if possible (400 Bad Request is returned otherwise). The status has to be specified using one of the following keys: <ul><li>PENDING – available when the job has one of the following statuses: REQUESTED, REJECTED</li><li>SENT – available when the job has one of the following statuses: PENDING</li><li>A
+schema: ProjectStatusDTO
+- path:quoteId string
+- body:status string
+
+## S598-N0166  PUT /v2/quotes/{quoteId}/vendorInstructions
+desc: Updates instructions for all vendors performing the jobs in a quote. | Updates instructions for all vendors performing the jobs in a quote. See also "PUT /jobs/{jobId}/instructions" for updating instructions for a specific job in a project or quote.
+schema: StringDTO
+- path:quoteId string
+- body:value string
+
+## S213-N0003  POST /admin.conversations.archive
+desc: Archive a public or private channel.
+- body:channel_id string
+
+## S213-N0005  POST /admin.conversations.create
+desc: Create a public or private channel-based conversation.
+- body:description string
+- body:is_private boolean
+- body:name string
+- body:org_wide boolean
+- body:team_id string
+
+## S213-N0006  POST /admin.conversations.delete
+desc: Delete a public or private channel.
+- body:channel_id string
+
+## S213-N0007  POST /admin.conversations.disconnectShared
+desc: Disconnect a connected channel from one or more workspaces.
+- body:channel_id string
+- body:leaving_team_ids string
+
+## S213-N0008  POST /admin.conversations.invite
+desc: Invite a user to a public or private channel.
+- body:channel_id string
+- body:user_ids string
+
+## S213-N0009  POST /admin.conversations.rename
+desc: Rename a public or private channel.
+- body:channel_id string
+- body:name string
+
+## S213-N0010  POST /admin.conversations.restrictAccess.addGroup
+desc: Add an allowlist of IDP groups for accessing a channel
+- body:channel_id string
+- body:group_id string
+- body:team_id string
+- body:token string
+
+## S213-N0011  POST /admin.conversations.restrictAccess.removeGroup
+desc: Remove a linked IDP group linked from a private channel
+- body:channel_id string
+- body:group_id string
+- body:team_id string
+- body:token string
+
+## S213-N0012  POST /admin.conversations.setConversationPrefs
+desc: Set the posting permissions for a public or private channel.
+- body:channel_id string
+- body:prefs string
+
+## S213-N0014  POST /admin.conversations.unarchive
+desc: Unarchive a public or private channel.
+- body:channel_id string
+
+## S213-N0015  POST /admin.emoji.add
+desc: Add an emoji.
+- body:name string
+- body:token string
+- body:url string
+
+## S213-N0016  POST /admin.emoji.addAlias
+desc: Add an emoji alias.
+- body:alias_for string
+- body:name string
+- body:token string
+
+## S213-N0018  POST /admin.emoji.rename
+desc: Rename an emoji.
+- body:name string
+- body:new_name string
+- body:token string
+
+## S213-N0020  POST /admin.inviteRequests.deny
+desc: Deny a workspace invite request.
+- body:invite_request_id string
+- body:team_id string
+
+## S213-N0022  POST /admin.teams.settings.setDefaultChannels
+desc: Set the default channels of a workspace.
+- body:channel_ids string
+- body:team_id string
+- body:token string
+
+## S213-N0023  POST /admin.teams.settings.setDescription
+desc: Set the description of a given workspace.
+- body:description string
+- body:team_id string
+
+## S213-N0024  POST /admin.teams.settings.setDiscoverability
+desc: An API method that allows admins to set the discoverability of a given workspace
+- body:discoverability string
+- body:team_id string
+
+## S213-N0027  POST /admin.usergroups.addChannels
+desc: Add one or more default channels to an IDP group.
+- body:channel_ids string
+- body:team_id string
+- body:usergroup_id string
+
+## S213-N0028  POST /admin.usergroups.addTeams
+desc: Associate one or more default workspaces with an organization-wide IDP group.
+- body:auto_provision boolean
+- body:team_ids string
+- body:usergroup_id string
+
+## S213-N0029  POST /admin.usergroups.removeChannels
+desc: Remove one or more default channels from an org-level IDP group (user group).
+- body:channel_ids string
+- body:usergroup_id string
+
+## S213-N0030  POST /admin.users.assign
+desc: Add an Enterprise user to a workspace.
+- body:channel_ids string
+- body:is_restricted boolean
+- body:is_ultra_restricted boolean
+- body:team_id string
+- body:user_id string
+
+## S213-N0032  POST /admin.users.remove
+desc: Remove a user from a workspace.
+- body:team_id string
+- body:user_id string
+
+## S213-N0034  POST /admin.users.session.reset
+desc: Wipes all valid sessions on all devices for a given user
+- body:mobile_only boolean
+- body:user_id string
+- body:web_only boolean
+
+## S213-N0036  POST /admin.users.setExpiration
+desc: Set an expiration for a guest user
+- body:expiration_ts integer
+- body:team_id string
+- body:user_id string
+
+## S213-N0037  POST /admin.users.setOwner
+desc: Set an existing guest, regular user, or admin user to be a workspace owner.
+- body:team_id string
+- body:user_id string
+
+## S213-N0038  POST /admin.users.setRegular
+desc: Set an existing guest user, admin user, or owner to be a regular user.
+- body:team_id string
+- body:user_id string
+
+## S213-N0040  POST /calls.end
+desc: Ends a Call.
+- body:duration integer
+- body:id string
+
+## S213-N0041  POST /calls.participants.add
+desc: Registers new participants added to a Call.
+- body:id string
+- body:users string
+
+## S213-N0042  POST /calls.participants.remove
+desc: Registers participants removed from a Call.
+- body:id string
+- body:users string
+
+## S213-N0043  POST /calls.update
+desc: Updates information about a Call.
+- body:desktop_app_join_url string
+- body:id string
+- body:join_url string
+- body:title string
+
+## S213-N0045  POST /chat.deleteScheduledMessage
+desc: Deletes a pending scheduled message from the queue.
+- body:as_user boolean
+- body:channel string
+- body:scheduled_message_id string
+
+## S213-N0046  POST /chat.meMessage
+desc: Share a me message into a channel.
+- body:channel string
+- body:text string
+
+## S213-N0047  POST /chat.postEphemeral
+desc: Sends an ephemeral message to a user in a channel.
+- body:as_user boolean
+- body:attachments string
+- body:blocks string
+- body:channel string
+- body:icon_emoji string
+- body:icon_url string
+- body:link_names boolean
+- body:parse string
+- body:text string
+- body:thread_ts string
+- body:user string
+- body:username string
+
+## S213-N0048  POST /chat.postMessage
+desc: Sends a message to a channel.
+- body:as_user string
+- body:attachments string
+- body:blocks string
+- body:channel string
+- body:icon_emoji string
+- body:icon_url string
+- body:link_names boolean
+- body:mrkdwn boolean
+- body:parse string
+- body:reply_broadcast boolean
+- body:text string
+- body:thread_ts string
+- body:unfurl_links boolean
+- body:unfurl_media boolean
+- body:username string
+
+## S213-N0050  POST /chat.unfurl
+desc: Provide custom unfurl behavior for user-posted URLs
+- body:channel string
+- body:ts string
+- body:unfurls string
+- body:user_auth_message string
+- body:user_auth_required boolean
+- body:user_auth_url string
+
+## S213-N0052  POST /conversations.archive
+desc: Archives a conversation.
+- body:channel string
+
+## S213-N0053  POST /conversations.close
+desc: Closes a direct message or multi-person direct message.
+- body:channel string
+
+## S213-N0054  POST /conversations.create
+desc: Initiates a public or private channel-based conversation
+- body:is_private boolean
+- body:name string
+
+## S213-N0056  POST /conversations.join
+desc: Joins an existing conversation.
+- body:channel string
+
+## S213-N0058  POST /conversations.leave
+desc: Leaves a conversation.
+- body:channel string
+
+## S213-N0060  POST /conversations.open
+desc: Opens or resumes a direct message or multi-person direct message.
+- body:channel string
+- body:return_im boolean
+- body:users string
+
+## S213-N0062  POST /conversations.setPurpose
+desc: Sets the purpose for a conversation.
+- body:channel string
+- body:purpose string
+
+## S213-N0063  POST /conversations.setTopic
+desc: Sets the topic for a conversation.
+- body:channel string
+- body:topic string
+
+## S213-N0066  POST /dnd.endSnooze
+desc: Ends the current user's snooze mode immediately.
+
+## S213-N0067  POST /dnd.setSnooze
+desc: Turns on Do Not Disturb mode for the current user, or changes its duration.
+- body:num_minutes string
+- body:token string
+
+## S213-N0069  POST /files.delete
+desc: Deletes a file.
+- body:file string
+
+## S213-N0070  POST /files.remote.add
+desc: Adds a file from a remote service
+- body:external_id string
+- body:external_url string
+- body:filetype string
+- body:indexable_file_contents string
+- body:preview_image string
+- body:title string
+- body:token string
+
+## S213-N0071  POST /files.remote.remove
+desc: Remove a remote file.
+- body:external_id string
+- body:file string
+- body:token string
+
+## S213-N0073  POST /files.revokePublicURL
+desc: Revokes public/external sharing access for a file
+- body:file string
+
+## S213-N0074  POST /files.sharedPublicURL
+desc: Enables a file for public/external sharing.
+- body:file string
+
+## S213-N0078  POST /reactions.add
+desc: Adds a reaction to an item.
+- body:channel string
+- body:name string
+- body:timestamp string
+
+## S213-N0084  POST /stars.remove
+desc: Removes a star from an item.
+- body:channel string
+- body:file string
+- body:file_comment string
+- body:timestamp string
+
+## S213-N0087  POST /usergroups.enable
+desc: Enable a User Group
+- body:include_count boolean
+- body:usergroup string
+
+## S213-N0088  POST /usergroups.update
+desc: Update an existing User Group
+- body:channels string
+- body:description string
+- body:handle string
+- body:include_count boolean
+- body:name string
+- body:usergroup string
+
+## S213-N0089  POST /usergroups.users.update
+desc: Update the list of users for a User Group
+- body:include_count boolean
+- body:usergroup string
+- body:users string
+
+## S213-N0090  POST /users.deletePhoto
+desc: Delete the user profile photo
+- body:token string
+
+## S213-N0091  POST /users.profile.set
+desc: Set the profile information for a user.
+- body:name string
+- body:profile string
+- body:user string
+- body:value string
+
+## S213-N0093  POST /users.setPhoto
+desc: Set the user profile photo
+- body:crop_w string
+- body:crop_x string
+- body:crop_y string
+- body:image string
+- body:token string
+
+## S319-N0001  POST /action_notification_exports
+desc: Create Action Notification Export | Create Action Notification Export
+- body:end_at string
+- body:query_folder string
+- body:query_message string
+- body:query_path string
+- body:query_request_method string
+- body:query_request_url string
+- body:query_status string
+- body:query_success boolean
+- body:start_at string
+- body:user_id integer
+
+## S319-N0002  POST /action_webhook_failures/{id}/retry
+desc: retry Action Webhook Failure | retry Action Webhook Failure
+- path:id integer
+
+## S319-N0005  POST /api_keys
+desc: Create Api Key | Create Api Key
+- body:description string
+- body:expires_at string
+- body:name string
+- body:path string
+- body:permission_set string enum[none|full|desktop_app|sync_app|office_integration|mobile_app]
+- body:user_id integer
+
+## S319-N0006  DELETE /api_keys/{id}
+desc: Delete Api Key | Delete Api Key
+- path:id integer
+
+## S319-N0007  PATCH /api_keys/{id}
+desc: Update Api Key | Update Api Key
+- path:id integer
+- body:description string
+- body:expires_at string
+- body:name string
+- body:permission_set string enum[none|full|desktop_app|sync_app|office_integration|mobile_app]
+
+## S319-N0008  POST /as2_partners
+desc: Create As2 Partner | Create As2 Partner
+- body:as2_station_id integer
+- body:name string
+- body:public_certificate string
+- body:server_certificate string
+- body:uri string
+
+## S319-N0010  PATCH /as2_partners/{id}
+desc: Update As2 Partner | Update As2 Partner
+- path:id integer
+- body:name string
+- body:public_certificate string
+- body:server_certificate string
+- body:uri string
+
+## S319-N0012  DELETE /as2_stations/{id}
+desc: Delete As2 Station | Delete As2 Station
+- path:id integer
+
+## S319-N0013  PATCH /as2_stations/{id}
+desc: Update As2 Station | Update As2 Station
+- path:id integer
+- body:name string
+- body:private_key string
+- body:private_key_password string
+- body:public_certificate string
+
+## S319-N0014  POST /automations
+desc: Create Automation | Create Automation
+- body:automation string enum[create_folder|request_file|request_move|copy_newest_file|delete_file|copy_file|move_file|as2_send|run_sync]
+- body:description string
+- body:destination string
+- body:destination_replace_from string
+- body:destination_replace_to string
+- body:destinations array<string>
+- body:disabled boolean
+- body:group_ids string
+- body:interval string
+- body:name string
+- body:path string
+- body:schedule object
+- body:source string
+- body:sync_ids string
+- body:trigger string enum[realtime|daily|custom_schedule|webhook|email|action]
+- body:trigger_actions array<string>
+- body:user_ids string
+- body:value object
+
+## S319-N0015  DELETE /automations/{id}
+desc: Delete Automation | Delete Automation
+- path:id integer
+
+## S319-N0016  PATCH /automations/{id}
+desc: Update Automation | Update Automation
+- path:id integer
+- body:automation string enum[create_folder|request_file|request_move|copy_newest_file|delete_file|copy_file|move_file|as2_send|run_sync]
+- body:description string
+- body:destination string
+- body:destination_replace_from string
+- body:destination_replace_to string
+- body:destinations array<string>
+- body:disabled boolean
+- body:group_ids string
+- body:interval string
+- body:name string
+- body:path string
+- body:schedule object
+- body:source string
+- body:sync_ids string
+- body:trigger string enum[realtime|daily|custom_schedule|webhook|email|action]
+- body:trigger_actions array<string>
+- body:user_ids string
+- body:value object
+
+## S319-N0018  POST /behaviors/webhook/test
+desc: Test webhook. | Test webhook.
+- body:action string
+- body:body object
+- body:encoding string
+- body:headers object
+- body:method string
+- body:url string
+
+## S319-N0019  DELETE /behaviors/{id}
+desc: Delete Behavior | Delete Behavior
+- path:id integer
+
+## S319-N0021  POST /bundle_notifications
+desc: Create Bundle Notification | Create Bundle Notification
+- body:bundle_id integer
+- body:notify_on_registration boolean
+- body:notify_on_upload boolean
+- body:user_id integer

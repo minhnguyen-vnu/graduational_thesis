@@ -1,0 +1,1647 @@
+## S330-N0090  PUT /api/v1/orgs/{org_id}/inventory
+desc: updateOrgInventoryAssignment | Update Org Inventory
+- path:org_id string
+- body:disable_auto_config boolean
+- body:macs array<string>
+- body:managed boolean
+- body:no_reassign boolean
+- body:op string enum[assign|unassign|delete|manage|unmanage]
+- body:serials array<string>
+- body:site_id string
+
+## S330-N0091  POST /api/v1/orgs/{org_id}/inventory/reevaluate_auto_assignment
+desc: reevaluateOrgAutoAssignment | Reevaluate Auto Assignment
+- path:org_id string
+- body:(body) object
+
+## S330-N0092  POST /api/v1/orgs/{org_id}/inventory/replace
+desc: replaceOrgDevices | It’s a common request we get from the customers. When a AP HW has problem and need a replacement, they would want to copy the existing attributes (Device Config) of this old AP to the new one. It can be done by providing the MAC of a device that’s currently in the inventory but not assigned. The Device replaced will become unassigned. **Note:** For Gateway devices only like-for
+- path:org_id string
+- body:discard array<string>
+- body:inventory_mac string
+- body:mac string
+- body:site_id string
+
+## S330-N0093  POST /api/v1/orgs/{org_id}/invites
+desc: inviteOrgAdmin | If the request is successful, an email will also be sent to the user with a link to ```https://manage.mist.com/verify/invite?token=:token&expire=1459632743&org=OrgName```
+schema: admin
+- path:org_id string
+- body:admin_id string
+- body:email string
+- body:enable_two_factor boolean
+- body:first_name string
+- body:hours integer
+- body:last_name string
+- body:oauth_google boolean
+- body:phone string
+- body:phone2 string
+- body:privileges array<object>
+- body:privileges[].for_site boolean
+- body:privileges[].msp_id string
+- body:privileges[].msp_logo_url string
+- body:privileges[].msp_name string
+- body:privileges[].msp_url string
+- body:privileges[].name string
+- body:privileges[].org_id string
+- body:privileges[].org_name string
+- body:privileges[].orggroup_ids array<string>
+- body:privileges[].role string enum[admin|write|read|helpdesk|installer]
+- body:privileges[].scope string enum[org|site|msp|orggroup]
+- body:privileges[].site_id string
+- body:privileges[].sitegroup_ids array<string>
+- body:privileges[].views array<string>
+- body:session_expiry integer
+- body:tags array<string>
+- body:two_factor_verified boolean
+- body:via_sso string
+
+## S330-N0094  DELETE /api/v1/orgs/{org_id}/invites/{invite_id}
+desc: uninviteOrgAdmin | Delete Admin Invite
+- path:org_id string
+- path:invite_id string
+
+## S330-N0095  PUT /api/v1/orgs/{org_id}/invites/{invite_id}
+desc: updateOrgAdminInvite | Update Admin Invite
+schema: admin
+- path:org_id string
+- path:invite_id string
+- body:admin_id string
+- body:email string
+- body:enable_two_factor boolean
+- body:first_name string
+- body:hours integer
+- body:last_name string
+- body:oauth_google boolean
+- body:phone string
+- body:phone2 string
+- body:privileges array<object>
+- body:privileges[].for_site boolean
+- body:privileges[].msp_id string
+- body:privileges[].msp_logo_url string
+- body:privileges[].msp_name string
+- body:privileges[].msp_url string
+- body:privileges[].name string
+- body:privileges[].org_id string
+- body:privileges[].org_name string
+- body:privileges[].orggroup_ids array<string>
+- body:privileges[].role string enum[admin|write|read|helpdesk|installer]
+- body:privileges[].scope string enum[org|site|msp|orggroup]
+- body:privileges[].site_id string
+- body:privileges[].sitegroup_ids array<string>
+- body:privileges[].views array<string>
+- body:session_expiry integer
+- body:tags array<string>
+- body:two_factor_verified boolean
+- body:via_sso string
+
+## S330-N0096  POST /api/v1/orgs/{org_id}/jsi/devices/{device_mac}/shell
+desc: createOrgJsiDeviceShellSession | Create Shell Session
+- path:org_id string
+- path:device_mac string
+
+## S330-N0097  POST /api/v1/orgs/{org_id}/jsi/devices/{device_mac}/upgrade
+desc: upgradeOrgJsiDevice | Upgrade
+- path:org_id string
+- path:device_mac string
+- body:version string
+
+## S330-N0098  PUT /api/v1/orgs/{org_id}/licenses
+desc: moveOrDeleteOrgLicenseToAnotherOrg | Move, Undo Move or Delete Org License to Another Org If the admin has admin privilege against the `org_id` and `dst_org_id`, he can move some of the licenses to another Org. Given that: 1. the specified license is currently active 2. there’s enough licenses left in the specified license (by subscription_id) 3. there will still be enough entitled licenses for th
+- path:org_id string
+- body:amendment_id string
+- body:dst_org_id string
+- body:notes string
+- body:op string enum[amend|unamend|delete|annotate]
+- body:quantity integer
+- body:subscription_id string
+
+## S330-N0099  POST /api/v1/orgs/{org_id}/maps/import
+desc: importOrgMaps | Import data from files is a multipart POST which has an file, an optional json, and an optional csv, to create floorplan, assign matching inventory to specific site, place ap if name or mac matches # CSV File Format ```csv Vendor AP name,Mist AP Mac US Office AP-2 - 5c:5b:35:00:00:02,5c5b35000002 ```
+- path:org_id string
+- body:auto_deviceprofile_assignment boolean
+- body:csv string
+- body:file string
+- body:json object
+- body:json.import_all_floorpans boolean
+- body:json.import_height boolean
+- body:json.import_orientation boolean
+- body:json.site_id string
+- body:json.vendor_name string enum[ekahau|ibwave]
+
+## S330-N0100  POST /api/v1/orgs/{org_id}/mxclusters
+desc: createOrgMxEdgeCluster | Create MxCluster
+schema: mxcluster
+- path:org_id string
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:mist_das object
+- body:mist_das.coa_servers array<object>
+- body:mist_das.coa_servers[].disable_event_timestamp_check boolean
+- body:mist_das.coa_servers[].enabled boolean
+- body:mist_das.coa_servers[].host string
+- body:mist_das.coa_servers[].port integer
+- body:mist_das.coa_servers[].secret string
+- body:mist_das.enabled boolean
+- body:mist_nac object
+- body:mist_nac.acct_server_port integer
+- body:mist_nac.auth_server_port integer
+- body:mist_nac.client_ips object
+- body:mist_nac.enabled boolean
+- body:mist_nac.secret string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:proxy object
+- body:proxy.url string
+- body:radsec object
+- body:radsec.acct_servers array<object>
+- body:radsec.acct_servers[].host string
+- body:radsec.acct_servers[].port integer
+- body:radsec.acct_servers[].secret string
+- body:radsec.acct_servers[].ssids array<string>
+- body:radsec.auth_servers array<object>
+- body:radsec.auth_servers[].host string
+- body:radsec.auth_servers[].keywrap_enabled boolean
+- body:radsec.auth_servers[].keywrap_format string enum[hex|ascii]
+- body:radsec.auth_servers[].keywrap_kek string
+- body:radsec.auth_servers[].keywrap_mack string
+- body:radsec.auth_servers[].port integer
+- body:radsec.auth_servers[].secret string
+- body:radsec.auth_servers[].ssids array<string>
+- body:radsec.enabled boolean
+- body:radsec.match_ssid boolean
+- body:radsec.proxy_hosts array<string>
+- body:radsec.server_selection string enum[ordered|unordered]
+- body:radsec.source string enum[tunnel|oob|any]
+- body:radsec_tls object
+- body:radsec_tls.keypair string
+- body:site_id string
+- body:tunterm_ap_subnets array<string>
+- body:tunterm_dhcpd_config object
+- body:tunterm_dhcpd_config.enabled boolean
+- body:tunterm_dhcpd_config.servers array<string>
+- body:tunterm_dhcpd_config.type string enum[relay]
+- body:tunterm_extra_routes object
+- body:tunterm_hosts array<string>
+- body:tunterm_hosts_order array<integer>
+- body:tunterm_hosts_selection string enum[shuffle|shuffle-by-site|ordered]
+- body:tunterm_monitoring array<object>
+- body:tunterm_monitoring[].host string
+- body:tunterm_monitoring[].port integer
+- body:tunterm_monitoring[].protocol string enum[arp|ping|tcp]
+- body:tunterm_monitoring[].timeout integer
+- body:tunterm_monitoring_disabled boolean
+
+## S330-N0101  DELETE /api/v1/orgs/{org_id}/mxclusters/{mxcluster_id}
+desc: deleteOrgMxEdgeCluster | Delete Org MXEdge Cluster
+- path:org_id string
+- path:mxcluster_id string
+
+## S330-N0102  PUT /api/v1/orgs/{org_id}/mxclusters/{mxcluster_id}
+desc: updateOrgMxEdgeCluster | Update Org MxEdge Cluster
+schema: mxcluster
+- path:org_id string
+- path:mxcluster_id string
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:mist_das object
+- body:mist_das.coa_servers array<object>
+- body:mist_das.coa_servers[].disable_event_timestamp_check boolean
+- body:mist_das.coa_servers[].enabled boolean
+- body:mist_das.coa_servers[].host string
+- body:mist_das.coa_servers[].port integer
+- body:mist_das.coa_servers[].secret string
+- body:mist_das.enabled boolean
+- body:mist_nac object
+- body:mist_nac.acct_server_port integer
+- body:mist_nac.auth_server_port integer
+- body:mist_nac.client_ips object
+- body:mist_nac.enabled boolean
+- body:mist_nac.secret string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:proxy object
+- body:proxy.url string
+- body:radsec object
+- body:radsec.acct_servers array<object>
+- body:radsec.acct_servers[].host string
+- body:radsec.acct_servers[].port integer
+- body:radsec.acct_servers[].secret string
+- body:radsec.acct_servers[].ssids array<string>
+- body:radsec.auth_servers array<object>
+- body:radsec.auth_servers[].host string
+- body:radsec.auth_servers[].keywrap_enabled boolean
+- body:radsec.auth_servers[].keywrap_format string enum[hex|ascii]
+- body:radsec.auth_servers[].keywrap_kek string
+- body:radsec.auth_servers[].keywrap_mack string
+- body:radsec.auth_servers[].port integer
+- body:radsec.auth_servers[].secret string
+- body:radsec.auth_servers[].ssids array<string>
+- body:radsec.enabled boolean
+- body:radsec.match_ssid boolean
+- body:radsec.proxy_hosts array<string>
+- body:radsec.server_selection string enum[ordered|unordered]
+- body:radsec.source string enum[tunnel|oob|any]
+- body:radsec_tls object
+- body:radsec_tls.keypair string
+- body:site_id string
+- body:tunterm_ap_subnets array<string>
+- body:tunterm_dhcpd_config object
+- body:tunterm_dhcpd_config.enabled boolean
+- body:tunterm_dhcpd_config.servers array<string>
+- body:tunterm_dhcpd_config.type string enum[relay]
+- body:tunterm_extra_routes object
+- body:tunterm_hosts array<string>
+- body:tunterm_hosts_order array<integer>
+- body:tunterm_hosts_selection string enum[shuffle|shuffle-by-site|ordered]
+- body:tunterm_monitoring array<object>
+- body:tunterm_monitoring[].host string
+- body:tunterm_monitoring[].port integer
+- body:tunterm_monitoring[].protocol string enum[arp|ping|tcp]
+- body:tunterm_monitoring[].timeout integer
+- body:tunterm_monitoring_disabled boolean
+
+## S330-N0103  POST /api/v1/orgs/{org_id}/mxedges
+desc: createOrgMxEdge | Create MxEdge
+schema: mxedge
+- path:org_id string
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:magic string
+- body:model string
+- body:modified_time number
+- body:mxagent_registered boolean
+- body:mxcluster_id string
+- body:mxedge_mgmt object
+- body:mxedge_mgmt.mist_password string
+- body:mxedge_mgmt.root_password string
+- body:name string
+- body:ntp_servers array<string>
+- body:oob_ip_config object
+- body:oob_ip_config.dns array<string>
+- body:oob_ip_config.gateway string
+- body:oob_ip_config.ip string
+- body:oob_ip_config.netmask string
+- body:oob_ip_config.type string enum[static|dhcp]
+- body:org_id string
+- body:proxy object
+- body:proxy.url string
+- body:services array<string>
+- body:site_id string
+- body:tunterm_dhcpd_config object
+- body:tunterm_dhcpd_config.enabled boolean
+- body:tunterm_dhcpd_config.servers array<string>
+- body:tunterm_dhcpd_config.type string enum[relay]
+- body:tunterm_extra_routes object
+- body:tunterm_igmp_snooping_config object
+- body:tunterm_igmp_snooping_config.enabled boolean
+- body:tunterm_igmp_snooping_config.querier object
+- body:tunterm_igmp_snooping_config.querier.max_response_time integer
+- body:tunterm_igmp_snooping_config.querier.mtu integer
+- body:tunterm_igmp_snooping_config.querier.query_interval integer
+- body:tunterm_igmp_snooping_config.querier.robustness integer
+- body:tunterm_igmp_snooping_config.querier.version integer
+- body:tunterm_igmp_snooping_config.vlan_ids array<integer>
+- body:tunterm_ip_config object
+- body:tunterm_ip_config.gateway string
+- body:tunterm_ip_config.ip string
+- body:tunterm_ip_config.netmask string
+- body:tunterm_monitoring array<object>
+- body:tunterm_monitoring[].host string
+- body:tunterm_monitoring[].port integer
+- body:tunterm_monitoring[].protocol string enum[arp|ping|tcp]
+- body:tunterm_monitoring[].timeout integer
+- body:tunterm_other_ip_configs object
+- body:tunterm_port_config object
+- body:tunterm_port_config.downstream_ports array<string>
+- body:tunterm_port_config.separate_upstream_downstream boolean
+- body:tunterm_port_config.upstream_port_vlan_id integer
+- body:tunterm_port_config.upstream_ports array<string>
+- body:tunterm_registered boolean
+- body:tunterm_switch_config object
+- body:tunterm_switch_config.enabled boolean
+- body:versions object
+- body:versions.mxagent string
+- body:versions.tuntnerm string
+
+## S330-N0104  POST /api/v1/orgs/{org_id}/mxedges/assign
+desc: assignOrgMxEdgeToSite | Assign Org MxEdge to Site
+- path:org_id string
+- body:mxedge_ids array<string>
+- body:site_id string
+
+## S330-N0105  POST /api/v1/orgs/{org_id}/mxedges/claim
+desc: claimOrgMxEdge | For a Mist Edge in default state, it will show a random claim code like `135-546-673` which you can “claim” it into your Org
+- path:org_id string
+- body:code string
+
+## S330-N0106  POST /api/v1/orgs/{org_id}/mxedges/unassign
+desc: unassignOrgMxEdgeFromSite | Unassign Org MxEdge from Site
+- path:org_id string
+- body:mxedge_ids array<string>
+
+## S330-N0107  POST /api/v1/orgs/{org_id}/mxedges/upgrade
+desc: upgradeOrgMxEdges | Upgrade Mist Edges
+- path:org_id string
+- body:allow_downgrades object
+- body:allow_downgrades.mxagent boolean
+- body:allow_downgrades.mxdas boolean
+- body:allow_downgrades.mxocproxy boolean
+- body:allow_downgrades.radsecproxy boolean
+- body:allow_downgrades.tunterm boolean
+- body:channel string enum[stable|beta|alpha]
+- body:distro string
+- body:mxedge_ids array<string>
+- body:strategy string enum[big_bang|serial]
+- body:versions object
+- body:versions.mxagent string
+- body:versions.mxdas string
+- body:versions.mxocproxy string
+- body:versions.radsecproxy string
+- body:versions.tunterm string
+
+## S330-N0108  DELETE /api/v1/orgs/{org_id}/mxedges/{mxedge_id}
+desc: deleteOrgMxEdge | Delete Org MxEdge
+- path:org_id string
+- path:mxedge_id string
+
+## S330-N0109  PUT /api/v1/orgs/{org_id}/mxedges/{mxedge_id}
+desc: updateOrgMxEdge | Update Org MxEdge
+schema: mxedge
+- path:org_id string
+- path:mxedge_id string
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:magic string
+- body:model string
+- body:modified_time number
+- body:mxagent_registered boolean
+- body:mxcluster_id string
+- body:mxedge_mgmt object
+- body:mxedge_mgmt.mist_password string
+- body:mxedge_mgmt.root_password string
+- body:name string
+- body:ntp_servers array<string>
+- body:oob_ip_config object
+- body:oob_ip_config.dns array<string>
+- body:oob_ip_config.gateway string
+- body:oob_ip_config.ip string
+- body:oob_ip_config.netmask string
+- body:oob_ip_config.type string enum[static|dhcp]
+- body:org_id string
+- body:proxy object
+- body:proxy.url string
+- body:services array<string>
+- body:site_id string
+- body:tunterm_dhcpd_config object
+- body:tunterm_dhcpd_config.enabled boolean
+- body:tunterm_dhcpd_config.servers array<string>
+- body:tunterm_dhcpd_config.type string enum[relay]
+- body:tunterm_extra_routes object
+- body:tunterm_igmp_snooping_config object
+- body:tunterm_igmp_snooping_config.enabled boolean
+- body:tunterm_igmp_snooping_config.querier object
+- body:tunterm_igmp_snooping_config.querier.max_response_time integer
+- body:tunterm_igmp_snooping_config.querier.mtu integer
+- body:tunterm_igmp_snooping_config.querier.query_interval integer
+- body:tunterm_igmp_snooping_config.querier.robustness integer
+- body:tunterm_igmp_snooping_config.querier.version integer
+- body:tunterm_igmp_snooping_config.vlan_ids array<integer>
+- body:tunterm_ip_config object
+- body:tunterm_ip_config.gateway string
+- body:tunterm_ip_config.ip string
+- body:tunterm_ip_config.netmask string
+- body:tunterm_monitoring array<object>
+- body:tunterm_monitoring[].host string
+- body:tunterm_monitoring[].port integer
+- body:tunterm_monitoring[].protocol string enum[arp|ping|tcp]
+- body:tunterm_monitoring[].timeout integer
+- body:tunterm_other_ip_configs object
+- body:tunterm_port_config object
+- body:tunterm_port_config.downstream_ports array<string>
+- body:tunterm_port_config.separate_upstream_downstream boolean
+- body:tunterm_port_config.upstream_port_vlan_id integer
+- body:tunterm_port_config.upstream_ports array<string>
+- body:tunterm_registered boolean
+- body:tunterm_switch_config object
+- body:tunterm_switch_config.enabled boolean
+- body:versions object
+- body:versions.mxagent string
+- body:versions.tuntnerm string
+
+## S330-N0110  POST /api/v1/orgs/{org_id}/mxedges/{mxedge_id}/restart
+desc: restartOrgMxEdge | In the case where a Mist Edge is replaced, you would need to unregister it. Which disconnects the currently the connected Mist Edge and allow another to register.
+- path:org_id string
+- path:mxedge_id string
+
+## S330-N0111  POST /api/v1/orgs/{org_id}/mxedges/{mxedge_id}/services/tunterm/bounce_port
+desc: bounceOrgMxEdgeDataPorts | Bounce TunTerm Data Ports
+- path:org_id string
+- path:mxedge_id string
+- body:hold_time integer
+- body:ports array<string>
+
+## S330-N0112  POST /api/v1/orgs/{org_id}/mxedges/{mxedge_id}/services/{name}/{action}
+desc: controlOrgMxEdgeServices | Control Services on a Mist Edge
+- path:org_id string
+- path:mxedge_id string
+- path:name string enum[tunterm|radsecproxy|mxagent|mxocproxy|mxdas]
+- path:action string enum[restart|start|stop]
+
+## S330-N0113  POST /api/v1/orgs/{org_id}/mxedges/{mxedge_id}/support
+desc: uploadOrgMxEdgeSupportFiles | Support / Upload Mist Edge support files
+- path:org_id string
+- path:mxedge_id string
+
+## S330-N0114  POST /api/v1/orgs/{org_id}/mxedges/{mxedge_id}/unregister
+desc: unregisterOrgMxEdge | In the case where a Mist Edge is replaced, you would need to unregister it. Which disconnects the currently the connected Mist Edge and allow another to register.
+- path:org_id string
+- path:mxedge_id string
+
+## S330-N0116  POST /api/v1/orgs/{org_id}/mxtunnels
+desc: createOrgMxTunnel | Create MxTunnel
+schema: mxtunnel
+- path:org_id string
+- body:anchor_mxtunnel_ids array<string>
+- body:auto_preemption object
+- body:auto_preemption.day_of_week string enum[any|mon|tue|wed|thu|fri|sat|sun]
+- body:auto_preemption.enabled boolean
+- body:auto_preemption.time_of_day string
+- body:created_time number
+- body:for_site boolean
+- body:hello_interval integer
+- body:hello_retries integer
+- body:id string
+- body:ipsec object
+- body:ipsec.dns_servers array<string>
+- body:ipsec.dns_suffix array<string>
+- body:ipsec.enabled boolean
+- body:ipsec.extra_routes array<object>
+- body:ipsec.extra_routes[].dest string
+- body:ipsec.extra_routes[].next_hop string
+- body:ipsec.split_tunnel boolean
+- body:ipsec.use_mxedge boolean
+- body:modified_time number
+- body:mtu integer
+- body:mxcluster_ids array<string>
+- body:name string
+- body:org_id string
+- body:protocol string enum[udp|ip]
+- body:site_id string
+- body:vlan_ids array<integer>
+
+## S330-N0117  DELETE /api/v1/orgs/{org_id}/mxtunnels/{mxtunnel_id}
+desc: deleteOrgMxTunnel | Delete Org MxTunnel
+- path:org_id string
+- path:mxtunnel_id string
+
+## S330-N0118  PUT /api/v1/orgs/{org_id}/mxtunnels/{mxtunnel_id}
+desc: updateOrgMxTunnel | Update Org MxTunnel
+schema: mxtunnel
+- path:org_id string
+- path:mxtunnel_id string
+- body:anchor_mxtunnel_ids array<string>
+- body:auto_preemption object
+- body:auto_preemption.day_of_week string enum[any|mon|tue|wed|thu|fri|sat|sun]
+- body:auto_preemption.enabled boolean
+- body:auto_preemption.time_of_day string
+- body:created_time number
+- body:for_site boolean
+- body:hello_interval integer
+- body:hello_retries integer
+- body:id string
+- body:ipsec object
+- body:ipsec.dns_servers array<string>
+- body:ipsec.dns_suffix array<string>
+- body:ipsec.enabled boolean
+- body:ipsec.extra_routes array<object>
+- body:ipsec.extra_routes[].dest string
+- body:ipsec.extra_routes[].next_hop string
+- body:ipsec.split_tunnel boolean
+- body:ipsec.use_mxedge boolean
+- body:modified_time number
+- body:mtu integer
+- body:mxcluster_ids array<string>
+- body:name string
+- body:org_id string
+- body:protocol string enum[udp|ip]
+- body:site_id string
+- body:vlan_ids array<integer>
+
+## S330-N0119  POST /api/v1/orgs/{org_id}/nacrules
+desc: createOrgNacRule | create Org NAC Rule
+schema: nac_rule
+- path:org_id string
+- body:action string enum[allow|block]
+- body:apply_tags array<string>
+- body:created_time integer
+- body:enabled boolean
+- body:id string
+- body:matching object
+- body:matching.auth_type string enum[cert|idp|mab|psk]
+- body:matching.nactags array<string>
+- body:matching.port_types array<string> enum[wireless|wired]
+- body:matching.site_ids array<string>
+- body:matching.sitegroup_ids array<string>
+- body:modified_time integer
+- body:name string
+- body:not_matching object
+- body:not_matching.auth_type string enum[cert|idp|mab|psk]
+- body:not_matching.nactags array<string>
+- body:not_matching.port_types array<string> enum[wireless|wired]
+- body:not_matching.site_ids array<string>
+- body:not_matching.sitegroup_ids array<string>
+- body:order number
+- body:org_id string
+
+## S330-N0120  DELETE /api/v1/orgs/{org_id}/nacrules/{nacrule_id}
+desc: deleteOrgNacRule | Delete Org NAC Rule
+- path:org_id string
+- path:nacrule_id string
+
+## S330-N0121  PUT /api/v1/orgs/{org_id}/nacrules/{nacrule_id}
+desc: updateOrgNacRule | Update Org NAC Rule
+schema: nac_rule
+- path:org_id string
+- path:nacrule_id string
+- body:action string enum[allow|block]
+- body:apply_tags array<string>
+- body:created_time integer
+- body:enabled boolean
+- body:id string
+- body:matching object
+- body:matching.auth_type string enum[cert|idp|mab|psk]
+- body:matching.nactags array<string>
+- body:matching.port_types array<string> enum[wireless|wired]
+- body:matching.site_ids array<string>
+- body:matching.sitegroup_ids array<string>
+- body:modified_time integer
+- body:name string
+- body:not_matching object
+- body:not_matching.auth_type string enum[cert|idp|mab|psk]
+- body:not_matching.nactags array<string>
+- body:not_matching.port_types array<string> enum[wireless|wired]
+- body:not_matching.site_ids array<string>
+- body:not_matching.sitegroup_ids array<string>
+- body:order number
+- body:org_id string
+
+## S330-N0122  POST /api/v1/orgs/{org_id}/nactags
+desc: createOrgNacTag | Create Org NAC Tag
+schema: nac_tag
+- path:org_id string
+- body:created_time number
+- body:gbp_tag integer
+- body:id string
+- body:match string enum[vendor|idp_role|cert_cn|cert_sub|cert_serial|cert_issuer|cert_san|realm|user_name|ssid|client_mac]
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:radius_group string
+- body:type string enum[match|radius_group|vlan|gbp_tag]
+- body:values array<string>
+- body:vlan string
+
+## S330-N0123  DELETE /api/v1/orgs/{org_id}/nactags/{nactag_id}
+desc: DeleteOrgNacTag | Delete Org NAC Tag
+- path:org_id string
+- path:nactag_id string
+
+## S330-N0124  PUT /api/v1/orgs/{org_id}/nactags/{nactag_id}
+desc: updateOrgNacTag | Update Org NAC Tag
+schema: nac_tag
+- path:org_id string
+- path:nactag_id string
+- body:created_time number
+- body:gbp_tag integer
+- body:id string
+- body:match string enum[vendor|idp_role|cert_cn|cert_sub|cert_serial|cert_issuer|cert_san|realm|user_name|ssid|client_mac]
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:radius_group string
+- body:type string enum[match|radius_group|vlan|gbp_tag]
+- body:values array<string>
+- body:vlan string
+
+## S330-N0125  POST /api/v1/orgs/{org_id}/networks
+desc: createOrgNetwork | Create Organization Network
+schema: network
+- path:org_id string
+- body:created_time number
+- body:disallow_mist_services boolean
+- body:gateway string
+- body:hosts object
+- body:id string
+- body:internal_access object
+- body:internal_access.enabled boolean
+- body:internet_access object
+- body:internet_access.create_simple_service_policy boolean
+- body:internet_access.destination_nat object
+- body:internet_access.enabled boolean
+- body:internet_access.restricted boolean
+- body:internet_access.static_nat object
+- body:isolation boolean
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:subnet string
+- body:tenants object
+- body:vlan_id integer
+- body:vpn_access object
+
+## S330-N0126  DELETE /api/v1/orgs/{org_id}/networks/{network_id}
+desc: deleteOrgNetwork | Delete Organization Network
+- path:org_id string
+- path:network_id string
+
+## S330-N0127  PUT /api/v1/orgs/{org_id}/networks/{network_id}
+desc: updateOrgNetwork | Update Organization Network
+schema: network
+- path:org_id string
+- path:network_id string
+- body:created_time number
+- body:disallow_mist_services boolean
+- body:gateway string
+- body:hosts object
+- body:id string
+- body:internal_access object
+- body:internal_access.enabled boolean
+- body:internet_access object
+- body:internet_access.create_simple_service_policy boolean
+- body:internet_access.destination_nat object
+- body:internet_access.enabled boolean
+- body:internet_access.restricted boolean
+- body:internet_access.static_nat object
+- body:isolation boolean
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:subnet string
+- body:tenants object
+- body:vlan_id integer
+- body:vpn_access object
+
+## S330-N0128  POST /api/v1/orgs/{org_id}/networktemplates
+desc: createOrgNetworkTemplate | Update Org Network Templates
+schema: networktemplate
+- path:org_id string
+- body:additional_config_cmds array<string>
+- body:created_time number
+- body:dhcp_snooping object
+- body:dhcp_snooping.all_networks boolean
+- body:dhcp_snooping.enable_arp_spoof_check boolean
+- body:dhcp_snooping.enable_ip_source_guard boolean
+- body:dhcp_snooping.enabled boolean
+- body:dhcp_snooping.networks array<string>
+- body:dns_servers array<string>
+- body:dns_suffix array<string>
+- body:extra_routes object
+- body:group_tags object
+- body:id string
+- body:mist_nac object
+- body:mist_nac.enabled boolean
+- body:mist_nac.network string
+- body:modified_time number
+- body:name string
+- body:networks object
+- body:ntp_servers array<string>
+- body:org_id string
+- body:port_usages object
+- body:port_usages.dynamic object
+- body:port_usages.dynamic.mode string enum[dynamic]
+- body:port_usages.dynamic.reset_default_when string enum[none|link_down]
+- body:port_usages.dynamic.rules array<object>
+- body:radius_config object
+- body:radius_config.acct_interim_interval integer
+- body:radius_config.acct_servers array<object>
+- body:radius_config.acct_servers[].host string
+- body:radius_config.acct_servers[].keywrap_enabled boolean
+- body:radius_config.acct_servers[].keywrap_format string
+- body:radius_config.acct_servers[].keywrap_kek string
+- body:radius_config.acct_servers[].keywrap_mack string
+- body:radius_config.acct_servers[].port integer
+- body:radius_config.acct_servers[].secret string
+- body:radius_config.auth_servers array<object>
+- body:radius_config.auth_servers[].host string
+- body:radius_config.auth_servers[].keywrap_enabled boolean
+- body:radius_config.auth_servers[].keywrap_format string
+- body:radius_config.auth_servers[].keywrap_kek string
+- body:radius_config.auth_servers[].keywrap_mack string
+- body:radius_config.auth_servers[].port integer
+- body:radius_config.auth_servers[].secret string
+- body:radius_config.auth_servers_retries integer
+- body:radius_config.auth_servers_timeout integer
+- body:radius_config.coa_enabled boolean
+- body:radius_config.coa_port integer
+- body:radius_config.network string
+- body:radius_config.source_ip string
+- body:remote_syslog object
+- body:remote_syslog.archive object
+- body:remote_syslog.archive.files integer
+- body:remote_syslog.archive.size string
+- body:remote_syslog.console object
+- body:remote_syslog.console.contents array<object>
+- body:remote_syslog.enabled boolean
+- body:remote_syslog.files array<object>
+- body:remote_syslog.files[].archive object
+- body:remote_syslog.files[].contents array<object>
+- body:remote_syslog.files[].explicit_priority boolean
+- body:remote_syslog.files[].file string
+- body:remote_syslog.files[].match string
+- body:remote_syslog.files[].structured_data boolean
+- body:remote_syslog.network string
+- body:remote_syslog.send_to_all_servers boolean
+- body:remote_syslog.servers array<object>
+- body:remote_syslog.servers[].contents array<object>
+- body:remote_syslog.servers[].explicit_priority boolean
+- body:remote_syslog.servers[].facility string enum[any|authorization|conflict-log|change-log|daemon|dfc|kernel|interactive-commands|ftp|firewall|external|pfe]
+- body:remote_syslog.servers[].host string
+- body:remote_syslog.servers[].match string
+- body:remote_syslog.servers[].port integer
+- body:remote_syslog.servers[].protocol string enum[udp|tcp]
+- body:remote_syslog.servers[].routing_instance string
+- body:remote_syslog.servers[].severity string enum[any|alert|emergency|critical|warning|info|notice|error]
+- body:remote_syslog.servers[].source_address string
+- body:remote_syslog.servers[].structured_data boolean
+- body:remote_syslog.servers[].tag string
+(+57 fields cut)
+
+## S330-N0129  DELETE /api/v1/orgs/{org_id}/networktemplates/{networktemplate_id}
+desc: deleteOrgNetworkTemplate | Delete Org Network Template
+- path:org_id string
+- path:networktemplate_id string
+
+## S330-N0130  PUT /api/v1/orgs/{org_id}/networktemplates/{networktemplate_id}
+desc: updateOrgNetworkTemplates | Update Org Network Template
+schema: networktemplate
+- path:org_id string
+- path:networktemplate_id string
+- body:additional_config_cmds array<string>
+- body:created_time number
+- body:dhcp_snooping object
+- body:dhcp_snooping.all_networks boolean
+- body:dhcp_snooping.enable_arp_spoof_check boolean
+- body:dhcp_snooping.enable_ip_source_guard boolean
+- body:dhcp_snooping.enabled boolean
+- body:dhcp_snooping.networks array<string>
+- body:dns_servers array<string>
+- body:dns_suffix array<string>
+- body:extra_routes object
+- body:group_tags object
+- body:id string
+- body:mist_nac object
+- body:mist_nac.enabled boolean
+- body:mist_nac.network string
+- body:modified_time number
+- body:name string
+- body:networks object
+- body:ntp_servers array<string>
+- body:org_id string
+- body:port_usages object
+- body:port_usages.dynamic object
+- body:port_usages.dynamic.mode string enum[dynamic]
+- body:port_usages.dynamic.reset_default_when string enum[none|link_down]
+- body:port_usages.dynamic.rules array<object>
+- body:radius_config object
+- body:radius_config.acct_interim_interval integer
+- body:radius_config.acct_servers array<object>
+- body:radius_config.acct_servers[].host string
+- body:radius_config.acct_servers[].keywrap_enabled boolean
+- body:radius_config.acct_servers[].keywrap_format string
+- body:radius_config.acct_servers[].keywrap_kek string
+- body:radius_config.acct_servers[].keywrap_mack string
+- body:radius_config.acct_servers[].port integer
+- body:radius_config.acct_servers[].secret string
+- body:radius_config.auth_servers array<object>
+- body:radius_config.auth_servers[].host string
+- body:radius_config.auth_servers[].keywrap_enabled boolean
+- body:radius_config.auth_servers[].keywrap_format string
+- body:radius_config.auth_servers[].keywrap_kek string
+- body:radius_config.auth_servers[].keywrap_mack string
+- body:radius_config.auth_servers[].port integer
+- body:radius_config.auth_servers[].secret string
+- body:radius_config.auth_servers_retries integer
+- body:radius_config.auth_servers_timeout integer
+- body:radius_config.coa_enabled boolean
+- body:radius_config.coa_port integer
+- body:radius_config.network string
+- body:radius_config.source_ip string
+- body:remote_syslog object
+- body:remote_syslog.archive object
+- body:remote_syslog.archive.files integer
+- body:remote_syslog.archive.size string
+- body:remote_syslog.console object
+- body:remote_syslog.console.contents array<object>
+- body:remote_syslog.enabled boolean
+- body:remote_syslog.files array<object>
+- body:remote_syslog.files[].archive object
+- body:remote_syslog.files[].contents array<object>
+- body:remote_syslog.files[].explicit_priority boolean
+- body:remote_syslog.files[].file string
+- body:remote_syslog.files[].match string
+- body:remote_syslog.files[].structured_data boolean
+- body:remote_syslog.network string
+- body:remote_syslog.send_to_all_servers boolean
+- body:remote_syslog.servers array<object>
+- body:remote_syslog.servers[].contents array<object>
+- body:remote_syslog.servers[].explicit_priority boolean
+- body:remote_syslog.servers[].facility string enum[any|authorization|conflict-log|change-log|daemon|dfc|kernel|interactive-commands|ftp|firewall|external|pfe]
+- body:remote_syslog.servers[].host string
+- body:remote_syslog.servers[].match string
+- body:remote_syslog.servers[].port integer
+- body:remote_syslog.servers[].protocol string enum[udp|tcp]
+- body:remote_syslog.servers[].routing_instance string
+- body:remote_syslog.servers[].severity string enum[any|alert|emergency|critical|warning|info|notice|error]
+- body:remote_syslog.servers[].source_address string
+- body:remote_syslog.servers[].structured_data boolean
+(+58 fields cut)
+
+## S330-N0131  PUT /api/v1/orgs/{org_id}/otherdevices
+desc: updateOrgOtherDevices | If the Site / Device cannot be identified, a manual association can be made. Either a site_id or a device_mac needs to be provided.
+- path:org_id string
+- body:device_mac string
+- body:macs array<string>
+- body:site_id string
+
+## S330-N0132  DELETE /api/v1/orgs/{org_id}/otherdevices/{device_mac}
+desc: deleteOrgOtherDevice | Delete OtherDevice
+- path:org_id string
+- path:device_mac string
+
+## S330-N0133  PUT /api/v1/orgs/{org_id}/otherdevices/{device_mac}
+desc: updateOrgOtherDevice | If the Site / Device cannot be identified, a manual association can be made
+- path:org_id string
+- path:device_mac string
+- body:device_mac string
+- body:site_id string
+
+## S330-N0134  POST /api/v1/orgs/{org_id}/pskportals
+desc: createOrgPskPortal | Create Org Psk Portal
+schema: psk_portal
+- path:org_id string
+- body:auth string enum[sso|sponsor]
+- body:bg_image_url string
+- body:cleanup_psk boolean
+- body:created_time integer
+- body:expire_time integer
+- body:expiry_notification_time integer
+- body:hide_psks_created_by_other_admins boolean
+- body:id string
+- body:max_usage integer
+- body:modified_time integer
+- body:name string
+- body:notify_expiry boolean
+- body:notify_on_create_or_edit boolean
+- body:org_id string
+- body:passphrase_rules object
+- body:passphrase_rules.alphaberts_enabled boolean
+- body:passphrase_rules.length integer
+- body:passphrase_rules.max_length integer
+- body:passphrase_rules.min_length integer
+- body:passphrase_rules.numerics_enabled boolean
+- body:passphrase_rules.symbols string
+- body:passphrase_rules.symbols_enabled boolean
+- body:required_fields array<string>
+- body:role string
+- body:ssid string
+- body:sso object
+- body:sso.allowed_roles array<string>
+- body:sso.idp_cert string
+- body:sso.idp_sign_algo string
+- body:sso.idp_sso_url string
+- body:sso.issuer string
+- body:sso.nameid_format string
+- body:sso.role_mapping object
+- body:sso.use_sso_role_for_psk_role boolean
+- body:template_url string
+- body:thumbnail_url string
+- body:type string enum[byod|admin]
+- body:vlan_id integer
+
+## S330-N0135  DELETE /api/v1/orgs/{org_id}/pskportals/{pskportal_id}
+desc: deleteOrgPskPortal | Delete Org Psk Portal
+- path:org_id string
+- path:pskportal_id string
+
+## S330-N0136  PUT /api/v1/orgs/{org_id}/pskportals/{pskportal_id}
+desc: updateOrgPskPortal | update Org Psk Portal
+schema: psk_portal
+- path:org_id string
+- path:pskportal_id string
+- body:auth string enum[sso|sponsor]
+- body:bg_image_url string
+- body:cleanup_psk boolean
+- body:created_time integer
+- body:expire_time integer
+- body:expiry_notification_time integer
+- body:hide_psks_created_by_other_admins boolean
+- body:id string
+- body:max_usage integer
+- body:modified_time integer
+- body:name string
+- body:notify_expiry boolean
+- body:notify_on_create_or_edit boolean
+- body:org_id string
+- body:passphrase_rules object
+- body:passphrase_rules.alphaberts_enabled boolean
+- body:passphrase_rules.length integer
+- body:passphrase_rules.max_length integer
+- body:passphrase_rules.min_length integer
+- body:passphrase_rules.numerics_enabled boolean
+- body:passphrase_rules.symbols string
+- body:passphrase_rules.symbols_enabled boolean
+- body:required_fields array<string>
+- body:role string
+- body:ssid string
+- body:sso object
+- body:sso.allowed_roles array<string>
+- body:sso.idp_cert string
+- body:sso.idp_sign_algo string
+- body:sso.idp_sso_url string
+- body:sso.issuer string
+- body:sso.nameid_format string
+- body:sso.role_mapping object
+- body:sso.use_sso_role_for_psk_role boolean
+- body:template_url string
+- body:thumbnail_url string
+- body:type string enum[byod|admin]
+- body:vlan_id integer
+
+## S330-N0137  POST /api/v1/orgs/{org_id}/psks
+desc: createOrgPsk | Create Org PSK
+schema: psk
+- path:org_id string
+- query:upsert boolean
+- body:admin_sso_id string
+- body:created_time number
+- body:email string
+- body:expire_time integer
+- body:expiry_notification_time integer
+- body:id string
+- body:mac string
+- body:max_usage integer
+- body:modified_time number
+- body:name string
+- body:note string
+- body:notify_expiry boolean
+- body:notify_on_create_or_edit boolean
+- body:old_passphrase string
+- body:org_id string
+- body:passphrase string
+- body:role string
+- body:site_id string
+- body:ssid string
+- body:usage string enum[multi|single]
+- body:vlan_id integer
+
+## S330-N0138  PUT /api/v1/orgs/{org_id}/psks
+desc: updateOrgMultiPsks | Update multi PSKs
+schema: psk
+- path:org_id string
+- body:admin_sso_id string
+- body:created_time number
+- body:email string
+- body:expire_time integer
+- body:expiry_notification_time integer
+- body:id string
+- body:mac string
+- body:max_usage integer
+- body:modified_time number
+- body:name string
+- body:note string
+- body:notify_expiry boolean
+- body:notify_on_create_or_edit boolean
+- body:old_passphrase string
+- body:org_id string
+- body:passphrase string
+- body:role string
+- body:site_id string
+- body:ssid string
+- body:usage string enum[multi|single]
+- body:vlan_id integer
+
+## S330-N0139  POST /api/v1/orgs/{org_id}/psks/import
+desc: importOrgPsks | Import PSK from CSV file or JSON ## CSV File Format ``` PSK Import CSV File Format: name,ssid,passphrase,usage,vlan_id,mac,max_usage,role,expire_time,notify_expiry,expiry_notification_time,notify_on_create_or_edit,email Common,warehouse,foryoureyesonly,single,35,a31425f31278,0,student,1618594236 Justin,reception,visible,multi,1002,200,teacher,1618594236 Common2,ssid,1245678-xx,sing
+schema: psk
+- path:org_id string
+- body:admin_sso_id string
+- body:created_time number
+- body:email string
+- body:expire_time integer
+- body:expiry_notification_time integer
+- body:id string
+- body:mac string
+- body:max_usage integer
+- body:modified_time number
+- body:name string
+- body:note string
+- body:notify_expiry boolean
+- body:notify_on_create_or_edit boolean
+- body:old_passphrase string
+- body:org_id string
+- body:passphrase string
+- body:role string
+- body:site_id string
+- body:ssid string
+- body:usage string enum[multi|single]
+- body:vlan_id integer
+
+## S330-N0140  DELETE /api/v1/orgs/{org_id}/psks/{psk_id}
+desc: deleteOrgPsk | Delete Org PSK
+- path:org_id string
+- path:psk_id string
+
+## S330-N0142  POST /api/v1/orgs/{org_id}/psks/{psk_id}/delete_old_passphrase
+desc: deleteOrgPskOldPassphrase | Delete `old_passphrase` from PSK. If successful, response is same as GET, returns the PSK with `old_passphrase` removed.
+- path:org_id string
+- path:psk_id string
+- body:(body) object
+
+## S330-N0143  POST /api/v1/orgs/{org_id}/rftemplates
+desc: createOrgRfTemplate | Create Org RF Template
+schema: rftemplate
+- path:org_id string
+- body:ant_gain_24 integer
+- body:ant_gain_5 integer
+- body:band_24 object
+- body:band_24.allow_rrm_disable boolean
+- body:band_24.ant_gain integer
+- body:band_24.antenna_mode string enum[default|1x1|2x2|3x3|4x4]
+- body:band_24.bandwidth integer enum[20|40|80]
+- body:band_24.channel integer
+- body:band_24.channels array<integer>
+- body:band_24.disabled boolean
+- body:band_24.power integer
+- body:band_24.power_max integer
+- body:band_24.power_min integer
+- body:band_24.preamble string enum[short|long|auto]
+- body:band_24.usage string enum[24|5|rrm]
+- body:band_24_usage string enum[24|5|auto]
+- body:band_5 object
+- body:band_5.allow_rrm_disable boolean
+- body:band_5.ant_gain integer
+- body:band_5.antenna_mode string enum[default|1x1|2x2|3x3|4x4]
+- body:band_5.bandwidth integer enum[20|40|80]
+- body:band_5.channel integer
+- body:band_5.channels array<integer>
+- body:band_5.disabled boolean
+- body:band_5.power integer
+- body:band_5.power_max integer
+- body:band_5.power_min integer
+- body:band_5.preamble string enum[short|long|auto]
+- body:band_5.usage string enum[24|5|rrm]
+- body:band_5_on_24_radio object
+- body:band_5_on_24_radio.allow_rrm_disable boolean
+- body:band_5_on_24_radio.ant_gain integer
+- body:band_5_on_24_radio.antenna_mode string enum[default|1x1|2x2|3x3|4x4]
+- body:band_5_on_24_radio.bandwidth integer enum[20|40|80]
+- body:band_5_on_24_radio.channel integer
+- body:band_5_on_24_radio.channels array<integer>
+- body:band_5_on_24_radio.disabled boolean
+- body:band_5_on_24_radio.power integer
+- body:band_5_on_24_radio.power_max integer
+- body:band_5_on_24_radio.power_min integer
+- body:band_5_on_24_radio.preamble string enum[short|long|auto]
+- body:band_5_on_24_radio.usage string enum[24|5|rrm]
+- body:country_code string
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:model_specific object
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:scanning_enabled boolean
+- body:site_id string
+
+## S330-N0144  DELETE /api/v1/orgs/{org_id}/rftemplates/{rftemplate_id}
+desc: deleteOrgRfTemplate | Delete Org RF Template
+- path:org_id string
+- path:rftemplate_id string
+
+## S330-N0145  PUT /api/v1/orgs/{org_id}/rftemplates/{rftemplate_id}
+desc: updateOrgRfTemplate | Update Org RF Template
+schema: rftemplate
+- path:org_id string
+- path:rftemplate_id string
+- body:ant_gain_24 integer
+- body:ant_gain_5 integer
+- body:band_24 object
+- body:band_24.allow_rrm_disable boolean
+- body:band_24.ant_gain integer
+- body:band_24.antenna_mode string enum[default|1x1|2x2|3x3|4x4]
+- body:band_24.bandwidth integer enum[20|40|80]
+- body:band_24.channel integer
+- body:band_24.channels array<integer>
+- body:band_24.disabled boolean
+- body:band_24.power integer
+- body:band_24.power_max integer
+- body:band_24.power_min integer
+- body:band_24.preamble string enum[short|long|auto]
+- body:band_24.usage string enum[24|5|rrm]
+- body:band_24_usage string enum[24|5|auto]
+- body:band_5 object
+- body:band_5.allow_rrm_disable boolean
+- body:band_5.ant_gain integer
+- body:band_5.antenna_mode string enum[default|1x1|2x2|3x3|4x4]
+- body:band_5.bandwidth integer enum[20|40|80]
+- body:band_5.channel integer
+- body:band_5.channels array<integer>
+- body:band_5.disabled boolean
+- body:band_5.power integer
+- body:band_5.power_max integer
+- body:band_5.power_min integer
+- body:band_5.preamble string enum[short|long|auto]
+- body:band_5.usage string enum[24|5|rrm]
+- body:band_5_on_24_radio object
+- body:band_5_on_24_radio.allow_rrm_disable boolean
+- body:band_5_on_24_radio.ant_gain integer
+- body:band_5_on_24_radio.antenna_mode string enum[default|1x1|2x2|3x3|4x4]
+- body:band_5_on_24_radio.bandwidth integer enum[20|40|80]
+- body:band_5_on_24_radio.channel integer
+- body:band_5_on_24_radio.channels array<integer>
+- body:band_5_on_24_radio.disabled boolean
+- body:band_5_on_24_radio.power integer
+- body:band_5_on_24_radio.power_max integer
+- body:band_5_on_24_radio.power_min integer
+- body:band_5_on_24_radio.preamble string enum[short|long|auto]
+- body:band_5_on_24_radio.usage string enum[24|5|rrm]
+- body:country_code string
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:model_specific object
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:scanning_enabled boolean
+- body:site_id string
+
+## S330-N0146  PUT /api/v1/orgs/{org_id}/sdkclients/{sdkclient_id}
+desc: updateSdkClient | Update SDK Client
+- path:org_id string
+- path:sdkclient_id string
+- body:name string
+
+## S330-N0147  POST /api/v1/orgs/{org_id}/sdkinvites
+desc: createSdkInvite | Create SDK Invite
+schema: sdkinvite
+- path:org_id string
+- body:created_time number
+- body:enabled boolean
+- body:expire_time integer
+- body:id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:quota integer
+- body:quota_limited boolean
+- body:site_id string
+
+## S330-N0149  PUT /api/v1/orgs/{org_id}/sdkinvites/{sdkinvite_id}
+desc: updateSdkInvite | Update SDK Invite
+schema: sdkinvite
+- path:org_id string
+- path:sdkinvite_id string
+- body:created_time number
+- body:enabled boolean
+- body:expire_time integer
+- body:id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:quota integer
+- body:quota_limited boolean
+- body:site_id string
+
+## S330-N0150  POST /api/v1/orgs/{org_id}/sdkinvites/{sdkinvite_id}/email
+desc: sendSdkInviteEmail | Send SDK Invite by Email
+schema: Model_object_email
+- path:org_id string
+- path:sdkinvite_id string
+- body:email string
+
+## S330-N0151  POST /api/v1/orgs/{org_id}/sdkinvites/{sdkinvite_id}/sms
+desc: sendSdkInviteSms | Send SDK Invite by SMS
+- path:org_id string
+- path:sdkinvite_id string
+- body:number string
+
+## S330-N0152  POST /api/v1/orgs/{org_id}/sdktemplates
+desc: createSdkTemplate | Create SDK Template
+schema: sdktemplate
+- path:org_id string
+- body:bg_image string
+- body:btn_flr_bgcolor string
+- body:created_time number
+- body:default boolean
+- body:for_site boolean
+- body:header_txt string
+- body:id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:search_txtcolor string
+- body:site_id string
+- body:welcome_msg string
+
+## S330-N0154  PUT /api/v1/orgs/{org_id}/sdktemplates/{sdktemplate_id}
+desc: updateSdkTemplate | Update SDK Template
+schema: sdktemplate
+- path:org_id string
+- path:sdktemplate_id string
+- body:bg_image string
+- body:btn_flr_bgcolor string
+- body:created_time number
+- body:default boolean
+- body:for_site boolean
+- body:header_txt string
+- body:id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:search_txtcolor string
+- body:site_id string
+- body:welcome_msg string
+
+## S330-N0155  POST /api/v1/orgs/{org_id}/secpolicies
+desc: createOrgSecPolicies | Create Org Security Policy
+schema: secpolicy
+- path:org_id string
+- body:created_time number
+- body:id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:site_id string
+- body:wlans array<object>
+- body:wlans[].acct_interim_interval integer
+- body:wlans[].acct_servers array<object>
+- body:wlans[].acct_servers[].host string
+- body:wlans[].acct_servers[].keywrap_enabled boolean
+- body:wlans[].acct_servers[].keywrap_format string
+- body:wlans[].acct_servers[].keywrap_kek string
+- body:wlans[].acct_servers[].keywrap_mack string
+- body:wlans[].acct_servers[].port integer
+- body:wlans[].acct_servers[].secret string
+- body:wlans[].airwatch object
+- body:wlans[].airwatch.api_key string
+- body:wlans[].airwatch.console_url string
+- body:wlans[].airwatch.enabled boolean
+- body:wlans[].airwatch.password string
+- body:wlans[].airwatch.username string
+- body:wlans[].allow_ipv6_ndp boolean
+- body:wlans[].allow_mdns boolean
+- body:wlans[].allow_ssdp boolean
+- body:wlans[].ap_ids array<string>
+- body:wlans[].app_limit object
+- body:wlans[].app_limit.apps object
+- body:wlans[].app_limit.enabled boolean
+- body:wlans[].app_limit.wxtag_ids object
+- body:wlans[].app_qos object
+- body:wlans[].app_qos.apps object
+- body:wlans[].app_qos.enabled boolean
+- body:wlans[].app_qos.others array<object>
+- body:wlans[].apply_to string enum[site|wxtags|aps]
+- body:wlans[].arp_filter boolean
+- body:wlans[].auth object
+- body:wlans[].auth.anticlog_threshold integer
+- body:wlans[].auth.eap_reauth boolean
+- body:wlans[].auth.enable_mac_auth boolean
+- body:wlans[].auth.key_idx integer
+- body:wlans[].auth.keys array<string>
+- body:wlans[].auth.multi_psk_only boolean
+- body:wlans[].auth.owe string
+- body:wlans[].auth.pairwise array<string>
+- body:wlans[].auth.private_wlan boolean
+- body:wlans[].auth.psk string
+- body:wlans[].auth.type string enum[open|psk|wep|eap|psk-tkip|psk-wpa2-tkip]
+- body:wlans[].auth.wep_as_secondary_auth boolean
+- body:wlans[].auth_server_selection string enum[ordered|unordered]
+- body:wlans[].auth_servers array<object>
+- body:wlans[].auth_servers[].host string
+- body:wlans[].auth_servers[].keywrap_enabled boolean
+- body:wlans[].auth_servers[].keywrap_format string
+- body:wlans[].auth_servers[].keywrap_kek string
+- body:wlans[].auth_servers[].keywrap_mack string
+- body:wlans[].auth_servers[].port integer
+- body:wlans[].auth_servers[].secret string
+- body:wlans[].auth_servers_nas_id string
+- body:wlans[].auth_servers_nas_ip string
+- body:wlans[].auth_servers_retries integer
+- body:wlans[].auth_servers_timeout integer
+- body:wlans[].band string
+- body:wlans[].band_steer boolean
+- body:wlans[].band_steer_force_band5 boolean
+- body:wlans[].bands array<string> enum[24|5|6]
+- body:wlans[].block_blacklist_clients boolean
+- body:wlans[].bonjour object
+- body:wlans[].bonjour.additional_vlan_ids array<integer>
+- body:wlans[].bonjour.enabled boolean
+- body:wlans[].bonjour.services object
+- body:wlans[].cisco_cwa object
+- body:wlans[].cisco_cwa.allowed_hostnames array<string>
+- body:wlans[].cisco_cwa.allowed_subnets array<string>
+- body:wlans[].cisco_cwa.blocked_subnets array<string>
+- body:wlans[].cisco_cwa.enabled boolean
+- body:wlans[].client_limit_down integer
+- body:wlans[].client_limit_down_enabled boolean
+- body:wlans[].client_limit_up integer
+(+171 fields cut)
+
+## S330-N0156  DELETE /api/v1/orgs/{org_id}/secpolicies/{secpolicy_id}
+desc: deleteOrgSecPolicy | Delete Org Security Policy
+- path:org_id string
+- path:secpolicy_id string
+
+## S330-N0157  PUT /api/v1/orgs/{org_id}/secpolicies/{secpolicy_id}
+desc: updateOrgSecPolicies | Update Org Security Policy
+schema: secpolicy
+- path:org_id string
+- path:secpolicy_id string
+- body:created_time number
+- body:id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:site_id string
+- body:wlans array<object>
+- body:wlans[].acct_interim_interval integer
+- body:wlans[].acct_servers array<object>
+- body:wlans[].acct_servers[].host string
+- body:wlans[].acct_servers[].keywrap_enabled boolean
+- body:wlans[].acct_servers[].keywrap_format string
+- body:wlans[].acct_servers[].keywrap_kek string
+- body:wlans[].acct_servers[].keywrap_mack string
+- body:wlans[].acct_servers[].port integer
+- body:wlans[].acct_servers[].secret string
+- body:wlans[].airwatch object
+- body:wlans[].airwatch.api_key string
+- body:wlans[].airwatch.console_url string
+- body:wlans[].airwatch.enabled boolean
+- body:wlans[].airwatch.password string
+- body:wlans[].airwatch.username string
+- body:wlans[].allow_ipv6_ndp boolean
+- body:wlans[].allow_mdns boolean
+- body:wlans[].allow_ssdp boolean
+- body:wlans[].ap_ids array<string>
+- body:wlans[].app_limit object
+- body:wlans[].app_limit.apps object
+- body:wlans[].app_limit.enabled boolean
+- body:wlans[].app_limit.wxtag_ids object
+- body:wlans[].app_qos object
+- body:wlans[].app_qos.apps object
+- body:wlans[].app_qos.enabled boolean
+- body:wlans[].app_qos.others array<object>
+- body:wlans[].apply_to string enum[site|wxtags|aps]
+- body:wlans[].arp_filter boolean
+- body:wlans[].auth object
+- body:wlans[].auth.anticlog_threshold integer
+- body:wlans[].auth.eap_reauth boolean
+- body:wlans[].auth.enable_mac_auth boolean
+- body:wlans[].auth.key_idx integer
+- body:wlans[].auth.keys array<string>
+- body:wlans[].auth.multi_psk_only boolean
+- body:wlans[].auth.owe string
+- body:wlans[].auth.pairwise array<string>
+- body:wlans[].auth.private_wlan boolean
+- body:wlans[].auth.psk string
+- body:wlans[].auth.type string enum[open|psk|wep|eap|psk-tkip|psk-wpa2-tkip]
+- body:wlans[].auth.wep_as_secondary_auth boolean
+- body:wlans[].auth_server_selection string enum[ordered|unordered]
+- body:wlans[].auth_servers array<object>
+- body:wlans[].auth_servers[].host string
+- body:wlans[].auth_servers[].keywrap_enabled boolean
+- body:wlans[].auth_servers[].keywrap_format string
+- body:wlans[].auth_servers[].keywrap_kek string
+- body:wlans[].auth_servers[].keywrap_mack string
+- body:wlans[].auth_servers[].port integer
+- body:wlans[].auth_servers[].secret string
+- body:wlans[].auth_servers_nas_id string
+- body:wlans[].auth_servers_nas_ip string
+- body:wlans[].auth_servers_retries integer
+- body:wlans[].auth_servers_timeout integer
+- body:wlans[].band string
+- body:wlans[].band_steer boolean
+- body:wlans[].band_steer_force_band5 boolean
+- body:wlans[].bands array<string> enum[24|5|6]
+- body:wlans[].block_blacklist_clients boolean
+- body:wlans[].bonjour object
+- body:wlans[].bonjour.additional_vlan_ids array<integer>
+- body:wlans[].bonjour.enabled boolean
+- body:wlans[].bonjour.services object
+- body:wlans[].cisco_cwa object
+- body:wlans[].cisco_cwa.allowed_hostnames array<string>
+- body:wlans[].cisco_cwa.allowed_subnets array<string>
+- body:wlans[].cisco_cwa.blocked_subnets array<string>
+- body:wlans[].cisco_cwa.enabled boolean
+- body:wlans[].client_limit_down integer
+- body:wlans[].client_limit_down_enabled boolean
+(+172 fields cut)
+
+## S330-N0158  POST /api/v1/orgs/{org_id}/servicepolicies
+desc: createOrgServicePolicy | Create Org Serrvice Policy
+schema: service_policy
+- path:org_id string
+- body:action string enum[allow|deny]
+- body:created_time number
+- body:id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:services array<string>
+- body:tenants array<string>
+
+## S330-N0159  DELETE /api/v1/orgs/{org_id}/servicepolicies/{servicepolicy_id}
+desc: deleteOrgServicePolicy | Delete Org Service Policuy
+- path:org_id string
+- path:servicepolicy_id string
+
+## S330-N0160  PUT /api/v1/orgs/{org_id}/servicepolicies/{servicepolicy_id}
+desc: updateOrgServicePolicy | Update Org Serrvice Policy
+schema: service_policy
+- path:org_id string
+- path:servicepolicy_id string
+- body:action string enum[allow|deny]
+- body:created_time number
+- body:id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:services array<string>
+- body:tenants array<string>
+
+## S330-N0161  POST /api/v1/orgs/{org_id}/services
+desc: createOrgService | Create getOrgServices Service
+schema: service
+- path:org_id string
+- body:addresses array<string>
+- body:app_caetgories array<string>
+- body:apps array<string>
+- body:created_time integer
+- body:description string
+- body:dscp integer
+- body:failover_policy string enum[revertable|non-revertable]
+- body:hostnames array<string>
+- body:id string
+- body:max_jitter integer
+- body:max_latency string
+- body:max_loss integer
+- body:modified_time integer
+- body:name string
+- body:org_id string
+- body:sle_enabled boolean
+- body:specs array<object>
+- body:specs[].port_range integer
+- body:specs[].protocol string
+- body:traffic_class string enum[best_effort|high|medium|low]
+- body:traffic_type string
+- body:type string enum[app|app_categories|custom]
+- body:vpn_name string enum[addresses|apps|local|hostname]
+
+## S330-N0162  DELETE /api/v1/orgs/{org_id}/services/{service_id}
+desc: deleteOrgService | deleteOrgService
+- path:org_id string
+- path:service_id string
+
+## S330-N0163  PUT /api/v1/orgs/{org_id}/services/{service_id}
+desc: updateOrgService | update Org Service
+schema: service
+- path:org_id string
+- path:service_id string
+- body:addresses array<string>
+- body:app_caetgories array<string>
+- body:apps array<string>
+- body:created_time integer
+- body:description string
+- body:dscp integer
+- body:failover_policy string enum[revertable|non-revertable]
+- body:hostnames array<string>
+- body:id string
+- body:max_jitter integer
+- body:max_latency string
+- body:max_loss integer
+- body:modified_time integer
+- body:name string
+- body:org_id string
+- body:sle_enabled boolean
+- body:specs array<object>
+- body:specs[].port_range integer
+- body:specs[].protocol string
+- body:traffic_class string enum[best_effort|high|medium|low]
+- body:traffic_type string
+- body:type string enum[app|app_categories|custom]
+- body:vpn_name string enum[addresses|apps|local|hostname]
+
+## S330-N0164  PUT /api/v1/orgs/{org_id}/setting
+desc: updateOrgSettings | Update Org Settings
+schema: org_setting
+- path:org_id string
+- body:auto_device_naming object
+- body:auto_device_naming.enable boolean
+- body:auto_device_naming.rules array<object>
+- body:auto_device_naming.rules[].expression string
+- body:auto_device_naming.rules[].model string
+- body:auto_device_naming.rules[].prefix string
+- body:auto_device_naming.rules[].src string enum[name|subnet|lldp_system_name|dns_suffix|model|lldp_port_desc]
+- body:auto_device_naming.rules[].subnet string
+- body:auto_device_naming.rules[].suffix string
+- body:auto_device_naming.rules[].value string
+- body:auto_deviceprofile_assignment object
+- body:auto_deviceprofile_assignment.enable boolean
+- body:auto_deviceprofile_assignment.rules array<object>
+- body:auto_deviceprofile_assignment.rules[].expression string
+- body:auto_deviceprofile_assignment.rules[].model string
+- body:auto_deviceprofile_assignment.rules[].prefix string
+- body:auto_deviceprofile_assignment.rules[].src string enum[name|subnet|lldp_system_name|dns_suffix|model|lldp_port_desc]
+- body:auto_deviceprofile_assignment.rules[].subnet string
+- body:auto_deviceprofile_assignment.rules[].suffix string
+- body:auto_deviceprofile_assignment.rules[].value string
+- body:auto_site_assignment object
+- body:auto_site_assignment.enable boolean
+- body:auto_site_assignment.rules array<object>
+- body:auto_site_assignment.rules[].expression string
+- body:auto_site_assignment.rules[].model string
+- body:auto_site_assignment.rules[].prefix string
+- body:auto_site_assignment.rules[].src string enum[name|subnet|lldp_system_name|dns_suffix|model|lldp_port_desc]
+- body:auto_site_assignment.rules[].subnet string
+- body:auto_site_assignment.rules[].suffix string
+- body:auto_site_assignment.rules[].value string
+- body:blacklist_url string
+- body:cacerts array<string>
+- body:celona object
+- body:celona.api_key string
+- body:celona.api_prefix string
+- body:cloudshark object
+- body:cloudshark.apitoken string
+- body:cloudshark.url string
+- body:cradlepoint object
+- body:cradlepoint.cp_api_id string
+- body:cradlepoint.cp_api_key string
+- body:cradlepoint.ecm_api_id string
+- body:cradlepoint.ecm_api_key string
+- body:created_time number
+- body:device_cert object
+- body:device_cert.cert string
+- body:device_cert.key string
+- body:device_updown_threshold integer
+- body:disable_pcap boolean
+- body:for_site boolean
+- body:gateway_mgmt object
+- body:gateway_mgmt.app_probing object
+- body:gateway_mgmt.app_probing.apps array<string>
+- body:gateway_mgmt.app_usage boolean
+- body:gateway_mgmt.tacacs object
+- body:gateway_mgmt.tacacs.acct_servers array<object>
+- body:gateway_mgmt.tacacs.enabled boolean
+- body:gateway_mgmt.tacacs.network string
+- body:gateway_mgmt.tacacs.tacplus_servers array<object>
+- body:id string
+- body:installer object
+- body:installer.allow_all_devices boolean
+- body:installer.allow_all_sites boolean
+- body:installer.extra_site_ids array<string>
+- body:installer.grace_period number
+- body:juniper object
+- body:juniper.accounts array<object>
+- body:juniper.accounts[].linked_by string
+- body:juniper.accounts[].name string
+- body:juniper.customer_name string
+- body:juniper.linked boolean
+- body:mgmt object
+- body:mgmt.mxtunnel_ids array<string>
+- body:mgmt.use_mxtunnel boolean
+- body:mgmt.use_wxtunnel boolean
+- body:mist_nac object
+- body:mist_nac.cacerts string
+- body:mist_nac.default_idp_id string
+- body:mist_nac.idps array<object>
+(+79 fields cut)
+
+## S330-N0165  DELETE /api/v1/orgs/{org_id}/setting/blacklist
+desc: deleteOrgClientsBlocklist | Delete Org Blacklist Station Clients
+- path:org_id string
+
+## S330-N0166  POST /api/v1/orgs/{org_id}/setting/blacklist
+desc: createOrgClientsBlocklist | Create Org Blacklist Client List. If there is already a blacklist, this API will replace it with the new one. Max number of blacklist clients is 1000. Retrieve the current blacklisted clients from `blacklist_url` under Org:Setting
+schema: Model_object_macs_array_string
+- path:org_id string
+- body:macs array<string>
+
+## S330-N0167  POST /api/v1/orgs/{org_id}/setting/cradlepoint/setup
+desc: setupOrgCradlepointConnectionToMist | This sets up cradlepoint webhooks to send events to Mist
+- path:org_id string
+- body:cp_api_id string
+- body:cp_api_key string
+- body:ecm_api_id string
+- body:ecm_api_key string
+
+## S330-N0168  POST /api/v1/orgs/{org_id}/setting/cradlepoint/sync
+desc: syncOrgCradlepointRouters | This syncs cradlepoint devices with Mist. We’ll also attempt to use the LLDP data from cradlepoint to identify the linkage against Mist Site / Device
+- path:org_id string

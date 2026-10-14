@@ -1,0 +1,669 @@
+## S202-0001  POST /transform
+summary: Transform API Descriptions from/to various formats
+desc: Transform API Descriptions from/to various formats e.g., Swagger, API Blueprint, RAML, WADL, Google Discovery, I/O Docs. ### INPUTS * API Blueprint * Swagger 1.0 - 1.2 * Swagger 2.0 JSON * Swagger 2.0 YAML * WADL - W3C 2009 * Google Discovery * RAML 0.8 * I/O Docs - Mashery * HAR 1.2 * Postman Collection 1.0 - 2.0 * APIMATIC Format * Mashape ### OUTPUTS * API Blueprint * Swagger 1.2 * Swagger 2.0 
+- query:format string enum[swagger10|swagger20|swaggeryaml|apiblueprint|wadl2009|raml|apimatic]
+- body:url string
+
+## S203-0001  POST /reports
+summary: Post a report to the data hub
+- query:client string
+- query:option string enum[ValidatePayload|CheckConnections|SendImmediately|SkipSend|SkipInvalidItems]
+- query:default array<string>
+- query:routeTo array<string>
+- body:(body) string
+
+## S203-0002  DELETE /settings/organizations/{organizationName}
+desc: Delete an organization (and the associated receivers and senders)
+- path:organizationName string
+
+## S203-0003  PUT /settings/organizations/{organizationName}
+desc: Create or update the direct settings associated with an organization
+- path:organizationName string
+- body:countyName string
+- body:description string
+- body:jurisdiction string enum[National|State|County]
+- body:meta object
+- body:meta.createdAt string
+- body:meta.createdBy string
+- body:meta.version number
+- body:name string
+- body:stateCode string
+
+## S203-0004  DELETE /settings/organizations/{organizationName}/receivers/{receiverName}
+desc: Delete a receiver
+- path:organizationName string
+- path:receiverName string
+
+## S203-0005  PUT /settings/organizations/{organizationName}/receivers/{receiverName}
+desc: Update a single reciever
+- path:organizationName string
+- path:receiverName string
+- body:description string
+- body:jurisdictionalFilters array<object>
+- body:jurisdictionalFilters[].doesNotMatch boolean
+- body:jurisdictionalFilters[].matchFields string enum[FACILITY_OR_PATIENT_ADDRESS|FACILITY_ADDRESS|FACILITY_NAME|ABNORMAL_VALUE]
+- body:jurisdictionalFilters[].matchValues array<string>
+- body:meta object
+- body:meta.createdAt string
+- body:meta.createdBy string
+- body:meta.version number
+- body:name string
+- body:organizationName string
+- body:timing object
+- body:timing.dailyAt number
+- body:timing.frequency string enum[REAL_TIME|HOURLY|DAILY]
+- body:topic string
+- body:translations array<object>
+- body:translations[].format string enum[CSV|HL7]
+- body:translations[].nameFormat string
+- body:translations[].receivingOrganization string
+- body:translations[].schemaName string
+- body:translations[].transport object
+- body:translations[].transport.filePath string
+- body:translations[].transport.host string
+- body:translations[].transport.port number
+- body:translations[].transport.type string
+- body:translations[].transport.contentDescription string
+- body:translations[].transport.mimeType string
+- body:translations[].transport.receiverId string
+- body:translations[].transport.receiverUrl string
+- body:translations[].transport.senderEmail string
+- body:translations[].transport.senderId string
+- body:translations[].transport.containerName string
+- body:translations[].transport.storageName string
+- body:translations[].transport.dummy string
+- body:translations[].type string
+- body:translations[].convertTimestampToDateTime string
+- body:translations[].defaultAoeToUnknown boolean
+- body:translations[].includeAOE boolean
+- body:translations[].phoneNumberFormatting string enum[STANDARD|ONLY_DIGITS_IN_COMPONENT_ONE|AREA_LOCAL_IN_COMPONENT_ONE]
+- body:translations[].receivingApplicationName string
+- body:translations[].receivingApplicationOID string
+- body:translations[].receivingFacilityName string
+- body:translations[].receivingFacilityOID string
+- body:translations[].reportingFacilityId string
+- body:translations[].reportingFacilityIdType string
+- body:translations[].reportingFacilityName string
+- body:translations[].suppressAoe boolean
+- body:translations[].suppressHl7Fields string
+- body:translations[].suppressQstForAoe boolean
+- body:translations[].truncateHDNamespaceIds boolean
+- body:translations[].useBatchHeaders boolean
+- body:translations[].useBlankInsteadOfUnknown string
+- body:translations[].usePid14ForPatientEmail boolean
+- body:translations[].useTestProcessingMode boolean
+
+## S203-0006  DELETE /settings/organizations/{organizationName}/senders/{senderName}
+desc: Delete a sender
+- path:organizationName string
+- path:senderName string
+
+## S203-0007  PUT /settings/organizations/{organizationName}/senders/{senderName}
+desc: Update a single sender
+- path:organizationName string
+- path:senderName string
+- body:description string
+- body:format string enum[CSV]
+- body:meta object
+- body:meta.createdAt string
+- body:meta.createdBy string
+- body:meta.version number
+- body:name string
+- body:organizationName string
+- body:schema string
+- body:topic string
+
+## S204-0001  POST /groups/{groupKey}/organizers
+summary: Create organizer in group
+desc: Creates a new organizer and sends an email to the email address defined in request. This API call is only available to users with the admin role. You may also pass 'G2W' or 'G2T' or 'OPENVOICE' as productType variables, creating organizers for those products. A G2W or G2T organizer will also have access to G2M.
+- path:groupKey integer
+- body:firstName string
+- body:lastName string
+- body:organizerEmail string
+- body:productType string enum[G2M|G2T|G2W|OPENVOICE]
+
+## S204-0002  POST /meetings
+summary: Create meeting
+desc: Create a new meeting based on the parameters specified.
+- body:conferencecallinfo string
+- body:endtime string
+- body:meetingtype string enum[immediate|recurring|scheduled]
+- body:passwordrequired boolean
+- body:starttime string
+- body:subject string
+- body:timezonekey string
+
+## S204-0003  DELETE /meetings/{meetingId}
+summary: Delete meeting
+desc: Deletes the meeting identified by the meetingId.
+- path:meetingId integer
+
+## S204-0004  PUT /meetings/{meetingId}
+summary: Update meeting
+desc: Updates an existing meeting specified by meetingId.
+- path:meetingId integer
+- body:conferencecallinfo string
+- body:endtime string
+- body:meetingtype string enum[immediate|recurring|scheduled]
+- body:passwordrequired boolean
+- body:starttime string
+- body:subject string
+- body:timezonekey string
+
+## S204-0005  DELETE /organizers
+summary: Delete organizer by email
+desc: Deletes the individual organizer specified by the email address. This API call is only available to users with the admin role.
+- query:email string
+
+## S204-0006  POST /organizers
+summary: Create organizer
+desc: Creates a new organizer and sends an email to the email address defined in the request. This API call is only available to users with the admin role. You may also pass 'G2W' or 'G2T' or 'OPENVOICE' as productType variables, creating organizers for those products. A G2W or G2T organizer will also have access to G2M.
+- body:firstName string
+- body:lastName string
+- body:organizerEmail string
+- body:productType string enum[G2M|G2T|G2W|OPENVOICE]
+
+## S204-0007  DELETE /organizers/{organizerKey}
+summary: Delete organizer
+desc: Deletes the individual organizer specified by the organizer key. This API call is only available to users with the admin role.
+- path:organizerKey integer
+
+## S204-0008  PUT /organizers/{organizerKey}
+summary: Update organizer
+desc: Updates the products of the specified organizer. To add a product (G2M, G2W, G2T, OPENVOICE) for the organizer, the call must be sent once for each product you want to add. To remove all products for the organizer, set status to 'suspended'. The call is limited to users with the admin role.
+- path:organizerKey integer
+- body:productType string enum[G2M|G2T|G2W|OPENVOICE]
+- body:status string enum[suspended]
+
+## S205-0001  POST /propose
+desc: Propose new resource to CyCAT.
+
+## S206-0001  POST /bin
+summary: Create a json bin
+
+## S206-0002  DELETE /bin/{id}
+summary: Delete a json bin
+- path:id string
+
+## S206-0003  PATCH /bin/{id}
+summary: Partially update a json bin with JSON Merge Patch
+- path:id string
+
+## S206-0004  PUT /bin/{id}
+summary: Update a json bin
+- path:id string
+
+## S207-0001  POST /device/detect
+summary: Detect iot device by service banners and mac address
+desc: Use device service banners and mac address captured by your network port scanner, vulnerability assessment or asset discovery tools to detect device maker, model and firmware information
+- body:ftp_banner string
+- body:hostname string
+- body:http_response string
+- body:https_response string
+- body:nic_mac string
+- body:snmp_sysdescr string
+- body:snmp_sysoid string
+- body:telnet_banner string
+- body:upnp_response string
+
+## S208-0001  POST /rest-service-fe/commit-graph-v1/details/{repository}
+desc: Retrieves detailed information about a set of changesets in a repository, designed to be used with the FishEye commit graph
+- path:repository string
+
+## S208-0002  POST /rest-service-fe/search-v1/reviewsForChangeset/{repository}
+desc: Retrieve a list of reviews for a changeset in a given repository.
+- path:repository string
+
+## S208-0003  POST /rest-service-fe/search-v1/reviewsForChangesets/{repository}
+desc: Retrieve a list of reviews for each given changeset in a given repository.
+- path:repository string
+
+## S209-0001  POST /1/sandboxes
+summary: createSandbox
+- body:commitBaseTemplate boolean
+- body:description string
+- body:name string
+- body:ownerOrganisationName string
+- body:parentSandboxName string
+- body:transportType string enum[HTTP]
+
+## S209-0002  DELETE /1/sandboxes/{sandboxName}
+summary: deleteSandbox
+- path:sandboxName string
+
+## S209-0003  PUT /1/sandboxes/{sandboxName}
+summary: updateSandbox
+- path:sandboxName string
+- body:apiDefinition string enum[None|Apiary|Swagger_V2_Json|RAML_V08|WSDL]
+- body:childSandboxes array<object>
+- body:childSandboxes[].apiDefinition string enum[None|Apiary|Swagger_V2_Json|RAML_V08|WSDL]
+- body:childSandboxes[].childSandboxes array<object>
+- body:childSandboxes[].childSandboxes[].apiDefinition string enum[None|Apiary|Swagger_V2_Json|RAML_V08|WSDL]
+- body:childSandboxes[].childSandboxes[].childSandboxes array<object>
+- body:childSandboxes[].childSandboxes[].configuredRoutes array<object>
+- body:childSandboxes[].childSandboxes[].description string
+- body:childSandboxes[].childSandboxes[].gitAccessToken string
+- body:childSandboxes[].childSandboxes[].gitUrl string
+- body:childSandboxes[].childSandboxes[].hasRepository boolean
+- body:childSandboxes[].childSandboxes[].id string
+- body:childSandboxes[].childSandboxes[].ipWhitelist array<string>
+- body:childSandboxes[].childSandboxes[].name string
+- body:childSandboxes[].childSandboxes[].parentSandbox object
+- body:childSandboxes[].childSandboxes[].properties object
+- body:childSandboxes[].childSandboxes[].proxyStatus string enum[STARTED|STOPPED]
+- body:childSandboxes[].childSandboxes[].runtimeVersion string enum[VERSION_1|VERSION_2]
+- body:childSandboxes[].childSandboxes[].sandboxUrl string
+- body:childSandboxes[].childSandboxes[].stackType string enum[JavaScript]
+- body:childSandboxes[].childSandboxes[].transportType string enum[HTTP]
+- body:childSandboxes[].configuredRoutes array<object>
+- body:childSandboxes[].configuredRoutes[].activeErrorOverride boolean
+- body:childSandboxes[].configuredRoutes[].activeLatency boolean
+- body:childSandboxes[].configuredRoutes[].defaultLatency integer
+- body:childSandboxes[].configuredRoutes[].errorOverrideType string enum[NONE|TIMEOUT|SERVICE_DOWN]
+- body:childSandboxes[].configuredRoutes[].loadLatency integer
+- body:childSandboxes[].configuredRoutes[].loadThreshold integer
+- body:childSandboxes[].configuredRoutes[].method string
+- body:childSandboxes[].configuredRoutes[].path string
+- body:childSandboxes[].configuredRoutes[].properties object
+- body:childSandboxes[].configuredRoutes[].routeConfig object
+- body:childSandboxes[].configuredRoutes[].transport string
+- body:childSandboxes[].description string
+- body:childSandboxes[].gitAccessToken string
+- body:childSandboxes[].gitUrl string
+- body:childSandboxes[].hasRepository boolean
+- body:childSandboxes[].id string
+- body:childSandboxes[].ipWhitelist array<string>
+- body:childSandboxes[].name string
+- body:childSandboxes[].parentSandbox object
+- body:childSandboxes[].parentSandbox.apiDefinition string enum[None|Apiary|Swagger_V2_Json|RAML_V08|WSDL]
+- body:childSandboxes[].parentSandbox.childSandboxes array<object>
+- body:childSandboxes[].parentSandbox.configuredRoutes array<object>
+- body:childSandboxes[].parentSandbox.description string
+- body:childSandboxes[].parentSandbox.gitAccessToken string
+- body:childSandboxes[].parentSandbox.gitUrl string
+- body:childSandboxes[].parentSandbox.hasRepository boolean
+- body:childSandboxes[].parentSandbox.id string
+- body:childSandboxes[].parentSandbox.ipWhitelist array<string>
+- body:childSandboxes[].parentSandbox.name string
+- body:childSandboxes[].parentSandbox.parentSandbox object
+- body:childSandboxes[].parentSandbox.properties object
+- body:childSandboxes[].parentSandbox.proxyStatus string enum[STARTED|STOPPED]
+- body:childSandboxes[].parentSandbox.runtimeVersion string enum[VERSION_1|VERSION_2]
+- body:childSandboxes[].parentSandbox.sandboxUrl string
+- body:childSandboxes[].parentSandbox.stackType string enum[JavaScript]
+- body:childSandboxes[].parentSandbox.transportType string enum[HTTP]
+- body:childSandboxes[].properties object
+- body:childSandboxes[].proxyStatus string enum[STARTED|STOPPED]
+- body:childSandboxes[].runtimeVersion string enum[VERSION_1|VERSION_2]
+- body:childSandboxes[].sandboxUrl string
+- body:childSandboxes[].stackType string enum[JavaScript]
+- body:childSandboxes[].transportType string enum[HTTP]
+- body:configuredRoutes array<object>
+- body:configuredRoutes[].activeErrorOverride boolean
+- body:configuredRoutes[].activeLatency boolean
+- body:configuredRoutes[].defaultLatency integer
+- body:configuredRoutes[].errorOverrideType string enum[NONE|TIMEOUT|SERVICE_DOWN]
+- body:configuredRoutes[].loadLatency integer
+- body:configuredRoutes[].loadThreshold integer
+- body:configuredRoutes[].method string
+- body:configuredRoutes[].path string
+- body:configuredRoutes[].properties object
+- body:configuredRoutes[].routeConfig object
+- body:configuredRoutes[].routeConfig.errorStrategy string enum[NONE|TIMEOUT|SERVICE_DOWN]
+- body:configuredRoutes[].routeConfig.latencyMs integer
+- body:configuredRoutes[].routeConfig.latencyMultiplier integer
+- body:configuredRoutes[].routeConfig.latencyType string enum[NONE|CONSTANT|LINEAR]
+- (79 truong bi cat)
+
+## S209-0004  DELETE /1/sandboxes/{sandboxName}/state
+summary: deleteSandboxState
+- path:sandboxName string
+
+## S210-0019  PUT /enterprises/{enterprise}/actions/permissions/workflow
+summary: Set default workflow permissions for an enterprise
+desc: Sets the default workflow permissions granted to the `GITHUB_TOKEN` when running workflows in an enterprise, and sets whether GitHub Actions can submit approving pull request reviews. For more information, see "[Enforcing a policy for workflow permissions in your enterprise](https://docs.github.com/enterprise-cloud@latest//admin/policies/enforcing-policies-for-your-enterprise/enforcing-policies-fo
+- path:enterprise string
+- body:can_approve_pull_request_reviews boolean
+- body:default_workflow_permissions string enum[read|write]
+
+## S210-0021  DELETE /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}
+summary: Delete a self-hosted runner group from an enterprise
+desc: Deletes a self-hosted runner group for an enterprise. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+- path:enterprise string
+- path:runner_group_id integer
+
+## S210-0056  PATCH /orgs/{org}
+summary: Update an organization
+desc: **Parameter Deprecation Notice:** GitHub Enterprise Cloud will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise a
+- path:org string
+- body:advanced_security_enabled_for_new_repositories boolean
+- body:billing_email string
+- body:blog string
+- body:company string
+- body:default_repository_permission string enum[read|write|admin|none]
+- body:dependabot_alerts_enabled_for_new_repositories boolean
+- body:dependabot_security_updates_enabled_for_new_repositories boolean
+- body:dependency_graph_enabled_for_new_repositories boolean
+- body:description string
+- body:email string
+- body:has_organization_projects boolean
+- body:has_repository_projects boolean
+- body:location string
+- body:members_allowed_repository_creation_type string enum[all|private|none]
+- body:members_can_create_internal_repositories boolean
+- body:members_can_create_pages boolean
+- body:members_can_create_private_pages boolean
+- body:members_can_create_private_repositories boolean
+- body:members_can_create_public_pages boolean
+- body:members_can_create_public_repositories boolean
+- body:members_can_create_repositories boolean
+- body:members_can_fork_private_repositories boolean
+- body:name string
+- body:secret_scanning_enabled_for_new_repositories boolean
+- body:secret_scanning_push_protection_custom_link string
+- body:secret_scanning_push_protection_custom_link_enabled boolean
+- body:secret_scanning_push_protection_enabled_for_new_repositories boolean
+- body:twitter_username string
+- body:web_commit_signoff_required boolean
+
+## S210-0060  DELETE /orgs/{org}/actions/permissions/repositories/{repository_id}
+summary: Disable a selected repository for GitHub Actions in an organization
+desc: Removes a repository from the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)." You must authenticate using an 
+- path:org string
+- path:repository_id integer
+
+## S210-0063  PUT /orgs/{org}/actions/permissions/workflow
+summary: Set default workflow permissions for an organization
+desc: Sets the default workflow permissions granted to the `GITHUB_TOKEN` when running workflows in an organization, and sets if GitHub Actions can submit approving pull request reviews. For more information, see "[Setting the permissions of the GITHUB_TOKEN for your organization](https://docs.github.com/enterprise-cloud@latest//organizations/managing-organization-settings/disabling-or-limiting-github-a
+- path:org string
+- body:can_approve_pull_request_reviews boolean
+- body:default_workflow_permissions string enum[read|write]
+
+## S210-0073  PUT /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories
+summary: Set repository access for a self-hosted runner group in an organization
+desc: Replaces the list of repositories that have access to a self-hosted runner group configured in an organization. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:runner_group_id integer
+- body:selected_repository_ids array<integer>
+
+## S210-0083  POST /orgs/{org}/actions/runners/{runner_id}/labels
+summary: Add custom labels to a self-hosted runner for an organization
+desc: Add custom labels to a self-hosted runner configured in an organization. You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+- path:org string
+- path:runner_id integer
+- body:labels array<string>
+
+## S210-0098  PATCH /orgs/{org}/announcement
+summary: Set announcement banner for organization
+desc: Sets the announcement banner to display for the organization.
+- path:org string
+- body:announcement string
+- body:expires_at string
+
+## S210-0103  POST /orgs/{org}/codespaces/billing/selected_users
+summary: Add users to Codespaces billing for an organization
+desc: Codespaces for the specified users will be billed to the organization. To use this endpoint, the billing settings for the organization must be set to `selected_members`. For information on how to change this setting please see [these docs].(https://docs.github.com/enterprise-cloud@latest//rest/codespaces/organizations#manage-access-control-for-organization-codespaces) You must authenticate using a
+- path:org string
+- body:selected_usernames array<string>
+
+## S210-0109  DELETE /orgs/{org}/credential-authorizations/{credential_id}
+summary: Remove a SAML SSO authorization for an organization
+desc: Listing and deleting credential authorizations is available to organizations with GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs-products). An authenticated organization owner with the `admin:org` scope can remove a credential authorization for an organization that uses SAML SSO. Onc
+- path:org string
+- path:credential_id integer
+
+## S210-0119  DELETE /orgs/{org}/hooks/{hook_id}
+summary: Delete an organization webhook
+- path:org string
+- path:hook_id integer
+
+## S210-0137  PUT /orgs/{org}/outside_collaborators/{username}
+summary: Convert an organization member to outside collaborator
+desc: When an organization member is converted to an outside collaborator, they'll only have access to the repositories that their current team membership allows. The user will no longer be a member of the organization. For more information, see "[Converting an organization member to an outside collaborator](https://docs.github.com/enterprise-cloud@latest//articles/converting-an-organization-member-to-a
+- path:org string
+- path:username string
+- body:async boolean
+
+## S210-0180  DELETE /projects/{project_id}/collaborators/{username}
+summary: Remove user as a collaborator
+desc: Removes a collaborator from an organization project. You must be an organization owner or a project `admin` to remove a collaborator.
+- path:project_id integer
+- path:username string
+
+## S210-0202  POST /repos/{owner}/{repo}/actions/runs/{run_id}/approve
+summary: Approve a workflow run for a fork pull request
+desc: Approves a workflow run for a pull request from a public fork of a first time contributor. For more information, see ["Approving workflow runs from public forks](https://docs.github.com/enterprise-cloud@latest//actions/managing-workflow-runs/approving-workflow-runs-from-public-forks)." You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the
+- path:owner string
+- path:repo string
+- path:run_id integer
+
+## S210-0203  POST /repos/{owner}/{repo}/actions/runs/{run_id}/cancel
+summary: Cancel a workflow run
+desc: Cancels a workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+- path:owner string
+- path:repo string
+- path:run_id integer
+
+## S210-0221  PUT /repos/{owner}/{repo}/branches/{branch}/protection
+summary: Update branch protection
+desc: Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs-products) in the GitHub Help d
+- path:owner string
+- path:repo string
+- path:branch string
+- body:allow_deletions boolean
+- body:allow_force_pushes boolean
+- body:allow_fork_syncing boolean
+- body:block_creations boolean
+- body:enforce_admins boolean
+- body:lock_branch boolean
+- body:required_conversation_resolution boolean
+- body:required_linear_history boolean
+- body:required_pull_request_reviews object
+- body:required_pull_request_reviews.bypass_pull_request_allowances object
+- body:required_pull_request_reviews.bypass_pull_request_allowances.apps array<string>
+- body:required_pull_request_reviews.bypass_pull_request_allowances.teams array<string>
+- body:required_pull_request_reviews.bypass_pull_request_allowances.users array<string>
+- body:required_pull_request_reviews.dismiss_stale_reviews boolean
+- body:required_pull_request_reviews.dismissal_restrictions object
+- body:required_pull_request_reviews.dismissal_restrictions.apps array<string>
+- body:required_pull_request_reviews.dismissal_restrictions.teams array<string>
+- body:required_pull_request_reviews.dismissal_restrictions.users array<string>
+- body:required_pull_request_reviews.require_code_owner_reviews boolean
+- body:required_pull_request_reviews.require_last_push_approval boolean
+- body:required_pull_request_reviews.required_approving_review_count integer
+- body:required_status_checks object
+- body:required_status_checks.checks array<object>
+- body:required_status_checks.checks[].app_id integer
+- body:required_status_checks.checks[].context string
+- body:required_status_checks.contexts array<string>
+- body:required_status_checks.strict boolean
+- body:restrictions object
+- body:restrictions.apps array<string>
+- body:restrictions.teams array<string>
+- body:restrictions.users array<string>
+
+## S210-0240  DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users
+summary: Remove user access restrictions
+desc: Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs-products) in the GitHub Help d
+- path:owner string
+- path:repo string
+- path:branch string
+- body:users array<string>
+
+## S210-0243  POST /repos/{owner}/{repo}/branches/{branch}/rename
+summary: Rename a branch
+desc: Renames a branch in a repository. **Note:** Although the API responds immediately, the branch rename process might take some extra time to complete in the background. You won't be able to push to the old branch name while the rename process is in progress. For more information, see "[Renaming a branch](https://docs.github.com/enterprise-cloud@latest//github/administering-a-repository/renaming-a-br
+- path:owner string
+- path:repo string
+- path:branch string
+- body:new_name string
+
+## S210-0247  POST /repos/{owner}/{repo}/check-suites
+summary: Create a check suite
+desc: **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`. By default, check suites are automatically created when you create a [check run](https://docs.github.com/enterprise-cloud@latest//rest/reference/ch
+- path:owner string
+- path:repo string
+- body:head_sha string
+
+## S210-0249  POST /repos/{owner}/{repo}/check-suites/{check_suite_id}/rerequest
+summary: Rerequest a check suite
+desc: Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will trigger the [`check_suite` webhook](https://docs.github.com/enterprise-cloud@latest//webhooks/event-payloads/#check_suite) event with the action `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared. To rerequest a check 
+- path:owner string
+- path:repo string
+- path:check_suite_id integer
+
+## S210-0252  POST /repos/{owner}/{repo}/code-scanning/sarifs
+summary: Upload an analysis as SARIF data
+desc: Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. You must use an access token with the `security_events` scope to use this endpoint for private repositories. You can also use tokens with the `public_repo` scope for public repositories only. GitHub Apps must have the `security_events` write permission to use this endpoint. There ar
+- path:owner string
+- path:repo string
+- body:checkout_uri string
+- body:commit_sha string
+- body:ref string
+- body:sarif string
+- body:started_at string
+- body:tool_name string
+- body:validate boolean
+
+## S210-0281  POST /repos/{owner}/{repo}/git/refs
+summary: Create a reference
+desc: Creates a reference for your repository. You are unable to create new references for empty repositories, even if the commit SHA-1 hash used exists. Empty repositories are repositories without branches.
+- path:owner string
+- path:repo string
+- body:key string
+- body:ref string
+- body:sha string
+
+## S210-0285  POST /repos/{owner}/{repo}/git/trees
+summary: Create a tree
+desc: The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure. If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more in
+- path:owner string
+- path:repo string
+- body:base_tree string
+- body:tree array<object>
+- body:tree[].content string
+- body:tree[].mode string enum[100644|100755|040000|160000|120000]
+- body:tree[].path string
+- body:tree[].sha string
+- body:tree[].type string enum[blob|tree|commit]
+
+## S210-0286  POST /repos/{owner}/{repo}/hooks
+summary: Create a repository webhook
+desc: Repositories can have multiple webhooks installed. Each webhook should have a unique `config`. Multiple webhooks can share the same `config` as long as those webhooks do not have any `events` that overlap.
+- path:owner string
+- path:repo string
+- body:active boolean
+- body:config object
+- body:config.content_type string
+- body:config.digest string
+- body:config.insecure_ssl string
+- body:config.secret string
+- body:config.token string
+- body:config.url string
+- body:events array<string>
+- body:name string
+
+## S210-0295  PUT /repos/{owner}/{repo}/import
+summary: Start an import
+desc: Start a source import to a GitHub Enterprise Cloud repository using GitHub Enterprise Cloud Importer. Importing into a GitHub Enterprise Cloud repository with GitHub Actions enabled is not supported and will return a status `422 Unprocessable Entity` response.
+- path:owner string
+- path:repo string
+- body:tfvc_project string
+- body:vcs string enum[subversion|git|mercurial|tfvc]
+- body:vcs_password string
+- body:vcs_url string
+- body:vcs_username string
+
+## S210-0323  PATCH /repos/{owner}/{repo}/labels/{name}
+summary: Update a label
+- path:owner string
+- path:repo string
+- path:name string
+- body:color string
+- body:description string
+- body:new_name string
+
+## S210-0346  POST /repos/{owner}/{repo}/pulls/{pull_number}/comments/{comment_id}/replies
+summary: Create a reply for a review comment
+desc: Creates a reply to a review comment for a pull request. For the `comment_id`, provide the ID of the review comment you are replying to. This must be the ID of a _top-level review comment_, not a reply to that comment. Replies to replies are not supported. This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest//github/managing-subscriptions-and-notifications-on-githu
+- path:owner string
+- path:repo string
+- path:pull_number integer
+- path:comment_id integer
+- body:body string
+
+## S210-0354  POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/events
+summary: Submit a review for a pull request
+desc: Submits a pending review for a pull request. For more information about creating a pending review for a pull request, see "[Create a review for a pull request](https://docs.github.com/enterprise-cloud@latest//rest/pulls#create-a-review-for-a-pull-request)."
+- path:owner string
+- path:repo string
+- path:pull_number integer
+- path:review_id integer
+- body:body string
+- body:event string enum[APPROVE|REQUEST_CHANGES|COMMENT]
+
+## S210-0359  POST /repos/{owner}/{repo}/releases/generate-notes
+summary: Generate release notes content for a release
+desc: Generate a name and body describing a [release](https://docs.github.com/enterprise-cloud@latest//rest/reference/repos#releases). The body content will be markdown formatted and contain information like the changes since last release and users who contributed. The generated release notes are not saved anywhere. They are intended to be generated and used when creating a new release.
+- path:owner string
+- path:repo string
+- body:configuration_file_path string
+- body:previous_tag_name string
+- body:tag_name string
+- body:target_commitish string
+
+## S210-0407  POST /user/codespaces
+summary: Create a codespace for the authenticated user
+desc: Creates a new codespace, owned by the authenticated user. This endpoint requires either a `repository_id` OR a `pull_request` but not both. You must authenticate using an access token with the `codespace` scope to use this endpoint. GitHub Apps must have write access to the `codespaces` repository permission to use this endpoint.
+- body:client_ip string
+- body:devcontainer_path string
+- body:display_name string
+- body:idle_timeout_minutes integer
+- body:location string
+- body:machine string
+- body:multi_repo_permissions_opt_out boolean
+- body:ref string
+- body:repository_id integer
+- body:retention_period_minutes integer
+- body:working_directory string
+- body:pull_request object
+- body:pull_request.pull_request_number integer
+- body:pull_request.repository_id integer
+
+## S210-0409  PUT /user/codespaces/secrets/{secret_name}
+summary: Create or update a secret for the authenticated user
+desc: Creates or updates a secret for a user's codespace with an encrypted value. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access token with the `codespace` or `codespace:secrets` scope to use this endpoint. User must also have Codespaces access to use this endpoint. GitHub Apps must have write access to the `cod
+- path:secret_name string
+- body:encrypted_value string
+- body:key_id string
+- body:selected_repository_ids array<integer>
+
+## S210-0417  POST /user/codespaces/{codespace_name}/start
+summary: Start a codespace for the authenticated user
+desc: Starts a user's codespace. You must authenticate using an access token with the `codespace` scope to use this endpoint. GitHub Apps must have write access to the `codespaces_lifecycle_admin` repository permission to use this endpoint.
+- path:codespace_name string
+
+## S210-0429  PUT /user/interaction-limits
+summary: Set interaction restrictions for your public repositories
+desc: Temporarily restricts which type of GitHub user can interact with your public repositories. Setting the interaction limit at the user level will overwrite any interaction limits that are set for individual repositories owned by the user.
+- body:expiry string enum[one_day|three_days|one_week|one_month|six_months]
+- body:limit string enum[existing_users|contributors_only|collaborators_only]
+
+## S210-0430  POST /user/keys
+summary: Create a public SSH key for the authenticated user
+desc: Adds a public SSH key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:public_key` [scope](https://docs.github.com/enterprise-cloud@latest//apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+- body:key string
+- body:title string
+
+## S210-0446  DELETE /user/starred/{owner}/{repo}
+summary: Unstar a repository for the authenticated user
+- path:owner string
+- path:repo string
+
+## S210-0450  DELETE /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}
+summary: Delete package version for a user
+desc: Deletes a specific package version for a user. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance. To use this endpoint, you must authenticate using an access token with the `read:packages` and `delete:packages` scopes. In addition: - If the `package_type` belongs to 
+- path:package_type string enum[npm|maven|rubygems|docker|nuget|container]
+- path:package_name string
+- path:username string
+- path:package_version_id integer

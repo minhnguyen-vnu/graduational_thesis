@@ -1,0 +1,1242 @@
+## S506-N0021  DELETE /rest/api/3/dashboard/{id}
+desc: Delete dashboard | Deletes a dashboard. **[Permissions](#permissions) required:** None The dashboard to be deleted must be owned by the user.
+- path:id string
+
+## S506-N0023  POST /rest/api/3/dashboard/{id}/copy
+desc: Copy dashboard | Copies a dashboard. Any values provided in the `dashboard` parameter replace those in the copied dashboard. **[Permissions](#permissions) required:** None The dashboard to be copied must be owned by or shared with the user.
+schema: DashboardDetails
+- path:id string
+- body:description string
+- body:editPermissions array<object>
+- body:editPermissions[].group object
+- body:editPermissions[].group.groupId string
+- body:editPermissions[].group.name string
+- body:editPermissions[].group.self string
+- body:editPermissions[].id integer
+- body:editPermissions[].project object
+- body:editPermissions[].project.archived boolean
+- body:editPermissions[].project.archivedBy object
+- body:editPermissions[].project.archivedDate string
+- body:editPermissions[].project.assigneeType string enum[PROJECT_LEAD|UNASSIGNED]
+- body:editPermissions[].project.avatarUrls object
+- body:editPermissions[].project.components array<object>
+- body:editPermissions[].project.deleted boolean
+- body:editPermissions[].project.deletedBy object
+- body:editPermissions[].project.deletedDate string
+- body:editPermissions[].project.description string
+- body:editPermissions[].project.email string
+- body:editPermissions[].project.expand string
+- body:editPermissions[].project.favourite boolean
+- body:editPermissions[].project.id string
+- body:editPermissions[].project.insight object
+- body:editPermissions[].project.isPrivate boolean
+- body:editPermissions[].project.issueTypeHierarchy object
+- body:editPermissions[].project.issueTypes array<object>
+- body:editPermissions[].project.key string
+- body:editPermissions[].project.landingPageInfo object
+- body:editPermissions[].project.lead object
+- body:editPermissions[].project.name string
+- body:editPermissions[].project.permissions object
+- body:editPermissions[].project.projectCategory object
+- body:editPermissions[].project.projectTypeKey string enum[software|service_desk|business]
+- body:editPermissions[].project.properties object
+- body:editPermissions[].project.retentionTillDate string
+- body:editPermissions[].project.roles object
+- body:editPermissions[].project.self string
+- body:editPermissions[].project.simplified boolean
+- body:editPermissions[].project.style string enum[classic|next-gen]
+- body:editPermissions[].project.url string
+- body:editPermissions[].project.uuid string
+- body:editPermissions[].project.versions array<object>
+- body:editPermissions[].role object
+- body:editPermissions[].role.actors array<object>
+- body:editPermissions[].role.admin boolean
+- body:editPermissions[].role.currentUserRole boolean
+- body:editPermissions[].role.default boolean
+- body:editPermissions[].role.description string
+- body:editPermissions[].role.id integer
+- body:editPermissions[].role.name string
+- body:editPermissions[].role.roleConfigurable boolean
+- body:editPermissions[].role.scope object
+- body:editPermissions[].role.self string
+- body:editPermissions[].role.translatedName string
+- body:editPermissions[].type string enum[user|group|project|projectRole|global|loggedin|authenticated|project-unknown]
+- body:editPermissions[].user object
+- body:editPermissions[].user.accountId string
+- body:editPermissions[].user.active boolean
+- body:editPermissions[].user.avatarUrls object
+- body:editPermissions[].user.displayName string
+- body:editPermissions[].user.key string
+- body:editPermissions[].user.name string
+- body:editPermissions[].user.self string
+- body:name string
+- body:sharePermissions array<object>
+- body:sharePermissions[].group object
+- body:sharePermissions[].group.groupId string
+- body:sharePermissions[].group.name string
+- body:sharePermissions[].group.self string
+- body:sharePermissions[].id integer
+- body:sharePermissions[].project object
+- body:sharePermissions[].project.archived boolean
+- body:sharePermissions[].project.archivedBy object
+- body:sharePermissions[].project.archivedDate string
+- body:sharePermissions[].project.assigneeType string enum[PROJECT_LEAD|UNASSIGNED]
+- body:sharePermissions[].project.avatarUrls object
+- body:sharePermissions[].project.components array<object>
+- body:sharePermissions[].project.deleted boolean
+- body:sharePermissions[].project.deletedBy object
+(+47 fields cut)
+
+## S506-N0025  POST /rest/api/3/expression/eval
+desc: Evaluate Jira expression | Evaluates a Jira expression and returns its value. This resource can be used to test Jira expressions that you plan to use elsewhere, or to fetch data in a flexible way. Consult the [Jira expressions documentation](https://developer.atlassian.com/cloud/jira/platform/jira-expressions/) for more details. #### Context variables #### The following context variables are avail
+schema: JiraExpressionEvalRequestBean
+- query:expand string
+- body:context object
+- body:context.board integer
+- body:context.custom array<object>
+- body:context.custom[].type string
+- body:context.custom[].accountId string
+- body:context.custom[].id integer
+- body:context.custom[].key string
+- body:context.custom[].value object
+- body:context.customerRequest integer
+- body:context.issue object
+- body:context.issue.id integer
+- body:context.issue.key string
+- body:context.issues object
+- body:context.issues.jql object
+- body:context.project object
+- body:context.project.id integer
+- body:context.project.key string
+- body:context.serviceDesk integer
+- body:context.sprint integer
+- body:expression string
+
+## S506-N0026  POST /rest/api/3/field
+desc: Create custom field | Creates a custom field. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: CustomFieldDefinitionJsonBean
+- body:description string
+- body:name string
+- body:searcherKey string enum[com.atlassian.jira.plugin.system.customfieldtypes:cascadingselectsearcher|com.atlassian.jira.plugin.system.customfieldtypes:daterange|com.atlassian.jira.plugin.system.customfieldtypes:datetimerange|com.atlassian.jira.plugin.system.customfieldtypes:exactnumber|com.atlassian.jira.plugin.system.customfieldtypes:exacttextsearcher|com.atlassian.jira.plugin.system.customfieldtypes:grouppickersearcher|com.atlassian.jira.plugin.system.customfieldtypes:labelsearcher|com.atlassian.jira.plugin.system.customfieldtypes:multiselectsearcher|com.atlassian.jira.plugin.system.customfieldtypes:numberrange|com.atlassian.jira.plugin.system.customfieldtypes:projectsearcher|com.atlassian.jira.plugin.system.customfieldtypes:textsearcher|com.atlassian.jira.plugin.system.customfieldtypes:userpickergroupsearcher]
+- body:type string
+
+## S506-N0027  PUT /rest/api/3/field/{fieldId}
+desc: Update custom field | Updates a custom field. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: UpdateCustomFieldDetails
+- path:fieldId string
+- body:description string
+- body:name string
+- body:searcherKey string enum[com.atlassian.jira.plugin.system.customfieldtypes:cascadingselectsearcher|com.atlassian.jira.plugin.system.customfieldtypes:daterange|com.atlassian.jira.plugin.system.customfieldtypes:datetimerange|com.atlassian.jira.plugin.system.customfieldtypes:exactnumber|com.atlassian.jira.plugin.system.customfieldtypes:exacttextsearcher|com.atlassian.jira.plugin.system.customfieldtypes:grouppickersearcher|com.atlassian.jira.plugin.system.customfieldtypes:labelsearcher|com.atlassian.jira.plugin.system.customfieldtypes:multiselectsearcher|com.atlassian.jira.plugin.system.customfieldtypes:numberrange|com.atlassian.jira.plugin.system.customfieldtypes:projectsearcher|com.atlassian.jira.plugin.system.customfieldtypes:textsearcher|com.atlassian.jira.plugin.system.customfieldtypes:userpickergroupsearcher]
+
+## S506-N0028  POST /rest/api/3/field/{fieldId}/context
+desc: Create custom field context | Creates a custom field context. If `projectIds` is empty, a global context is created. A global context is one that applies to all project. If `issueTypeIds` is empty, the context applies to all issue types. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: CreateCustomFieldContext
+- path:fieldId string
+- body:description string
+- body:id string
+- body:issueTypeIds array<string>
+- body:name string
+- body:projectIds array<string>
+
+## S506-N0029  PUT /rest/api/3/field/{fieldId}/context/defaultValue
+desc: Set custom field contexts default values | Sets default for contexts of a custom field. Default are defined using these objects: * `CustomFieldContextDefaultValueDate` (type `datepicker`) for date fields. * `CustomFieldContextDefaultValueDateTime` (type `datetimepicker`) for date-time fields. * `CustomFieldContextDefaultValueSingleOption` (type `option.single`) for single choice select lists and r
+schema: CustomFieldContextDefaultValueUpdate
+- path:fieldId string
+- body:defaultValues array<object>
+- body:defaultValues[].cascadingOptionId string
+- body:defaultValues[].contextId string
+- body:defaultValues[].optionId string
+- body:defaultValues[].type string
+- body:defaultValues[].optionIds array<string>
+- body:defaultValues[].accountId string
+- body:defaultValues[].userFilter object
+- body:defaultValues[].userFilter.enabled boolean
+- body:defaultValues[].userFilter.groups array<string>
+- body:defaultValues[].userFilter.roleIds array<integer>
+- body:defaultValues[].accountIds array<string>
+- body:defaultValues[].groupId string
+- body:defaultValues[].groupIds array<string>
+- body:defaultValues[].date string
+- body:defaultValues[].useCurrent boolean
+- body:defaultValues[].dateTime string
+- body:defaultValues[].url string
+- body:defaultValues[].projectId string
+- body:defaultValues[].number number
+- body:defaultValues[].labels array<string>
+- body:defaultValues[].text string
+- body:defaultValues[].versionId string
+- body:defaultValues[].versionOrder string
+- body:defaultValues[].versionIds array<string>
+- body:defaultValues[].values array<string>
+- body:defaultValues[].object object
+
+## S506-N0031  DELETE /rest/api/3/field/{fieldId}/context/{contextId}
+desc: Delete custom field context | Deletes a [ custom field context](https://confluence.atlassian.com/adminjiracloud/what-are-custom-field-contexts-991923859.html). **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:fieldId string
+- path:contextId integer
+
+## S506-N0033  PUT /rest/api/3/field/{fieldId}/context/{contextId}/issuetype
+desc: Add issue types to context | Adds issue types to a custom field context, appending the issue types to the issue types list. A custom field context without any issue types applies to all issue types. Adding issue types to such a custom field context would result in it applying to only the listed issue types. If any of the issue types exists in the custom field context, the operation fails and no is
+schema: IssueTypeIds
+- path:fieldId string
+- path:contextId integer
+- body:issueTypeIds array<string>
+
+## S506-N0034  POST /rest/api/3/field/{fieldId}/context/{contextId}/issuetype/remove
+desc: Remove issue types from context | Removes issue types from a custom field context. A custom field context without any issue types applies to all issue types. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueTypeIds
+- path:fieldId string
+- path:contextId integer
+- body:issueTypeIds array<string>
+
+## S506-N0035  POST /rest/api/3/field/{fieldId}/context/{contextId}/option
+desc: Create custom field options (context) | Creates options and, where the custom select field is of the type Select List (cascading), cascading options for a custom select field. The options are added to a context of the field. The maximum number of options that can be created per request is 1000 and each field can have a maximum of 10000 options. This operation works for custom field options created
+schema: BulkCustomFieldOptionCreateRequest
+- path:fieldId string
+- path:contextId integer
+- body:options array<object>
+- body:options[].disabled boolean
+- body:options[].optionId string
+- body:options[].value string
+
+## S506-N0037  PUT /rest/api/3/field/{fieldId}/context/{contextId}/option/move
+desc: Reorder custom field options (context) | Changes the order of custom field options or cascading options in a context. This operation works for custom field options created in Jira or the operations from this resource. **To work with issue field select list options created for Connect apps use the [Issue custom field options (apps)](#api-group-issue-custom-field-options--apps-) operations.** **[Per
+schema: OrderOfCustomFieldOptions
+- path:fieldId string
+- path:contextId integer
+- body:after string
+- body:customFieldOptionIds array<string>
+- body:position string enum[First|Last]
+
+## S506-N0038  DELETE /rest/api/3/field/{fieldId}/context/{contextId}/option/{optionId}
+desc: Delete custom field options (context) | Deletes a custom field option. Options with cascading options cannot be deleted without deleting the cascading options first. This operation works for custom field options created in Jira or the operations from this resource. **To work with issue field select list options created for Connect apps use the [Issue custom field options (apps)](#api-group-issue-c
+- path:fieldId string
+- path:contextId integer
+- path:optionId integer
+
+## S506-N0039  PUT /rest/api/3/field/{fieldId}/context/{contextId}/project
+desc: Assign custom field context to projects | Assigns a custom field context to projects. If any project in the request is assigned to any context of the custom field, the operation fails. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: ProjectIds
+- path:fieldId string
+- path:contextId integer
+- body:projectIds array<string>
+
+## S506-N0040  POST /rest/api/3/field/{fieldId}/context/{contextId}/project/remove
+desc: Remove custom field context from projects | Removes a custom field context from projects. A custom field context without any projects applies to all projects. Removing all projects from a custom field context would result in it applying to all projects. If any project in the request is not assigned to the context, or the operation would result in two global contexts for the field, the operation fa
+schema: ProjectIds
+- path:fieldId string
+- path:contextId integer
+- body:projectIds array<string>
+
+## S506-N0041  POST /rest/api/3/field/{fieldKey}/option
+desc: Create issue field option | Creates an option for a select list issue field. Note that this operation **only works for issue field select list options added by Connect apps**, it cannot be used with issue field select list options created in Jira or using operations from the [Issue custom field options](#api-group-Issue-custom-field-options) resource. **[Permissions](#permissions) required:** *Adm
+schema: IssueFieldOptionCreateBean
+- path:fieldKey string
+- body:config object
+- body:config.attributes array<string> enum[notSelectable|defaultValue]
+- body:config.scope object
+- body:config.scope.global object
+- body:config.scope.projects array<integer>
+- body:config.scope.projects2 array<object>
+- body:properties object
+- body:value string
+
+## S506-N0042  DELETE /rest/api/3/field/{fieldKey}/option/{optionId}
+desc: Delete issue field option | Deletes an option from a select list issue field. Note that this operation **only works for issue field select list options added by Connect apps**, it cannot be used with issue field select list options created in Jira or using operations from the [Issue custom field options](#api-group-Issue-custom-field-options) resource. **[Permissions](#permissions) required:** *Ad
+- path:fieldKey string
+- path:optionId integer
+
+## S506-N0043  PUT /rest/api/3/field/{fieldKey}/option/{optionId}
+desc: Update issue field option | Updates or creates an option for a select list issue field. This operation requires that the option ID is provided when creating an option, therefore, the option ID needs to be specified as a path and body parameter. The option ID provided in the path and body must be identical. Note that this operation **only works for issue field select list options added by Connect a
+schema: IssueFieldOption
+- path:fieldKey string
+- path:optionId integer
+- body:config object
+- body:config.attributes array<string> enum[notSelectable|defaultValue]
+- body:config.scope object
+- body:config.scope.global object
+- body:config.scope.projects array<integer>
+- body:config.scope.projects2 array<object>
+- body:id integer
+- body:properties object
+- body:value string
+
+## S506-N0044  DELETE /rest/api/3/field/{fieldKey}/option/{optionId}/issue
+desc: Replace issue field option | Deselects an issue-field select-list option from all issues where it is selected. A different option can be selected to replace the deselected option. The update can also be limited to a smaller set of issues by using a JQL query. Connect and Forge app users with *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg) can override the screen se
+- path:fieldKey string
+- path:optionId integer
+- query:replaceWith integer
+- query:jql string
+- query:overrideScreenSecurity boolean
+- query:overrideEditableFlag boolean
+
+## S506-N0045  DELETE /rest/api/3/field/{id}
+desc: Delete custom field | Deletes a custom field. The custom field is deleted whether it is in the trash or not. See [Edit or delete a custom field](https://confluence.atlassian.com/x/Z44fOw) for more information on trashing and deleting custom fields. This operation is [asynchronous](#async). Follow the `location` link in the response to determine the status of the task and use [Get task](#api-rest-a
+- path:id string
+
+## S506-N0046  POST /rest/api/3/field/{id}/restore
+desc: Restore custom field from trash | Restores a custom field from trash. See [Edit or delete a custom field](https://confluence.atlassian.com/x/Z44fOw) for more information on trashing and deleting custom fields. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id string
+
+## S506-N0049  DELETE /rest/api/3/fieldconfiguration/{id}
+desc: Delete field configuration | Deletes a field configuration. This operation can only delete configurations used in company-managed (classic) projects. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id integer
+
+## S506-N0050  PUT /rest/api/3/fieldconfiguration/{id}
+desc: Update field configuration | Updates a field configuration. The name and the description provided in the request override the existing values. This operation can only update configurations used in company-managed (classic) projects. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: FieldConfigurationDetails
+- path:id integer
+- body:description string
+- body:name string
+
+## S506-N0051  PUT /rest/api/3/fieldconfiguration/{id}/fields
+desc: Update field configuration items | Updates fields in a field configuration. The properties of the field configuration fields provided override the existing values. This operation can only update field configurations used in company-managed (classic) projects. The operation can set the renderer for text fields to the default text renderer (`text-renderer`) or wiki style renderer (`wiki-renderer`). 
+schema: FieldConfigurationItemsDetails
+- path:id integer
+- body:fieldConfigurationItems array<object>
+- body:fieldConfigurationItems[].description string
+- body:fieldConfigurationItems[].id string
+- body:fieldConfigurationItems[].isHidden boolean
+- body:fieldConfigurationItems[].isRequired boolean
+- body:fieldConfigurationItems[].renderer string
+
+## S506-N0052  POST /rest/api/3/fieldconfigurationscheme
+desc: Create field configuration scheme | Creates a field configuration scheme. This operation can only create field configuration schemes used in company-managed (classic) projects. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: UpdateFieldConfigurationSchemeDetails
+- body:description string
+- body:name string
+
+## S506-N0054  DELETE /rest/api/3/fieldconfigurationscheme/{id}
+desc: Delete field configuration scheme | Deletes a field configuration scheme. This operation can only delete field configuration schemes used in company-managed (classic) projects. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id integer
+
+## S506-N0055  PUT /rest/api/3/fieldconfigurationscheme/{id}
+desc: Update field configuration scheme | Updates a field configuration scheme. This operation can only update field configuration schemes used in company-managed (classic) projects. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: UpdateFieldConfigurationSchemeDetails
+- path:id integer
+- body:description string
+- body:name string
+
+## S506-N0056  PUT /rest/api/3/fieldconfigurationscheme/{id}/mapping
+desc: Assign issue types to field configurations | Assigns issue types to field configurations on field configuration scheme. This operation can only modify field configuration schemes used in company-managed (classic) projects. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: AssociateFieldConfigurationsWithIssueTypesRequest
+- path:id integer
+- body:mappings array<object>
+- body:mappings[].fieldConfigurationId string
+- body:mappings[].issueTypeId string
+
+## S506-N0057  POST /rest/api/3/fieldconfigurationscheme/{id}/mapping/delete
+desc: Remove issue types from field configuration scheme | Removes issue types from the field configuration scheme. This operation can only modify field configuration schemes used in company-managed (classic) projects. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueTypeIdsToRemove
+- path:id integer
+- body:issueTypeIds array<string>
+
+## S506-N0058  POST /rest/api/3/filter
+desc: Create filter | Creates a filter. The filter is shared according to the [default share scope](#api-rest-api-3-filter-post). The filter is not selected as a favorite. **[Permissions](#permissions) required:** Permission to access Jira.
+schema: Filter
+- query:expand string
+- query:overrideSharePermissions boolean
+- body:description string
+- body:editPermissions array<object>
+- body:editPermissions[].group object
+- body:editPermissions[].group.groupId string
+- body:editPermissions[].group.name string
+- body:editPermissions[].group.self string
+- body:editPermissions[].id integer
+- body:editPermissions[].project object
+- body:editPermissions[].project.archived boolean
+- body:editPermissions[].project.archivedBy object
+- body:editPermissions[].project.archivedDate string
+- body:editPermissions[].project.assigneeType string enum[PROJECT_LEAD|UNASSIGNED]
+- body:editPermissions[].project.avatarUrls object
+- body:editPermissions[].project.components array<object>
+- body:editPermissions[].project.deleted boolean
+- body:editPermissions[].project.deletedBy object
+- body:editPermissions[].project.deletedDate string
+- body:editPermissions[].project.description string
+- body:editPermissions[].project.email string
+- body:editPermissions[].project.expand string
+- body:editPermissions[].project.favourite boolean
+- body:editPermissions[].project.id string
+- body:editPermissions[].project.insight object
+- body:editPermissions[].project.isPrivate boolean
+- body:editPermissions[].project.issueTypeHierarchy object
+- body:editPermissions[].project.issueTypes array<object>
+- body:editPermissions[].project.key string
+- body:editPermissions[].project.landingPageInfo object
+- body:editPermissions[].project.lead object
+- body:editPermissions[].project.name string
+- body:editPermissions[].project.permissions object
+- body:editPermissions[].project.projectCategory object
+- body:editPermissions[].project.projectTypeKey string enum[software|service_desk|business]
+- body:editPermissions[].project.properties object
+- body:editPermissions[].project.retentionTillDate string
+- body:editPermissions[].project.roles object
+- body:editPermissions[].project.self string
+- body:editPermissions[].project.simplified boolean
+- body:editPermissions[].project.style string enum[classic|next-gen]
+- body:editPermissions[].project.url string
+- body:editPermissions[].project.uuid string
+- body:editPermissions[].project.versions array<object>
+- body:editPermissions[].role object
+- body:editPermissions[].role.actors array<object>
+- body:editPermissions[].role.admin boolean
+- body:editPermissions[].role.currentUserRole boolean
+- body:editPermissions[].role.default boolean
+- body:editPermissions[].role.description string
+- body:editPermissions[].role.id integer
+- body:editPermissions[].role.name string
+- body:editPermissions[].role.roleConfigurable boolean
+- body:editPermissions[].role.scope object
+- body:editPermissions[].role.self string
+- body:editPermissions[].role.translatedName string
+- body:editPermissions[].type string enum[user|group|project|projectRole|global|loggedin|authenticated|project-unknown]
+- body:editPermissions[].user object
+- body:editPermissions[].user.accountId string
+- body:editPermissions[].user.active boolean
+- body:editPermissions[].user.avatarUrls object
+- body:editPermissions[].user.displayName string
+- body:editPermissions[].user.key string
+- body:editPermissions[].user.name string
+- body:editPermissions[].user.self string
+- body:favourite boolean
+- body:favouritedCount integer
+- body:id string
+- body:jql string
+- body:name string
+- body:owner object
+- body:owner.accountId string
+- body:owner.accountType string enum[atlassian|app|customer|unknown]
+- body:owner.active boolean
+- body:owner.applicationRoles object
+- body:owner.applicationRoles.callback object
+- body:owner.applicationRoles.items array<object>
+- body:owner.applicationRoles.max-results integer
+- body:owner.applicationRoles.pagingCallback object
+- body:owner.applicationRoles.size integer
+(+113 fields cut)
+
+## S506-N0059  PUT /rest/api/3/filter/defaultShareScope
+desc: Set default share scope | Sets the default sharing for new filters and dashboards for a user. **[Permissions](#permissions) required:** Permission to access Jira.
+schema: DefaultShareScope
+- body:scope string enum[GLOBAL|AUTHENTICATED|PRIVATE]
+
+## S506-N0060  DELETE /rest/api/3/filter/{id}
+desc: Delete filter | Delete a filter. **[Permissions](#permissions) required:** Permission to access Jira, however filters can only be deleted by the creator of the filter or a user with *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id integer
+
+## S506-N0061  PUT /rest/api/3/filter/{id}
+desc: Update filter | Updates a filter. Use this operation to update a filter's name, description, JQL, or sharing. **[Permissions](#permissions) required:** Permission to access Jira, however the user must own the filter.
+schema: Filter
+- path:id integer
+- query:expand string
+- query:overrideSharePermissions boolean
+- body:description string
+- body:editPermissions array<object>
+- body:editPermissions[].group object
+- body:editPermissions[].group.groupId string
+- body:editPermissions[].group.name string
+- body:editPermissions[].group.self string
+- body:editPermissions[].id integer
+- body:editPermissions[].project object
+- body:editPermissions[].project.archived boolean
+- body:editPermissions[].project.archivedBy object
+- body:editPermissions[].project.archivedDate string
+- body:editPermissions[].project.assigneeType string enum[PROJECT_LEAD|UNASSIGNED]
+- body:editPermissions[].project.avatarUrls object
+- body:editPermissions[].project.components array<object>
+- body:editPermissions[].project.deleted boolean
+- body:editPermissions[].project.deletedBy object
+- body:editPermissions[].project.deletedDate string
+- body:editPermissions[].project.description string
+- body:editPermissions[].project.email string
+- body:editPermissions[].project.expand string
+- body:editPermissions[].project.favourite boolean
+- body:editPermissions[].project.id string
+- body:editPermissions[].project.insight object
+- body:editPermissions[].project.isPrivate boolean
+- body:editPermissions[].project.issueTypeHierarchy object
+- body:editPermissions[].project.issueTypes array<object>
+- body:editPermissions[].project.key string
+- body:editPermissions[].project.landingPageInfo object
+- body:editPermissions[].project.lead object
+- body:editPermissions[].project.name string
+- body:editPermissions[].project.permissions object
+- body:editPermissions[].project.projectCategory object
+- body:editPermissions[].project.projectTypeKey string enum[software|service_desk|business]
+- body:editPermissions[].project.properties object
+- body:editPermissions[].project.retentionTillDate string
+- body:editPermissions[].project.roles object
+- body:editPermissions[].project.self string
+- body:editPermissions[].project.simplified boolean
+- body:editPermissions[].project.style string enum[classic|next-gen]
+- body:editPermissions[].project.url string
+- body:editPermissions[].project.uuid string
+- body:editPermissions[].project.versions array<object>
+- body:editPermissions[].role object
+- body:editPermissions[].role.actors array<object>
+- body:editPermissions[].role.admin boolean
+- body:editPermissions[].role.currentUserRole boolean
+- body:editPermissions[].role.default boolean
+- body:editPermissions[].role.description string
+- body:editPermissions[].role.id integer
+- body:editPermissions[].role.name string
+- body:editPermissions[].role.roleConfigurable boolean
+- body:editPermissions[].role.scope object
+- body:editPermissions[].role.self string
+- body:editPermissions[].role.translatedName string
+- body:editPermissions[].type string enum[user|group|project|projectRole|global|loggedin|authenticated|project-unknown]
+- body:editPermissions[].user object
+- body:editPermissions[].user.accountId string
+- body:editPermissions[].user.active boolean
+- body:editPermissions[].user.avatarUrls object
+- body:editPermissions[].user.displayName string
+- body:editPermissions[].user.key string
+- body:editPermissions[].user.name string
+- body:editPermissions[].user.self string
+- body:favourite boolean
+- body:favouritedCount integer
+- body:id string
+- body:jql string
+- body:name string
+- body:owner object
+- body:owner.accountId string
+- body:owner.accountType string enum[atlassian|app|customer|unknown]
+- body:owner.active boolean
+- body:owner.applicationRoles object
+- body:owner.applicationRoles.callback object
+- body:owner.applicationRoles.items array<object>
+- body:owner.applicationRoles.max-results integer
+- body:owner.applicationRoles.pagingCallback object
+(+114 fields cut)
+
+## S506-N0063  PUT /rest/api/3/filter/{id}/columns
+desc: Set columns | Sets the columns for a filter. Only navigable fields can be set as columns. Use [Get fields](#api-rest-api-3-field-get) to get the list fields in Jira. A navigable field has `navigable` set to `true`. The parameters for this resource are expressed as HTML form data. For example, in curl: `curl -X PUT -d columns=summary -d columns=description https://your-domain.atlassian.net/rest/api
+- path:id integer
+- body:(body) string
+
+## S506-N0064  DELETE /rest/api/3/filter/{id}/favourite
+desc: Remove filter as favorite | Removes a filter as a favorite for the user. Note that this operation only removes filters visible to the user from the user's favorites list. For example, if the user favorites a public filter that is subsequently made private (and is therefore no longer visible on their favorites list) they cannot remove it from their favorites list. **[Permissions](#permissions) requ
+- path:id integer
+- query:expand string
+
+## S506-N0066  PUT /rest/api/3/filter/{id}/owner
+desc: Change filter owner | Changes the owner of the filter. **[Permissions](#permissions) required:** Permission to access Jira. However, the user must own the filter or have the *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: ChangeFilterOwner
+- path:id integer
+- body:accountId string
+
+## S506-N0067  POST /rest/api/3/filter/{id}/permission
+desc: Add share permission | Add a share permissions to a filter. If you add a global share permission (one for all logged-in users or the public) it will overwrite all share permissions for the filter. Be aware that this operation uses different objects for updating share permissions compared to [Update filter](#api-rest-api-3-filter-id-put). **[Permissions](#permissions) required:** *Share dashboards 
+schema: SharePermissionInputBean
+- path:id integer
+- body:accountId string
+- body:groupId string
+- body:groupname string
+- body:projectId string
+- body:projectRoleId string
+- body:rights integer
+- body:type string enum[user|project|group|projectRole|global|authenticated]
+
+## S506-N0068  DELETE /rest/api/3/filter/{id}/permission/{permissionId}
+desc: Delete share permission | Deletes a share permission from a filter. **[Permissions](#permissions) required:** Permission to access Jira and the user must own the filter.
+- path:id integer
+- path:permissionId integer
+
+## S506-N0069  DELETE /rest/api/3/group
+desc: Remove group | Deletes a group. **[Permissions](#permissions) required:** Site administration (that is, member of the *site-admin* strategic [group](https://confluence.atlassian.com/x/24xjL)).
+- query:groupname string
+- query:groupId string
+- query:swapGroup string
+- query:swapGroupId string
+
+## S506-N0070  POST /rest/api/3/group
+desc: Create group | Creates a group. **[Permissions](#permissions) required:** Site administration (that is, member of the *site-admin* [group](https://confluence.atlassian.com/x/24xjL)).
+schema: AddGroupBean
+- body:name string
+
+## S506-N0071  DELETE /rest/api/3/group/user
+desc: Remove user from group | Removes a user from a group. **[Permissions](#permissions) required:** Site administration (that is, member of the *site-admin* [group](https://confluence.atlassian.com/x/24xjL)).
+- query:groupname string
+- query:groupId string
+- query:username string
+- query:accountId string
+
+## S506-N0072  POST /rest/api/3/group/user
+desc: Add user to group | Adds a user to a group. **[Permissions](#permissions) required:** Site administration (that is, member of the *site-admin* [group](https://confluence.atlassian.com/x/24xjL)).
+schema: UpdateUserToGroupBean
+- query:groupname string
+- query:groupId string
+- body:accountId string
+- body:name string
+
+## S506-N0073  POST /rest/api/3/issue
+desc: Create issue | Creates an issue or, where the option to create subtasks is enabled in Jira, a subtask. A transition may be applied, to move the issue or subtask to a workflow step other than the default start step, and issue properties set. The content of the issue or subtask is defined using `update` and `fields`. The fields that can be set in the issue or subtask are determined using the [ Get c
+schema: IssueUpdateDetails
+- query:updateHistory boolean
+- body:fields object
+- body:historyMetadata object
+- body:historyMetadata.activityDescription string
+- body:historyMetadata.activityDescriptionKey string
+- body:historyMetadata.actor object
+- body:historyMetadata.actor.avatarUrl string
+- body:historyMetadata.actor.displayName string
+- body:historyMetadata.actor.displayNameKey string
+- body:historyMetadata.actor.id string
+- body:historyMetadata.actor.type string
+- body:historyMetadata.actor.url string
+- body:historyMetadata.cause object
+- body:historyMetadata.cause.avatarUrl string
+- body:historyMetadata.cause.displayName string
+- body:historyMetadata.cause.displayNameKey string
+- body:historyMetadata.cause.id string
+- body:historyMetadata.cause.type string
+- body:historyMetadata.cause.url string
+- body:historyMetadata.description string
+- body:historyMetadata.descriptionKey string
+- body:historyMetadata.emailDescription string
+- body:historyMetadata.emailDescriptionKey string
+- body:historyMetadata.extraData object
+- body:historyMetadata.generator object
+- body:historyMetadata.generator.avatarUrl string
+- body:historyMetadata.generator.displayName string
+- body:historyMetadata.generator.displayNameKey string
+- body:historyMetadata.generator.id string
+- body:historyMetadata.generator.type string
+- body:historyMetadata.generator.url string
+- body:historyMetadata.type string
+- body:properties array<object>
+- body:properties[].key string
+- body:properties[].value any
+- body:transition object
+- body:transition.expand string
+- body:transition.fields object
+- body:transition.hasScreen boolean
+- body:transition.id string
+- body:transition.isAvailable boolean
+- body:transition.isConditional boolean
+- body:transition.isGlobal boolean
+- body:transition.isInitial boolean
+- body:transition.looped boolean
+- body:transition.name string
+- body:transition.to object
+- body:transition.to.description string
+- body:transition.to.iconUrl string
+- body:transition.to.id string
+- body:transition.to.name string
+- body:transition.to.self string
+- body:transition.to.statusCategory object
+- body:update object
+
+## S506-N0074  POST /rest/api/3/issue/bulk
+desc: Bulk create issue | Creates upto **50** issues and, where the option to create subtasks is enabled in Jira, subtasks. Transitions may be applied, to move the issues or subtasks to a workflow step other than the default start step, and issue properties set. The content of each issue or subtask is defined using `update` and `fields`. The fields that can be set in the issue or subtask are determined 
+schema: IssuesUpdateBean
+- body:issueUpdates array<object>
+- body:issueUpdates[].fields object
+- body:issueUpdates[].historyMetadata object
+- body:issueUpdates[].historyMetadata.activityDescription string
+- body:issueUpdates[].historyMetadata.activityDescriptionKey string
+- body:issueUpdates[].historyMetadata.actor object
+- body:issueUpdates[].historyMetadata.cause object
+- body:issueUpdates[].historyMetadata.description string
+- body:issueUpdates[].historyMetadata.descriptionKey string
+- body:issueUpdates[].historyMetadata.emailDescription string
+- body:issueUpdates[].historyMetadata.emailDescriptionKey string
+- body:issueUpdates[].historyMetadata.extraData object
+- body:issueUpdates[].historyMetadata.generator object
+- body:issueUpdates[].historyMetadata.type string
+- body:issueUpdates[].properties array<object>
+- body:issueUpdates[].properties[].key string
+- body:issueUpdates[].properties[].value any
+- body:issueUpdates[].transition object
+- body:issueUpdates[].transition.expand string
+- body:issueUpdates[].transition.fields object
+- body:issueUpdates[].transition.hasScreen boolean
+- body:issueUpdates[].transition.id string
+- body:issueUpdates[].transition.isAvailable boolean
+- body:issueUpdates[].transition.isConditional boolean
+- body:issueUpdates[].transition.isGlobal boolean
+- body:issueUpdates[].transition.isInitial boolean
+- body:issueUpdates[].transition.looped boolean
+- body:issueUpdates[].transition.name string
+- body:issueUpdates[].transition.to object
+- body:issueUpdates[].update object
+
+## S506-N0075  POST /rest/api/3/issue/properties
+desc: Bulk set issues properties by list | Sets or updates a list of entity property values on issues. A list of up to 10 entity properties can be specified along with up to 10,000 issues on which to set or update that list of entity properties. The value of the request body must be a [valid](http://tools.ietf.org/html/rfc4627), non-empty JSON. The maximum length of single issue property value is 32768 
+schema: IssueEntityProperties
+- body:entitiesIds array<integer>
+- body:properties object
+
+## S506-N0076  POST /rest/api/3/issue/properties/multi
+desc: Bulk set issue properties by issue | Sets or updates entity property values on issues. Up to 10 entity properties can be specified for each issue and up to 100 issues included in the request. The value of the request body must be a [valid](http://tools.ietf.org/html/rfc4627), non-empty JSON. This operation is: * [asynchronous](#async). Follow the `location` link in the response to determine the st
+schema: MultiIssueEntityProperties
+- body:issues array<object>
+- body:issues[].issueID integer
+- body:issues[].properties object
+
+## S506-N0077  DELETE /rest/api/3/issue/properties/{propertyKey}
+desc: Bulk delete issue property | Deletes a property value from multiple issues. The issues to be updated can be specified by filter criteria. The criteria the filter used to identify eligible issues are: * `entityIds` Only issues from this list are eligible. * `currentValue` Only issues with the property set to this value are eligible. If both criteria is specified, they are joined with the logical *A
+schema: IssueFilterForBulkPropertyDelete
+- path:propertyKey string
+- body:currentValue any
+- body:entityIds array<integer>
+
+## S506-N0078  PUT /rest/api/3/issue/properties/{propertyKey}
+desc: Bulk set issue property | Sets a property value on multiple issues. The value set can be a constant or determined by a [Jira expression](https://developer.atlassian.com/cloud/jira/platform/jira-expressions/). Expressions must be computable with constant complexity when applied to a set of issues. Expressions must also comply with the [restrictions](https://developer.atlassian.com/cloud/jira/platfo
+schema: BulkIssuePropertyUpdateRequest
+- path:propertyKey string
+- body:expression string
+- body:filter object
+- body:filter.currentValue any
+- body:filter.entityIds array<integer>
+- body:filter.hasProperty boolean
+- body:value any
+
+## S506-N0079  POST /rest/api/3/issue/watching
+desc: Get is watching issue bulk | Returns, for the user, details of the watched status of issues from a list. If an issue ID is invalid, the returned watched status is `false`. This operation requires the **Allow users to watch issues** option to be *ON*. This option is set in General configuration for Jira. See [Configuring Jira application options](https://confluence.atlassian.com/x/uYXKM) for detail
+schema: IssueList
+- body:issueIds array<string>
+
+## S506-N0081  PUT /rest/api/3/issue/{issueIdOrKey}
+desc: Edit issue | Edits an issue. A transition may be applied and issue properties updated as part of the edit. The edits to the issue's fields are defined using `update` and `fields`. The fields that can be edited are determined using [ Get edit issue metadata](#api-rest-api-3-issue-issueIdOrKey-editmeta-get). The parent field may be set by key or ID. For standard issue types, the parent may be remove
+schema: IssueUpdateDetails
+- path:issueIdOrKey string
+- query:notifyUsers boolean
+- query:overrideScreenSecurity boolean
+- query:overrideEditableFlag boolean
+- body:fields object
+- body:historyMetadata object
+- body:historyMetadata.activityDescription string
+- body:historyMetadata.activityDescriptionKey string
+- body:historyMetadata.actor object
+- body:historyMetadata.actor.avatarUrl string
+- body:historyMetadata.actor.displayName string
+- body:historyMetadata.actor.displayNameKey string
+- body:historyMetadata.actor.id string
+- body:historyMetadata.actor.type string
+- body:historyMetadata.actor.url string
+- body:historyMetadata.cause object
+- body:historyMetadata.cause.avatarUrl string
+- body:historyMetadata.cause.displayName string
+- body:historyMetadata.cause.displayNameKey string
+- body:historyMetadata.cause.id string
+- body:historyMetadata.cause.type string
+- body:historyMetadata.cause.url string
+- body:historyMetadata.description string
+- body:historyMetadata.descriptionKey string
+- body:historyMetadata.emailDescription string
+- body:historyMetadata.emailDescriptionKey string
+- body:historyMetadata.extraData object
+- body:historyMetadata.generator object
+- body:historyMetadata.generator.avatarUrl string
+- body:historyMetadata.generator.displayName string
+- body:historyMetadata.generator.displayNameKey string
+- body:historyMetadata.generator.id string
+- body:historyMetadata.generator.type string
+- body:historyMetadata.generator.url string
+- body:historyMetadata.type string
+- body:properties array<object>
+- body:properties[].key string
+- body:properties[].value any
+- body:transition object
+- body:transition.expand string
+- body:transition.fields object
+- body:transition.hasScreen boolean
+- body:transition.id string
+- body:transition.isAvailable boolean
+- body:transition.isConditional boolean
+- body:transition.isGlobal boolean
+- body:transition.isInitial boolean
+- body:transition.looped boolean
+- body:transition.name string
+- body:transition.to object
+- body:transition.to.description string
+- body:transition.to.iconUrl string
+- body:transition.to.id string
+- body:transition.to.name string
+- body:transition.to.self string
+- body:transition.to.statusCategory object
+- body:update object
+
+## S506-N0083  POST /rest/api/3/issue/{issueIdOrKey}/attachments
+desc: Add attachment | Adds one or more attachments to an issue. Attachments are posted as multipart/form-data ([RFC 1867](https://www.ietf.org/rfc/rfc1867.txt)). Note that: * The request must have a `X-Atlassian-Token: no-check` header, if not it is blocked. See [Special headers](#special-request-headers) for more information. * The name of the multipart/form-data parameter that contains the attachment
+- path:issueIdOrKey string
+- body:(body) string
+
+## S506-N0084  POST /rest/api/3/issue/{issueIdOrKey}/changelog/list
+desc: Get changelogs by IDs | Returns changelogs for an issue specified by a list of changelog IDs. This operation can be accessed anonymously. **[Permissions](#permissions) required:** * *Browse projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project that the issue is in. * If [issue-level security](https://confluence.atlassian.com/x/J4lKLg) is configured, issue-level 
+schema: IssueChangelogIds
+- path:issueIdOrKey string
+- body:changelogIds array<integer>
+
+## S506-N0086  DELETE /rest/api/3/issue/{issueIdOrKey}/comment/{id}
+desc: Delete comment | Deletes a comment. **[Permissions](#permissions) required:** * *Browse projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project that the issue containing the comment is in. * If [issue-level security](https://confluence.atlassian.com/x/J4lKLg) is configured, issue-level security permission to view the issue. * *Delete all comments*[ project permiss
+- path:issueIdOrKey string
+- path:id string
+
+## S506-N0087  PUT /rest/api/3/issue/{issueIdOrKey}/comment/{id}
+desc: Update comment | Updates a comment. This operation can be accessed anonymously. **[Permissions](#permissions) required:** * *Browse projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project that the issue containing the comment is in. * If [issue-level security](https://confluence.atlassian.com/x/J4lKLg) is configured, issue-level security permission to view the iss
+schema: Comment
+- path:issueIdOrKey string
+- path:id string
+- query:notifyUsers boolean
+- query:overrideEditableFlag boolean
+- query:expand string
+- body:author object
+- body:author.accountId string
+- body:author.accountType string
+- body:author.active boolean
+- body:author.avatarUrls object
+- body:author.avatarUrls.16x16 string
+- body:author.avatarUrls.24x24 string
+- body:author.avatarUrls.32x32 string
+- body:author.avatarUrls.48x48 string
+- body:author.displayName string
+- body:author.emailAddress string
+- body:author.key string
+- body:author.name string
+- body:author.self string
+- body:author.timeZone string
+- body:body any
+- body:created string
+- body:id string
+- body:jsdAuthorCanSeeRequest boolean
+- body:jsdPublic boolean
+- body:properties array<object>
+- body:properties[].key string
+- body:properties[].value any
+- body:renderedBody string
+- body:self string
+- body:updateAuthor object
+- body:updateAuthor.accountId string
+- body:updateAuthor.accountType string
+- body:updateAuthor.active boolean
+- body:updateAuthor.avatarUrls object
+- body:updateAuthor.avatarUrls.16x16 string
+- body:updateAuthor.avatarUrls.24x24 string
+- body:updateAuthor.avatarUrls.32x32 string
+- body:updateAuthor.avatarUrls.48x48 string
+- body:updateAuthor.displayName string
+- body:updateAuthor.emailAddress string
+- body:updateAuthor.key string
+- body:updateAuthor.name string
+- body:updateAuthor.self string
+- body:updateAuthor.timeZone string
+- body:updated string
+- body:visibility object
+- body:visibility.identifier string
+- body:visibility.type string enum[group|role]
+- body:visibility.value string
+
+## S506-N0088  POST /rest/api/3/issue/{issueIdOrKey}/notify
+desc: Send notification for issue | Creates an email notification for an issue and adds it to the mail queue. **[Permissions](#permissions) required:** * *Browse Projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project that the issue is in. * If [issue-level security](https://confluence.atlassian.com/x/J4lKLg) is configured, issue-level security permission to view the is
+schema: Notification
+- path:issueIdOrKey string
+- body:htmlBody string
+- body:restrict object
+- body:restrict.groupIds array<string>
+- body:restrict.groups array<object>
+- body:restrict.groups[].groupId string
+- body:restrict.groups[].name string
+- body:restrict.groups[].self string
+- body:restrict.permissions array<object>
+- body:restrict.permissions[].id string
+- body:restrict.permissions[].key string
+- body:subject string
+- body:textBody string
+- body:to object
+- body:to.assignee boolean
+- body:to.groupIds array<string>
+- body:to.groups array<object>
+- body:to.groups[].groupId string
+- body:to.groups[].name string
+- body:to.groups[].self string
+- body:to.reporter boolean
+- body:to.users array<object>
+- body:to.users[].accountId string
+- body:to.users[].accountType string
+- body:to.users[].active boolean
+- body:to.users[].avatarUrls object
+- body:to.users[].displayName string
+- body:to.users[].emailAddress string
+- body:to.users[].key string
+- body:to.users[].name string
+- body:to.users[].self string
+- body:to.users[].timeZone string
+- body:to.voters boolean
+- body:to.watchers boolean
+
+## S506-N0089  DELETE /rest/api/3/issue/{issueIdOrKey}/properties/{propertyKey}
+desc: Delete issue property | Deletes an issue's property. This operation can be accessed anonymously. **[Permissions](#permissions) required:** * *Browse projects* and *Edit issues* [project permissions](https://confluence.atlassian.com/x/yodKLg) for the project containing the issue. * If [issue-level security](https://confluence.atlassian.com/x/J4lKLg) is configured, issue-level security permission to
+- path:issueIdOrKey string
+- path:propertyKey string
+
+## S506-N0090  PUT /rest/api/3/issue/{issueIdOrKey}/properties/{propertyKey}
+desc: Set issue property | Sets the value of an issue's property. Use this resource to store custom data against an issue. The value of the request body must be a [valid](http://tools.ietf.org/html/rfc4627), non-empty JSON blob. The maximum length is 32768 characters. This operation can be accessed anonymously. **[Permissions](#permissions) required:** * *Browse projects* and *Edit issues* [project perm
+- path:issueIdOrKey string
+- path:propertyKey string
+
+## S506-N0091  DELETE /rest/api/3/issue/{issueIdOrKey}/remotelink
+desc: Delete remote issue link by global ID | Deletes the remote issue link from the issue using the link's global ID. Where the global ID includes reserved URL characters these must be escaped in the request. For example, pass `system=http://www.mycompany.com/support&id=1` as `system%3Dhttp%3A%2F%2Fwww.mycompany.com%2Fsupport%26id%3D1`. This operation requires [issue linking to be active](https://confl
+- path:issueIdOrKey string
+- query:globalId string
+
+## S506-N0092  POST /rest/api/3/issue/{issueIdOrKey}/remotelink
+desc: Create or update remote issue link | Creates or updates a remote issue link for an issue. If a `globalId` is provided and a remote issue link with that global ID is found it is updated. Any fields without values in the request are set to null. Otherwise, the remote issue link is created. This operation requires [issue linking to be active](https://confluence.atlassian.com/x/yoXKM). This operation 
+schema: RemoteIssueLinkRequest
+- path:issueIdOrKey string
+- body:application object
+- body:application.name string
+- body:application.type string
+- body:globalId string
+- body:object object
+- body:object.icon object
+- body:object.icon.link string
+- body:object.icon.title string
+- body:object.icon.url16x16 string
+- body:object.status object
+- body:object.status.icon object
+- body:object.status.resolved boolean
+- body:object.summary string
+- body:object.title string
+- body:object.url string
+- body:relationship string
+
+## S506-N0094  PUT /rest/api/3/issue/{issueIdOrKey}/remotelink/{linkId}
+desc: Update remote issue link by ID | Updates a remote issue link for an issue. Note: Fields without values in the request are set to null. This operation requires [issue linking to be active](https://confluence.atlassian.com/x/yoXKM). This operation can be accessed anonymously. **[Permissions](#permissions) required:** * *Browse projects* and *Link issues* [project permission](https://confluence.atlas
+schema: RemoteIssueLinkRequest
+- path:issueIdOrKey string
+- path:linkId string
+- body:application object
+- body:application.name string
+- body:application.type string
+- body:globalId string
+- body:object object
+- body:object.icon object
+- body:object.icon.link string
+- body:object.icon.title string
+- body:object.icon.url16x16 string
+- body:object.status object
+- body:object.status.icon object
+- body:object.status.resolved boolean
+- body:object.summary string
+- body:object.title string
+- body:object.url string
+- body:relationship string
+
+## S506-N0095  POST /rest/api/3/issue/{issueIdOrKey}/transitions
+desc: Transition issue | Performs an issue transition and, if the transition has a screen, updates the fields from the transition screen. sortByCategory To update the fields on the transition screen, specify the fields in the `fields` or `update` parameters in the request body. Get details about the fields using [ Get transitions](#api-rest-api-3-issue-issueIdOrKey-transitions-get) with the `transitions
+schema: IssueUpdateDetails
+- path:issueIdOrKey string
+- body:fields object
+- body:historyMetadata object
+- body:historyMetadata.activityDescription string
+- body:historyMetadata.activityDescriptionKey string
+- body:historyMetadata.actor object
+- body:historyMetadata.actor.avatarUrl string
+- body:historyMetadata.actor.displayName string
+- body:historyMetadata.actor.displayNameKey string
+- body:historyMetadata.actor.id string
+- body:historyMetadata.actor.type string
+- body:historyMetadata.actor.url string
+- body:historyMetadata.cause object
+- body:historyMetadata.cause.avatarUrl string
+- body:historyMetadata.cause.displayName string
+- body:historyMetadata.cause.displayNameKey string
+- body:historyMetadata.cause.id string
+- body:historyMetadata.cause.type string
+- body:historyMetadata.cause.url string
+- body:historyMetadata.description string
+- body:historyMetadata.descriptionKey string
+- body:historyMetadata.emailDescription string
+- body:historyMetadata.emailDescriptionKey string
+- body:historyMetadata.extraData object
+- body:historyMetadata.generator object
+- body:historyMetadata.generator.avatarUrl string
+- body:historyMetadata.generator.displayName string
+- body:historyMetadata.generator.displayNameKey string
+- body:historyMetadata.generator.id string
+- body:historyMetadata.generator.type string
+- body:historyMetadata.generator.url string
+- body:historyMetadata.type string
+- body:properties array<object>
+- body:properties[].key string
+- body:properties[].value any
+- body:transition object
+- body:transition.expand string
+- body:transition.fields object
+- body:transition.hasScreen boolean
+- body:transition.id string
+- body:transition.isAvailable boolean
+- body:transition.isConditional boolean
+- body:transition.isGlobal boolean
+- body:transition.isInitial boolean
+- body:transition.looped boolean
+- body:transition.name string
+- body:transition.to object
+- body:transition.to.description string
+- body:transition.to.iconUrl string
+- body:transition.to.id string
+- body:transition.to.name string
+- body:transition.to.self string
+- body:transition.to.statusCategory object
+- body:update object
+
+## S506-N0096  DELETE /rest/api/3/issue/{issueIdOrKey}/votes
+desc: Delete vote | Deletes a user's vote from an issue. This is the equivalent of the user clicking *Unvote* on an issue in Jira. This operation requires the **Allow users to vote on issues** option to be *ON*. This option is set in General configuration for Jira. See [Configuring Jira application options](https://confluence.atlassian.com/x/uYXKM) for details. **[Permissions](#permissions) required:** 
+- path:issueIdOrKey string
+
+## S506-N0097  POST /rest/api/3/issue/{issueIdOrKey}/votes
+desc: Add vote | Adds the user's vote to an issue. This is the equivalent of the user clicking *Vote* on an issue in Jira. This operation requires the **Allow users to vote on issues** option to be *ON*. This option is set in General configuration for Jira. See [Configuring Jira application options](https://confluence.atlassian.com/x/uYXKM) for details. **[Permissions](#permissions) required:** * *Brows
+- path:issueIdOrKey string
+
+## S506-N0098  DELETE /rest/api/3/issue/{issueIdOrKey}/watchers
+desc: Delete watcher | Deletes a user as a watcher of an issue. This operation requires the **Allow users to watch issues** option to be *ON*. This option is set in General configuration for Jira. See [Configuring Jira application options](https://confluence.atlassian.com/x/uYXKM) for details. **[Permissions](#permissions) required:** * *Browse projects* [project permission](https://confluence.atlassian
+- path:issueIdOrKey string
+- query:username string
+- query:accountId string
+
+## S506-N0099  POST /rest/api/3/issue/{issueIdOrKey}/watchers
+desc: Add watcher | Adds a user as a watcher of an issue by passing the account ID of the user. For example, `"5b10ac8d82e05b22cc7d4ef5"`. If no user is specified the calling user is added. This operation requires the **Allow users to watch issues** option to be *ON*. This option is set in General configuration for Jira. See [Configuring Jira application options](https://confluence.atlassian.com/x/uYXKM
+- path:issueIdOrKey string
+- body:(body) string
+
+## S506-N0100  POST /rest/api/3/issue/{issueIdOrKey}/worklog
+desc: Add worklog | Adds a worklog to an issue. Time tracking must be enabled in Jira, otherwise this operation returns an error. For more information, see [Configuring time tracking](https://confluence.atlassian.com/x/qoXKM). This operation can be accessed anonymously. **[Permissions](#permissions) required:** * *Browse projects* and *Work on issues* [project permission](https://confluence.atlassian.co
+schema: Worklog
+- path:issueIdOrKey string
+- query:notifyUsers boolean
+- query:adjustEstimate string enum[new|leave|manual|auto]
+- query:newEstimate string
+- query:reduceBy string
+- query:expand string
+- query:overrideEditableFlag boolean
+- body:author object
+- body:author.accountId string
+- body:author.accountType string
+- body:author.active boolean
+- body:author.avatarUrls object
+- body:author.avatarUrls.16x16 string
+- body:author.avatarUrls.24x24 string
+- body:author.avatarUrls.32x32 string
+- body:author.avatarUrls.48x48 string
+- body:author.displayName string
+- body:author.emailAddress string
+- body:author.key string
+- body:author.name string
+- body:author.self string
+- body:author.timeZone string
+- body:comment any
+- body:created string
+- body:id string
+- body:issueId string
+- body:properties array<object>
+- body:properties[].key string
+- body:properties[].value any
+- body:self string
+- body:started string
+- body:timeSpent string
+- body:timeSpentSeconds integer
+- body:updateAuthor object
+- body:updateAuthor.accountId string
+- body:updateAuthor.accountType string
+- body:updateAuthor.active boolean
+- body:updateAuthor.avatarUrls object
+- body:updateAuthor.avatarUrls.16x16 string
+- body:updateAuthor.avatarUrls.24x24 string
+- body:updateAuthor.avatarUrls.32x32 string
+- body:updateAuthor.avatarUrls.48x48 string
+- body:updateAuthor.displayName string
+- body:updateAuthor.emailAddress string
+- body:updateAuthor.key string
+- body:updateAuthor.name string
+- body:updateAuthor.self string
+- body:updateAuthor.timeZone string
+- body:updated string
+- body:visibility object
+- body:visibility.identifier string
+- body:visibility.type string enum[group|role]
+- body:visibility.value string
+
+## S506-N0101  DELETE /rest/api/3/issue/{issueIdOrKey}/worklog/{id}
+desc: Delete worklog | Deletes a worklog from an issue. Time tracking must be enabled in Jira, otherwise this operation returns an error. For more information, see [Configuring time tracking](https://confluence.atlassian.com/x/qoXKM). This operation can be accessed anonymously. **[Permissions](#permissions) required:** * *Browse projects* [project permission](https://confluence.atlassian.com/x/yodKLg) f
+- path:issueIdOrKey string
+- path:id string
+- query:notifyUsers boolean
+- query:adjustEstimate string enum[new|leave|manual|auto]
+- query:newEstimate string
+- query:increaseBy string
+- query:overrideEditableFlag boolean
+
+## S506-N0102  PUT /rest/api/3/issue/{issueIdOrKey}/worklog/{id}
+desc: Update worklog | Updates a worklog. Time tracking must be enabled in Jira, otherwise this operation returns an error. For more information, see [Configuring time tracking](https://confluence.atlassian.com/x/qoXKM). This operation can be accessed anonymously. **[Permissions](#permissions) required:** * *Browse projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project
+schema: Worklog
+- path:issueIdOrKey string
+- path:id string
+- query:notifyUsers boolean
+- query:adjustEstimate string enum[new|leave|manual|auto]
+- query:newEstimate string
+- query:expand string
+- query:overrideEditableFlag boolean
+- body:author object
+- body:author.accountId string
+- body:author.accountType string
+- body:author.active boolean
+- body:author.avatarUrls object
+- body:author.avatarUrls.16x16 string
+- body:author.avatarUrls.24x24 string
+- body:author.avatarUrls.32x32 string
+- body:author.avatarUrls.48x48 string
+- body:author.displayName string
+- body:author.emailAddress string
+- body:author.key string
+- body:author.name string
+- body:author.self string
+- body:author.timeZone string
+- body:comment any
+- body:created string
+- body:id string
+- body:issueId string
+- body:properties array<object>
+- body:properties[].key string
+- body:properties[].value any
+- body:self string
+- body:started string
+- body:timeSpent string
+- body:timeSpentSeconds integer
+- body:updateAuthor object
+- body:updateAuthor.accountId string
+- body:updateAuthor.accountType string
+- body:updateAuthor.active boolean
+- body:updateAuthor.avatarUrls object
+- body:updateAuthor.avatarUrls.16x16 string
+- body:updateAuthor.avatarUrls.24x24 string
+- body:updateAuthor.avatarUrls.32x32 string
+- body:updateAuthor.avatarUrls.48x48 string
+- body:updateAuthor.displayName string
+- body:updateAuthor.emailAddress string
+- body:updateAuthor.key string
+- body:updateAuthor.name string
+- body:updateAuthor.self string
+- body:updateAuthor.timeZone string
+- body:updated string
+- body:visibility object
+- body:visibility.identifier string
+- body:visibility.type string enum[group|role]
+- body:visibility.value string
+
+## S506-N0103  DELETE /rest/api/3/issue/{issueIdOrKey}/worklog/{worklogId}/properties/{propertyKey}
+desc: Delete worklog property | Deletes a worklog property. This operation can be accessed anonymously. **[Permissions](#permissions) required:** * *Browse projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project that the issue is in. * If [issue-level security](https://confluence.atlassian.com/x/J4lKLg) is configured, issue-level security permission to view the issue. *
+- path:issueIdOrKey string
+- path:worklogId string
+- path:propertyKey string
+
+## S506-N0104  PUT /rest/api/3/issue/{issueIdOrKey}/worklog/{worklogId}/properties/{propertyKey}
+desc: Set worklog property | Sets the value of a worklog property. Use this operation to store custom data against the worklog. The value of the request body must be a [valid](http://tools.ietf.org/html/rfc4627), non-empty JSON blob. The maximum length is 32768 characters. This operation can be accessed anonymously. **[Permissions](#permissions) required:** * *Browse projects* [project permission](https
+- path:issueIdOrKey string
+- path:worklogId string
+- path:propertyKey string
+
+## S506-N0105  POST /rest/api/3/issueLink
+desc: Create issue link | Creates a link between two issues. Use this operation to indicate a relationship between two issues and optionally add a comment to the from (outward) issue. To use this resource the site must have [Issue Linking](https://confluence.atlassian.com/x/yoXKM) enabled. This resource returns nothing on the creation of an issue link. To obtain the ID of the issue link, use `https://yo
+schema: LinkIssueRequestJsonBean
+- body:comment object
+- body:comment.author object
+- body:comment.author.accountId string
+- body:comment.author.accountType string
+- body:comment.author.active boolean
+- body:comment.author.avatarUrls object
+- body:comment.author.displayName string
+- body:comment.author.emailAddress string
+- body:comment.author.key string
+- body:comment.author.name string
+- body:comment.author.self string
+- body:comment.author.timeZone string
+- body:comment.body any
+- body:comment.created string
+- body:comment.id string
+- body:comment.jsdAuthorCanSeeRequest boolean
+- body:comment.jsdPublic boolean
+- body:comment.properties array<object>
+- body:comment.properties[].key string
+- body:comment.properties[].value any
+- body:comment.renderedBody string
+- body:comment.self string
+- body:comment.updateAuthor object
+- body:comment.updateAuthor.accountId string
+- body:comment.updateAuthor.accountType string
+- body:comment.updateAuthor.active boolean
+- body:comment.updateAuthor.avatarUrls object
+- body:comment.updateAuthor.displayName string
+- body:comment.updateAuthor.emailAddress string
+- body:comment.updateAuthor.key string
+- body:comment.updateAuthor.name string
+- body:comment.updateAuthor.self string
+- body:comment.updateAuthor.timeZone string
+- body:comment.updated string
+- body:comment.visibility object
+- body:comment.visibility.identifier string
+- body:comment.visibility.type string enum[group|role]
+- body:comment.visibility.value string
+- body:inwardIssue object
+- body:inwardIssue.fields object
+- body:inwardIssue.fields.assignee object
+- body:inwardIssue.fields.issueType object
+- body:inwardIssue.fields.issuetype object
+- body:inwardIssue.fields.priority object
+- body:inwardIssue.fields.status object
+- body:inwardIssue.fields.summary string
+- body:inwardIssue.fields.timetracking object
+- body:inwardIssue.id string
+- body:inwardIssue.key string
+- body:inwardIssue.self string
+- body:outwardIssue object
+- body:outwardIssue.fields object
+- body:outwardIssue.fields.assignee object
+- body:outwardIssue.fields.issueType object
+- body:outwardIssue.fields.issuetype object
+- body:outwardIssue.fields.priority object
+- body:outwardIssue.fields.status object
+- body:outwardIssue.fields.summary string
+- body:outwardIssue.fields.timetracking object
+- body:outwardIssue.id string
+- body:outwardIssue.key string
+- body:outwardIssue.self string
+- body:type object
+- body:type.id string
+- body:type.inward string
+- body:type.name string
+- body:type.outward string
+- body:type.self string
+
+## S506-N0106  DELETE /rest/api/3/issueLink/{linkId}
+desc: Delete issue link | Deletes an issue link. This operation can be accessed anonymously. **[Permissions](#permissions) required:** * Browse project [project permission](https://confluence.atlassian.com/x/yodKLg) for all the projects containing the issues in the link. * *Link issues* [project permission](https://confluence.atlassian.com/x/yodKLg) for at least one of the projects containing issues in 
+- path:linkId string
+
+## S506-N0107  POST /rest/api/3/issueLinkType
+desc: Create issue link type | Creates an issue link type. Use this operation to create descriptions of the reasons why issues are linked. The issue link type consists of a name and descriptions for a link's inward and outward relationships. To use this operation, the site must have [issue linking](https://confluence.atlassian.com/x/yoXKM) enabled. **[Permissions](#permissions) required:** *Administer J
+schema: IssueLinkType
+- body:id string
+- body:inward string
+- body:name string
+- body:outward string
+- body:self string
+
+## S506-N0109  PUT /rest/api/3/issueLinkType/{issueLinkTypeId}
+desc: Update issue link type | Updates an issue link type. To use this operation, the site must have [issue linking](https://confluence.atlassian.com/x/yoXKM) enabled. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueLinkType
+- path:issueLinkTypeId string
+- body:id string
+- body:inward string
+- body:name string
+- body:outward string
+- body:self string
+
+## S506-N0110  POST /rest/api/3/issuetype
+desc: Create issue type | Creates an issue type and adds it to the default issue type scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+schema: IssueTypeCreateBean
+- body:description string
+- body:hierarchyLevel integer
+- body:name string
+- body:type string enum[subtask|standard]

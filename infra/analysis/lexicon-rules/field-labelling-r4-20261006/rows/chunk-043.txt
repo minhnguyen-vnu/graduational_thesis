@@ -1,0 +1,757 @@
+## S131-N0077  DELETE /v1/bundleIds/{id}
+- path:id string
+
+## S131-N0078  PATCH /v1/bundleIds/{id}
+schema: BundleIdUpdateRequest
+- path:id string
+- body:name string
+
+## S131-N0079  POST /v1/certificates
+schema: CertificateCreateRequest
+- body:certificateType string enum[IOS_DEVELOPMENT|IOS_DISTRIBUTION|MAC_APP_DISTRIBUTION|MAC_INSTALLER_DISTRIBUTION|MAC_APP_DEVELOPMENT|DEVELOPER_ID_KEXT|DEVELOPER_ID_APPLICATION|DEVELOPMENT|DISTRIBUTION]
+- body:csrContent string
+
+## S131-N0080  DELETE /v1/certificates/{id}
+- path:id string
+
+## S131-N0081  POST /v1/devices
+schema: DeviceCreateRequest
+- body:name string
+- body:platform string enum[IOS|MAC_OS]
+- body:udid string
+
+## S131-N0083  POST /v1/endUserLicenseAgreements
+schema: EndUserLicenseAgreementCreateRequest
+- body:agreementText string
+- body:app object
+- body:app.data object
+- body:app.data.id string
+- body:app.data.type string enum[apps]
+- body:territories object
+- body:territories.data array<object>
+- body:territories.data[].id string
+- body:territories.data[].type string enum[territories]
+
+## S131-N0084  DELETE /v1/endUserLicenseAgreements/{id}
+- path:id string
+
+## S131-N0085  PATCH /v1/endUserLicenseAgreements/{id}
+schema: EndUserLicenseAgreementUpdateRequest
+- path:id string
+- body:agreementText string
+- body:territories object
+- body:territories.data array<object>
+- body:territories.data[].id string
+- body:territories.data[].type string enum[territories]
+
+## S131-N0086  DELETE /v1/gameCenterEnabledVersions/{id}/relationships/compatibleVersions
+schema: GameCenterEnabledVersionCompatibleVersionsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[gameCenterEnabledVersions]
+
+## S131-N0087  PATCH /v1/gameCenterEnabledVersions/{id}/relationships/compatibleVersions
+schema: GameCenterEnabledVersionCompatibleVersionsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[gameCenterEnabledVersions]
+
+## S131-N0088  POST /v1/gameCenterEnabledVersions/{id}/relationships/compatibleVersions
+schema: GameCenterEnabledVersionCompatibleVersionsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[gameCenterEnabledVersions]
+
+## S131-N0089  POST /v1/idfaDeclarations
+schema: IdfaDeclarationCreateRequest
+- body:attributesActionWithPreviousAd boolean
+- body:attributesAppInstallationToPreviousAd boolean
+- body:honorsLimitedAdTracking boolean
+- body:servesAds boolean
+- body:appStoreVersion object
+- body:appStoreVersion.data object
+- body:appStoreVersion.data.id string
+- body:appStoreVersion.data.type string enum[appStoreVersions]
+
+## S131-N0090  DELETE /v1/idfaDeclarations/{id}
+- path:id string
+
+## S131-N0091  PATCH /v1/idfaDeclarations/{id}
+schema: IdfaDeclarationUpdateRequest
+- path:id string
+- body:attributesActionWithPreviousAd boolean
+- body:attributesAppInstallationToPreviousAd boolean
+- body:honorsLimitedAdTracking boolean
+- body:servesAds boolean
+
+## S131-N0093  DELETE /v1/profiles/{id}
+- path:id string
+
+## S131-N0094  POST /v1/routingAppCoverages
+schema: RoutingAppCoverageCreateRequest
+- body:fileName string
+- body:fileSize integer
+- body:appStoreVersion object
+- body:appStoreVersion.data object
+- body:appStoreVersion.data.id string
+- body:appStoreVersion.data.type string enum[appStoreVersions]
+
+## S131-N0095  DELETE /v1/routingAppCoverages/{id}
+- path:id string
+
+## S131-N0096  PATCH /v1/routingAppCoverages/{id}
+schema: RoutingAppCoverageUpdateRequest
+- path:id string
+- body:sourceFileChecksum string
+- body:uploaded boolean
+
+## S131-N0098  DELETE /v1/userInvitations/{id}
+- path:id string
+
+## S131-N0099  DELETE /v1/users/{id}
+- path:id string
+
+## S131-N0102  PATCH /v1/users/{id}/relationships/visibleApps
+schema: UserVisibleAppsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[apps]
+
+## S423-N0006  POST /document
+desc: Create New Document. | Create a document object. A document object can be used to simply store data around a given identity or similar document. You can attach scans, PDFs, photos, videos, etc to the objectif you wish and these may be processed later (using the /scan function) to extract useful information. Or you can manually supply the extracted information if you choose. Document objects can be
+schema: IdentityDocumentObject
+- body:country string
+- body:createdFromScan boolean
+- body:docScan array<object>
+- body:docScan[].ScanDelete boolean
+- body:docScan[].scanCreated string
+- body:docScan[].scanData string
+- body:docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:docScan[].scanDocId string
+- body:docScan[].scanFilename string
+- body:docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:docScan[].scanPageNum integer
+- body:docScan[].scanSide string enum[F|B]
+- body:docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:documentId string
+- body:documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:extraData array<object>
+- body:extraData[].kvpKey string
+- body:extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:extraData[].kvpValue string
+- body:idExpiry string
+- body:idIssued string
+- body:idNumber string
+- body:idSubType string
+- body:idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:manuallyModified boolean
+- body:region string
+
+## S423-N0036  POST /entity/{entityId}/verify/pushToMobile
+desc: Update Entity and Push Self-Verification Link | Update an existing entity object and begin the process of verification after pushing a message to a mobile number. The entity will receive a link on their mobile and will then be guided through a series of steps to capture and OCR scan their ID, and perform a selfie comparison. We'll then attempt to verify the data received and push a notification ba
+schema: EntityCheckDetailsObject
+- path:entityId string
+- query:nopush boolean
+- query:phase integer
+- body:deviceCheckDetails array<object>
+- body:deviceCheckDetails[].activityType string enum[SIGNUP|LOGIN|PAYMENT|CONFIRMATION|_<Vendor Specific List>]
+- body:deviceCheckDetails[].additionalData array<object>
+- body:deviceCheckDetails[].additionalData[].kvpKey string
+- body:deviceCheckDetails[].additionalData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:deviceCheckDetails[].additionalData[].kvpValue string
+- body:deviceCheckDetails[].checkSessionKey string
+- body:deviceCheckDetails[].checkType string enum[DEVICE|BIOMETRIC]
+- body:entity object
+- body:entity.addresses array<object>
+- body:entity.addresses[].addressId string
+- body:entity.addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:entity.addresses[].buildingName string
+- body:entity.addresses[].careOf string
+- body:entity.addresses[].country string
+- body:entity.addresses[].endDate string
+- body:entity.addresses[].longForm string
+- body:entity.addresses[].postalCode string
+- body:entity.addresses[].region string
+- body:entity.addresses[].startDate string
+- body:entity.addresses[].state string
+- body:entity.addresses[].streetName string
+- body:entity.addresses[].streetNumber string
+- body:entity.addresses[].streetType string
+- body:entity.addresses[].suburb string
+- body:entity.addresses[].town string
+- body:entity.addresses[].unitNumber string
+- body:entity.dateOfBirth object
+- body:entity.dateOfBirth.country string
+- body:entity.dateOfBirth.dateOfBirth string
+- body:entity.dateOfBirth.locality string
+- body:entity.dateOfBirth.yearOfBirth string
+- body:entity.entityId string
+- body:entity.entityProfile string
+- body:entity.entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:entity.extraData array<object>
+- body:entity.extraData[].kvpKey string
+- body:entity.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:entity.extraData[].kvpValue string
+- body:entity.flags array<object>
+- body:entity.flags[].flag string
+- body:entity.flags[].value integer
+- body:entity.gender string enum[U|F|M|O]
+- body:entity.identityDocs array<object>
+- body:entity.identityDocs[].country string
+- body:entity.identityDocs[].createdFromScan boolean
+- body:entity.identityDocs[].docScan array<object>
+- body:entity.identityDocs[].documentId string
+- body:entity.identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:entity.identityDocs[].extraData array<object>
+- body:entity.identityDocs[].idExpiry string
+- body:entity.identityDocs[].idIssued string
+- body:entity.identityDocs[].idNumber string
+- body:entity.identityDocs[].idSubType string
+- body:entity.identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:entity.identityDocs[].manuallyModified boolean
+- body:entity.identityDocs[].region string
+- body:entity.name object
+- body:entity.name.displayName string
+- body:entity.name.familyName string
+- body:entity.name.givenName string
+- body:entity.name.honourific string
+- body:entity.name.middleName string
+- body:entity.organisationData object
+- body:entity.organisationData.adverseCreditDataPresent boolean
+- body:entity.organisationData.class object
+- body:entity.organisationData.disclosingEntityIndicator boolean
+- body:entity.organisationData.includesNonBeneficiallyHeld boolean
+- body:entity.organisationData.kycCustomerType string
+- body:entity.organisationData.lastCheckDate string
+- body:entity.organisationData.ownershipResolved boolean
+- body:entity.organisationData.registeredName string
+- body:entity.organisationData.registration object
+- body:entity.organisationData.shareStructure array<object>
+- body:entity.organisationData.startDate string
+- body:entity.organisationData.status object
+- body:entity.organisationData.subclass object
+(+1 fields cut)
+
+## S214-N0001  POST /api/v1/AgentTelemetry
+schema: TelemetryData
+- body:level string
+- body:message string
+- body:optionalValues object
+- body:time string
+
+## S214-N0002  POST /api/v1/AgentTelemetry/standalone
+schema: TelemetryData
+- body:level string
+- body:message string
+- body:optionalValues object
+- body:time string
+
+## S214-N0003  POST /api/v1/Environments
+schema: CreateCloudEnvironmentBody
+- query:access boolean
+- body:analyticsTrackingId string
+- body:autoShutdownDelayMinutes integer
+- body:billableOwner object
+- body:billableOwner.id string
+- body:billableOwner.login string
+- body:billableOwner.type integer enum[0 (User)|1 (Organization)]
+- body:connection object
+- body:connection.connectionServiceUri string
+- body:connection.connectionSessionId string
+- body:connection.connectionSessionPath string
+- body:connection.hostPublicKeys array<string>
+- body:connection.relayEndpoint string
+- body:connection.relaySasToken string
+- body:connection.sessionToken string
+- body:connection.tunnelProperties object
+- body:connection.tunnelProperties.clusterId string
+- body:connection.tunnelProperties.connectAccessToken string
+- body:connection.tunnelProperties.domain string
+- body:connection.tunnelProperties.managePortsAccessToken string
+- body:connection.tunnelProperties.serviceUri string
+- body:connection.tunnelProperties.tunnelId string
+- body:connection.tunnelProperties.tunnelName string
+- body:containerImage string
+- body:createAsPrebuild boolean
+- body:devContainerJson string
+- body:devContainerPath string
+- body:experimentalFeatures object
+- body:experimentalFeatures.enableDynamicHttpsDetection boolean
+- body:experimentalFeatures.queueResourceAllocation boolean
+- body:experimentalFeatures.usePrebuildFastPathIfAvailable boolean
+- body:experimentalFeatures.usePrebuiltImages boolean
+- body:experimentalFeatures.useStorageV2 boolean
+- body:features object
+- body:friendlyName string
+- body:gitHubApiUrl string
+- body:gitHubAppUrl string
+- body:gitHubPfsAuthEndpoint string
+- body:githubEnvironmentEndpoint string
+- body:hasDevcontainerJson boolean
+- body:identity object
+- body:identity.displayName string
+- body:identity.id string
+- body:identity.userName string
+- body:label string
+- body:location string
+- body:netmonCorrelationData object
+- body:netmonCorrelationData.billableOwnerCreatedAt string
+- body:netmonCorrelationData.billableOwnerDatabaseId string
+- body:netmonCorrelationData.billableOwnerGlobalRelayId string
+- body:netmonCorrelationData.billableOwnerPlan string
+- body:netmonCorrelationData.ownerCreatedAt string
+- body:netmonCorrelationData.ownerDatabaseId string
+- body:netmonCorrelationData.ownerGlobalRelayId string
+- body:netmonCorrelationData.ownerPlan string
+- body:netmonCorrelationData.repositoryCreatedAt string
+- body:netmonCorrelationData.repositoryDatabaseId string
+- body:netmonCorrelationData.repositoryGlobalRelayId string
+- body:netmonCorrelationData.repositoryPrivate boolean
+- body:personalization object
+- body:personalization.dotfilesInstallCommand string
+- body:personalization.dotfilesRepository string
+- body:personalization.dotfilesTargetPath string
+- body:planId string
+- body:platform string
+- body:runtimeConstraints object
+- body:runtimeConstraints.allowedPortPrivacySettings array<integer> enum[0 (Private)|1 (Public)|2 (Org)]
+- body:runtimeConstraints.imageAllowList array<string>
+- body:secrets array<object>
+- body:secrets[].name string
+- body:secrets[].type integer enum[1 (EnvironmentVariable)|2 (ContainerRegistry)]
+- body:secrets[].value string
+- body:seed object
+- body:seed.cloneUrl string
+- body:seed.gitConfig object
+- body:seed.gitConfig.userEmail string
+- body:seed.gitConfig.userName string
+- body:seed.recurseClone boolean
+- body:seed.repository object
+- body:seed.repository.branchName string
+(+15 fields cut)
+
+## S214-N0004  DELETE /api/v1/Environments/{environmentId}
+- path:environmentId string
+
+## S214-N0006  POST /api/v1/Environments/{environmentId}/_callback
+schema: EnvironmentRegistrationCallbackBody
+- path:environmentId string
+- body:payload object
+- body:payload.sessionId string
+- body:payload.sessionPath string
+- body:type string
+
+## S214-N0007  POST /api/v1/Environments/{environmentId}/archive
+- path:environmentId string
+
+## S214-N0008  POST /api/v1/Environments/{environmentId}/export
+- path:environmentId string
+
+## S214-N0009  PATCH /api/v1/Environments/{environmentId}/folder
+schema: CloudEnvironmentFolderBody
+- path:environmentId string
+- body:recentFolderPaths array<string>
+
+## S214-N0011  DELETE /api/v1/Environments/{environmentId}/ports/{port}
+- path:environmentId string
+- path:port integer
+
+## S214-N0012  PUT /api/v1/Environments/{environmentId}/ports/{port}
+schema: AddForwardedPortSettings
+- path:environmentId string
+- path:port integer
+- body:privacy integer enum[0 (Private)|1 (Public)|2 (Org)]
+- body:tunnelType integer enum[0 (Basis)|1 (Liveshare)]
+
+## S214-N0014  PUT /api/v1/Environments/{environmentId}/secrets
+schema: UpdateUserSecretsRequestBody
+- path:environmentId string
+- body:secrets array<object>
+- body:secrets[].name string
+- body:secrets[].type integer enum[1 (EnvironmentVariable)|2 (ContainerRegistry)]
+- body:secrets[].value string
+
+## S214-N0016  POST /api/v1/Environments/{environmentId}/start
+- path:environmentId string
+- query:access boolean
+
+## S214-N0017  POST /api/v1/GenevaActions/Billing/resend
+schema: ReplayBillRequestBody
+- body:endTime string
+- body:startTime string
+
+## S214-N0018  POST /api/v1/GenevaActions/Billing/{environmentId}/state-changes
+schema: CreateEnvironmentStateChangeBody
+- path:environmentId string
+- body:newValue integer enum[0 (None)|1 (Created)|2 (Queued)|3 (Provisioning)|4 (Available)|5 (Awaiting)|6 (Unavailable)|7 (Deleted)|8 (Moved)|9 (Shutdown)|10 (Archived)|11 (Starting)]
+- body:oldValue integer enum[0 (None)|1 (Created)|2 (Queued)|3 (Provisioning)|4 (Available)|5 (Awaiting)|6 (Unavailable)|7 (Deleted)|8 (Moved)|9 (Shutdown)|10 (Archived)|11 (Starting)]
+- body:time string
+
+## S214-N0020  DELETE /api/v1/GenevaActions/Configuration/{target}/{key}
+- path:target string
+- path:key string
+
+## S214-N0021  DELETE /api/v1/GenevaActions/Environments/{environmentId}
+- path:environmentId string
+- query:deletionType string
+
+## S214-N0023  PUT /api/v1/GenevaActions/Environments/{environmentId}/shutdown
+- path:environmentId string
+
+## S214-N0024  POST /api/v1/GenevaActions/Environments/{environmentId}/upload/running/vm/logs
+- path:environmentId string
+
+## S214-N0025  POST /api/v1/GenevaActions/Pools/change-resource-deletion-setting
+schema: ChangeResourceDeletionRequestBody
+- body:comment string
+- body:enabled boolean
+- body:poolCode string
+- body:poolType string
+- body:region string
+
+## S214-N0027  POST /api/v1/GenevaActions/Pools/{target}
+schema: PoolConfigRequestBody
+- path:target string
+- body:comment string
+- body:maxTargetCount string
+- body:minTargetCount string
+- body:poolCode string
+- body:poolType string
+- body:region string
+- body:targetCount string
+
+## S214-N0028  POST /api/v1/GenevaActions/Prebuilds/pools/createorupdatesettings
+schema: PoolSettingsBody
+- body:branchName string
+- body:devContainerPath string
+- body:pools array<object>
+- body:pools[].poolType integer enum[0 (None)|1 (Blob)|2 (CodespacePool)|3 (StoragePool)|4 (CodespaceAndStoragePool)]
+- body:pools[].skuName string
+- body:pools[].targetCount integer
+- body:repoId string
+- body:storageType integer enum[0 (V1)|1 (V2)]
+
+## S214-N0029  POST /api/v1/GenevaActions/Prebuilds/pools/delete
+schema: PoolSettingsBody
+- body:branchName string
+- body:devContainerPath string
+- body:pools array<object>
+- body:pools[].poolType integer enum[0 (None)|1 (Blob)|2 (CodespacePool)|3 (StoragePool)|4 (CodespaceAndStoragePool)]
+- body:pools[].skuName string
+- body:pools[].targetCount integer
+- body:repoId string
+- body:storageType integer enum[0 (V1)|1 (V2)]
+
+## S214-N0030  POST /api/v1/GenevaActions/Privacy/refresh-profile-telemetry-properties
+schema: RefreshProfileTelemetryPropertiesRequest
+- body:partner string
+- body:tenantId string
+- body:userIds string
+
+## S214-N0031  POST /api/v1/GenevaActions/Resources/{resourceId}/under-investigation
+- path:resourceId string
+
+## S214-N0033  POST /api/v1/GenevaActions/VnetPoolDefinitions
+schema: PoolDefinitionInput
+- body:dimensions object
+- body:isEnabled boolean
+- body:location integer enum[101 (EastAsia)|102 (SouthEastAsia)|201 (AustraliaCentral)|202 (AustraliaCentral2)|203 (AustraliaEast)|205 (AustraliaSouthEast)|301 (BrazilSouth)|401 (CanadaCentral)|402 (CanadaEast)|501 (NorthEurope)|502 (WestEurope)|601 (FranceCentral)]
+- body:logicalSkus array<string>
+- body:subtype integer enum[0 (Default)|2 (ShrunkBlob)|3 (FullBlob)|4 (UserParametersBlob)|5 (PrebuildHash)|6 (VnetInjected)]
+- body:targetCount integer
+- body:type integer enum[1 (ComputeVM)|2 (StorageFileShare)|3 (StorageArchive)|4 (KeyVault)|5 (OSDisk)|6 (NetworkInterface)|7 (InputQueue)|8 (Snapshot)|9 (PoolQueue)|10 (VirtualNetwork)|11 (NetworkSecurityGroup)|12 (LiveShareWorkspace)]
+
+## S214-N0035  POST /api/v1/Prebuilds/pools/{poolId}/instances
+schema: CreateEnvironmentPoolResourceBody
+- path:poolId string
+- body:environmentOptions object
+- body:environmentOptions.correlationId string
+- body:secrets array<object>
+- body:secrets[].name string
+- body:secrets[].type integer enum[1 (EnvironmentVariable)|2 (ContainerRegistry)]
+- body:secrets[].value string
+
+## S214-N0036  PUT /api/v1/Prebuilds/pools/{poolId}/instances
+schema: CreateEnvironmentPoolResourceBody
+- path:poolId string
+- body:environmentOptions object
+- body:environmentOptions.correlationId string
+- body:secrets array<object>
+- body:secrets[].name string
+- body:secrets[].type integer enum[1 (EnvironmentVariable)|2 (ContainerRegistry)]
+- body:secrets[].value string
+
+## S214-N0037  POST /api/v1/Secrets
+schema: ScopedCreateSecretBody
+- query:planId string
+- body:filters array<object>
+- body:filters[].type integer enum[1 (GitRepo)|2 (CodespaceName)]
+- body:filters[].value string
+- body:notes string
+- body:scope integer enum[1 (Plan)|2 (User)]
+- body:secretName string
+- body:type integer enum[1 (EnvironmentVariable)|2 (ContainerRegistry)]
+- body:value string
+
+## S214-N0038  DELETE /api/v1/Secrets/{secretId}
+- path:secretId string
+- query:planId string
+- query:scope integer enum[1 (Plan)|2 (User)]
+
+## S214-N0040  DELETE /api/v1/Tenant/{tenantId}
+- path:tenantId string
+
+## S214-N0041  PUT /api/v1/Tenant/{tenantId}
+- path:tenantId string
+
+## S214-N0042  POST /api/v1/Tokens/plans/{planName}/deleteAllCodespaces
+- path:planName string
+- query:expiration string
+
+## S214-N0043  POST /api/v1/Tokens/plans/{planName}/readAllCodespaces
+- path:planName string
+- query:expiration string
+
+## S214-N0045  POST /api/v1/Tokens/plans/{planName}/writeDelegates
+schema: IssueDelegatePlanAccessTokenBody
+- path:planName string
+- body:environmentIds array<string>
+- body:expiration string
+- body:identity object
+- body:identity.displayName string
+- body:identity.id string
+- body:identity.username string
+- body:portNumbers array<integer>
+- body:scope string
+
+## S214-N0047  POST /api/v1/Tokens/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/{providerNamespace}/plans/{resourceName}/deleteAllCodespaces
+- path:subscriptionId string
+- path:resourceGroup string
+- path:providerNamespace string
+- path:resourceName string
+- query:expiration string
+
+## S214-N0048  POST /api/v1/Tokens/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/{providerNamespace}/plans/{resourceName}/deleteAllEnvironments
+- path:subscriptionId string
+- path:resourceGroup string
+- path:providerNamespace string
+- path:resourceName string
+- query:expiration string
+
+## S214-N0049  POST /api/v1/Tokens/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/{providerNamespace}/plans/{resourceName}/readAllCodespaces
+- path:subscriptionId string
+- path:resourceGroup string
+- path:providerNamespace string
+- path:resourceName string
+- query:expiration string
+
+## S214-N0050  POST /api/v1/Tokens/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/{providerNamespace}/plans/{resourceName}/readAllEnvironments
+- path:subscriptionId string
+- path:resourceGroup string
+- path:providerNamespace string
+- path:resourceName string
+- query:expiration string
+
+## S214-N0055  POST /api/v1/UserSubscriptions
+- query:email string
+
+## S214-N0056  PUT /api/v1/subscriptions/{subscriptionId}/providers/GitHub.Network/{resourceType}/SubscriptionLifeCycleNotification
+schema: RPSubscriptionNotification
+- path:subscriptionId string
+- path:resourceType string
+- body:properties object
+- body:properties.accountOwner object
+- body:properties.accountOwner.email string
+- body:properties.accountOwner.puid string
+- body:properties.additionalProperties object
+- body:properties.additionalProperties.billingProperties object
+- body:properties.additionalProperties.resourceProviderProperties string
+- body:properties.locationPlacementId string
+- body:properties.managedByTenants array<object>
+- body:properties.managedByTenants[].key string
+- body:properties.managedByTenants[].value string
+- body:properties.quotaId string
+- body:properties.registeredFeatures array<object>
+- body:properties.registeredFeatures[].key string
+- body:properties.registeredFeatures[].value string
+- body:properties.tenantId string
+- body:registrationDate string
+- body:state string
+
+## S214-N0057  POST /api/v1/subscriptions/{subscriptionId}/providers/GitHub.Network/{resourceType}/resourceReadBegin
+schema: NetworkSettingsResourceList
+- path:subscriptionId string
+- path:resourceType string
+- body:value array<object>
+- body:value[].id string
+- body:value[].location string
+- body:value[].name string
+- body:value[].properties object
+- body:value[].properties.subnetId string
+- body:value[].provisioningState string
+- body:value[].tags object
+- body:value[].type string
+
+## S214-N0058  PUT /api/v1/subscriptions/{subscriptionId}/providers/Microsoft.Codespaces/plans/SubscriptionLifeCycleNotification
+schema: RPSubscriptionNotification
+- path:subscriptionId string
+- body:properties object
+- body:properties.accountOwner object
+- body:properties.accountOwner.email string
+- body:properties.accountOwner.puid string
+- body:properties.additionalProperties object
+- body:properties.additionalProperties.billingProperties object
+- body:properties.additionalProperties.resourceProviderProperties string
+- body:properties.locationPlacementId string
+- body:properties.managedByTenants array<object>
+- body:properties.managedByTenants[].key string
+- body:properties.managedByTenants[].value string
+- body:properties.quotaId string
+- body:properties.registeredFeatures array<object>
+- body:properties.registeredFeatures[].key string
+- body:properties.registeredFeatures[].value string
+- body:properties.tenantId string
+- body:registrationDate string
+- body:state string
+
+## S214-N0059  POST /api/v1/subscriptions/{subscriptionId}/providers/Microsoft.Codespaces/plans/resourceReadBegin
+schema: PlanResourceList
+- path:subscriptionId string
+- body:value array<object>
+- body:value[].id string
+- body:value[].identity object
+- body:value[].identity.principalId string
+- body:value[].identity.tenantId string
+- body:value[].identity.type string
+- body:value[].location string
+- body:value[].name string
+- body:value[].properties object
+- body:value[].properties.defaultCodespaceSku string
+- body:value[].properties.defaultEnvironmentSku string
+- body:value[].properties.encryption object
+- body:value[].properties.userId string
+- body:value[].properties.vnetProperties object
+- body:value[].provisioningState string
+- body:value[].tags object
+- body:value[].type string
+
+## S214-N0061  POST /api/v1/subscriptions/{subscriptionId}/providers/Microsoft.VSOnline/plans/resourceReadBegin
+schema: PlanResourceList
+- path:subscriptionId string
+- body:value array<object>
+- body:value[].id string
+- body:value[].identity object
+- body:value[].identity.principalId string
+- body:value[].identity.tenantId string
+- body:value[].identity.type string
+- body:value[].location string
+- body:value[].name string
+- body:value[].properties object
+- body:value[].properties.defaultCodespaceSku string
+- body:value[].properties.defaultEnvironmentSku string
+- body:value[].properties.encryption object
+- body:value[].properties.userId string
+- body:value[].properties.vnetProperties object
+- body:value[].provisioningState string
+- body:value[].tags object
+- body:value[].type string
+
+## S214-N0062  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/resourceReadBegin
+schema: NetworkSettingsResourceList
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- body:value array<object>
+- body:value[].id string
+- body:value[].location string
+- body:value[].name string
+- body:value[].properties object
+- body:value[].properties.subnetId string
+- body:value[].provisioningState string
+- body:value[].tags object
+- body:value[].type string
+
+## S214-N0064  PATCH /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}
+schema: NetworkSettingsResource
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+- body:id string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-N0066  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}/resourceCreationCompleted
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+
+## S214-N0068  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}/resourceDeletionCompleted
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+
+## S214-N0070  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}/resourcePatchCompleted
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+
+## S214-N0071  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}/resourcePatchValidate
+schema: NetworkSettingsResource
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+- body:id string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-N0072  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/GitHub.Network/{resourceType}/{resourceName}/resourceReadBegin
+schema: NetworkSettingsResource
+- path:subscriptionId string
+- path:resourceGroup string
+- path:resourceType string
+- path:resourceName string
+- body:id string
+- body:location string
+- body:name string
+- body:properties object
+- body:properties.subnetId string
+- body:provisioningState string
+- body:tags object
+- body:type string
+
+## S214-N0073  POST /api/v1/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Codespaces/plans/resourceReadBegin
+schema: PlanResourceList
+- path:subscriptionId string
+- path:resourceGroup string
+- body:value array<object>
+- body:value[].id string
+- body:value[].identity object
+- body:value[].identity.principalId string
+- body:value[].identity.tenantId string
+- body:value[].identity.type string
+- body:value[].location string
+- body:value[].name string
+- body:value[].properties object
+- body:value[].properties.defaultCodespaceSku string
+- body:value[].properties.defaultEnvironmentSku string
+- body:value[].properties.encryption object
+- body:value[].properties.userId string
+- body:value[].properties.vnetProperties object
+- body:value[].provisioningState string
+- body:value[].tags object
+- body:value[].type string

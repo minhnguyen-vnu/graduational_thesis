@@ -1,0 +1,23 @@
+[PRE] promote victim->administrator
+  promote -> 200
+[A] victim login -> V_OLD
+  V_OLD srole=administrator
+[B] source write V_OLD (expect 200) -> 200
+[D] demote victim->guest (step-up)
+  demote -> 200
+[poll] fresh(guest) vs V_OLD write, until fresh flips to 403 (cache expiry)
+  t=0s fresh(srole=guest)=200  old(srole=administrator)=200
+  t=5s fresh(srole=guest)=200  old(srole=administrator)=200
+  t=10s fresh(srole=guest)=200  old(srole=administrator)=200
+  t=15s fresh(srole=guest)=200  old(srole=administrator)=200
+  t=21s fresh(srole=guest)=200  old(srole=administrator)=200
+  t=26s fresh(srole=guest)=200  old(srole=administrator)=200
+  t=31s fresh(srole=guest)=200  old(srole=administrator)=200
+  t=36s fresh(srole=guest)=200  old(srole=administrator)=200
+  t=41s fresh(srole=guest)=200  old(srole=administrator)=200
+  t=46s fresh(srole=guest)=200  old(srole=administrator)=200
+  t=51s fresh(srole=guest)=200  old(srole=administrator)=200
+  t=57s fresh(srole=guest)=200  old(srole=administrator)=200
+  t=62s fresh(srole=guest)=403  old(srole=administrator)=403
+[FLIP] fresh->403 at t=62s ; old=403
+[DONE]

@@ -1,0 +1,744 @@
+## S322-0001  POST /
+summary: Geolocate a given IP address
+- body:ip string
+
+## S323-0001  POST /accounts
+desc: Create a new account.
+- body:address object
+- body:address.country string
+- body:address.locality string
+- body:address.post_office_box_number string
+- body:address.postal_code string
+- body:address.region string
+- body:address.street_address string
+- body:billing_information object
+- body:billing_information.address object
+- body:billing_information.address.country string
+- body:billing_information.address.locality string
+- body:billing_information.address.post_office_box_number string
+- body:billing_information.address.postal_code string
+- body:billing_information.address.region string
+- body:billing_information.address.street_address string
+- body:billing_information.name string
+- body:billing_information.vat_number string
+- body:discoverable boolean
+- body:external_ref string
+- body:legal_name string
+- body:managing_account string
+- body:metro_area_network_presence array<string>
+- body:name string
+
+## S323-0002  DELETE /accounts/{id}
+desc: Accounts can be deleted, when all services and configs are decommissioned or the account is not longer referenced e.g. as a `managing_account` or `billing_account`. Deleting an account will cascade to `contacts` and `role-assignments`. The request will immediately fail, if the above preconditions are not met.
+- path:id string
+
+## S323-0003  PATCH /accounts/{id}
+desc: Update parts of an account.
+- path:id string
+- body:address object
+- body:address.country string
+- body:address.locality string
+- body:address.post_office_box_number string
+- body:address.postal_code string
+- body:address.region string
+- body:address.street_address string
+- body:billing_information object
+- body:billing_information.address object
+- body:billing_information.address.country string
+- body:billing_information.address.locality string
+- body:billing_information.address.post_office_box_number string
+- body:billing_information.address.postal_code string
+- body:billing_information.address.region string
+- body:billing_information.address.street_address string
+- body:billing_information.name string
+- body:billing_information.vat_number string
+- body:discoverable boolean
+- body:external_ref string
+- body:legal_name string
+- body:managing_account string
+- body:metro_area_network_presence array<string>
+- body:name string
+
+## S323-0004  PUT /accounts/{id}
+desc: Update the entire account.
+- path:id string
+- body:address object
+- body:address.country string
+- body:address.locality string
+- body:address.post_office_box_number string
+- body:address.postal_code string
+- body:address.region string
+- body:address.street_address string
+- body:billing_information object
+- body:billing_information.address object
+- body:billing_information.address.country string
+- body:billing_information.address.locality string
+- body:billing_information.address.post_office_box_number string
+- body:billing_information.address.postal_code string
+- body:billing_information.address.region string
+- body:billing_information.address.street_address string
+- body:billing_information.name string
+- body:billing_information.vat_number string
+- body:discoverable boolean
+- body:external_ref string
+- body:legal_name string
+- body:managing_account string
+- body:metro_area_network_presence array<string>
+- body:name string
+
+## S323-0005  POST /auth/refresh
+desc: Reauthenticate the API user, issue a new `access_token` and `refresh_token` pair by providing the `refresh_token` in the request body.
+- body:refresh_token string
+
+## S323-0006  POST /auth/token
+desc: Authenticate an API user identified by `api_key` and `api_secret`.
+- body:api_key string
+- body:api_secret string
+
+## S323-0007  POST /contacts
+desc: Create a new contact.
+- body:consuming_account string
+- body:email string
+- body:external_ref string
+- body:managing_account string
+- body:name string
+- body:telephone string
+
+## S323-0008  DELETE /contacts/{id}
+desc: Remove a contact. Please note, that a contact can only be removed if it is not longer in use in a network service or config through a role assignment.
+- path:id string
+
+## S323-0009  PATCH /contacts/{id}
+desc: Update parts of a contact
+- path:id string
+- body:consuming_account string
+- body:email string
+- body:external_ref string
+- body:managing_account string
+- body:name string
+- body:telephone string
+
+## S323-0010  PUT /contacts/{id}
+desc: Update a contact
+- path:id string
+- body:consuming_account string
+- body:email string
+- body:external_ref string
+- body:managing_account string
+- body:name string
+- body:telephone string
+
+## S323-0011  POST /ips
+desc: Add an ip host address or network prefix.
+- body:address string
+- body:consuming_account string
+- body:external_ref string
+- body:fqdn string
+- body:managing_account string
+- body:prefix_length integer
+- body:valid_not_after string
+- body:valid_not_before string
+- body:version integer
+
+## S323-0012  PATCH /ips/{id}
+desc: Update parts of an ip address. As with the `PUT` opertaion, IP addresses, where you don't have update rights, will yield a `resource access denied` error when attempting an update. If the ip address was allocated for you, you might not be able to change anything but the `fqdn`.
+- path:id string
+- body:address string
+- body:consuming_account string
+- body:external_ref string
+- body:fqdn string
+- body:managing_account string
+- body:prefix_length integer
+- body:valid_not_after string
+- body:valid_not_before string
+- body:version integer
+
+## S323-0013  PUT /ips/{id}
+desc: Update an ip address object. You can only update IP addresses within your current scope. Not all addresses you can read you can update. If the ip address was allocated for you, you might not be able to change anything but the `fqdn`.
+- path:id string
+- body:address string
+- body:consuming_account string
+- body:external_ref string
+- body:fqdn string
+- body:managing_account string
+- body:prefix_length integer
+- body:valid_not_after string
+- body:valid_not_before string
+- body:version integer
+
+## S323-0014  POST /macs
+desc: Register a mac address.
+- body:address string
+- body:consuming_account string
+- body:external_ref string
+- body:managing_account string
+- body:valid_not_after string
+- body:valid_not_before string
+
+## S323-0015  DELETE /macs/{id}
+desc: Remove a mac address.
+- path:id string
+
+## S323-0016  POST /member-joining-rules
+desc: Create a member joining rule
+- body:capacity_max integer
+- body:capacity_min integer
+- body:consuming_account string
+- body:external_ref string
+- body:managing_account string
+- body:network_service string
+- body:type string
+
+## S323-0017  DELETE /member-joining-rules/{id}
+desc: Delete a joining rule
+- path:id string
+
+## S323-0018  PATCH /member-joining-rules/{id}
+desc: Partially update a joining rule
+- path:id string
+- body:capacity_max integer
+- body:capacity_min integer
+- body:consuming_account string
+- body:external_ref string
+- body:managing_account string
+- body:type string
+
+## S323-0019  PUT /member-joining-rules/{id}
+desc: Update a joining rule
+- path:id string
+- body:capacity_max integer
+- body:capacity_min integer
+- body:consuming_account string
+- body:external_ref string
+- body:managing_account string
+- body:type string
+
+## S323-0020  POST /network-feature-configs
+desc: Create a configuration for a `NetworkFeature` defined in the `NetworkFeature`s collection.
+- body:as_set_v4 string
+- body:as_set_v6 string
+- body:asn integer
+- body:bgp_session_type string enum[active|passive]
+- body:billing_account string
+- body:consuming_account string
+- body:contract_ref string
+- body:external_ref string
+- body:insert_ixp_asn boolean
+- body:ip string
+- body:managing_account string
+- body:max_prefix_v4 integer
+- body:max_prefix_v6 integer
+- body:network_feature string
+- body:network_service_config string
+- body:password string
+- body:purchase_order string
+- body:role_assignments array<string>
+- body:session_mode string enum[public|collector]
+- body:type string
+
+## S323-0021  DELETE /network-feature-configs/{id}
+desc: Remove a network feature config. The network feature config will be marked as `decommission_requested`. Decommissioning a network feature config will not cascade to related services or service configs.
+- path:id string
+
+## S323-0022  PATCH /network-feature-configs/{id}
+desc: Update parts of a network feature configuration
+- path:id string
+- body:as_set_v4 string
+- body:as_set_v6 string
+- body:asn integer
+- body:bgp_session_type string enum[active|passive]
+- body:consuming_account string
+- body:external_ref string
+- body:insert_ixp_asn boolean
+- body:ip string
+- body:managing_account string
+- body:max_prefix_v4 integer
+- body:max_prefix_v6 integer
+- body:password string
+- body:session_mode string enum[public|collector]
+- body:type string
+
+## S323-0023  PUT /network-feature-configs/{id}
+desc: Update a network feature configuration
+- path:id string
+- body:as_set_v4 string
+- body:as_set_v6 string
+- body:asn integer
+- body:bgp_session_type string enum[active|passive]
+- body:consuming_account string
+- body:external_ref string
+- body:insert_ixp_asn boolean
+- body:ip string
+- body:managing_account string
+- body:max_prefix_v4 integer
+- body:max_prefix_v6 integer
+- body:password string
+- body:session_mode string enum[public|collector]
+- body:type string
+
+## S323-0024  POST /network-service-configs
+desc: Create a `network-service-config`.
+- body:asns array<integer>
+- body:billing_account string
+- body:capacity integer
+- body:connection string
+- body:consuming_account string
+- body:contract_ref string
+- body:external_ref string
+- body:ips array<string>
+- body:listed boolean
+- body:macs array<string>
+- body:managing_account string
+- body:network_feature_configs array<string>
+- body:network_service string
+- body:product_offering string
+- body:purchase_order string
+- body:role_assignments array<string>
+- body:type string
+- body:vlan_config object
+- body:vlan_config.vlan integer
+- body:vlan_config.vlan_ethertype string enum[0x8100|0x88a8|0x9100]
+- body:vlan_config.vlan_type string
+- body:vlan_config.inner_vlan integer
+- body:vlan_config.outer_vlan integer
+- body:vlan_config.outer_vlan_ethertype string enum[0x8100|0x88a8|0x9100]
+- body:role string enum[root|leaf]
+- body:cloud_vlan integer
+- body:handover integer
+
+## S323-0025  DELETE /network-service-configs/{id}
+desc: Request decommissioning the network service configuration. The network service config will assume the state `decommission_requested`. This will cascade to related resources like `network-feature-configs`.
+- path:id string
+- body:decommission_at string
+
+## S323-0026  PATCH /network-service-configs/{id}
+desc: Update parts of an exisiting `network-service-config`.
+- path:id string
+- body:asns array<integer>
+- body:billing_account string
+- body:capacity integer
+- body:connection string
+- body:consuming_account string
+- body:contract_ref string
+- body:external_ref string
+- body:ips array<string>
+- body:listed boolean
+- body:macs array<string>
+- body:managing_account string
+- body:network_feature_configs array<string>
+- body:purchase_order string
+- body:role_assignments array<string>
+- body:type string
+- body:vlan_config object
+- body:vlan_config.vlan integer
+- body:vlan_config.vlan_ethertype string enum[0x8100|0x88a8|0x9100]
+- body:vlan_config.vlan_type string
+- body:vlan_config.inner_vlan integer
+- body:vlan_config.outer_vlan integer
+- body:vlan_config.outer_vlan_ethertype string enum[0x8100|0x88a8|0x9100]
+- body:network_service string
+- body:role string enum[root|leaf]
+- body:cloud_vlan integer
+- body:handover integer
+
+## S323-0027  PUT /network-service-configs/{id}
+desc: Update an exisiting `network-service-config`
+- path:id string
+- body:asns array<integer>
+- body:billing_account string
+- body:capacity integer
+- body:connection string
+- body:consuming_account string
+- body:contract_ref string
+- body:external_ref string
+- body:ips array<string>
+- body:listed boolean
+- body:macs array<string>
+- body:managing_account string
+- body:network_feature_configs array<string>
+- body:purchase_order string
+- body:role_assignments array<string>
+- body:type string
+- body:vlan_config object
+- body:vlan_config.vlan integer
+- body:vlan_config.vlan_ethertype string enum[0x8100|0x88a8|0x9100]
+- body:vlan_config.vlan_type string
+- body:vlan_config.inner_vlan integer
+- body:vlan_config.outer_vlan integer
+- body:vlan_config.outer_vlan_ethertype string enum[0x8100|0x88a8|0x9100]
+- body:network_service string
+- body:role string enum[root|leaf]
+- body:cloud_vlan integer
+- body:handover integer
+
+## S323-0028  POST /network-services
+desc: Create a new network service
+- body:billing_account string
+- body:consuming_account string
+- body:contract_ref string
+- body:external_ref string
+- body:joining_member_account string
+- body:managing_account string
+- body:product_offering string
+- body:purchase_order string
+- body:type string
+- body:name string
+- body:public boolean
+- body:capacity integer
+- body:cloud_key string
+
+## S323-0029  DELETE /network-services/{id}
+desc: Request decomissioning of the network service. The network service will enter the state of `decommission_requested`. The request will cascade to related network service and feature configs. An *optional request body* can be provided to request a specific service termination date. If no date is given in the request body, it is assumed to be the earliest possible date. Possible values for `decommiss
+- path:id string
+- body:decommission_at string
+
+## S323-0030  PATCH /network-services/{id}
+desc: Partially update a network service
+- path:id string
+- body:billing_account string
+- body:consuming_account string
+- body:contract_ref string
+- body:external_ref string
+- body:joining_member_account string
+- body:managing_account string
+- body:product_offering string
+- body:purchase_order string
+- body:type string
+- body:name string
+- body:public boolean
+- body:capacity integer
+- body:cloud_key string
+
+## S323-0031  PUT /network-services/{id}
+desc: Update a network service
+- path:id string
+- body:billing_account string
+- body:consuming_account string
+- body:contract_ref string
+- body:external_ref string
+- body:joining_member_account string
+- body:managing_account string
+- body:product_offering string
+- body:purchase_order string
+- body:type string
+- body:name string
+- body:public boolean
+- body:capacity integer
+- body:cloud_key string
+
+## S323-0032  DELETE /network-services/{id}/change-request
+desc: Retract or reject a change to the network service.
+- path:id string
+
+## S323-0033  POST /network-services/{id}/change-request
+desc: Request a change to the network service. A participant in a network service of type `p2p_vc` can issue a change request, expressing a desired change in the capacity. The change is accepted when all sides have configured the network service configs with the new bandwidth. These changes can sometimes require a change of the product offering. The product offering may only differ in regards to bandwid
+- path:id string
+- body:capacity integer
+- body:product_offering string
+
+## S323-0034  POST /role-assignments
+desc: Assign a `Role` to a `Contact`. The contact needs to have all fields filled, which the role requires. If this is not the case a `400` `UnableToFulfill` will be returned.
+- body:contact string
+- body:role string
+
+## S323-0035  DELETE /role-assignments/{assignment_id}
+desc: Remove a role assignment from a contact. If the contact is still in use with a given role required, this will yield an `UnableToFulfill` error.
+- path:assignment_id string
+
+## S324-0001  POST /account/relay-auto-configs
+summary: Create a new relay proxy config.
+- body:name string
+- body:policy array<object>
+- body:policy[].actions array<string>
+- body:policy[].effect string
+- body:policy[].notActions array<string>
+- body:policy[].notResources array<string>
+- body:policy[].resources array<string>
+
+## S324-0002  PATCH /account/relay-auto-configs/{id}
+summary: Modify a relay proxy configuration by ID.
+- path:id string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-0003  POST /account/relay-auto-configs/{id}/reset
+summary: Reset a relay proxy configuration's secret key with an optional expiry time for the old key.
+- path:id string
+- query:expiry integer
+
+## S324-0004  POST /destinations/{projectKey}/{environmentKey}
+summary: Create a new data export destination
+- path:projectKey string
+- path:environmentKey string
+- body:config object
+- body:kind string enum[google-pubsub|kinesis|mparticle|segment]
+- body:name string
+- body:on boolean
+
+## S324-0005  DELETE /destinations/{projectKey}/{environmentKey}/{destinationId}
+summary: Get a single data export destination by ID
+- path:projectKey string
+- path:environmentKey string
+- path:destinationId string
+
+## S324-0006  DELETE /integrations/{integrationKey}/{integrationId}
+summary: Delete an integration subscription by ID.
+- path:integrationKey string
+- path:integrationId string
+
+## S324-0007  PATCH /integrations/{integrationKey}/{integrationId}
+summary: Modify an integration subscription by ID.
+- path:integrationKey string
+- path:integrationId string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-0008  DELETE /members/{memberId}
+summary: Delete a team member by ID.
+- path:memberId string
+
+## S324-0009  PATCH /members/{memberId}
+summary: Modify a team member by ID.
+- path:memberId string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-0010  POST /projects
+summary: Create a new project with the given key and name.
+- body:defaultClientSideAvailability object
+- body:defaultClientSideAvailability.usingEnvironmentId boolean
+- body:defaultClientSideAvailability.usingMobileKey boolean
+- body:environments array<object>
+- body:environments[].color string
+- body:environments[].confirmChanges boolean
+- body:environments[].defaultTrackEvents boolean
+- body:environments[].defaultTtl number
+- body:environments[].key string
+- body:environments[].name string
+- body:environments[].requireComments boolean
+- body:environments[].secureMode boolean
+- body:environments[].tags array<string>
+- body:includeInSnippetByDefault boolean
+- body:key string
+- body:name string
+- body:tags array<string>
+
+## S324-0011  DELETE /projects/{projectKey}
+summary: Delete a project by key. Caution-- deleting a project will delete all associated environments and feature flags. You cannot delete the last project in an account.
+- path:projectKey string
+
+## S324-0012  PATCH /projects/{projectKey}
+summary: Modify a project by ID.
+- path:projectKey string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-0013  POST /projects/{projectKey}/environments
+summary: Create a new environment in a specified project with a given name, key, and swatch color.
+- path:projectKey string
+- body:color string
+- body:confirmChanges boolean
+- body:defaultTrackEvents boolean
+- body:defaultTtl number
+- body:key string
+- body:name string
+- body:requireComments boolean
+- body:secureMode boolean
+- body:tags array<string>
+
+## S324-0014  DELETE /projects/{projectKey}/environments/{environmentKey}
+summary: Delete an environment in a specific project.
+- path:projectKey string
+- path:environmentKey string
+
+## S324-0015  PATCH /projects/{projectKey}/environments/{environmentKey}
+summary: Modify an environment by ID. If you try to patch the environment by setting both required and requiredApprovalTags, it will result in an error. Users can specify either required approvals for all flags in an environment or those with specific tags, but not both. Only customers on an Enterprise plan can require approval for flag updates with either mechanism.
+- path:projectKey string
+- path:environmentKey string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-0016  POST /projects/{projectKey}/environments/{environmentKey}/apiKey
+summary: Reset an environment's SDK key with an optional expiry time for the old key.
+- path:projectKey string
+- path:environmentKey string
+- query:expiry integer
+
+## S324-0017  POST /projects/{projectKey}/environments/{environmentKey}/mobileKey
+summary: Reset an environment's mobile key. The optional expiry for the old key is deprecated for this endpoint, so the old key will always expire immediately.
+- path:projectKey string
+- path:environmentKey string
+- query:expiry integer
+
+## S324-0018  POST /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/approval-requests/{approvalRequestId}
+summary: Create an approval request for a feature flag config
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- path:approvalRequestId string
+- body:comment string
+- body:description string
+- body:executionDate integer
+- body:instructions array<object>
+- body:instructions[].kind string
+- body:notifyMemberIds array<string>
+- body:operatingOnId string
+
+## S324-0019  POST /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/approval-requests/{approvalRequestId}/apply
+summary: Apply approval request for a feature flag config
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- path:approvalRequestId string
+- body:comment string
+
+## S324-0020  POST /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/approval-requests/{approvalRequestId}/review
+summary: Review approval request for a feature flag config
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- path:approvalRequestId string
+- body:comment string
+- body:kind string enum[approve|decline|comment]
+
+## S324-0021  POST /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/scheduled-changes
+summary: Creates a new scheduled change for a feature flag.
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- body:comment string
+- body:executionDate integer
+- body:instructions array<object>
+- body:instructions[].kind string
+
+## S324-0022  POST /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/scheduled-changes-conflicts
+summary: Lists conflicts between the given instructions and any existing scheduled changes for the feature flag. The actual HTTP verb should be REPORT, not POST.
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- body:executionDate integer
+- body:instructions array<object>
+- body:instructions[].kind string
+
+## S324-0023  DELETE /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/scheduled-changes/{scheduledChangeId}
+summary: Delete a scheduled change on a feature flag in an environment.
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- path:scheduledChangeId string
+
+## S324-0024  PATCH /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/scheduled-changes/{scheduledChangeId}
+summary: Updates an existing scheduled-change on a feature flag in an environment.
+- path:projectKey string
+- path:featureFlagKey string
+- path:environmentKey string
+- path:scheduledChangeId string
+- body:comment string
+- body:instructions array<object>
+- body:instructions[].kind string
+
+## S324-0025  DELETE /roles/{customRoleKey}
+summary: Delete a custom role by key.
+- path:customRoleKey string
+
+## S324-0026  POST /segments/{projectKey}/{environmentKey}
+summary: Creates a new user segment.
+- path:projectKey string
+- path:environmentKey string
+- body:description string
+- body:key string
+- body:name string
+- body:tags array<string>
+- body:unbounded boolean
+
+## S324-0027  DELETE /segments/{projectKey}/{environmentKey}/{userSegmentKey}
+summary: Delete a user segment.
+- path:projectKey string
+- path:environmentKey string
+- path:userSegmentKey string
+
+## S324-0028  POST /segments/{projectKey}/{environmentKey}/{userSegmentKey}/users
+summary: Update targets included or excluded in a big segment
+- path:projectKey string
+- path:environmentKey string
+- path:userSegmentKey string
+- body:excluded object
+- body:excluded.add array<string>
+- body:excluded.remove array<string>
+- body:included object
+- body:included.add array<string>
+- body:included.remove array<string>
+
+## S324-0029  PATCH /segments/{projectKey}/{userSegmentKey}/expiring-user-targets/{environmentKey}
+summary: Update, add, or delete expiring user targets on user segment
+- path:projectKey string
+- path:environmentKey string
+- path:userSegmentKey string
+- body:(body) object
+
+## S324-0030  POST /tokens
+summary: Create a new token.
+- body:customRoleIds array<string>
+- body:defaultApiVersion integer
+- body:inlineRole array<object>
+- body:inlineRole[].actions array<string>
+- body:inlineRole[].effect string enum[allow|deny]
+- body:inlineRole[].notActions array<string>
+- body:inlineRole[].notResources array<string>
+- body:inlineRole[].resources array<string>
+- body:name string
+- body:role string
+- body:serviceToken boolean
+
+## S324-0031  PATCH /tokens/{tokenId}
+summary: Modify an access token by ID.
+- path:tokenId string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-0032  PUT /users/{projectKey}/{environmentKey}/{userKey}/flags/{featureFlagKey}
+summary: Specifically enable or disable a feature flag for a user based on their key.
+- path:projectKey string
+- path:environmentKey string
+- path:userKey string
+- path:featureFlagKey string
+- body:setting boolean
+
+## S324-0033  PATCH /users/{projectKey}/{userKey}/expiring-user-targets/{environmentKey}
+summary: Update, add, or delete expiring user targets for a single user on all flags
+- path:projectKey string
+- path:environmentKey string
+- path:userKey string
+- body:(body) object
+
+## S324-0034  POST /webhooks
+summary: Create a webhook.
+- body:name string
+- body:on boolean
+- body:secret string
+- body:sign boolean
+- body:statements array<object>
+- body:statements[].actions array<string>
+- body:statements[].effect string enum[allow|deny]
+- body:statements[].notActions array<string>
+- body:statements[].notResources array<string>
+- body:statements[].resources array<string>
+- body:tags array<string>
+- body:url string
+
+## S324-0035  DELETE /webhooks/{resourceId}
+summary: Delete a webhook by ID.
+- path:resourceId string
+
+## S324-0036  PATCH /webhooks/{resourceId}
+summary: Modify a webhook by ID.
+- path:resourceId string
+- body:op string
+- body:path string
+- body:value object

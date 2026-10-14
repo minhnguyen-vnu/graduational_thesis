@@ -1,0 +1,676 @@
+## S107-0027  POST /organizations/lti/credentials
+desc: Create a new couple of LTI 1.x credentials | Flat for Education is a Certified LTI Provider. You can use these API methods to automate the creation of LTI credentials. You can read more about our LTI implementation, supported components and LTI Endpoints in our [Developer Documentation](https://flat.io/developers/docs/lti/).
+schema: LtiCredentialsCreation
+- body:lms string enum[canvas|moodle|schoology|blackboard|desire2learn|sakai|schoolbox|other]
+- body:name string
+
+## S107-0028  DELETE /organizations/lti/credentials/{credentials}
+desc: Revoke LTI 1.x credentials
+- path:credentials string
+
+## S107-0029  POST /organizations/users
+desc: Create a new user account
+schema: UserCreation
+- body:email string
+- body:firstname string
+- body:lastname string
+- body:locale string enum[en|en-GB|es|fr|de|it|ja|ko|nl|pl|pt|pt-BR]
+- body:password string
+- body:username string
+
+## S107-0030  DELETE /organizations/users/{user}
+desc: Remove an account from Flat | This operation removes an account from Flat and its data, including: * The music scores created by this user (documents, history, comments, collaboration information) * Education related data (assignments and classroom information)
+- path:user string
+- query:convertToIndividual boolean
+
+## S107-0031  PUT /organizations/users/{user}
+desc: Update account information
+schema: UserAdminUpdate
+- path:user string
+- body:email string
+- body:firstname string
+- body:lastname string
+- body:organizationRole string enum[admin|billing|teacher|user]
+- body:password string
+- body:username string
+
+## S107-0033  DELETE /scores/{score}
+desc: Delete a score | This method can be used by the owner/admin (`aclAdmin` rights) of a score as well as regular collaborators. When called by an owner/admin, it will schedule the deletion of the score, its revisions, and complete history. The score won't be accessible anymore after calling this method and the user's quota will directly be updated. When called by a regular collaborator (`aclRead` / `
+- path:score string
+- query:now boolean
+
+## S107-0035  POST /scores/{score}/collaborators
+desc: Add a new collaborator | Share a score with a single user or a group. This API call allows to add, invite and update the collaborators of a resource. - To add an existing Flat user to the resource, specify its unique identifier in the `user` property. - To invite an external user to the resource, specify its email in the `userEmail` property. - To add a Flat group to the resource, specify its uniq
+schema: ResourceCollaboratorCreation
+- path:score string
+- body:aclAdmin boolean
+- body:aclRead boolean
+- body:aclWrite boolean
+- body:group string
+- body:user string
+- body:userEmail string
+- body:userToken string
+
+## S107-0037  POST /scores/{score}/comments
+desc: Post a new comment | Post a document or a contextualized comment on a document. Please note that this method includes an anti-spam system for public scores. We don't guarantee that your comments will be accepted and displayed to end-user. Comments are be blocked by returning a `403` HTTP error and hidden from other users when the `spam` property is `true`.
+schema: ScoreCommentCreation
+- path:score string
+- query:sharingKey string
+- body:comment string
+- body:context object
+- body:context.measureUuids array<string>
+- body:context.partUuid string
+- body:context.staffIdx number
+- body:context.staffUuid string
+- body:context.startDpq number
+- body:context.startTimePos number
+- body:context.stopDpq number
+- body:context.stopTimePos number
+- body:mentions array<string>
+- body:rawComment string
+- body:replyTo string
+- body:revision string
+
+## S107-0042  POST /scores/{score}/fork
+desc: Fork a score | This API call will make a copy of the last revision of the specified score and create a new score. The copy of the score will have a privacy set to `private`. When using a [Flat for Education](https://flat.io/edu) account, the inline and contextualized comments will be accessible in the child document.
+schema: ScoreFork
+- path:score string
+- query:sharingKey string
+- body:collection string
+
+## S107-0046  PUT /scores/{score}/tracks/{track}
+desc: Update an audio or video track linked to a score
+schema: ScoreTrackUpdate
+- path:score string
+- path:track string
+- body:default boolean
+- body:state string enum[draft|completed|deleted]
+- body:synchronizationPoints array<object>
+- body:synchronizationPoints[].measureUuid string
+- body:synchronizationPoints[].time number
+- body:synchronizationPoints[].type string enum[measure|end]
+- body:title string
+
+## S108-0003  POST /admin/hooks
+desc: Create a hook
+schema: CreateHookOption
+- body:active boolean
+- body:authorization_header string
+- body:branch_filter string
+- body:config object
+- body:events array<string>
+- body:type string enum[dingtalk|discord|gitea|gogs|msteams|slack|telegram|feishu|wechatwork|packagist]
+
+## S108-0007  POST /admin/users
+desc: Create a user
+schema: CreateUserOption
+- body:created_at string
+- body:email string
+- body:full_name string
+- body:login_name string
+- body:must_change_password boolean
+- body:password string
+- body:restricted boolean
+- body:send_notify boolean
+- body:source_id integer
+- body:username string
+- body:visibility string
+
+## S108-0008  DELETE /admin/users/{username}
+desc: Delete a user
+- path:username string
+
+## S108-0010  POST /admin/users/{username}/keys
+desc: Add a public key on behalf of a user
+schema: CreateKeyOption
+- path:username string
+- body:key string
+- body:read_only boolean
+- body:title string
+
+## S108-0011  DELETE /admin/users/{username}/keys/{id}
+desc: Delete a user's public key
+- path:username string
+- path:id integer
+
+## S108-0013  POST /admin/users/{username}/repos
+desc: Create a repository on behalf of a user
+schema: CreateRepoOption
+- path:username string
+- body:auto_init boolean
+- body:default_branch string
+- body:description string
+- body:gitignores string
+- body:issue_labels string
+- body:license string
+- body:name string
+- body:private boolean
+- body:readme string
+- body:template boolean
+- body:trust_model string enum[default|collaborator|committer|collaboratorcommitter]
+
+## S108-0017  PUT /notifications
+desc: Mark notification threads as read, pinned or unread
+- query:last_read_at string
+- query:all string
+- query:status-types array<string>
+- query:to-status string
+
+## S108-0020  POST /orgs
+desc: Create an organization
+schema: CreateOrgOption
+- body:description string
+- body:full_name string
+- body:location string
+- body:repo_admin_change_team_access boolean
+- body:username string
+- body:visibility string enum[public|limited|private]
+- body:website string
+
+## S108-0023  POST /orgs/{org}/hooks
+desc: Create a hook
+schema: CreateHookOption
+- path:org string
+- body:active boolean
+- body:authorization_header string
+- body:branch_filter string
+- body:config object
+- body:events array<string>
+- body:type string enum[dingtalk|discord|gitea|gogs|msteams|slack|telegram|feishu|wechatwork|packagist]
+
+## S108-0026  POST /orgs/{org}/labels
+desc: Create a label for an organization
+schema: CreateLabelOption
+- path:org string
+- body:color string
+- body:description string
+- body:exclusive boolean
+- body:name string
+
+## S108-0030  DELETE /orgs/{org}/public_members/{username}
+desc: Conceal a user's membership
+- path:org string
+- path:username string
+
+## S108-0035  POST /repos/migrate
+desc: Migrate a remote git repository
+schema: MigrateRepoOptions
+- body:auth_password string
+- body:auth_token string
+- body:auth_username string
+- body:clone_addr string
+- body:description string
+- body:issues boolean
+- body:labels boolean
+- body:lfs boolean
+- body:lfs_endpoint string
+- body:milestones boolean
+- body:mirror boolean
+- body:mirror_interval string
+- body:private boolean
+- body:pull_requests boolean
+- body:releases boolean
+- body:repo_name string
+- body:repo_owner string
+- body:service string enum[git|github|gitea|gitlab]
+- body:uid integer
+- body:wiki boolean
+
+## S108-0043  DELETE /repos/{owner}/{repo}/collaborators/{collaborator}
+desc: Delete a collaborator from a repository
+- path:owner string
+- path:repo string
+- path:collaborator string
+
+## S108-0049  POST /repos/{owner}/{repo}/forks
+desc: Fork a repository
+schema: CreateForkOption
+- path:owner string
+- path:repo string
+- body:name string
+- body:organization string
+
+## S108-0050  POST /repos/{owner}/{repo}/hooks
+desc: Create a hook
+schema: CreateHookOption
+- path:owner string
+- path:repo string
+- body:active boolean
+- body:authorization_header string
+- body:branch_filter string
+- body:config object
+- body:events array<string>
+- body:type string enum[dingtalk|discord|gitea|gogs|msteams|slack|telegram|feishu|wechatwork|packagist]
+
+## S108-0059  POST /repos/{owner}/{repo}/issues/comments/{id}/assets
+desc: Create a comment attachment
+- path:owner string
+- path:repo string
+- path:id integer
+- query:name string
+- body:attachment string
+
+## S108-0065  PATCH /repos/{owner}/{repo}/issues/{index}
+desc: Edit an issue. If using deadline only the date will be taken into account, and time of day ignored.
+schema: EditIssueOption
+- path:owner string
+- path:repo string
+- path:index integer
+- body:assignee string
+- body:assignees array<string>
+- body:body string
+- body:due_date string
+- body:milestone integer
+- body:ref string
+- body:state string
+- body:title string
+- body:unset_due_date boolean
+
+## S108-0082  DELETE /repos/{owner}/{repo}/issues/{index}/subscriptions/{user}
+desc: Unsubscribe user from issue
+- path:owner string
+- path:repo string
+- path:index integer
+- path:user string
+
+## S108-0083  PUT /repos/{owner}/{repo}/issues/{index}/subscriptions/{user}
+desc: Subscribe user to issue
+- path:owner string
+- path:repo string
+- path:index integer
+- path:user string
+
+## S108-0085  POST /repos/{owner}/{repo}/issues/{index}/times
+desc: Add tracked time to a issue
+schema: AddTimeOption
+- path:owner string
+- path:repo string
+- path:index integer
+- body:created string
+- body:time integer
+- body:user_name string
+
+## S108-0087  POST /repos/{owner}/{repo}/keys
+desc: Add a key to a repository
+schema: CreateKeyOption
+- path:owner string
+- path:repo string
+- body:key string
+- body:read_only boolean
+- body:title string
+
+## S108-0088  DELETE /repos/{owner}/{repo}/keys/{id}
+desc: Delete a key from a repository
+- path:owner string
+- path:repo string
+- path:id integer
+
+## S108-0091  PATCH /repos/{owner}/{repo}/labels/{id}
+desc: Update a label
+schema: EditLabelOption
+- path:owner string
+- path:repo string
+- path:id integer
+- body:color string
+- body:description string
+- body:exclusive boolean
+- body:name string
+
+## S108-0101  DELETE /repos/{owner}/{repo}/pulls/{index}/requested_reviewers
+desc: cancel review requests for a pull request
+schema: PullReviewRequestOptions
+- path:owner string
+- path:repo string
+- path:index integer
+- body:reviewers array<string>
+- body:team_reviewers array<string>
+
+## S108-0103  POST /repos/{owner}/{repo}/pulls/{index}/reviews
+desc: Create a review to an pull request
+schema: CreatePullReviewOptions
+- path:owner string
+- path:repo string
+- path:index integer
+- body:body string
+- body:comments array<object>
+- body:comments[].body string
+- body:comments[].new_position integer
+- body:comments[].old_position integer
+- body:comments[].path string
+- body:commit_id string
+- body:event string
+
+## S108-0104  DELETE /repos/{owner}/{repo}/pulls/{index}/reviews/{id}
+desc: Delete a specific review from a pull request
+- path:owner string
+- path:repo string
+- path:index integer
+- path:id integer
+
+## S108-0110  POST /repos/{owner}/{repo}/push_mirrors-sync
+desc: Sync all push mirrored repository
+- path:owner string
+- path:repo string
+
+## S108-0124  DELETE /repos/{owner}/{repo}/teams/{team}
+desc: Delete a team from a repository
+- path:owner string
+- path:repo string
+- path:team string
+
+## S108-0125  PUT /repos/{owner}/{repo}/teams/{team}
+desc: Add a team to a repository
+- path:owner string
+- path:repo string
+- path:team string
+
+## S108-0129  POST /repos/{owner}/{repo}/transfer
+desc: Transfer a repo ownership
+schema: TransferRepoOption
+- path:owner string
+- path:repo string
+- body:new_owner string
+- body:team_ids array<integer>
+
+## S108-0136  DELETE /teams/{id}
+desc: Delete a team
+- path:id integer
+
+## S108-0139  PUT /teams/{id}/members/{username}
+desc: Add a team member
+- path:id integer
+- path:username string
+
+## S108-0149  POST /user/gpg_key_verify
+desc: Verify a GPG key
+
+## S108-0151  DELETE /user/gpg_keys/{id}
+desc: Remove a GPG key
+- path:id integer
+
+## S108-0156  DELETE /user/starred/{owner}/{repo}
+desc: Unstar the given repo
+- path:owner string
+- path:repo string
+
+## S108-0159  DELETE /users/{username}/tokens/{token}
+desc: delete an access token
+- path:username string
+- path:token string
+
+## S109-0001  PUT /v3/application/settings
+desc: Modify application settings | Modify application settings
+- body:default_branch_protection integer enum[0|1|2]
+- body:default_project_visibility integer enum[0|10|20]
+- body:default_snippet_visibility integer enum[0|10|20]
+- body:default_group_visibility integer enum[0|10|20]
+- body:restricted_visibility_levels array<string>
+- body:import_sources array<string> enum[github|bitbucket|gitlab|google_code|fogbugz|git|gitlab_project]
+- body:disabled_oauth_sign_in_sources array<string>
+- body:enabled_git_access_protocol string enum[ssh|http|nil]
+- body:gravatar_enabled boolean
+- body:default_projects_limit integer
+- body:max_attachment_size integer
+- body:session_expire_delay integer
+- body:user_oauth_applications boolean
+- body:user_default_external boolean
+- body:signup_enabled boolean
+- body:send_user_confirmation_email boolean
+- body:domain_whitelist string
+- body:domain_blacklist_enabled boolean
+- body:domain_blacklist string
+- body:after_sign_up_text string
+- body:signin_enabled boolean
+- body:require_two_factor_authentication boolean
+- body:two_factor_grace_period integer
+- body:home_page_url string
+- body:after_sign_out_path string
+- body:sign_in_text string
+- body:help_page_text string
+- body:shared_runners_enabled boolean
+- body:shared_runners_text string
+- body:max_artifacts_size integer
+- body:container_registry_token_expire_delay integer
+- body:metrics_enabled boolean
+- body:metrics_host string
+- body:metrics_port integer
+- body:metrics_pool_size integer
+- body:metrics_timeout integer
+- body:metrics_method_call_threshold integer
+- body:metrics_sample_interval integer
+- body:metrics_packet_size integer
+- body:sidekiq_throttling_enabled boolean
+- body:sidekiq_throttling_queus array<string>
+- body:sidekiq_throttling_factor number
+- body:recaptcha_enabled boolean
+- body:recaptcha_site_key string
+- body:recaptcha_private_key string
+- body:akismet_enabled boolean
+- body:akismet_api_key string
+- body:admin_notification_email string
+- body:sentry_enabled boolean
+- body:sentry_dsn string
+- body:repository_storage string
+- body:repository_checks_enabled boolean
+- body:koding_enabled boolean
+- body:koding_url string
+- body:plantuml_enabled boolean
+- body:plantuml_url string
+- body:version_check_enabled boolean
+- body:email_author_in_body boolean
+- body:html_emails_enabled boolean
+- body:housekeeping_enabled boolean
+- body:housekeeping_bitmaps_enabled boolean
+- body:housekeeping_incremental_repack_period integer
+- body:housekeeping_full_repack_period integer
+- body:housekeeping_gc_period integer
+
+## S109-0003  POST /v3/groups
+desc: Create a group. Available only for users who can create groups. | Create a group. Available only for users who can create groups.
+- body:name string
+- body:path string
+- body:description string
+- body:visibility_level integer
+- body:lfs_enabled boolean
+- body:request_access_enabled boolean
+
+## S109-0004  DELETE /v3/groups/{id}
+desc: Remove a group. | Remove a group.
+- path:id string
+
+## S109-0005  PUT /v3/groups/{id}
+desc: Update a group. Available only for users who can administrate groups. | Update a group. Available only for users who can administrate groups.
+- path:id string
+- body:name string
+- body:path string
+- body:description string
+- body:visibility_level integer
+- body:lfs_enabled boolean
+- body:request_access_enabled boolean
+
+## S109-0006  POST /v3/groups/{id}/access_requests
+desc: Requests access for the authenticated user to a group. | This feature was introduced in GitLab 8.11.
+- path:id string
+
+## S109-0007  DELETE /v3/groups/{id}/access_requests/{user_id}
+desc: Denies an access request for the given user. | This feature was introduced in GitLab 8.11.
+- path:id string
+- path:user_id integer
+
+## S109-0008  PUT /v3/groups/{id}/access_requests/{user_id}/approve
+desc: Approves an access request for the given user. | This feature was introduced in GitLab 8.11.
+- path:id string
+- path:user_id integer
+- body:access_level integer
+
+## S109-0009  POST /v3/groups/{id}/members
+desc: Adds a member to a group or project. | Adds a member to a group or project.
+- path:id string
+- body:user_id integer
+- body:access_level integer
+- body:expires_at string
+
+## S109-0010  DELETE /v3/groups/{id}/members/{user_id}
+desc: Removes a user from a group or project. | Removes a user from a group or project.
+- path:id string
+- path:user_id integer
+
+## S109-0011  PUT /v3/groups/{id}/members/{user_id}
+desc: Updates a member of a group or project. | Updates a member of a group or project.
+- path:id string
+- path:user_id integer
+- body:access_level integer
+- body:expires_at string
+
+## S109-0013  POST /v3/groups/{id}/projects/{project_id}
+desc: Transfer a project to the group namespace. Available only for admin. | Transfer a project to the group namespace. Available only for admin.
+- path:id string
+- path:project_id string
+
+## S109-0021  POST /v3/projects/fork/{id}
+desc: Fork new project for the current user or provided namespace. | Fork new project for the current user or provided namespace.
+- path:id string
+- body:namespace string
+
+## S109-0022  POST /v3/projects/user/{user_id}
+desc: Create new project for a specified user. Only available to admin users. | Create new project for a specified user. Only available to admin users.
+- path:user_id integer
+- body:name string
+- body:default_branch string
+- body:description string
+- body:issues_enabled boolean
+- body:merge_requests_enabled boolean
+- body:wiki_enabled boolean
+- body:builds_enabled boolean
+- body:snippets_enabled boolean
+- body:shared_runners_enabled boolean
+- body:container_registry_enabled boolean
+- body:lfs_enabled boolean
+- body:public boolean
+- body:visibility_level integer enum[0|10|20]
+- body:public_builds boolean
+- body:request_access_enabled boolean
+- body:only_allow_merge_if_build_succeeds boolean
+- body:only_allow_merge_if_all_discussions_are_resolved boolean
+- body:namespace_id integer
+- body:import_url string
+
+## S109-0026  POST /v3/projects/{id}/access_requests
+desc: Requests access for the authenticated user to a project. | This feature was introduced in GitLab 8.11.
+- path:id string
+
+## S109-0027  DELETE /v3/projects/{id}/access_requests/{user_id}
+desc: Denies an access request for the given user. | This feature was introduced in GitLab 8.11.
+- path:id string
+- path:user_id integer
+
+## S109-0028  PUT /v3/projects/{id}/access_requests/{user_id}/approve
+desc: Approves an access request for the given user. | This feature was introduced in GitLab 8.11.
+- path:id string
+- path:user_id integer
+- body:access_level integer
+
+## S109-0034  POST /v3/projects/{id}/builds/{build_id}/cancel
+desc: Cancel a specific build of a project | Cancel a specific build of a project
+- path:id string
+- path:build_id integer
+
+## S109-0040  DELETE /v3/projects/{id}/deploy_keys/{key_id}/disable
+desc: Disable a deploy key for a project | This feature was added in GitLab 8.11
+- path:id string
+- path:key_id integer
+
+## S109-0049  PUT /v3/projects/{id}/hooks/{hook_id}
+desc: Update an existing project hook | Update an existing project hook
+- path:id string
+- path:hook_id integer
+- body:url string
+- body:push_events boolean
+- body:issues_events boolean
+- body:merge_requests_events boolean
+- body:tag_push_events boolean
+- body:note_events boolean
+- body:build_events boolean
+- body:pipeline_events boolean
+- body:wiki_page_events boolean
+- body:enable_ssl_verification boolean
+- body:token string
+
+## S109-0059  POST /v3/projects/{id}/issues/{issue_id}/reset_spent_time
+desc: Reset spent time for a project issue | Reset spent time for a project issue
+- path:id string
+- path:issue_id integer
+
+## S109-0077  POST /v3/projects/{id}/members
+desc: Adds a member to a group or project. | Adds a member to a group or project.
+- path:id string
+- body:user_id integer
+- body:access_level integer
+- body:expires_at string
+
+## S109-0105  POST /v3/projects/{id}/merge_requests/{subscribable_id}/subscription
+desc: Subscribe to a resource | Subscribe to a resource
+- path:id string
+- path:subscribable_id string
+
+## S109-0108  PUT /v3/projects/{id}/notification_settings
+desc: Update project level notification level settings, defaults to Global | This feature was introduced in GitLab 8.12
+- path:id string
+- body:level string
+- body:new_note boolean
+- body:new_issue boolean
+- body:reopen_issue boolean
+- body:close_issue boolean
+- body:reassign_issue boolean
+- body:new_merge_request boolean
+- body:reopen_merge_request boolean
+- body:close_merge_request boolean
+- body:reassign_merge_request boolean
+- body:merge_merge_request boolean
+- body:failed_pipeline boolean
+- body:success_pipeline boolean
+
+## S109-0127  POST /v3/projects/{id}/runners
+desc: Enable a runner for a project | Enable a runner for a project
+- path:id string
+- body:runner_id integer
+
+## S109-0142  PUT /v3/projects/{id}/services/hipchat
+desc: Set hipchat service for project | Set hipchat service for project
+- path:id integer
+- body:token string
+- body:room string
+- body:color string
+- body:notify boolean
+- body:api_version string
+- body:server string
+- body:push_events string
+- body:issue_events string
+- body:confidential_issue_events string
+- body:merge_request_events string
+- body:note_events string
+- body:tag_push_events string
+- body:build_events string
+
+## S109-0151  PUT /v3/projects/{id}/services/pushover
+desc: Set pushover service for project | Set pushover service for project
+- path:id integer
+- body:api_key string
+- body:user_key string
+- body:priority string
+- body:device string
+- body:sound string
+- body:push_events string
+
+## S109-0154  PUT /v3/projects/{id}/services/slack-slash-commands
+desc: Set slack-slash-commands service for project | Set slack-slash-commands service for project
+- path:id integer
+- body:token string
+
+## S109-0188  POST /v3/user/emails
+desc: Add new email address to the currently authenticated user | Add new email address to the currently authenticated user
+- body:email string
+
+## S109-0189  DELETE /v3/user/emails/{email_id}
+desc: Delete an email address from the currently authenticated user | Delete an email address from the currently authenticated user
+- path:email_id integer

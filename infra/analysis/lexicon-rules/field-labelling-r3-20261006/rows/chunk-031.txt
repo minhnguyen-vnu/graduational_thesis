@@ -1,0 +1,1932 @@
+## S417-0031  DELETE /api/transport-turbo-sms/{id}
+desc: Removes the TransportTurboSms resource. | Removes the TransportTurboSms resource.
+- path:id string
+
+## S417-0032  PUT /api/transport-turbo-sms/{id}
+desc: Replaces the TransportTurboSms resource. | Replaces the TransportTurboSms resource.
+schema: TransportTurboSms-put
+- path:id string
+- body:dataSegmentCode string
+- body:transportName string
+- body:turboSmsAuthToken string
+- body:turboSmsFrom string
+
+## S417-0033  POST /api/transport-twilio
+desc: Creates a TransportTwilio resource. | Creates a TransportTwilio resource.
+schema: TransportTwilio-post
+- body:dataSegmentCode string
+- body:partition string
+- body:transportName string
+- body:twilioFrom string
+- body:twilioSid string
+- body:twilioToken string
+
+## S417-0034  DELETE /api/transport-twilio/{id}
+desc: Removes the TransportTwilio resource. | Removes the TransportTwilio resource.
+- path:id string
+
+## S417-0035  PUT /api/transport-zendesk/{id}
+desc: Replaces the TransportZendesk resource. | Replaces the TransportZendesk resource.
+schema: TransportZendesk-put
+- path:id string
+- body:dataSegmentCode string
+- body:transportName string
+- body:zendeskEmail string
+- body:zendeskHost string
+- body:zendeskToken string
+
+## S417-0036  PUT /api/user-account/{id}
+desc: Replaces the UserAccount resource. | Replaces the UserAccount resource.
+schema: UserAccount-put
+- path:id string
+- body:creditsOveragePercentTripSwitch integer
+
+## S418-0001  POST /bank-accounts
+desc: Create a bank account | Create a new bank account. Returns a bank account object if the create is succeded.
+schema: BankAccount
+- body:account_number string
+- body:account_number_iban string
+- body:currency string enum[AUD|BGN|BRL|CAD|CHF|CNY|CZK|DKK|EUR|GBP|HKD|HRK]
+- body:id integer
+- body:name string
+- body:need_qr boolean
+- body:swift string
+
+## S418-0002  DELETE /bank-accounts/{id}
+desc: Delete a bank account | Delete an existing bank account.
+- path:id integer
+
+## S418-0003  PUT /bank-accounts/{id}
+desc: Update a bank account | Update an existing bank accounts. Returns a bank account object if the update is succeded.
+schema: BankAccount
+- path:id integer
+- body:account_number string
+- body:account_number_iban string
+- body:currency string enum[AUD|BGN|BRL|CAD|CHF|CNY|CZK|DKK|EUR|GBP|HKD|HRK]
+- body:id integer
+- body:name string
+- body:need_qr boolean
+- body:swift string
+
+## S418-0004  POST /documents
+desc: Create a document | Create a new document. Returns a document object if the create is succeded.
+schema: DocumentInsert
+- body:bank_account_id integer
+- body:block_id integer
+- body:comment string
+- body:conversion_rate number
+- body:currency string enum[AUD|BGN|BRL|CAD|CHF|CNY|CZK|DKK|EUR|GBP|HKD|HRK]
+- body:due_date string
+- body:electronic boolean
+- body:fulfillment_date string
+- body:items array<object>
+- body:items[].product_id integer
+- body:items[].quantity number
+- body:items[].comment string
+- body:items[].name string
+- body:items[].unit string
+- body:items[].unit_price number
+- body:items[].unit_price_type string enum[gross|net]
+- body:items[].vat string enum[0%|1%|10%|11%|12%|13%|14%|15%|16%|17%|18%|19%]
+- body:language string enum[de|en|fr|hr|hu|it|ro|sk]
+- body:paid boolean
+- body:partner_id integer
+- body:payment_method string enum[aruhitel|bankcard|barion|barter|cash|cash_on_delivery|coupon|elore_utalas|ep_kartya|kompenzacio|levonas|online_bankcard]
+- body:settings object
+- body:settings.mediated_service boolean
+- body:settings.online_payment string enum[|Barion|SimplePay|no]
+- body:settings.place_id integer
+- body:settings.round string enum[five|none|one|ten]
+- body:settings.without_financial_fulfillment boolean
+- body:type string enum[advance|draft|invoice|proforma]
+- body:vendor_id string
+
+## S418-0005  POST /documents/{id}/cancel
+desc: Cancel a document | Cancel a document. Returns a cancellation document object if the cancellation is succeded.
+- path:id integer
+
+## S418-0006  POST /documents/{id}/create-from-proforma
+desc: Create a document from proforma. | Create a new document from proforma. Returns a document object if the create is succeded.
+- path:id integer
+
+## S418-0007  DELETE /documents/{id}/payments
+desc: Delete all payment history on document | Delete all exist payment history on document.
+- path:id integer
+
+## S418-0008  PUT /documents/{id}/payments
+desc: Update payment history | Update payment history an existing document. Returns a payment history object if the update is succeded.
+schema: PaymentHistory
+- path:id integer
+- body:conversion_rate number
+- body:date string
+- body:payment_method string enum[aruhitel|bankcard|barion|barter|cash|cash_on_delivery|coupon|elore_utalas|ep_kartya|kompenzacio|levonas|online_bankcard]
+- body:price number
+- body:voucher_number string
+
+## S418-0009  POST /documents/{id}/send
+desc: Send invoice to given email adresses. | Returns a list of emails, where the invoice is sent.
+schema: SendDocument
+- path:id integer
+- body:emails array<string>
+
+## S418-0010  POST /partners
+desc: Create a partner | Create a new partner. Returns a partner object if the create is succeded.
+schema: PartnerUpsert
+- body:account_number string
+- body:address object
+- body:address.address string
+- body:address.city string
+- body:address.country_code string enum[|AC|AD|AE|AF|AG|AI|AL|AM|AO|AQ|AR]
+- body:address.post_code string
+- body:emails array<string>
+- body:general_ledger_number string
+- body:iban string
+- body:name string
+- body:phone string
+- body:swift string
+- body:taxcode string
+
+## S418-0011  DELETE /partners/{id}
+desc: Delete a partner | Delete an existing partner.
+- path:id integer
+
+## S418-0012  PUT /partners/{id}
+desc: Update a partner | Update an existing partner. Returns a partner object if the update is succeded.
+schema: PartnerUpsert
+- path:id integer
+- body:account_number string
+- body:address object
+- body:address.address string
+- body:address.city string
+- body:address.country_code string enum[|AC|AD|AE|AF|AG|AI|AL|AM|AO|AQ|AR]
+- body:address.post_code string
+- body:emails array<string>
+- body:general_ledger_number string
+- body:iban string
+- body:name string
+- body:phone string
+- body:swift string
+- body:taxcode string
+
+## S418-0013  POST /products
+desc: Create a product | Create a new product. Returns a product object if the create is succeded.
+schema: Product
+- body:comment string
+- body:currency string enum[AUD|BGN|BRL|CAD|CHF|CNY|CZK|DKK|EUR|GBP|HKD|HRK]
+- body:general_ledger_number string
+- body:general_ledger_taxcode string
+- body:id integer
+- body:name string
+- body:net_unit_price number
+- body:unit string
+- body:vat string enum[0%|1%|10%|11%|12%|13%|14%|15%|16%|17%|18%|19%]
+
+## S418-0014  DELETE /products/{id}
+desc: Delete a product | Delete an existing product.
+- path:id integer
+
+## S418-0015  PUT /products/{id}
+desc: Update a product | Update an existing product. Returns a product object if the update is succeded.
+schema: Product
+- path:id integer
+- body:comment string
+- body:currency string enum[AUD|BGN|BRL|CAD|CHF|CNY|CZK|DKK|EUR|GBP|HKD|HRK]
+- body:general_ledger_number string
+- body:general_ledger_taxcode string
+- body:id integer
+- body:name string
+- body:net_unit_price number
+- body:unit string
+- body:vat string enum[0%|1%|10%|11%|12%|13%|14%|15%|16%|17%|18%|19%]
+
+## S419-0001  POST /blocked-numbers
+desc: Create a blocked number | Blocked numbers are phone numbers to which your account is not permitted to send messages. The numbers can be created via this API, by a recipient replying with a STOP message to one of your previous SENT messages, or by a BulkSMS administrator. Sending a message to a blocked number will result in the message being assigned a status of `FAILED.BLOCKED`. Messages sent to b
+schema: PhoneNumber
+- body:(body) string
+
+## S419-0002  POST /credit/transfer
+desc: Transfer credits to another account | Before you can use the transfer credits endpoint, the _credit-transfer facility_ must be activated for your account. You can request activation from `support@bulksms.com`. The recipient must be an enabled account that uses the same currency as your account.
+schema: TransferEntry
+- body:commentOnFrom string
+- body:commentOnTo string
+- body:credits number
+- body:toUserId number
+- body:toUsername string
+
+## S419-0003  POST /messages
+desc: Send Messages | Send messages to one or more recipients. You can post up to `30 000` messages in a batch. But note that the `deduplication-id` is set per submission, so it is recommended that you use a smaller number, like `4000` per submission in order to make resubmissions on network failures more practical. #### Repliability When a sent message is _repliable_, the BulkSMS system can process an 
+schema: SubmissionEntry
+- query:deduplication-id integer
+- query:auto-unicode boolean
+- query:schedule-date string
+- query:schedule-description string
+- body:body string
+- body:deliveryReports string enum[ALL|ERRORS|NONE]
+- body:encoding string enum[TEXT|UNICODE|BINARY]
+- body:from object
+- body:from.address string
+- body:from.type string enum[INTERNATIONAL|ALPHANUMERIC|SHORTCODE|REPLIABLE]
+- body:longMessageMaxParts integer
+- body:messageClass string enum[FLASH_SMS|ME_SPECIFIC|SIM_SPECIFIC|TE_SPECIFIC]
+- body:protocolId string enum[IMPLICIT|SHORT_MESSAGE_TYPE_0|REPLACE_MESSAGE_1|REPLACE_MESSAGE_2|REPLACE_MESSAGE_3|REPLACE_MESSAGE_4|REPLACE_MESSAGE_5|REPLACE_MESSAGE_6|REPLACE_MESSAGE_7|RETURN_CALL|ME_DOWNLOAD|ME_DEPERSONALIZE]
+- body:routingGroup string enum[ECONOMY|STANDARD|PREMIUM]
+- body:to array<object>
+- body:to[].address string
+- body:to[].fields array<string>
+- body:to[].id string
+- body:to[].name string
+- body:to[].type string enum[INTERNATIONAL|GROUP]
+- body:userSuppliedId string
+
+## S419-0004  POST /rmm/pre-sign-attachment
+desc: Upload an attachment via a signed URL | When composing an SMS, you can add SMS attachments by adding a URL to your text. When the recipient clicks on the URL, the attached file will be downloaded and opened on their mobile device. The best way to do this is to store the file on a web server you own and use that URL in the SMS text. This URL will be easily recognisable to your message recipient and
+schema: PreSignRequest
+- body:fileExtension string
+- body:mediaType string
+
+## S419-0005  POST /webhooks
+desc: Create a webhook | A webhook is an URL that you can register when you want the BulkSMS system to notify you about your messages. You can register multiple webhooks, and each one will be called. (Note: you can also use our [Web App](https://www.bulksms.com/account/#!/advanced-settings/webhooks) to manage your webhooks interactively.) If you want to be notified of `SENT` messages and `RECEIVED` mess
+schema: WebhookEntry
+- body:active boolean
+- body:contactEmailAddress string
+- body:invokeOption string enum[ONE|MANY]
+- body:name string
+- body:onWebApp boolean
+- body:triggerScope string enum[SENT|RECEIVED]
+- body:url string
+
+## S419-0006  DELETE /webhooks/{id}
+desc: Delete a webhook
+- path:id string
+
+## S419-0007  POST /webhooks/{id}
+desc: Update a webhook
+schema: WebhookEntry
+- path:id string
+- body:active boolean
+- body:contactEmailAddress string
+- body:invokeOption string enum[ONE|MANY]
+- body:name string
+- body:onWebApp boolean
+- body:triggerScope string enum[SENT|RECEIVED]
+- body:url string
+
+## S420-0001  DELETE /api/v2/applicant/attributes
+desc: Deletes a custom attribute for an applicant.
+- query:email string
+- query:name string
+- query:pool string enum[Standard|CommonAppSDS]
+- query:commonAppYear integer
+
+## S420-0002  POST /api/v2/applicant/attributes
+desc: Updates the custom attributes for an applicant. | This method only adds or updates attributes. Null values will be updated as nulls, but not deleted. API Import is available in the Advanced Plan.
+- query:email string
+- query:pool string enum[Standard|CommonAppSDS]
+- query:commonAppYear integer
+- body:(body) object
+
+## S420-0003  POST /api/v2/application/request-export
+desc: Requests the generation of application export files (tabular, pdf, zip). | Exports are generated asynchronously within SlideRoom. To retrieve the export file generated by this request, use the api/v#/export/{token} endpoint to check the progress/result of the generation process. PDF and ZIP exports are available in the Advanced Plan.
+- query:format string enum[csv|tsv|txt|tab|xlsx|pdf|zip|json]
+- query:roundType string enum[Assigned|Current|Named|All]
+- query:roundName string
+- query:tab.export string
+- query:pdf.includeForms boolean
+- query:pdf.includeReferences boolean
+- query:pdf.includeMedia boolean
+- query:pdf.includeApplicantAttachments boolean
+- query:pdf.includeOrganizationAttachments boolean
+- query:pdf.includeRatings boolean
+- query:pdf.includeFullPageMedia boolean
+- query:pdf.includeHighlights boolean
+- query:pdf.includeComments boolean
+- query:pdf.includeCommonApp boolean
+- query:zip.originalMedia boolean
+- query:zip.includeForms boolean
+- query:zip.includeReferences boolean
+- query:zip.includeMedia boolean
+- query:zip.includeApplicantAttachments boolean
+- query:zip.includeOrganizationAttachments boolean
+- query:zip.includeRatings boolean
+- query:zip.includeComments boolean
+- query:zip.includeCommonApp boolean
+- query:delivery.account string
+- query:delivery.folder string
+- query:since integer
+- query:pool string enum[All|Current|Archived|CommonAppSDS]
+- query:status string enum[All|InProgress|Submitted]
+- query:searchName string
+- query:email string
+
+## S420-0004  DELETE /api/v2/application/{applicationId}/attributes
+desc: Deletes a custom attribute for an application.
+- path:applicationId string
+- query:name string
+
+## S420-0005  POST /api/v2/application/{applicationId}/attributes
+desc: Updates the custom attributes for an application. API Import is available in the Advanced Plan. | This method only adds or updates attributes. Null values will be updated as nulls, but not deleted.
+- path:applicationId string
+- body:(body) object
+
+## S420-0006  POST /api/v2/application/{applicationId}/request-export
+desc: Requests the generation of a single application export file (tabular, pdf, zip). | Exports are generated asynchronously within SlideRoom. To retrieve the export file generated by this request, use the api/v#/export/{token} endpoint to check the progress/result of the generation process.
+- path:applicationId string
+- query:format string enum[csv|tsv|txt|tab|xlsx|pdf|zip|json]
+- query:roundType string enum[Assigned|Current|Named|All]
+- query:roundName string
+- query:tab.export string
+- query:pdf.includeForms boolean
+- query:pdf.includeReferences boolean
+- query:pdf.includeMedia boolean
+- query:pdf.includeApplicantAttachments boolean
+- query:pdf.includeOrganizationAttachments boolean
+- query:pdf.includeRatings boolean
+- query:pdf.includeFullPageMedia boolean
+- query:pdf.includeHighlights boolean
+- query:pdf.includeComments boolean
+- query:pdf.includeCommonApp boolean
+- query:zip.originalMedia boolean
+- query:zip.includeForms boolean
+- query:zip.includeReferences boolean
+- query:zip.includeMedia boolean
+- query:zip.includeApplicantAttachments boolean
+- query:zip.includeOrganizationAttachments boolean
+- query:zip.includeRatings boolean
+- query:zip.includeComments boolean
+- query:zip.includeCommonApp boolean
+- query:delivery.account string
+- query:delivery.folder string
+
+## S423-0001  POST /business/international/profile
+desc: Retrieve a business profile from any country (AUS included). | Using the Company Code retrieved from the search response (see above) you can pull back the details of the company. The Frankie platform will save the details of the response as an ORGANISATION type entity with the profile attached as a report which you can potentially re-retrieve later if you wish.
+schema: InternationalBusinessProfileCriteria
+- body:company_code string
+- body:country string
+
+## S423-0002  POST /business/international/search
+desc: Search for a business from any country (AUS included). | Search for a given business name or business number across international business registers. The search will return a list of matching companies that you can then potentially query using the international profile query (see below). Each search result will have a CompanyCode that you use to retrieve the specific company details using the prof
+schema: InternationalBusinessSearchCriteria
+- body:country string
+- body:organisation_name string
+- body:organisation_number string
+
+## S423-0003  POST /business/ownership/query
+desc: Create Business Entity and Query UBO (AUS Only) | Process a request for ownership details for an Australian organisation. See below for more generic international queries. At a minimum, you just need to supply an ACN or ABN and we can retrieve the rest. You also have the option of supplying company name, type (as per ABR types) and both ABN/ACN and we'll attempt to verfy that that data matches wha
+schema: OwnershipQuery
+- query:checkType array<string> enum[full|default|one_plus|two_plus|id|fraudlist|fraudcheck|pep|pep_media|profile]
+- query:entityCategories array<string> enum[organisation|ubos|pseudo_ubos|direct_owners|officers|officers_directors|officers_other|all]
+- query:resultLevel string enum[summary|full]
+- query:validation string enum[on|off|only|acn]
+- query:generateReport string
+- query:includeHistorical boolean
+- query:onlyProfile boolean
+- body:organisation object
+- body:organisation.addresses array<object>
+- body:organisation.addresses[].addressId string
+- body:organisation.addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:organisation.addresses[].buildingName string
+- body:organisation.addresses[].careOf string
+- body:organisation.addresses[].country string
+- body:organisation.addresses[].endDate string
+- body:organisation.addresses[].longForm string
+- body:organisation.addresses[].postalCode string
+- body:organisation.addresses[].region string
+- body:organisation.addresses[].startDate string
+- body:organisation.addresses[].state string
+- body:organisation.addresses[].streetName string
+- body:organisation.addresses[].streetNumber string
+- body:organisation.addresses[].streetType string
+- body:organisation.addresses[].suburb string
+- body:organisation.addresses[].town string
+- body:organisation.addresses[].unitNumber string
+- body:organisation.dateOfBirth object
+- body:organisation.dateOfBirth.country string
+- body:organisation.dateOfBirth.dateOfBirth string
+- body:organisation.dateOfBirth.locality string
+- body:organisation.dateOfBirth.yearOfBirth string
+- body:organisation.entityId string
+- body:organisation.entityProfile string
+- body:organisation.entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:organisation.extraData array<object>
+- body:organisation.extraData[].kvpKey string
+- body:organisation.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:organisation.extraData[].kvpValue string
+- body:organisation.flags array<object>
+- body:organisation.flags[].flag string
+- body:organisation.flags[].value integer
+- body:organisation.gender string enum[U|F|M|O]
+- body:organisation.identityDocs array<object>
+- body:organisation.identityDocs[].country string
+- body:organisation.identityDocs[].createdFromScan boolean
+- body:organisation.identityDocs[].docScan array<object>
+- body:organisation.identityDocs[].documentId string
+- body:organisation.identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:organisation.identityDocs[].extraData array<object>
+- body:organisation.identityDocs[].idExpiry string
+- body:organisation.identityDocs[].idIssued string
+- body:organisation.identityDocs[].idNumber string
+- body:organisation.identityDocs[].idSubType string
+- body:organisation.identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:organisation.identityDocs[].manuallyModified boolean
+- body:organisation.identityDocs[].region string
+- body:organisation.name object
+- body:organisation.name.displayName string
+- body:organisation.name.familyName string
+- body:organisation.name.givenName string
+- body:organisation.name.honourific string
+- body:organisation.name.middleName string
+- body:organisation.organisationData object
+- body:organisation.organisationData.adverseCreditDataPresent boolean
+- body:organisation.organisationData.class object
+- body:organisation.organisationData.disclosingEntityIndicator boolean
+- body:organisation.organisationData.includesNonBeneficiallyHeld boolean
+- body:organisation.organisationData.kycCustomerType string
+- body:organisation.organisationData.lastCheckDate string
+- body:organisation.organisationData.ownershipResolved boolean
+- body:organisation.organisationData.registeredName string
+- body:organisation.organisationData.registration object
+- body:organisation.organisationData.shareStructure array<object>
+- body:organisation.organisationData.startDate string
+- body:organisation.organisationData.status object
+- body:organisation.organisationData.subclass object
+- body:organisation.organisationData.type object
+
+## S423-0004  POST /business/reports
+desc: Run Report(s) against a new or existing organisation entity (AUS Only). | NOTE: Australian companies ONLY. Create or find and update an ORGANISATION type entity, then run the requested reports. Reports include: - Credit Report - Credit Score At a minimum, you just need to supply an ACN and/or ABN and an entity type set to ORGANISATION. Alternatively the entity ID of an existing ORGANISATION entity
+schema: EntityObject
+- query:reportTypes string
+- body:addresses array<object>
+- body:addresses[].addressId string
+- body:addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:addresses[].buildingName string
+- body:addresses[].careOf string
+- body:addresses[].country string
+- body:addresses[].endDate string
+- body:addresses[].longForm string
+- body:addresses[].postalCode string
+- body:addresses[].region string
+- body:addresses[].startDate string
+- body:addresses[].state string
+- body:addresses[].streetName string
+- body:addresses[].streetNumber string
+- body:addresses[].streetType string
+- body:addresses[].suburb string
+- body:addresses[].town string
+- body:addresses[].unitNumber string
+- body:dateOfBirth object
+- body:dateOfBirth.country string
+- body:dateOfBirth.dateOfBirth string
+- body:dateOfBirth.locality string
+- body:dateOfBirth.yearOfBirth string
+- body:entityId string
+- body:entityProfile string
+- body:entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:extraData array<object>
+- body:extraData[].kvpKey string
+- body:extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:extraData[].kvpValue string
+- body:flags array<object>
+- body:flags[].flag string
+- body:flags[].value integer
+- body:gender string enum[U|F|M|O]
+- body:identityDocs array<object>
+- body:identityDocs[].country string
+- body:identityDocs[].createdFromScan boolean
+- body:identityDocs[].docScan array<object>
+- body:identityDocs[].docScan[].ScanDelete boolean
+- body:identityDocs[].docScan[].scanCreated string
+- body:identityDocs[].docScan[].scanData string
+- body:identityDocs[].docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:identityDocs[].docScan[].scanDocId string
+- body:identityDocs[].docScan[].scanFilename string
+- body:identityDocs[].docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:identityDocs[].docScan[].scanPageNum integer
+- body:identityDocs[].docScan[].scanSide string enum[F|B]
+- body:identityDocs[].docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:identityDocs[].documentId string
+- body:identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:identityDocs[].extraData array<object>
+- body:identityDocs[].extraData[].kvpKey string
+- body:identityDocs[].extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:identityDocs[].extraData[].kvpValue string
+- body:identityDocs[].idExpiry string
+- body:identityDocs[].idIssued string
+- body:identityDocs[].idNumber string
+- body:identityDocs[].idSubType string
+- body:identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:identityDocs[].manuallyModified boolean
+- body:identityDocs[].region string
+- body:name object
+- body:name.displayName string
+- body:name.familyName string
+- body:name.givenName string
+- body:name.honourific string
+- body:name.middleName string
+- body:organisationData object
+- body:organisationData.adverseCreditDataPresent boolean
+- body:organisationData.class object
+- body:organisationData.class.code string
+- body:organisationData.class.description string
+- body:organisationData.disclosingEntityIndicator boolean
+- body:organisationData.includesNonBeneficiallyHeld boolean
+- body:organisationData.kycCustomerType string
+- body:organisationData.lastCheckDate string
+- body:organisationData.ownershipResolved boolean
+- body:organisationData.registeredName string
+- body:organisationData.registration object
+(+22 fields cut)
+
+## S423-0005  POST /business/{entityId}/verify
+desc: Run KYC/AML Checks on Organisation and/or Associated Individuals. | Run KYC/AML for a selection of entities associated with an organisation and/or the organisation itself based on a previous ownership query. By default AML will be checked for just the organisation itself. If a list of entity categories is given then default checks based on configuration will be run for those categories. If a check
+- path:entityId string
+- query:checkType array<string> enum[full|default|one_plus|two_plus|id|fraudlist|fraudcheck|pep|pep_media|profile]
+- query:entityCategories array<string> enum[organisation|ubos|pseudo_ubos|direct_owners|officers|officers_directors|officers_other|all]
+- query:resultLevel string enum[summary|full]
+- query:generateReport string
+
+## S423-0006  POST /document/new/compare
+desc: Create Document and Compare to Original. | Creates a new document from the "toDocument" parameter (usual rules apply in that it must be a valid document, with no existing documentId). The compareDocument can be an existing documentId, or it too can be new as well. * If existing (i.e. a valid DocumentId is supplied), it will be updated with any new data supplied before being sent to the comparison 
+schema: ComparisonSet
+- body:compareDocument object
+- body:compareDocument.country string
+- body:compareDocument.createdFromScan boolean
+- body:compareDocument.docScan array<object>
+- body:compareDocument.docScan[].ScanDelete boolean
+- body:compareDocument.docScan[].scanCreated string
+- body:compareDocument.docScan[].scanData string
+- body:compareDocument.docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:compareDocument.docScan[].scanDocId string
+- body:compareDocument.docScan[].scanFilename string
+- body:compareDocument.docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:compareDocument.docScan[].scanPageNum integer
+- body:compareDocument.docScan[].scanSide string enum[F|B]
+- body:compareDocument.docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:compareDocument.documentId string
+- body:compareDocument.documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:compareDocument.extraData array<object>
+- body:compareDocument.extraData[].kvpKey string
+- body:compareDocument.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:compareDocument.extraData[].kvpValue string
+- body:compareDocument.idExpiry string
+- body:compareDocument.idIssued string
+- body:compareDocument.idNumber string
+- body:compareDocument.idSubType string
+- body:compareDocument.idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:compareDocument.manuallyModified boolean
+- body:compareDocument.region string
+- body:toDocument object
+- body:toDocument.country string
+- body:toDocument.createdFromScan boolean
+- body:toDocument.docScan array<object>
+- body:toDocument.docScan[].ScanDelete boolean
+- body:toDocument.docScan[].scanCreated string
+- body:toDocument.docScan[].scanData string
+- body:toDocument.docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:toDocument.docScan[].scanDocId string
+- body:toDocument.docScan[].scanFilename string
+- body:toDocument.docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:toDocument.docScan[].scanPageNum integer
+- body:toDocument.docScan[].scanSide string enum[F|B]
+- body:toDocument.docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:toDocument.documentId string
+- body:toDocument.documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:toDocument.extraData array<object>
+- body:toDocument.extraData[].kvpKey string
+- body:toDocument.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:toDocument.extraData[].kvpValue string
+- body:toDocument.idExpiry string
+- body:toDocument.idIssued string
+- body:toDocument.idNumber string
+- body:toDocument.idSubType string
+- body:toDocument.idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:toDocument.manuallyModified boolean
+- body:toDocument.region string
+
+## S423-0007  POST /document/new/scan
+desc: Create and OCR Scan Document. | Create a document object. This is then processed to extract useful information and create an entity; or it may be attached to an entity, either directly or through an ID check. The service will attempt to extract relevant data from any/all uploaded images/documents and will place those in the extraData KVP block.
+schema: IdentityDocumentObject
+- body:country string
+- body:createdFromScan boolean
+- body:docScan array<object>
+- body:docScan[].ScanDelete boolean
+- body:docScan[].scanCreated string
+- body:docScan[].scanData string
+- body:docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:docScan[].scanDocId string
+- body:docScan[].scanFilename string
+- body:docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:docScan[].scanPageNum integer
+- body:docScan[].scanSide string enum[F|B]
+- body:docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:documentId string
+- body:documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:extraData array<object>
+- body:extraData[].kvpKey string
+- body:extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:extraData[].kvpValue string
+- body:idExpiry string
+- body:idIssued string
+- body:idNumber string
+- body:idSubType string
+- body:idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:manuallyModified boolean
+- body:region string
+
+## S423-0008  POST /document/new/utility/process/compare
+desc: Create Document and Run Utility Price Comparison. | Create a document object. This is then processed to extract useful information, just like a normal OCR scan. The service will then push the document through an industry specific comparison process, where the details are used to find a better plan, based on the bill. 100's of datapoints are accurately extracted from the uploaded document. This dat
+schema: IdentityDocumentObject
+- query:planLimit integer
+- body:country string
+- body:createdFromScan boolean
+- body:docScan array<object>
+- body:docScan[].ScanDelete boolean
+- body:docScan[].scanCreated string
+- body:docScan[].scanData string
+- body:docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:docScan[].scanDocId string
+- body:docScan[].scanFilename string
+- body:docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:docScan[].scanPageNum integer
+- body:docScan[].scanSide string enum[F|B]
+- body:docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:documentId string
+- body:documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:extraData array<object>
+- body:extraData[].kvpKey string
+- body:extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:extraData[].kvpValue string
+- body:idExpiry string
+- body:idIssued string
+- body:idNumber string
+- body:idSubType string
+- body:idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:manuallyModified boolean
+- body:region string
+
+## S423-0009  POST /document/new/verify
+desc: Create and Verify Document. | Send the document to an external service to have the detailed verified. For example, we could send through the details of a drivers licence to be checked against a national database. * NOTE: This is NOT the OCR data extraction process (see /document/scan) * NOTE: This is NOT the comparison process (see /document/compare)
+schema: DocumentVerify
+- body:document object
+- body:document.country string
+- body:document.createdFromScan boolean
+- body:document.docScan array<object>
+- body:document.docScan[].ScanDelete boolean
+- body:document.docScan[].scanCreated string
+- body:document.docScan[].scanData string
+- body:document.docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:document.docScan[].scanDocId string
+- body:document.docScan[].scanFilename string
+- body:document.docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:document.docScan[].scanPageNum integer
+- body:document.docScan[].scanSide string enum[F|B]
+- body:document.docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:document.documentId string
+- body:document.documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:document.extraData array<object>
+- body:document.extraData[].kvpKey string
+- body:document.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:document.extraData[].kvpValue string
+- body:document.idExpiry string
+- body:document.idIssued string
+- body:document.idNumber string
+- body:document.idSubType string
+- body:document.idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:document.manuallyModified boolean
+- body:document.region string
+- body:entityData object
+- body:entityData.addresses array<object>
+- body:entityData.addresses[].addressId string
+- body:entityData.addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:entityData.addresses[].buildingName string
+- body:entityData.addresses[].careOf string
+- body:entityData.addresses[].country string
+- body:entityData.addresses[].endDate string
+- body:entityData.addresses[].longForm string
+- body:entityData.addresses[].postalCode string
+- body:entityData.addresses[].region string
+- body:entityData.addresses[].startDate string
+- body:entityData.addresses[].state string
+- body:entityData.addresses[].streetName string
+- body:entityData.addresses[].streetNumber string
+- body:entityData.addresses[].streetType string
+- body:entityData.addresses[].suburb string
+- body:entityData.addresses[].town string
+- body:entityData.addresses[].unitNumber string
+- body:entityData.dateOfBirth object
+- body:entityData.dateOfBirth.country string
+- body:entityData.dateOfBirth.dateOfBirth string
+- body:entityData.dateOfBirth.locality string
+- body:entityData.dateOfBirth.yearOfBirth string
+- body:entityData.entityId string
+- body:entityData.entityProfile string
+- body:entityData.entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:entityData.extraData array<object>
+- body:entityData.extraData[].kvpKey string
+- body:entityData.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:entityData.extraData[].kvpValue string
+- body:entityData.flags array<object>
+- body:entityData.flags[].flag string
+- body:entityData.flags[].value integer
+- body:entityData.gender string enum[U|F|M|O]
+- body:entityData.identityDocs array<object>
+- body:entityData.identityDocs[].country string
+- body:entityData.identityDocs[].createdFromScan boolean
+- body:entityData.identityDocs[].docScan array<object>
+- body:entityData.identityDocs[].documentId string
+- body:entityData.identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:entityData.identityDocs[].extraData array<object>
+- body:entityData.identityDocs[].idExpiry string
+- body:entityData.identityDocs[].idIssued string
+- body:entityData.identityDocs[].idNumber string
+- body:entityData.identityDocs[].idSubType string
+- body:entityData.identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:entityData.identityDocs[].manuallyModified boolean
+- body:entityData.identityDocs[].region string
+- body:entityData.name object
+- body:entityData.name.displayName string
+- body:entityData.name.familyName string
+- body:entityData.name.givenName string
+(+17 fields cut)
+
+## S423-0010  POST /document/search
+desc: Search For a Document !! EXPERIMENTAL !! | Search for an existing document that matches the criteria supplied There are of course limits to what can be searched upon. For a document search to work, you must supply at a minimum: * idType * country * idNumber The service will return a list of matching documents with confidence levels. If you are the "owner" of the document - i.e. the same CustomerID
+schema: IdentityDocumentObject
+- body:country string
+- body:createdFromScan boolean
+- body:docScan array<object>
+- body:docScan[].ScanDelete boolean
+- body:docScan[].scanCreated string
+- body:docScan[].scanData string
+- body:docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:docScan[].scanDocId string
+- body:docScan[].scanFilename string
+- body:docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:docScan[].scanPageNum integer
+- body:docScan[].scanSide string enum[F|B]
+- body:docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:documentId string
+- body:documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:extraData array<object>
+- body:extraData[].kvpKey string
+- body:extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:extraData[].kvpValue string
+- body:idExpiry string
+- body:idIssued string
+- body:idNumber string
+- body:idSubType string
+- body:idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:manuallyModified boolean
+- body:region string
+
+## S423-0011  DELETE /document/{documentId}
+desc: Delete Document. | Mark this document as deleted. It will then become effectively invisible to all queries, but will be available in anonymised form for a past check.
+- path:documentId string
+
+## S423-0012  POST /document/{documentId}
+desc: Update Existing Document. | Using a previously uploaded but incomplete document, you can optionally supply updated details (such as corrections on a previous scan), along with one or more additional ID scans (e.g. additional pages).
+schema: IdentityDocumentObject
+- path:documentId string
+- query:noInvalidate boolean
+- body:country string
+- body:createdFromScan boolean
+- body:docScan array<object>
+- body:docScan[].ScanDelete boolean
+- body:docScan[].scanCreated string
+- body:docScan[].scanData string
+- body:docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:docScan[].scanDocId string
+- body:docScan[].scanFilename string
+- body:docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:docScan[].scanPageNum integer
+- body:docScan[].scanSide string enum[F|B]
+- body:docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:documentId string
+- body:documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:extraData array<object>
+- body:extraData[].kvpKey string
+- body:extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:extraData[].kvpValue string
+- body:idExpiry string
+- body:idIssued string
+- body:idNumber string
+- body:idSubType string
+- body:idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:manuallyModified boolean
+- body:region string
+
+## S423-0013  POST /document/{documentId}/compare
+desc: Update Document and Compare to Original. | Send the attached document scans to an external service for processing and comparison, such as comparing a selfie-video against a drivers licence photo. * NOTE: This is NOT the verification process (see /document/verify) * NOTE: This is NOT the OCR data extraction process either (see /document/scan)
+schema: ComparisonSet
+- path:documentId string
+- body:compareDocument object
+- body:compareDocument.country string
+- body:compareDocument.createdFromScan boolean
+- body:compareDocument.docScan array<object>
+- body:compareDocument.docScan[].ScanDelete boolean
+- body:compareDocument.docScan[].scanCreated string
+- body:compareDocument.docScan[].scanData string
+- body:compareDocument.docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:compareDocument.docScan[].scanDocId string
+- body:compareDocument.docScan[].scanFilename string
+- body:compareDocument.docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:compareDocument.docScan[].scanPageNum integer
+- body:compareDocument.docScan[].scanSide string enum[F|B]
+- body:compareDocument.docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:compareDocument.documentId string
+- body:compareDocument.documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:compareDocument.extraData array<object>
+- body:compareDocument.extraData[].kvpKey string
+- body:compareDocument.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:compareDocument.extraData[].kvpValue string
+- body:compareDocument.idExpiry string
+- body:compareDocument.idIssued string
+- body:compareDocument.idNumber string
+- body:compareDocument.idSubType string
+- body:compareDocument.idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:compareDocument.manuallyModified boolean
+- body:compareDocument.region string
+- body:toDocument object
+- body:toDocument.country string
+- body:toDocument.createdFromScan boolean
+- body:toDocument.docScan array<object>
+- body:toDocument.docScan[].ScanDelete boolean
+- body:toDocument.docScan[].scanCreated string
+- body:toDocument.docScan[].scanData string
+- body:toDocument.docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:toDocument.docScan[].scanDocId string
+- body:toDocument.docScan[].scanFilename string
+- body:toDocument.docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:toDocument.docScan[].scanPageNum integer
+- body:toDocument.docScan[].scanSide string enum[F|B]
+- body:toDocument.docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:toDocument.documentId string
+- body:toDocument.documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:toDocument.extraData array<object>
+- body:toDocument.extraData[].kvpKey string
+- body:toDocument.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:toDocument.extraData[].kvpValue string
+- body:toDocument.idExpiry string
+- body:toDocument.idIssued string
+- body:toDocument.idNumber string
+- body:toDocument.idSubType string
+- body:toDocument.idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:toDocument.manuallyModified boolean
+- body:toDocument.region string
+
+## S423-0014  POST /document/{documentId}/scan
+desc: Update and OCR Scan Document | Using a previously uploaded but potentially incomplete document, you can optionally supply updated details (such as corrections on a previous scan), along with one or more additional ID scans (e.g. additional pages). Includes a follow-on action as well initiating OCR processing proceedures immediately. The service will attempt to extract relevant data from any/all up
+schema: IdentityDocumentObject
+- path:documentId string
+- body:country string
+- body:createdFromScan boolean
+- body:docScan array<object>
+- body:docScan[].ScanDelete boolean
+- body:docScan[].scanCreated string
+- body:docScan[].scanData string
+- body:docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:docScan[].scanDocId string
+- body:docScan[].scanFilename string
+- body:docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:docScan[].scanPageNum integer
+- body:docScan[].scanSide string enum[F|B]
+- body:docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:documentId string
+- body:documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:extraData array<object>
+- body:extraData[].kvpKey string
+- body:extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:extraData[].kvpValue string
+- body:idExpiry string
+- body:idIssued string
+- body:idNumber string
+- body:idSubType string
+- body:idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:manuallyModified boolean
+- body:region string
+
+## S423-0015  POST /document/{documentId}/utility/process/compare
+desc: Update Document and Run Utility Price Comparison. | Using a previously uploaded but incomplete document, you can optionally supply updated details or simply request that the document be re-processed through the industry comparison service. 100's of datapoints are accurately extracted from the uploaded document. This data is then used to compare the bill against the whole market. A personalised com
+schema: IdentityDocumentObject
+- path:documentId string
+- query:planLimit integer
+- body:country string
+- body:createdFromScan boolean
+- body:docScan array<object>
+- body:docScan[].ScanDelete boolean
+- body:docScan[].scanCreated string
+- body:docScan[].scanData string
+- body:docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:docScan[].scanDocId string
+- body:docScan[].scanFilename string
+- body:docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:docScan[].scanPageNum integer
+- body:docScan[].scanSide string enum[F|B]
+- body:docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:documentId string
+- body:documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:extraData array<object>
+- body:extraData[].kvpKey string
+- body:extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:extraData[].kvpValue string
+- body:idExpiry string
+- body:idIssued string
+- body:idNumber string
+- body:idSubType string
+- body:idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:manuallyModified boolean
+- body:region string
+
+## S423-0016  POST /document/{documentId}/utility/process/consent
+desc: Provide Explicit Consent to Switch Utility Plans. | Using a previously uploaded and processed document, the user must provide explicit consent before being able to call the /switch function. Before entering into a contract with a new energy retailer, consumers are first obliged to review the retailer's contractual terms and conditions, confirm they understand these terms as well as give explicit, 
+schema: EICRequest
+- path:documentId string
+- body:correlationId string
+- body:details object
+- body:details.concessionCard object
+- body:details.concessionCard.concessionEvidenceType string enum[Pensioner Concession Card|Gold Repatriation Health Card|Health Care Card|NSW Life Support Rebate Without Concession Card|Queensland Seniors Card]
+- body:details.concessionCard.concessionType string enum[Life Support|Medical Cooling|Service to Property Charge|Off-Peak Electricity|Annual Electricity|Transfer Fee Waiver|Excess Electricity|Controlled Load|Low Income Household|Medical Energy|NSW Government Life Support Rebate|Queensland Electricity Rebate]
+- body:details.concessionCard.customerReferenceNumber string
+- body:details.concessionCard.endDate string
+- body:details.concessionCard.firstName string
+- body:details.concessionCard.lastName string
+- body:details.concessionCard.startDate string
+- body:details.vulnerabilities object
+- body:details.vulnerabilities.dependencyType string enum[Life Support|Sensitive Load]
+- body:planId string
+
+## S423-0017  POST /document/{documentId}/utility/process/switch
+desc: Initiate Switching of Utility Plan. | Using a previously uploaded and processed document, the user must provide explicit consent before being able to call the /switch function. The bill payer has uploaded their current bill, selected a new plan, accepted the terms and conditions and given their consent for the switch to occur. This API call will finalise the switch request and send all the custome
+schema: SwitchRequest
+- path:documentId string
+- body:confirmation array<string>
+- body:correlationId string
+- body:details object
+- body:details.customerDetails object
+- body:details.customerDetails.address string
+- body:details.customerDetails.dateOfBirth string
+- body:details.customerDetails.email string
+- body:details.customerDetails.evidenceOfIdentity object
+- body:details.customerDetails.mobile string
+- body:details.customerDetails.name object
+
+## S423-0018  POST /document/{documentId}/verify
+desc: Update and Verify Document. | Using a previously uploaded but potentially incomplete document, you can optionally supply updated details (such as corrections on a previous scan), along with one or more additional ID scans (e.g. additional pages). Includes a follow-on action as well initiating verification proceedures immediately. Sends the updated document to an external service to have the detail
+schema: DocumentVerify
+- path:documentId string
+- body:document object
+- body:document.country string
+- body:document.createdFromScan boolean
+- body:document.docScan array<object>
+- body:document.docScan[].ScanDelete boolean
+- body:document.docScan[].scanCreated string
+- body:document.docScan[].scanData string
+- body:document.docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:document.docScan[].scanDocId string
+- body:document.docScan[].scanFilename string
+- body:document.docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:document.docScan[].scanPageNum integer
+- body:document.docScan[].scanSide string enum[F|B]
+- body:document.docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:document.documentId string
+- body:document.documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:document.extraData array<object>
+- body:document.extraData[].kvpKey string
+- body:document.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:document.extraData[].kvpValue string
+- body:document.idExpiry string
+- body:document.idIssued string
+- body:document.idNumber string
+- body:document.idSubType string
+- body:document.idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:document.manuallyModified boolean
+- body:document.region string
+- body:entityData object
+- body:entityData.addresses array<object>
+- body:entityData.addresses[].addressId string
+- body:entityData.addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:entityData.addresses[].buildingName string
+- body:entityData.addresses[].careOf string
+- body:entityData.addresses[].country string
+- body:entityData.addresses[].endDate string
+- body:entityData.addresses[].longForm string
+- body:entityData.addresses[].postalCode string
+- body:entityData.addresses[].region string
+- body:entityData.addresses[].startDate string
+- body:entityData.addresses[].state string
+- body:entityData.addresses[].streetName string
+- body:entityData.addresses[].streetNumber string
+- body:entityData.addresses[].streetType string
+- body:entityData.addresses[].suburb string
+- body:entityData.addresses[].town string
+- body:entityData.addresses[].unitNumber string
+- body:entityData.dateOfBirth object
+- body:entityData.dateOfBirth.country string
+- body:entityData.dateOfBirth.dateOfBirth string
+- body:entityData.dateOfBirth.locality string
+- body:entityData.dateOfBirth.yearOfBirth string
+- body:entityData.entityId string
+- body:entityData.entityProfile string
+- body:entityData.entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:entityData.extraData array<object>
+- body:entityData.extraData[].kvpKey string
+- body:entityData.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:entityData.extraData[].kvpValue string
+- body:entityData.flags array<object>
+- body:entityData.flags[].flag string
+- body:entityData.flags[].value integer
+- body:entityData.gender string enum[U|F|M|O]
+- body:entityData.identityDocs array<object>
+- body:entityData.identityDocs[].country string
+- body:entityData.identityDocs[].createdFromScan boolean
+- body:entityData.identityDocs[].docScan array<object>
+- body:entityData.identityDocs[].documentId string
+- body:entityData.identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:entityData.identityDocs[].extraData array<object>
+- body:entityData.identityDocs[].idExpiry string
+- body:entityData.identityDocs[].idIssued string
+- body:entityData.identityDocs[].idNumber string
+- body:entityData.identityDocs[].idSubType string
+- body:entityData.identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:entityData.identityDocs[].manuallyModified boolean
+- body:entityData.identityDocs[].region string
+- body:entityData.name object
+- body:entityData.name.displayName string
+- body:entityData.name.familyName string
+(+18 fields cut)
+
+## S423-0019  POST /entity
+desc: Create New Entity. | Create an entity object. An entity object can be used to simply store data around a given identity. You can attach ID documents, scans, PDFs, photos, videos, etc to the entity if you wish and these may be processed later (using the /scan function) to extract useful information. Or you can manually supply the information if you choose. Entity objects can be used to run a check,
+schema: EntityObject
+- body:addresses array<object>
+- body:addresses[].addressId string
+- body:addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:addresses[].buildingName string
+- body:addresses[].careOf string
+- body:addresses[].country string
+- body:addresses[].endDate string
+- body:addresses[].longForm string
+- body:addresses[].postalCode string
+- body:addresses[].region string
+- body:addresses[].startDate string
+- body:addresses[].state string
+- body:addresses[].streetName string
+- body:addresses[].streetNumber string
+- body:addresses[].streetType string
+- body:addresses[].suburb string
+- body:addresses[].town string
+- body:addresses[].unitNumber string
+- body:dateOfBirth object
+- body:dateOfBirth.country string
+- body:dateOfBirth.dateOfBirth string
+- body:dateOfBirth.locality string
+- body:dateOfBirth.yearOfBirth string
+- body:entityId string
+- body:entityProfile string
+- body:entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:extraData array<object>
+- body:extraData[].kvpKey string
+- body:extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:extraData[].kvpValue string
+- body:flags array<object>
+- body:flags[].flag string
+- body:flags[].value integer
+- body:gender string enum[U|F|M|O]
+- body:identityDocs array<object>
+- body:identityDocs[].country string
+- body:identityDocs[].createdFromScan boolean
+- body:identityDocs[].docScan array<object>
+- body:identityDocs[].docScan[].ScanDelete boolean
+- body:identityDocs[].docScan[].scanCreated string
+- body:identityDocs[].docScan[].scanData string
+- body:identityDocs[].docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:identityDocs[].docScan[].scanDocId string
+- body:identityDocs[].docScan[].scanFilename string
+- body:identityDocs[].docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:identityDocs[].docScan[].scanPageNum integer
+- body:identityDocs[].docScan[].scanSide string enum[F|B]
+- body:identityDocs[].docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:identityDocs[].documentId string
+- body:identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:identityDocs[].extraData array<object>
+- body:identityDocs[].extraData[].kvpKey string
+- body:identityDocs[].extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:identityDocs[].extraData[].kvpValue string
+- body:identityDocs[].idExpiry string
+- body:identityDocs[].idIssued string
+- body:identityDocs[].idNumber string
+- body:identityDocs[].idSubType string
+- body:identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:identityDocs[].manuallyModified boolean
+- body:identityDocs[].region string
+- body:name object
+- body:name.displayName string
+- body:name.familyName string
+- body:name.givenName string
+- body:name.honourific string
+- body:name.middleName string
+- body:organisationData object
+- body:organisationData.adverseCreditDataPresent boolean
+- body:organisationData.class object
+- body:organisationData.class.code string
+- body:organisationData.class.description string
+- body:organisationData.disclosingEntityIndicator boolean
+- body:organisationData.includesNonBeneficiallyHeld boolean
+- body:organisationData.kycCustomerType string
+- body:organisationData.lastCheckDate string
+- body:organisationData.ownershipResolved boolean
+- body:organisationData.registeredName string
+- body:organisationData.registration object
+- body:organisationData.registration.date string
+(+21 fields cut)
+
+## S423-0020  POST /entity/new/idvalidate/getToken
+desc: Create Entity and Get IDV Token | Create an entity object and if successful, obtain a token for use in an ID Validation service SDK (web or native app) At a minimum, you will need to supply: - the entity familyName. - the entity givenName For best results, you should gather the DoB, address, ID document details as well before calling the initProcess function. SPECIAL NOTE 1: Tokens have a limited 
+schema: EntityIDVDetailsObject
+- body:applicantId string
+- body:applicationId string
+- body:entity object
+- body:entity.addresses array<object>
+- body:entity.addresses[].addressId string
+- body:entity.addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:entity.addresses[].buildingName string
+- body:entity.addresses[].careOf string
+- body:entity.addresses[].country string
+- body:entity.addresses[].endDate string
+- body:entity.addresses[].longForm string
+- body:entity.addresses[].postalCode string
+- body:entity.addresses[].region string
+- body:entity.addresses[].startDate string
+- body:entity.addresses[].state string
+- body:entity.addresses[].streetName string
+- body:entity.addresses[].streetNumber string
+- body:entity.addresses[].streetType string
+- body:entity.addresses[].suburb string
+- body:entity.addresses[].town string
+- body:entity.addresses[].unitNumber string
+- body:entity.dateOfBirth object
+- body:entity.dateOfBirth.country string
+- body:entity.dateOfBirth.dateOfBirth string
+- body:entity.dateOfBirth.locality string
+- body:entity.dateOfBirth.yearOfBirth string
+- body:entity.entityId string
+- body:entity.entityProfile string
+- body:entity.entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:entity.extraData array<object>
+- body:entity.extraData[].kvpKey string
+- body:entity.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:entity.extraData[].kvpValue string
+- body:entity.flags array<object>
+- body:entity.flags[].flag string
+- body:entity.flags[].value integer
+- body:entity.gender string enum[U|F|M|O]
+- body:entity.identityDocs array<object>
+- body:entity.identityDocs[].country string
+- body:entity.identityDocs[].createdFromScan boolean
+- body:entity.identityDocs[].docScan array<object>
+- body:entity.identityDocs[].documentId string
+- body:entity.identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:entity.identityDocs[].extraData array<object>
+- body:entity.identityDocs[].idExpiry string
+- body:entity.identityDocs[].idIssued string
+- body:entity.identityDocs[].idNumber string
+- body:entity.identityDocs[].idSubType string
+- body:entity.identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:entity.identityDocs[].manuallyModified boolean
+- body:entity.identityDocs[].region string
+- body:entity.name object
+- body:entity.name.displayName string
+- body:entity.name.familyName string
+- body:entity.name.givenName string
+- body:entity.name.honourific string
+- body:entity.name.middleName string
+- body:entity.organisationData object
+- body:entity.organisationData.adverseCreditDataPresent boolean
+- body:entity.organisationData.class object
+- body:entity.organisationData.disclosingEntityIndicator boolean
+- body:entity.organisationData.includesNonBeneficiallyHeld boolean
+- body:entity.organisationData.kycCustomerType string
+- body:entity.organisationData.lastCheckDate string
+- body:entity.organisationData.ownershipResolved boolean
+- body:entity.organisationData.registeredName string
+- body:entity.organisationData.registration object
+- body:entity.organisationData.shareStructure array<object>
+- body:entity.organisationData.startDate string
+- body:entity.organisationData.status object
+- body:entity.organisationData.subclass object
+- body:entity.organisationData.type object
+- body:referrer string
+
+## S423-0021  POST /entity/new/verify/pushToMobile
+desc: Create Entity and Push Self-Verification Link | Create an entity object and begin the process of verification after pushing a message to a mobile number. The entity will receive a link on their mobile and will then be guided through a series of steps to capture and OCR scan their ID, and perform a selfie comparison. We'll then attempt to verify the data received and push a notification back to the
+schema: EntityCheckDetailsObject
+- query:nopush boolean
+- body:deviceCheckDetails array<object>
+- body:deviceCheckDetails[].activityType string enum[SIGNUP|LOGIN|PAYMENT|CONFIRMATION|_<Vendor Specific List>]
+- body:deviceCheckDetails[].additionalData array<object>
+- body:deviceCheckDetails[].additionalData[].kvpKey string
+- body:deviceCheckDetails[].additionalData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:deviceCheckDetails[].additionalData[].kvpValue string
+- body:deviceCheckDetails[].checkSessionKey string
+- body:deviceCheckDetails[].checkType string enum[DEVICE|BIOMETRIC]
+- body:entity object
+- body:entity.addresses array<object>
+- body:entity.addresses[].addressId string
+- body:entity.addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:entity.addresses[].buildingName string
+- body:entity.addresses[].careOf string
+- body:entity.addresses[].country string
+- body:entity.addresses[].endDate string
+- body:entity.addresses[].longForm string
+- body:entity.addresses[].postalCode string
+- body:entity.addresses[].region string
+- body:entity.addresses[].startDate string
+- body:entity.addresses[].state string
+- body:entity.addresses[].streetName string
+- body:entity.addresses[].streetNumber string
+- body:entity.addresses[].streetType string
+- body:entity.addresses[].suburb string
+- body:entity.addresses[].town string
+- body:entity.addresses[].unitNumber string
+- body:entity.dateOfBirth object
+- body:entity.dateOfBirth.country string
+- body:entity.dateOfBirth.dateOfBirth string
+- body:entity.dateOfBirth.locality string
+- body:entity.dateOfBirth.yearOfBirth string
+- body:entity.entityId string
+- body:entity.entityProfile string
+- body:entity.entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:entity.extraData array<object>
+- body:entity.extraData[].kvpKey string
+- body:entity.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:entity.extraData[].kvpValue string
+- body:entity.flags array<object>
+- body:entity.flags[].flag string
+- body:entity.flags[].value integer
+- body:entity.gender string enum[U|F|M|O]
+- body:entity.identityDocs array<object>
+- body:entity.identityDocs[].country string
+- body:entity.identityDocs[].createdFromScan boolean
+- body:entity.identityDocs[].docScan array<object>
+- body:entity.identityDocs[].documentId string
+- body:entity.identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:entity.identityDocs[].extraData array<object>
+- body:entity.identityDocs[].idExpiry string
+- body:entity.identityDocs[].idIssued string
+- body:entity.identityDocs[].idNumber string
+- body:entity.identityDocs[].idSubType string
+- body:entity.identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:entity.identityDocs[].manuallyModified boolean
+- body:entity.identityDocs[].region string
+- body:entity.name object
+- body:entity.name.displayName string
+- body:entity.name.familyName string
+- body:entity.name.givenName string
+- body:entity.name.honourific string
+- body:entity.name.middleName string
+- body:entity.organisationData object
+- body:entity.organisationData.adverseCreditDataPresent boolean
+- body:entity.organisationData.class object
+- body:entity.organisationData.disclosingEntityIndicator boolean
+- body:entity.organisationData.includesNonBeneficiallyHeld boolean
+- body:entity.organisationData.kycCustomerType string
+- body:entity.organisationData.lastCheckDate string
+- body:entity.organisationData.ownershipResolved boolean
+- body:entity.organisationData.registeredName string
+- body:entity.organisationData.registration object
+- body:entity.organisationData.shareStructure array<object>
+- body:entity.organisationData.startDate string
+- body:entity.organisationData.status object
+- body:entity.organisationData.subclass object
+- body:entity.organisationData.type object
+
+## S423-0022  POST /entity/new/verify/{checkType}/{resultLevel}
+desc: Create and Verify Entity | Create an entity object. An entity object can be used to simply store data around a given identity. You can attach ID documents, scans, PDFs, photos, videos, etc to the entity if you wish and these may be processed later (using the /scan function) to extract useful information. Or you can manually supply the information if you choose. If the entity is successfully create
+schema: EntityCheckDetailsObject
+- path:checkType string
+- path:resultLevel string enum[simple|summary|full]
+- body:deviceCheckDetails array<object>
+- body:deviceCheckDetails[].activityType string enum[SIGNUP|LOGIN|PAYMENT|CONFIRMATION|_<Vendor Specific List>]
+- body:deviceCheckDetails[].additionalData array<object>
+- body:deviceCheckDetails[].additionalData[].kvpKey string
+- body:deviceCheckDetails[].additionalData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:deviceCheckDetails[].additionalData[].kvpValue string
+- body:deviceCheckDetails[].checkSessionKey string
+- body:deviceCheckDetails[].checkType string enum[DEVICE|BIOMETRIC]
+- body:entity object
+- body:entity.addresses array<object>
+- body:entity.addresses[].addressId string
+- body:entity.addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:entity.addresses[].buildingName string
+- body:entity.addresses[].careOf string
+- body:entity.addresses[].country string
+- body:entity.addresses[].endDate string
+- body:entity.addresses[].longForm string
+- body:entity.addresses[].postalCode string
+- body:entity.addresses[].region string
+- body:entity.addresses[].startDate string
+- body:entity.addresses[].state string
+- body:entity.addresses[].streetName string
+- body:entity.addresses[].streetNumber string
+- body:entity.addresses[].streetType string
+- body:entity.addresses[].suburb string
+- body:entity.addresses[].town string
+- body:entity.addresses[].unitNumber string
+- body:entity.dateOfBirth object
+- body:entity.dateOfBirth.country string
+- body:entity.dateOfBirth.dateOfBirth string
+- body:entity.dateOfBirth.locality string
+- body:entity.dateOfBirth.yearOfBirth string
+- body:entity.entityId string
+- body:entity.entityProfile string
+- body:entity.entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:entity.extraData array<object>
+- body:entity.extraData[].kvpKey string
+- body:entity.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:entity.extraData[].kvpValue string
+- body:entity.flags array<object>
+- body:entity.flags[].flag string
+- body:entity.flags[].value integer
+- body:entity.gender string enum[U|F|M|O]
+- body:entity.identityDocs array<object>
+- body:entity.identityDocs[].country string
+- body:entity.identityDocs[].createdFromScan boolean
+- body:entity.identityDocs[].docScan array<object>
+- body:entity.identityDocs[].documentId string
+- body:entity.identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:entity.identityDocs[].extraData array<object>
+- body:entity.identityDocs[].idExpiry string
+- body:entity.identityDocs[].idIssued string
+- body:entity.identityDocs[].idNumber string
+- body:entity.identityDocs[].idSubType string
+- body:entity.identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:entity.identityDocs[].manuallyModified boolean
+- body:entity.identityDocs[].region string
+- body:entity.name object
+- body:entity.name.displayName string
+- body:entity.name.familyName string
+- body:entity.name.givenName string
+- body:entity.name.honourific string
+- body:entity.name.middleName string
+- body:entity.organisationData object
+- body:entity.organisationData.adverseCreditDataPresent boolean
+- body:entity.organisationData.class object
+- body:entity.organisationData.disclosingEntityIndicator boolean
+- body:entity.organisationData.includesNonBeneficiallyHeld boolean
+- body:entity.organisationData.kycCustomerType string
+- body:entity.organisationData.lastCheckDate string
+- body:entity.organisationData.ownershipResolved boolean
+- body:entity.organisationData.registeredName string
+- body:entity.organisationData.registration object
+- body:entity.organisationData.shareStructure array<object>
+- body:entity.organisationData.startDate string
+- body:entity.organisationData.status object
+- body:entity.organisationData.subclass object
+- body:entity.organisationData.type object
+
+## S423-0023  POST /entity/search
+desc: Search for Entity | Search for an existing entity that matches the criteria supplied Criteria are supplied in the form of a populated entity object, with the name/address/DoB details supplied. You can also include documents that can be used to further refine your search (see the /document/search function for minimum requirements for a document search) At an absolute minimum, you must supply one of
+schema: EntityObject
+- body:addresses array<object>
+- body:addresses[].addressId string
+- body:addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:addresses[].buildingName string
+- body:addresses[].careOf string
+- body:addresses[].country string
+- body:addresses[].endDate string
+- body:addresses[].longForm string
+- body:addresses[].postalCode string
+- body:addresses[].region string
+- body:addresses[].startDate string
+- body:addresses[].state string
+- body:addresses[].streetName string
+- body:addresses[].streetNumber string
+- body:addresses[].streetType string
+- body:addresses[].suburb string
+- body:addresses[].town string
+- body:addresses[].unitNumber string
+- body:dateOfBirth object
+- body:dateOfBirth.country string
+- body:dateOfBirth.dateOfBirth string
+- body:dateOfBirth.locality string
+- body:dateOfBirth.yearOfBirth string
+- body:entityId string
+- body:entityProfile string
+- body:entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:extraData array<object>
+- body:extraData[].kvpKey string
+- body:extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:extraData[].kvpValue string
+- body:flags array<object>
+- body:flags[].flag string
+- body:flags[].value integer
+- body:gender string enum[U|F|M|O]
+- body:identityDocs array<object>
+- body:identityDocs[].country string
+- body:identityDocs[].createdFromScan boolean
+- body:identityDocs[].docScan array<object>
+- body:identityDocs[].docScan[].ScanDelete boolean
+- body:identityDocs[].docScan[].scanCreated string
+- body:identityDocs[].docScan[].scanData string
+- body:identityDocs[].docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:identityDocs[].docScan[].scanDocId string
+- body:identityDocs[].docScan[].scanFilename string
+- body:identityDocs[].docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:identityDocs[].docScan[].scanPageNum integer
+- body:identityDocs[].docScan[].scanSide string enum[F|B]
+- body:identityDocs[].docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:identityDocs[].documentId string
+- body:identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:identityDocs[].extraData array<object>
+- body:identityDocs[].extraData[].kvpKey string
+- body:identityDocs[].extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:identityDocs[].extraData[].kvpValue string
+- body:identityDocs[].idExpiry string
+- body:identityDocs[].idIssued string
+- body:identityDocs[].idNumber string
+- body:identityDocs[].idSubType string
+- body:identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:identityDocs[].manuallyModified boolean
+- body:identityDocs[].region string
+- body:name object
+- body:name.displayName string
+- body:name.familyName string
+- body:name.givenName string
+- body:name.honourific string
+- body:name.middleName string
+- body:organisationData object
+- body:organisationData.adverseCreditDataPresent boolean
+- body:organisationData.class object
+- body:organisationData.class.code string
+- body:organisationData.class.description string
+- body:organisationData.disclosingEntityIndicator boolean
+- body:organisationData.includesNonBeneficiallyHeld boolean
+- body:organisationData.kycCustomerType string
+- body:organisationData.lastCheckDate string
+- body:organisationData.ownershipResolved boolean
+- body:organisationData.registeredName string
+- body:organisationData.registration object
+- body:organisationData.registration.date string
+(+21 fields cut)
+
+## S423-0024  DELETE /entity/{entityId}
+desc: Delete Entity | Marks the entity as deleted in the system, and no further operations or general queries may be executed against it by the Customer. If another customer is presently relying on this data, it will still be available to them (but only in the partially anonymised form they originally had. An entity and its related data is only completely deleted from the database when either: - a) Ther
+- path:entityId string
+
+## S423-0025  POST /entity/{entityId}
+desc: Update Existing Entity. | Using a previously uploaded but incomplete Entity, you can optionally supply updated details (such as corrections on a previous address), along with one or more additional ID docs/scans (e.g. new documents to parse, etc).
+schema: EntityObject
+- path:entityId string
+- query:noInvalidate boolean
+- body:addresses array<object>
+- body:addresses[].addressId string
+- body:addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:addresses[].buildingName string
+- body:addresses[].careOf string
+- body:addresses[].country string
+- body:addresses[].endDate string
+- body:addresses[].longForm string
+- body:addresses[].postalCode string
+- body:addresses[].region string
+- body:addresses[].startDate string
+- body:addresses[].state string
+- body:addresses[].streetName string
+- body:addresses[].streetNumber string
+- body:addresses[].streetType string
+- body:addresses[].suburb string
+- body:addresses[].town string
+- body:addresses[].unitNumber string
+- body:dateOfBirth object
+- body:dateOfBirth.country string
+- body:dateOfBirth.dateOfBirth string
+- body:dateOfBirth.locality string
+- body:dateOfBirth.yearOfBirth string
+- body:entityId string
+- body:entityProfile string
+- body:entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:extraData array<object>
+- body:extraData[].kvpKey string
+- body:extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:extraData[].kvpValue string
+- body:flags array<object>
+- body:flags[].flag string
+- body:flags[].value integer
+- body:gender string enum[U|F|M|O]
+- body:identityDocs array<object>
+- body:identityDocs[].country string
+- body:identityDocs[].createdFromScan boolean
+- body:identityDocs[].docScan array<object>
+- body:identityDocs[].docScan[].ScanDelete boolean
+- body:identityDocs[].docScan[].scanCreated string
+- body:identityDocs[].docScan[].scanData string
+- body:identityDocs[].docScan[].scanDataRetrievalState string enum[NORMAL|EXCLUDED|FAILED]
+- body:identityDocs[].docScan[].scanDocId string
+- body:identityDocs[].docScan[].scanFilename string
+- body:identityDocs[].docScan[].scanMIME string enum[image/jpeg|image/png|image/gif|image/webp|image/tiff|image/bmp|application/zip|application/x-tar|application/x-rar-compressed|application/gzip|application/x-bzip2|application/x-7z-compressed]
+- body:identityDocs[].docScan[].scanPageNum integer
+- body:identityDocs[].docScan[].scanSide string enum[F|B]
+- body:identityDocs[].docScan[].scanType string enum[PHOTO|VIDEO|AUDIO|PDF|DOC|ZIP]
+- body:identityDocs[].documentId string
+- body:identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:identityDocs[].extraData array<object>
+- body:identityDocs[].extraData[].kvpKey string
+- body:identityDocs[].extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:identityDocs[].extraData[].kvpValue string
+- body:identityDocs[].idExpiry string
+- body:identityDocs[].idIssued string
+- body:identityDocs[].idNumber string
+- body:identityDocs[].idSubType string
+- body:identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:identityDocs[].manuallyModified boolean
+- body:identityDocs[].region string
+- body:name object
+- body:name.displayName string
+- body:name.familyName string
+- body:name.givenName string
+- body:name.honourific string
+- body:name.middleName string
+- body:organisationData object
+- body:organisationData.adverseCreditDataPresent boolean
+- body:organisationData.class object
+- body:organisationData.class.code string
+- body:organisationData.class.description string
+- body:organisationData.disclosingEntityIndicator boolean
+- body:organisationData.includesNonBeneficiallyHeld boolean
+- body:organisationData.kycCustomerType string
+- body:organisationData.lastCheckDate string
+- body:organisationData.ownershipResolved boolean
+- body:organisationData.registeredName string
+(+23 fields cut)
+
+## S423-0026  POST /entity/{entityId}/check/{checkId}/{checkClass}
+desc: Update Check Result States (Batch) | Internal only Update a given set of KYC and/or AML check result statuses in order to force a re-evaluation of the overall check result.
+schema: CheckResultUpdateObject
+- path:entityId string
+- path:checkId string
+- path:checkClass string enum[pro|bcro|fraudlist]
+- body:checkClassIds array<string>
+- body:comment string
+- body:status string enum[UNKNOWN|TRUE_POSITIVE|TRUE_POSITIVE_ACCEPT|TRUE_POSITIVE_REJECT|FALSE_POSITIVE|STALE]
+
+## S423-0027  POST /entity/{entityId}/check/{checkId}/{checkClass}/{checkClassId}
+desc: Update Check Result State | Internal only Update a given KYC or AML check result status in order to force a re-evaluation of the overall check result.
+- path:entityId string
+- path:checkId string
+- path:checkClass string enum[pro|bcro|fraudlist]
+- path:checkClassId string
+- query:status string
+- query:undo boolean
+
+## S423-0028  POST /entity/{entityId}/flag/blacklist
+desc: Set Entity Blacklist State. | Mark the entity as blacklisted or not with the '?set=' query parameter as 'true' or 'false'.
+- path:entityId string
+- query:set boolean
+- query:reason string
+- query:blockedBy string
+- query:attribute string
+- query:originalId string
+
+## S423-0029  POST /entity/{entityId}/flag/duplicate/{otherId}
+desc: Resolve Duplicate States. | Resolve the state of a pair of duplicate entities with the '?set=' query parameter as 'true' or 'false'. Setting duplicate to 'true' will make entityId invisible for most purposes and otherId will continue to function as normal. Setting duplicate to 'false' means the two entities are in fact separate but similar and they will both continue to exist independently but wil
+- path:entityId string
+- path:otherId string
+- query:set boolean
+
+## S423-0030  POST /entity/{entityId}/flag/monitor
+desc: Set Entity Ongoing AML Monitoring Status. | Mark the entity as being monitored or not with the '?set=' query parameter as 'true' or 'false'.
+- path:entityId string
+- query:set boolean
+
+## S423-0031  POST /entity/{entityId}/flag/watchlist
+desc: Set Entity Watchlist State. | Mark the entity as watchlisted or not with the '?set=' query parameter as 'true' or 'false'.
+- path:entityId string
+- query:set boolean
+- query:reason string
+- query:comment string
+
+## S423-0032  POST /entity/{entityId}/idvalidate/getToken
+desc: Update Entity and Get IDV Token | Update an entity object and if successful, obtain a token for use in an ID Validation service SDK (web or native app) At a minimum, the entity will need to have a name. For best results, you should gather the DoB, address, ID document details as well before calling the initProcess function. SPECIAL NOTE 1: Tokens have a limited lifespan, typically only 1 hour. Mak
+schema: EntityIDVDetailsObject
+- path:entityId string
+- body:applicantId string
+- body:applicationId string
+- body:entity object
+- body:entity.addresses array<object>
+- body:entity.addresses[].addressId string
+- body:entity.addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:entity.addresses[].buildingName string
+- body:entity.addresses[].careOf string
+- body:entity.addresses[].country string
+- body:entity.addresses[].endDate string
+- body:entity.addresses[].longForm string
+- body:entity.addresses[].postalCode string
+- body:entity.addresses[].region string
+- body:entity.addresses[].startDate string
+- body:entity.addresses[].state string
+- body:entity.addresses[].streetName string
+- body:entity.addresses[].streetNumber string
+- body:entity.addresses[].streetType string
+- body:entity.addresses[].suburb string
+- body:entity.addresses[].town string
+- body:entity.addresses[].unitNumber string
+- body:entity.dateOfBirth object
+- body:entity.dateOfBirth.country string
+- body:entity.dateOfBirth.dateOfBirth string
+- body:entity.dateOfBirth.locality string
+- body:entity.dateOfBirth.yearOfBirth string
+- body:entity.entityId string
+- body:entity.entityProfile string
+- body:entity.entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:entity.extraData array<object>
+- body:entity.extraData[].kvpKey string
+- body:entity.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:entity.extraData[].kvpValue string
+- body:entity.flags array<object>
+- body:entity.flags[].flag string
+- body:entity.flags[].value integer
+- body:entity.gender string enum[U|F|M|O]
+- body:entity.identityDocs array<object>
+- body:entity.identityDocs[].country string
+- body:entity.identityDocs[].createdFromScan boolean
+- body:entity.identityDocs[].docScan array<object>
+- body:entity.identityDocs[].documentId string
+- body:entity.identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:entity.identityDocs[].extraData array<object>
+- body:entity.identityDocs[].idExpiry string
+- body:entity.identityDocs[].idIssued string
+- body:entity.identityDocs[].idNumber string
+- body:entity.identityDocs[].idSubType string
+- body:entity.identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:entity.identityDocs[].manuallyModified boolean
+- body:entity.identityDocs[].region string
+- body:entity.name object
+- body:entity.name.displayName string
+- body:entity.name.familyName string
+- body:entity.name.givenName string
+- body:entity.name.honourific string
+- body:entity.name.middleName string
+- body:entity.organisationData object
+- body:entity.organisationData.adverseCreditDataPresent boolean
+- body:entity.organisationData.class object
+- body:entity.organisationData.disclosingEntityIndicator boolean
+- body:entity.organisationData.includesNonBeneficiallyHeld boolean
+- body:entity.organisationData.kycCustomerType string
+- body:entity.organisationData.lastCheckDate string
+- body:entity.organisationData.ownershipResolved boolean
+- body:entity.organisationData.registeredName string
+- body:entity.organisationData.registration object
+- body:entity.organisationData.shareStructure array<object>
+- body:entity.organisationData.startDate string
+- body:entity.organisationData.status object
+- body:entity.organisationData.subclass object
+- body:entity.organisationData.type object
+- body:referrer string
+
+## S423-0033  POST /entity/{entityId}/idvalidate/initProcess
+desc: Update Entity and Initiate IDV Process | Update an entity object and if successful, start the process of downloading the captured data and processing the reports and results of the ID validation process. At a minimum, the entity will need to have a name. For best results, you should gather the DoB, address, ID document details as well before calling this initProcess function, or supply the details
+schema: EntityCheckDetailsObject
+- path:entityId string
+- body:deviceCheckDetails array<object>
+- body:deviceCheckDetails[].activityType string enum[SIGNUP|LOGIN|PAYMENT|CONFIRMATION|_<Vendor Specific List>]
+- body:deviceCheckDetails[].additionalData array<object>
+- body:deviceCheckDetails[].additionalData[].kvpKey string
+- body:deviceCheckDetails[].additionalData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:deviceCheckDetails[].additionalData[].kvpValue string
+- body:deviceCheckDetails[].checkSessionKey string
+- body:deviceCheckDetails[].checkType string enum[DEVICE|BIOMETRIC]
+- body:entity object
+- body:entity.addresses array<object>
+- body:entity.addresses[].addressId string
+- body:entity.addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:entity.addresses[].buildingName string
+- body:entity.addresses[].careOf string
+- body:entity.addresses[].country string
+- body:entity.addresses[].endDate string
+- body:entity.addresses[].longForm string
+- body:entity.addresses[].postalCode string
+- body:entity.addresses[].region string
+- body:entity.addresses[].startDate string
+- body:entity.addresses[].state string
+- body:entity.addresses[].streetName string
+- body:entity.addresses[].streetNumber string
+- body:entity.addresses[].streetType string
+- body:entity.addresses[].suburb string
+- body:entity.addresses[].town string
+- body:entity.addresses[].unitNumber string
+- body:entity.dateOfBirth object
+- body:entity.dateOfBirth.country string
+- body:entity.dateOfBirth.dateOfBirth string
+- body:entity.dateOfBirth.locality string
+- body:entity.dateOfBirth.yearOfBirth string
+- body:entity.entityId string
+- body:entity.entityProfile string
+- body:entity.entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:entity.extraData array<object>
+- body:entity.extraData[].kvpKey string
+- body:entity.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:entity.extraData[].kvpValue string
+- body:entity.flags array<object>
+- body:entity.flags[].flag string
+- body:entity.flags[].value integer
+- body:entity.gender string enum[U|F|M|O]
+- body:entity.identityDocs array<object>
+- body:entity.identityDocs[].country string
+- body:entity.identityDocs[].createdFromScan boolean
+- body:entity.identityDocs[].docScan array<object>
+- body:entity.identityDocs[].documentId string
+- body:entity.identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:entity.identityDocs[].extraData array<object>
+- body:entity.identityDocs[].idExpiry string
+- body:entity.identityDocs[].idIssued string
+- body:entity.identityDocs[].idNumber string
+- body:entity.identityDocs[].idSubType string
+- body:entity.identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:entity.identityDocs[].manuallyModified boolean
+- body:entity.identityDocs[].region string
+- body:entity.name object
+- body:entity.name.displayName string
+- body:entity.name.familyName string
+- body:entity.name.givenName string
+- body:entity.name.honourific string
+- body:entity.name.middleName string
+- body:entity.organisationData object
+- body:entity.organisationData.adverseCreditDataPresent boolean
+- body:entity.organisationData.class object
+- body:entity.organisationData.disclosingEntityIndicator boolean
+- body:entity.organisationData.includesNonBeneficiallyHeld boolean
+- body:entity.organisationData.kycCustomerType string
+- body:entity.organisationData.lastCheckDate string
+- body:entity.organisationData.ownershipResolved boolean
+- body:entity.organisationData.registeredName string
+- body:entity.organisationData.registration object
+- body:entity.organisationData.shareStructure array<object>
+- body:entity.organisationData.startDate string
+- body:entity.organisationData.status object
+- body:entity.organisationData.subclass object
+- body:entity.organisationData.type object
+
+## S423-0034  POST /entity/{entityId}/status
+desc: Update Entity States | Internal only Add a special internal 'entity result' to superceed any previous real checks until the next one.
+- path:entityId string
+- query:set string enum[wait|fail|archived|clear|inactive]
+- query:risk string enum[low|medium|high|unacceptable|significant]
+- query:comment string
+
+## S423-0035  POST /entity/{entityId}/verify/{checkType}/{resultLevel}
+desc: Update Entity and Verify Details | Take the details and documents provided in the entity, and set about verifying them all. So for example, you might extract: * The name from the entity.name object * The address from the entity.address object * The DoB.. All documents that are presently attached to the entity will also be verified (if requested) You can also specify the level of detail returned us
+schema: EntityCheckDetailsObject
+- path:entityId string
+- path:checkType string
+- path:resultLevel string enum[simple|summary|full]
+- query:force boolean
+- query:noInvalidate boolean
+- body:deviceCheckDetails array<object>
+- body:deviceCheckDetails[].activityType string enum[SIGNUP|LOGIN|PAYMENT|CONFIRMATION|_<Vendor Specific List>]
+- body:deviceCheckDetails[].additionalData array<object>
+- body:deviceCheckDetails[].additionalData[].kvpKey string
+- body:deviceCheckDetails[].additionalData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:deviceCheckDetails[].additionalData[].kvpValue string
+- body:deviceCheckDetails[].checkSessionKey string
+- body:deviceCheckDetails[].checkType string enum[DEVICE|BIOMETRIC]
+- body:entity object
+- body:entity.addresses array<object>
+- body:entity.addresses[].addressId string
+- body:entity.addresses[].addressType string enum[OTHER|RESIDENTIAL|RESIDENTIAL1|RESIDENTIAL2|RESIDENTIAL3|RESIDENTIAL4|BUSINESS|POSTAL|REGISTERED_OFFICE|PLACE_OF_BUSINESS|OFFICIAL_CORRESPONDANCE]
+- body:entity.addresses[].buildingName string
+- body:entity.addresses[].careOf string
+- body:entity.addresses[].country string
+- body:entity.addresses[].endDate string
+- body:entity.addresses[].longForm string
+- body:entity.addresses[].postalCode string
+- body:entity.addresses[].region string
+- body:entity.addresses[].startDate string
+- body:entity.addresses[].state string
+- body:entity.addresses[].streetName string
+- body:entity.addresses[].streetNumber string
+- body:entity.addresses[].streetType string
+- body:entity.addresses[].suburb string
+- body:entity.addresses[].town string
+- body:entity.addresses[].unitNumber string
+- body:entity.dateOfBirth object
+- body:entity.dateOfBirth.country string
+- body:entity.dateOfBirth.dateOfBirth string
+- body:entity.dateOfBirth.locality string
+- body:entity.dateOfBirth.yearOfBirth string
+- body:entity.entityId string
+- body:entity.entityProfile string
+- body:entity.entityType string enum[INDIVIDUAL|TRUST|ORGANISATION]
+- body:entity.extraData array<object>
+- body:entity.extraData[].kvpKey string
+- body:entity.extraData[].kvpType string enum[defunct|general.string|general.integer|general.float|general.bool|general.date|general.datetime|raw.json.base64|raw.xml.base64|raw.base64|error.code|error.message]
+- body:entity.extraData[].kvpValue string
+- body:entity.flags array<object>
+- body:entity.flags[].flag string
+- body:entity.flags[].value integer
+- body:entity.gender string enum[U|F|M|O]
+- body:entity.identityDocs array<object>
+- body:entity.identityDocs[].country string
+- body:entity.identityDocs[].createdFromScan boolean
+- body:entity.identityDocs[].docScan array<object>
+- body:entity.identityDocs[].documentId string
+- body:entity.identityDocs[].documentStatus string enum[INITIALISING|SCAN_IN_PROGRESS|DOC_SCANNED|DOC_CHECKED]
+- body:entity.identityDocs[].extraData array<object>
+- body:entity.identityDocs[].idExpiry string
+- body:entity.identityDocs[].idIssued string
+- body:entity.identityDocs[].idNumber string
+- body:entity.identityDocs[].idSubType string
+- body:entity.identityDocs[].idType string enum[OTHER|DRIVERS_LICENCE|PASSPORT|VISA|IMMIGRATION|NATIONAL_ID|TAX_ID|NATIONAL_HEALTH_ID|CONCESSION|HEALTH_CONCESSION|PENSION|MILITARY_ID]
+- body:entity.identityDocs[].manuallyModified boolean
+- body:entity.identityDocs[].region string
+- body:entity.name object
+- body:entity.name.displayName string
+- body:entity.name.familyName string
+- body:entity.name.givenName string
+- body:entity.name.honourific string
+- body:entity.name.middleName string
+- body:entity.organisationData object
+- body:entity.organisationData.adverseCreditDataPresent boolean
+- body:entity.organisationData.class object
+- body:entity.organisationData.disclosingEntityIndicator boolean
+- body:entity.organisationData.includesNonBeneficiallyHeld boolean
+- body:entity.organisationData.kycCustomerType string
+- body:entity.organisationData.lastCheckDate string
+- body:entity.organisationData.ownershipResolved boolean
+- body:entity.organisationData.registeredName string
+- body:entity.organisationData.registration object
+- body:entity.organisationData.shareStructure array<object>
+- body:entity.organisationData.startDate string
+(+3 fields cut)
+
+## S423-0036  POST /your/configured/path/{requestId}
+desc: Push Notification Payload | Whenever you request that a transaction be put into the background, there needs to be a mechanism for notifying you that the request has been completed. This notification will push you the high-level details of the result, and you can then query the results at your leisiure. The same notification process will also be used to push alerts to your system. This means that R
+schema: NotificationResultObject
+- path:requestId string
+- body:checkId string
+- body:documentId string
+- body:entityCustomerReference string
+- body:entityId string
+- body:function string
+- body:functionResult string enum[COMPLETED|FAILED|INCOMPLETE]
+- body:linkReference string
+- body:message string
+- body:notificationType string enum[FUNCTION|RESULT|EVENT|ALERT]
+- body:requestId string
+- body:username string
+
+## S500-0001  POST /api/v1/itemusages
+desc: Retrieves item usages | This endpoint requires your JSON Web Token to have the *itemusages* feature.
+schema: Cursor
+- body:cursor string
+- body:end_time string
+- body:limit number
+- body:start_time string
+
+## S500-0002  POST /api/v1/signinattempts
+desc: Retrieves sign-in attempts | This endpoint requires your JSON Web Token to have the *signinattempts* feature.
+schema: Cursor
+- body:cursor string
+- body:end_time string
+- body:limit number
+- body:start_time string
+
+## S501-0001  POST /v1/attempt/save_stats
+desc: For worker to set sync stats of a running attempt.
+schema: SaveStatsRequestBody
+- body:attemptNumber integer
+- body:jobId integer
+- body:stats object
+- body:stats.bytesEmitted integer
+- body:stats.estimatedBytes integer
+- body:stats.estimatedRecords integer
+- body:stats.recordsCommitted integer
+- body:stats.recordsEmitted integer
+- body:stats.stateMessagesEmitted integer
+- body:streamStats array<object>
+- body:streamStats[].stats object
+- body:streamStats[].stats.bytesEmitted integer
+- body:streamStats[].stats.estimatedBytes integer
+- body:streamStats[].stats.estimatedRecords integer
+- body:streamStats[].stats.recordsCommitted integer
+- body:streamStats[].stats.recordsEmitted integer
+- body:streamStats[].stats.stateMessagesEmitted integer
+- body:streamStats[].streamName string
+- body:streamStats[].streamNamespace string
+
+## S501-0002  POST /v1/attempt/save_sync_config
+desc: For worker to save the AttemptSyncConfig for an attempt.
+schema: SaveAttemptSyncConfigRequestBody
+- body:attemptNumber integer
+- body:jobId integer
+- body:syncConfig object
+- body:syncConfig.destinationConfiguration any
+- body:syncConfig.sourceConfiguration any
+- body:syncConfig.state object
+- body:syncConfig.state.connectionId string
+- body:syncConfig.state.globalState object
+- body:syncConfig.state.state object
+- body:syncConfig.state.stateType string enum[global|stream|legacy|not_set]
+- body:syncConfig.state.streamState array<object>
+
+## S501-0003  POST /v1/connections/reset
+desc: Reset the data for the connection. Deletes data generated by the connection in the destination. Resets any cursors back to initial state.
+schema: ConnectionIdRequestBody
+- body:connectionId string

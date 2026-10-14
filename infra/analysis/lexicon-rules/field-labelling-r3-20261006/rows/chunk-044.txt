@@ -1,0 +1,702 @@
+## S569-0029  POST /Users/ForgotPassword
+desc: Initiates the forgot password process for a local user.
+schema: ForgotPasswordDto
+- body:EnteredUsername string
+
+## S569-0030  POST /Users/{userId}/Authenticate
+desc: Authenticates a user.
+- path:userId string
+- query:pw string
+- query:password string
+
+## S569-0031  DELETE /Users/{userId}/Images/{imageType}
+desc: Delete the user's image.
+- path:userId string
+- path:imageType string enum[Primary|Art|Backdrop|Banner|Logo|Thumb|Disc|Box|Screenshot|Menu|Chapter|BoxRear]
+- query:index integer
+
+## S569-0032  POST /Users/{userId}/Images/{imageType}
+desc: Sets the user image.
+- path:userId string
+- path:imageType string enum[Primary|Art|Backdrop|Banner|Logo|Thumb|Disc|Box|Screenshot|Menu|Chapter|BoxRear]
+- query:index integer
+
+## S569-0033  POST /Users/{userId}/Images/{imageType}/{index}
+desc: Sets the user image.
+- path:userId string
+- path:imageType string enum[Primary|Art|Backdrop|Banner|Logo|Thumb|Disc|Box|Screenshot|Menu|Chapter|BoxRear]
+- path:index integer
+
+## S569-0034  POST /Users/{userId}/PlayedItems/{itemId}
+desc: Marks an item as played for user.
+- path:userId string
+- path:itemId string
+- query:datePlayed string
+
+## S569-0035  DELETE /Users/{userId}/PlayingItems/{itemId}
+desc: Reports that a user has stopped playing an item.
+- path:userId string
+- path:itemId string
+- query:mediaSourceId string
+- query:nextMediaType string
+- query:positionTicks integer
+- query:liveStreamId string
+- query:playSessionId string
+
+## S569-0036  POST /Videos/{itemId}/Subtitles
+desc: Upload an external subtitle file.
+schema: UploadSubtitleDto
+- path:itemId string
+- body:Data string
+- body:Format string
+- body:IsForced boolean
+- body:Language string
+
+## S570-0001  POST /auth/jwt
+desc: General-purpose authentication | ## Note: * The JWT tokens returned should be passed to any resource that requires authentication, in the Authentication header, in the format `Bearer: your-token-here` * Only JWT authentication tokens are provided (no refresh tokens). These tokens are valid for 30 seconds from the moment they were issued
+- body:username string
+- body:password string
+- body:role string
+
+## S570-0002  POST /clients/{clientId}/datasets/{datasetId}/snps/
+desc: Get a large group of SNPs | SNPs that are not present in the dataset are ignored, 404 is returned only if the dataset/client does not exist
+- path:clientId string
+- path:datasetId string
+- body:snps string
+
+## S570-0003  POST /products/{productId}/authorizations/{authorizationId}
+desc: Signal that processing is complete, without uploading any result
+- path:productId string
+- path:authorizationId string
+
+## S570-0004  POST /products/{productId}/authorizations/{authorizationId}/credentials
+desc: Provide a result for the authorization | These can be log-in credentials for a website where the result is available
+- path:productId string
+- path:authorizationId string
+- body:credentials_username string
+- body:credentials_password string
+- body:report_url string
+
+## S570-0005  POST /products/{productId}/authorizations/{authorizationId}/file
+desc: Provide a file result to the authorization, e | g. a pdf report
+- path:productId string
+- path:authorizationId string
+- query:original_filename string
+- body:file_report file
+
+## S570-0006  POST /products/{productId}/authorizations/{authorizationId}/unfulfillable
+desc: Catch-all Authorization state, for authorizations that passed all verifications and should reach the partner Product, but cannot be fulfilled for various reasons
+- path:productId string
+- path:authorizationId string
+
+## S571-0001  POST /exports/list.json
+desc: Returns a list of your exports.
+schema: api_key
+- body:key string
+
+## S571-0002  POST /exports/whitelist.json
+desc: Begins an export of your rejection whitelist. The whitelist will be exported to a zip archive containing a single file named whitelist.csv that includes the following fields: email, detail, created_at.
+schema: notify_email
+- body:key string
+- body:notify_email string
+
+## S571-0003  POST /inbound/add-route.json
+desc: Add a new mailbox route to an inbound domain
+schema: inbound_add-route
+- body:domain string
+- body:key string
+- body:pattern string
+- body:url string
+
+## S571-0004  POST /inbound/check-domain.json
+desc: Check the MX settings for an inbound domain. The domain must have already been added with the add-domain call
+schema: domain
+- body:domain string
+- body:key string
+
+## S571-0005  POST /inbound/update-route.json
+desc: Update the pattern or webhook of an existing inbound mailbox route. If null is provided for any fields, the values will remain unchanged.
+schema: inbound_update-route
+- body:id string
+- body:key string
+- body:pattern string
+- body:url string
+
+## S571-0006  POST /ips/delete-pool.json
+desc: Deletes a pool. A pool must be empty before you can delete it, and you cannot delete your default pool.
+schema: ips_pool-key
+- body:key string
+- body:pool string
+
+## S571-0007  POST /ips/list.json
+desc: Lists your dedicated IPs.
+schema: api_key
+- body:key string
+
+## S571-0008  POST /ips/provision.json
+desc: Requests an additional dedicated IP for your account. Accounts may have one outstanding request at any time, and provisioning requests are processed within 24 hours.
+schema: ips_provision
+- body:key string
+- body:pool string
+- body:warmup boolean
+
+## S571-0009  POST /messages/cancel-scheduled.json
+desc: Cancels a scheduled email.
+schema: messages_cancel-scheduled
+- body:id null
+- body:key string
+
+## S571-0010  POST /messages/list-scheduled.json
+desc: Queries your scheduled emails by sender or recipient, or both.
+schema: messages_list-scheduled
+- body:key string
+- body:to string
+
+## S571-0011  POST /messages/reschedule.json
+desc: Reschedules a scheduled email.
+schema: messages_reschedule
+- body:id string
+- body:key string
+- body:send_at string
+
+## S571-0012  POST /messages/send-template.json
+desc: Send a new transactional message through Mandrill using a template
+schema: messages_send-template
+- body:async boolean
+- body:ip_pool string
+- body:key string
+- body:message object
+- body:message.attachments array<object>
+- body:message.attachments[].content string
+- body:message.attachments[].name string
+- body:message.attachments[].type string
+- body:message.auto_html null
+- body:message.auto_text null
+- body:message.bcc_address string
+- body:message.from_email string
+- body:message.from_name string
+- body:message.global_merge_vars array<object>
+- body:message.global_merge_vars[].content string
+- body:message.global_merge_vars[].name string
+- body:message.google_analytics_campaign string
+- body:message.google_analytics_domains array<string>
+- body:message.headers object
+- body:message.headers.Reply-To string
+- body:message.html string
+- body:message.images array<object>
+- body:message.images[].content string
+- body:message.images[].name string
+- body:message.images[].type string
+- body:message.important boolean
+- body:message.inline_css null
+- body:message.merge boolean
+- body:message.merge_vars array<object>
+- body:message.merge_vars[].rcpt string
+- body:message.merge_vars[].vars array<object>
+- body:message.metadata object
+- body:message.metadata.website string
+- body:message.preserve_recipients null
+- body:message.recipient_metadata array<object>
+- body:message.recipient_metadata[].rcpt string
+- body:message.recipient_metadata[].values object
+- body:message.return_path_domain null
+- body:message.signing_domain null
+- body:message.subaccount string
+- body:message.subject string
+- body:message.tags array<string>
+- body:message.text string
+- body:message.to array<object>
+- body:message.to[].email string
+- body:message.to[].name string
+- body:message.to[].type string
+- body:message.track_clicks null
+- body:message.track_opens null
+- body:message.tracking_domain null
+- body:message.url_strip_qs null
+- body:message.view_content_link null
+- body:send_at string
+- body:template_content array<object>
+- body:template_content[].content string
+- body:template_content[].name string
+- body:template_name string
+
+## S571-0013  POST /metadata/delete.json
+desc: Delete an existing custom metadata field. Deletion isn't instataneous, and /metadata/list will continue to return the field until the asynchronous deletion process is complete.
+schema: name
+- body:key string
+- body:name string
+
+## S571-0014  POST /rejects/delete.json
+desc: Deletes an email rejection. There is no limit to how many rejections you can remove from your blacklist, but keep in mind that each deletion has an affect on your reputation.
+schema: rejects_delete
+- body:email string
+- body:key string
+- body:subaccount string
+
+## S571-0015  POST /senders/verify-domain.json
+desc: Sends a verification email in order to verify ownership of a domain. Domain verification is an optional step to confirm ownership of a domain. Once a domain has been verified in a Mandrill account, other accounts may not have their messages signed by that domain unless they also verify the domain. This prevents other Mandrill accounts from sending mail signed by your domain.
+schema: senders_verify-domain
+- body:domain string
+- body:key string
+- body:mailbox string
+
+## S571-0016  POST /subaccounts/add.json
+desc: Add a new subaccount
+schema: subaccount_info
+- body:custom_quota integer
+- body:id string
+- body:key string
+- body:name string
+- body:notes string
+
+## S571-0017  POST /subaccounts/list.json
+desc: Get the list of subaccounts defined for the account, optionally filtered by a prefix
+schema: url_key
+- body:key string
+- body:q string
+
+## S571-0018  POST /subaccounts/pause.json
+desc: Pause a subaccount's sending. Any future emails delivered to this subaccount will be queued for a maximum of 3 days until the subaccount is resumed.
+schema: id
+- body:id string
+- body:key string
+
+## S571-0019  POST /subaccounts/update.json
+desc: Update an existing subaccount
+schema: subaccount_info
+- body:custom_quota integer
+- body:id string
+- body:key string
+- body:name string
+- body:notes string
+
+## S571-0020  POST /tags/delete.json
+desc: Deletes a tag permanently. Deleting a tag removes the tag from any messages that have been sent, and also deletes the tag's stats. There is no way to undo this operation, so use it carefully.
+schema: tag_key
+- body:key string
+- body:tag string
+
+## S571-0021  POST /tags/info.json
+desc: Return more detailed information about a single tag, including aggregates of recent stats
+schema: tag_key
+- body:key string
+- body:tag string
+
+## S571-0022  POST /tags/list.json
+desc: Return all of the user-defined tag information
+schema: api_key
+- body:key string
+
+## S571-0023  POST /templates/add.json
+desc: Add a new template
+schema: template
+- body:code string
+- body:from_email string
+- body:from_name string
+- body:key string
+- body:labels array<string>
+- body:name string
+- body:publish boolean
+- body:subject string
+- body:text string
+
+## S571-0024  POST /templates/publish.json
+desc: Publish the content for the template. Any new messages sent using this template will start using the content that was previously in draft.
+schema: name
+- body:key string
+- body:name string
+
+## S571-0025  POST /templates/update.json
+desc: Update the code for an existing template. If null is provided for any fields, the values will remain unchanged.
+schema: template
+- body:code string
+- body:from_email string
+- body:from_name string
+- body:key string
+- body:labels array<string>
+- body:name string
+- body:publish boolean
+- body:subject string
+- body:text string
+
+## S571-0026  POST /urls/check-tracking-domain.json
+desc: Checks the CNAME settings for a tracking domain. The domain must have been added already with the add-tracking-domain call
+schema: domain
+- body:domain string
+- body:key string
+
+## S571-0027  POST /urls/list.json
+desc: Get the 100 most clicked URLs
+schema: api_key
+- body:key string
+
+## S571-0028  POST /urls/search.json
+desc: Return the 100 most clicked URLs that match the search query given
+schema: url_key
+- body:key string
+- body:q string
+
+## S571-0029  POST /urls/time-series.json
+desc: Return the recent history (hourly stats for the last 30 days) for a url
+schema: urls_time-series
+- body:key string
+- body:url string
+
+## S571-0030  POST /users/info.json
+desc: Return the information about the API-connected user
+schema: api_key
+- body:key string
+
+## S571-0031  POST /users/ping.json
+desc: Validate an API key and respond to a ping
+schema: api_key
+- body:key string
+
+## S571-0032  POST /webhooks/delete.json
+desc: Delete an existing webhook
+schema: webhook_key
+- body:id integer
+- body:key string
+
+## S571-0033  POST /webhooks/update.json
+desc: Update an existing webhook
+schema: webhooks_update
+- body:description string
+- body:events array<string>
+- body:id integer
+- body:key string
+- body:url string
+
+## S571-0034  POST /whitelists/add.json
+desc: Adds an email to your email rejection whitelist. If the address is currently on your blacklist, that blacklist entry will be removed automatically.
+schema: email
+- body:email string
+- body:key string
+
+## S571-0035  POST /whitelists/delete.json
+desc: Removes an email address from the whitelist.
+schema: email
+- body:email string
+- body:key string
+
+## S571-0036  POST /whitelists/list.json
+desc: Retrieves your email rejection whitelist. You can provide an email address or search prefix to limit the results. Returns up to 1000 results.
+schema: email
+- body:email string
+- body:key string
+
+## S572-0001  POST /GetLocation
+desc: To retrieve a specific devices latest known location the /GetLocation method is used. Please note that the MiataruConfig portion is optional. RequestMiataruDeviceID should be the ID of the device the request is sent from (or an identifier like an URL).
+schema: MiataruGetLocationRequest
+- body:MiataruConfig object
+- body:MiataruConfig.RequestMiataruDeviceID string
+- body:MiataruGetLocation array<object>
+- body:MiataruGetLocation[].Device string
+
+## S572-0002  POST /GetLocationHistory
+desc: Location History is stored on the server only if the client told the server to do so using the “EnableLocationHistory” setting in the Location Update requests. For transitions of enabling/disabling that functionality - Everytime a Location Update is received by the server with “EnableLocationHistory=false” the server removes all stored Location History till that point. There is a server-side setti
+schema: MiataruGetLocationHistoryRequest
+- body:MiataruConfig object
+- body:MiataruConfig.RequestMiataruDeviceID string
+- body:MiataruGetLocationHistory object
+- body:MiataruGetLocationHistory.Amount string
+- body:MiataruGetLocationHistory.Device string
+
+## S572-0003  POST /GetVisitorHistory
+desc: Visitor History is stored on the server with every request to the location or location history information of a device. There is a server-side setting that controls up to how many Visitors the server is storing in the Visitor History before it removes the oldest one. To request the Visitor History of a particular device the client sends the following POST request to the GetVisitorHistory service U
+schema: MiataruGetVisitorHistoryRequest
+- body:MiataruGetVisitorHistory object
+- body:MiataruGetVisitorHistory.Amount string
+- body:MiataruGetVisitorHistory.Device string
+
+## S572-0004  POST /UpdateLocation
+desc: This method is used to update the location of a device. The device does not need to be known already to the Miataru server but it rather creates a unique identifier for itself in the client application. This unique identifier, or device ID is then used to address this particular device.
+schema: MiataruUpdateLocationRequest
+- body:MiataruConfig object
+- body:MiataruConfig.EnableLocationHistory string
+- body:MiataruConfig.LocationDataRetentionTime string
+- body:MiataruLocation array<object>
+- body:MiataruLocation[].Device string
+- body:MiataruLocation[].HorizontalAccuracy string
+- body:MiataruLocation[].Latitude string
+- body:MiataruLocation[].Longitude string
+- body:MiataruLocation[].Timestamp string
+
+## S574-0001  PUT /circuits/circuit-types/{id}/
+schema: CircuitType
+- path:id integer
+- body:circuit_count integer
+- body:description string
+- body:id integer
+- body:name string
+- body:slug string
+
+## S574-0002  POST /circuits/circuits/
+schema: WritableCircuit
+- body:cid string
+- body:comments string
+- body:commit_rate integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:id integer
+- body:install_date string
+- body:last_updated string
+- body:provider integer
+- body:status string enum[planned|provisioning|active|offline|deprovisioning|decommissioned]
+- body:tags array<string>
+- body:tenant integer
+- body:termination_a string
+- body:termination_z string
+- body:type integer
+
+## S574-0003  PUT /circuits/providers/{id}/
+schema: Provider
+- path:id integer
+- body:account string
+- body:admin_contact string
+- body:asn integer
+- body:circuit_count integer
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:noc_contact string
+- body:portal_url string
+- body:slug string
+- body:tags array<string>
+
+## S574-0004  POST /dcim/console-port-templates/
+schema: WritableConsolePortTemplate
+- body:device_type integer
+- body:id integer
+- body:name string
+- body:type string enum[de-9|db-25|rj-11|rj-12|rj-45|usb-a|usb-b|usb-c|usb-mini-a|usb-mini-b|usb-micro-a|usb-micro-b]
+
+## S574-0005  PUT /dcim/console-port-templates/{id}/
+schema: WritableConsolePortTemplate
+- path:id integer
+- body:device_type integer
+- body:id integer
+- body:name string
+- body:type string enum[de-9|db-25|rj-11|rj-12|rj-45|usb-a|usb-b|usb-c|usb-mini-a|usb-mini-b|usb-micro-a|usb-micro-b]
+
+## S574-0006  POST /dcim/console-ports/
+schema: WritableConsolePort
+- body:cable object
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:connected_endpoint object
+- body:connected_endpoint_type string
+- body:connection_status boolean enum[False|True]
+- body:description string
+- body:device integer
+- body:id integer
+- body:name string
+- body:tags array<string>
+- body:type string enum[de-9|db-25|rj-11|rj-12|rj-45|usb-a|usb-b|usb-c|usb-mini-a|usb-mini-b|usb-micro-a|usb-micro-b]
+
+## S574-0007  DELETE /dcim/device-roles/{id}/
+- path:id integer
+
+## S574-0008  POST /dcim/device-types/
+schema: WritableDeviceType
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:device_count integer
+- body:display_name string
+- body:front_image string
+- body:id integer
+- body:is_full_depth boolean
+- body:last_updated string
+- body:manufacturer integer
+- body:model string
+- body:part_number string
+- body:rear_image string
+- body:slug string
+- body:subdevice_role string enum[parent|child]
+- body:tags array<string>
+- body:u_height integer
+
+## S574-0009  PUT /dcim/device-types/{id}/
+schema: WritableDeviceType
+- path:id integer
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:device_count integer
+- body:display_name string
+- body:front_image string
+- body:id integer
+- body:is_full_depth boolean
+- body:last_updated string
+- body:manufacturer integer
+- body:model string
+- body:part_number string
+- body:rear_image string
+- body:slug string
+- body:subdevice_role string enum[parent|child]
+- body:tags array<string>
+- body:u_height integer
+
+## S574-0010  POST /dcim/devices/
+schema: WritableDeviceWithConfigContext
+- body:asset_tag string
+- body:cluster integer
+- body:comments string
+- body:config_context object
+- body:created string
+- body:custom_fields object
+- body:device_role integer
+- body:device_type integer
+- body:display_name string
+- body:face string enum[front|rear]
+- body:id integer
+- body:last_updated string
+- body:local_context_data string
+- body:name string
+- body:parent_device object
+- body:parent_device.display_name string
+- body:parent_device.id integer
+- body:parent_device.name string
+- body:parent_device.url string
+- body:platform integer
+- body:position integer
+- body:primary_ip string
+- body:primary_ip4 integer
+- body:primary_ip6 integer
+- body:rack integer
+- body:serial string
+- body:site integer
+- body:status string enum[offline|active|planned|staged|failed|inventory|decommissioning]
+- body:tags array<string>
+- body:tenant integer
+- body:vc_position integer
+- body:vc_priority integer
+- body:virtual_chassis integer
+
+## S574-0011  DELETE /dcim/front-port-templates/{id}/
+- path:id integer
+
+## S574-0012  DELETE /dcim/front-ports/{id}/
+- path:id integer
+
+## S574-0013  DELETE /dcim/interface-templates/{id}/
+- path:id integer
+
+## S574-0014  PATCH /dcim/interface-templates/{id}/
+schema: WritableInterfaceTemplate
+- path:id integer
+- body:device_type integer
+- body:id integer
+- body:mgmt_only boolean
+- body:name string
+- body:type string enum[virtual|lag|100base-tx|1000base-t|2.5gbase-t|5gbase-t|10gbase-t|10gbase-cx4|1000base-x-gbic|1000base-x-sfp|10gbase-x-sfpp|10gbase-x-xfp]
+
+## S574-0015  PUT /dcim/interfaces/{id}/
+schema: WritableDeviceInterface
+- path:id integer
+- body:cable object
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:connected_endpoint object
+- body:connected_endpoint_type string
+- body:connection_status boolean enum[False|True]
+- body:count_ipaddresses integer
+- body:description string
+- body:device integer
+- body:enabled boolean
+- body:id integer
+- body:lag integer
+- body:mac_address string
+- body:mgmt_only boolean
+- body:mode string enum[access|tagged|tagged-all]
+- body:mtu integer
+- body:name string
+- body:tagged_vlans array<integer>
+- body:tags array<string>
+- body:type string enum[virtual|lag|100base-tx|1000base-t|2.5gbase-t|5gbase-t|10gbase-t|10gbase-cx4|1000base-x-gbic|1000base-x-sfp|10gbase-x-sfpp|10gbase-x-xfp]
+- body:untagged_vlan integer
+
+## S574-0016  POST /dcim/inventory-items/
+schema: WritableInventoryItem
+- body:asset_tag string
+- body:description string
+- body:device integer
+- body:discovered boolean
+- body:id integer
+- body:manufacturer integer
+- body:name string
+- body:parent integer
+- body:part_id string
+- body:serial string
+- body:tags array<string>
+
+## S574-0017  PUT /dcim/platforms/{id}/
+schema: WritablePlatform
+- path:id integer
+- body:description string
+- body:device_count integer
+- body:id integer
+- body:manufacturer integer
+- body:name string
+- body:napalm_args string
+- body:napalm_driver string
+- body:slug string
+- body:virtualmachine_count integer
+
+## S574-0018  PUT /dcim/power-outlet-templates/{id}/
+schema: WritablePowerOutletTemplate
+- path:id integer
+- body:device_type integer
+- body:feed_leg string enum[A|B|C]
+- body:id integer
+- body:name string
+- body:power_port integer
+- body:type string enum[iec-60320-c5|iec-60320-c7|iec-60320-c13|iec-60320-c15|iec-60320-c19|iec-60309-p-n-e-4h|iec-60309-p-n-e-6h|iec-60309-p-n-e-9h|iec-60309-2p-e-4h|iec-60309-2p-e-6h|iec-60309-2p-e-9h|iec-60309-3p-e-4h]
+
+## S574-0019  PATCH /dcim/power-outlets/{id}/
+schema: WritablePowerOutlet
+- path:id integer
+- body:cable object
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:connected_endpoint object
+- body:connected_endpoint_type string
+- body:connection_status boolean enum[False|True]
+- body:description string
+- body:device integer
+- body:feed_leg string enum[A|B|C]
+- body:id integer
+- body:name string
+- body:power_port integer
+- body:tags array<string>
+- body:type string enum[iec-60320-c5|iec-60320-c7|iec-60320-c13|iec-60320-c15|iec-60320-c19|iec-60309-p-n-e-4h|iec-60309-p-n-e-6h|iec-60309-p-n-e-9h|iec-60309-2p-e-4h|iec-60309-2p-e-6h|iec-60309-2p-e-9h|iec-60309-3p-e-4h]
+
+## S574-0020  DELETE /dcim/power-panels/{id}/
+- path:id integer
+
+## S574-0021  PATCH /dcim/power-ports/{id}/
+schema: WritablePowerPort
+- path:id integer
+- body:allocated_draw integer
+- body:cable object
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:connected_endpoint object
+- body:connected_endpoint_type string
+- body:connection_status boolean enum[False|True]
+- body:description string
+- body:device integer
+- body:id integer
+- body:maximum_draw integer
+- body:name string
+- body:tags array<string>
+- body:type string enum[iec-60320-c6|iec-60320-c8|iec-60320-c14|iec-60320-c16|iec-60320-c20|iec-60309-p-n-e-4h|iec-60309-p-n-e-6h|iec-60309-p-n-e-9h|iec-60309-2p-e-4h|iec-60309-2p-e-6h|iec-60309-2p-e-9h|iec-60309-3p-e-4h]

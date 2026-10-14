@@ -1,0 +1,598 @@
+## S569-N0147  POST /Users/{userId}/EasyPassword
+desc: Updates a user's easy password.
+schema: UpdateUserEasyPassword
+- path:userId string
+- body:NewPassword string
+- body:NewPw string
+- body:ResetPassword boolean
+
+## S569-N0148  DELETE /Users/{userId}/FavoriteItems/{itemId}
+desc: Unmarks item as a favorite.
+- path:userId string
+- path:itemId string
+
+## S569-N0149  POST /Users/{userId}/FavoriteItems/{itemId}
+desc: Marks an item as a favorite.
+- path:userId string
+- path:itemId string
+
+## S569-N0152  DELETE /Users/{userId}/Images/{imageType}/{index}
+desc: Delete the user's image.
+- path:userId string
+- path:imageType string enum[Primary|Art|Backdrop|Banner|Logo|Thumb|Disc|Box|Screenshot|Menu|Chapter|BoxRear]
+- path:index integer
+
+## S569-N0154  DELETE /Users/{userId}/Items/{itemId}/Rating
+desc: Deletes a user's saved personal rating for an item.
+- path:userId string
+- path:itemId string
+
+## S569-N0155  POST /Users/{userId}/Items/{itemId}/Rating
+desc: Updates a user's rating for an item.
+- path:userId string
+- path:itemId string
+- query:likes boolean
+
+## S569-N0156  POST /Users/{userId}/Password
+desc: Updates a user's password.
+schema: UpdateUserPassword
+- path:userId string
+- body:CurrentPassword string
+- body:CurrentPw string
+- body:NewPw string
+- body:ResetPassword boolean
+
+## S569-N0157  DELETE /Users/{userId}/PlayedItems/{itemId}
+desc: Marks an item as unplayed for user.
+- path:userId string
+- path:itemId string
+
+## S569-N0160  POST /Users/{userId}/PlayingItems/{itemId}
+desc: Reports that a user has begun playing an item.
+- path:userId string
+- path:itemId string
+- query:mediaSourceId string
+- query:audioStreamIndex integer
+- query:subtitleStreamIndex integer
+- query:playMethod string enum[Transcode|DirectStream|DirectPlay]
+- query:liveStreamId string
+- query:playSessionId string
+- query:canSeek boolean
+
+## S569-N0161  POST /Users/{userId}/PlayingItems/{itemId}/Progress
+desc: Reports a user's playback progress.
+- path:userId string
+- path:itemId string
+- query:mediaSourceId string
+- query:positionTicks integer
+- query:audioStreamIndex integer
+- query:subtitleStreamIndex integer
+- query:volumeLevel integer
+- query:playMethod string enum[Transcode|DirectStream|DirectPlay]
+- query:liveStreamId string
+- query:playSessionId string
+- query:repeatMode string enum[RepeatNone|RepeatAll|RepeatOne]
+- query:isPaused boolean
+- query:isMuted boolean
+
+## S569-N0162  POST /Users/{userId}/Policy
+desc: Updates a user policy.
+schema: UserPolicy
+- path:userId string
+- body:AccessSchedules array<object>
+- body:AccessSchedules[].DayOfWeek string enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Everyday|Weekday|Weekend]
+- body:AccessSchedules[].EndHour number
+- body:AccessSchedules[].Id integer
+- body:AccessSchedules[].StartHour number
+- body:AccessSchedules[].UserId string
+- body:AuthenticationProviderId string
+- body:BlockUnratedItems array<string> enum[Movie|Trailer|Series|Music|Book|LiveTvChannel|LiveTvProgram|ChannelContent|Other]
+- body:BlockedChannels array<string>
+- body:BlockedMediaFolders array<string>
+- body:BlockedTags array<string>
+- body:EnableAllChannels boolean
+- body:EnableAllDevices boolean
+- body:EnableAllFolders boolean
+- body:EnableAudioPlaybackTranscoding boolean
+- body:EnableContentDeletion boolean
+- body:EnableContentDeletionFromFolders array<string>
+- body:EnableContentDownloading boolean
+- body:EnableLiveTvAccess boolean
+- body:EnableLiveTvManagement boolean
+- body:EnableMediaConversion boolean
+- body:EnableMediaPlayback boolean
+- body:EnablePlaybackRemuxing boolean
+- body:EnablePublicSharing boolean
+- body:EnableRemoteAccess boolean
+- body:EnableRemoteControlOfOtherUsers boolean
+- body:EnableSharedDeviceControl boolean
+- body:EnableSyncTranscoding boolean
+- body:EnableUserPreferenceAccess boolean
+- body:EnableVideoPlaybackTranscoding boolean
+- body:EnabledChannels array<string>
+- body:EnabledDevices array<string>
+- body:EnabledFolders array<string>
+- body:ForceRemoteSourceTranscoding boolean
+- body:InvalidLoginAttemptCount integer
+- body:IsAdministrator boolean
+- body:IsDisabled boolean
+- body:IsHidden boolean
+- body:LoginAttemptsBeforeLockout integer
+- body:MaxActiveSessions integer
+- body:MaxParentalRating integer
+- body:PasswordResetProviderId string
+- body:RemoteClientBitrateLimit integer
+- body:SyncPlayAccess string enum[CreateAndJoinGroups|JoinGroups|None]
+
+## S569-N0163  DELETE /Videos/ActiveEncodings
+desc: Stops an active encoding.
+- query:deviceId string
+- query:playSessionId string
+
+## S569-N0164  POST /Videos/MergeVersions
+desc: Merges videos into a single record.
+- query:ids array<string>
+
+## S569-N0165  DELETE /Videos/{itemId}/AlternateSources
+desc: Removes alternate video sources.
+- path:itemId string
+
+## S569-N0167  DELETE /Videos/{itemId}/Subtitles/{index}
+desc: Deletes an external subtitle file.
+- path:itemId string
+- path:index integer
+
+## S136-N0001  POST /apps
+desc: Create an app | Create a new `App` with their organization profile
+- query:organization_name string
+
+## S136-N0008  POST /apps/{appId}/accountcategories/
+desc: Create a category
+- path:appId integer
+- query:name string
+- query:description string
+- query:type string
+
+## S136-N0009  DELETE /apps/{appId}/accountcategories/{id}
+desc: Remove a category
+- path:appId integer
+- path:id integer
+
+## S136-N0010  POST /apps/{appId}/accountcategories/{id}
+desc: Update a category
+- path:appId integer
+- path:id integer
+- query:name string
+- query:description string
+- query:type string
+
+## S136-N0012  POST /apps/{appId}/accounts/batch
+desc: Create many accounts | Create many accounts
+- path:appId integer
+- query:data array<object>
+
+## S136-N0014  POST /apps/{appId}/accounts/{id}
+desc: Update a Account
+- path:appId integer
+- path:id integer
+- query:journalcode string
+- query:name string
+- query:description string
+- query:keywords string
+- query:accounting_number string
+- query:is_cashflow boolean
+- query:is_sales boolean
+- query:is_purchase boolean
+
+## S136-N0015  POST /apps/{appId}/apikeys
+desc: Create new API key
+- path:appId integer
+- query:name string
+- query:api_partner_id integer
+
+## S136-N0016  DELETE /apps/{appId}/apikeys/{id}
+desc: Remove an api key
+- path:appId integer
+- path:id string
+
+## S136-N0018  PUT /apps/{appId}/attachments
+desc: Recreate S.A.P attestations
+- path:appId integer
+
+## S136-N0019  DELETE /apps/{appId}/attachments/{id}
+desc: Detach a file from id
+- path:appId integer
+- path:id integer
+
+## S136-N0020  POST /apps/{appId}/bankdetails
+desc: Create a BankDetails
+- path:appId integer
+- query:name string
+- query:iban string
+- query:bic string
+
+## S136-N0021  DELETE /apps/{appId}/bankdetails/{id}
+desc: Remove a BankDetails
+- path:appId integer
+- path:id integer
+
+## S136-N0023  DELETE /apps/{appId}/banks/
+desc: Remove a Bankin synchronization | The deletion of the account is irreversible, it will not be possible to resume synchronization as it is afterwards. - If transactions have been exported to accounting or used as payment, the CashflowSource will be left as it is. Resuming synchronization will remain impossible. If you re-import the account, a new CashflowSource will be created and transactions will
+- path:appId integer
+- query:item_id integer
+
+## S136-N0024  POST /apps/{appId}/banks/synchronize
+desc: Triggers synchronization at Bankin then synchronizes transactions with Sinao
+- path:appId integer
+- query:id integer
+- query:is_incremential boolean
+
+## S136-N0025  POST /apps/{appId}/banks/{id}/select_accounts
+desc: Select accounts to synchronize
+- path:appId integer
+- path:id integer
+- query:bank_account_ids array<integer>
+
+## S136-N0026  POST /apps/{appId}/cashflowsources/
+desc: Create a CashflowSource
+- path:appId integer
+- query:name string
+- query:identifiant string
+- query:type string enum[bank|cashdesk|waiting]
+- query:balance_amount integer
+- query:account_type string enum[checking|card|savings|special|securities|loan|life_insurance|unknown|pending|share_savings_plan]
+- query:parent_cashflow_source_id integer
+
+## S136-N0027  DELETE /apps/{appId}/cashflowsources/{id}
+desc: Remove a CashflowSource
+- path:appId integer
+- path:id integer
+
+## S136-N0028  POST /apps/{appId}/cashflowsources/{id}
+desc: Update a CashflowSource
+- path:appId integer
+- path:id integer
+- query:name string
+- query:identifiant string
+- query:type string enum[bank|cashdesk|waiting]
+- query:balance_amount integer
+- query:account_type string enum[checking|card|savings|special|securities|loan|life_insurance|unknown|pending|share_savings_plan]
+- query:parent_cashflow_source_id integer
+
+## S136-N0029  POST /apps/{appId}/contacts/merge
+desc: Merge many contacts
+- path:appId integer
+- query:contacts array<object>
+
+## S136-N0030  POST /apps/{appId}/email/batch
+desc: Send emails
+- path:appId integer
+- query:from string
+- query:messages array<object>
+- query:need_copy_bcc boolean
+
+## S136-N0031  POST /apps/{appId}/email/document
+desc: Send an email
+- path:appId integer
+- query:from string
+- query:recipients array<string>
+- query:recipients_cc array<string>
+- query:recipients_bcc array<string>
+- query:title string
+- query:body string
+- query:documents array<object>
+- query:need_copy_bcc boolean
+
+## S136-N0032  DELETE /apps/{appId}/establishments/{id}
+desc: Remove an establishment | Remove an establishment
+- path:appId integer
+- path:id integer
+
+## S136-N0033  POST /apps/{appId}/establishments/{id}
+desc: Update an establishment | Update an establishment by id
+- path:appId integer
+- path:id integer
+- query:name string
+- query:phones array<string>
+- query:emails array<string>
+- query:nic string
+- query:place object
+
+## S136-N0034  POST /apps/{appId}/exports
+desc: Create a ExportEntity
+- path:appId integer
+- query:until string
+
+## S136-N0035  POST /apps/{appId}/exports/acd_compta
+desc: Register ACD identifiants | Sinao will try to connect ACD authentification with your ids. If succed, Sinao will store your ids.
+- path:appId integer
+- query:login string
+- query:password string
+- query:base string
+- query:cnx string
+
+## S136-N0036  DELETE /apps/{appId}/exports/{id}
+desc: Remove a ExportEntity
+- path:appId integer
+- path:id integer
+
+## S136-N0038  DELETE /apps/{appId}/invoices/batch
+desc: Delete many invoices | Delete many invoices
+- path:appId integer
+- query:ids array<integer>
+
+## S136-N0039  POST /apps/{appId}/invoices/batch
+desc: Create or update many invoices | Create or update many invoices
+- path:appId integer
+- query:data array<object>
+
+## S136-N0040  POST /apps/{appId}/invoices/fresh
+desc: Regenerate pdf and recalcul amounts of invoice
+- path:appId integer
+- query:ids array<integer>
+
+## S136-N0041  DELETE /apps/{appId}/invoices/{id}
+desc: Remove an invoice | Remove an invoice by id : only for draft
+- path:appId integer
+- path:id integer
+
+## S136-N0044  POST /apps/{appId}/invoices/{id}/attach
+desc: Attach a file at an invoice
+- path:appId integer
+- path:id integer
+- query:file string
+
+## S136-N0045  POST /apps/{appId}/invoices/{id}/avoid
+desc: Create a creditnote on an invoice
+- path:appId integer
+- path:id integer
+
+## S136-N0046  POST /apps/{appId}/invoices/{id}/duplicate
+desc: Duplicate an invoice
+- path:appId integer
+- path:id integer
+
+## S136-N0047  POST /apps/{appId}/invoices/{id}/finalize
+desc: Finalize an invoice
+- path:appId integer
+- path:id integer
+- query:force_date boolean
+
+## S136-N0049  POST /apps/{appId}/invoices/{id}/tag
+desc: Add a tag on an invoice
+- path:appId integer
+- path:id integer
+- query:tag string
+
+## S136-N0051  DELETE /apps/{appId}/logs/autoreconcile/
+desc: Clear autoreconciliation logs
+- path:appId integer
+
+## S136-N0052  POST /apps/{appId}/logs/autoreconcile/
+desc: Start force autoreconciliation
+- path:appId integer
+
+## S136-N0053  POST /apps/{appId}/organization
+desc: Update organization profile for current app
+- path:appId integer
+- query:name string
+- query:billing_name string
+- query:logo string
+- query:legal_form string
+- query:country_iso2 string
+- query:founding_date string
+- query:founding_location string
+- query:dissolution_date string
+- query:closeaccounting_period string
+- query:national_id string
+- query:trade_directory_registration string
+- query:vat_id string
+- query:code_naf string
+- query:number_of_employees string
+- query:industry string
+- query:slogan string
+- query:rcs string
+- query:greffe string
+- query:sap_number_registration string
+- query:sap_activities string
+- query:sap_date_registration string
+- query:capital integer
+
+## S136-N0054  POST /apps/{appId}/organizations
+desc: Create an organization | Create a contact organization. This organization will be automatically completed and updated by public data. The public profile will be automatically find by NationalID
+- path:appId integer
+- query:name string
+- query:billing_name string
+- query:logo string
+- query:legal_form string
+- query:country_iso2 string
+- query:founding_date string
+- query:founding_location string
+- query:dissolution_date string
+- query:vat_system string
+- query:closeaccounting_period string
+- query:national_id string
+- query:vat_id string
+- query:code_naf string
+- query:number_of_employees string
+- query:slogan string
+- query:rcs string
+- query:greffe string
+- query:capital integer
+- query:metadata array<any>
+
+## S136-N0055  POST /apps/{appId}/organizations/batch
+desc: Create multiple organizations | Create a contact organization. This organization will be automatically completed and updated by public data. The public profile will be automatically find by NationalID
+- path:appId integer
+- query:data array<object>
+
+## S136-N0058  DELETE /apps/{appId}/payments/{id}
+desc: Remove a payment | Remove a payment by id
+- path:appId integer
+- path:id integer
+
+## S136-N0060  POST /apps/{appId}/persons/batch
+desc: Create multiple persons | Create a new person. Represent a private contact
+- path:appId integer
+- query:data array<object>
+
+## S136-N0063  POST /apps/{appId}/productcategory
+desc: Create a product category | Create a new product category
+- path:appId integer
+- query:name string
+- query:image string
+- query:parent_category_id integer
+
+## S136-N0064  DELETE /apps/{appId}/productcategory/{id}
+desc: Remove a product category | Remove a product category by id
+- path:appId integer
+- path:id integer
+
+## S136-N0065  POST /apps/{appId}/productcategory/{id}
+desc: Update a product category | Update a product category by id
+- path:appId integer
+- path:id integer
+- query:name string
+- query:image string
+- query:parent_category_id integer
+
+## S136-N0066  POST /apps/{appId}/products
+desc: Create a product | Create a new product
+- path:appId integer
+- query:name string
+- query:amount integer
+- query:amount_accurately integer
+- query:vat_percent integer
+- query:image string
+- query:lifetime integer
+- query:description string
+- query:type string enum[product|service]
+- query:quantity_name string
+- query:reference string
+- query:account_id string
+- query:tags array<any>
+- query:category_id integer
+- query:metadata array<any>
+
+## S136-N0067  POST /apps/{appId}/products/batch
+desc: Create multiple products | Create a new product
+- path:appId integer
+- query:data array<object>
+
+## S136-N0068  DELETE /apps/{appId}/products/{id}
+desc: Remove a product | Remove a product by id
+- path:appId integer
+- path:id integer
+
+## S136-N0070  DELETE /apps/{appId}/products/{id}/attach
+desc: Detach a file
+- path:appId integer
+- path:id integer
+- query:file_id integer
+
+## S136-N0071  POST /apps/{appId}/products/{id}/attach
+desc: Attach a file
+- path:appId integer
+- path:id integer
+- query:file string
+
+## S136-N0073  DELETE /apps/{appId}/productstocks/{id}
+desc: Remove a stocks | Remove a stocks by id
+- path:appId integer
+- path:id integer
+
+## S136-N0074  POST /apps/{appId}/productstocks/{id}
+desc: Update a stocks | Update a stocks by id
+- path:appId integer
+- path:id integer
+- query:purchase_id integer
+- query:bar_code string
+- query:location string
+- query:entered_at string
+- query:expired_at string
+- query:cost_amount integer
+- query:use_duration integer
+
+## S136-N0075  POST /apps/{appId}/productstocks/{id}/destruct
+desc: Destruct a quantity of stock (forgotten, destructed, expirated stock...) | Update a stocks by id to reduce quantity of stocks
+- path:appId integer
+- path:id integer
+- query:quantity integer
+- query:comment string
+
+## S136-N0076  POST /apps/{appId}/productstocks/{id}/rental/back
+desc: Consider part of the stock as back | Update the amount of stocks available through the return of rented stocks
+- path:appId integer
+- path:id integer
+- query:quantity integer
+- query:current_return_date string
+- query:use_duration integer
+- query:comment string
+
+## S136-N0077  POST /apps/{appId}/productstocks/{id}/rental/exit
+desc: Consider part of the stock as rented | Updates the quantity of available stocks and provides for a stocks return date
+- path:appId integer
+- path:id integer
+- query:quantity integer
+- query:future_return_date string
+- query:comment string
+
+## S136-N0078  POST /apps/{appId}/purchases
+desc: Create a purchase | Create a new purchase with an Organization. Relationship store notes, metadata and accounting settings parameters
+- path:appId integer
+- query:invoice string
+- query:account_id integer
+- query:supplier_organization_id integer
+- query:title string
+- query:supplier_name string
+- query:amount integer
+- query:amount_tax integer
+- query:currency string
+- query:vat_detail object
+- query:billed_at string
+- query:comment integer
+- query:tags array<any>
+- query:vat_repayment string enum[payment|billing]
+- query:payment_deadline_at string
+- query:payment_account_number string
+- query:payment_routing_number string
+- query:payment_swift string
+- query:payment_iban string
+
+## S136-N0079  DELETE /apps/{appId}/purchases/batch
+desc: Delete many purchases | Delete many purchases
+- path:appId integer
+- query:ids array<integer>
+
+## S136-N0080  POST /apps/{appId}/purchases/batch
+desc: Create or update many purchases | Create or update many purchases
+- path:appId integer
+- query:data array<object>
+
+## S136-N0081  DELETE /apps/{appId}/purchases/{id}
+desc: Remove a purchase | Remove a purchase by id
+- path:appId integer
+- path:id integer
+
+## S136-N0082  POST /apps/{appId}/purchases/{id}
+desc: Update a purchase | Update a purchase by id
+- path:appId integer
+- path:id integer
+- query:account_id integer
+- query:supplier_organization_id integer
+- query:title string
+- query:supplier_name string
+- query:amount integer
+- query:amount_tax integer
+- query:currency string
+- query:vat_detail object
+- query:billed_at string
+- query:comment integer
+- query:tags array<any>
+- query:vat_repayment string enum[payment|billing]
+- query:payment_deadline_at string
+- query:payment_account_number string
+- query:payment_routing_number string
+- query:payment_swift string
+- query:payment_iban string
+- query:purchase_lines array<object>

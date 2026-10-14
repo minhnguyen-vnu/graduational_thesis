@@ -1,0 +1,104 @@
+chuoi rolefield + diagnostics start Thu Sep 24 00:08:28 +07 2026
+00:08:28 cong 8080 tra 401
+00:08:28 cong 8081 tra 401
+00:08:28 cong 5002 tra 200
+00:08:28 cong 5003 tra 200
+00:08:28 cong 8090 tra 302
+00:08:28 cong 8091 tra 302
+00:08:28 cay lam viec d5a9b00de2af8811, jar 7f9d977e4849080a
+00:08:28 jar truoc khi doi da giu: evomaster-FH-2ec4b921.jar
+00:08:28 bo tu vung trong jar: 53 path, 45 param
+00:08:28 giai doan 1: self-test cu field-gate tren jar moi
+PASS  lexicon-in-jar        stateful-authz-lexicon.csv ships inside the jar
+PASS  body-word-passes-gate a word present only in a request body ranks PUT:/reports/{id} first
+PASS  absent-word-no-gate   a word in no path and no body leaves 0 candidates and raises nothing
+PASS  path-word-unchanged   a path word still chooses PUT:/users/{username}/role
+PASS  tier1-970             the shipped lexicon still chooses PUT:/users/{username}/role and raises 970
+PASS  fixed-no-970          the wider gate raises nothing on the patched app
+PASS  declared-untouched    a declared transition skips ranking and still raises 970
+00:37:31 self-test field-gate dat het
+00:37:31 giai doan 2: self-test cu local-harvest tren jar moi; content-type-is-a-value phai hong vi patch sua dung loi do
+PASS  harvest-is-local      POST:/reset carries no request body and now harvests 0 values
+PASS  loop-advances         2 candidates weighed, the top-scored barren one is skipped for PUT:/users/{username}/role
+PASS  candidate-cap         2 candidate lines, cap is 8
+FAIL  content-type-is-a-value  --  top='POST:/auth/login' reducedRoleValues='0' exit=0; expected 'POST:/auth/login' and 1
+PASS  tier1-970             the shipped lexicon still chooses PUT:/users/{username}/role and raises 970
+PASS  fixed-no-970          the patched app stays silent
+PASS  declared-untouched    a declared transition skips ranking and still raises 970
+01:01:18 self-test local-harvest: 6 kiem tra dat, content-type-is-a-value hong dung du kien
+01:01:18 giai doan 3: cong hoi quy
+02:49:01 cong hoi quy: 21 dong, ban da va lech 0, ban loi lech 0 (exit 0)
+02:49:01 khong dong ban da va nao lech, chay tiep
+02:49:01 giai doan 4: Tier-1 va Tier-2 ban loi, seeds 1-10
+02:53:46 tier1 vuln seed=1 det970=1 assembled=1 void=0 statuses=200/200/200
+02:58:35 tier1 vuln seed=2 det970=1 assembled=1 void=0 statuses=200/200/200
+03:03:24 tier1 vuln seed=3 det970=1 assembled=1 void=0 statuses=200/200/200
+03:08:07 tier1 vuln seed=4 det970=1 assembled=1 void=2 statuses=200/200/200
+03:12:54 tier1 vuln seed=5 det970=1 assembled=1 void=0 statuses=200/200/200
+03:17:52 tier1 vuln seed=6 det970=1 assembled=1 void=0 statuses=200/200/200
+03:22:58 tier1 vuln seed=7 det970=1 assembled=1 void=0 statuses=200/200/200
+03:27:42 tier1 vuln seed=8 det970=1 assembled=1 void=2 statuses=200/200/200
+03:32:31 tier1 vuln seed=9 det970=1 assembled=1 void=2 statuses=200/200/200
+03:37:12 tier1 vuln seed=10 det970=1 assembled=1 void=2 statuses=200/200/200
+03:42:35 tier2 vuln seed=1 det970=1 assembled=1 void=0 statuses=200/200/200
+03:47:56 tier2 vuln seed=2 det970=0 assembled=0 void=0 statuses=NA
+03:53:34 tier2 vuln seed=3 det970=0 assembled=0 void=7 statuses=NA
+03:59:18 tier2 vuln seed=4 det970=0 assembled=0 void=0 statuses=NA
+04:04:52 tier2 vuln seed=5 det970=1 assembled=1 void=3 statuses=200/200/200
+04:10:20 tier2 vuln seed=6 det970=0 assembled=0 void=0 statuses=NA
+04:15:27 tier2 vuln seed=7 det970=0 assembled=0 void=7 statuses=NA
+04:20:40 tier2 vuln seed=8 det970=0 assembled=0 void=3 statuses=NA
+04:26:10 tier2 vuln seed=9 det970=0 assembled=0 void=4 statuses=NA
+04:31:28 tier2 vuln seed=10 det970=1 assembled=1 void=0 statuses=200/200/200
+04:31:28 giai doan 5: Tier-1 va Tier-2 ban da va, seeds 1-10
+04:36:13 tier1 fixed seed=1 det970=0 assembled=1 void=0 statuses=200/200/403
+04:41:02 tier1 fixed seed=2 det970=0 assembled=1 void=0 statuses=200/200/403
+04:45:50 tier1 fixed seed=3 det970=0 assembled=1 void=0 statuses=200/200/403
+04:50:40 tier1 fixed seed=4 det970=0 assembled=1 void=2 statuses=200/200/403
+04:55:26 tier1 fixed seed=5 det970=0 assembled=1 void=0 statuses=200/200/403
+05:00:23 tier1 fixed seed=6 det970=0 assembled=1 void=0 statuses=200/200/403
+05:05:28 tier1 fixed seed=7 det970=0 assembled=1 void=0 statuses=200/200/403
+05:10:12 tier1 fixed seed=8 det970=0 assembled=1 void=2 statuses=200/200/403
+05:15:00 tier1 fixed seed=9 det970=0 assembled=1 void=2 statuses=200/200/403
+05:19:40 tier1 fixed seed=10 det970=0 assembled=1 void=2 statuses=200/200/403
+05:19:51 tier2 fixed seed=1 det970=ERR assembled=0 void=0 statuses=NA
+05:20:02 tier2 fixed seed=2 det970=ERR assembled=0 void=0 statuses=NA
+05:20:14 tier2 fixed seed=3 det970=ERR assembled=0 void=0 statuses=NA
+05:20:25 tier2 fixed seed=4 det970=ERR assembled=0 void=0 statuses=NA
+05:20:36 tier2 fixed seed=5 det970=ERR assembled=0 void=0 statuses=NA
+05:20:48 tier2 fixed seed=6 det970=ERR assembled=0 void=0 statuses=NA
+05:20:59 tier2 fixed seed=7 det970=ERR assembled=0 void=0 statuses=NA
+05:21:10 tier2 fixed seed=8 det970=ERR assembled=0 void=0 statuses=NA
+05:21:22 tier2 fixed seed=9 det970=ERR assembled=0 void=0 statuses=NA
+05:21:33 tier2 fixed seed=10 det970=ERR assembled=0 void=0 statuses=NA
+05:21:33 giai doan 6: pyLoad ban loi, seeds 1-10
+05:40:10 tier2b vuln seed=1 det970=1 assembled=1 void=2 statuses=200/200/200
+05:58:52 tier2b vuln seed=2 det970=1 assembled=1 void=2 statuses=200/200/200
+06:17:55 tier2b vuln seed=3 det970=1 assembled=1 void=2 statuses=200/200/200
+06:36:48 tier2b vuln seed=4 det970=1 assembled=1 void=2 statuses=200/200/200
+06:55:33 tier2b vuln seed=5 det970=1 assembled=1 void=2 statuses=200/200/200
+07:14:11 tier2b vuln seed=6 det970=1 assembled=1 void=2 statuses=200/200/200
+07:34:28 tier2b vuln seed=7 det970=1 assembled=1 void=2 statuses=200/200/200
+07:53:06 tier2b vuln seed=8 det970=1 assembled=1 void=2 statuses=200/200/200
+08:11:57 tier2b vuln seed=9 det970=1 assembled=1 void=2 statuses=200/200/200
+08:30:35 tier2b vuln seed=10 det970=1 assembled=1 void=2 statuses=200/200/200
+08:30:35 giai doan 7: sao luu
+08:32:53 sao luu /Users/minhnguyen/thesis-backups/thesis-full-20260924-0830.tar.gz
+CHAIN DONE Thu Sep 24 08:32:53 +07 2026
+08:33:00 chay lai Tier-2 ban da va seeds 1-10: container vampi-seeded-fixed bi OOM luc 03:53, 10 dong ERR o runs.csv giu nguyen
+08:38:27 tier2 fixed rerun seed=1 det970=0 assembled=1 void=0 statuses=200/200/403
+08:43:46 tier2 fixed rerun seed=2 det970=0 assembled=0 void=0 statuses=NA
+08:49:25 tier2 fixed rerun seed=3 det970=0 assembled=0 void=7 statuses=NA
+08:55:08 tier2 fixed rerun seed=4 det970=0 assembled=0 void=0 statuses=NA
+09:00:42 tier2 fixed rerun seed=5 det970=0 assembled=1 void=3 statuses=200/200/403
+09:05:59 tier2 fixed rerun seed=6 det970=0 assembled=0 void=0 statuses=NA
+09:11:20 tier2 fixed rerun seed=7 det970=0 assembled=0 void=7 statuses=NA
+09:16:33 tier2 fixed rerun seed=8 det970=0 assembled=0 void=3 statuses=NA
+09:22:03 tier2 fixed rerun seed=9 det970=0 assembled=0 void=4 statuses=NA
+09:27:20 tier2 fixed rerun seed=10 det970=0 assembled=1 void=0 statuses=200/200/403
+09:27:20 chay lai t2 fixed xong
+RERUN DONE Thu Sep 24 09:27:20 +07 2026
+09:29:42 chay lai Tier-2 ban loi seeds 3-4: hai dong duy nhat co MINIMIZATION het gio, trung cua so OOM 03:53
+09:35:21 tier2 vuln rerun seed=3 det970=0 faults=100|101|209 minimization_timeout=0
+09:41:04 tier2 vuln rerun seed=4 det970=0 faults=100|101|205|209 minimization_timeout=0
+RERUN34 DONE Thu Sep 24 09:41:04 +07 2026

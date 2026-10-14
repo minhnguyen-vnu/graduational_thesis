@@ -1,0 +1,30 @@
+──── A. restore the VICTIM — VULNERABLE (:8090) ────
+  [1] simulate a search that demoted the victim: -> HTTP 200, alice role=1
+  [2] alice logs in fresh, tries the guarded source -> HTTP 403   (the dead end today)
+  [3] superadmin PROMOTES alice back -> HTTP 200, alice role=0
+  [4] triple with the SAME replayed cookie -> 200 / 200 / 200
+
+──── A. restore the VICTIM — FIXED (:8091) ────
+  [1] simulate a search that demoted the victim: -> HTTP 200, alice role=1
+  [2] alice logs in fresh, tries the guarded source -> HTTP 403   (the dead end today)
+  [3] superadmin PROMOTES alice back -> HTTP 200, alice role=0
+  [4] triple with the SAME replayed cookie -> 200 / 200 / 403
+
+──── B. restore the OPERATOR — VULNERABLE (:8090) ────
+  corrupted state: alice=1 superadmin=1 pyload=0
+  [reproduce] victim=pyload operator=alice -> 200/401/200   (real logs: 200/401/200, 40/40)
+  [rescue] surviving admin 'pyload' PROMOTES operator alice -> HTTP 200, alice role=0
+  [triple] -> 200 / 200 / 200   (pyload role now 1)
+
+──── B. restore the OPERATOR — FIXED (:8091) ────
+  corrupted state: alice=1 superadmin=1 pyload=0
+  [reproduce] victim=pyload operator=alice -> 200/401/200   (real logs: 200/401/200, 40/40)
+  [rescue] surviving admin 'pyload' PROMOTES operator alice -> HTTP 200, alice role=0
+  [triple] -> 200 / 200 / 403   (pyload role now 1)
+
+──── C. add_user, and the ceiling ────
+  add_user role=0 -> HTTP 200   db role=0
+  the new account's guarded source -> HTTP 200
+  every admin demoted: alice=1 pyload=1 superadmin=1
+  fresh login then try to promote -> HTTP 401   <- the ceiling
+  (reseeded)

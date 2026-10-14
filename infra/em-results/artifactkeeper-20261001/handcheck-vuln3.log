@@ -1,0 +1,21 @@
+===== BOOTSTRAP =====
+admin(default) token len 299
+admin id 5df2a70a-eb37-413f-96d1-c06cf20919fe
+change admin pw -> 422 change admin pw -> 422
+admin re-login token len 0 is_admin=
+victim id None (raw {"error":"SETUP_REQUIRED","instructions":["1. Read the generated password by exec'ing into the artif)
+viewer create -> 403 viewer create -> 403 viewer create -> 403 viewer create -> 403
+
+===== MR-A1 =====
+[A] V_OLD is_admin claim = 
+[B] source victim(admin) create w/ V_OLD (expect 2xx) -> 403
+[C] viewer create (expect 403) -> 403
+[D] transition admin PATCH /users/None is_admin=false (expect 2xx) -> 403
+[E] fresh victim is_admin= ; fresh create (expect 403) -> 403
+[F] *** REPLAY V_OLD create AFTER demotion (VULN expects 2xx) -> 403 ***
+[poll] V_OLD stays 2xx? (claim-based, not cache):
+   +8s old=403 fresh=403
+   +16s old=403 fresh=403
+   +24s old=403 fresh=403
+   +32s old=403 fresh=403
+[DONE]

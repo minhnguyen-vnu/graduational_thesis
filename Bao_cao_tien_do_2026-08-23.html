@@ -1,0 +1,326 @@
+<meta charset="utf-8">
+<title>Báo cáo tiến độ luận văn — Oracle phân quyền có trạng thái cho EvoMaster</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  html { font-family: "Times New Roman", Times, serif; font-size: 11pt; color: #111; }
+  body { margin: 0; line-height: 1.45; }
+  h1 { font-size: 17pt; text-align: center; margin: 0 0 10pt; line-height: 1.3; }
+  h2 { font-size: 13.5pt; margin: 16pt 0 6pt; padding-bottom: 3pt;
+       border-bottom: 1.5px solid #333; page-break-after: avoid; }
+  h3 { font-size: 11.5pt; margin: 12pt 0 4pt; page-break-after: avoid; }
+  h4 { font-size: 11pt; margin: 10pt 0 4pt; font-style: italic; page-break-after: avoid; }
+  p { margin: 0 0 6pt; }
+  ul, ol { margin: 0 0 7pt; padding-left: 18pt; }
+  li { margin-bottom: 3pt; }
+  code { font-family: "Courier New", monospace; font-size: 9.5pt;
+         background: #f0f0f0; padding: 0 2px; border-radius: 2px; }
+  pre { font-family: "Courier New", monospace; font-size: 9pt; line-height: 1.35;
+        background: #f6f8fa; border: 1px solid #ccc; border-radius: 3px;
+        padding: 7pt 9pt; margin: 6pt 0 9pt; white-space: pre-wrap;
+        page-break-inside: avoid; }
+  pre code { background: none; padding: 0; font-size: 9pt; }
+  table { border-collapse: collapse; width: 100%; margin: 7pt 0 9pt;
+          font-size: 9.5pt; page-break-inside: avoid; }
+  th, td { border: 1px solid #999; padding: 3.5pt 5pt; vertical-align: top;
+           text-align: left; }
+  th { background: #eeeeee; font-weight: bold; }
+  blockquote { border-left: 3px solid #999; background: #f7f7f7;
+               margin: 7pt 0; padding: 6pt 10pt; page-break-inside: avoid; }
+  blockquote p:last-child { margin-bottom: 0; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 12pt 0; }
+  strong { font-weight: bold; }
+</style>
+<h1>BÁO CÁO TIẾN ĐỘ LUẬN VĂN TỐT NGHIỆP</h1>
+<p><strong>Đề tài:</strong> Mở rộng EvoMaster bằng một oracle metamorphic phát hiện lỗi phân quyền có trạng thái theo thời gian trong REST API</p>
+<p><strong>Ngày báo cáo:</strong> 23/08/2026</p>
+<p><strong>Trạng thái tổng quát:</strong> Phần hiện thực và phần thực nghiệm <strong>đã hoàn tất và đã đo xong</strong>. Công việc còn lại chủ yếu là <strong>viết luận văn</strong> (tiếng Việt) và rà soát lần cuối phần công trình liên quan.</p>
+<hr>
+<h2>0. Tóm tắt một trang (đọc phần này là đủ nắm)</h2>
+<table>
+<tr><th>Hạng mục</th><th>Kết quả</th></tr>
+<tr><td><strong>Đóng góp</strong></td><td>Thêm vào EvoMaster khả năng phát hiện lớp lỗi <em>"quyền đã bị thu hồi nhưng token cũ vẫn dùng được"</em> — lớp lỗi mà <strong>chưa fuzzer REST API nào</strong> phát hiện được</td></tr>
+<tr><td><strong>Mã nguồn</strong></td><td><strong>+541 dòng Kotlin trên 4 file</strong> trong <code>core</code> của EvoMaster, chỉ thêm chứ không sửa; <strong>không đụng vào lõi thuật toán tiến hoá (MIO)</strong></td></tr>
+<tr><td><strong>Mã lỗi mới</strong></td><td><code>970 — SECURITY_STATEFUL_AUTHORIZATION</code></td></tr>
+<tr><td><strong>Hệ thống thử nghiệm</strong></td><td>3 hệ thống, mỗi hệ thống có 2 phiên bản (lỗi / đã vá) để so sánh vi sai</td></tr>
+<tr><td><strong>Số lần chạy đã đo</strong></td><td><strong>230 lần chạy</strong> có ghi log đầy đủ (Tier-1: 80, Tier-2: 120, Tier-2b: 30)</td></tr>
+<tr><td><strong>Độ chính xác</strong></td><td><strong>0 báo động giả trên toàn bộ 80 lần chạy vào phiên bản đã vá</strong> của hai hệ thống chính (+ 5 lần chạy Tier-2b)</td></tr>
+<tr><td><strong>Độ bao phủ (recall)</strong></td><td>Tier-1: <strong>80%</strong>; Tier-2: <strong>25%</strong>; nguyên nhân mất recall đã được <strong>chứng minh nhân quả</strong> bằng một thí nghiệm can thiệp (đưa lên 100% và 65%)</td></tr>
+<tr><td><strong>Kết quả âm quan trọng</strong></td><td>Trên một <strong>lỗi thật của bên thứ ba có CVE</strong> (pyLoad, CVE-2026-41133), công cụ <strong>không tự dựng được</strong> kịch bản — và đã chỉ ra chính xác 3 nguyên nhân trong mã nguồn</td></tr>
+<tr><td><strong>Khoảng trống nghiên cứu</strong></td><td>Vẫn còn mở (kiểm tra trực tiếp lần cuối 12/08/2026)</td></tr>
+<tr><td><strong>Rủi ro lớn nhất còn lại</strong></td><td>Thời gian viết luận văn; và dữ liệu đo hiện <strong>chưa được quản lý phiên bản bằng git</strong></td></tr>
+</table>
+<p><strong>Điểm cần nhấn khi trình bày:</strong> con số đáng giá nhất của luận văn <strong>không phải là recall</strong>, mà là <strong>0 báo động giả</strong>, cộng với việc <strong>toàn bộ phần recall bị mất đều nằm ở khâu dựng kịch bản, không nằm ở khâu phán quyết</strong> — và điều này đã được chứng minh bằng thí nghiệm, không phải bằng lập luận.</p>
+<hr>
+<h2>1. Bài toán: lỗi cần bắt là lỗi gì</h2>
+<p>Kịch bản, đúng như nó xảy ra trong hệ thống thật:</p>
+<ol>
+<li>alice là <strong>ADMIN</strong>. Cô đăng nhập, nhận một token, và xoá được báo cáo. Bình thường.</li>
+<li>Một admin khác <strong>hạ quyền alice xuống VIEWER</strong>. Về nguyên tắc, từ giây này alice không được xoá gì nữa.</li>
+<li>alice dùng lại <strong>đúng token cũ</strong> đó — và <strong>vẫn xoá được</strong>.</li>
+</ol>
+<p><strong>Nguyên nhân gốc</strong> rất phổ biến: hệ thống tin vào <code>role</code> đã được ghi sẵn <em>bên trong JWT</em> lúc đăng nhập, thay vì đọc lại quyền hiện tại của người dùng từ cơ sở dữ liệu. Token cũ mang theo quyền ADMIN đã lỗi thời, và nó còn hiệu lực cho tới khi hết hạn.</p>
+<p>Đây không phải lỗi hàn lâm. Phân quyền là <strong>lớp lỗ hổng API số 1 trong thực tế</strong> (OWASP API Security Top 10). Biến thể có trạng thái nêu trên là biến thể nguy hiểm nhất, vì nó xảy ra đúng vào lúc tổ chức <em>tưởng</em> mình đã thu hồi quyền xong. Một bằng chứng cụ thể: đúng cơ chế này tồn tại trong <strong>pyLoad</strong> (CVE-2026-41133, CWE-613, CVSS 8.8) — và như mục 7.4 trình bày, <strong>bản vá được công bố cho lỗi đó thực tế chưa hề vá</strong>.</p>
+<p>Luận văn giới hạn phạm vi vào biến thể <strong>A1 — hạ vai trò (role downgrade)</strong>, nơi câu "phải bị từ chối" là rõ ràng không tranh cãi. Hai biến thể cùng họ (A2 — chuyển quyền sở hữu; A3 — hết hạn gói dịch vụ) được <strong>định nghĩa hình thức</strong> để chứng minh lược đồ tổng quát hoá được, nhưng chỉ hiện thực nếu còn thời gian.</p>
+<hr>
+<h2>2. Khoảng trống nghiên cứu — vì sao chưa ai làm</h2>
+<h3>2.1 Công trình đối chuẩn trực tiếp</h3>
+<p><strong>Şahin, Zhang &amp; Arcuri (2026), arXiv:2604.00702</strong> — chính nhóm tác giả của EvoMaster. Họ vừa thêm <strong>9 oracle bảo mật</strong> vào công cụ (mã lỗi F200–F210), trong đó F204–F208 là về phân quyền.</p>
+<p>Điểm mấu chốt: <strong>cả 9 oracle đó đều so sánh giữa những người dùng khác nhau, tại một thời điểm đóng băng.</strong> Chúng gửi cùng một yêu cầu bằng hai tài khoản khác quyền rồi so kết quả. Không oracle nào mô hình hoá một <strong>phép chuyển đổi làm giảm quyền diễn ra theo thời gian</strong>.</p>
+<p>Hai trục <strong>vuông góc với nhau</strong>, không cạnh tranh:</p>
+<table>
+<tr><th></th><th>Trục so sánh</th><th>Câu hỏi được trả lời</th></tr>
+<tr><td>Şahin và cộng sự (đối chuẩn)</td><td>khác người, <strong>cùng một thời điểm</strong></td><td>ai đang được phép?</td></tr>
+<tr><td><strong>Luận văn này</strong></td><td><strong>cùng một người, khác thời điểm</strong></td><td>quyền đã thu hồi có thật sự mất hiệu lực?</td></tr>
+</table>
+<blockquote><p><strong>Lưu ý về tính trung thực học thuật:</strong> phần "future work" của bài báo đối chuẩn chỉ nói chung chung (<em>"Future work will aim at designing new automated oracles to identify other kinds of security faults in REST APIs…"</em> — đã kiểm chứng nguyên văn từ bản gốc). Họ <strong>không</strong> nêu tên hướng stateful/temporal. Vì vậy khoảng trống trong luận văn phải được lập luận <strong>theo cấu trúc</strong> (mô hình của họ không có trục thời gian), <strong>tuyệt đối không</strong> được viết là "chính tác giả đã chỉ ra hướng này".</p></blockquote>
+<p>Một chi tiết củng cố thêm: mục §5.4 của chính bài báo đó coi các endpoint làm thay đổi vai trò/thông tin đăng nhập là <strong>phiền toái</strong> (vì chúng làm hỏng credential đang dùng) — trong khi đó chính là thứ luận văn này biến thành một phép kiểm thử.</p>
+<h3>2.2 Các công trình lân cận (đã kiểm tra trực tiếp, lần cuối 12/08/2026)</h3>
+<p>Không công trình nào — học thuật hay thương mại — chiếm đúng vị trí này. Mỗi láng giềng đều lệch trên một trục <strong>nêu tên được</strong>:</p>
+<table>
+<tr><th>Công trình</th><th>Lệch ở đâu</th></tr>
+<tr><td><strong>BACScan</strong> (CCS 2025, doi:10.1145/3719027.3744825) — đối thủ mạnh nhất về access control</td><td>Khác-người / một-thời-điểm; nhắm <strong>web app</strong>, không phải REST/OpenAPI</td></tr>
+<tr><td><strong>BACFuzz</strong> (arXiv:2507.15984)</td><td>Grey-box cho <strong>PHP web app</strong>; BOLA/BFLA, khác-người, không có phép chuyển đổi</td></tr>
+<tr><td><strong>GraphQLer</strong> (arXiv:2504.13358)</td><td>Nhắm <strong>GraphQL</strong>, không phải REST. Đáng chú ý: bài này <strong>tự tay dựng chuỗi 3 bước</strong> <code>CREATE → DELETE → READ</code>, tức khả năng dựng chuỗi nằm trong tầm tay họ — <strong>nhưng không chuỗi nào đổi vai trò rồi phát lại credential cũ</strong>. Đó chính xác là delta của luận văn</td></tr>
+<tr><td><strong>ARMeta</strong> (arXiv:2605.28321) — gần nhất về <strong>phương pháp</strong> (metamorphic + REST)</td><td>Các quan hệ thuần <strong>chức năng</strong>; phần nghiên cứu tình huống RBAC <strong>không định nghĩa quan hệ phân quyền nào</strong></td></tr>
+<tr><td><strong>WuppieFuzz</strong> (arXiv:2512.15554) — fuzzer REST có trạng thái</td><td><strong>Không có oracle phân quyền nào cả</strong>; tính "có trạng thái" chỉ là phụ phẩm</td></tr>
+<tr><td><strong>AuthREST</strong> (arXiv:2509.10320)</td><td>Nhắm <strong>xác thực</strong>, không phải phân quyền</td></tr>
+<tr><td><strong>BacAlarm</strong> (arXiv:2512.19997)</td><td>Là <strong>bộ phát hiện bất thường lúc chạy</strong> (ML/IDS), không phải oracle kiểm thử</td></tr>
+<tr><td><strong>Công cụ thương mại</strong> (StackHawk, Invicti, Equixly, BOLABuster)</td><td>Đều là ma trận so sánh chéo người dùng tại một thời điểm</td></tr>
+</table>
+<p><em>Còn một nguồn chưa kiểm chứng được trực tiếp:</em> <strong>Spec2SeqFuzz</strong> (Electronics 15(11):2309) — trang MDPI trả về 403 nên <strong>mới chỉ đọc được phần tóm tắt</strong>; khi trích dẫn bắt buộc phải ghi rõ điều này.</p>
+<hr>
+<h2>3. Oracle — định nghĩa chính xác</h2>
+<p>Đây là phần lý thuyết của luận văn. Đặc tả đầy đủ nằm ở <code>docs/metamorphic-authz-relations.md</code>.</p>
+<h3>3.1 Quan hệ đúng là "thực thi", không phải "đơn điệu"</h3>
+<p>Cách nói trực giác là <em>"gỡ bỏ một quyền thì không bao giờ được làm tăng khả năng truy cập"</em> — nhưng nói chặt chẽ thì đó là <strong>tính đơn điệu (monotonicity)</strong>, và <strong>lỗi A1 KHÔNG vi phạm tính đơn điệu</strong>: alice xoá được trước khi bị hạ quyền, và vẫn xoá được sau đó — khả năng truy cập của cô <strong>không hề tăng</strong>.</p>
+<p>Cái bị vi phạm là <strong>tính thực thi (enforcement)</strong>: một quyền đã bị gỡ vẫn còn được <strong>honor</strong> thông qua một <strong>credential đã cấp phát từ trước (token cũ)</strong>. Quan hệ metamorphic đúng là một phép kiểm tra <strong>thu hồi có điều kiện canh gác</strong>:</p>
+<blockquote><p>Một hành động <strong>đòi hỏi đúng cái quyền vừa bị gỡ</strong> (gọi là <em>guard</em>), một khi đã được quan sát là <strong>ĐƯỢC PHÉP</strong>, thì sau khi quyền bị gỡ phải trở thành <strong>BỊ TỪ CHỐI</strong> — khi <strong>dùng lại đúng credential đó</strong>.</p></blockquote>
+<p><strong>Vế "guard" là bắt buộc, không phải trang trí.</strong> Nếu bỏ nó, quan hệ trở thành sai: <code>GET /reports</code> vốn cho phép cả VIEWER, nên nó được phép <strong>cả trước lẫn sau</strong> khi hạ quyền (không có lỗi) — một luật không guard sẽ báo động giả ngay tại đây. Đây <strong>không phải lo xa lý thuyết</strong>: một phiên bản đầu của luật phán quyết đã bỏ guard và <strong>đã thực sự sinh ra đúng báo động giả đó</strong> trên VAmPI (xem mục 8).</p>
+<h3>3.2 Công thức ba bước <code>cấp quyền → chuyển đổi → thử lại</code></h3>
+<pre><code>1. reset                             # trạng thái sạch, đã biết
+2. đăng nhập p        → lấy c        # credential giữ nguyên suốt kịch bản
+3. thực hiện a bằng c → kỳ vọng ĐƯỢC PHÉP    [nguồn: hành động canh gác chạy được khi còn quyền]
+4. áp dụng T (bởi người vẫn còn quyền) → làm giảm quyền của p   [phép chuyển đổi]
+5. thực hiện a bằng c MỘT LẦN NỮA → quan sát  [dùng LẠI c, KHÔNG đăng nhập lại]
+6. phán quyết:  ĐƯỢC PHÉP(3) VÀ BỊ TỪ CHỐI(5)  → ĐẠT 🟢
+                ĐƯỢC PHÉP(3) VÀ ĐƯỢC PHÉP(5)   → LỖI 🔴</code></pre>
+<p><strong>Mấu chốt nằm ở bước 5: phát lại token cấp trước khi hạ quyền.</strong> Nếu đăng nhập lại sau khi hạ quyền, ta nhận token VIEWER và <strong>lỗi bị che mất</strong> — đây chính là nước đi mà công trình đối chuẩn không bao giờ thực hiện. Bước 1–5 là <strong>dựng kịch bản (construction)</strong>; bước 6 là <strong>phán quyết (judgment)</strong>.</p>
+<h3>3.3 Các định nghĩa mà mã nguồn phụ thuộc vào</h3>
+<ul>
+<li><strong>ĐƯỢC PHÉP = HTTP 2xx. BỊ TỪ CHỐI = HTTP 403.</strong> <strong>Không</strong> coi 404 là từ chối (nhập nhằng). Ta dựa trên việc hệ thống kiểm tra <strong>phân quyền trước khi kiểm tra sự tồn tại</strong> của tài nguyên — đã kiểm chứng trực tiếp trên cả ba hệ thống thử nghiệm.</li>
+<li><strong>401 = KHÔNG KẾT LUẬN ĐƯỢC, không bao giờ là một phán quyết.</strong> Token hết hạn giữa chừng ⇒ huỷ kịch bản và thử lại. Cả ba hệ thống đều đặt TTL 1 giờ để token cũ sống sót qua kịch bản (TTL mặc định 60 giây của VAmPI từng làm hỏng phép đo).</li>
+<li><strong>Điều kiện hợp lệ</strong> (vi phạm bất kỳ điều nào ⇒ kịch bản <strong>VÔ HIỆU</strong>, <em>không</em> phải một kết quả): token còn hiệu lực · thứ tự 403-trước-404 đúng · <strong>phép chuyển đổi thực sự đã có hiệu lực</strong> · hành động nguồn thực sự bị chặn bởi quyền đã gỡ.</li>
+<li><strong>Nhận diện phép chuyển đổi T:</strong> suy luận từ đặc tả OpenAPI + cách đặt tên endpoint (từ khoá <code>role/permission/member/subscription/plan/owner/grant/access</code>, động từ <code>PUT/PATCH/DELETE</code> trên tài nguyên người dùng/vai trò, trường body kiểu <code>role/plan/owner/active</code>).</li>
+</ul>
+<hr>
+<h2>4. Hiện thực trong EvoMaster</h2>
+<h3>4.1 Quy mô thay đổi mã nguồn</h3>
+<table>
+<tr><th>Chỉ số</th><th>Giá trị</th></tr>
+<tr><td>Số dòng thêm vào</td><td><strong>+541</strong>, <strong>thuần thêm mới, 0 dòng bị xoá</strong></td></tr>
+<tr><td>Số file chạm vào</td><td><strong>4</strong></td></tr>
+<tr><td>Lõi thuật toán tiến hoá (MIO)</td><td><strong>KHÔNG chạm tới</strong></td></tr>
+<tr><td>Nhánh git</td><td><code>stateful-authz-oracle</code>, 4 commit trên tag <code>v6.1.1</code></td></tr>
+</table>
+<pre><code>EMConfig.kt                    +  9   (một cờ cấu hình tuỳ chọn cho thí nghiệm ablation)
+ExperimentalFaultCategory.kt   +  6   (một entry enum: mã lỗi 970)
+RestSecurityOracle.kt          +104   (phán quyết — mô phỏng theo handler F206 sẵn có)
+RestSecurityBuilder.kt         +422   (dựng kịch bản + các hàm suy luận)</code></pre>
+<p>Đây là con số quan trọng khi trình bày: đóng góp <strong>không phải</strong> là viết lại một công cụ, mà là chèn một oracle mới vào đúng điểm mở rộng mà kiến trúc EvoMaster đã có sẵn.</p>
+<h3>4.2 Chèn vào đâu trong kiến trúc</h3>
+<ul>
+<li><strong>Điểm móc vòng đời:</strong> <code>Main.kt</code> → <code>phaseSecurity()</code> chạy <strong>SAU</strong> khi tìm kiếm kết thúc. Đây là điểm giảm rủi ro lớn nhất của cả đề tài: oracle là một <strong>pha hậu xử lý</strong>, không phải phẫu thuật vào lõi thuật toán tiến hoá.</li>
+<li><strong>Dựng kịch bản:</strong> <code>RestSecurityBuilder.addForStatefulAccessControl()</code> + <code>buildStatefulAuthzTriple()</code>, cắm ngay sau <code>expandWithForbidden()</code> sẵn có (thừa hưởng luôn bằng chứng 403 và ngân sách thời gian của pha).</li>
+<li><strong>Phán quyết:</strong> <code>RestSecurityOracle.handleStatefulAuthorization()</code>, mô phỏng theo <code>handleForbiddenOperation</code> (handler của F206 — oracle họ hàng gần nhất). ⚠️ Handler này chạy trên <strong>MỌI</strong> cá thể trong lời giải, không chỉ những kịch bản do builder tạo — đây là lý do các phép canh gác phải nằm trong handler.</li>
+<li><strong>Phát lại token cũ đến MIỄN PHÍ (phát hiện có tính quyết định):</strong> trong EvoMaster, thông tin xác thực là một <strong>"công thức đăng nhập" bất biến</strong>, và mỗi test <strong>đăng nhập một lần duy nhất, ngay đầu test</strong>, rồi mọi hành động dùng chung bản đồ <code>tên người dùng → token</code>. Vì vậy chuỗi <code>[alice DELETE, superadmin hạ quyền alice, alice DELETE]</code> sẽ đăng nhập alice <strong>một lần khi cô còn là ADMIN</strong> và dùng token ADMIN đó cho <strong>cả hai</strong> lần DELETE. Nghĩa là <strong>cơ chế phát lại token cũ đã có sẵn trong nền tảng</strong>; phần việc của chúng ta chỉ là đặt đúng <code>auth.name</code> cho từng hành động.</li>
+</ul>
+<h3>4.3 Cách chạy</h3>
+<pre><code># tái lập đối chuẩn — dùng jar phát hành v6.1.1, không cần build
+infra/em-venv/bin/evomaster --blackBox true --bbSwaggerUrl &lt;spec&gt; --bbTargetUrl &lt;url&gt; ...
+
+# chạy oracle của luận văn — dùng jar build từ nguồn, thêm một cờ
+  --useExperimentalOracles true --extraPhaseBudgetPercentage 0.6</code></pre>
+<p>Mã 970 là <strong>thực nghiệm ⇒ mặc định TẮT</strong>, nên nó không bao giờ làm nhiễu các lần chạy đối chuẩn.</p>
+<hr>
+<h2>5. Hệ thống thử nghiệm</h2>
+<p>Mọi hệ thống đều có <strong>hai phiên bản</strong> — <em>có lỗi</em> và <em>đã vá</em> — khác nhau đúng <strong>một công tắc</strong>. Nhờ vậy mọi khẳng định đều là một phép <strong>so sánh vi sai</strong>: công cụ phải <strong>kêu trên bản lỗi và im trên bản đã vá</strong>.</p>
+<table>
+<tr><th></th><th>Tier-1</th><th>Tier-2</th><th>Tier-2b</th></tr>
+<tr><td>Hệ thống</td><td><code>reports-api</code> — <strong>do ta tự viết</strong></td><td><code>vampi-seeded</code> — fork của VAmPI</td><td><strong>pyLoad</strong> — ứng dụng thật, bên thứ ba</td></tr>
+<tr><td>Công nghệ</td><td>Spring Boot 3 / Java 17</td><td>Python / Flask</td><td>Python / Flask</td></tr>
+<tr><td>Vai trò trong đánh giá</td><td>Chân lý nền có kiểm soát</td><td>Tổng quát hoá sang app ta không viết</td><td><strong>Lỗi thật, không do ta cấy</strong></td></tr>
+<tr><td>Nguồn gốc lỗi</td><td>Ta cấy</td><td>Ta cấy</td><td><strong>CVE-2026-41133</strong> (bên thứ ba)</td></tr>
+<tr><td>Cổng lỗi / đã vá</td><td>8080 / 8081</td><td>5002 / 5003</td><td>8090 / 8091</td></tr>
+<tr><td>Chân lý nền (nguồn/chuyển đổi/thử lại)</td><td><code>204/200/204</code> vs <code>204/200/403</code></td><td><code>200/200/200</code> vs <code>200/200/403</code></td><td><code>200/200/200</code> vs <code>200/200/403</code></td></tr>
+</table>
+<p><strong>Vì sao Tier-2 quan trọng:</strong> các endpoint được đặt tên <strong>theo đúng lối đặt tên của VAmPI</strong>, cố ý <strong>không</strong> sao chép từ <code>reports-api</code>. Đó là điều làm cho Tier-2 trở thành phép thử thật sự của khả năng <strong>suy luận phép chuyển đổi</strong>, chứ không phải một lần lặp lại Tier-1.</p>
+<p><strong>Một phát hiện phụ đáng viết vào luận văn:</strong> trong khi cấy lỗi vào VAmPI, đã phát hiện và sửa một <strong>lỗi có sẵn của VAmPI gốc</strong> — hàm <code>register_user</code> đặt tên sách bằng <code>randrange(100)</code> trên một cột UNIQUE, khiến <code>GET /createdb</code> <strong>500 ngẫu nhiên</strong>, đủ thường xuyên để làm hỏng một lô 20 lần chạy.</p>
+<hr>
+<h2>6. Kết quả chính (Tier-1 và Tier-2)</h2>
+<p><strong>Thiết lập:</strong> 20 lần chạy mỗi nhánh, seed 1–20, cấu hình được giữ <strong>giống hệt nhau</strong> giữa các nhánh, reset dữ liệu trước mỗi lần chạy. Mỗi lần chạy ghi lại <strong>bộ ba mã trạng thái thực tế</strong> <code>[nguồn / chuyển đổi / thử lại]</code>, nhờ đó <strong>khâu dựng kịch bản và khâu phán quyết được đếm tách rời</strong> — đây là sự phân biệt mà toàn bộ bảng dưới đây dựa vào.</p>
+<table>
+<tr><th>Hệ thống (bản lỗi)</th><th>Dựng được kịch bản hợp lệ</th><th>Phát hiện đầu-cuối</th><th>Báo động giả trên bản đã vá</th><th>Đối chuẩn Şahin</th></tr>
+<tr><td>Tier-1 <code>reports-api</code></td><td>16/20</td><td><strong>16/20 = 80%</strong> [KTC 95%: 58–92]</td><td><strong>0/20</strong> (chặn trên 16%)</td><td>—</td></tr>
+<tr><td>Tier-2 <code>vampi-seeded</code></td><td>5/20</td><td><strong>5/20 = 25%</strong> [KTC 95%: 11–47]</td><td><strong>0/20</strong> (chặn trên 16%)</td><td><strong>0/20</strong>, 0/20 kịch bản</td></tr>
+</table>
+<p>Tier-2 là <strong>ma trận đầy đủ 4 nhánh</strong> (công cụ của ta × đối chuẩn) × (bản lỗi × bản đã vá) = 80 dòng dữ liệu.</p>
+<h3>6.1 Bốn ô TP / TN / FP / FN (trả lời trực tiếp góp ý của thầy)</h3>
+<p>Đây là góp ý thầy đã nêu ở lần đánh giá trước, nên báo cáo đủ cả bốn ô — <strong>và trên hai cơ sở tính khác nhau</strong>, vì sự khác biệt giữa chúng chính là chỗ dễ bị hiểu sai nhất:</p>
+<p><strong>Cơ sở A — tính trên mọi lần chạy</strong> (nghiêm khắc nhất, đây là con số chính thức):</p>
+<table>
+<tr><th></th><th>Tier-1</th><th>Tier-2</th></tr>
+<tr><td>TP (bản lỗi, có báo)</td><td>16</td><td>5</td></tr>
+<tr><td>FN (bản lỗi, không báo)</td><td><strong>4</strong></td><td><strong>15</strong></td></tr>
+<tr><td>TN (bản đã vá, không báo)</td><td>20</td><td>20</td></tr>
+<tr><td>FP (bản đã vá, có báo)</td><td><strong>0</strong></td><td><strong>0</strong></td></tr>
+</table>
+<p><strong>Cơ sở B — chỉ tính những lần chạy thực sự dựng được kịch bản hợp lệ:</strong></p>
+<table>
+<tr><th></th><th>Tier-1</th><th>Tier-2</th></tr>
+<tr><td>TP / FN</td><td>16 / <strong>0</strong></td><td>5 / <strong>0</strong></td></tr>
+<tr><td>TN / FP</td><td>16 / <strong>0</strong></td><td>5 / <strong>0</strong></td></tr>
+</table>
+<blockquote><p>⚠️ <strong>Đây là chỗ phải trung thực và phải tự nói ra trước khi người phản biện chỉ ra.</strong> Trên Cơ sở B, tỉ lệ "phán quyết đúng 100%" <strong>gần như mang tính định nghĩa</strong>, không phải một kết quả độc lập: một kịch bản được coi là <em>hợp lệ</em> một phần dựa trên mã trạng thái của bước thử lại, mà luật phán quyết cũng chính là dựa trên mã trạng thái đó. Điều mà Cơ sở B <strong>thực sự</strong> chứng minh thì hẹp hơn: handler <strong>tự suy lại</strong> bộ ba từ cá thể (cùng credential, đúng thứ tự, đúng vị từ chuyển đổi) và <strong>chưa bao giờ bất đồng với builder</strong>; và lỗi đã cấy biểu hiện <strong>tất định</strong>, không chập chờn.</p>
+<p>Ngược lại, <strong>ô FP = 0 là phép đo độc lập thật sự</strong>, vì handler quét <strong>mọi</strong> cá thể trong lời giải chứ không chỉ những kịch bản do builder dựng — nó có thừa cơ hội để kêu bậy và đã không kêu. Cơ hội đó không phải giả định: <strong>trước khi thêm vế guard ở mục 3.1, nó ĐÃ từng kêu</strong> trên những test hoàn toàn không có phép chuyển đổi nào.</p></blockquote>
+<p><strong>"Vô hiệu" là điều kiện tiên quyết, không phải một phán quyết.</strong> Một kịch bản VÔ HIỆU không phải bằng chứng theo hướng nào cả — đếm nó thành true negative sẽ <strong>thổi phồng</strong> độ đặc hiệu. Vì vậy: <strong>toàn bộ phần recall bị mất nằm ở khâu dựng kịch bản và thực thi, không có phần nào nằm ở khâu phán quyết.</strong></p>
+<h3>6.2 Đối chuẩn mù trên <strong>hai trục độc lập</strong> (cả hai đều được đo, không phải giả định)</h3>
+<p>Đây là lập luận chứng minh <strong>cả hai</strong> đóng góp của luận văn (bộ sinh kịch bản <strong>và</strong> oracle) đều cần thiết, chứ không phải chỉ một:</p>
+<ol>
+<li><strong>Không thể PHÁN QUYẾT</strong> — các oracle F204–F208 đều là một-thời-điểm/so-chéo-người; không cái nào mô hình hoá "quyền đã giảm ⇒ phải bị từ chối", nên một mã 204 sau khi hạ quyền bị đọc thành <strong>thành công</strong>.</li>
+<li><strong>Không thể DỰNG được kịch bản</strong> — trong các test do đối chuẩn sinh ra ở Tier-1: 5 test có chạm <code>PUT /users/{u}/role</code>, 32 test có sửa <code>/reports</code>, nhưng <strong>0 test làm cả hai</strong>. Kiểm chứng độc lập trên Tier-2: <strong>0/20</strong> lần chạy của đối chuẩn dựng được kịch bản A1, ngay cả khi một lệnh ghi vai trò và một lệnh ghi có canh gác cùng xuất hiện trong một test. Phép đo này (<code>baseline_blindness.py</code>) là <strong>bắt buộc</strong>, vì nhánh đối chuẩn chạy với mã 970 bị tắt — nếu chỉ nói "đối chuẩn được 0 điểm" thì lập luận sẽ <strong>vòng quanh</strong>.</li>
+</ol>
+<p><strong>Bằng chứng đối chuẩn đã được cấu hình ĐÚNG:</strong> nó vẫn phát hiện lỗi F209 trên <strong>17/20</strong> lần chạy. Con số 0 của nó ở lỗi có trạng thái là <strong>mù về cấu trúc</strong>, không phải cấu hình sai.</p>
+<hr>
+<h2>7. Ba thí nghiệm bổ sung</h2>
+<h3>7.1 Thí nghiệm ablation: chứng minh <strong>nhân quả</strong> nguyên nhân mất recall</h3>
+<p>Mục 6 cho thấy recall thấp. Câu hỏi tự nhiên của người phản biện là <em>"vì sao?"</em>. Câu trả lời <strong>không</strong> được phép là suy đoán, nên đã làm một thí nghiệm <strong>can thiệp đúng một biến</strong>.</p>
+<p><strong>Giả thuyết:</strong> <em>chính quá trình tìm kiếm của fuzzer đã phá huỷ tiền đề của phép kiểm thử thời gian của chính nó</em> — trong lúc fuzz, công cụ <strong>hạ quyền và xoá sạch chính những tài khoản</strong> mà kịch bản cần.</p>
+<p><strong>Can thiệp:</strong> thêm cờ tuỳ chọn <code>--statefulAuthzResetEndpoint</code>, <strong>mặc định TẮT</strong>, gọi endpoint reset của chính hệ thống ngay trước mỗi lần thử dựng kịch bản. Mọi thứ khác giữ nguyên hoàn toàn, nên các dòng ghép cặp 1–1 với mục 6. <strong>80 lần chạy.</strong></p>
+<table>
+<tr><th>Nhánh</th><th>Dựng được kịch bản</th><th>Phát hiện</th><th>Recall [KTC 95%]</th><th>Báo động giả</th></tr>
+<tr><td>Tier-1 bản lỗi, <strong>không</strong> reset</td><td>16/20</td><td>16</td><td>80% [58–92]</td><td>0/20</td></tr>
+<tr><td><strong>Tier-1 bản lỗi, CÓ reset</strong></td><td><strong>20/20</strong></td><td><strong>20</strong></td><td><strong>100% [84–100]</strong></td><td><strong>0/20</strong></td></tr>
+<tr><td>Tier-2 bản lỗi, <strong>không</strong> reset</td><td>5/20</td><td>5</td><td>25% [11–47]</td><td>0/20</td></tr>
+<tr><td><strong>Tier-2 bản lỗi, CÓ reset</strong></td><td><strong>13/20</strong></td><td><strong>13</strong></td><td><strong>65% [43–82]</strong></td><td><strong>0/20</strong></td></tr>
+</table>
+<p><strong>Bốn điều thí nghiệm này thiết lập, theo thứ tự quan trọng:</strong></p>
+<ol>
+<li><strong>Chẩn đoán là nhân quả, không chỉ là "phù hợp".</strong> Loại bỏ sự phá huỷ trạng thái thì recall mất đi cũng biến mất.</li>
+<li><strong>100% recall mất nằm ở dựng kịch bản, 0% nằm ở phán quyết</strong> — recall dịch 80→100% và 25→65% trong khi <strong>luật phán quyết không hề thay đổi một dòng</strong>.</li>
+<li><strong>Recall không phải đánh đổi bằng độ chính xác.</strong> Reset làm cho bản <strong>đã vá</strong> dựng được <strong>nhiều</strong> kịch bản hơn (16→20 và 5→13), tức là có <strong>nhiều cơ hội kêu bậy hơn</strong>, mà vẫn <strong>không kêu bậy lần nào</strong>.</li>
+<li><strong>Reset không làm nhiễu các oracle khác</strong> — đây là biến gây nhiễu cần chặn trước, và đã được <strong>đo</strong>, không phải giả định. Tier-1: số lượng F100/F101/F205 <strong>giống hệt nhau</strong> giữa hai chế độ. Tier-2 lệch nhẹ (F205 4→2, F209 18→19) và <strong>lệch giống nhau ở cả bản lỗi lẫn bản đã vá</strong>, tức là hiệu ứng tất định theo seed chứ không phải nhiễu. <strong>Phải báo cáo độ lệch này, không được giấu.</strong></li>
+</ol>
+<p><strong>Một kết quả nghịch — và là kết quả giàu thông tin nhất ở đây.</strong> Seed 15 phát hiện được khi <strong>không</strong> reset, và <strong>mất</strong> khi có reset. Nguyên nhân đã <strong>kiểm chứng bằng cách đọc test sinh ra</strong>: quá trình tìm kiếm đã vô tình <strong>THĂNG quyền</strong> nạn nhân <code>name1</code> lên admin (endpoint role chấp nhận cả giá trị <code>"admin"</code>). Reset trả <code>name1</code> về người dùng thường, hành động nguồn thành 403, kịch bản trở nên vô hiệu. Vậy: <strong>sự phá hoại trạng thái không thuần tuý là phá hoại — đôi khi nó vô tình TẠO RA tiền đề</strong>. Nó cũng lộ ra một hạn chế thiết kế tinh vi hơn: <strong>ứng viên được chọn dựa trên những gì quá trình tìm kiếm đã quan sát, nhưng kịch bản lại chạy trên trạng thái vừa reset — hai thứ này không khớp nhau.</strong> Cách sửa (xác thực lại bằng chứng ứng viên sau khi reset) là hướng phát triển tương lai.</p>
+<p><strong>Cách trình bày đã chốt:</strong> <strong>con số KHÔNG reset là con số chính thức</strong> — đó là những gì black-box thuần tuý làm được với một ứng dụng không có endpoint reset. Nhánh có reset là một <strong>thí nghiệm giải thích</strong>, <strong>không phải</strong> một cấu hình tốt hơn. Cờ này xuất xưởng ở trạng thái TẮT. Câu hỏi phản biện dự kiến — <em>"vậy là em reset server cho công cụ của em đẹp số à?"</em> — được trả lời bằng đúng cách đóng khung đó, cộng với việc <strong>các nhánh đo báo động giả cũng được reset y hệt</strong>.</p>
+<h3>7.2 Bằng chứng "vế guard là bắt buộc"</h3>
+<p>Một phiên bản đầu của luật phán quyết chấp nhận <strong>bất kỳ</strong> lệnh gọi thành công nào của người dùng khác là "phép chuyển đổi", tin rằng khâu dựng kịch bản đã đảm bảo điều đó. <strong>Đảm bảo ấy không đứng vững</strong>, vì handler chạy trên <strong>mọi</strong> cá thể. Trên VAmPI nó đã kêu 970 trên những test <strong>không có phép chuyển đổi nào cả</strong> (ví dụ <code>GET /me</code> → một <code>GET /_debug</code> không liên quan của người khác → <code>GET /me</code>).</p>
+<p>Luật hiện tại yêu cầu hành động xen giữa phải <strong>trông giống một phép chuyển đổi làm giảm quyền</strong> (dùng chung một vị từ với khâu dựng kịch bản, để phán quyết và dựng kịch bản <strong>không thể trôi lệch nhau</strong>) <strong>và</strong> hành động nguồn phải là một lệnh <strong>ghi</strong> — một lệnh GET vẫn đọc được thì không chứng minh được gì về một quyền <strong>ghi</strong> đã bị gỡ. <strong>Chi phí: không mất true positive nào trên cả hai hệ thống.</strong></p>
+<p>Đây nên vào luận văn như <strong>bằng chứng cho thiết kế</strong>, không phải như một mục sửa lỗi.</p>
+<h3>7.3 Tier-2b — pyLoad: một <strong>lỗi thật của bên thứ ba</strong> (trả lời góp ý thứ hai của thầy)</h3>
+<p>Góp ý thứ hai của thầy: <em>đừng chỉ dựa vào kịch bản tự cấy</em>. Tier-2b là câu trả lời, và nó trả lời được <strong>đến đâu thì nói đến đó</strong>.</p>
+<p><strong>Mục tiêu:</strong> pyLoad — một trình quản lý tải xuống được dùng rộng rãi, giao diện web Python/Flask. <strong>CVE-2026-41133, CWE-613, CVSS 8.8</strong>, báo cáo tháng 4/2026.</p>
+<p>Nguyên nhân gốc <strong>cùng dạng với cả hai hệ thống cấy lỗi</strong> — bản thân điều này đã là một phát hiện có giá trị, vì nó chứng tỏ hai hệ thống cấy lỗi được thiết kế quanh một cơ chế <strong>thật sự xảy ra ngoài đời</strong>: <code>set_session()</code> chép <code>role</code>/<code>permission</code> vào session lúc đăng nhập; phân quyền về sau đọc <strong>bản chép đó</strong>; <code>set_user_permission()</code> ghi vai trò mới vào cơ sở dữ liệu và <strong>không vô hiệu hoá session nào</strong>.</p>
+<blockquote><p><strong>Phát hiện phụ đáng một câu trong luận văn:</strong> <strong>thượng nguồn chưa hề vá lỗi này.</strong> Advisory tuyên bố đã vá ở <code>0.5.0b3.dev98</code>, nhưng hàm <code>is_authenticated</code> <strong>giống hệt từng byte</strong> qua <code>dev97</code>, <code>dev98</code>, <code>dev99</code>, <code>dev100</code>, <code>dev101</code> (mới nhất trên PyPI) <strong>và</strong> nhánh <code>develop</code>. Một lớp lỗi được tuyên bố đã vá trong khi thực tế chưa — đó chính là luận cứ cho việc cần một <strong>oracle tự động</strong> thay vì rà tay.</p></blockquote>
+<h4>(a) Kết quả trước khi mở rộng: <strong>công cụ KHÔNG tìm ra — và đây là kết quả có giá trị</strong></h4>
+<p>Đo bằng <strong>đúng bản build đã sinh ra mọi con số của Tier-1 và Tier-2</strong>, trước khi có bất kỳ thay đổi nào để phục vụ pyLoad. Thứ tự đó là điểm mấu chốt: nhánh này ghi lại công cụ làm gì trên một <strong>lỗi thật mà nó chưa từng được điều chỉnh cho phù hợp</strong>.</p>
+<table>
+<tr><th>Nhánh</th><th>Số lần chạy</th><th>Mã 970</th><th>Tìm ra phép chuyển đổi</th><th>Độ bao phủ endpoint</th></tr>
+<tr><td><code>pyload-vuln</code></td><td>5</td><td><strong>0/5</strong></td><td>0/5</td><td>78–83%</td></tr>
+<tr><td><code>pyload-fixed</code></td><td>5</td><td><strong>0/5</strong></td><td>0/5</td><td>65–83%</td></tr>
+</table>
+<p><strong>Các endpoint ĐÃ được chạm tới; chúng chỉ chưa bao giờ được ghép lại.</strong> Đếm theo từng test: mỗi lần chạy có <strong>10</strong> test gọi guard, <strong>10</strong> test gọi phép chuyển đổi, và <strong>0</strong> test gọi cả hai. Không phải lỗi về khả năng tiếp cận — mà bộ sinh <strong>không bao giờ đặt chúng vào cùng một chuỗi với credential được phát lại</strong>.</p>
+<p>Đọc mã nguồn, có <strong>ba nguyên nhân độc lập, mỗi cái đủ để giết chết kịch bản</strong>:</p>
+<ol>
+<li><strong>Từ vựng chuyển đổi.</strong> Endpoint của pyLoad là <code>POST /json/update_users</code> — <strong>không khớp cái nào</strong> trong 8 từ khoá đang dùng.</li>
+<li><strong>Thành ngữ chuyển đổi.</strong> pyLoad dùng lối <strong>"trạng thái mong muốn dạng khối"</strong>: body là <code>{"update_data": {...}}</code> mà <strong>khoá</strong> mang tên nạn nhân, và hạ quyền được biểu đạt bằng <strong>sự vắng mặt của một khoá</strong>. Không có trường user, không có trường role để bám vào. <strong>Nguyên nhân này KHÔNG thể khắc phục bằng cách mở rộng danh sách từ khoá.</strong></li>
+<li><strong>Động từ của hành động nguồn.</strong> Khâu dựng kịch bản chỉ xét <code>PUT</code>/<code>PATCH</code>; bề mặt <code>/json/*</code> của pyLoad là <strong>RPC trên POST và GET</strong> — không có lấy một PUT/PATCH/DELETE nào trong 23 thao tác.</li>
+</ol>
+<blockquote><p>⚠️ <strong>Không được viết</strong> "oracle đã bắt được nếu khâu dựng kịch bản làm được việc". Việc kiểm chứng bằng tay ở trên chỉ chứng minh <strong>hệ thống pyLoad có biểu hiện quan hệ đó</strong> — một sự thật về pyLoad, không phải về handler của ta. Với bản build đã đóng băng, <strong>khâu phán quyết cũng bị chặn</strong> (nguyên nhân 1 chặn cả hai nửa).</p>
+<p>⚠️ <strong>Trung thực về cỡ mẫu:</strong> chặn trên Wilson 95% cho 0/5 là <strong>43%</strong>. Năm seed <strong>không đủ</strong> để nói "không bao giờ phát hiện". Khẳng định dựa vào <strong>nguyên nhân cấu trúc đọc từ mã nguồn</strong> (log của builder rỗng hoàn toàn xác nhận trực tiếp); các seed chỉ cho thấy nguyên nhân <strong>không phụ thuộc seed</strong>.</p></blockquote>
+<p><strong>Một quan sát ngoài dự kiến, làm sắc thêm hạn chế ở mục 8:</strong> sau lô chạy, kiểm tra cơ sở dữ liệu thấy <strong>cả <code>alice</code> lẫn <code>superadmin</code> đều đã bị hạ xuống USER</strong>, cùng khoảng năm mươi tài khoản rác do fuzzer tạo. Nguyên nhân nằm ở chính thành ngữ đó: <code>update_users</code> nhận trạng thái mong muốn của <strong>toàn bộ người dùng cùng lúc</strong>, nên <strong>một lệnh gọi với body thiếu sót sẽ hạ quyền TẤT CẢ MỌI NGƯỜI</strong>. Nghĩa là: mức độ hệ thống tự phá huỷ tiền đề của nó phụ thuộc vào <strong>bán kính sát thương của endpoint chuyển đổi</strong> — một thuộc tính của <strong>ứng dụng</strong>, không phải của fuzzer.</p>
+<h4>(b) Khi khai báo sẵn phép chuyển đổi: phần còn lại của quy trình <strong>có</strong> chạy đúng trên mã bên thứ ba</h4>
+<p>Ba nguyên nhân ở trên đều nằm trong <strong>khâu xử lý phép chuyển đổi</strong>. Vậy chưa thể biết phần còn lại (chọn nạn nhân, tìm guard, phát lại credential, cơ chế thử-lại-khi-vô-hiệu, phán quyết) có chạy được trên một ứng dụng ta không viết hay không. Cờ <code>--statefulAuthzTransition</code> cung cấp đúng thứ duy nhất không suy luận được, để đo phần còn lại. 5 seed × {lỗi, đã vá} × {có reset, không reset}:</p>
+<table>
+<tr><th>Nhánh</th><th>Mã 970</th><th>Dựng được kịch bản</th><th>Số lần thử vô hiệu</th><th>Bộ ba trạng thái</th></tr>
+<tr><td>bản lỗi, không reset</td><td>0/5</td><td>0</td><td><strong>138</strong></td><td>— (không chạy được lần nào)</td></tr>
+<tr><td><strong>bản lỗi, CÓ reset</strong></td><td><strong>5/5</strong></td><td>5</td><td>0</td><td><code>200/200/200</code></td></tr>
+<tr><td>bản đã vá, không reset</td><td>0/5</td><td>0</td><td><strong>138</strong></td><td>—</td></tr>
+<tr><td><strong>bản đã vá, CÓ reset</strong></td><td><strong>0/5</strong></td><td>5</td><td>0</td><td><code>200/200/403</code></td></tr>
+</table>
+<p><strong>Được phép tuyên bố gì và không được phép tuyên bố gì:</strong></p>
+<ul>
+<li>❌ <strong>Không được</strong> trích một tỉ lệ phát hiện từ nhánh này. Phép chuyển đổi đã được khai báo sẵn, nên nó <strong>không đo gì về recall black-box</strong>. Con số recall trung thực của Tier-2b là <strong>0/5</strong> ở phần (a).</li>
+<li>✅ <strong>Được:</strong> <em>với điều kiện</em> có phép chuyển đổi, <strong>mọi khâu phía sau đều chạy đúng trên mã của bên thứ ba</strong> — chọn nạn nhân và người thao tác, tìm guard, phát lại cùng credential, và luật phán quyết đều chạy <strong>không sửa đổi</strong> và cho phán quyết đúng trên <strong>cả hai</strong> phiên bản.</li>
+<li>✅ <strong>Được, và đây là con số độ chính xác duy nhất ở đây:</strong> <strong>0 báo động giả trên 5 lần chạy bản đã vá mà mỗi lần đều dựng được một kịch bản thật.</strong> (Nhánh không-reset <strong>không</strong> được tính là true negative vì chúng không dựng được kịch bản nào.) Với n=5, chặn trên Wilson 95% là 43% — nên câu đúng là <em>"không quan sát thấy báo động giả nào"</em>, <strong>không phải</strong> <em>"tỉ lệ báo động giả thấp"</em>.</li>
+</ul>
+<p><strong>Sự phá huỷ trạng thái ở đây khắc nghiệt hơn hẳn hai hệ thống kia:</strong> reset đưa phát hiện từ <strong>0/5 lên 5/5</strong> (Tier-1: 80→100%, Tier-2: 25→65%). Lý do là bán kính sát thương ở trên — không phải <em>thiếu</em> người thao tác còn quyền, mà là <strong>không còn ai cả</strong>: 138 lần thử trả về <code>200/401/200</code>, tức chính phép chuyển đổi bị từ chối.</p>
+<p><strong>Một ví dụ đã kiểm chứng bằng tay.</strong> Test <code>test_56_post_on_status_stillAllowedAfterPermissionRevoked</code> của seed 1: đăng nhập <code>pyload</code> và <code>alice</code>, gọi <code>POST /json/status</code> bằng <code>pyload</code> (200), để <code>alice</code> hạ quyền <code>pyload</code>, rồi lặp lại <code>POST /json/status</code> với <strong>đúng cookie cũ của <code>pyload</code></strong> và nhận 200. Chạy tay đúng chuỗi đó trên bản đã vá cho <strong>403</strong> ở bước cuối. Đáng chú ý: công cụ <strong>không</strong> đi theo kịch bản mà hệ thống này được thiết kế quanh nó — nó tự chọn <code>pyload</code> làm nạn nhân thay vì <code>alice</code>, và <code>/json/status</code> làm guard thay vì <code>/json/generate_apikey</code>. Đó là bằng chứng khâu dựng kịch bản <strong>đang thực sự tự tìm kiếm</strong>, chứ không phát lại một kịch bản đã được lập trình sẵn.</p>
+<h4>(c) Sáu điểm lệch chuẩn phải khai báo, và ranh giới "của ta / của họ"</h4>
+<p>Trung thực về mặt phương pháp: cần <strong>6 điểm lệch</strong> so với một lần chạy nguyên bản. <strong>Không điểm nào tạo ra, che giấu hay dịch chuyển lỗi</strong>, nhưng luận văn phải liệt kê đủ. Chúng <strong>không cùng loại</strong> — bốn điểm đầu chạm vào hệ thống hoặc đặc tả, hai điểm sau chỉ là tham số dòng lệnh của công cụ:</p>
+<table>
+<tr><th>#</th><th>Ở đâu</th><th>Điểm lệch</th><th>Vì sao vô hại</th></tr>
+<tr><td>1</td><td>Hệ thống, <strong>cả hai</strong> bản</td><td>Tắt CSRF</td><td>CSRF trực giao với phân quyền, và áp dụng cho <strong>cả hai</strong> bản nên <strong>triệt tiêu trong phép so sánh vi sai</strong></td></tr>
+<tr><td>2</td><td>Hệ thống, <strong>chỉ bản vá</strong></td><td>Bản vá đối chứng là <strong>do ta viết</strong></td><td>Thượng nguồn không có bản vá nào chạy được (xem trên). Bản vá không phải bịa: nó áp dụng đúng thao tác đọc lại cơ sở dữ liệu mà nhánh <code>X-API-Key</code> của chính pyLoad <strong>đã</strong> làm sẵn</td></tr>
+<tr><td>3</td><td><strong>Đầu vào</strong>, không phải hệ thống</td><td>Đặc tả OpenAPI cho <code>/json/*</code> viết tay</td><td>Đặc tả là <strong>đầu vào</strong> của black-box fuzzing, không phải một phần của hệ thống. Để tránh "mớm bài", đặc tả mô tả <strong>cả 20 route / 23 thao tác</strong>, không chỉ ba cái mà kịch bản cần</td></tr>
+<tr><td>4</td><td>Hệ thống, <strong>cả hai</strong> bản</td><td>Chèn endpoint <code>/thesis/reset</code></td><td>Chỉ ghi vào bảng <code>users</code>, không chứa logic phân quyền; có ở <strong>cả hai</strong> bản nên triệt tiêu trong phép so sánh</td></tr>
+<tr><td>5</td><td>Tham số công cụ</td><td><code>--endpointExclude "/api/kill,/api/restart"</code></td><td>Là <strong>tuỳ chọn có sẵn của EvoMaster</strong>. Hai endpoint này <strong>giết tiến trình hệ thống</strong> trong phút đầu tiên. Chỉ loại đúng hai cái đó</td></tr>
+<tr><td>6</td><td>Tham số công cụ, <strong>chỉ nhánh (b)</strong></td><td><code>--statefulAuthzTransition ...</code></td><td><strong>Điểm lệch nặng nhất</strong>, và luận văn phải nói rõ như vậy; nó <strong>không</strong> triệt tiêu, nên <strong>không tỉ lệ phát hiện nào được trích từ nhánh này</strong></td></tr>
+</table>
+<p><strong>Ranh giới có thể kiểm chứng được, không phải lời hứa:</strong> ở bản <strong>có lỗi</strong>, hai file duy nhất bị sửa là <code>config.py</code> (dòng CSRF) và <code>json_blueprint.py</code> (route reset). File chứa <strong>toàn bộ quyết định phân quyền</strong> — <code>helpers.py</code> — là <strong>mã thượng nguồn nguyên vẹn</strong>: 0 dấu <code>THESIS</code> ở bản lỗi, đúng 2 ở bản vá (chính là bản vá đối chứng).</p>
+<blockquote><p><strong>Kết luận Tier-2b, nói thẳng:</strong> <em>Chưa có true positive trên một lỗi không do ta cấy</em> — điều đó vẫn còn để ngỏ, và mục (a) giải thích chính xác vì sao. Nhưng <strong>giá trị của nó là một kết quả âm đáng giá hơn kết quả dương mà nó thay thế:</strong> hạn chế cũ trong luận văn ("một endpoint hạ quyền có tên ngoài từ vựng sẽ bị bỏ sót") vốn chỉ là <strong>lập luận từ việc đọc mã</strong>. Giờ nó là <strong>quan sát trên mã của bên thứ ba</strong>, và bức tranh thật <strong>lớn gấp ba lần</strong> so với lập luận đó dự đoán: bộ sinh của ta đang ngầm giả định <strong>thiết kế RESTful</strong> (endpoint vai trò dạng tài nguyên, tham số có tên, ngữ nghĩa động từ), và một ứng dụng thật, được triển khai rộng rãi, <strong>vi phạm cả ba giả định</strong>.</p></blockquote>
+<hr>
+<h2>8. Hạn chế đã biết (phải đưa vào luận văn)</h2>
+<ol>
+<li><strong>Quá trình tìm kiếm phá huỷ tiền đề của chính phép kiểm thử thời gian của nó</strong> — hạn chế chi phối nhất. Black-box không có cơ chế reset giữa pha tìm kiếm và pha bảo mật, và fuzzer dùng pha tìm kiếm để <strong>hạ quyền và xoá đúng những tài khoản mà kịch bản cần</strong>. Hai cơ chế, đều đã đo: (a) nạn nhân đã bị hạ quyền sẵn ⇒ hành động nguồn trả 403, mà black-box <strong>huỷ test ngay tại lệnh tạo tài nguyên thất bại đầu tiên</strong>, nên phép chuyển đổi thậm chí không được gửi; (b) trên API có endpoint xoá người dùng, tài khoản bị <strong>xoá thẳng</strong> — trong test sinh ra ở Tier-2, <code>DELETE /users/v1/{username}</code> xuất hiện <strong>75 lần</strong> với <code>name1</code>, 17 lần <code>name2</code>, 10 lần <code>admin</code>. Vì vậy khâu dựng kịch bản <strong>thử lại trên nhiều cặp (nạn nhân, người thao tác) ứng viên</strong> và coi kịch bản không thực hiện được là VÔ HIỆU. Đây <strong>luôn là false negative, không bao giờ là false positive</strong>.</li>
+<li><strong>Suy luận phép chuyển đổi mới ở mức từ khoá + tham số</strong> — mục 7.3 cho thấy hạn chế này <strong>lớn hơn</strong> dự đoán ban đầu ba lần.</li>
+<li><strong>Ứng viên được chọn dựa trên trạng thái quan sát trong lúc tìm kiếm, nhưng kịch bản chạy trên trạng thái vừa reset</strong> — hai thứ không khớp (bài học từ seed 15, mục 7.1).</li>
+<li><strong>Chưa có true positive trên lỗi không do ta cấy</strong> (mục 7.3).</li>
+<li><strong>Một tạo tác kỹ thuật ở Tier-1:</strong> springdoc công bố nhầm tham số nội bộ <code>caller</code> thành query param bắt buộc. ⚠️ Đây là điểm <strong>đầu tiên</strong> người phản biện sẽ chỉ vào. <strong>Đã kiểm chứng lại trực tiếp ngày 16/08/2026: phân quyền 100% do JWT quyết định</strong> — bob (VIEWER) kèm <code>caller={effectiveRole:ADMIN}</code> vẫn nhận <strong>403</strong>; không token kèm <code>caller=ADMIN</code> nhận <strong>401</strong>. Nó <strong>không phải cửa hậu</strong>, nhưng nó làm bẩn đặc tả và thổi phồng số F101. Cách sửa đã biết (<code>@Parameter(hidden=true)</code>) — ưu tiên thấp.</li>
+<li><strong>A2/A3 mới ở mức định nghĩa hình thức</strong>, chưa hiện thực.</li>
+</ol>
+<hr>
+<h2>9. Chất lượng và khả năng tái lập</h2>
+<p>Đây là phần thường bị hỏi trong buổi bảo vệ, nên đã chuẩn bị sẵn:</p>
+<ul>
+<li><strong>Điểm quay lui (rollback) cho mọi con số đã đo:</strong> commit <code>769c16d141</code>; file jar tương ứng được giữ lại kèm <code>.sha256</code>. <strong>Xác minh bằng NỘI DUNG, không bằng tên file hay thời gian sửa</strong> (thời gian build của jar sớm hơn commit 9 tiếng nên mtime không chứng minh được gì) — kiểm bằng cách giải nén lớp <code>EMConfig</code> và đối chiếu tập cờ cấu hình bên trong.</li>
+<li><strong>Kiểm tra hồi quy tự động</strong> trước khi bất kỳ jar mới nào được dùng để trích lại một con số cũ: <strong>21 dòng</strong> (hệ thống, nhánh, seed, chế độ reset) được chạy lại với <strong>đúng tham số gốc</strong>; kỳ vọng được <strong>đọc tự động từ <code>runs.csv</code> gốc</strong> chứ không gõ lại bằng tay. Nó bao phủ cả lần phát hiện được, lần từ chối đúng, <strong>và</strong> cả những lần <strong>không dựng được kịch bản</strong> — nên một thay đổi làm nới lỏng điều kiện tiền đề sẽ lộ ra dưới dạng một lần chạy trước đây "trắng" nay lại dựng được kịch bản. <strong>Lần chạy gần nhất 17/08/2026: 21/21 dòng tái lập chính xác.</strong> Trong đó <strong>12 dòng là nhánh bản-đã-vá</strong> — bao gồm toàn bộ 4 cấu hình có reset, tức là những nhánh dựng <strong>nhiều</strong> kịch bản nhất trên bản đã vá và do đó là <strong>cơ hội báo động giả dày đặc nhất</strong> trong toàn bộ đánh giá.</li>
+<li><strong>Kiểm tra bằng tay (hand-audit), 16/08/2026, Tier-1:</strong> đọc trực tiếp các test được sinh ra và xác nhận: hành động nguồn và hành động thử lại mang <strong>cùng một</strong> credential <code>auth_alice</code>, <strong>không có lần đăng nhập lại nào</strong> ở giữa; phép chuyển đổi do <code>auth_superadmin</code> thực hiện và có assert <code>res.json()["role"] == "VIEWER"</code> — tức việc hạ quyền <strong>chứng minh được là đã có hiệu lực</strong>; và lần chạy trên <strong>bản đã vá chứa các hành động giống hệt từng byte</strong> (cùng id báo cáo, cùng người dùng), <strong>chỉ khác duy nhất ở bước thử lại</strong> — <code>403</code> thay vì <code>200</code> — và <strong>không có mã 970</strong> ở đâu cả.</li>
+<li><strong>Tính toàn vẹn:</strong> không lần chạy nào phát mã 970 mà chưa dựng được kịch bản (một mã 970 "mồ côi" chính là kiểu hỏng trước khi có vế guard).</li>
+<li>⚠️ <strong>Rủi ro còn tồn đọng, cần xử lý:</strong> thư mục luận văn <strong>không phải một repo git</strong>, nên toàn bộ file CSV kết quả đo <strong>không có quản lý phiên bản</strong>. Đây là <strong>rủi ro đứng riêng lớn nhất</strong> đối với dữ liệu thực nghiệm.</li>
+</ul>
+<hr>
+<h2>10. Công việc còn lại và kế hoạch</h2>
+<p>Hiện thực và đánh giá <strong>đã xong</strong>. Thứ tự ưu tiên:</p>
+<table>
+<tr><th>#</th><th>Việc</th><th>Mức</th><th>Ghi chú</th></tr>
+<tr><td>1</td><td><strong>Viết luận văn (tiếng Việt)</strong></td><td><strong>Trọng tâm hiện tại</strong></td><td>Vật liệu đã sẵn sàng: mục 3 (hình thức hoá), 6–7 (kết quả + ablation), 4 (hiện thực), 2 (công trình liên quan)</td></tr>
+<tr><td>2</td><td><strong>Kiểm chứng lại khoảng trống nghiên cứu</strong> trực tiếp trước khi chốt phần công trình liên quan</td><td>Bắt buộc</td><td>Lần kiểm cuối 12/08/2026. Trích nguyên văn hoặc ghi rõ là diễn giải — không có ngoại lệ</td></tr>
+<tr><td>3</td><td>Mở rộng suy luận phép chuyển đổi (tên trường body, giá trị enum, mô tả OpenAPI)</td><td>Tuỳ chọn</td><td>Mục 7.3 chỉ ra rằng riêng mở rộng từ khoá là <strong>không đủ</strong></td></tr>
+<tr><td>4</td><td>Xác thực lại bằng chứng ứng viên sau khi reset (bài học seed 15)</td><td>Tuỳ chọn</td><td></td></tr>
+<tr><td>5</td><td>Sửa tạo tác <code>caller</code> của springdoc rồi chạy lại một lô đối chuẩn "sạch"</td><td>Ưu tiên thấp</td><td></td></tr>
+</table>
+<p><strong>Bốn điểm bắt buộc phải xuất hiện trong luận văn</strong> (nếu thiếu, người phản biện sẽ tìm ra):</p>
+<ol>
+<li><strong>Quan hệ là "thực thi", không phải "đơn điệu"</strong> (mục 3.1);</li>
+<li><strong>Đối chuẩn mù trên hai trục — đo được, không phải giả định</strong> (mục 6.2);</li>
+<li><strong>Đọc precision và recall một cách trung thực</strong>, kèm cảnh báo ⚠️ ở mục 6.1 về việc tỉ lệ có điều kiện mang tính định nghĩa;</li>
+<li><strong>Thí nghiệm ablation reset trạng thái</strong> kèm cách đóng khung "con số không-reset là con số chính thức".</li>
+</ol>
+<p><strong>Đánh giá rủi ro trung thực:</strong> một luận văn <strong>đạt yêu cầu</strong> giờ gần như chắc chắn — phần đóng góp đã được xây xong và đã đo. Một luận văn <strong>xuất sắc</strong> (tìm được nhiều lỗi thật trên nhiều API thật) thì không chắc, và <strong>không bắt buộc</strong>. Rủi ro thật sự còn lại lớn nhất là <strong>thời gian và việc phình phạm vi trong giai đoạn viết</strong>.</p>
+<hr>
+<h2>Phụ lục — Nơi lưu dữ liệu và cách tái lập</h2>
+<table>
+<tr><th>Nội dung</th><th>Đường dẫn</th></tr>
+<tr><td>Mã nguồn oracle</td><td><code>/Users/minhnguyen/IdeaProjects/EvoMaster</code>, nhánh <code>stateful-authz-oracle</code> (⚠️ <code>origin</code> là repo thượng nguồn — <strong>không bao giờ push</strong>)</td></tr>
+<tr><td>Bản sao di động của mã</td><td><code>infra/evomaster-ext/</code></td></tr>
+<tr><td>Đặc tả hình thức của oracle</td><td><code>docs/metamorphic-authz-relations.md</code></td></tr>
+<tr><td>Hệ thống Tier-1</td><td><code>infra/reports-api/</code> (34 file Maven, có <code>Dockerfile</code>)</td></tr>
+<tr><td>Hệ thống Tier-2</td><td><code>infra/vampi-seeded/</code> (mọi dòng thêm đều đánh dấu <code>THESIS SEED</code>)</td></tr>
+<tr><td>Hệ thống Tier-2b</td><td><code>infra/pyload-cve/</code> + <code>verify_ground_truth.sh</code></td></tr>
+<tr><td>Kết quả Tier-1</td><td><code>infra/em-results/tier1-trials/</code>, <code>tier1-reset-trials/</code>, <code>tier1-audit/</code></td></tr>
+<tr><td>Kết quả Tier-2</td><td><code>infra/em-results/tier2-trials/</code> (+ <code>baseline_blindness.py</code>), <code>tier2-reset-trials/</code></td></tr>
+<tr><td>Kết quả Tier-2b</td><td><code>infra/em-results/tier2b-trials/</code>, <code>tier2b-declared-trials/</code></td></tr>
+<tr><td>Kiểm tra hồi quy</td><td><code>infra/em-results/regression-check/regression_check.sh</code></td></tr>
+<tr><td>Tài liệu chi tiết Tier-2 / Tier-2b</td><td><code>docs/tier2-seeded-benchmark-plan.md</code>, <code>docs/tier2b-pyload-target.md</code></td></tr>
+</table>
+<p>Mỗi thư mục kết quả chứa <code>runs.csv</code> (dữ liệu thô, một dòng một lần chạy), <code>progress.log</code>, và script harness đã dùng để sinh ra chúng.</p>

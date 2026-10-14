@@ -1,0 +1,1386 @@
+## S404-N0012  PUT /repositories/{workspace}/{repo_slug}/branch-restrictions/{id}
+desc: Update a branch restriction rule | Updates an existing branch restriction rule. Fields not present in the request body are ignored. See [`POST`](/cloud/bitbucket/rest/api-group-branch-restrictions/#api-repositories-workspace-repo-slug-branch-restrictions-post) for details.
+schema: branchrestriction
+- path:id string
+- path:repo_slug string
+- path:workspace string
+- body:type string
+- body:groups array<object>
+- body:groups[].type string
+- body:groups[].full_slug string
+- body:groups[].links object
+- body:groups[].links.html object
+- body:groups[].links.self object
+- body:groups[].name string
+- body:groups[].owner object
+- body:groups[].owner.type string
+- body:groups[].owner.created_on string
+- body:groups[].owner.display_name string
+- body:groups[].owner.links object
+- body:groups[].owner.username string
+- body:groups[].owner.uuid string
+- body:groups[].slug string
+- body:groups[].workspace object
+- body:groups[].workspace.type string
+- body:groups[].workspace.created_on string
+- body:groups[].workspace.is_private boolean
+- body:groups[].workspace.links object
+- body:groups[].workspace.name string
+- body:groups[].workspace.slug string
+- body:groups[].workspace.updated_on string
+- body:groups[].workspace.uuid string
+- body:users array<object>
+- body:users[].type string
+- body:users[].created_on string
+- body:users[].display_name string
+- body:users[].links object
+- body:users[].links.avatar object
+- body:users[].username string
+- body:users[].uuid string
+
+## S404-N0013  PUT /repositories/{workspace}/{repo_slug}/branching-model/settings
+desc: Update the branching model config for a repository | Update the branching model configuration for a repository. The `development` branch can be configured to a specific branch or to track the main branch. When set to a specific branch it must currently exist. Only the passed properties will be updated. The properties not passed will be left unchanged. A request without a `development` property wil
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0016  POST /repositories/{workspace}/{repo_slug}/commit/{commit}/comments
+desc: Create comment for a commit | Creates new comment on the specified commit. To post a reply to an existing comment, include the `parent.id` field: ``` $ curl https://api.bitbucket.org/2.0/repositories/atlassian/prlinks/commit/db9ba1e031d07a02603eae0e559a7adc010257fc/comments/ \ -X POST -u evzijst \ -H 'Content-Type: application/json' \ -d '{"content": {"raw": "One more thing!"}, "parent": {"id": 57
+schema: commit_comment
+- path:commit string
+- path:repo_slug string
+- path:workspace string
+- body:type string
+- body:content object
+- body:content.html string
+- body:content.markup string enum[markdown|creole|plaintext]
+- body:content.raw string
+- body:created_on string
+- body:deleted boolean
+- body:id integer
+- body:inline object
+- body:inline.from integer
+- body:inline.path string
+- body:inline.to integer
+- body:links object
+- body:links.code object
+- body:links.code.href string
+- body:links.code.name string
+- body:links.html object
+- body:links.html.href string
+- body:links.html.name string
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:parent object
+- body:parent.type string
+- body:parent.content object
+- body:parent.content.html string
+- body:parent.content.markup string enum[markdown|creole|plaintext]
+- body:parent.content.raw string
+- body:parent.created_on string
+- body:parent.deleted boolean
+- body:parent.id integer
+- body:parent.inline object
+- body:parent.inline.from integer
+- body:parent.inline.path string
+- body:parent.inline.to integer
+- body:parent.links object
+- body:parent.links.code object
+- body:parent.links.html object
+- body:parent.links.self object
+- body:parent.parent object
+- body:parent.parent.type string
+- body:parent.parent.content object
+- body:parent.parent.created_on string
+- body:parent.parent.deleted boolean
+- body:parent.parent.id integer
+- body:parent.parent.inline object
+- body:parent.parent.links object
+- body:parent.parent.parent object
+- body:parent.parent.updated_on string
+- body:parent.parent.user object
+- body:parent.updated_on string
+- body:parent.user object
+- body:parent.user.type string
+- body:parent.user.created_on string
+- body:parent.user.display_name string
+- body:parent.user.links object
+- body:parent.user.username string
+- body:parent.user.uuid string
+- body:updated_on string
+- body:user object
+- body:user.type string
+- body:user.created_on string
+- body:user.display_name string
+- body:user.links object
+- body:user.links.avatar object
+- body:user.username string
+- body:user.uuid string
+- body:commit object
+- body:commit.type string
+- body:commit.author object
+- body:commit.author.type string
+- body:commit.author.raw string
+- body:commit.author.user object
+- body:commit.date string
+- body:commit.hash string
+- body:commit.message string
+- body:commit.parents array<object>
+(+38 fields cut)
+
+## S404-N0017  DELETE /repositories/{workspace}/{repo_slug}/commit/{commit}/comments/{comment_id}
+desc: Delete a commit comment | Deletes the specified commit comment. Note that deleting comments that have visible replies that point to them will not really delete the resource. This is to retain the integrity of the original comment tree. Instead, the `deleted` element is set to `true` and the content is blanked out. The comment will continue to be returned by the collections and self endpoints.
+- path:comment_id integer
+- path:commit string
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0018  PUT /repositories/{workspace}/{repo_slug}/commit/{commit}/comments/{comment_id}
+desc: Update a commit comment | Used to update the contents of a comment. Only the content of the comment can be updated. ``` $ curl https://api.bitbucket.org/2.0/repositories/atlassian/prlinks/commit/7f71b5/comments/5728901 \ -X PUT -u evzijst \ -H 'Content-Type: application/json' \ -d '{"content": {"raw": "One more thing!"}' ```
+schema: commit_comment
+- path:comment_id integer
+- path:commit string
+- path:repo_slug string
+- path:workspace string
+- body:type string
+- body:content object
+- body:content.html string
+- body:content.markup string enum[markdown|creole|plaintext]
+- body:content.raw string
+- body:created_on string
+- body:deleted boolean
+- body:id integer
+- body:inline object
+- body:inline.from integer
+- body:inline.path string
+- body:inline.to integer
+- body:links object
+- body:links.code object
+- body:links.code.href string
+- body:links.code.name string
+- body:links.html object
+- body:links.html.href string
+- body:links.html.name string
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:parent object
+- body:parent.type string
+- body:parent.content object
+- body:parent.content.html string
+- body:parent.content.markup string enum[markdown|creole|plaintext]
+- body:parent.content.raw string
+- body:parent.created_on string
+- body:parent.deleted boolean
+- body:parent.id integer
+- body:parent.inline object
+- body:parent.inline.from integer
+- body:parent.inline.path string
+- body:parent.inline.to integer
+- body:parent.links object
+- body:parent.links.code object
+- body:parent.links.html object
+- body:parent.links.self object
+- body:parent.parent object
+- body:parent.parent.type string
+- body:parent.parent.content object
+- body:parent.parent.created_on string
+- body:parent.parent.deleted boolean
+- body:parent.parent.id integer
+- body:parent.parent.inline object
+- body:parent.parent.links object
+- body:parent.parent.parent object
+- body:parent.parent.updated_on string
+- body:parent.parent.user object
+- body:parent.updated_on string
+- body:parent.user object
+- body:parent.user.type string
+- body:parent.user.created_on string
+- body:parent.user.display_name string
+- body:parent.user.links object
+- body:parent.user.username string
+- body:parent.user.uuid string
+- body:updated_on string
+- body:user object
+- body:user.type string
+- body:user.created_on string
+- body:user.display_name string
+- body:user.links object
+- body:user.links.avatar object
+- body:user.username string
+- body:user.uuid string
+- body:commit object
+- body:commit.type string
+- body:commit.author object
+- body:commit.author.type string
+- body:commit.author.raw string
+- body:commit.author.user object
+- body:commit.date string
+- body:commit.hash string
+- body:commit.message string
+(+39 fields cut)
+
+## S404-N0019  DELETE /repositories/{workspace}/{repo_slug}/commit/{commit}/properties/{app_key}/{property_name}
+desc: Delete a commit application property | Delete an [application property](/cloud/bitbucket/application-properties/) value stored against a commit.
+- path:workspace string
+- path:repo_slug string
+- path:commit string
+- path:app_key string
+- path:property_name string
+
+## S404-N0020  PUT /repositories/{workspace}/{repo_slug}/commit/{commit}/properties/{app_key}/{property_name}
+desc: Update a commit application property | Update an [application property](/cloud/bitbucket/application-properties/) value stored against a commit.
+schema: application_property
+- path:workspace string
+- path:repo_slug string
+- path:commit string
+- path:app_key string
+- path:property_name string
+- body:_attributes array<string> enum[public|read_only]
+
+## S404-N0021  DELETE /repositories/{workspace}/{repo_slug}/commit/{commit}/reports/{reportId}
+desc: Delete a report | Deletes a single Report matching the provided ID.
+- path:workspace string
+- path:repo_slug string
+- path:commit string
+- path:reportId string
+
+## S404-N0023  POST /repositories/{workspace}/{repo_slug}/commit/{commit}/reports/{reportId}/annotations
+desc: Bulk create or update annotations | Bulk upload of annotations. Annotations are individual findings that have been identified as part of a report, for example, a line of code that represents a vulnerability. These annotations can be attached to a specific file and even a specific line in that file, however, that is optional. Annotations are not mandatory and a report can contain up to 1000 annotat
+schema: report_annotation
+- path:workspace string
+- path:repo_slug string
+- path:commit string
+- path:reportId string
+- body:type string
+- body:annotation_type string enum[VULNERABILITY|CODE_SMELL|BUG]
+- body:created_on string
+- body:details string
+- body:external_id string
+- body:line integer
+- body:link string
+- body:path string
+- body:result string enum[PASSED|FAILED|SKIPPED|IGNORED]
+- body:severity string enum[CRITICAL|HIGH|MEDIUM|LOW]
+- body:summary string
+- body:updated_on string
+- body:uuid string
+
+## S404-N0024  DELETE /repositories/{workspace}/{repo_slug}/commit/{commit}/reports/{reportId}/annotations/{annotationId}
+desc: Delete an annotation | Deletes a single Annotation matching the provided ID.
+- path:workspace string
+- path:repo_slug string
+- path:commit string
+- path:reportId string
+- path:annotationId string
+
+## S404-N0025  PUT /repositories/{workspace}/{repo_slug}/commit/{commit}/reports/{reportId}/annotations/{annotationId}
+desc: Create or update an annotation | Creates or updates an individual annotation for the specified report. Annotations are individual findings that have been identified as part of a report, for example, a line of code that represents a vulnerability. These annotations can be attached to a specific file and even a specific line in that file, however, that is optional. Annotations are not mandatory and 
+schema: report_annotation
+- path:workspace string
+- path:repo_slug string
+- path:commit string
+- path:reportId string
+- path:annotationId string
+- body:type string
+- body:annotation_type string enum[VULNERABILITY|CODE_SMELL|BUG]
+- body:created_on string
+- body:details string
+- body:external_id string
+- body:line integer
+- body:link string
+- body:path string
+- body:result string enum[PASSED|FAILED|SKIPPED|IGNORED]
+- body:severity string enum[CRITICAL|HIGH|MEDIUM|LOW]
+- body:summary string
+- body:updated_on string
+- body:uuid string
+
+## S404-N0026  POST /repositories/{workspace}/{repo_slug}/commit/{commit}/statuses/build
+desc: Create a build status for a commit | Creates a new build status against the specified commit. If the specified key already exists, the existing status object will be overwritten. Example: ``` curl https://api.bitbucket.org/2.0/repositories/my-workspace/my-repo/commit/e10dae226959c2194f2b07b077c07762d93821cf/statuses/build/ -X POST -u jdoe -H 'Content-Type: application/json' -d '{ "key": "MY-BUILD"
+schema: commitstatus
+- path:commit string
+- path:repo_slug string
+- path:workspace string
+- body:type string
+- body:created_on string
+- body:description string
+- body:key string
+- body:links object
+- body:links.commit object
+- body:links.commit.href string
+- body:links.commit.name string
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:name string
+- body:refname string
+- body:state string enum[INPROGRESS|SUCCESSFUL|STOPPED|FAILED]
+- body:updated_on string
+- body:url string
+- body:uuid string
+
+## S404-N0027  PUT /repositories/{workspace}/{repo_slug}/commit/{commit}/statuses/build/{key}
+desc: Update a build status for a commit | Used to update the current status of a build status object on the specific commit. This operation can also be used to change other properties of the build status: * `state` * `name` * `description` * `url` * `refname` The `key` cannot be changed.
+schema: commitstatus
+- path:commit string
+- path:key string
+- path:repo_slug string
+- path:workspace string
+- body:type string
+- body:created_on string
+- body:description string
+- body:key string
+- body:links object
+- body:links.commit object
+- body:links.commit.href string
+- body:links.commit.name string
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:name string
+- body:refname string
+- body:state string enum[INPROGRESS|SUCCESSFUL|STOPPED|FAILED]
+- body:updated_on string
+- body:url string
+- body:uuid string
+
+## S404-N0028  POST /repositories/{workspace}/{repo_slug}/commits
+desc: List commits with include/exclude | Identical to `GET /repositories/{workspace}/{repo_slug}/commits`, except that POST allows clients to place the include and exclude parameters in the request body to avoid URL length issues. **Note that this resource does NOT support new commit creation.**
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0029  POST /repositories/{workspace}/{repo_slug}/commits/{revision}
+desc: List commits for revision using include/exclude | Identical to `GET /repositories/{workspace}/{repo_slug}/commits/{revision}`, except that POST allows clients to place the include and exclude parameters in the request body to avoid URL length issues. **Note that this resource does NOT support new commit creation.**
+- path:repo_slug string
+- path:revision string
+- path:workspace string
+
+## S404-N0032  POST /repositories/{workspace}/{repo_slug}/deploy-keys
+desc: Add a repository deploy key | Create a new deploy key in a repository. Note: If authenticating a deploy key with an OAuth consumer, any changes to the OAuth consumer will subsequently invalidate the deploy key. Example: ``` $ curl -XPOST \ -H "Authorization <auth header>" \ -H "Content-type: application/json" \ https://api.bitbucket.org/2.0/repositories/mleu/test/deploy-keys -d \ '{ "key": "ssh-rs
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0033  DELETE /repositories/{workspace}/{repo_slug}/deploy-keys/{key_id}
+desc: Delete a repository deploy key | This deletes a deploy key from a repository. Example: ``` $ curl -XDELETE \ -H "Authorization <auth header>" \ https://api.bitbucket.org/2.0/repositories/mleu/test/deploy-keys/1234 ```
+- path:key_id string
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0034  PUT /repositories/{workspace}/{repo_slug}/deploy-keys/{key_id}
+desc: Update a repository deploy key | Create a new deploy key in a repository. The same key needs to be passed in but the comment and label can change. Example: ``` $ curl -XPUT \ -H "Authorization <auth header>" \ -H "Content-type: application/json" \ https://api.bitbucket.org/2.0/repositories/mleu/test/deploy-keys/1234 -d \ '{ "label": "newlabel", "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAK/b1c
+- path:key_id string
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0035  POST /repositories/{workspace}/{repo_slug}/deployments_config/environments/{environment_uuid}/variables
+desc: Create a variable for an environment | Create a deployment environment level variable.
+schema: deployment_variable
+- path:workspace string
+- path:repo_slug string
+- path:environment_uuid string
+- body:type string
+- body:key string
+- body:secured boolean
+- body:uuid string
+- body:value string
+
+## S404-N0036  DELETE /repositories/{workspace}/{repo_slug}/deployments_config/environments/{environment_uuid}/variables/{variable_uuid}
+desc: Delete a variable for an environment | Delete a deployment environment level variable.
+- path:workspace string
+- path:repo_slug string
+- path:environment_uuid string
+- path:variable_uuid string
+
+## S404-N0037  PUT /repositories/{workspace}/{repo_slug}/deployments_config/environments/{environment_uuid}/variables/{variable_uuid}
+desc: Update a variable for an environment | Update a deployment environment level variable.
+schema: deployment_variable
+- path:workspace string
+- path:repo_slug string
+- path:environment_uuid string
+- path:variable_uuid string
+- body:type string
+- body:key string
+- body:secured boolean
+- body:uuid string
+- body:value string
+
+## S404-N0038  POST /repositories/{workspace}/{repo_slug}/downloads
+desc: Upload a download artifact | Upload new download artifacts. To upload files, perform a `multipart/form-data` POST containing one or more `files` fields: $ echo Hello World > hello.txt $ curl -s -u evzijst -X POST https://api.bitbucket.org/2.0/repositories/evzijst/git-tests/downloads -F files=@hello.txt When a file is uploaded with the same name as an existing artifact, then the existing file will 
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0039  DELETE /repositories/{workspace}/{repo_slug}/downloads/{filename}
+desc: Delete a download artifact | Deletes the specified download artifact from the repository.
+- path:filename string
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0041  DELETE /repositories/{workspace}/{repo_slug}/environments/{environment_uuid}
+desc: Delete an environment | Delete an environment
+- path:workspace string
+- path:repo_slug string
+- path:environment_uuid string
+
+## S404-N0042  POST /repositories/{workspace}/{repo_slug}/environments/{environment_uuid}/changes/
+desc: Update an environment | Update an environment
+- path:workspace string
+- path:repo_slug string
+- path:environment_uuid string
+
+## S404-N0043  POST /repositories/{workspace}/{repo_slug}/forks
+desc: Fork a repository | Creates a new fork of the specified repository. #### Forking a repository To create a fork, specify the workspace explicitly as part of the request body: ``` $ curl -X POST -u jdoe https://api.bitbucket.org/2.0/repositories/atlassian/bbql/forks \ -H 'Content-Type: application/json' -d '{ "name": "bbql_fork", "workspace": { "slug": "atlassian" } }' ``` To fork a repository into 
+schema: repository
+- path:repo_slug string
+- path:workspace string
+- body:type string
+- body:created_on string
+- body:description string
+- body:fork_policy string enum[allow_forks|no_public_forks|no_forks]
+- body:full_name string
+- body:has_issues boolean
+- body:has_wiki boolean
+- body:is_private boolean
+- body:language string
+- body:links object
+- body:links.avatar object
+- body:links.avatar.href string
+- body:links.avatar.name string
+- body:links.clone array<object>
+- body:links.clone[].href string
+- body:links.clone[].name string
+- body:links.commits object
+- body:links.commits.href string
+- body:links.commits.name string
+- body:links.downloads object
+- body:links.downloads.href string
+- body:links.downloads.name string
+- body:links.forks object
+- body:links.forks.href string
+- body:links.forks.name string
+- body:links.hooks object
+- body:links.hooks.href string
+- body:links.hooks.name string
+- body:links.html object
+- body:links.html.href string
+- body:links.html.name string
+- body:links.pullrequests object
+- body:links.pullrequests.href string
+- body:links.pullrequests.name string
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:links.watchers object
+- body:links.watchers.href string
+- body:links.watchers.name string
+- body:mainbranch object
+- body:mainbranch.links object
+- body:mainbranch.links.commits object
+- body:mainbranch.links.html object
+- body:mainbranch.links.self object
+- body:mainbranch.name string
+- body:mainbranch.target object
+- body:mainbranch.target.type string
+- body:mainbranch.target.author object
+- body:mainbranch.target.date string
+- body:mainbranch.target.hash string
+- body:mainbranch.target.message string
+- body:mainbranch.target.parents array<object>
+- body:mainbranch.target.summary object
+- body:mainbranch.target.participants array<object>
+- body:mainbranch.target.repository object
+- body:mainbranch.type string
+- body:mainbranch.default_merge_strategy string
+- body:mainbranch.merge_strategies array<string> enum[merge_commit|squash|fast_forward]
+- body:name string
+- body:owner object
+- body:owner.type string
+- body:owner.created_on string
+- body:owner.display_name string
+- body:owner.links object
+- body:owner.links.avatar object
+- body:owner.username string
+- body:owner.uuid string
+- body:parent object
+- body:parent.type string
+- body:parent.created_on string
+- body:parent.description string
+- body:parent.fork_policy string enum[allow_forks|no_public_forks|no_forks]
+- body:parent.full_name string
+- body:parent.has_issues boolean
+- body:parent.has_wiki boolean
+- body:parent.is_private boolean
+- body:parent.language string
+(+86 fields cut)
+
+## S404-N0046  PUT /repositories/{workspace}/{repo_slug}/hooks/{uid}
+desc: Update a webhook for a repository | Updates the specified webhook subscription. The following properties can be mutated: * `description` * `url` * `active` * `events`
+- path:repo_slug string
+- path:uid string
+- path:workspace string
+
+## S404-N0047  POST /repositories/{workspace}/{repo_slug}/issues
+desc: Create an issue | Creates a new issue. This call requires authentication. Private repositories or private issue trackers require the caller to authenticate with an account that has appropriate authorization. The authenticated user is used for the issue's `reporter` field.
+schema: issue
+- path:repo_slug string
+- path:workspace string
+- body:type string
+- body:assignee object
+- body:assignee.type string
+- body:assignee.created_on string
+- body:assignee.display_name string
+- body:assignee.links object
+- body:assignee.links.avatar object
+- body:assignee.username string
+- body:assignee.uuid string
+- body:component object
+- body:component.type string
+- body:component.id integer
+- body:component.links object
+- body:component.links.self object
+- body:component.name string
+- body:content object
+- body:content.html string
+- body:content.markup string enum[markdown|creole|plaintext]
+- body:content.raw string
+- body:created_on string
+- body:edited_on string
+- body:id integer
+- body:kind string enum[bug|enhancement|proposal|task]
+- body:links object
+- body:links.attachments object
+- body:links.attachments.href string
+- body:links.attachments.name string
+- body:links.comments object
+- body:links.comments.href string
+- body:links.comments.name string
+- body:links.html object
+- body:links.html.href string
+- body:links.html.name string
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:links.vote object
+- body:links.vote.href string
+- body:links.vote.name string
+- body:links.watch object
+- body:links.watch.href string
+- body:links.watch.name string
+- body:milestone object
+- body:milestone.type string
+- body:milestone.id integer
+- body:milestone.links object
+- body:milestone.links.self object
+- body:milestone.name string
+- body:priority string enum[trivial|minor|major|critical|blocker]
+- body:reporter object
+- body:reporter.type string
+- body:reporter.created_on string
+- body:reporter.display_name string
+- body:reporter.links object
+- body:reporter.links.avatar object
+- body:reporter.username string
+- body:reporter.uuid string
+- body:repository object
+- body:repository.type string
+- body:repository.created_on string
+- body:repository.description string
+- body:repository.fork_policy string enum[allow_forks|no_public_forks|no_forks]
+- body:repository.full_name string
+- body:repository.has_issues boolean
+- body:repository.has_wiki boolean
+- body:repository.is_private boolean
+- body:repository.language string
+- body:repository.links object
+- body:repository.links.avatar object
+- body:repository.links.clone array<object>
+- body:repository.links.commits object
+- body:repository.links.downloads object
+- body:repository.links.forks object
+- body:repository.links.hooks object
+- body:repository.links.html object
+- body:repository.links.pullrequests object
+- body:repository.links.self object
+- body:repository.links.watchers object
+(+61 fields cut)
+
+## S404-N0049  POST /repositories/{workspace}/{repo_slug}/issues/import
+desc: Import issues | A POST request to this endpoint will import the zip file given by the archive parameter into the repository. All existing issues will be deleted and replaced by the contents of the imported zip file. Imports are done through a multipart/form-data POST. There is one valid and required form field, with the name "archive," which needs to be a file field: ``` $ curl -u <username> -X PO
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0051  PUT /repositories/{workspace}/{repo_slug}/issues/{issue_id}
+desc: Update an issue | Modifies the issue. ``` $ curl https://api.bitbucket.org/2.0/repostories/evzijst/dogslow/issues/123 \ -u evzijst -s -X PUT -H 'Content-Type: application/json' \ -d '{ "title": "Updated title", "assignee": { "account_id": "5d5355e8c6b9320d9ea5b28d" }, "priority": "minor", "version": { "name": "1.0" }, "component": null }' ``` This example changes the `title`, `assignee`, `priority
+- path:issue_id string
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0052  POST /repositories/{workspace}/{repo_slug}/issues/{issue_id}/attachments
+desc: Upload an attachment to an issue | Upload new issue attachments. To upload files, perform a `multipart/form-data` POST containing one or more file fields. When a file is uploaded with the same name as an existing attachment, then the existing file will be replaced.
+- path:issue_id string
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0053  DELETE /repositories/{workspace}/{repo_slug}/issues/{issue_id}/attachments/{path}
+desc: Delete an attachment for an issue | Deletes an attachment.
+- path:issue_id string
+- path:path string
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0055  POST /repositories/{workspace}/{repo_slug}/issues/{issue_id}/comments
+desc: Create a comment on an issue | Creates a new issue comment. ``` $ curl https://api.bitbucket.org/2.0/repositories/atlassian/prlinks/issues/42/comments/ \ -X POST -u evzijst \ -H 'Content-Type: application/json' \ -d '{"content": {"raw": "Lorem ipsum."}}' ```
+schema: issue_comment
+- path:issue_id string
+- path:repo_slug string
+- path:workspace string
+- body:type string
+- body:content object
+- body:content.html string
+- body:content.markup string enum[markdown|creole|plaintext]
+- body:content.raw string
+- body:created_on string
+- body:deleted boolean
+- body:id integer
+- body:inline object
+- body:inline.from integer
+- body:inline.path string
+- body:inline.to integer
+- body:links object
+- body:links.code object
+- body:links.code.href string
+- body:links.code.name string
+- body:links.html object
+- body:links.html.href string
+- body:links.html.name string
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:parent object
+- body:parent.type string
+- body:parent.content object
+- body:parent.content.html string
+- body:parent.content.markup string enum[markdown|creole|plaintext]
+- body:parent.content.raw string
+- body:parent.created_on string
+- body:parent.deleted boolean
+- body:parent.id integer
+- body:parent.inline object
+- body:parent.inline.from integer
+- body:parent.inline.path string
+- body:parent.inline.to integer
+- body:parent.links object
+- body:parent.links.code object
+- body:parent.links.html object
+- body:parent.links.self object
+- body:parent.parent object
+- body:parent.parent.type string
+- body:parent.parent.content object
+- body:parent.parent.created_on string
+- body:parent.parent.deleted boolean
+- body:parent.parent.id integer
+- body:parent.parent.inline object
+- body:parent.parent.links object
+- body:parent.parent.parent object
+- body:parent.parent.updated_on string
+- body:parent.parent.user object
+- body:parent.updated_on string
+- body:parent.user object
+- body:parent.user.type string
+- body:parent.user.created_on string
+- body:parent.user.display_name string
+- body:parent.user.links object
+- body:parent.user.username string
+- body:parent.user.uuid string
+- body:updated_on string
+- body:user object
+- body:user.type string
+- body:user.created_on string
+- body:user.display_name string
+- body:user.links object
+- body:user.links.avatar object
+- body:user.username string
+- body:user.uuid string
+- body:issue object
+- body:issue.type string
+- body:issue.assignee object
+- body:issue.assignee.type string
+- body:issue.assignee.created_on string
+- body:issue.assignee.display_name string
+- body:issue.assignee.links object
+- body:issue.assignee.username string
+- body:issue.assignee.uuid string
+- body:issue.component object
+(+61 fields cut)
+
+## S404-N0057  PUT /repositories/{workspace}/{repo_slug}/issues/{issue_id}/comments/{comment_id}
+desc: Update a comment on an issue | Updates the content of the specified issue comment. Note that only the `content.raw` field can be modified. ``` $ curl https://api.bitbucket.org/2.0/repositories/atlassian/prlinks/issues/42/comments/5728901 \ -X PUT -u evzijst \ -H 'Content-Type: application/json' \ -d '{"content": {"raw": "Lorem ipsum."}' ```
+schema: issue_comment
+- path:comment_id integer
+- path:issue_id string
+- path:repo_slug string
+- path:workspace string
+- body:type string
+- body:content object
+- body:content.html string
+- body:content.markup string enum[markdown|creole|plaintext]
+- body:content.raw string
+- body:created_on string
+- body:deleted boolean
+- body:id integer
+- body:inline object
+- body:inline.from integer
+- body:inline.path string
+- body:inline.to integer
+- body:links object
+- body:links.code object
+- body:links.code.href string
+- body:links.code.name string
+- body:links.html object
+- body:links.html.href string
+- body:links.html.name string
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:parent object
+- body:parent.type string
+- body:parent.content object
+- body:parent.content.html string
+- body:parent.content.markup string enum[markdown|creole|plaintext]
+- body:parent.content.raw string
+- body:parent.created_on string
+- body:parent.deleted boolean
+- body:parent.id integer
+- body:parent.inline object
+- body:parent.inline.from integer
+- body:parent.inline.path string
+- body:parent.inline.to integer
+- body:parent.links object
+- body:parent.links.code object
+- body:parent.links.html object
+- body:parent.links.self object
+- body:parent.parent object
+- body:parent.parent.type string
+- body:parent.parent.content object
+- body:parent.parent.created_on string
+- body:parent.parent.deleted boolean
+- body:parent.parent.id integer
+- body:parent.parent.inline object
+- body:parent.parent.links object
+- body:parent.parent.parent object
+- body:parent.parent.updated_on string
+- body:parent.parent.user object
+- body:parent.updated_on string
+- body:parent.user object
+- body:parent.user.type string
+- body:parent.user.created_on string
+- body:parent.user.display_name string
+- body:parent.user.links object
+- body:parent.user.username string
+- body:parent.user.uuid string
+- body:updated_on string
+- body:user object
+- body:user.type string
+- body:user.created_on string
+- body:user.display_name string
+- body:user.links object
+- body:user.links.avatar object
+- body:user.username string
+- body:user.uuid string
+- body:issue object
+- body:issue.type string
+- body:issue.assignee object
+- body:issue.assignee.type string
+- body:issue.assignee.created_on string
+- body:issue.assignee.display_name string
+- body:issue.assignee.links object
+- body:issue.assignee.username string
+- body:issue.assignee.uuid string
+(+62 fields cut)
+
+## S404-N0058  DELETE /repositories/{workspace}/{repo_slug}/issues/{issue_id}/vote
+desc: Remove vote for an issue | Retract your vote.
+- path:issue_id string
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0059  PUT /repositories/{workspace}/{repo_slug}/issues/{issue_id}/vote
+desc: Vote for an issue | Vote for this issue. To cast your vote, do an empty PUT. The 204 status code indicates that the operation was successful.
+- path:issue_id string
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0061  PUT /repositories/{workspace}/{repo_slug}/issues/{issue_id}/watch
+desc: Watch an issue | Start watching this issue. To start watching this issue, do an empty PUT. The 204 status code indicates that the operation was successful.
+- path:issue_id string
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0062  PUT /repositories/{workspace}/{repo_slug}/override-settings
+desc: Set the inheritance state for repository settings
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0063  DELETE /repositories/{workspace}/{repo_slug}/permissions-config/groups/{group_slug}
+desc: Delete an explicit group permission for a repository | Deletes the repository group permission between the requested repository and group, if one exists. Only users with admin permission for the repository may access this resource. Example: $ curl -X DELETE https://api.bitbucket.org/2.0/repositories/atlassian_tutorial /geordi/permissions-config/groups/developers HTTP/1.1 204
+- path:group_slug string
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0065  DELETE /repositories/{workspace}/{repo_slug}/permissions-config/users/{selected_user_id}
+desc: Delete an explicit user permission for a repository | Deletes the repository user permission between the requested repository and user, if one exists. Only users with admin permission for the repository may access this resource. The only authentication method for this endpoint is via app passwords. ``` $ curl -X DELETE https://api.bitbucket.org/2.0/repositories/atlassian_tutorial/geordi/ permissio
+- path:repo_slug string
+- path:selected_user_id string
+- path:workspace string
+
+## S404-N0066  PUT /repositories/{workspace}/{repo_slug}/permissions-config/users/{selected_user_id}
+desc: Update an explicit user permission for a repository | Updates the explicit user permission for a given user and repository. The selected user must be a member of the workspace, and cannot be the workspace owner. Only users with admin permission for the repository may access this resource. The only authentication method for this endpoint is via app passwords. Permissions can be: * `admin` * `write`
+- path:repo_slug string
+- path:selected_user_id string
+- path:workspace string
+
+## S404-N0068  DELETE /repositories/{workspace}/{repo_slug}/pipelines-config/caches/{cache_uuid}
+desc: Delete a cache | Delete a repository cache.
+- path:workspace string
+- path:repo_slug string
+- path:cache_uuid string
+
+## S404-N0070  POST /repositories/{workspace}/{repo_slug}/pipelines/{pipeline_uuid}/stopPipeline
+desc: Stop a pipeline | Signal the stop of a pipeline and all of its steps that not have completed yet.
+- path:workspace string
+- path:repo_slug string
+- path:pipeline_uuid string
+
+## S404-N0071  PUT /repositories/{workspace}/{repo_slug}/pipelines_config
+desc: Update configuration | Update the pipelines configuration for a repository.
+schema: pipelines_config
+- path:workspace string
+- path:repo_slug string
+- body:type string
+- body:enabled boolean
+- body:repository object
+- body:repository.type string
+- body:repository.created_on string
+- body:repository.description string
+- body:repository.fork_policy string enum[allow_forks|no_public_forks|no_forks]
+- body:repository.full_name string
+- body:repository.has_issues boolean
+- body:repository.has_wiki boolean
+- body:repository.is_private boolean
+- body:repository.language string
+- body:repository.links object
+- body:repository.links.avatar object
+- body:repository.links.clone array<object>
+- body:repository.links.commits object
+- body:repository.links.downloads object
+- body:repository.links.forks object
+- body:repository.links.hooks object
+- body:repository.links.html object
+- body:repository.links.pullrequests object
+- body:repository.links.self object
+- body:repository.links.watchers object
+- body:repository.mainbranch object
+- body:repository.mainbranch.links object
+- body:repository.mainbranch.name string
+- body:repository.mainbranch.target object
+- body:repository.mainbranch.type string
+- body:repository.mainbranch.default_merge_strategy string
+- body:repository.mainbranch.merge_strategies array<string> enum[merge_commit|squash|fast_forward]
+- body:repository.name string
+- body:repository.owner object
+- body:repository.owner.type string
+- body:repository.owner.created_on string
+- body:repository.owner.display_name string
+- body:repository.owner.links object
+- body:repository.owner.username string
+- body:repository.owner.uuid string
+- body:repository.parent object
+- body:repository.parent.type string
+- body:repository.parent.created_on string
+- body:repository.parent.description string
+- body:repository.parent.fork_policy string enum[allow_forks|no_public_forks|no_forks]
+- body:repository.parent.full_name string
+- body:repository.parent.has_issues boolean
+- body:repository.parent.has_wiki boolean
+- body:repository.parent.is_private boolean
+- body:repository.parent.language string
+- body:repository.parent.links object
+- body:repository.parent.mainbranch object
+- body:repository.parent.name string
+- body:repository.parent.owner object
+- body:repository.parent.parent object
+- body:repository.parent.project object
+- body:repository.parent.scm string enum[git]
+- body:repository.parent.size integer
+- body:repository.parent.updated_on string
+- body:repository.parent.uuid string
+- body:repository.project object
+- body:repository.project.type string
+- body:repository.project.created_on string
+- body:repository.project.description string
+- body:repository.project.has_publicly_visible_repos boolean
+- body:repository.project.is_private boolean
+- body:repository.project.key string
+- body:repository.project.links object
+- body:repository.project.name string
+- body:repository.project.owner object
+- body:repository.project.updated_on string
+- body:repository.project.uuid string
+- body:repository.scm string enum[git]
+- body:repository.size integer
+- body:repository.updated_on string
+- body:repository.uuid string
+
+## S404-N0073  POST /repositories/{workspace}/{repo_slug}/pipelines_config/schedules/
+desc: Create a schedule | Create a schedule for the given repository.
+schema: pipeline_schedule
+- path:workspace string
+- path:repo_slug string
+- body:type string
+- body:created_on string
+- body:cron_pattern string
+- body:enabled boolean
+- body:selector object
+- body:selector.type string
+- body:selector.pattern string
+- body:target object
+- body:target.type string
+- body:updated_on string
+- body:uuid string
+
+## S404-N0074  DELETE /repositories/{workspace}/{repo_slug}/pipelines_config/schedules/{schedule_uuid}
+desc: Delete a schedule | Delete a schedule.
+- path:workspace string
+- path:repo_slug string
+- path:schedule_uuid string
+
+## S404-N0075  PUT /repositories/{workspace}/{repo_slug}/pipelines_config/schedules/{schedule_uuid}
+desc: Update a schedule | Update a schedule.
+schema: pipeline_schedule
+- path:workspace string
+- path:repo_slug string
+- path:schedule_uuid string
+- body:type string
+- body:created_on string
+- body:cron_pattern string
+- body:enabled boolean
+- body:selector object
+- body:selector.type string
+- body:selector.pattern string
+- body:target object
+- body:target.type string
+- body:updated_on string
+- body:uuid string
+
+## S404-N0076  DELETE /repositories/{workspace}/{repo_slug}/pipelines_config/ssh/key_pair
+desc: Delete SSH key pair | Delete the repository SSH key pair.
+- path:workspace string
+- path:repo_slug string
+
+## S404-N0078  POST /repositories/{workspace}/{repo_slug}/pipelines_config/ssh/known_hosts/
+desc: Create a known host | Create a repository level known host.
+schema: pipeline_known_host
+- path:workspace string
+- path:repo_slug string
+- body:type string
+- body:hostname string
+- body:public_key object
+- body:public_key.type string
+- body:public_key.key string
+- body:public_key.key_type string
+- body:public_key.md5_fingerprint string
+- body:public_key.sha256_fingerprint string
+- body:uuid string
+
+## S404-N0079  DELETE /repositories/{workspace}/{repo_slug}/pipelines_config/ssh/known_hosts/{known_host_uuid}
+desc: Delete a known host | Delete a repository level known host.
+- path:workspace string
+- path:repo_slug string
+- path:known_host_uuid string
+
+## S404-N0080  PUT /repositories/{workspace}/{repo_slug}/pipelines_config/ssh/known_hosts/{known_host_uuid}
+desc: Update a known host | Update a repository level known host.
+schema: pipeline_known_host
+- path:workspace string
+- path:repo_slug string
+- path:known_host_uuid string
+- body:type string
+- body:hostname string
+- body:public_key object
+- body:public_key.type string
+- body:public_key.key string
+- body:public_key.key_type string
+- body:public_key.md5_fingerprint string
+- body:public_key.sha256_fingerprint string
+- body:uuid string
+
+## S404-N0081  POST /repositories/{workspace}/{repo_slug}/pipelines_config/variables/
+desc: Create a variable for a repository | Create a repository level variable.
+schema: pipeline_variable
+- path:workspace string
+- path:repo_slug string
+- body:type string
+- body:key string
+- body:secured boolean
+- body:uuid string
+- body:value string
+
+## S404-N0083  PUT /repositories/{workspace}/{repo_slug}/pipelines_config/variables/{variable_uuid}
+desc: Update a variable for a repository | Update a repository level variable.
+schema: pipeline_variable
+- path:workspace string
+- path:repo_slug string
+- path:variable_uuid string
+- body:type string
+- body:key string
+- body:secured boolean
+- body:uuid string
+- body:value string
+
+## S404-N0084  DELETE /repositories/{workspace}/{repo_slug}/properties/{app_key}/{property_name}
+desc: Delete a repository application property | Delete an [application property](/cloud/bitbucket/application-properties/) value stored against a repository.
+- path:workspace string
+- path:repo_slug string
+- path:app_key string
+- path:property_name string
+
+## S404-N0085  PUT /repositories/{workspace}/{repo_slug}/properties/{app_key}/{property_name}
+desc: Update a repository application property | Update an [application property](/cloud/bitbucket/application-properties/) value stored against a repository.
+schema: application_property
+- path:workspace string
+- path:repo_slug string
+- path:app_key string
+- path:property_name string
+- body:_attributes array<string> enum[public|read_only]
+
+## S404-N0088  DELETE /repositories/{workspace}/{repo_slug}/pullrequests/{pull_request_id}/approve
+desc: Unapprove a pull request | Redact the authenticated user's approval of the specified pull request.
+- path:pull_request_id integer
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0089  POST /repositories/{workspace}/{repo_slug}/pullrequests/{pull_request_id}/approve
+desc: Approve a pull request | Approve the specified pull request as the authenticated user.
+- path:pull_request_id integer
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0092  PUT /repositories/{workspace}/{repo_slug}/pullrequests/{pull_request_id}/comments/{comment_id}
+desc: Update a comment on a pull request | Updates a specific pull request comment.
+schema: pullrequest_comment
+- path:comment_id integer
+- path:pull_request_id integer
+- path:repo_slug string
+- path:workspace string
+- body:type string
+- body:content object
+- body:content.html string
+- body:content.markup string enum[markdown|creole|plaintext]
+- body:content.raw string
+- body:created_on string
+- body:deleted boolean
+- body:id integer
+- body:inline object
+- body:inline.from integer
+- body:inline.path string
+- body:inline.to integer
+- body:links object
+- body:links.code object
+- body:links.code.href string
+- body:links.code.name string
+- body:links.html object
+- body:links.html.href string
+- body:links.html.name string
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:parent object
+- body:parent.type string
+- body:parent.content object
+- body:parent.content.html string
+- body:parent.content.markup string enum[markdown|creole|plaintext]
+- body:parent.content.raw string
+- body:parent.created_on string
+- body:parent.deleted boolean
+- body:parent.id integer
+- body:parent.inline object
+- body:parent.inline.from integer
+- body:parent.inline.path string
+- body:parent.inline.to integer
+- body:parent.links object
+- body:parent.links.code object
+- body:parent.links.html object
+- body:parent.links.self object
+- body:parent.parent object
+- body:parent.parent.type string
+- body:parent.parent.content object
+- body:parent.parent.created_on string
+- body:parent.parent.deleted boolean
+- body:parent.parent.id integer
+- body:parent.parent.inline object
+- body:parent.parent.links object
+- body:parent.parent.parent object
+- body:parent.parent.updated_on string
+- body:parent.parent.user object
+- body:parent.updated_on string
+- body:parent.user object
+- body:parent.user.type string
+- body:parent.user.created_on string
+- body:parent.user.display_name string
+- body:parent.user.links object
+- body:parent.user.username string
+- body:parent.user.uuid string
+- body:updated_on string
+- body:user object
+- body:user.type string
+- body:user.created_on string
+- body:user.display_name string
+- body:user.links object
+- body:user.links.avatar object
+- body:user.username string
+- body:user.uuid string
+- body:pullrequest object
+- body:pullrequest.type string
+- body:pullrequest.author object
+- body:pullrequest.author.type string
+- body:pullrequest.author.created_on string
+- body:pullrequest.author.display_name string
+- body:pullrequest.author.links object
+- body:pullrequest.author.username string
+- body:pullrequest.author.uuid string
+(+59 fields cut)
+
+## S404-N0093  POST /repositories/{workspace}/{repo_slug}/pullrequests/{pull_request_id}/decline
+desc: Decline a pull request | Declines the pull request.
+- path:pull_request_id integer
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0094  POST /repositories/{workspace}/{repo_slug}/pullrequests/{pull_request_id}/merge
+desc: Merge a pull request | Merges the pull request.
+schema: pullrequest_merge_parameters
+- path:pull_request_id integer
+- path:repo_slug string
+- path:workspace string
+- query:async boolean
+- body:close_source_branch boolean
+- body:merge_strategy string enum[merge_commit|squash|fast_forward]
+- body:message string
+- body:type string
+
+## S404-N0095  DELETE /repositories/{workspace}/{repo_slug}/pullrequests/{pull_request_id}/request-changes
+desc: Remove change request for a pull request
+- path:pull_request_id integer
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0096  POST /repositories/{workspace}/{repo_slug}/pullrequests/{pull_request_id}/request-changes
+desc: Request changes for a pull request
+- path:pull_request_id integer
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0097  DELETE /repositories/{workspace}/{repo_slug}/pullrequests/{pullrequest_id}/properties/{app_key}/{property_name}
+desc: Delete a pull request application property | Delete an [application property](/cloud/bitbucket/application-properties/) value stored against a pull request.
+- path:workspace string
+- path:repo_slug string
+- path:pullrequest_id string
+- path:app_key string
+- path:property_name string
+
+## S404-N0099  POST /repositories/{workspace}/{repo_slug}/refs/branches
+desc: Create a branch | Creates a new branch in the specified repository. The payload of the POST should consist of a JSON document that contains the name of the tag and the target hash. ``` curl https://api.bitbucket.org/2.0/repositories/seanfarley/hg/refs/branches \ -s -u seanfarley -X POST -H "Content-Type: application/json" \ -d '{ "name" : "smf/create-feature", "target" : { "hash" : "default", } }'
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0100  DELETE /repositories/{workspace}/{repo_slug}/refs/branches/{name}
+desc: Delete a branch | Delete a branch in the specified repository. The main branch is not allowed to be deleted and will return a 400 response. The branch name should not include any prefixes (e.g. refs/heads).
+- path:name string
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0101  POST /repositories/{workspace}/{repo_slug}/refs/tags
+desc: Create a tag | Creates a new tag in the specified repository. The payload of the POST should consist of a JSON document that contains the name of the tag and the target hash. ``` curl https://api.bitbucket.org/2.0/repositories/jdoe/myrepo/refs/tags \ -s -u jdoe -X POST -H "Content-Type: application/json" \ -d '{ "name" : "new-tag-name", "target" : { "hash" : "a1b2c3d4e5f6", } }' ``` This endpoint 
+schema: tag
+- path:repo_slug string
+- path:workspace string
+- body:links object
+- body:links.commits object
+- body:links.commits.href string
+- body:links.commits.name string
+- body:links.html object
+- body:links.html.href string
+- body:links.html.name string
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:name string
+- body:target object
+- body:target.type string
+- body:target.author object
+- body:target.author.type string
+- body:target.author.raw string
+- body:target.author.user object
+- body:target.date string
+- body:target.hash string
+- body:target.message string
+- body:target.parents array<object>
+- body:target.parents[].type string
+- body:target.parents[].author object
+- body:target.parents[].date string
+- body:target.parents[].hash string
+- body:target.parents[].message string
+- body:target.parents[].parents array<object>
+- body:target.parents[].summary object
+- body:target.summary object
+- body:target.summary.html string
+- body:target.summary.markup string enum[markdown|creole|plaintext]
+- body:target.summary.raw string
+- body:target.participants array<object>
+- body:target.participants[].type string
+- body:target.participants[].approved boolean
+- body:target.participants[].participated_on string
+- body:target.participants[].role string enum[PARTICIPANT|REVIEWER]
+- body:target.participants[].state string enum[approved|changes_requested]
+- body:target.participants[].user object
+- body:target.repository object
+- body:target.repository.type string
+- body:target.repository.created_on string
+- body:target.repository.description string
+- body:target.repository.fork_policy string enum[allow_forks|no_public_forks|no_forks]
+- body:target.repository.full_name string
+- body:target.repository.has_issues boolean
+- body:target.repository.has_wiki boolean
+- body:target.repository.is_private boolean
+- body:target.repository.language string
+- body:target.repository.links object
+- body:target.repository.mainbranch object
+- body:target.repository.name string
+- body:target.repository.owner object
+- body:target.repository.parent object
+- body:target.repository.project object
+- body:target.repository.scm string enum[git]
+- body:target.repository.size integer
+- body:target.repository.updated_on string
+- body:target.repository.uuid string
+- body:type string
+- body:date string
+- body:message string
+- body:tagger object
+- body:tagger.type string
+- body:tagger.raw string
+- body:tagger.user object
+- body:tagger.user.type string
+- body:tagger.user.created_on string
+- body:tagger.user.display_name string
+- body:tagger.user.links object
+- body:tagger.user.username string
+- body:tagger.user.uuid string
+
+## S404-N0102  DELETE /repositories/{workspace}/{repo_slug}/refs/tags/{name}
+desc: Delete a tag | Delete a tag in the specified repository. The tag name should not include any prefixes (e.g. refs/tags).
+- path:name string
+- path:repo_slug string
+- path:workspace string
+
+## S404-N0103  POST /repositories/{workspace}/{repo_slug}/src
+desc: Create a commit by uploading a file | This endpoint is used to create new commits in the repository by uploading files. To add a new file to a repository: ``` $ curl https://api.bitbucket.org/2.0/repositories/username/slug/src \ -F /repo/path/to/image.png=@image.png ``` This will create a new commit on top of the main branch, inheriting the contents of the main branch, but adding (or overwriting) 
+- path:repo_slug string
+- path:workspace string
+- query:message string
+- query:author string
+- query:parents string
+- query:files string
+- query:branch string
+
+## S404-N0105  POST /snippets/{workspace}
+desc: Create a snippet for a workspace | Identical to [`/snippets`](/cloud/bitbucket/rest/api-group-snippets/#api-snippets-post), except that the new snippet will be created under the workspace specified in the path parameter `{workspace}`.
+schema: snippet
+- path:workspace string
+- body:type string
+- body:created_on string
+- body:creator object
+- body:creator.type string
+- body:creator.created_on string
+- body:creator.display_name string
+- body:creator.links object
+- body:creator.links.avatar object
+- body:creator.username string
+- body:creator.uuid string
+- body:id integer
+- body:is_private boolean
+- body:owner object
+- body:owner.type string
+- body:owner.created_on string
+- body:owner.display_name string
+- body:owner.links object
+- body:owner.links.avatar object
+- body:owner.username string
+- body:owner.uuid string
+- body:scm string enum[git]
+- body:title string
+- body:updated_on string
+
+## S404-N0106  DELETE /snippets/{workspace}/{encoded_id}
+desc: Delete a snippet | Deletes a snippet and returns an empty response.
+- path:encoded_id string
+- path:workspace string
+
+## S404-N0109  DELETE /snippets/{workspace}/{encoded_id}/comments/{comment_id}
+desc: Delete a comment on a snippet | Deletes a snippet comment. Comments can only be removed by the comment author, snippet creator, or workspace admin.
+- path:comment_id integer
+- path:encoded_id string
+- path:workspace string
+
+## S404-N0110  PUT /snippets/{workspace}/{encoded_id}/comments/{comment_id}
+desc: Update a comment on a snippet | Updates a comment. The only required field in the body is `content.raw`. Comments can only be updated by their author.
+schema: snippet_comment
+- path:comment_id integer
+- path:encoded_id string
+- path:workspace string
+- body:type string
+- body:links object
+- body:links.html object
+- body:links.html.href string
+- body:links.html.name string
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:snippet object
+- body:snippet.type string
+- body:snippet.created_on string
+- body:snippet.creator object
+- body:snippet.creator.type string
+- body:snippet.creator.created_on string
+- body:snippet.creator.display_name string
+- body:snippet.creator.links object
+- body:snippet.creator.username string
+- body:snippet.creator.uuid string
+- body:snippet.id integer
+- body:snippet.is_private boolean
+- body:snippet.owner object
+- body:snippet.owner.type string
+- body:snippet.owner.created_on string
+- body:snippet.owner.display_name string
+- body:snippet.owner.links object
+- body:snippet.owner.username string
+- body:snippet.owner.uuid string
+- body:snippet.scm string enum[git]
+- body:snippet.title string
+- body:snippet.updated_on string
+
+## S404-N0111  DELETE /snippets/{workspace}/{encoded_id}/watch
+desc: Stop watching a snippet | Used to stop watching a specific snippet. Returns 204 (No Content) to indicate success.
+- path:encoded_id string
+- path:workspace string
+
+## S404-N0112  PUT /snippets/{workspace}/{encoded_id}/watch
+desc: Watch a snippet | Used to start watching a specific snippet. Returns 204 (No Content).
+- path:encoded_id string
+- path:workspace string
+
+## S404-N0113  DELETE /snippets/{workspace}/{encoded_id}/{node_id}
+desc: Delete a previous revision of a snippet | Deletes the snippet. Note that this only works for versioned URLs that point to the latest commit of the snippet. Pointing to an older commit results in a 405 status code. To delete a snippet, regardless of whether or not concurrent changes are being made to it, use `DELETE /snippets/{encoded_id}` instead.
+- path:encoded_id string
+- path:node_id string
+- path:workspace string

@@ -1,0 +1,49 @@
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt	2026-09-25 00:55:57
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt	2026-09-25 00:56:13
+@@ -1001,19 +1001,26 @@
+         setInParams(action.parameters.filterIsInstance<BodyParam>(), roleFieldSignals, reducedRole)
+             || setInQueryParamsTopLevel(action, roleFieldSignals, reducedRole)
+ 
++    private fun trySetFromStringValue(g: Gene, value: String): Boolean =
++        try {
++            g.setFromStringValue(value)
++        } catch (e: Exception) {
++            false
++        }
++
+     private fun setAllRoleFieldsTo(action: RestCallAction, value: String): Boolean {
+         var any = false
+         for (p in action.parameters.filterIsInstance<BodyParam>()) {
+             for (g in p.primaryGene().flatView()) {
+                 val n = g.name.lowercase()
+-                if (roleFieldSignals.any { n == it || n.contains(it) } && g.setFromStringValue(value)) {
++                if (roleFieldSignals.any { n == it || n.contains(it) } && trySetFromStringValue(g, value)) {
+                     any = true
+                 }
+             }
+         }
+         for (p in action.parameters.filterIsInstance<QueryParam>()) {
+             val n = p.name.lowercase()
+-            if (roleFieldSignals.any { n == it || n.contains(it) } && p.primaryGene().setFromStringValue(value)) {
++            if (roleFieldSignals.any { n == it || n.contains(it) } && trySetFromStringValue(p.primaryGene(), value)) {
+                 any = true
+             }
+         }
+@@ -1027,7 +1034,7 @@
+     ): Boolean {
+         for (p in action.parameters.filterIsInstance<QueryParam>()) {
+             val n = p.name.lowercase()
+-            if (signals.any { n == it || n.contains(it) } && p.primaryGene().setFromStringValue(value)) {
++            if (signals.any { n == it || n.contains(it) } && trySetFromStringValue(p.primaryGene(), value)) {
+                 return true
+             }
+         }
+@@ -1070,7 +1077,7 @@
+         for (p in params) {
+             for (g in p.primaryGene().flatView()) {
+                 val n = g.name.lowercase()
+-                if (signals.any { n == it || n.contains(it) } && g.setFromStringValue(value)) {
++                if (signals.any { n == it || n.contains(it) } && trySetFromStringValue(g, value)) {
+                     return true
+                 }
+             }

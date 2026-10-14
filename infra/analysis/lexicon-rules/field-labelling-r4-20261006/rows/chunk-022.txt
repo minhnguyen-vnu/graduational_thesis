@@ -1,0 +1,858 @@
+## S340-N0025  POST /database/
+desc: Create a new Database.
+schema: DatabaseRestApi.post
+- body:allow_csv_upload boolean
+- body:allow_ctas boolean
+- body:allow_cvas boolean
+- body:allow_dml boolean
+- body:allow_multi_schema_metadata_fetch boolean
+- body:allow_run_async boolean
+- body:cache_timeout integer
+- body:configuration_method any
+- body:database_name string
+- body:encrypted_extra string
+- body:engine string
+- body:expose_in_sqllab boolean
+- body:extra string
+- body:force_ctas_schema string
+- body:impersonate_user boolean
+- body:parameters object
+- body:server_cert string
+- body:sqlalchemy_uri string
+
+## S340-N0028  POST /database/validate_parameters
+desc: Validates parameters used to connect to a database
+schema: DatabaseValidateParametersSchema
+- body:configuration_method any
+- body:database_name string
+- body:encrypted_extra string
+- body:engine string
+- body:extra string
+- body:impersonate_user boolean
+- body:parameters object
+- body:server_cert string
+
+## S340-N0034  DELETE /dataset/{pk}
+desc: Deletes a Dataset
+- path:pk integer
+
+## S340-N0037  DELETE /dataset/{pk}/metric/{metric_id}
+desc: Delete a Dataset metric
+- path:pk integer
+- path:metric_id integer
+
+## S340-N0040  DELETE /report/
+desc: Deletes multiple report schedules in a bulk operation.
+- query:q any
+
+## S340-N0042  DELETE /report/{pk}
+desc: Delete a report schedule
+- path:pk integer
+
+## S340-N0044  DELETE /saved_query/
+desc: Deletes multiple saved queries in a bulk operation.
+- query:q any
+
+## S340-N0046  POST /saved_query/import/
+- body:formData string
+- body:overwrite boolean
+- body:passwords string
+
+## S394-N0001  POST /alerts
+desc: Trigger Alert | Triggers a new alert for your team. All team members on duty will receive alert notifications.
+schema: RaiseAlertInfo
+- body:attachments array<object>
+- body:attachments[].content string
+- body:attachments[].contentType string
+- body:attachments[].encoding integer enum[0|1]
+- body:attachments[].id string
+- body:attachments[].name string
+- body:category string
+- body:externalId string
+- body:flags integer
+- body:parameters array<object>
+- body:parameters[].name string
+- body:parameters[].order integer
+- body:parameters[].type integer enum[0|1|2|3|4|5|6|7|8|9|10|11]
+- body:parameters[].value string
+- body:severity integer enum[0|1|2]
+- body:text string
+- body:title string
+
+## S394-N0010  POST /alerts/{alertId}/annotate
+desc: Annotate Alert | Annotates an alert by given Annotation Info.
+schema: AlertAnnotationInfo
+- path:alertId string
+- body:annotationType integer
+- body:id string
+- body:text string
+- body:timestamp string
+- body:userId string
+
+## S394-N0012  POST /alerts/{alertId}/undoAcknowledge
+desc: Undo the acknowledgement of an alert. | This method tries to undo an alert acknowledgement.
+schema: ChangeAlertStatusInfo
+- path:alertId string
+- body:description string
+- body:userId string
+
+## S394-N0014  POST /categories/{teamId}
+desc: Create a new category | Sample Request: POST /categories/cbb70402-1359-477f-ac92-0171cf2b5ff7 { "name": "Water", "imageName": "water.svg", "color": "#0000cc", "keywordMatching": "Any", "keywords": [ { "value": "H2O" }, { "value": "Water" } ] }
+schema: CategoryInfo
+- path:teamId string
+- body:augmentations array<object>
+- body:augmentations[].enabled boolean
+- body:augmentations[].name string
+- body:augmentations[].type integer enum[0|1|2|3]
+- body:augmentations[].value string
+- body:color string
+- body:id string
+- body:imageName string
+- body:isDefault boolean
+- body:keywordMatching integer enum[0|1]
+- body:keywords array<string>
+- body:lastMatch string
+- body:name string
+- body:options integer enum[0|1|2|4|8]
+- body:order integer
+
+## S394-N0018  POST /events/paged
+desc: Get overview event paged. | Get overview event paged. If there are more results, you also get a continuation token which you can add to the event filter.
+schema: EventFilter
+- query:maxResults integer
+- body:continuationToken object
+- body:continuationToken.nextPartitionKey string
+- body:continuationToken.nextRowKey string
+- body:continuationToken.nextTableName string
+- body:eventStatusCode integer enum[0|1|2|3|4|5|6|1000]
+- body:maxCreationDate string
+- body:minCreationDate string
+- body:modifiedSince string
+- body:teamId string
+- body:textToSearch string
+
+## S394-N0019  PUT /prepaid/settings
+desc: Update your subscription's current prepaid settings.
+schema: PrepaidSettingsInfo
+- body:topUpAmount integer
+- body:topUpEnabled boolean
+- body:topUpLimit integer
+
+## S394-N0023  PUT /scripts/instances/{instanceId}/data
+desc: Updates custom data of a given script instance which includes its display name. | Updates the specified script instance.
+schema: ScriptInstanceCustomUserData
+- path:instanceId string
+- body:customScriptDescription string
+- body:customScriptName string
+- body:instanceId string
+- body:scriptId string
+
+## S394-N0027  PUT /subscriptions/{subscriptionId}/profile
+desc: Updates a subscriptions profile.
+schema: SubscriptionProfile
+- path:subscriptionId string
+- body:name string
+
+## S394-N0031  DELETE /teams/{teamId}/memberships/{userId}
+desc: Removes a user or invitation from a team, and may delete the user if he is not in any team.
+- path:teamId string
+- path:userId string
+- query:requesterUserId string
+
+## S394-N0033  PUT /teams/{teamId}/profile
+desc: Updates team profile of a team
+schema: TeamProfile
+- path:teamId string
+- body:name string
+
+## S394-N0037  DELETE /teams/{teamId}/schedules/{dutyId}
+desc: Delete a specific duty.
+- path:teamId string
+- path:dutyId string
+
+## S394-N0046  DELETE /webhooks/{webhookId}
+desc: Delete Webhook by Id | Deletes the specified webhook so that it will no longer be notified.
+- path:webhookId string
+
+## S394-N0048  POST /webhooks/{webhookId}/disable
+desc: Ability to enable a webHook.
+- path:webhookId string
+
+## S397-N0002  POST /answerCallbackQuery
+desc: Use this method to send answers to callback queries sent from [inline keyboards](/bots#inline-keyboards-and-on-the-fly-updating). The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, *True* is returned. Alternatively, the user can be redirected to the specified Game URL. For this option to work, you must first create a game for your b
+- body:cache_time integer
+- body:callback_query_id string
+- body:show_alert boolean
+- body:text string
+- body:url string
+
+## S397-N0003  POST /answerInlineQuery
+desc: Use this method to send answers to an inline query. On success, *True* is returned. No more than **50** results per query are allowed.
+- body:cache_time integer
+- body:inline_query_id string
+- body:is_personal boolean
+- body:next_offset string
+- body:results array<object>
+- body:results[].audio_file_id string
+- body:results[].caption string
+- body:results[].caption_entities array<object>
+- body:results[].caption_entities[].language string
+- body:results[].caption_entities[].length integer
+- body:results[].caption_entities[].offset integer
+- body:results[].caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:results[].caption_entities[].url string
+- body:results[].caption_entities[].user object
+- body:results[].id string
+- body:results[].input_message_content object
+- body:results[].input_message_content.disable_web_page_preview boolean
+- body:results[].input_message_content.entities array<object>
+- body:results[].input_message_content.message_text string
+- body:results[].input_message_content.parse_mode string
+- body:results[].input_message_content.heading integer
+- body:results[].input_message_content.horizontal_accuracy number
+- body:results[].input_message_content.latitude number
+- body:results[].input_message_content.live_period integer
+- body:results[].input_message_content.longitude number
+- body:results[].input_message_content.proximity_alert_radius integer
+- body:results[].input_message_content.address string
+- body:results[].input_message_content.foursquare_id string
+- body:results[].input_message_content.foursquare_type string
+- body:results[].input_message_content.google_place_id string
+- body:results[].input_message_content.google_place_type string
+- body:results[].input_message_content.title string
+- body:results[].input_message_content.first_name string
+- body:results[].input_message_content.last_name string
+- body:results[].input_message_content.phone_number string
+- body:results[].input_message_content.vcard string
+- body:results[].parse_mode string
+- body:results[].reply_markup object
+- body:results[].reply_markup.inline_keyboard array<array>
+- body:results[].type string
+- body:results[].description string
+- body:results[].document_file_id string
+- body:results[].title string
+- body:results[].gif_file_id string
+- body:results[].mpeg4_file_id string
+- body:results[].photo_file_id string
+- body:results[].sticker_file_id string
+- body:results[].video_file_id string
+- body:results[].voice_file_id string
+- body:results[].hide_url boolean
+- body:results[].thumb_height integer
+- body:results[].thumb_url string
+- body:results[].thumb_width integer
+- body:results[].url string
+- body:results[].audio_duration integer
+- body:results[].audio_url string
+- body:results[].performer string
+- body:results[].first_name string
+- body:results[].last_name string
+- body:results[].phone_number string
+- body:results[].vcard string
+- body:results[].game_short_name string
+- body:results[].document_url string
+- body:results[].mime_type string enum[application/pdf|application/zip]
+- body:results[].gif_duration integer
+- body:results[].gif_height integer
+- body:results[].gif_url string
+- body:results[].gif_width integer
+- body:results[].thumb_mime_type string enum[image/jpeg|image/gif|video/mp4]
+- body:results[].heading integer
+- body:results[].horizontal_accuracy number
+- body:results[].latitude number
+- body:results[].live_period integer
+- body:results[].longitude number
+- body:results[].proximity_alert_radius integer
+- body:results[].mpeg4_duration integer
+- body:results[].mpeg4_height integer
+- body:results[].mpeg4_url string
+- body:results[].mpeg4_width integer
+- body:results[].photo_height integer
+(+15 fields cut)
+
+## S397-N0005  POST /answerShippingQuery
+desc: If you sent an invoice requesting a shipping address and the parameter *is\_flexible* was specified, the Bot API will send an [Update](https://core.telegram.org/bots/api/#update) with a *shipping\_query* field to the bot. Use this method to reply to shipping queries. On success, True is returned.
+- body:error_message string
+- body:ok boolean
+- body:shipping_options array<object>
+- body:shipping_options[].id string
+- body:shipping_options[].prices array<object>
+- body:shipping_options[].prices[].amount integer
+- body:shipping_options[].prices[].label string
+- body:shipping_options[].title string
+- body:shipping_query_id string
+
+## S397-N0006  POST /close
+desc: Use this method to close the bot instance before moving it from one local server to another. You need to delete the webhook before calling this method to ensure that the bot isn't launched again after server restart. The method will return error 429 in the first 10 minutes after the bot is launched. Returns *True* on success. Requires no parameters.
+
+## S397-N0008  POST /createNewStickerSet
+desc: Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You **must** use exactly one of the fields *png\_sticker* or *tgs\_sticker*. Returns *True* on success.
+- body:contains_masks boolean
+- body:emojis string
+- body:mask_position object
+- body:mask_position.point string enum[forehead|eyes|mouth|chin]
+- body:mask_position.scale number
+- body:mask_position.x_shift number
+- body:mask_position.y_shift number
+- body:name string
+- body:png_sticker string
+- body:tgs_sticker any
+- body:title string
+- body:user_id integer
+
+## S397-N0010  POST /deleteChatStickerSet
+desc: Use this method to delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field *can\_set\_sticker\_set* optionally returned in [getChat](https://core.telegram.org/bots/api/#getchat) requests to check if the bot can use this method. Returns *True* on success.
+- body:chat_id integer
+
+## S397-N0012  POST /deleteStickerFromSet
+desc: Use this method to delete a sticker from a set created by the bot. Returns *True* on success.
+- body:sticker string
+
+## S397-N0014  POST /editMessageCaption
+desc: Use this method to edit captions of messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is returned.
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:inline_message_id string
+- body:message_id integer
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+
+## S397-N0017  POST /editMessageReplyMarkup
+desc: Use this method to edit only the reply markup of messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is returned.
+- body:chat_id integer
+- body:inline_message_id string
+- body:message_id integer
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+
+## S397-N0022  POST /getChatAdministrators
+desc: Use this method to get a list of administrators in a chat. On success, returns an Array of [ChatMember](https://core.telegram.org/bots/api/#chatmember) objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.
+- body:chat_id integer
+
+## S397-N0024  POST /getChatMembersCount
+desc: Use this method to get the number of members in a chat. Returns *Int* on success.
+- body:chat_id integer
+
+## S397-N0025  POST /getFile
+desc: Use this method to get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a [File](https://core.telegram.org/bots/api/#file) object is returned. The file can then be downloaded via the link `https://api.telegram.org/file/bot<token>/<file_path>`, where `<file_path>` is taken from the response. It is guaranteed that the 
+- body:file_id string
+
+## S397-N0026  POST /getGameHighScores
+desc: Use this method to get data for high score tables. Will return the score of the specified user and several of their neighbors in a game. On success, returns an *Array* of [GameHighScore](https://core.telegram.org/bots/api/#gamehighscore) objects. This method will currently return scores for the target user, plus two of their closest neighbors on each side. Will also return the top three users if t
+- body:chat_id integer
+- body:inline_message_id string
+- body:message_id integer
+- body:user_id integer
+
+## S397-N0028  POST /getMyCommands
+desc: Use this method to get the current list of the bot's commands. Requires no parameters. Returns Array of [BotCommand](https://core.telegram.org/bots/api/#botcommand) on success.
+
+## S397-N0030  POST /getUpdates
+desc: Use this method to receive incoming updates using long polling ([wiki](https://en.wikipedia.org/wiki/Push_technology#Long_polling)). An Array of [Update](https://core.telegram.org/bots/api/#update) objects is returned.
+- body:allowed_updates array<string>
+- body:limit integer
+- body:offset integer
+- body:timeout integer
+
+## S397-N0033  POST /kickChatMember
+desc: Use this method to kick a user from a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the group on their own using invite links, etc., unless [unbanned](https://core.telegram.org/bots/api/#unbanchatmember) first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns *True* 
+- body:chat_id integer
+- body:until_date integer
+- body:user_id integer
+
+## S397-N0034  POST /leaveChat
+desc: Use this method for your bot to leave a group, supergroup or channel. Returns *True* on success.
+- body:chat_id integer
+
+## S397-N0038  POST /restrictChatMember
+desc: Use this method to restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate admin rights. Pass *True* for all permissions to lift restrictions from a user. Returns *True* on success.
+- body:chat_id integer
+- body:permissions object
+- body:permissions.can_add_web_page_previews boolean
+- body:permissions.can_change_info boolean
+- body:permissions.can_invite_users boolean
+- body:permissions.can_pin_messages boolean
+- body:permissions.can_send_media_messages boolean
+- body:permissions.can_send_messages boolean
+- body:permissions.can_send_other_messages boolean
+- body:permissions.can_send_polls boolean
+- body:until_date integer
+- body:user_id integer
+
+## S397-N0040  POST /sendAudio
+desc: Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future. For sending voice messages, use the [sendVoice](https://core
+- body:allow_sending_without_reply boolean
+- body:audio string
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:disable_notification boolean
+- body:duration integer
+- body:parse_mode string
+- body:performer string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:thumb string
+- body:title string
+
+## S397-N0041  POST /sendChatAction
+desc: Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns *True* on success. Example: The [ImageBot](https://t.me/imagebot) needs some time to process a request and upload the image. Instead of sending a text message along the lines o
+- body:action string
+- body:chat_id integer
+
+## S397-N0045  POST /sendGame
+desc: Use this method to send a game. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:chat_id integer
+- body:disable_notification boolean
+- body:game_short_name string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_to_message_id integer
+
+## S397-N0046  POST /sendInvoice
+desc: Use this method to send invoices. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:chat_id integer
+- body:currency string
+- body:description string
+- body:disable_notification boolean
+- body:is_flexible boolean
+- body:need_email boolean
+- body:need_name boolean
+- body:need_phone_number boolean
+- body:need_shipping_address boolean
+- body:payload string
+- body:photo_height integer
+- body:photo_size integer
+- body:photo_url string
+- body:photo_width integer
+- body:prices array<object>
+- body:prices[].amount integer
+- body:prices[].label string
+- body:provider_data string
+- body:provider_token string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_to_message_id integer
+- body:send_email_to_provider boolean
+- body:send_phone_number_to_provider boolean
+- body:start_parameter string
+- body:title string
+
+## S397-N0047  POST /sendLocation
+desc: Use this method to send point on the map. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:chat_id integer
+- body:disable_notification boolean
+- body:heading integer
+- body:horizontal_accuracy number
+- body:latitude number
+- body:live_period integer
+- body:longitude number
+- body:proximity_alert_radius integer
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+
+## S397-N0048  POST /sendMediaGroup
+desc: Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of [Messages](https://core.telegram.org/bots/api/#message) that were sent is returned.
+- body:allow_sending_without_reply boolean
+- body:chat_id integer
+- body:disable_notification boolean
+- body:media array<object>
+- body:media[].caption string
+- body:media[].caption_entities array<object>
+- body:media[].caption_entities[].language string
+- body:media[].caption_entities[].length integer
+- body:media[].caption_entities[].offset integer
+- body:media[].caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:media[].caption_entities[].url string
+- body:media[].caption_entities[].user object
+- body:media[].duration integer
+- body:media[].media string
+- body:media[].parse_mode string
+- body:media[].performer string
+- body:media[].thumb string
+- body:media[].title string
+- body:media[].type string
+- body:media[].disable_content_type_detection boolean
+- body:media[].height integer
+- body:media[].supports_streaming boolean
+- body:media[].width integer
+- body:reply_to_message_id integer
+
+## S397-N0049  POST /sendMessage
+desc: Use this method to send text messages. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:chat_id integer
+- body:disable_notification boolean
+- body:disable_web_page_preview boolean
+- body:entities array<object>
+- body:entities[].language string
+- body:entities[].length integer
+- body:entities[].offset integer
+- body:entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:entities[].url string
+- body:entities[].user object
+- body:entities[].user.can_join_groups boolean
+- body:entities[].user.can_read_all_group_messages boolean
+- body:entities[].user.first_name string
+- body:entities[].user.id integer
+- body:entities[].user.is_bot boolean
+- body:entities[].user.language_code string
+- body:entities[].user.last_name string
+- body:entities[].user.supports_inline_queries boolean
+- body:entities[].user.username string
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:text string
+
+## S397-N0052  POST /sendSticker
+desc: Use this method to send static .WEBP or [animated](https://telegram.org/blog/animated-stickers) .TGS stickers. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:chat_id integer
+- body:disable_notification boolean
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:sticker string
+
+## S397-N0053  POST /sendVenue
+desc: Use this method to send information about a venue. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:address string
+- body:allow_sending_without_reply boolean
+- body:chat_id integer
+- body:disable_notification boolean
+- body:foursquare_id string
+- body:foursquare_type string
+- body:google_place_id string
+- body:google_place_type string
+- body:latitude number
+- body:longitude number
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:title string
+
+## S397-N0057  POST /setChatAdministratorCustomTitle
+desc: Use this method to set a custom title for an administrator in a supergroup promoted by the bot. Returns *True* on success.
+- body:chat_id integer
+- body:custom_title string
+- body:user_id integer
+
+## S397-N0058  POST /setChatDescription
+desc: Use this method to change the description of a group, a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns *True* on success.
+- body:chat_id integer
+- body:description string
+
+## S397-N0059  POST /setChatPermissions
+desc: Use this method to set default chat permissions for all members. The bot must be an administrator in the group or a supergroup for this to work and must have the *can\_restrict\_members* admin rights. Returns *True* on success.
+- body:chat_id integer
+- body:permissions object
+- body:permissions.can_add_web_page_previews boolean
+- body:permissions.can_change_info boolean
+- body:permissions.can_invite_users boolean
+- body:permissions.can_pin_messages boolean
+- body:permissions.can_send_media_messages boolean
+- body:permissions.can_send_messages boolean
+- body:permissions.can_send_other_messages boolean
+- body:permissions.can_send_polls boolean
+
+## S397-N0062  POST /setChatTitle
+desc: Use this method to change the title of a chat. Titles can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns *True* on success.
+- body:chat_id integer
+- body:title string
+
+## S397-N0063  POST /setGameScore
+desc: Use this method to set the score of the specified user in a game. On success, if the message was sent by the bot, returns the edited [Message](https://core.telegram.org/bots/api/#message), otherwise returns *True*. Returns an error, if the new score is not greater than the user's current score in the chat and *force* is *False*.
+- body:chat_id integer
+- body:disable_edit_message boolean
+- body:force boolean
+- body:inline_message_id string
+- body:message_id integer
+- body:score integer
+- body:user_id integer
+
+## S397-N0064  POST /setMyCommands
+desc: Use this method to change the list of the bot's commands. Returns *True* on success.
+- body:commands array<object>
+- body:commands[].command string
+- body:commands[].description string
+
+## S397-N0067  POST /setStickerSetThumb
+desc: Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Returns *True* on success.
+- body:name string
+- body:thumb string
+- body:user_id integer
+
+## S397-N0068  POST /setWebhook
+desc: Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized [Update](https://core.telegram.org/bots/api/#update). In case of an unsuccessful request, we will give up after a reasonable amount of attempts. Returns *True* on success. If you'd like 
+- body:allowed_updates array<string>
+- body:certificate any
+- body:drop_pending_updates boolean
+- body:ip_address string
+- body:max_connections integer
+- body:url string
+
+## S397-N0071  POST /unbanChatMember
+desc: Use this method to unban a previously kicked user in a supergroup or channel. The user will **not** return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. By default, this method guarantees that after the call the user is not a member of the chat, but will be able to join it. So if the user is a member of the chat th
+- body:chat_id integer
+- body:only_if_banned boolean
+- body:user_id integer
+
+## S397-N0073  POST /unpinChatMessage
+desc: Use this method to remove a message from the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can\_pin\_messages' admin right in a supergroup or 'can\_edit\_messages' admin right in a channel. Returns *True* on success.
+- body:chat_id integer
+- body:message_id integer
+
+## S397-N0074  POST /uploadStickerFile
+desc: Use this method to upload a .PNG file with a sticker for later use in *createNewStickerSet* and *addStickerToSet* methods (can be used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api/#file) on success.
+- body:png_sticker any
+- body:user_id integer
+
+## S592-N0001  DELETE /actions/bulk/telephony_credentials
+desc: Delete several credentials | Delete several credentials in bulk.
+- query:filter[tag] string
+
+## S592-N0002  PATCH /actions/bulk/telephony_credentials
+desc: Update several credentials | Update several credentials in bulk.
+schema: BulkCredentialRequest
+- query:filter[tag] string
+- body:amount integer
+- body:connection_id string
+- body:name string
+- body:tag string
+
+## S592-N0004  PUT /actions/network_preferences/sim_cards
+desc: Bulk Network Preferences for SIM cards | This API allows dispatching the same operation described for the PUT sim_cards/:sim_card_id/network_preferences API for multiple SIM cards at once.<br/><br/> Although, a SIM card network preference may fail individually under any validation triggered as a consequence of its state. For example, a SIM can't have an in-progress OTA update for applying a Networ
+- body:mobile_operator_networks_preferences array<object>
+- body:mobile_operator_networks_preferences[].mobile_operator_network_id string
+- body:mobile_operator_networks_preferences[].priority integer
+- body:sim_card_ids array<string>
+
+## S592-N0007  POST /addresses
+desc: Creates an address | Creates an address.
+schema: AddressCreate
+- body:address_book boolean
+- body:administrative_area string
+- body:borough string
+- body:business_name string
+- body:country_code string
+- body:customer_reference string
+- body:extended_address string
+- body:first_name string
+- body:last_name string
+- body:locality string
+- body:neighborhood string
+- body:phone_number string
+- body:postal_code string
+- body:street_address string
+- body:validate_address boolean
+
+## S592-N0008  POST /addresses/actions/validate
+desc: Validate an address | Validates an address for emergency services.
+schema: ValidateAddressRequest
+- body:administrative_area string
+- body:country_code string
+- body:extended_address string
+- body:locality string
+- body:postal_code string
+- body:street_address string
+
+## S592-N0009  DELETE /addresses/{id}
+desc: Deletes an address | Deletes an existing address.
+- path:id string
+
+## S592-N0010  POST /authentication_providers
+desc: Creates an authentication provider | Creates an authentication provider.
+schema: AuthenticationProviderCreate
+- body:active boolean
+- body:name string
+- body:settings object
+- body:settings.idp_cert_fingerprint string
+- body:settings.idp_cert_fingerprint_algorithm string enum[sha1|sha256|sha384|sha512]
+- body:settings.idp_entity_id string
+- body:settings.idp_sso_target_url string
+- body:settings_url string
+- body:short_name string
+
+## S592-N0011  DELETE /authentication_providers/{id}
+desc: Deletes an authentication provider | Deletes an existing authentication provider.
+- path:id string
+
+## S592-N0012  PATCH /authentication_providers/{id}
+desc: Update a authentication provider | Updates settings of an existing authentication provider.
+schema: UpdateAuthenticationProviderRequest
+- path:id string
+- body:active boolean
+- body:name string
+- body:settings object
+- body:settings.idp_cert_fingerprint string
+- body:settings.idp_cert_fingerprint_algorithm string enum[sha1|sha256|sha384|sha512]
+- body:settings.idp_entity_id string
+- body:settings.idp_sso_target_url string
+- body:settings_url string
+- body:short_name string
+
+## S592-N0013  POST /billing_groups
+desc: Create a billing group
+schema: NewBillingGroup
+- body:name string
+
+## S592-N0014  DELETE /billing_groups/{id}
+desc: Delete a billing group
+- path:id string
+
+## S592-N0015  PATCH /billing_groups/{id}
+desc: Update a billing group
+schema: UpdateBillingGroup
+- path:id string
+- body:name string
+
+## S592-N0016  POST /call_control_applications
+desc: Create a call control application | Create a call control application.
+schema: CreateCallControlApplicationRequest
+- body:active boolean
+- body:anchorsite_override string enum["Latency"|"Chicago, IL"|"Ashburn, VA"|"San Jose, CA"]
+- body:application_name string
+- body:dtmf_type string enum[RFC 2833|Inband|SIP INFO]
+- body:first_command_timeout boolean
+- body:first_command_timeout_secs integer
+- body:inbound object
+- body:inbound.channel_limit integer
+- body:inbound.sip_subdomain string
+- body:inbound.sip_subdomain_receive_settings string enum[only_my_connections|from_anyone]
+- body:outbound object
+- body:outbound.channel_limit integer
+- body:outbound.outbound_voice_profile_id string
+- body:webhook_api_version string enum[1|2]
+- body:webhook_event_failover_url string
+- body:webhook_event_url string
+- body:webhook_timeout_secs integer
+
+## S592-N0017  DELETE /call_control_applications/{id}
+desc: Delete a call control application | Deletes a call control application.
+- path:id string
+
+## S592-N0018  PATCH /call_control_applications/{id}
+desc: Update a call control application | Updates settings of an existing call control application.
+schema: UpdateCallControlApplicationRequest
+- path:id string
+- body:active boolean
+- body:anchorsite_override string enum["Latency"|"Chicago, IL"|"Ashburn, VA"|"San Jose, CA"]
+- body:application_name string
+- body:dtmf_type string enum[RFC 2833|Inband|SIP INFO]
+- body:first_command_timeout boolean
+- body:first_command_timeout_secs integer
+- body:inbound object
+- body:inbound.channel_limit integer
+- body:inbound.sip_subdomain string
+- body:inbound.sip_subdomain_receive_settings string enum[only_my_connections|from_anyone]
+- body:outbound object
+- body:outbound.channel_limit integer
+- body:outbound.outbound_voice_profile_id string
+- body:webhook_api_version string enum[1|2]
+- body:webhook_event_failover_url string
+- body:webhook_event_url string
+- body:webhook_timeout_secs integer
+
+## S592-N0019  POST /calls
+desc: Dial | Dial a number or SIP URI from a given connection. A successful response will include a `call_leg_id` which can be used to correlate the command with subsequent webhooks. **Expected Webhooks:** - `call.initiated` - `call.answered` or `call.hangup` - `call.machine.detection.ended` if `answering_machine_detection` was requested - `call.machine.greeting.ended` if `answering_machine_detection` w
+schema: CallRequest
+- body:answering_machine_detection string enum[detect|detect_beep|detect_words|greeting_end|disabled]
+- body:answering_machine_detection_config object
+- body:answering_machine_detection_config.after_greeting_silence_millis integer
+- body:answering_machine_detection_config.between_words_silence_millis integer
+- body:answering_machine_detection_config.greeting_duration_millis integer
+- body:answering_machine_detection_config.greeting_silence_duration_millis integer
+- body:answering_machine_detection_config.greeting_total_analysis_time_millis integer
+- body:answering_machine_detection_config.initial_silence_millis integer
+- body:answering_machine_detection_config.maximum_number_of_words integer
+- body:answering_machine_detection_config.maximum_word_length_millis integer
+- body:answering_machine_detection_config.silence_threshold integer
+- body:answering_machine_detection_config.total_analysis_time_millis integer
+- body:audio_url string
+- body:billing_group_id string
+- body:client_state string
+- body:command_id string
+- body:connection_id string
+- body:custom_headers array<object>
+- body:custom_headers[].name string
+- body:custom_headers[].value string
+- body:from string
+- body:from_display_name string
+- body:link_to string
+- body:media_name string
+- body:sip_auth_password string
+- body:sip_auth_username string
+- body:time_limit_secs integer
+- body:timeout_secs integer
+- body:to string
+- body:webhook_url string
+- body:webhook_url_method string enum[POST|GET]

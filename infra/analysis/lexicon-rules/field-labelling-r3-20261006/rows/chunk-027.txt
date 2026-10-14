@@ -1,0 +1,1282 @@
+## S395-0012  POST /v1/identity/verification_sessions/{session}/redact
+desc: <p>Redact a VerificationSession to remove all collected information from Stripe. This will redact the VerificationSession and all objects related to it, including VerificationReports, Events, request logs, etc.</p> <p>A VerificationSession object can be redacted when it is in <code>requires_input</code> or <code>verified</code> <a href="/docs/identity/how-sessions-work">status</a>. Redacting a Ver
+- path:session string
+- body:expand array<string>
+
+## S395-0013  DELETE /v1/invoiceitems/{invoiceitem}
+desc: <p>Deletes an invoice item, removing it from an invoice. Deleting invoice items is only possible when they’re not attached to invoices, or if it’s attached to a draft invoice.</p>
+- path:invoiceitem string
+- body:(body) object
+
+## S395-0014  POST /v1/invoices
+desc: <p>This endpoint creates a draft invoice for a given customer. The invoice remains a draft until you <a href="#finalize_invoice">finalize</a> the invoice, which allows you to <a href="#pay_invoice">pay</a> or <a href="#send_invoice">send</a> the invoice to your customers.</p>
+- body:account_tax_ids array<string> enum[]
+- body:application_fee_amount integer
+- body:auto_advance boolean
+- body:automatic_tax object
+- body:automatic_tax.enabled boolean
+- body:collection_method string enum[charge_automatically|send_invoice]
+- body:currency string
+- body:custom_fields array<object> enum[]
+- body:custom_fields[].name string
+- body:custom_fields[].value string
+- body:customer string
+- body:days_until_due integer
+- body:default_payment_method string
+- body:default_source string
+- body:default_tax_rates array<string>
+- body:description string
+- body:discounts array<object> enum[]
+- body:discounts[].coupon string
+- body:discounts[].discount string
+- body:due_date integer
+- body:expand array<string>
+- body:footer string
+- body:from_invoice object
+- body:from_invoice.action string enum[revision]
+- body:from_invoice.invoice string
+- body:metadata object enum[]
+- body:on_behalf_of string
+- body:payment_settings object
+- body:payment_settings.default_mandate string
+- body:payment_settings.payment_method_options object
+- body:payment_settings.payment_method_options.acss_debit object enum[]
+- body:payment_settings.payment_method_options.bancontact object enum[]
+- body:payment_settings.payment_method_options.card object enum[]
+- body:payment_settings.payment_method_options.customer_balance object enum[]
+- body:payment_settings.payment_method_options.konbini object enum[]
+- body:payment_settings.payment_method_options.us_bank_account object enum[]
+- body:payment_settings.payment_method_types array<string> enum[ach_credit_transfer|ach_debit|acss_debit|au_becs_debit|bacs_debit|bancontact|boleto|card|customer_balance|fpx|giropay|grabpay]
+- body:pending_invoice_items_behavior string enum[exclude|include|include_and_require]
+- body:rendering_options object enum[]
+- body:rendering_options.amount_tax_display string enum[|exclude_tax|include_inclusive_tax]
+- body:shipping_cost object
+- body:shipping_cost.shipping_rate string
+- body:shipping_cost.shipping_rate_data object
+- body:shipping_cost.shipping_rate_data.delivery_estimate object
+- body:shipping_cost.shipping_rate_data.display_name string
+- body:shipping_cost.shipping_rate_data.fixed_amount object
+- body:shipping_cost.shipping_rate_data.metadata object
+- body:shipping_cost.shipping_rate_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:shipping_cost.shipping_rate_data.tax_code string
+- body:shipping_cost.shipping_rate_data.type string enum[fixed_amount]
+- body:shipping_details object
+- body:shipping_details.address object
+- body:shipping_details.address.city string
+- body:shipping_details.address.country string
+- body:shipping_details.address.line1 string
+- body:shipping_details.address.line2 string
+- body:shipping_details.address.postal_code string
+- body:shipping_details.address.state string
+- body:shipping_details.name string
+- body:shipping_details.phone string
+- body:statement_descriptor string
+- body:subscription string
+- body:transfer_data object
+- body:transfer_data.amount integer
+- body:transfer_data.destination string
+
+## S395-0015  POST /v1/issuing/disputes/{dispute}/submit
+desc: <p>Submits an Issuing <code>Dispute</code> to the card network. Stripe validates that all evidence fields required for the dispute’s reason are present. For more details, see <a href="/docs/issuing/purchases/disputes#dispute-reasons-and-evidence">Dispute reasons and evidence</a>.</p>
+- path:dispute string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-0016  POST /v1/payment_intents/{intent}/confirm
+desc: <p>Confirm that your customer intends to pay with current or provided payment method. Upon confirmation, the PaymentIntent will attempt to initiate a payment. If the selected payment method requires additional authentication steps, the PaymentIntent will transition to the <code>requires_action</code> status and suggest additional actions via <code>next_action</code>. If payment fails, the PaymentI
+- path:intent string
+- body:capture_method string enum[automatic|manual]
+- body:client_secret string
+- body:error_on_requires_action boolean
+- body:expand array<string>
+- body:mandate string
+- body:mandate_data object
+- body:mandate_data.customer_acceptance object
+- body:mandate_data.customer_acceptance.accepted_at integer
+- body:mandate_data.customer_acceptance.offline object
+- body:mandate_data.customer_acceptance.online object
+- body:mandate_data.customer_acceptance.type string enum[offline|online]
+- body:off_session boolean enum[one_off|recurring]
+- body:payment_method string
+- body:payment_method_data object
+- body:payment_method_data.acss_debit object
+- body:payment_method_data.acss_debit.account_number string
+- body:payment_method_data.acss_debit.institution_number string
+- body:payment_method_data.acss_debit.transit_number string
+- body:payment_method_data.affirm object
+- body:payment_method_data.afterpay_clearpay object
+- body:payment_method_data.alipay object
+- body:payment_method_data.au_becs_debit object
+- body:payment_method_data.au_becs_debit.account_number string
+- body:payment_method_data.au_becs_debit.bsb_number string
+- body:payment_method_data.bacs_debit object
+- body:payment_method_data.bacs_debit.account_number string
+- body:payment_method_data.bacs_debit.sort_code string
+- body:payment_method_data.bancontact object
+- body:payment_method_data.billing_details object
+- body:payment_method_data.billing_details.address object enum[]
+- body:payment_method_data.billing_details.email string enum[]
+- body:payment_method_data.billing_details.name string
+- body:payment_method_data.billing_details.phone string
+- body:payment_method_data.blik object
+- body:payment_method_data.boleto object
+- body:payment_method_data.boleto.tax_id string
+- body:payment_method_data.customer_balance object
+- body:payment_method_data.eps object
+- body:payment_method_data.eps.bank string enum[arzte_und_apotheker_bank|austrian_anadi_bank_ag|bank_austria|bankhaus_carl_spangler|bankhaus_schelhammer_und_schattera_ag|bawag_psk_ag|bks_bank_ag|brull_kallmus_bank_ag|btv_vier_lander_bank|capital_bank_grawe_gruppe_ag|deutsche_bank_ag|dolomitenbank]
+- body:payment_method_data.fpx object
+- body:payment_method_data.fpx.bank string enum[affin_bank|agrobank|alliance_bank|ambank|bank_islam|bank_muamalat|bank_of_china|bank_rakyat|bsn|cimb|deutsche_bank|hong_leong_bank]
+- body:payment_method_data.giropay object
+- body:payment_method_data.grabpay object
+- body:payment_method_data.ideal object
+- body:payment_method_data.ideal.bank string enum[abn_amro|asn_bank|bunq|handelsbanken|ing|knab|moneyou|rabobank|regiobank|revolut|sns_bank|triodos_bank]
+- body:payment_method_data.interac_present object
+- body:payment_method_data.klarna object
+- body:payment_method_data.klarna.dob object
+- body:payment_method_data.konbini object
+- body:payment_method_data.link object
+- body:payment_method_data.metadata object
+- body:payment_method_data.oxxo object
+- body:payment_method_data.p24 object
+- body:payment_method_data.p24.bank string enum[alior_bank|bank_millennium|bank_nowy_bfg_sa|bank_pekao_sa|banki_spbdzielcze|blik|bnp_paribas|boz|citi_handlowy|credit_agricole|envelobank|etransfer_pocztowy24]
+- body:payment_method_data.paynow object
+- body:payment_method_data.pix object
+- body:payment_method_data.promptpay object
+- body:payment_method_data.radar_options object
+- body:payment_method_data.radar_options.session string
+- body:payment_method_data.sepa_debit object
+- body:payment_method_data.sepa_debit.iban string
+- body:payment_method_data.sofort object
+- body:payment_method_data.sofort.country string enum[AT|BE|DE|ES|IT|NL]
+- body:payment_method_data.type string enum[acss_debit|affirm|afterpay_clearpay|alipay|au_becs_debit|bacs_debit|bancontact|blik|boleto|customer_balance|eps|fpx]
+- body:payment_method_data.us_bank_account object
+- body:payment_method_data.us_bank_account.account_holder_type string enum[company|individual]
+- body:payment_method_data.us_bank_account.account_number string
+- body:payment_method_data.us_bank_account.account_type string enum[checking|savings]
+- body:payment_method_data.us_bank_account.financial_connections_account string
+- body:payment_method_data.us_bank_account.routing_number string
+- body:payment_method_data.wechat_pay object
+- body:payment_method_options object
+- body:payment_method_options.acss_debit object enum[]
+- body:payment_method_options.acss_debit.mandate_options object
+- body:payment_method_options.acss_debit.setup_future_usage string enum[|none|off_session|on_session]
+- body:payment_method_options.acss_debit.verification_method string enum[automatic|instant|microdeposits]
+- body:payment_method_options.affirm object enum[]
+- body:payment_method_options.affirm.capture_method string enum[|manual]
+- body:payment_method_options.affirm.setup_future_usage string enum[none]
+(+108 fields cut)
+
+## S395-0017  POST /v1/payment_intents/{intent}/increment_authorization
+desc: <p>Perform an incremental authorization on an eligible <a href="/docs/api/payment_intents/object">PaymentIntent</a>. To be eligible, the PaymentIntent’s status must be <code>requires_capture</code> and <a href="/docs/api/charges/object#charge_object-payment_method_details-card_present-incremental_authorization_supported">incremental_authorization_supported</a> must be <code>true</code>.</p> <p>Inc
+- path:intent string
+- body:amount integer
+- body:application_fee_amount integer
+- body:description string
+- body:expand array<string>
+- body:metadata object
+- body:statement_descriptor string
+- body:transfer_data object
+- body:transfer_data.amount integer
+
+## S395-0018  POST /v1/payment_links/{payment_link}
+desc: <p>Updates a payment link.</p>
+- path:payment_link string
+- body:active boolean
+- body:after_completion object
+- body:after_completion.hosted_confirmation object
+- body:after_completion.hosted_confirmation.custom_message string
+- body:after_completion.redirect object
+- body:after_completion.redirect.url string
+- body:after_completion.type string enum[hosted_confirmation|redirect]
+- body:allow_promotion_codes boolean
+- body:automatic_tax object
+- body:automatic_tax.enabled boolean
+- body:billing_address_collection string enum[auto|required]
+- body:custom_fields array<object> enum[]
+- body:custom_fields[].dropdown object
+- body:custom_fields[].dropdown.options array<object>
+- body:custom_fields[].key string
+- body:custom_fields[].label object
+- body:custom_fields[].label.custom string
+- body:custom_fields[].label.type string enum[custom]
+- body:custom_fields[].optional boolean
+- body:custom_fields[].type string enum[dropdown|numeric|text]
+- body:custom_text object
+- body:custom_text.shipping_address object enum[]
+- body:custom_text.shipping_address.message string
+- body:custom_text.submit object enum[]
+- body:custom_text.submit.message string
+- body:customer_creation string enum[always|if_required]
+- body:expand array<string>
+- body:invoice_creation object
+- body:invoice_creation.enabled boolean
+- body:invoice_creation.invoice_data object
+- body:invoice_creation.invoice_data.account_tax_ids array<string> enum[]
+- body:invoice_creation.invoice_data.custom_fields array<object> enum[]
+- body:invoice_creation.invoice_data.description string
+- body:invoice_creation.invoice_data.footer string
+- body:invoice_creation.invoice_data.metadata object enum[]
+- body:invoice_creation.invoice_data.rendering_options object enum[]
+- body:line_items array<object>
+- body:line_items[].adjustable_quantity object
+- body:line_items[].adjustable_quantity.enabled boolean
+- body:line_items[].adjustable_quantity.maximum integer
+- body:line_items[].adjustable_quantity.minimum integer
+- body:line_items[].id string
+- body:line_items[].quantity integer
+- body:metadata object
+- body:payment_method_collection string enum[always|if_required]
+- body:payment_method_types array<string> enum[affirm|afterpay_clearpay|alipay|au_becs_debit|bacs_debit|bancontact|blik|boleto|card|eps|fpx|giropay]
+- body:shipping_address_collection object enum[]
+- body:shipping_address_collection.allowed_countries array<string> enum[AC|AD|AE|AF|AG|AI|AL|AM|AO|AQ|AR|AT]
+
+## S395-0019  POST /v1/payment_methods/{payment_method}/attach
+desc: <p>Attaches a PaymentMethod object to a Customer.</p> <p>To attach a new PaymentMethod to a customer for future payments, we recommend you use a <a href="/docs/api/setup_intents">SetupIntent</a> or a PaymentIntent with <a href="/docs/api/payment_intents/create#create_payment_intent-setup_future_usage">setup_future_usage</a>. These approaches will perform any necessary steps to set up the PaymentMe
+- path:payment_method string
+- body:customer string
+- body:expand array<string>
+
+## S395-0020  POST /v1/prices/{price}
+desc: <p>Updates the specified price by setting the values of the parameters passed. Any parameters not provided are left unchanged.</p>
+- path:price string
+- body:active boolean
+- body:currency_options object enum[]
+- body:expand array<string>
+- body:lookup_key string
+- body:metadata object enum[]
+- body:nickname string
+- body:tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:transfer_lookup_key boolean
+
+## S395-0021  POST /v1/quotes/{quote}/finalize
+desc: <p>Finalizes the quote.</p>
+- path:quote string
+- body:expand array<string>
+- body:expires_at integer
+
+## S395-0022  POST /v1/radar/value_list_items
+desc: <p>Creates a new <code>ValueListItem</code> object, which is added to the specified parent value list.</p>
+- body:expand array<string>
+- body:value string
+- body:value_list string
+
+## S395-0023  POST /v1/reviews/{review}/approve
+desc: <p>Approves a <code>Review</code> object, closing it and removing it from the list of reviews.</p>
+- path:review string
+- body:expand array<string>
+
+## S395-0024  POST /v1/setup_intents/{intent}/confirm
+desc: <p>Confirm that your customer intends to set up the current or provided payment method. For example, you would confirm a SetupIntent when a customer hits the “Save” button on a payment method management page on your website.</p> <p>If the selected payment method does not require any additional steps from the customer, the SetupIntent will transition to the <code>succeeded</code> status.</p> <p>Oth
+- path:intent string
+- body:client_secret string
+- body:expand array<string>
+- body:mandate_data object
+- body:mandate_data.customer_acceptance object
+- body:mandate_data.customer_acceptance.accepted_at integer
+- body:mandate_data.customer_acceptance.offline object
+- body:mandate_data.customer_acceptance.online object
+- body:mandate_data.customer_acceptance.type string enum[offline|online]
+- body:payment_method string
+- body:payment_method_data object
+- body:payment_method_data.acss_debit object
+- body:payment_method_data.acss_debit.account_number string
+- body:payment_method_data.acss_debit.institution_number string
+- body:payment_method_data.acss_debit.transit_number string
+- body:payment_method_data.affirm object
+- body:payment_method_data.afterpay_clearpay object
+- body:payment_method_data.alipay object
+- body:payment_method_data.au_becs_debit object
+- body:payment_method_data.au_becs_debit.account_number string
+- body:payment_method_data.au_becs_debit.bsb_number string
+- body:payment_method_data.bacs_debit object
+- body:payment_method_data.bacs_debit.account_number string
+- body:payment_method_data.bacs_debit.sort_code string
+- body:payment_method_data.bancontact object
+- body:payment_method_data.billing_details object
+- body:payment_method_data.billing_details.address object enum[]
+- body:payment_method_data.billing_details.email string enum[]
+- body:payment_method_data.billing_details.name string
+- body:payment_method_data.billing_details.phone string
+- body:payment_method_data.blik object
+- body:payment_method_data.boleto object
+- body:payment_method_data.boleto.tax_id string
+- body:payment_method_data.customer_balance object
+- body:payment_method_data.eps object
+- body:payment_method_data.eps.bank string enum[arzte_und_apotheker_bank|austrian_anadi_bank_ag|bank_austria|bankhaus_carl_spangler|bankhaus_schelhammer_und_schattera_ag|bawag_psk_ag|bks_bank_ag|brull_kallmus_bank_ag|btv_vier_lander_bank|capital_bank_grawe_gruppe_ag|deutsche_bank_ag|dolomitenbank]
+- body:payment_method_data.fpx object
+- body:payment_method_data.fpx.bank string enum[affin_bank|agrobank|alliance_bank|ambank|bank_islam|bank_muamalat|bank_of_china|bank_rakyat|bsn|cimb|deutsche_bank|hong_leong_bank]
+- body:payment_method_data.giropay object
+- body:payment_method_data.grabpay object
+- body:payment_method_data.ideal object
+- body:payment_method_data.ideal.bank string enum[abn_amro|asn_bank|bunq|handelsbanken|ing|knab|moneyou|rabobank|regiobank|revolut|sns_bank|triodos_bank]
+- body:payment_method_data.interac_present object
+- body:payment_method_data.klarna object
+- body:payment_method_data.klarna.dob object
+- body:payment_method_data.konbini object
+- body:payment_method_data.link object
+- body:payment_method_data.metadata object
+- body:payment_method_data.oxxo object
+- body:payment_method_data.p24 object
+- body:payment_method_data.p24.bank string enum[alior_bank|bank_millennium|bank_nowy_bfg_sa|bank_pekao_sa|banki_spbdzielcze|blik|bnp_paribas|boz|citi_handlowy|credit_agricole|envelobank|etransfer_pocztowy24]
+- body:payment_method_data.paynow object
+- body:payment_method_data.pix object
+- body:payment_method_data.promptpay object
+- body:payment_method_data.radar_options object
+- body:payment_method_data.radar_options.session string
+- body:payment_method_data.sepa_debit object
+- body:payment_method_data.sepa_debit.iban string
+- body:payment_method_data.sofort object
+- body:payment_method_data.sofort.country string enum[AT|BE|DE|ES|IT|NL]
+- body:payment_method_data.type string enum[acss_debit|affirm|afterpay_clearpay|alipay|au_becs_debit|bacs_debit|bancontact|blik|boleto|customer_balance|eps|fpx]
+- body:payment_method_data.us_bank_account object
+- body:payment_method_data.us_bank_account.account_holder_type string enum[company|individual]
+- body:payment_method_data.us_bank_account.account_number string
+- body:payment_method_data.us_bank_account.account_type string enum[checking|savings]
+- body:payment_method_data.us_bank_account.financial_connections_account string
+- body:payment_method_data.us_bank_account.routing_number string
+- body:payment_method_data.wechat_pay object
+- body:payment_method_options object
+- body:payment_method_options.acss_debit object
+- body:payment_method_options.acss_debit.currency string enum[cad|usd]
+- body:payment_method_options.acss_debit.mandate_options object
+- body:payment_method_options.acss_debit.verification_method string enum[automatic|instant|microdeposits]
+- body:payment_method_options.blik object
+- body:payment_method_options.blik.code string
+- body:payment_method_options.card object
+- body:payment_method_options.card.mandate_options object
+- body:payment_method_options.card.network string enum[amex|cartes_bancaires|diners|discover|interac|jcb|mastercard|unionpay|unknown|visa]
+- body:payment_method_options.card.request_three_d_secure string enum[any|automatic]
+- body:payment_method_options.link object
+(+8 fields cut)
+
+## S395-0025  POST /v1/shipping_rates/{shipping_rate_token}
+desc: <p>Updates an existing shipping rate object.</p>
+- path:shipping_rate_token string
+- body:active boolean
+- body:expand array<string>
+- body:fixed_amount object
+- body:fixed_amount.currency_options object
+- body:metadata object enum[]
+- body:tax_behavior string enum[exclusive|inclusive|unspecified]
+
+## S395-0026  POST /v1/subscription_schedules
+desc: <p>Creates a new subscription schedule object. Each customer can have up to 500 active or scheduled subscriptions.</p>
+- body:customer string
+- body:default_settings object
+- body:default_settings.application_fee_percent number
+- body:default_settings.automatic_tax object
+- body:default_settings.automatic_tax.enabled boolean
+- body:default_settings.billing_cycle_anchor string enum[automatic|phase_start]
+- body:default_settings.billing_thresholds object enum[]
+- body:default_settings.billing_thresholds.amount_gte integer
+- body:default_settings.billing_thresholds.reset_billing_cycle_anchor boolean
+- body:default_settings.collection_method string enum[charge_automatically|send_invoice]
+- body:default_settings.default_payment_method string
+- body:default_settings.description string
+- body:default_settings.invoice_settings object
+- body:default_settings.invoice_settings.days_until_due integer
+- body:default_settings.on_behalf_of string enum[]
+- body:default_settings.transfer_data object enum[]
+- body:default_settings.transfer_data.amount_percent number
+- body:default_settings.transfer_data.destination string
+- body:end_behavior string enum[cancel|none|release|renew]
+- body:expand array<string>
+- body:from_subscription string
+- body:metadata object enum[]
+- body:phases array<object>
+- body:phases[].add_invoice_items array<object>
+- body:phases[].add_invoice_items[].price string
+- body:phases[].add_invoice_items[].price_data object
+- body:phases[].add_invoice_items[].quantity integer
+- body:phases[].add_invoice_items[].tax_rates array<string> enum[]
+- body:phases[].application_fee_percent number
+- body:phases[].automatic_tax object
+- body:phases[].automatic_tax.enabled boolean
+- body:phases[].billing_cycle_anchor string enum[automatic|phase_start]
+- body:phases[].billing_thresholds object enum[]
+- body:phases[].billing_thresholds.amount_gte integer
+- body:phases[].billing_thresholds.reset_billing_cycle_anchor boolean
+- body:phases[].collection_method string enum[charge_automatically|send_invoice]
+- body:phases[].coupon string
+- body:phases[].currency string
+- body:phases[].default_payment_method string
+- body:phases[].default_tax_rates array<string> enum[]
+- body:phases[].description string
+- body:phases[].end_date integer
+- body:phases[].invoice_settings object
+- body:phases[].invoice_settings.days_until_due integer
+- body:phases[].items array<object>
+- body:phases[].items[].billing_thresholds object enum[]
+- body:phases[].items[].metadata object
+- body:phases[].items[].price string
+- body:phases[].items[].price_data object
+- body:phases[].items[].quantity integer
+- body:phases[].items[].tax_rates array<string> enum[]
+- body:phases[].iterations integer
+- body:phases[].metadata object
+- body:phases[].on_behalf_of string
+- body:phases[].proration_behavior string enum[always_invoice|create_prorations|none]
+- body:phases[].transfer_data object
+- body:phases[].transfer_data.amount_percent number
+- body:phases[].transfer_data.destination string
+- body:phases[].trial boolean
+- body:phases[].trial_end integer
+- body:start_date integer enum[now]
+
+## S395-0027  POST /v1/subscription_schedules/{schedule}/release
+desc: <p>Releases the subscription schedule immediately, which will stop scheduling of its phases, but leave any existing subscription in place. A schedule can only be released if its status is <code>not_started</code> or <code>active</code>. If the subscription schedule is currently associated with a subscription, releasing it will remove its <code>subscription</code> property and set the subscription’
+- path:schedule string
+- body:expand array<string>
+- body:preserve_cancel_date boolean
+
+## S395-0028  POST /v1/terminal/locations/{location}
+desc: <p>Updates a <code>Location</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>
+- path:location string
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.line1 string
+- body:address.line2 string
+- body:address.postal_code string
+- body:address.state string
+- body:configuration_overrides string
+- body:display_name string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-0029  DELETE /v1/test_helpers/test_clocks/{test_clock}
+desc: <p>Deletes a test clock.</p>
+- path:test_clock string
+- body:(body) object
+
+## S395-0030  POST /v1/test_helpers/treasury/inbound_transfers/{id}/return
+desc: <p>Marks the test mode InboundTransfer object as returned and links the InboundTransfer to a ReceivedDebit. The InboundTransfer must already be in the <code>succeeded</code> state.</p>
+- path:id string
+- body:expand array<string>
+
+## S395-0031  POST /v1/test_helpers/treasury/inbound_transfers/{id}/succeed
+desc: <p>Transitions a test mode created InboundTransfer to the <code>succeeded</code> status. The InboundTransfer must already be in the <code>processing</code> state.</p>
+- path:id string
+- body:expand array<string>
+
+## S395-0032  POST /v1/test_helpers/treasury/outbound_payments/{id}/fail
+desc: <p>Transitions a test mode created OutboundPayment to the <code>failed</code> status. The OutboundPayment must already be in the <code>processing</code> state.</p>
+- path:id string
+- body:expand array<string>
+
+## S395-0033  POST /v1/test_helpers/treasury/received_credits
+desc: <p>Use this endpoint to simulate a test mode ReceivedCredit initiated by a third party. In live mode, you can’t directly create ReceivedCredits initiated by third parties.</p>
+- body:amount integer
+- body:currency string
+- body:description string
+- body:expand array<string>
+- body:financial_account string
+- body:initiating_payment_method_details object
+- body:initiating_payment_method_details.type string enum[us_bank_account]
+- body:initiating_payment_method_details.us_bank_account object
+- body:initiating_payment_method_details.us_bank_account.account_holder_name string
+- body:initiating_payment_method_details.us_bank_account.account_number string
+- body:initiating_payment_method_details.us_bank_account.routing_number string
+- body:network string enum[ach|us_domestic_wire]
+
+## S395-0034  POST /v1/tokens
+desc: <p>Creates a single-use token that represents a bank account’s details. This token can be used with any API method in place of a bank account dictionary. This token can be used only once, by attaching it to a <a href="#accounts">Custom account</a>.</p>
+- body:account object
+- body:account.business_type string enum[company|government_entity|individual|non_profit]
+- body:account.company object
+- body:account.company.address object
+- body:account.company.address_kana object
+- body:account.company.address_kanji object
+- body:account.company.directors_provided boolean
+- body:account.company.executives_provided boolean
+- body:account.company.name string
+- body:account.company.name_kana string
+- body:account.company.name_kanji string
+- body:account.company.owners_provided boolean
+- body:account.company.ownership_declaration object
+- body:account.company.ownership_declaration_shown_and_signed boolean
+- body:account.company.phone string
+- body:account.company.registration_number string
+- body:account.company.structure string enum[|free_zone_establishment|free_zone_llc|government_instrumentality|governmental_unit|incorporated_non_profit|limited_liability_partnership|llc|multi_member_llc|private_company|private_corporation|private_partnership]
+- body:account.company.tax_id string
+- body:account.company.tax_id_registrar string
+- body:account.company.vat_id string
+- body:account.company.verification object
+- body:account.individual object
+- body:account.individual.address object
+- body:account.individual.address_kana object
+- body:account.individual.address_kanji object
+- body:account.individual.dob object enum[]
+- body:account.individual.email string
+- body:account.individual.first_name string
+- body:account.individual.first_name_kana string
+- body:account.individual.first_name_kanji string
+- body:account.individual.full_name_aliases array<string> enum[]
+- body:account.individual.gender string
+- body:account.individual.id_number string
+- body:account.individual.id_number_secondary string
+- body:account.individual.last_name string
+- body:account.individual.last_name_kana string
+- body:account.individual.last_name_kanji string
+- body:account.individual.maiden_name string
+- body:account.individual.metadata object enum[]
+- body:account.individual.phone string
+- body:account.individual.political_exposure string enum[existing|none]
+- body:account.individual.registered_address object
+- body:account.individual.ssn_last_4 string
+- body:account.individual.verification object
+- body:account.tos_shown_and_accepted boolean
+- body:bank_account object
+- body:bank_account.account_holder_name string
+- body:bank_account.account_holder_type string enum[company|individual]
+- body:bank_account.account_number string
+- body:bank_account.account_type string enum[checking|futsu|savings|toza]
+- body:bank_account.country string
+- body:bank_account.currency string
+- body:bank_account.routing_number string
+- body:card object
+- body:card.address_city string
+- body:card.address_country string
+- body:card.address_line1 string
+- body:card.address_line2 string
+- body:card.address_state string
+- body:card.address_zip string
+- body:card.currency string
+- body:card.cvc string
+- body:card.exp_month string
+- body:card.exp_year string
+- body:card.name string
+- body:card.number string
+- body:customer string
+- body:cvc_update object
+- body:cvc_update.cvc string
+- body:expand array<string>
+- body:person object
+- body:person.address object
+- body:person.address.city string
+- body:person.address.country string
+- body:person.address.line1 string
+- body:person.address.line2 string
+- body:person.address.postal_code string
+- body:person.address.state string
+- body:person.address_kana object
+- body:person.address_kana.city string
+(+58 fields cut)
+
+## S395-0035  POST /v1/treasury/outbound_transfers
+desc: <p>Creates an OutboundTransfer.</p>
+- body:amount integer
+- body:currency string
+- body:description string
+- body:destination_payment_method string
+- body:destination_payment_method_options object
+- body:destination_payment_method_options.us_bank_account object enum[]
+- body:destination_payment_method_options.us_bank_account.network string enum[ach|us_domestic_wire]
+- body:expand array<string>
+- body:financial_account string
+- body:metadata object
+- body:statement_descriptor string
+
+## S395-0036  DELETE /v1/webhook_endpoints/{webhook_endpoint}
+desc: <p>You can also delete webhook endpoints via the <a href="https://dashboard.stripe.com/account/webhooks">webhook endpoint management</a> page of the Stripe dashboard.</p>
+- path:webhook_endpoint string
+- body:(body) object
+
+## S396-0001  POST /api/account/v1/feedback
+desc: Add manually verified receipt data to a given receipt for feedback and training purposes
+schema: receiptFeedbackAddPayload
+- body:currencyCode string
+- body:date string
+- body:masterCategory string
+- body:merchantName string
+- body:referenceId string
+- body:taxAmount number
+- body:totalAmount number
+
+## S396-0002  POST /api/account/v1/merchantname/add
+desc: Add a keyword to your account's model to predict merchant name. Changes in your account's model are updated daily.
+schema: merchantNameAddPayload
+- body:merchantName string
+
+## S396-0003  POST /api/receipt/v1/match/file
+desc: detect and match a receipt against keywords and metadata by uploading an image file
+- body:file file
+- body:refresh boolean
+- body:incognito boolean
+- body:ipAddress string
+- body:primaryKeywords array<string>
+- body:secondaryKeywords array<string>
+- body:stopWords array<string>
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+
+## S396-0004  POST /api/receipt/v1/simple/encoded
+desc: transcribe a receipt using base64 encoded image in json payload
+schema: jsonPayload
+- body:contentType string
+- body:extractTime boolean
+- body:filename string
+- body:ignoreMerchantName string
+- body:image string
+- body:incognito boolean
+- body:ipAddress string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:near string
+- body:referenceId string
+- body:refresh boolean
+- body:subAccountId string
+
+## S396-0005  POST /api/receipt/v1/simple/file
+desc: transcribe a receipt by uploading an image file
+- body:file file
+- body:refresh boolean
+- body:incognito boolean
+- body:ipAddress string
+- body:near string
+- body:ignoreMerchantName string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:extractTime boolean
+- body:subAccountId string
+- body:referenceId string
+
+## S396-0006  POST /api/receipt/v1/simple/storage
+desc: transcribe a receipt in storage
+schema: storagePayload
+- body:contentType string
+- body:extractTime boolean
+- body:ignoreMerchantName string
+- body:ipAddress string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:md5 string
+- body:near string
+- body:referenceId string
+- body:refresh boolean
+- body:subAccountId string
+
+## S396-0007  POST /api/receipt/v1/simple/url
+desc: transcribe a receipt from URL
+schema: urlPayload
+- body:extractTime boolean
+- body:headers object
+- body:headers.x-custom-key string
+- body:ignoreMerchantName string
+- body:incognito boolean
+- body:ipAddress string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:near string
+- body:referenceId string
+- body:refresh boolean
+- body:subAccountId string
+- body:url string
+
+## S396-0008  POST /api/receipt/v1/verbose/encoded
+desc: transcribe a receipt using base64 encoded image in json payload and return detailed result
+schema: jsonPayload
+- body:contentType string
+- body:extractTime boolean
+- body:filename string
+- body:ignoreMerchantName string
+- body:image string
+- body:incognito boolean
+- body:ipAddress string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:near string
+- body:referenceId string
+- body:refresh boolean
+- body:subAccountId string
+
+## S396-0009  POST /api/receipt/v1/verbose/file
+desc: transcribe a receipt by uploading an image file and return detailed result
+- body:file file
+- body:refresh boolean
+- body:incognito boolean
+- body:ipAddress string
+- body:near string
+- body:ignoreMerchantName string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:extractTime boolean
+- body:subAccountId string
+- body:referenceId string
+
+## S396-0010  POST /api/receipt/v1/verbose/storage
+desc: transcribe a receipt in storage and return detailed result
+schema: storagePayload
+- body:contentType string
+- body:extractTime boolean
+- body:ignoreMerchantName string
+- body:ipAddress string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:md5 string
+- body:near string
+- body:referenceId string
+- body:refresh boolean
+- body:subAccountId string
+
+## S396-0011  POST /api/receipt/v1/verbose/url
+desc: transcribe a receipt from URL and return detailed result
+schema: urlPayload
+- body:extractTime boolean
+- body:headers object
+- body:headers.x-custom-key string
+- body:ignoreMerchantName string
+- body:incognito boolean
+- body:ipAddress string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:near string
+- body:referenceId string
+- body:refresh boolean
+- body:subAccountId string
+- body:url string
+
+## S396-0012  POST /api/validation/v1/campaign/file
+desc: validate and match a receipt against a campaign validation settings by uploading an image file
+- body:file file
+- body:incognito boolean
+- body:ipAddress string
+- body:near string
+- body:campaignId string
+- body:referenceId string
+
+## S396-0013  POST /api/validation/v1/campaign/product-validation/file
+desc: validate if user-submitted info like serial number are detected an image file
+- body:file file
+- body:productVerificationNumber string
+- body:incognito boolean
+- body:subAccountId string
+- body:referenceId string
+
+## S397-0001  POST /addStickerToSet
+desc: Use this method to add a new sticker to a set created by the bot. You **must** use exactly one of the fields *png\_sticker* or *tgs\_sticker*. Animated stickers can be added to animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns *True* on success.
+- body:emojis string
+- body:mask_position object
+- body:mask_position.point string enum[forehead|eyes|mouth|chin]
+- body:mask_position.scale number
+- body:mask_position.x_shift number
+- body:mask_position.y_shift number
+- body:name string
+- body:png_sticker string
+- body:tgs_sticker any
+- body:user_id integer
+
+## S397-0002  POST /answerPreCheckoutQuery
+desc: Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an [Update](https://core.telegram.org/bots/api/#update) with the field *pre\_checkout\_query*. Use this method to respond to such pre-checkout queries. On success, True is returned. **Note:** The Bot API must receive an answer within 10 seconds after the pre-checkout query was se
+- body:error_message string
+- body:ok boolean
+- body:pre_checkout_query_id string
+
+## S397-0003  POST /copyMessage
+desc: Use this method to copy messages of any kind. The method is analogous to the method [forwardMessages](https://core.telegram.org/bots/api/#forwardmessages), but the copied message doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.org/bots/api/#messageid) of the sent message on success.
+- body:allow_sending_without_reply boolean
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:disable_notification boolean
+- body:from_chat_id integer
+- body:message_id integer
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+
+## S397-0004  POST /deleteChatPhoto
+desc: Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns *True* on success.
+- body:chat_id integer
+
+## S397-0005  POST /deleteMessage
+desc: Use this method to delete a message, including service messages, with the following limitations: \- A message can only be deleted if it was sent less than 48 hours ago. \- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago. \- Bots can delete outgoing messages in private chats, groups, and supergroups. \- Bots can delete incoming messages in private chats. \
+- body:chat_id integer
+- body:message_id integer
+
+## S397-0006  POST /deleteWebhook
+desc: Use this method to remove webhook integration if you decide to switch back to [getUpdates](https://core.telegram.org/bots/api/#getupdates). Returns *True* on success.
+- body:drop_pending_updates boolean
+
+## S397-0007  POST /editMessageLiveLocation
+desc: Use this method to edit live location messages. A location can be edited until its *live\_period* expires or editing is explicitly disabled by a call to [stopMessageLiveLocation](https://core.telegram.org/bots/api/#stopmessagelivelocation). On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is 
+- body:chat_id integer
+- body:heading integer
+- body:horizontal_accuracy number
+- body:inline_message_id string
+- body:latitude number
+- body:longitude number
+- body:message_id integer
+- body:proximity_alert_radius integer
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+
+## S397-0008  POST /editMessageMedia
+desc: Use this method to edit animation, audio, document, photo, or video messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo or a video otherwise. When an inline message is edited, a new file can't be uploaded. Use a previously uploaded file via its file\_id or specify a URL. On success, if the
+- body:chat_id integer
+- body:inline_message_id string
+- body:media object
+- body:media.caption string
+- body:media.caption_entities array<object>
+- body:media.caption_entities[].language string
+- body:media.caption_entities[].length integer
+- body:media.caption_entities[].offset integer
+- body:media.caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:media.caption_entities[].url string
+- body:media.caption_entities[].user object
+- body:media.duration integer
+- body:media.height integer
+- body:media.media string
+- body:media.parse_mode string
+- body:media.thumb string
+- body:media.type string
+- body:media.width integer
+- body:media.disable_content_type_detection boolean
+- body:media.performer string
+- body:media.title string
+- body:media.supports_streaming boolean
+- body:message_id integer
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+
+## S397-0009  POST /editMessageText
+desc: Use this method to edit text and [game](https://core.telegram.org/bots/api/#games) messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is returned.
+- body:chat_id integer
+- body:disable_web_page_preview boolean
+- body:entities array<object>
+- body:entities[].language string
+- body:entities[].length integer
+- body:entities[].offset integer
+- body:entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:entities[].url string
+- body:entities[].user object
+- body:entities[].user.can_join_groups boolean
+- body:entities[].user.can_read_all_group_messages boolean
+- body:entities[].user.first_name string
+- body:entities[].user.id integer
+- body:entities[].user.is_bot boolean
+- body:entities[].user.language_code string
+- body:entities[].user.last_name string
+- body:entities[].user.supports_inline_queries boolean
+- body:entities[].user.username string
+- body:inline_message_id string
+- body:message_id integer
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:text string
+
+## S397-0010  POST /exportChatInviteLink
+desc: Use this method to generate a new invite link for a chat; any previously generated link is revoked. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the new invite link as *String* on success.
+- body:chat_id integer
+
+## S397-0011  POST /forwardMessage
+desc: Use this method to forward messages of any kind. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:chat_id integer
+- body:disable_notification boolean
+- body:from_chat_id integer
+- body:message_id integer
+
+## S397-0012  POST /getChat
+desc: Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a [Chat](https://core.telegram.org/bots/api/#chat) object on success.
+- body:chat_id integer
+
+## S397-0013  POST /getChatMember
+desc: Use this method to get information about a member of a chat. Returns a [ChatMember](https://core.telegram.org/bots/api/#chatmember) object on success.
+- body:chat_id integer
+- body:user_id integer
+
+## S397-0014  POST /getMe
+desc: A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a [User](https://core.telegram.org/bots/api/#user) object.
+
+## S397-0015  POST /getStickerSet
+desc: Use this method to get a sticker set. On success, a [StickerSet](https://core.telegram.org/bots/api/#stickerset) object is returned.
+- body:name string
+
+## S397-0016  POST /getUserProfilePhotos
+desc: Use this method to get a list of profile pictures for a user. Returns a [UserProfilePhotos](https://core.telegram.org/bots/api/#userprofilephotos) object.
+- body:limit integer
+- body:offset integer
+- body:user_id integer
+
+## S397-0017  POST /getWebhookInfo
+desc: Use this method to get current webhook status. Requires no parameters. On success, returns a [WebhookInfo](https://core.telegram.org/bots/api/#webhookinfo) object. If the bot is using [getUpdates](https://core.telegram.org/bots/api/#getupdates), will return an object with the *url* field empty.
+
+## S397-0018  POST /logOut
+desc: Use this method to log out from the cloud Bot API server before launching the bot locally. You **must** log out the bot before running it locally, otherwise there is no guarantee that the bot will receive updates. After a successful call, you can immediately log in on a local server, but will not be able to log in back to the cloud Bot API server for 10 minutes. Returns *True* on success. Requires
+
+## S397-0019  POST /pinChatMessage
+desc: Use this method to add a message to the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can\_pin\_messages' admin right in a supergroup or 'can\_edit\_messages' admin right in a channel. Returns *True* on success.
+- body:chat_id integer
+- body:disable_notification boolean
+- body:message_id integer
+
+## S397-0020  POST /promoteChatMember
+desc: Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Pass *False* for all boolean parameters to demote a user. Returns *True* on success.
+- body:can_change_info boolean
+- body:can_delete_messages boolean
+- body:can_edit_messages boolean
+- body:can_invite_users boolean
+- body:can_pin_messages boolean
+- body:can_post_messages boolean
+- body:can_promote_members boolean
+- body:can_restrict_members boolean
+- body:chat_id integer
+- body:is_anonymous boolean
+- body:user_id integer
+
+## S397-0021  POST /sendAnimation
+desc: Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
+- body:allow_sending_without_reply boolean
+- body:animation string
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:disable_notification boolean
+- body:duration integer
+- body:height integer
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:thumb string
+- body:width integer
+
+## S397-0022  POST /sendContact
+desc: Use this method to send phone contacts. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:chat_id integer
+- body:disable_notification boolean
+- body:first_name string
+- body:last_name string
+- body:phone_number string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:vcard string
+
+## S397-0023  POST /sendDice
+desc: Use this method to send an animated emoji that will display a random value. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:chat_id integer
+- body:disable_notification boolean
+- body:emoji string enum[🎲|🎯|🏀|⚽|🎰]
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+
+## S397-0024  POST /sendDocument
+desc: Use this method to send general files. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
+- body:allow_sending_without_reply boolean
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:disable_content_type_detection boolean
+- body:disable_notification boolean
+- body:document string
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:thumb string
+
+## S397-0025  POST /sendPhoto
+desc: Use this method to send photos. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:disable_notification boolean
+- body:parse_mode string
+- body:photo string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+
+## S397-0026  POST /sendPoll
+desc: Use this method to send a native poll. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:allows_multiple_answers boolean
+- body:chat_id integer
+- body:close_date integer
+- body:correct_option_id integer
+- body:disable_notification boolean
+- body:explanation string
+- body:explanation_entities array<object>
+- body:explanation_entities[].language string
+- body:explanation_entities[].length integer
+- body:explanation_entities[].offset integer
+- body:explanation_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:explanation_entities[].url string
+- body:explanation_entities[].user object
+- body:explanation_entities[].user.can_join_groups boolean
+- body:explanation_entities[].user.can_read_all_group_messages boolean
+- body:explanation_entities[].user.first_name string
+- body:explanation_entities[].user.id integer
+- body:explanation_entities[].user.is_bot boolean
+- body:explanation_entities[].user.language_code string
+- body:explanation_entities[].user.last_name string
+- body:explanation_entities[].user.supports_inline_queries boolean
+- body:explanation_entities[].user.username string
+- body:explanation_parse_mode string
+- body:is_anonymous boolean
+- body:is_closed boolean
+- body:open_period integer
+- body:options array<string>
+- body:question string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:type string
+
+## S397-0027  POST /sendVideo
+desc: Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as [Document](https://core.telegram.org/bots/api/#document)). On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
+- body:allow_sending_without_reply boolean
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:disable_notification boolean
+- body:duration integer
+- body:height integer
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:supports_streaming boolean
+- body:thumb string
+- body:video string
+- body:width integer
+
+## S397-0028  POST /sendVideoNote
+desc: As of [v.4.0](https://telegram.org/blog/video-messages-and-telescope), Telegram clients support rounded square mp4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:chat_id integer
+- body:disable_notification boolean
+- body:duration integer
+- body:length integer
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:thumb string
+- body:video_note string
+
+## S397-0029  POST /sendVoice
+desc: Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as [Audio](https://core.telegram.org/bots/api/#audio) or [Document](https://core.telegram.org/bots/api/#document)). On success, the sent [Message](https://core.telegram.org/bots/api/#mess
+- body:allow_sending_without_reply boolean
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:disable_notification boolean
+- body:duration integer
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:voice string
+
+## S397-0030  POST /setChatPhoto
+desc: Use this method to set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns *True* on success.
+- body:chat_id integer
+- body:photo any
+
+## S397-0031  POST /setChatStickerSet
+desc: Use this method to set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field *can\_set\_sticker\_set* optionally returned in [getChat](https://core.telegram.org/bots/api/#getchat) requests to check if the bot can use this method. Returns *True* on success.
+- body:chat_id integer
+- body:sticker_set_name string
+
+## S397-0032  POST /setPassportDataErrors
+desc: Informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns *True* on success. Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For exampl
+- body:errors array<object>
+- body:errors[].data_hash string
+- body:errors[].field_name string
+- body:errors[].message string
+- body:errors[].source string
+- body:errors[].type string enum[personal_details|passport|driver_license|identity_card|internal_passport|address]
+- body:errors[].file_hash string
+- body:errors[].file_hashes array<string>
+- body:errors[].element_hash string
+- body:user_id integer
+
+## S397-0033  POST /setStickerPositionInSet
+desc: Use this method to move a sticker in a set created by the bot to a specific position. Returns *True* on success.
+- body:position integer
+- body:sticker string
+
+## S397-0034  POST /stopMessageLiveLocation
+desc: Use this method to stop updating a live location message before *live\_period* expires. On success, if the message was sent by the bot, the sent [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is returned.
+- body:chat_id integer
+- body:inline_message_id string
+- body:message_id integer
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+
+## S397-0035  POST /stopPoll
+desc: Use this method to stop a poll which was sent by the bot. On success, the stopped [Poll](https://core.telegram.org/bots/api/#poll) with the final results is returned.
+- body:chat_id integer
+- body:message_id integer
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+
+## S397-0036  POST /unpinAllChatMessages
+desc: Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can\_pin\_messages' admin right in a supergroup or 'can\_edit\_messages' admin right in a channel. Returns *True* on success.
+- body:chat_id integer
+
+## S398-0001  POST /search/{versionNumber}/geometryFilter.{ext}
+desc: Geometry Filter
+- path:versionNumber integer enum[2]
+- path:ext string enum[json|jsonp|js|xml]
+- body:geometryList array<object>
+- body:geometryList[].position string
+- body:geometryList[].radius integer
+- body:geometryList[].type string
+- body:geometryList[].vertices array<string>
+- body:poiList array<object>
+- body:poiList[].address object
+- body:poiList[].address.freeformAddress string
+- body:poiList[].poi object
+- body:poiList[].poi.name string
+- body:poiList[].position object
+- body:poiList[].position.lat number
+- body:poiList[].position.lon number

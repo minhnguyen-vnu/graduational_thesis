@@ -1,0 +1,792 @@
+## S360-0001  POST /v1/chargestations
+desc: Create a new charge station
+- body:location string
+- body:manufacturer string
+- body:model string
+- body:protocol string
+- body:public boolean
+
+## S360-0002  DELETE /v1/chargestations/{id}
+desc: Use to delete a charge station
+- path:id string
+
+## S360-0003  PATCH /v1/chargestations/{id}
+desc: Update a charge station's data
+- path:id string
+- body:location string
+- body:manufacturer string
+- body:model string
+- body:protocol string
+- body:public boolean
+
+## S360-0004  POST /v1/commands/cancelreservation
+desc: Use to request a delete an existing reservation. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- body:reservation string
+
+## S360-0005  DELETE /v1/commands/chargingschedule
+desc: Delete a smart charging schedule
+- body:id string
+
+## S360-0006  POST /v1/commands/chargingschedule
+desc: Set one of charging power or current of a specific chargestation connector
+- body:connector string
+- body:schedule array<object>
+- body:schedule[].endDate string
+- body:schedule[].limit number
+- body:schedule[].startDate string
+- body:schedule[].unit string
+
+## S360-0007  POST /v1/commands/remotestart
+desc: Use to request a remote start command. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- body:chargestation string
+- body:connector string
+- body:driver string
+- body:token string
+
+## S360-0008  POST /v1/commands/remotestop
+desc: Use to request a remote stop command. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- body:chargestation string
+- body:driver string
+- body:transaction string
+
+## S360-0009  POST /v1/commands/reserve
+desc: Use to request a reserve command. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- body:chargestation string
+- body:connector string
+- body:driver string
+- body:endDate string
+- body:token string
+
+## S360-0010  POST /v1/commands/reset
+desc: Use to request a reset command. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- body:chargestation string
+- body:type string
+
+## S360-0011  POST /v1/commands/unlockconnector
+desc: Use to request an unlock command for a connector. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- body:chargestation string
+- body:connector string
+
+## S360-0012  PATCH /v1/commands/{id}/variables
+desc: Update config variables for a chargestation
+- path:id string
+- body:value string
+- body:variable string enum[MeterValueSampleInterval|HeartbeatInterval|ConnectionTimeOut|WebSocketPingInterval|TransactionMessageRetryInterval|TransactionMessageAttempts]
+
+## S360-0013  POST /v1/configurations
+desc: Create connector with parameters
+- body:key string
+- body:value string
+
+## S360-0014  POST /v1/connectors
+desc: Create a new connector
+- body:chargestation string
+- body:format string
+- body:power integer
+- body:power_type string
+- body:rate string
+- body:type string
+
+## S360-0015  DELETE /v1/connectors/{id}
+desc: Delete a connector
+- path:id string
+
+## S360-0016  PATCH /v1/connectors/{id}
+desc: Update a connector's data
+- path:id string
+- body:chargestation string
+- body:format string
+- body:power integer
+- body:power_type string
+- body:rate string
+- body:type string
+
+## S360-0017  POST /v1/drivers
+desc: Create a new driver
+- body:active boolean
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.streetAndNumber string
+- body:email string
+- body:firstname string
+- body:lastname string
+- body:phone object
+- body:phone.home string
+- body:phone.mobile string
+- body:phone.work string
+- body:source string enum[physical|slack|telegram|sms]
+
+## S360-0018  DELETE /v1/drivers/{id}
+desc: Delete a driver
+- path:id string
+
+## S360-0019  PATCH /v1/drivers/{id}
+desc: Update a driver's data
+- path:id string
+- body:active boolean
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.streetAndNumber string
+- body:email string
+- body:firstname string
+- body:lastname string
+- body:phone object
+- body:phone.home string
+- body:phone.mobile string
+- body:phone.work string
+- body:source string
+- body:tokens array<any>
+
+## S360-0020  DELETE /v1/location/{id}
+desc: Delete a location
+- path:id string
+
+## S360-0021  PATCH /v1/location/{id}
+desc: Update a location's data
+- path:id string
+- body:active boolean
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.state string
+- body:address.streetAndNumber string
+- body:chargestations array<any>
+- body:coordinates object
+- body:coordinates.latitude number
+- body:coordinates.longitude number
+- body:openingHours object
+- body:openingHours.0 array<object>
+- body:openingHours.0[].endTime string
+- body:openingHours.0[].startTime string
+- body:openingHours.1 array<object>
+- body:openingHours.1[].endTime string
+- body:openingHours.1[].startTime string
+- body:openingHours.2 array<object>
+- body:openingHours.2[].endTime string
+- body:openingHours.2[].startTime string
+- body:openingHours.3 array<object>
+- body:openingHours.3[].endTime string
+- body:openingHours.3[].startTime string
+- body:openingHours.4 array<object>
+- body:openingHours.4[].endTime string
+- body:openingHours.4[].startTime string
+- body:openingHours.5 array<object>
+- body:openingHours.5[].endTime string
+- body:openingHours.5[].startTime string
+- body:openingHours.6 array<object>
+- body:openingHours.6[].endTime string
+- body:openingHours.6[].startTime string
+- body:operatorName string
+- body:timezone string
+
+## S360-0022  POST /v1/locations
+desc: Create a new location
+- body:active boolean
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.streetAndNumber string
+- body:chargestations array<any>
+- body:coordinates object
+- body:coordinates.latitude number
+- body:coordinates.longitude number
+- body:operatorName string
+
+## S360-0023  PATCH /v1/organizations/{id}
+desc: Update an organization's data
+- path:id string
+- body:active boolean
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.streetAndNumber string
+- body:channels object
+- body:channels.slack object
+- body:channels.telegram object
+- body:configurations object
+- body:configurations.basicAuthEnabled boolean
+- body:configurations.basicAuthPassword boolean
+- body:links object
+- body:links.about string
+- body:links.contact string
+- body:links.privacy string
+- body:links.support string
+- body:locations array<any>
+- body:logo string
+- body:name string
+- body:otp string
+- body:stripe_connected_account_id string
+- body:stripe_country string
+- body:stripe_currency string
+- body:stripe_reserve_amount integer
+- body:support object
+- body:support.business_hours string
+- body:support.chat object
+- body:support.chat.type string
+- body:support.chat.value string
+- body:support.contact_number string
+- body:support.email string
+- body:supportChat object
+- body:supportChat.id string
+- body:supportChat.name string
+- body:theme object
+- body:theme.colors object
+- body:theme.colors.primary string
+- body:theme.colors.secondary string
+
+## S360-0024  PATCH /v1/reservations/{id}
+desc: Use to request a update an existing reservation. The request will wait for the charge station to process the command. It will timeout after 60 seconds.
+- path:id string
+- body:connector integer
+- body:driver string
+- body:endDate string
+- body:evse integer
+
+## S360-0025  POST /v1/tokens
+desc: Create a new token
+- body:active boolean
+- body:channel string enum[physical|slack|telegram|sms]
+- body:driver string
+- body:physicalId string
+- body:type string
+
+## S360-0026  DELETE /v1/tokens/{id}
+desc: Use to delete a token
+- path:id string
+
+## S360-0027  PATCH /v1/tokens/{id}
+desc: Update a token
+- path:id string
+- body:active boolean
+- body:channel string enum[physical|slack|telegram|sms]
+- body:driver string
+- body:physicalId string
+- body:type string
+
+## S360-0028  POST /v1/vehicles/{id}/charge
+desc: Change charge
+- path:id string
+- body:action string enum[START|STOP]
+
+## S361-0001  POST /almaws/v1/task-lists/printouts
+summary: Act on Printouts
+desc: This API performs an action on printouts: mark as printed or canceled. 10,000 records can be handled in one requests. Only printouts which were updated will be returned.
+- query:letter string
+- query:status string
+- query:printer_id string
+- query:printout_id string
+- query:op string
+
+## S361-0002  POST /almaws/v1/task-lists/printouts/{printout_id}
+summary: Printout Service
+desc: This API operates on an printout. given a Printout ID.
+- path:printout_id string
+- query:op string
+
+## S361-0003  POST /almaws/v1/task-lists/requested-resources
+summary: Act on Requested Resources
+desc: This API performs an action on requested resources that are on the shelf in Alma
+- query:library string
+- query:circ_desk string
+- query:op string
+- query:location string
+- query:pickup_inst string
+- query:reported string
+- query:printed string
+
+## S361-0004  POST /almaws/v1/task-lists/rs/lending-requests
+summary: Act on Lending Requests
+desc: This API preforms the requested action on a list (specified by given filters) of lending requests in Alma
+- query:library string
+- query:op string
+- query:status string
+- query:printed string
+- query:reported string
+- query:partner string
+- query:requested_format string
+- query:supplied_format string
+
+## S361-0005  POST /almaws/v1/task-lists/test
+summary: POST Task-lists Test API
+desc: This API is used to test if the API key was configured correctly, including read/write permissions.It returns a short XML (no schema available - the output is subject to changes) with the following structure:<test>POST - OK</test>
+
+## S363-0001  POST /combined_submissions
+summary: Merge generated PDFs together
+- body:expires_in integer
+- body:metadata object
+- body:password string
+- body:submission_ids array<string>
+- body:test boolean
+
+## S363-0002  DELETE /combined_submissions/{combined_submission_id}
+summary: Expire a combined submission
+- path:combined_submission_id string
+
+## S363-0003  POST /combined_submissions?v=2
+summary: Merge submission PDFs, template PDFs, or custom files
+- body:delete_custom_files boolean
+- body:expires_in integer
+- body:metadata object
+- body:password string
+- body:source_pdfs array<object>
+- body:source_pdfs[].id string
+- body:source_pdfs[].type string enum[submission|combined_submission|template|custom_file]
+- body:source_pdfs[].url string
+- body:test boolean
+
+## S363-0004  POST /custom_files
+summary: Create a new custom file from a cached presign upload
+- body:cache_id string
+
+## S363-0005  PUT /data_requests/{data_request_id}
+summary: Update a submission data request
+- path:data_request_id string
+- body:auth_phone_number_hash string
+- body:auth_provider string
+- body:auth_second_factor_type string enum[none|phone_number|totp|mobile_push|security_key|fingerprint]
+- body:auth_session_id_hash string
+- body:auth_session_started_at string
+- body:auth_type string enum[none|password|oauth|email_link|phone_number|ldap|saml]
+- body:auth_user_id_hash string
+- body:auth_username_hash string
+- body:email string
+- body:fields array<string>
+- body:metadata object
+- body:name string
+- body:order integer
+
+## S363-0006  POST /data_requests/{data_request_id}/tokens
+summary: Creates a new data request token for form authentication
+- path:data_request_id string
+
+## S363-0007  POST /folders/
+summary: Create a folder
+- body:folder object
+- body:folder.name string
+- body:folder.parent_folder_id string
+
+## S363-0008  DELETE /folders/{folder_id}
+summary: Delete a folder
+- path:folder_id string
+
+## S363-0009  POST /folders/{folder_id}/move
+summary: Move a folder
+- path:folder_id string
+- body:parent_folder_id string
+
+## S363-0010  POST /folders/{folder_id}/rename
+summary: Rename a folder
+- path:folder_id string
+- body:name string
+
+## S363-0011  POST /submissions/batches
+summary: Generates multiple PDFs
+- body:metadata object
+- body:submissions array<object>
+- body:submissions[].css string
+- body:submissions[].data object
+- body:submissions[].html string
+- body:submissions[].metadata object
+- body:submissions[].template_id string
+- body:submissions[].test boolean
+- body:template_id string
+- body:test boolean
+
+## S363-0012  DELETE /submissions/{submission_id}
+summary: Expire a PDF submission
+- path:submission_id string
+
+## S363-0013  POST /templates
+summary: Create a new PDF template with a form POST file upload
+- body:template[document] string
+- body:template[name] string
+- body:template[parent_folder_id] string
+
+## S363-0014  PUT /templates/{template_id}
+summary: Update a Template
+- path:template_id string
+- body:template object
+- body:template.allow_additional_properties boolean
+- body:template.description string
+- body:template.editable_submissions boolean
+- body:template.expiration_interval string enum[minutes|hours|days]
+- body:template.expire_after number
+- body:template.expire_submissions boolean
+- body:template.footer_html string
+- body:template.header_html string
+- body:template.html string
+- body:template.name string
+- body:template.public_submissions boolean
+- body:template.public_web_form boolean
+- body:template.redirect_url string
+- body:template.scss string
+- body:template.slack_webhook_url string
+- body:template.webhook_url string
+
+## S363-0015  PUT /templates/{template_id}/add_fields
+summary: Add new fields to a Template
+- path:template_id string
+- body:fields array<object>
+- body:fields[].alignment string enum[left|center|right]
+- body:fields[].autoCalculateMaxLength boolean
+- body:fields[].backgroundColor string
+- body:fields[].backgroundColorFieldName string
+- body:fields[].backgroundColorFieldRequired boolean
+- body:fields[].barcodeSymbology string
+- body:fields[].bold boolean
+- body:fields[].characterSpacing number
+- body:fields[].checkCharacter string enum[&#10003;|&#10004;|&#10006;|&#10007;|&#10008;]
+- body:fields[].checkColor string
+- body:fields[].checkColorFieldName string
+- body:fields[].checkColorFieldRequired boolean
+- body:fields[].color string
+- body:fields[].colorFieldName string
+- body:fields[].colorFieldRequired boolean
+- body:fields[].comb boolean
+- body:fields[].combNumberOfCells number
+- body:fields[].combValueOffset number
+- body:fields[].combinedFieldFormat string
+- body:fields[].combinedFieldNames string
+- body:fields[].combinedFieldSeparator string
+- body:fields[].combinedFieldType string
+- body:fields[].condition string
+- body:fields[].currency boolean
+- body:fields[].dateTimeFormat string
+- body:fields[].decimalPlaces number
+- body:fields[].default string
+- body:fields[].description string
+- body:fields[].displayType string enum[text|check|qrcode|barcode|image|shape]
+- body:fields[].exclusiveMaximum boolean
+- body:fields[].exclusiveMinimum boolean
+- body:fields[].falseText string
+- body:fields[].fontSize number
+- body:fields[].height number
+- body:fields[].hidden boolean
+- body:fields[].id number
+- body:fields[].imageGravity string enum[NorthWest|North|NorthEast|West|Center|East|SouthWest|South|SouthEast]
+- body:fields[].imageScaleType string enum[fit|fill|stretch]
+- body:fields[].includeTime boolean
+- body:fields[].integer boolean
+- body:fields[].invertBooleanCondition boolean
+- body:fields[].maxLength number
+- body:fields[].maximum number
+- body:fields[].metadata string
+- body:fields[].minLength number
+- body:fields[].minimum number
+- body:fields[].multiline boolean
+- body:fields[].multilineLines number
+- body:fields[].name string
+- body:fields[].numberConditionRangeExclusiveMax boolean
+- body:fields[].numberConditionRangeExclusiveMin boolean
+- body:fields[].numberConditionRangeMax number
+- body:fields[].numberConditionRangeMin number
+- body:fields[].numberConditionType string enum[equals|range|gte|gt|lte|lt]
+- body:fields[].opacity number
+- body:fields[].optionList string
+- body:fields[].overflow string enum[shrink_to_fit|truncate]
+- body:fields[].page number
+- body:fields[].placeholder string
+- body:fields[].qrcodeColor string
+- body:fields[].qrcodeColorFieldName string
+- body:fields[].qrcodeColorFieldRequired boolean
+- body:fields[].required boolean
+- body:fields[].rotation number
+- body:fields[].shapeBorderColor string
+- body:fields[].shapeBorderColorFieldName string
+- body:fields[].shapeBorderColorFieldRequired boolean
+- body:fields[].shapeBorderWidth number
+- body:fields[].shapeFillColor string
+- body:fields[].shapeFillColorFieldName string
+- body:fields[].shapeFillColorFieldRequired boolean
+- body:fields[].shapeType string enum[square|rectangle|circle|ellipse]
+- body:fields[].signatureAllowDraw boolean
+- body:fields[].signatureAllowType boolean
+- body:fields[].static boolean
+- body:fields[].strikethrough boolean
+- body:fields[].stringConditionType string enum[equals|contains|starts_with|ends_with|regex]
+- body:fields[].title string
+- (8 truong bi cat)
+
+## S363-0016  POST /templates/{template_id}/copy
+summary: Copy a Template
+- path:template_id string
+- body:name string
+- body:parent_folder_id string
+
+## S363-0017  POST /templates/{template_id}/move
+summary: Move Template to folder
+- path:template_id string
+- body:parent_folder_id string
+
+## S363-0018  POST /templates/{template_id}/submissions
+summary: Generates a new PDF
+- path:template_id string
+- body:css string
+- body:data object
+- body:data_requests array<object>
+- body:data_requests[].auth_phone_number_hash string
+- body:data_requests[].auth_provider string
+- body:data_requests[].auth_second_factor_type string enum[none|phone_number|totp|mobile_push|security_key|fingerprint]
+- body:data_requests[].auth_session_id_hash string
+- body:data_requests[].auth_session_started_at string
+- body:data_requests[].auth_type string enum[none|password|oauth|email_link|phone_number|ldap|saml]
+- body:data_requests[].auth_user_id_hash string
+- body:data_requests[].auth_username_hash string
+- body:data_requests[].email string
+- body:data_requests[].fields array<string>
+- body:data_requests[].metadata object
+- body:data_requests[].name string
+- body:data_requests[].order integer
+- body:expires_in integer
+- body:field_overrides object
+- body:html string
+- body:metadata object
+- body:password string
+- body:test boolean
+
+## S363-0019  POST /templates/{template_id}/submissions/batch
+summary: Generates multiple PDFs
+- path:template_id string
+- body:(body) object
+
+## S363-0020  POST /templates?desc=cached_upload
+summary: Create a new PDF template from a cached presign upload
+- body:template object
+- body:template.allow_additional_properties boolean
+- body:template.description string
+- body:template.document object
+- body:template.document.id string
+- body:template.document.metadata object
+- body:template.document.storage string enum[cache]
+- body:template.editable_submissions boolean
+- body:template.expiration_interval string enum[minutes|hours|days]
+- body:template.expire_after number
+- body:template.expire_submissions boolean
+- body:template.footer_html string
+- body:template.header_html string
+- body:template.html string
+- body:template.name string
+- body:template.public_submissions boolean
+- body:template.public_web_form boolean
+- body:template.redirect_url string
+- body:template.scss string
+- body:template.slack_webhook_url string
+- body:template.template_type string enum[pdf|html]
+- body:template.webhook_url string
+
+## S363-0021  POST /templates?desc=html
+summary: Create a new HTML template
+- body:template object
+- body:template.allow_additional_properties boolean
+- body:template.description string
+- body:template.editable_submissions boolean
+- body:template.expiration_interval string enum[minutes|hours|days]
+- body:template.expire_after number
+- body:template.expire_submissions boolean
+- body:template.footer_html string
+- body:template.header_html string
+- body:template.html string
+- body:template.name string
+- body:template.public_submissions boolean
+- body:template.public_web_form boolean
+- body:template.redirect_url string
+- body:template.scss string
+- body:template.slack_webhook_url string
+- body:template.template_type string enum[pdf|html]
+- body:template.webhook_url string
+
+## S366-0001  POST /auth/authorization
+summary: Logs in to an existing account
+- body:login string
+- body:password string
+
+## S366-0002  POST /auth/changePassword
+summary: changes a user's password
+- body:new_password string
+- body:old_password string
+- body:uid string
+
+## S366-0003  POST /auth/logout
+summary: logs out a session uid
+- body:uid string
+
+## S366-0004  POST /auth/register
+summary: Registers a new account
+- body:discount_code string
+- body:fname string
+- body:lname string
+- body:login string
+- body:password string
+
+## S366-0005  POST /auth/resetPasswordRequest
+summary: resets a user's password
+- body:login string
+
+## S366-0006  POST /cards/createCustomCard
+summary: Create a new custom card
+- body:card_id integer
+- body:cover_id integer
+- body:cover_size_percent integer
+- body:footer_align string
+- body:footer_font_id integer
+- body:footer_font_size integer
+- body:footer_text string
+- body:header_align string
+- body:header_auto_size boolean
+- body:header_font_id integer
+- body:header_font_size integer
+- body:header_text string
+- body:logo_id integer
+- body:logo_size_percent integer
+- body:name string
+- body:type string
+- body:uid string
+
+## S366-0007  POST /cards/list
+summary: Lists information on cards
+desc: Simple listing of cards. No filters can be applied.
+- body:category_id integer
+- body:uid string
+
+## S366-0008  POST /cards/uploadCustomLogo
+summary: upload logo or cover image for card
+- body:file file
+- body:type string
+- body:uid string
+
+## S366-0009  POST /cards/view
+summary: Provides full information on a specific card
+desc: Full card details
+- body:card_id integer
+- body:uid string
+
+## S366-0010  POST /giftCards/view
+summary: Lists information on gift cards
+desc: Returns images and details (and associated denominations) of all gift cards
+
+## S366-0011  POST /orders/singleStepOrder
+summary: sends an order in a single step. This is much easier than using other order commands
+desc: Sends an order in one step. No need to create then process order. Optionally include a gift card.
+- body:card_id integer
+- body:credit_card_id integer
+- body:denomination_id integer
+- body:font_label string
+- body:message string
+- body:recipient_address1 string
+- body:recipient_address2 string
+- body:recipient_business_name string
+- body:recipient_city string
+- body:recipient_country string
+- body:recipient_country_id integer
+- body:recipient_name string
+- body:recipient_state string
+- body:recipient_zip string
+- body:sender_address1 string
+- body:sender_address2 string
+- body:sender_business_name string
+- body:sender_city string
+- body:sender_country string
+- body:sender_country_id integer
+- body:sender_name string
+- body:sender_state string
+- body:sender_zip string
+- body:uid string
+
+## S366-0012  POST /profile/address
+summary: gets the user's return address information
+- body:uid string
+
+## S366-0013  POST /profile/deleteRecipient
+summary: deletes an existing recipient address
+- body:address_id integer
+- body:uid string
+
+## S366-0014  POST /profile/profileAddRecipient
+summary: add a new recipient address
+- body:address1 string
+- body:address2 string
+- body:business_name string
+- body:city string
+- body:country string
+- body:country_id integer
+- body:name string
+- body:state string
+- body:uid string
+- body:zip string
+
+## S366-0015  POST /profile/recipientsList
+summary: list the addresses in the user's account
+- body:uid string
+
+## S366-0016  POST /profile/updateAddress
+summary: update the user's return address information
+- body:address1 string
+- body:address2 string
+- body:address_id integer
+- body:business_name string
+- body:city string
+- body:country string
+- body:country_id integer
+- body:name string
+- body:state string
+- body:uid string
+- body:zip string
+
+## S366-0017  POST /profile/updateRecipient
+summary: updates an existing new recipient address
+- body:address1 string
+- body:address2 string
+- body:business_name string
+- body:city string
+- body:country string
+- body:country_id integer
+- body:id integer
+- body:name string
+- body:state string
+- body:uid string
+- body:zip string
+
+## S366-0018  POST /templateCategories/list
+summary: List template categories
+desc: Lists the template categories of all users. By passing the optional UID, any custom template categories are also available.
+- body:uid string
+
+## S366-0019  POST /templates/create
+summary: Creates a New Template in the User’s Account
+desc: Creates a new Template in the User’s Account
+- body:message string
+- body:name string
+- body:uid string
+
+## S366-0020  POST /templates/delete
+summary: Deletes a users template
+desc: Deletes a template in the User’s Account
+- body:template_id integer
+- body:uid string
+
+## S366-0021  POST /templates/list
+summary: List template categories
+desc: Lists the template categories of all users. By passing the optional UID, any custom template categories are also available.
+- body:category_id integer
+- body:uid string
+
+## S366-0022  POST /templates/update
+summary: Updates an Existing Template in the User’s Account
+desc: Updates an Existing Template in the User’s Account
+- body:message string
+- body:name string
+- body:template_id integer
+- body:uid string
+
+## S366-0023  POST /templates/view
+summary: Get all info on a template
+desc: Provides all details on a template
+- body:template_id integer
+- body:uid string

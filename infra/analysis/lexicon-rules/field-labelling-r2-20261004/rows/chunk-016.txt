@@ -1,0 +1,683 @@
+## S587-0001  POST /questions
+summary: Create a New Question
+desc: You may create your own question using this action. It takes a JSON object containing a question and a collection of answers in the form of choices.
+- body:choices array<string>
+- body:question string
+
+## S588-0001  POST /oauth/token
+summary: Get a Bearer token
+- body:email string
+- body:password string
+
+## S589-0001  DELETE /me/albums
+summary: Remove Users' Saved Albums
+desc: Remove one or more albums from the current user's 'Your Music' library.
+- query:ids string
+- body:ids array<string>
+
+## S589-0002  PUT /me/albums
+summary: Save Albums for Current User
+desc: Save one or more albums to the current user's 'Your Music' library.
+- query:ids string
+- body:ids array<string>
+
+## S589-0003  DELETE /me/audiobooks
+summary: Remove User's Saved Audiobooks
+desc: Remove one or more audiobooks from the Spotify user's library.
+- query:ids string
+
+## S589-0004  PUT /me/audiobooks
+summary: Save Audiobooks for Current User
+desc: Save one or more audiobooks to the current Spotify user's library.
+- query:ids string
+
+## S589-0005  DELETE /me/episodes
+summary: Remove User's Saved Episodes
+desc: Remove one or more episodes from the current user's library.
+- query:ids string
+- body:ids array<string>
+
+## S589-0006  PUT /me/episodes
+summary: Save Episodes for Current User
+desc: Save one or more episodes to the current user's library.
+- query:ids string
+- body:ids array<string>
+
+## S589-0007  DELETE /me/following
+summary: Unfollow Artists or Users
+desc: Remove the current user as a follower of one or more artists or other Spotify users.
+- query:type string enum[artist|user]
+- query:ids string
+- body:ids array<string>
+
+## S589-0008  PUT /me/following
+summary: Follow Artists or Users
+desc: Add the current user as a follower of one or more artists or other Spotify users.
+- query:type string enum[artist|user]
+- query:ids string
+- body:ids array<string>
+
+## S589-0009  PUT /me/player
+summary: Transfer Playback
+desc: Transfer playback to a new device and determine if it should start playing.
+- body:device_ids array<string>
+- body:play boolean
+
+## S589-0010  POST /me/player/next
+summary: Skip To Next
+desc: Skips to next track in the user’s queue.
+- query:device_id string
+
+## S589-0011  PUT /me/player/pause
+summary: Pause Playback
+desc: Pause playback on the user's account.
+- query:device_id string
+
+## S589-0012  PUT /me/player/play
+summary: Start/Resume Playback
+desc: Start a new context or resume current playback on the user's active device.
+- query:device_id string
+- body:context_uri string
+- body:offset object
+- body:position_ms integer
+- body:uris array<string>
+
+## S589-0013  POST /me/player/previous
+summary: Skip To Previous
+desc: Skips to previous track in the user’s queue.
+- query:device_id string
+
+## S589-0014  POST /me/player/queue
+summary: Add Item to Playback Queue
+desc: Add an item to the end of the user's current playback queue.
+- query:uri string
+- query:device_id string
+
+## S589-0015  PUT /me/player/repeat
+summary: Set Repeat Mode
+desc: Set the repeat mode for the user's playback. Options are repeat-track, repeat-context, and off.
+- query:state string
+- query:device_id string
+
+## S589-0016  PUT /me/player/seek
+summary: Seek To Position
+desc: Seeks to the given position in the user’s currently playing track.
+- query:position_ms integer
+- query:device_id string
+
+## S589-0017  PUT /me/player/shuffle
+summary: Toggle Playback Shuffle
+desc: Toggle shuffle on or off for user’s playback.
+- query:state boolean
+- query:device_id string
+
+## S589-0018  PUT /me/player/volume
+summary: Set Playback Volume
+desc: Set the volume for the user’s current playback device.
+- query:volume_percent integer
+- query:device_id string
+
+## S589-0019  DELETE /me/shows
+summary: Remove User's Saved Shows
+desc: Delete one or more shows from current Spotify user's library.
+- query:ids string
+- query:market string
+
+## S589-0020  PUT /me/shows
+summary: Save Shows for Current User
+desc: Save one or more shows to current Spotify user's library.
+- query:ids string
+
+## S589-0021  DELETE /me/tracks
+summary: Remove User's Saved Tracks
+desc: Remove one or more tracks from the current user's 'Your Music' library.
+- query:ids string
+- body:ids array<string>
+
+## S589-0022  PUT /me/tracks
+summary: Save Tracks for Current User
+desc: Save one or more tracks to the current user's 'Your Music' library.
+- query:ids string
+- body:ids array<string>
+
+## S589-0023  PUT /playlists/{playlist_id}
+summary: Change Playlist Details
+desc: Change a playlist's name and public/private state. (The user must, of course, own the playlist.)
+- path:playlist_id string
+- body:collaborative boolean
+- body:description string
+- body:name string
+- body:public boolean
+
+## S589-0024  DELETE /playlists/{playlist_id}/followers
+summary: Unfollow Playlist
+desc: Remove the current user as a follower of a playlist.
+- path:playlist_id string
+
+## S589-0025  PUT /playlists/{playlist_id}/followers
+summary: Follow Playlist
+desc: Add the current user as a follower of a playlist.
+- path:playlist_id string
+- body:public boolean
+
+## S589-0026  PUT /playlists/{playlist_id}/images
+summary: Add Custom Playlist Cover Image
+desc: Replace the image used to represent a specific playlist.
+- path:playlist_id string
+
+## S589-0027  DELETE /playlists/{playlist_id}/tracks
+summary: Remove Playlist Items
+desc: Remove one or more items from a user's playlist.
+- path:playlist_id string
+- body:snapshot_id string
+- body:tracks array<object>
+- body:tracks[].uri string
+
+## S589-0028  POST /playlists/{playlist_id}/tracks
+summary: Add Items to Playlist
+desc: Add one or more items to a user's playlist.
+- path:playlist_id string
+- query:position integer
+- query:uris string
+- body:position integer
+- body:uris array<string>
+
+## S589-0029  PUT /playlists/{playlist_id}/tracks
+summary: Update Playlist Items
+desc: Either reorder or replace items in a playlist depending on the request's parameters. To reorder items, include `range_start`, `insert_before`, `range_length` and `snapshot_id` in the request's body. To replace items, include `uris` as either a query parameter or in the request's body. Replacing items in a playlist will overwrite its existing items. This operation can be used for replacing or clear
+- path:playlist_id string
+- query:uris string
+- body:insert_before integer
+- body:range_length integer
+- body:range_start integer
+- body:snapshot_id string
+- body:uris array<string>
+
+## S589-0030  POST /users/{user_id}/playlists
+summary: Create Playlist
+desc: Create a playlist for a Spotify user. (The playlist will be empty until you [add tracks](/documentation/web-api/reference/#/operations/add-tracks-to-playlist).)
+- path:user_id string
+- body:collaborative boolean
+- body:description string
+- body:name string
+- body:public boolean
+
+## S590-0001  POST /accounts
+summary: Create a new account with an application key
+
+## S590-0002  PUT /accounts
+summary: Update User
+
+## S590-0003  POST /accounts/password
+summary: Forget password with email
+
+## S590-0004  POST /accounts/settings
+summary: Settings
+
+## S590-0005  POST /accounts/sign_in
+summary: Login with email, password and application key
+
+## S590-0006  PUT /accounts/update_password
+summary: Update Password
+
+## S590-0007  POST /addresses/places_autocomplete
+summary: Get autocomplete places
+desc: For searching places just send the following attributes : - **longitude** (optional, float) : The location longitude for the seach - **latitude** (optional, float) : The location latitude for the seach - **search** (required, string) : The search text (most than 3 char)
+
+## S590-0008  POST /addresses/places_details
+summary: Get autocomplete places details
+
+## S590-0009  POST /promotional_codes
+summary: Add a promotional code
+
+## S590-0010  POST /rides/{id}/reserve
+summary: Reserve a ride
+desc: To book, the ride must belong to the connected user. The ride must have a main passenger at least, the booking user id and the payment hash must be set. **Must be authenticate**
+- path:id number
+
+## S590-0011  POST /rides?page={page}&per_page={per_page}
+summary: Create a ride
+
+## S591-0001  POST /video/create
+summary: Create a new video, optionally setting some metadata fields.
+desc: Create a new video, optionally setting some metadata fields. You may optionally set some of the metadata associated with the video. Only fields inside the "userdata" field can be set.
+- body:api_key string
+- body:userdata string
+
+## S591-0002  POST /video/details
+summary: Return details about a video.
+desc: Return details about a video. You may optionally request that only some of the metadata fields are returned.
+- body:api_key string
+- body:video_id string
+
+## S591-0003  POST /video/query
+summary: Perform a JavaScript query to return video objects matching any desired criteria.
+desc: Find videos matching any criteria, by running a JavaScript function over each video object. A detailed tutorial on how to use this functionality is available on the [documentation page](https://www.synq.fm/queries-video-api/).
+- body:api_key string
+- body:filter string
+
+## S591-0004  POST /video/stream
+summary: Returns urls for streaming.
+desc: Returns a stream url that you can stream to from your broadcasting software, and a playback url people can use to watch the stream.
+- body:api_key string
+- body:video_id string
+
+## S591-0005  POST /video/update
+summary: Update a video's metadata.
+desc: Update a video's metadata through JavaScript code. Only fields inside the "userdata" object can be set.
+- body:api_key string
+- body:video_id string
+- body:source string
+
+## S591-0006  POST /video/upload
+summary: Return parameters needed for uploading a video file.
+desc: Return parameters needed for uploading a video file to Amazon Simple Storage Service. See http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-post-example.html as well as the language-specific code-examples. #### *Example request* ```shell curl -s https://api.synq.fm/v1/video/upload \ -F api_key=${SYNQ_API_KEY} \ -F video_id=2d81c30ce62f4dfdb501dbca96c7ae56 ``` #### *Example response* ```json { "
+- body:api_key string
+- body:video_id string
+
+## S591-0007  POST /video/uploader
+summary: Return embeddable url to an uploader widget
+desc: Returns an embeddable url, that contains an uploader widget that allows you to easily upload any mp4. Great way to simplify the uploading process for end users.
+- body:api_key string
+- body:video_id string
+- body:timeout string
+
+## S592-0001  POST /actions/bulk/telephony_credentials
+summary: Creates several credentials
+desc: Creates several credentials in bulk.
+- body:amount integer
+- body:connection_id string
+- body:name string
+- body:tag string
+
+## S592-0002  POST /actions/register/sim_cards
+summary: Register SIM cards
+desc: Register the SIM cards associated with the provided registration codes to the current user's account.<br/><br/> If <code>sim_card_group_id</code> is provided, the SIM cards will be associated with that group. Otherwise, the default group for the current user will be used.<br/><br/>
+- body:registration_codes array<string>
+- body:sim_card_group_id string
+- body:status string enum[enabled|disabled|standby]
+- body:tags array<string>
+
+## S592-0003  POST /actions/{action}/telephony_credentials
+summary: Perform activate or deactivate action on all credentials filtered by the provided tag.
+desc: Perform activate or deactivate action on all credentials filtered by the provided tag. Activate action will change the status to active, making it possible to connect calls with the credential. Deactivate action will change the status to inactive, making it impossible to connect calls with the credential.
+- path:action string enum[activate|deactivate]
+- query:filter[tag] string
+
+## S592-0004  POST /calls/{call_control_id}/actions/answer
+summary: Answer call
+desc: Answer an incoming call. You must issue this command before executing subsequent commands on an incoming call. **Expected Webhooks:** - `call.answered`
+- path:call_control_id string
+- body:billing_group_id string
+- body:client_state string
+- body:command_id string
+- body:webhook_url string
+- body:webhook_url_method string enum[POST|GET]
+
+## S592-0005  POST /calls/{call_control_id}/actions/hangup
+summary: Hangup call
+desc: Hang up the call. **Expected Webhooks:** - `call.hangup` - `call.recording.saved`
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+
+## S592-0006  POST /calls/{call_control_id}/actions/leave_queue
+summary: Remove call from a queue
+desc: Removes the call from a queue.
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+
+## S592-0007  POST /calls/{call_control_id}/actions/playback_stop
+summary: Stop audio playback
+desc: Stop audio being played on the call. **Expected Webhooks:** - `call.playback.ended` or `call.speak.ended`
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+- body:stop string
+
+## S592-0008  POST /calls/{call_control_id}/actions/record_resume
+summary: Record resume
+desc: Resume recording the call. **Expected Webhooks:** There are no webhooks associated with this command.
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+
+## S592-0009  POST /calls/{call_control_id}/actions/send_dtmf
+summary: Send DTMF
+desc: Sends DTMF tones from this leg. DTMF tones will be heard by the other end of the call. **Expected Webhooks:** There are no webhooks associated with this command.
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+- body:digits string
+- body:duration_millis integer
+
+## S592-0010  POST /calls/{call_control_id}/actions/transfer
+summary: Transfer call
+desc: Transfer a call to a new destination. If the transfer is unsuccessful, a `call.hangup` webhook for the other call (Leg B) will be sent indicating that the transfer could not be completed. The original call will remain active and may be issued additional commands, potentially transfering the call to an alternate destination. **Expected Webhooks:** - `call.initiated` - `call.bridged` to Leg B - `cal
+- path:call_control_id string
+- body:answering_machine_detection string enum[detect|detect_beep|detect_words|greeting_end|disabled]
+- body:answering_machine_detection_config object
+- body:answering_machine_detection_config.after_greeting_silence_millis integer
+- body:answering_machine_detection_config.between_words_silence_millis integer
+- body:answering_machine_detection_config.greeting_duration_millis integer
+- body:answering_machine_detection_config.greeting_silence_duration_millis integer
+- body:answering_machine_detection_config.greeting_total_analysis_time_millis integer
+- body:answering_machine_detection_config.initial_silence_millis integer
+- body:answering_machine_detection_config.maximum_number_of_words integer
+- body:answering_machine_detection_config.maximum_word_length_millis integer
+- body:answering_machine_detection_config.silence_threshold integer
+- body:answering_machine_detection_config.total_analysis_time_millis integer
+- body:audio_url string
+- body:client_state string
+- body:command_id string
+- body:custom_headers array<object>
+- body:custom_headers[].name string
+- body:custom_headers[].value string
+- body:from string
+- body:from_display_name string
+- body:media_name string
+- body:sip_auth_password string
+- body:sip_auth_username string
+- body:target_leg_client_state string
+- body:time_limit_secs integer
+- body:timeout_secs integer
+- body:to string
+- body:webhook_url string
+- body:webhook_url_method string enum[POST|GET]
+
+## S592-0011  POST /conferences
+summary: Create conference
+desc: Create a conference from an existing call leg using a `call_control_id` and a conference name. Upon creating the conference, the call will be automatically bridged to the conference. Conferences will expire after all participants have left the conference or after 4 hours regardless of the number of active participants. **Expected Webhooks:** - `conference.created` - `conference.participant.joined`
+- body:beep_enabled string enum[always|never|on_enter|on_exit]
+- body:call_control_id string
+- body:client_state string
+- body:comfort_noise boolean
+- body:command_id string
+- body:duration_minutes integer
+- body:hold_audio_url string
+- body:hold_media_name string
+- body:name string
+- body:start_conference_on_create boolean
+
+## S592-0012  POST /conferences/{id}/actions/hold
+summary: Hold conference participants
+desc: Hold a list of participants in a conference call
+- path:id string
+- body:audio_url string
+- body:call_control_ids array<string>
+- body:media_name string
+
+## S592-0013  POST /conferences/{id}/actions/join
+summary: Join a conference
+desc: Join an existing call leg to a conference. Issue the Join Conference command with the conference ID in the path and the `call_control_id` of the leg you wish to join to the conference as an attribute. **Expected Webhooks:** - `conference.participant.joined` - `conference.participant.left`
+- path:id string
+- body:beep_enabled string enum[always|never|on_enter|on_exit]
+- body:call_control_id string
+- body:client_state string
+- body:command_id string
+- body:end_conference_on_exit boolean
+- body:hold boolean
+- body:hold_audio_url string
+- body:hold_media_name string
+- body:mute boolean
+- body:soft_end_conference_on_exit boolean
+- body:start_conference_on_enter boolean
+- body:supervisor_role string enum[barge|monitor|none|whisper]
+- body:whisper_call_control_ids array<string>
+
+## S592-0014  POST /conferences/{id}/actions/play
+summary: Play audio to conference participants
+desc: Play audio to all or some participants on a conference call.
+- path:id string
+- body:audio_url string
+- body:call_control_ids array<string>
+- body:loop string
+- body:media_name string
+
+## S592-0015  POST /conferences/{id}/actions/unmute
+summary: Unmute conference participants
+desc: Unmute a list of participants in a conference call
+- path:id string
+- body:call_control_ids array<string>
+
+## S592-0016  POST /ledger_billing_group_reports
+summary: Create a ledger billing group report
+- body:month integer
+- body:year integer
+
+## S592-0017  PUT /media/{media_name}
+summary: Update stored media
+desc: Updates a stored media file.
+- path:media_name string
+- body:media_url string
+- body:ttl_secs integer
+
+## S592-0018  DELETE /messaging_profiles/{id}
+summary: Delete a messaging profile
+- path:id string
+
+## S592-0019  POST /outbound_voice_profiles
+summary: Create an outbound voice profile
+desc: Create an outbound voice profile.
+- body:billing_group_id string
+- body:call_recording object
+- body:call_recording.call_recording_caller_phone_numbers array<string>
+- body:call_recording.call_recording_channels string enum[single|dual]
+- body:call_recording.call_recording_format string enum[wav|mp3]
+- body:call_recording.call_recording_type string enum[all|none|by_caller_phone_number]
+- body:concurrent_call_limit integer
+- body:daily_spend_limit string
+- body:daily_spend_limit_enabled boolean
+- body:enabled boolean
+- body:max_destination_rate number
+- body:name string
+- body:service_plan string enum[us|international|global]
+- body:tags array<string>
+- body:traffic_type string enum[conversational|short_duration]
+- body:usage_payment_method string enum[tariff|rate-deck]
+- body:whitelisted_destinations array<string>
+
+## S592-0020  DELETE /phone_numbers/{id}
+summary: Delete a phone number
+- path:id string
+
+## S592-0021  POST /porting_orders
+summary: Create a porting order
+desc: Creates a new porting order object.
+- body:phone_numbers array<string>
+
+## S592-0022  DELETE /porting_orders/{id}
+summary: Request cancellation
+desc: Request the cancellation of a porting order.
+- path:id string
+
+## S592-0023  POST /porting_orders/{id}/actions/cancel
+summary: Cancel this porting order
+desc: Cancel this porting order
+- path:id string
+
+## S592-0024  PATCH /portouts/{id}/{status}
+summary: Update Status
+desc: Authorize or reject portout request
+- path:id string
+- path:status string enum[authorized|rejected]
+
+## S592-0025  POST /private_wireless_gateways
+summary: Create a Private Wireless Gateway
+desc: Asynchronously create a Private Wireless Gateway for SIM cards for a previously created network.
+- body:name string
+- body:network_id string
+
+## S592-0026  DELETE /private_wireless_gateways/{id}
+summary: Delete a Private Wireless Gateway
+desc: Deletes the Private Wireless Gateway.
+- path:id string
+
+## S592-0027  DELETE /reports/batch_mdr_reports/{id}
+desc: Delete generated messaging detail report by id
+- path:id any
+
+## S592-0028  DELETE /rooms/{room_id}
+summary: Delete a room.
+desc: Synchronously delete a Room. Participants from that room will be kicked out, they won't be able to join that room anymore, and you won't be charged anymore for that room.
+- path:room_id string
+
+## S592-0029  POST /sim_card_groups
+summary: Create a SIM card group
+desc: Creates a new SIM card group object
+- body:data_limit integer
+- body:name string
+
+## S592-0030  POST /sim_cards/{id}/actions/set_standby
+summary: Request setting a SIM card to standby
+desc: The SIM card will be able to connect to the network once the process to set it to standby has been completed, thus making it possible to consume data.<br/> To set a SIM card to standby, it must be associated with SIM card group.<br/> Transitioning to the standby state may take a period of time. Until the transition is completed, the SIM card status will be <code>setting_standby</code>.
+- path:id string
+
+## S592-0031  POST /telephony_credentials/{id}/token
+summary: Create an Access Token.
+desc: Create an Access Token (JWT) for the credential.
+- path:id string
+
+## S592-0032  POST /verify_profiles
+summary: Create a Verify profile
+desc: Creates a new Verify profile to associate verifications with.
+- body:call object
+- body:call.default_call_timeout_secs integer
+- body:call.default_verification_timeout_secs integer
+- body:call.speech_template string
+- body:flashcall object
+- body:flashcall.default_verification_timeout_secs integer
+- body:language string
+- body:name string
+- body:psd2 object
+- body:psd2.default_verification_timeout_secs integer
+- body:sms object
+- body:sms.default_verification_timeout_secs integer
+- body:sms.messaging_enabled boolean
+- body:sms.messaging_template string
+- body:sms.rcs_enabled boolean
+- body:sms.vsms_enabled boolean
+- body:webhook_failover_url string
+- body:webhook_url string
+- body:whatsapp object
+- body:whatsapp.app_name string
+- body:whatsapp.default_verification_timeout_secs integer
+
+## S592-0033  PATCH /verify_profiles/{verify_profile_id}
+summary: Update a Verify profile
+- path:verify_profile_id string
+- body:call object
+- body:call.default_call_timeout_secs integer
+- body:call.default_verification_timeout_secs integer
+- body:call.speech_template string
+- body:flashcall object
+- body:flashcall.default_verification_timeout_secs integer
+- body:language string
+- body:name string
+- body:psd2 object
+- body:psd2.default_verification_timeout_secs integer
+- body:sms object
+- body:sms.default_verification_timeout_secs integer
+- body:sms.messaging_enabled boolean
+- body:sms.messaging_template string
+- body:sms.rcs_enabled boolean
+- body:sms.vsms_enabled boolean
+- body:webhook_failover_url string
+- body:webhook_url string
+- body:whatsapp object
+- body:whatsapp.app_name string
+- body:whatsapp.default_verification_timeout_secs integer
+
+## S592-0034  DELETE /whatsapp_media/{whatsapp_user_id}/{media_id}
+summary: Delete Media
+desc: Delete uploaded media.
+- path:whatsapp_user_id string
+- path:media_id string
+
+## S592-0035  POST /whatsapp_messages
+summary: Send Message
+desc: Send text messages, media/documents, and message templates to your customers.
+- body:audio object
+- body:audio.id string
+- body:audio.link string
+- body:contacts array<object>
+- body:contacts[].addresses array<object>
+- body:contacts[].addresses[].city string
+- body:contacts[].addresses[].country string
+- body:contacts[].addresses[].country_code string
+- body:contacts[].addresses[].state string
+- body:contacts[].addresses[].street string
+- body:contacts[].addresses[].type string
+- body:contacts[].addresses[].zip string
+- body:contacts[].birthday string
+- body:contacts[].emails array<object>
+- body:contacts[].emails[].email string
+- body:contacts[].emails[].type string
+- body:contacts[].ims array<string>
+- body:contacts[].name object
+- body:contacts[].name.first_name string
+- body:contacts[].name.formatted_name string
+- body:contacts[].name.last_name string
+- body:contacts[].name.prefix string
+- body:contacts[].name.suffix string
+- body:contacts[].org object
+- body:contacts[].org.company string
+- body:contacts[].org.department string
+- body:contacts[].org.title string
+- body:contacts[].phones array<object>
+- body:contacts[].phones[].id string
+- body:contacts[].phones[].phone string
+- body:contacts[].phones[].type string
+- body:contacts[].urls array<object>
+- body:contacts[].urls[].type string
+- body:contacts[].urls[].url string
+- body:document object
+- body:document.caption string
+- body:document.filename string
+- body:document.id string
+- body:document.link string
+- body:hsm object
+- body:hsm.element_name string
+- body:hsm.language object
+- body:hsm.language.code string
+- body:hsm.language.policy string enum[fallback|deterministic]
+- body:hsm.localizable_params array<object>
+- body:hsm.localizable_params[].currency object
+- body:hsm.localizable_params[].date_time object
+- body:hsm.localizable_params[].default string
+- body:hsm.namespace string
+- body:image object
+- body:image.caption string
+- body:image.id string
+- body:image.link string
+- body:location object
+- body:location.address string
+- body:location.latitude string
+- body:location.longitude string
+- body:location.name string
+- body:preview_url boolean
+- body:template object
+- body:template.components array<object>
+- body:template.components[].parameters array<object>
+- body:template.components[].type string enum[header|body|footer]
+- body:template.language object
+- body:template.language.code string
+- body:template.language.policy string enum[fallback|deterministic]
+- body:template.name string
+- body:template.namespace string
+- body:text object
+- body:text.body string
+- body:to string
+- body:type string enum[audio|contacts|document|hsm|image|location|template|text|video|voice|unknown]
+- body:video object
+- body:video.caption string
+- body:video.id string
+- body:video.link string
+- body:whatsapp_user_id string
+
+## S592-0036  PATCH /whatsapp_users/{whatsapp_user_id}
+summary: Update WhatsApp User
+desc: Update webhook URL used for a given WhatsApp user.
+- path:whatsapp_user_id string
+- body:webhook_url string

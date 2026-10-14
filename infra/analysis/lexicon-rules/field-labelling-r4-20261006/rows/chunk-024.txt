@@ -1,0 +1,638 @@
+## S592-N0110  PATCH /number_order_documents/{number_order_document_id}
+desc: Update a number order document | Updates a number order document.
+schema: UpdateNumberOrderDocumentRequest
+- path:number_order_document_id string
+- body:created_at string
+- body:customer_reference string
+- body:file_id string
+- body:id string
+- body:record_type string
+- body:requirement_type string enum[address_proof|identification|reg_form]
+- body:requirements_id string
+
+## S592-N0111  PATCH /number_order_phone_numbers/{number_order_phone_number_id}
+desc: Update a number order phone number. | Updates a number order phone number.
+schema: UpdateNumberOrderPhoneNumberRequest
+- path:number_order_phone_number_id string
+- body:regulatory_requirements array<object>
+- body:regulatory_requirements[].field_value string
+- body:regulatory_requirements[].requirement_id string
+
+## S592-N0112  POST /number_orders
+desc: Create a number order | Creates a phone number order.
+schema: CreateNumberOrderRequest
+- body:billing_group_id string
+- body:connection_id string
+- body:created_at string
+- body:customer_reference string
+- body:id string
+- body:messaging_profile_id string
+- body:phone_numbers array<object>
+- body:phone_numbers[].id string
+- body:phone_numbers[].phone_number string
+- body:phone_numbers[].record_type string
+- body:phone_numbers[].regulatory_group_id string
+- body:phone_numbers[].regulatory_requirements array<object>
+- body:phone_numbers[].regulatory_requirements[].field_type string enum[textual|datetime|address|document]
+- body:phone_numbers[].regulatory_requirements[].record_type string
+- body:phone_numbers[].regulatory_requirements[].requirement_id string
+- body:phone_numbers[].regulatory_requirements[].field_value string
+- body:phone_numbers[].requirements_met boolean
+- body:phone_numbers[].status string enum[pending|success|failure]
+- body:phone_numbers_count integer
+- body:record_type string
+- body:requirements_met boolean
+- body:status string enum[pending|success|failure]
+- body:updated_at string
+
+## S592-N0113  PATCH /number_orders/{number_order_id}
+desc: Update a number order | Updates a phone number order.
+schema: UpdateNumberOrderRequest
+- path:number_order_id string
+- body:created_at string
+- body:customer_reference string
+- body:id string
+- body:phone_numbers array<object>
+- body:phone_numbers[].id string
+- body:phone_numbers[].phone_number string
+- body:phone_numbers[].record_type string
+- body:phone_numbers[].regulatory_group_id string
+- body:phone_numbers[].regulatory_requirements array<object>
+- body:phone_numbers[].regulatory_requirements[].field_type string enum[textual|datetime|address|document]
+- body:phone_numbers[].regulatory_requirements[].record_type string
+- body:phone_numbers[].regulatory_requirements[].requirement_id string
+- body:phone_numbers[].regulatory_requirements[].field_value string
+- body:phone_numbers[].requirements_met boolean
+- body:phone_numbers[].status string enum[pending|success|failure]
+- body:phone_numbers_count integer
+- body:record_type string
+- body:requirements_met boolean
+- body:status string enum[pending|success|failure]
+- body:updated_at string
+
+## S592-N0114  POST /number_reservations
+desc: Create a number reservation | Creates a Phone Number Reservation for multiple numbers.
+schema: CreateNumberReservationRequest
+- body:created_at string
+- body:customer_reference string
+- body:id string
+- body:phone_numbers array<object>
+- body:phone_numbers[].created_at string
+- body:phone_numbers[].expired_at string
+- body:phone_numbers[].id string
+- body:phone_numbers[].phone_number string
+- body:phone_numbers[].record_type string
+- body:phone_numbers[].status string enum[pending|success|failure]
+- body:phone_numbers[].updated_at string
+- body:record_type string
+- body:status string enum[pending|success|failure]
+- body:updated_at string
+
+## S592-N0115  POST /number_reservations/{number_reservation_id}/actions/extend
+desc: Extend a number reservation | Extends reservation expiry time on all phone numbers.
+- path:number_reservation_id string
+
+## S592-N0117  DELETE /outbound_voice_profiles/{id}
+desc: Delete an outbound voice profile | Deletes an existing outbound voice profile.
+- path:id string
+
+## S592-N0118  PATCH /outbound_voice_profiles/{id}
+desc: Updates an existing outbound voice profile. | Updates an existing outbound voice profile.
+schema: UpdateOutboundVoiceProfileRequest
+- path:id string
+- body:billing_group_id string
+- body:call_recording object
+- body:call_recording.call_recording_caller_phone_numbers array<string>
+- body:call_recording.call_recording_channels string enum[single|dual]
+- body:call_recording.call_recording_format string enum[wav|mp3]
+- body:call_recording.call_recording_type string enum[all|none|by_caller_phone_number]
+- body:concurrent_call_limit integer
+- body:daily_spend_limit string
+- body:daily_spend_limit_enabled boolean
+- body:enabled boolean
+- body:max_destination_rate number
+- body:name string
+- body:service_plan string enum[us|international|global]
+- body:tags array<string>
+- body:traffic_type string enum[conversational|short_duration]
+- body:usage_payment_method string enum[tariff|rate-deck]
+- body:whitelisted_destinations array<string>
+
+## S592-N0119  POST /phone_number_blocks/jobs/delete_phone_number_block
+desc: Deletes all numbers associated with a phone number block | Creates a new background job to delete all the phone numbers associated with the given block. We will only consider the phone number block as deleted after all phone numbers associated with it are removed, so multiple executions of this job may be necessary in case some of the phone numbers present errors during the deletion process.
+schema: PhoneNumberBlocksJobDeletePhoneNumberBlockRequest
+- body:phone_number_block_id string
+
+## S592-N0120  POST /phone_numbers/csv_downloads
+desc: Create a CSV download
+
+## S592-N0121  PATCH /phone_numbers/inbound_channels
+desc: Update inbound channels | Update the inbound channels for the account
+- body:channels integer
+
+## S592-N0122  POST /phone_numbers/jobs/delete_phone_numbers
+desc: Delete a batch of numbers | Creates a new background job to delete a batch of numbers. At most one thousand numbers can be updated per API call.
+schema: PhoneNumbersJobDeletePhoneNumbersRequest
+- body:phone_numbers array<string>
+
+## S592-N0123  POST /phone_numbers/jobs/update_emergency_settings
+desc: Update the emergency settings from a batch of numbers | Creates a background job to update the emergency settings of a collection of phone numbers. At most one thousand numbers can be updated per API call.
+schema: PhoneNumbersJobUpdateEmergencySettingsRequest
+- body:emergency_address_id string
+- body:emergency_enabled boolean
+- body:phone_numbers array<string>
+
+## S592-N0124  POST /phone_numbers/jobs/update_phone_numbers
+desc: Update a batch of numbers | Creates a new background job to update a batch of numbers. At most one thousand numbers can be updated per API call. At least one of the updateable fields must be submitted.
+schema: PhoneNumbersJobUpdatePhoneNumbersRequest
+- body:billing_group_id string
+- body:connection_id string
+- body:customer_reference string
+- body:external_pin string
+- body:phone_numbers array<string>
+- body:tags array<string>
+
+## S592-N0126  PATCH /phone_numbers/{id}
+desc: Update a phone number
+schema: UpdatePhoneNumberRequest
+- path:id string
+- body:billing_group_id string
+- body:connection_id string
+- body:customer_reference string
+- body:external_pin string
+- body:id string
+- body:number_level_routing string enum[enabled|disabled]
+- body:tags array<string>
+
+## S592-N0127  POST /phone_numbers/{id}/actions/enable_emergency
+desc: Enable emergency for a phone number
+schema: PhoneNumberEnableEmergencyRequest
+- path:id string
+- body:emergency_address_id string
+- body:emergency_enabled boolean
+
+## S592-N0128  PATCH /phone_numbers/{id}/messaging
+desc: Update a phone number with messaging settings
+schema: UpdatePhoneNumberMessagingSettingsRequest
+- path:id string
+- body:messaging_product string
+- body:messaging_profile_id string
+
+## S592-N0129  PATCH /phone_numbers/{id}/voice
+desc: Update a phone number with voice settings
+schema: UpdatePhoneNumberVoiceSettingsRequest
+- path:id string
+- body:call_forwarding object
+- body:call_forwarding.call_forwarding_enabled boolean
+- body:call_forwarding.forwarding_type string enum[always|on_failure]
+- body:call_forwarding.forwards_to string
+- body:call_recording object
+- body:call_recording.inbound_call_recording_channels string enum[single|dual]
+- body:call_recording.inbound_call_recording_enabled boolean
+- body:call_recording.inbound_call_recording_format string enum[wav|mp3]
+- body:cnam_listing object
+- body:cnam_listing.cnam_listing_details string
+- body:cnam_listing.cnam_listing_enabled boolean
+- body:media_features object
+- body:media_features.accept_any_rtp_packets_enabled boolean
+- body:media_features.media_handling_mode string enum[default|proxy]
+- body:media_features.rtp_auto_adjust_enabled boolean
+- body:media_features.t38_fax_gateway_enabled boolean
+- body:tech_prefix_enabled boolean
+- body:translated_number string
+- body:usage_payment_method string enum[pay-per-minute|channel]
+
+## S592-N0130  POST /portability_checks
+desc: Run a portability check | Runs a portability check, returning the results immediately.
+- body:phone_numbers array<string>
+
+## S592-N0133  PATCH /porting_orders/{id}
+desc: Edit a porting order | Edits the details of an existing porting order. Any or all of a porting order’s attributes may be included in the resource object included in a PATCH request. If a request does not include all of the attributes for a resource, the system will interpret the missing attributes as if they were included with their current values. To explicitly set something to null, it must be i
+schema: UpdatePortingOrder
+- path:id string
+- body:activation_settings object
+- body:activation_settings.foc_datetime_requested string
+- body:customer_reference string
+- body:end_user object
+- body:end_user.admin object
+- body:end_user.admin.account_number string
+- body:end_user.admin.auth_person_name string
+- body:end_user.admin.billing_phone_number string
+- body:end_user.admin.business_identifier string
+- body:end_user.admin.entity_name string
+- body:end_user.admin.pin_passcode string
+- body:end_user.admin.tax_identifier string
+- body:end_user.location object
+- body:end_user.location.administrative_area string
+- body:end_user.location.country_code string
+- body:end_user.location.extended_address string
+- body:end_user.location.locality string
+- body:end_user.location.postal_code string
+- body:end_user.location.street_address string
+- body:misc object
+- body:misc.new_billing_phone_number string
+- body:misc.remaining_numbers_action string enum[keep|disconnect]
+- body:misc.type string enum[full|partial]
+- body:phone_number_configuration object
+- body:phone_number_configuration.connection_id string
+- body:phone_number_configuration.emergency_address_id string
+- body:phone_number_configuration.messaging_profile_id string
+- body:phone_number_configuration.tags array<string>
+- body:requirements array<object>
+- body:requirements[].field_value string
+- body:requirements[].requirement_type_id string
+- body:user_feedback object
+- body:user_feedback.user_comment string
+- body:user_feedback.user_rating integer
+- body:webhook_url string
+
+## S592-N0134  POST /porting_orders/{id}/actions/activate
+desc: Activates every number on a porting order. | Activate every numbers of a porting order asynchronously.
+- path:id string
+
+## S592-N0136  POST /porting_orders/{id}/actions/confirm
+desc: Confirms the porting order is ready to be actioned. | Confirm your porting order.
+- path:id string
+
+## S592-N0137  POST /porting_orders/{id}/comments
+desc: Create a comment for a porting order | Creates a new comment for a porting order.
+schema: CreatePortingOrderComment
+- path:id string
+- body:body string
+
+## S592-N0138  POST /portouts/{id}/comments
+desc: Create a comment on a portout request | Creates a comment on a portout request.
+- path:id string
+- body:body string
+
+## S592-N0142  POST /reports/batch_mdr_reports
+desc: Submit a request for new messaging detail report. Messaging detail report pulls all raw messaging data according to defined filters.
+schema: MdrPostDetailReportRequest
+- body:connections array<integer>
+- body:directions array<string> enum[INBOUND|OUTBOUND]
+- body:end_date string
+- body:filters array<object>
+- body:filters[].billing_group string
+- body:filters[].cld string
+- body:filters[].cld_filter string enum[contains|starts_with|ends_with]
+- body:filters[].cli string
+- body:filters[].cli_filter string enum[contains|starts_with|ends_with]
+- body:filters[].filter_type string enum[and|or]
+- body:filters[].tags_list string
+- body:include_message_body boolean
+- body:profiles string
+- body:record_types array<string> enum[INCOMPLETE|COMPLETED|ERRORS]
+- body:report_name string
+- body:start_date string
+
+## S592-N0144  POST /reports/mdr_usage_reports
+desc: Submit request for new new messaging usage report. This endpoint will pull and aggregate messaging data in specified time period.
+schema: MdrPostUsageReportRequest
+- body:aggregation_type string enum[NO_AGGREGATION|PROFILE|TAGS]
+- body:end_date string
+- body:profiles string
+- body:start_date string
+
+## S592-N0145  DELETE /reports/mdr_usage_reports/{id}
+desc: Delete messaging usage report by id
+- path:id any
+
+## S592-N0146  POST /rooms
+desc: Create a room. | Synchronously create a Room.
+schema: CreateRoomRequest
+- body:max_participants integer
+- body:unique_name string
+
+## S592-N0148  POST /rooms/{room_id}/actions/generate_join_client_token
+desc: Create Client Token to join a room. | Synchronously create an Client Token to join a Room. Client Token is necessary to join a Telnyx Room. Client Token will expire after `token_ttl_secs`, a Refresh Token is also provided to refresh a Client Token, the Refresh Token expires after `refresh_token_ttl_secs`.
+schema: CreateRoomClientTokenRequest
+- path:room_id string
+- body:refresh_token_ttl_secs integer
+- body:token_ttl_secs integer
+
+## S592-N0149  POST /rooms/{room_id}/actions/refresh_client_token
+desc: Refresh Client Token to join a room. | Synchronously refresh an Client Token to join a Room. Client Token is necessary to join a Telnyx Room. Client Token will expire after `token_ttl_secs`.
+schema: RefreshRoomClientTokenRequest
+- path:room_id string
+- body:refresh_token string
+- body:token_ttl_secs integer
+
+## S592-N0150  PATCH /short_codes/{id}
+desc: Update short code | Update the settings for a specific short code. To unbind a short code from a profile, set the `messaging_profile_id` to `null` or an empty string.
+schema: UpdateShortCodeRequest
+- path:id string
+- body:messaging_profile_id string
+
+## S592-N0152  DELETE /sim_card_groups/{id}
+desc: Delete a SIM card group | Permanently deletes a SIM card group
+- path:id string
+
+## S592-N0153  PATCH /sim_card_groups/{id}
+desc: Update a SIM card group | Updates a SIM card group
+schema: SIMCardGroupPatch
+- path:id string
+- body:data_limit integer
+- body:name string
+
+## S592-N0154  POST /sim_card_groups/{id}/actions/remove_private_wireless_gateway
+desc: Request Private Wireless Gateway removal from SIM card group | This action will asynchronously remove an existing Private Wireless Gateway definition from a SIM card group. Completing this operation defines that all SIM cards in the SIM card group will get their traffic handled by Telnyx's default mobile network configuration.
+- path:id string
+
+## S592-N0155  POST /sim_card_groups/{id}/actions/set_private_wireless_gateway
+desc: Request Private Wireless Gateway assignment for SIM card group | This action will asynchronously assign a provisioned Private Wireless Gateway to the SIM card group. Completing this operation defines that all SIM cards in the SIM card group will get their traffic controlled by the associated Private Wireless Gateway. This operation will also imply that new SIM cards assigned to a group will inheri
+- path:id string
+- body:private_wireless_gateway_id string
+
+## S592-N0156  POST /sim_card_order_preview
+desc: Preview SIM card orders | Preview SIM card order purchases.
+- body:address_id string
+- body:quantity integer
+
+## S592-N0157  POST /sim_card_orders
+desc: Create a SIM card order | Creates a new order for SIM cards.
+schema: SimCardOrderCreate
+- body:address_id string
+- body:quantity integer
+
+## S592-N0158  POST /sim_cards/actions/validate_registration_codes
+desc: Validate SIM cards registration codes | It validates whether SIM card registration codes are valid or not.
+- body:registration_codes array<string>
+
+## S592-N0159  DELETE /sim_cards/{id}
+desc: Deletes a SIM card | The SIM card will be decommissioned, removed from your account and you will stop being charged.<br />The SIM card won't be able to connect to the network after the deletion is completed, thus making it impossible to consume data.<br/> Transitioning to the disabled state may take a period of time.</br> Until the transition is completed, the SIM card status will be disabling <co
+- path:id string
+
+## S592-N0160  PATCH /sim_cards/{id}
+desc: Update a SIM card | Updates a SIM card's group and tags
+schema: SIMCard
+- path:id string
+- body:created_at string
+- body:iccid string
+- body:id string
+- body:imsi string
+- body:ipv4 string
+- body:ipv6 string
+- body:msisdn string
+- body:record_type string
+- body:sim_card_group_id string
+- body:status string enum[registering|enabling|enabled|disabling|disabled|data_limit_exceeded]
+- body:tags array<string>
+- body:updated_at string
+
+## S592-N0161  POST /sim_cards/{id}/actions/disable
+desc: Request a SIM card disable | The SIM card won't be able to connect to the network after the disabling is completed, thus making it impossible to consume data.<br/> Transitioning to the disabled state may take a period of time.</br> Until the transition is completed, the SIM card status will be <code>disabling</code>.
+- path:id string
+
+## S592-N0162  POST /sim_cards/{id}/actions/enable
+desc: Request a SIM card enable | The SIM card will be able to connect to the network once the enabling is complete, thus making it possible to consume data.<br/> To enable a SIM card, it must be associated with SIM card group.<br/> Transitioning to the enabled state may take a period of time. Until the transition is completed, the SIM card status will be <code>enabling</code>.
+- path:id string
+
+## S592-N0164  DELETE /sim_cards/{sim_card_id}/network_preferences
+desc: DELETE network preferences | This API asynchronously removes the custom-defined network preferences settings. After this operation is done the Telnyx default settings, the same applied for an unaltered SIM card, will be in place.
+- path:sim_card_id string
+
+## S592-N0165  PUT /sim_cards/{sim_card_id}/network_preferences
+desc: Set network preferences | This API allows setting or updating a SIM card network preference. <br/><br/> Every SIM card has default network preferences defined on Telnyx. These preferences will determine how a SIMCard will connect to the network by considering a list of preferable operators.<br/><br/> There can be multiple scenarios where an operator can be preferred over another, for example, when
+- path:sim_card_id string
+- body:mobile_operator_networks_preferences array<object>
+- body:mobile_operator_networks_preferences[].mobile_operator_network_id string
+- body:mobile_operator_networks_preferences[].priority integer
+
+## S592-N0166  DELETE /sim_cards/{sim_card_id}/public_ip
+desc: Delete SIM card public IP | This API asynchronously removes an existing public IP from a SIM card.
+- path:sim_card_id string
+
+## S592-N0167  POST /sim_cards/{sim_card_id}/public_ip
+desc: Set SIM card public IP | This API will asynchronously map a random public IP to a SIM card, making it reachable on the public internet. <br/><br/> The request will return the resource as "provisioning" right away, and it'll eventually get "provisioned", meaning it completed the setup. <br/><br/> Setting up a public IP will generate charges, and we won't be able to provide the IP if the account doe
+- path:sim_card_id string
+
+## S592-N0168  PATCH /sub_number_orders/{sub_number_order_id}
+desc: Update a sub number order | Updates a sub number order.
+schema: UpdateSubNumberOrderRequest
+- path:sub_number_order_id string
+- body:regulatory_requirements array<object>
+- body:regulatory_requirements[].field_value string
+- body:regulatory_requirements[].requirement_id string
+
+## S592-N0169  POST /telephony_credentials
+desc: Create a credential | Create a credential.
+schema: TelephonyCredentialCreateRequest
+- body:connection_id string
+- body:expires_at string
+- body:name string
+- body:tag string
+
+## S592-N0170  DELETE /telephony_credentials/{id}
+desc: Delete a credential | Delete an existing credential.
+- path:id string
+
+## S592-N0171  PATCH /telephony_credentials/{id}
+desc: Update a credential | Update an existing credential.
+schema: TelephonyCredentialUpdateRequest
+- path:id string
+- body:connection_id string
+- body:expires_at string
+- body:name string
+- body:tag string
+
+## S592-N0172  POST /telephony_credentials/{id}/actions/{action}
+desc: Perform activate or deactivate action on provided Credential | Perform activate or deactivate action on provided Credential. Activate action will change the status to active, making it possible to connect calls with the credential. Deactivate action will change the status to inactive, making it impossible to connect calls with the credential.
+- path:id string
+- path:action string enum[activate|deactivate]
+
+## S592-N0174  POST /texml_applications
+desc: Creates a TeXML Application | Creates a TeXML Application.
+schema: CreateTexmlApplicationRequest
+- body:active boolean
+- body:anchorsite_override string enum[Latency|Chicago, IL|Ashburn, VA|San Jose, CA|Sydney, Australia|Amsterdam, Netherlands|London, UK|Toronto, Canada|Vancouver, Canada|Frankfurt, Germany]
+- body:dtmf_type string enum[RFC 2833|Inband|SIP INFO]
+- body:first_command_timeout boolean
+- body:first_command_timeout_secs integer
+- body:friendly_name string
+- body:inbound object
+- body:inbound.channel_limit integer
+- body:inbound.sip_subdomain string
+- body:inbound.sip_subdomain_receive_settings string enum[only_my_connections|from_anyone]
+- body:outbound object
+- body:outbound.channel_limit integer
+- body:outbound.outbound_voice_profile_id string
+- body:status_callback string
+- body:status_callback_method string enum[get|post]
+- body:voice_fallback_url string
+- body:voice_method string enum[get|post]
+- body:voice_url string
+
+## S592-N0175  DELETE /texml_applications/{id}
+desc: Deletes a TeXML Application | Deletes a TeXML Application.
+- path:id string
+
+## S592-N0176  PATCH /texml_applications/{id}
+desc: Update a TeXML Application | Updates settings of an existing TeXML Application.
+schema: UpdateTexmlApplicationRequest
+- path:id string
+- body:active boolean
+- body:anchorsite_override string enum[Latency|Chicago, IL|Ashburn, VA|San Jose, CA|Sydney, Australia|Amsterdam, Netherlands|London, UK|Toronto, Canada|Vancouver, Canada|Frankfurt, Germany]
+- body:dtmf_type string enum[RFC 2833|Inband|SIP INFO]
+- body:first_command_timeout boolean
+- body:first_command_timeout_secs integer
+- body:friendly_name string
+- body:inbound object
+- body:inbound.channel_limit integer
+- body:inbound.sip_subdomain string
+- body:inbound.sip_subdomain_receive_settings string enum[only_my_connections|from_anyone]
+- body:outbound object
+- body:outbound.channel_limit integer
+- body:outbound.outbound_voice_profile_id string
+- body:status_callback string
+- body:status_callback_method string enum[get|post]
+- body:voice_fallback_url string
+- body:voice_method string enum[get|post]
+- body:voice_url string
+
+## S592-N0177  POST /verifications/by_phone_number/{phone_number}/actions/verify
+desc: Submit a verification code
+schema: VerifyVerificationCodeRequest
+- path:phone_number string
+- body:code string
+
+## S592-N0178  POST /verifications/call
+desc: Trigger a Call verification
+schema: CreateVerificationRequestCall
+- body:call_timeout_secs integer
+- body:phone_number string
+- body:timeout_secs integer
+- body:verify_profile_id string
+
+## S592-N0179  POST /verifications/flashcall
+desc: Trigger a Flash call verification
+schema: CreateVerificationRequestFlashcall
+- body:phone_number string
+- body:timeout_secs integer
+- body:verify_profile_id string
+
+## S592-N0180  POST /verifications/psd2
+desc: Trigger a PSD2 verification
+schema: CreateVerificationRequestPSD2
+- body:amount string
+- body:currency string enum[USD|EUR|GBP|AUD|CAD]
+- body:payee string
+- body:phone_number string
+- body:timeout_secs integer
+- body:verify_profile_id string
+
+## S592-N0181  POST /verifications/sms
+desc: Trigger a SMS verification
+schema: CreateVerificationRequestSMS
+- body:phone_number string
+- body:timeout_secs integer
+- body:verify_profile_id string
+
+## S592-N0182  POST /verifications/whatsapp
+desc: Trigger a Whatsapp verification
+schema: CreateVerificationRequestWhatsapp
+- body:phone_number string
+- body:timeout_secs integer
+- body:verify_profile_id string
+
+## S592-N0184  DELETE /verify_profiles/{verify_profile_id}
+desc: Delete a Verify profile
+- path:verify_profile_id string
+
+## S592-N0186  POST /whatsapp_contacts
+desc: Check Contact | Verify that a phone number belongs to a valid WhatsApp account. You must ensure that the status is valid before you can message a user, and you'll get their WhatsApp ID to use for messaging.
+schema: CheckContactRequestBody
+- body:blocking string enum[no_wait|wait]
+- body:contacts array<string>
+- body:whatsapp_user_id string
+
+## S592-N0187  POST /whatsapp_detail_record_reports
+desc: Submit a request for new WhatsApp detail report. WhatsApp detail report pulls all raw WhatsApp data according to defined filters.
+schema: WhatsAppReportsReq
+- body:end_date string
+- body:start_date string
+
+## S592-N0188  DELETE /whatsapp_detail_record_reports/{id}
+desc: Delete generated WhatsApp detail report by id
+- path:id any
+
+## S592-N0189  POST /whatsapp_media
+desc: Upload Media | Upload media. Accepted media types include image/jpeg, image/png, video/mp4, video/3gpp, audio/aac, audio/ogg.
+schema: MediaRequestBody
+- body:media_content_type string
+- body:upload_file string
+- body:whatsapp_user_id string
+
+## S592-N0192  PATCH /whatsapp_messages/{message_id}
+desc: Mark Message As Read | Mark a message as read.
+schema: MarkMessageAsReadRequestBody
+- path:message_id string
+- body:status string
+- body:whatsapp_user_id string
+
+## S592-N0194  POST /wireless/detail_records_reports
+desc: Create a Wireless Detail Records (WDRs) Report | Asynchronously create a report containing Wireless Detail Records (WDRs) for the SIM cards that consumed wireless data in the given time period.
+schema: WdrReportRequest
+- body:end_time string
+- body:start_time string
+
+## S592-N0195  DELETE /wireless/detail_records_reports/{id}
+desc: Delete a Wireless Detail Record (WDR) Report | Deletes one specific WDR report
+- path:id string
+
+## S627-N0003  PUT /edge-config/{edgeConfigId}
+desc: Update an Edge Config | Updates an Edge Config.
+- path:edgeConfigId string
+- query:teamId string
+- body:slug string
+
+## S627-N0004  PATCH /edge-config/{edgeConfigId}/items
+desc: Update Edge Config items in batch | Update multiple Edge Config Items in batch.
+- path:edgeConfigId string
+- query:teamId string
+- body:items array<object>
+- body:items[].key string
+- body:items[].operation any
+- body:items[].value string
+
+## S627-N0006  DELETE /edge-config/{edgeConfigId}/tokens
+desc: Delete one or more Edge Config tokens | Deletes one or more tokens of an existing Edge Config.
+- path:edgeConfigId string
+- query:teamId string
+- body:tokens array<string>
+
+## S627-N0010  POST /v1/deployments/{deploymentId}/checks/{checkId}/rerequest
+desc: Rerequest a check | Rerequest a selected check that has failed.
+- path:deploymentId string
+- path:checkId string
+- query:teamId string
+
+## S627-N0011  PATCH /v1/domains/records/{recordId}
+desc: Update an existing DNS record | Updates an existing DNS record for a domain name.
+- path:recordId string
+- query:teamId string
+- body:mxPriority integer
+- body:name string
+- body:srv object
+- body:srv.port integer
+- body:srv.priority integer
+- body:srv.target string
+- body:srv.weight integer
+- body:ttl integer
+- body:type string enum[A|AAAA|ALIAS|CAA|CNAME|MX|SRV|TXT|NS]
+- body:value string
+
+## S627-N0012  DELETE /v1/integrations/configuration/{id}
+desc: Delete an integration configuration | Allows to remove the configuration with the `id` provided in the parameters. The configuration and all of its resources will be removed. This includes Webhooks, LogDrains and Project Env variables.
+- path:id string
+- query:teamId string
+
+## S627-N0014  POST /v1/log-drains
+desc: Creates a Configurable Log Drain | Creates a configurable log drain. This endpoint must be called with a team AccessToken (integration OAuth2 clients are not allowed)
+- query:teamId string
+- body:branch string
+- body:deliveryFormat string enum[json|ndjson]
+- body:environment string enum[preview|production]
+- body:headers object
+- body:projectIds array<string>
+- body:sources array<string> enum[static|lambda|build|edge|external]
+- body:url string

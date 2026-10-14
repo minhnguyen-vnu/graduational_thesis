@@ -1,0 +1,910 @@
+## S329-0001  POST /artifact/upload
+summary: Upload an artifact
+desc: Uploads an artifact to be imported by Microcks.
+- query:mainArtifact boolean
+- body:file string
+
+## S329-0002  POST /import
+summary: Import a snapshot
+desc: Import a repository snapshot previsouly exported into Microcks
+- body:file string
+
+## S329-0003  POST /jobs
+summary: Create ImportJob
+desc: Create a new ImportJob
+- body:active boolean
+- body:createdDate string
+- body:etag string
+- body:frequency string
+- body:id string
+- body:lastImportDate string
+- body:lastImportError string
+- body:mainArtifact boolean
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.createdOn integer
+- body:metadata.labels object
+- body:metadata.lastUpdate integer
+- body:name string
+- body:repositoryDisableSSLValidation boolean
+- body:repositoryUrl string
+- body:secretRef object
+- body:secretRef.name string
+- body:secretRef.secretId string
+- body:serviceRefs array<object>
+- body:serviceRefs[].name string
+- body:serviceRefs[].serviceId string
+- body:serviceRefs[].version string
+
+## S329-0004  DELETE /jobs/{id}
+summary: Delete ImportJob
+desc: Delete an ImportJob
+- path:id string
+
+## S329-0005  POST /jobs/{id}
+summary: Update ImportJob
+desc: Update an ImportJob
+- path:id string
+- body:active boolean
+- body:createdDate string
+- body:etag string
+- body:frequency string
+- body:id string
+- body:lastImportDate string
+- body:lastImportError string
+- body:mainArtifact boolean
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.createdOn integer
+- body:metadata.labels object
+- body:metadata.lastUpdate integer
+- body:name string
+- body:repositoryDisableSSLValidation boolean
+- body:repositoryUrl string
+- body:secretRef object
+- body:secretRef.name string
+- body:secretRef.secretId string
+- body:serviceRefs array<object>
+- body:serviceRefs[].name string
+- body:serviceRefs[].serviceId string
+- body:serviceRefs[].version string
+
+## S329-0006  PUT /jobs/{id}/activate
+summary: Activate an ImportJob
+desc: Make an ImportJob active, so that it is executed
+- path:id string
+
+## S329-0007  PUT /jobs/{id}/start
+summary: Start an ImportJob
+desc: Starting an ImportJob forces it to immediatly import mock definitions
+- path:id string
+
+## S329-0008  PUT /jobs/{id}/stop
+summary: Stop an ImportJob
+desc: Stopping an ImportJob desactivate it, so that it won't execute at next schedule
+- path:id string
+
+## S329-0009  POST /secrets
+summary: Create a new Secret
+- body:caCertPem string
+- body:description string
+- body:id string
+- body:name string
+- body:password string
+- body:token string
+- body:tokenHeader string
+- body:username string
+
+## S329-0010  DELETE /secrets/{id}
+summary: Delete Secret
+desc: Delete a Secret
+- path:id string
+
+## S329-0011  PUT /secrets/{id}
+summary: Update Secret
+desc: Update a Secret
+- path:id string
+
+## S329-0012  DELETE /services/{id}
+summary: Delete Service
+desc: Delete a Service
+- path:id string
+
+## S329-0013  PUT /services/{id}/metadata
+summary: Update Service Metadata
+- path:id string
+- body:annotations object
+- body:createdOn integer
+- body:labels object
+- body:lastUpdate integer
+
+## S329-0014  PUT /services/{id}/operation
+summary: Override Service Operation
+- path:id string
+- query:operationName string
+- body:defaultDelay integer
+- body:dispatcher string
+- body:dispatcherRules string
+- body:parameterConstraints array<object>
+- body:parameterConstraints[].in string enum[path|query|header]
+- body:parameterConstraints[].mustMatchRegexp string
+- body:parameterConstraints[].name string
+- body:parameterConstraints[].recopy boolean
+- body:parameterConstraints[].required boolean
+
+## S329-0015  POST /tests
+summary: Create a new Test
+- body:filteredOperations array<string>
+- body:operationHeaders object
+- body:runnerType string enum[HTTP|SOAP_HTTP|SOAP_UI|POSTMAN|OPEN_API_SCHEMA|ASYNC_API_SCHEMA|GRPC_PROTOBUF|GRAPHQL_SCHEMA]
+- body:secretName string
+- body:serviceId string
+- body:testEndpoint string
+- body:timeout integer
+
+## S329-0016  POST /tests/{id}/testCaseResult
+summary: Report and create a new TestCaseResult
+desc: Report a TestCaseResult (typically used by a Test runner)
+- path:id string
+- body:operationName string
+
+## S330-0001  POST /api/v1/invite/verify/{token}
+summary: verifyAdminInvite
+desc: **Note**: another call to ```GET /api/v1/self``` is required to see the new set of privileges
+- path:token string
+
+## S330-0002  DELETE /api/v1/login/oauth/{provider}
+summary: unlinkOAuth2Provider
+desc: Unlink OAuth2 Provider
+- path:provider string
+
+## S330-0003  PUT /api/v1/msps/{msp_id}/admins/{admin_id}
+summary: updateMspAdmin
+desc: Update MSP Admin
+- path:msp_id string
+- path:admin_id string
+- body:admin_id string
+- body:email string
+- body:enable_two_factor boolean
+- body:first_name string
+- body:hours integer
+- body:last_name string
+- body:oauth_google boolean
+- body:phone string
+- body:phone2 string
+- body:privileges array<object>
+- body:privileges[].for_site boolean
+- body:privileges[].msp_id string
+- body:privileges[].msp_logo_url string
+- body:privileges[].msp_name string
+- body:privileges[].msp_url string
+- body:privileges[].name string
+- body:privileges[].org_id string
+- body:privileges[].org_name string
+- body:privileges[].orggroup_ids array<string>
+- body:privileges[].role string enum[admin|write|read|helpdesk|installer]
+- body:privileges[].scope string enum[org|site|msp|orggroup]
+- body:privileges[].site_id string
+- body:privileges[].sitegroup_ids array<string>
+- body:privileges[].views array<string>
+- body:session_expiry integer
+- body:tags array<string>
+- body:two_factor_verified boolean
+- body:via_sso string
+
+## S330-0004  POST /api/v1/orgs/{org_id}/aptemplates
+summary: createOrgAptemplate
+desc: Create Org AP Template
+- path:org_id string
+- body:ap_matching object
+- body:ap_matching.enabled boolean
+- body:ap_matching.rules array<object>
+- body:ap_matching.rules[].match_model string
+- body:ap_matching.rules[].name string
+- body:ap_matching.rules[].port_config object
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:modified_time number
+- body:org_id string
+- body:site_id string
+- body:wifi object
+- body:wifi.cisco_enabled boolean
+- body:wifi.disable_11k boolean
+- body:wifi.disable_radios_when_power_constrained boolean
+- body:wifi.enable_arp_spoof boolean
+- body:wifi.enable_shared_radio_scanning boolean
+- body:wifi.enabled boolean
+- body:wifi.locate_connected boolean
+- body:wifi.locate_unconnected boolean
+- body:wifi.mesh_allow_dfs boolean
+- body:wifi.mesh_enable_crm boolean
+- body:wifi.mesh_enabled boolean
+- body:wifi.proxy_arp boolean
+
+## S330-0005  DELETE /api/v1/orgs/{org_id}/assets/{asset_id}
+summary: deleteOrgAsset
+desc: Delete Org Asset
+- path:org_id string
+- path:asset_id string
+
+## S330-0006  POST /api/v1/orgs/{org_id}/mxedges/{mxedge_id}/upgrade
+summary: upgradeOrgMxEdge
+desc: Upgrade MxEdge
+- path:org_id string
+- path:mxedge_id string
+- body:channel string enum[stable|beta|alpha]
+- body:mxedge_ids array<string>
+- body:versions object
+- body:versions.mxagent string
+- body:versions.tunterm string
+
+## S330-0007  PUT /api/v1/orgs/{org_id}/psks/{psk_id}
+summary: updateOrgPsk
+desc: Update Org PSK
+- path:org_id string
+- path:psk_id string
+- body:admin_sso_id string
+- body:created_time number
+- body:email string
+- body:expire_time integer
+- body:expiry_notification_time integer
+- body:id string
+- body:mac string
+- body:max_usage integer
+- body:modified_time number
+- body:name string
+- body:note string
+- body:notify_expiry boolean
+- body:notify_on_create_or_edit boolean
+- body:old_passphrase string
+- body:org_id string
+- body:passphrase string
+- body:role string
+- body:site_id string
+- body:ssid string
+- body:usage string enum[multi|single]
+- body:vlan_id integer
+
+## S330-0008  DELETE /api/v1/orgs/{org_id}/sdkinvites/{sdkinvite_id}
+summary: revokeSdkInvite
+desc: Revoke SDK Invite
+- path:org_id string
+- path:sdkinvite_id string
+
+## S330-0009  DELETE /api/v1/orgs/{org_id}/sdktemplates/{sdktemplate_id}
+summary: deleteSdkTemplate
+desc: Delete SDK Template
+- path:org_id string
+- path:sdktemplate_id string
+
+## S330-0010  POST /api/v1/orgs/{org_id}/setting/juniper/link_accounts
+summary: linkOrgToJuniperJuniperAccount
+desc: Link Juniper Accounts
+- path:org_id string
+- body:password string
+- body:username string
+
+## S330-0011  DELETE /api/v1/orgs/{org_id}/sitegroups/{sitegroup_id}
+summary: deleteOrgSiteGroup
+desc: Delete Org Site Group
+- path:org_id string
+- path:sitegroup_id string
+
+## S330-0012  DELETE /api/v1/orgs/{org_id}/templates/{template_id}
+summary: deleteOrgTemplate
+desc: Delete Org Template
+- path:org_id string
+- path:template_id string
+
+## S330-0013  POST /api/v1/orgs/{org_id}/templates/{template_id}/clone
+summary: cloneOrgTemplate
+desc: Clone Org Template
+- path:org_id string
+- path:template_id string
+- body:name string
+
+## S330-0014  PUT /api/v1/orgs/{org_id}/tickets/{ticket_id}
+summary: updateOrgTicket
+desc: Update support ticket
+- path:org_id string
+- path:ticket_id string
+- body:case_number string
+- body:comments array<object>
+- body:comments[].attachments array<object>
+- body:comments[].attachments[].content_type string
+- body:comments[].attachments[].content_url string
+- body:comments[].attachments[].size integer
+- body:comments[].author string
+- body:comments[].comment string
+- body:comments[].created_at integer
+- body:created_at integer
+- body:id string
+- body:requester string
+- body:requester_email string
+- body:status string enum[open|pending|solved|closed]
+- body:subject string
+- body:type string
+- body:updated_at integer
+
+## S330-0015  POST /api/v1/register/verify/{token}
+summary: verifyRegistration
+desc: Verify registration
+- path:token string
+
+## S330-0016  POST /api/v1/self/two_factor/verify
+summary: verifyTwoFactor
+desc: Verify Two-factor (OTP) To verify two-factor authentication by using a code generated by app (e.g. Google Authenticator, Authy) or by SMS. Upon successful verification, the otp_verified will be set to true if it hasn’t already been.
+- body:two_factor string
+
+## S330-0017  POST /api/v1/sites/{site_id}/alarms/{alarm_id}/unack
+summary: unackSiteAlarm
+desc: Unack Site Alarm
+- path:site_id string
+- path:alarm_id string
+- body:note string
+
+## S330-0018  DELETE /api/v1/sites/{site_id}/assets/{asset_id}
+summary: deleteSiteAsset
+desc: Delete Site Asset
+- path:site_id string
+- path:asset_id string
+
+## S330-0019  PUT /api/v1/sites/{site_id}/assets/{asset_id}
+summary: updateSiteAsset
+desc: Update Site Asset
+- path:site_id string
+- path:asset_id string
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:mac string
+- body:map_id string
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:site_id string
+- body:tag_id string
+
+## S330-0020  POST /api/v1/sites/{site_id}/clients/{client_mac}/unauthorize
+summary: unauthorizeSiteClient
+desc: This unauthorize a client (if it’s a guest) and disconnect it. From the guest’s perspective, s/he will see the splash page again and go through the flow (e.g. Terms of Use) again.
+- path:site_id string
+- path:client_mac string
+
+## S330-0021  DELETE /api/v1/sites/{site_id}/devices/{device_id}
+summary: deleteSiteDevice
+desc: Delete Site Device
+- path:site_id string
+- path:device_id string
+
+## S330-0022  POST /api/v1/sites/{site_id}/devices/{device_id}/clear_bpdu_error
+summary: clearBpduErrosFromPortsOnSwitch
+desc: Clear bridge protocol data unit (BPDU) error condition caused by the detection of a possible bridging loop from Spanning Tree Protocol (STP) operation that renders the port unoperational.
+- path:site_id string
+- path:device_id string
+- body:port string
+
+## S330-0023  POST /api/v1/sites/{site_id}/devices/{device_id}/release_dhcp
+summary: releaseSiteSsrDhcpLease
+desc: Releases an active DHCP lease.
+- path:site_id string
+- path:device_id string
+- body:port string
+
+## S330-0024  POST /api/v1/sites/{site_id}/devices/{device_id}/unlocate
+summary: stopSiteLocateDevice
+desc: Stop Locate a Device
+- path:site_id string
+- path:device_id string
+
+## S330-0025  DELETE /api/v1/sites/{site_id}/location/ml/map/{map_id}
+summary: clearSiteMlOverwriteForMap
+desc: Clear ML Overwrite for Map
+- path:site_id string
+- path:map_id string
+
+## S330-0026  DELETE /api/v1/sites/{site_id}/maps/{map_id}/auto_orient
+summary: deleteSiteApAutoOrientation
+desc: This API is called to force stop auto placement for a given map
+- path:map_id string
+- path:site_id string
+
+## S330-0027  POST /api/v1/sites/{site_id}/rrm/optimize
+summary: optimizeSiteRrm
+desc: Optimize Site RRM
+- path:site_id string
+- body:bands array<string>
+
+## S330-0028  POST /api/v1/sites/{site_id}/setting/blacklist
+summary: createSiteClientsBlocklist
+desc: This endpoint is to provide list of client macs for annotation blacklist. Retrieve the current clients list `blacklist_url` under Site:Setting
+- path:site_id string
+- body:macs array<string>
+
+## S330-0029  DELETE /api/v1/sites/{site_id}/setting/whitelist
+summary: deleteSiteClientsAllowlist
+desc: Delete Site Whitelist Station Clients
+- path:site_id string
+
+## S330-0030  POST /api/v1/sites/{site_id}/subscriptions
+summary: SubscribeSite
+desc: Subscribe to Site Alarms
+- path:site_id string
+
+## S330-0031  POST /api/v1/sites/{site_id}/uisettings/{uisetting_id}
+summary: updateSiteCurdSetting
+desc: CURD site UI settings
+- path:site_id string
+- path:uisetting_id string
+- body:created_time number
+- body:defaultScopeId string
+- body:defaultScopeType string
+- body:defaultTimeRange object
+- body:defaultTimeRange.end integer
+- body:defaultTimeRange.endDate string
+- body:defaultTimeRange.interval string
+- body:defaultTimeRange.name string
+- body:defaultTimeRange.shortName string
+- body:defaultTimeRange.start integer
+- body:defaultTimeRange.usePreset boolean
+- body:description string
+- body:for_site boolean
+- body:id string
+- body:isCustomDataboard boolean
+- body:isScopeLinked boolean
+- body:isTimeRangeLinked boolean
+- body:modified_time number
+- body:name string
+- body:org_id string
+- body:purpose string
+- body:site_id string
+- body:tiles array<object>
+- body:tiles[].chartBand string
+- body:tiles[].chartColor string
+- body:tiles[].chartDirection string
+- body:tiles[].chartRankBy string
+- body:tiles[].chartType string
+- body:tiles[].colspan integer
+- body:tiles[].column integer
+- body:tiles[].hideEmptyRows boolean
+- body:tiles[].id string
+- body:tiles[].metric object
+- body:tiles[].metric.apiName string
+- body:tiles[].name string
+- body:tiles[].row integer
+- body:tiles[].rowspan integer
+- body:tiles[].scopeId string
+- body:tiles[].scopeType string
+- body:tiles[].sortedColumns any
+- body:tiles[].timeRange object
+- body:tiles[].timeRange.end number
+- body:tiles[].timeRange.endDate string
+- body:tiles[].timeRange.interval string
+- body:tiles[].timeRange.name string
+- body:tiles[].timeRange.shortName string
+- body:tiles[].timeRange.start integer
+- body:tiles[].timeRange.usePreset boolean
+- body:tiles[].trendType string
+- body:tiles[].vizType string
+
+## S330-0032  POST /api/v1/sites/{site_id}/wlans
+summary: createSiteWlan
+desc: Create Site WLAN
+- path:site_id string
+- body:acct_interim_interval integer
+- body:acct_servers array<object>
+- body:acct_servers[].host string
+- body:acct_servers[].keywrap_enabled boolean
+- body:acct_servers[].keywrap_format string
+- body:acct_servers[].keywrap_kek string
+- body:acct_servers[].keywrap_mack string
+- body:acct_servers[].port integer
+- body:acct_servers[].secret string
+- body:airwatch object
+- body:airwatch.api_key string
+- body:airwatch.console_url string
+- body:airwatch.enabled boolean
+- body:airwatch.password string
+- body:airwatch.username string
+- body:allow_ipv6_ndp boolean
+- body:allow_mdns boolean
+- body:allow_ssdp boolean
+- body:ap_ids array<string>
+- body:app_limit object
+- body:app_limit.apps object
+- body:app_limit.enabled boolean
+- body:app_limit.wxtag_ids object
+- body:app_qos object
+- body:app_qos.apps object
+- body:app_qos.apps.skype-business-video object
+- body:app_qos.apps.skype-business-voice object
+- body:app_qos.enabled boolean
+- body:app_qos.others array<object>
+- body:app_qos.others[].dscp integer
+- body:app_qos.others[].dst_subnet string
+- body:app_qos.others[].port_ranges string
+- body:app_qos.others[].protocol string
+- body:app_qos.others[].src_subnet string
+- body:apply_to string enum[site|wxtags|aps]
+- body:arp_filter boolean
+- body:auth object
+- body:auth.anticlog_threshold integer
+- body:auth.eap_reauth boolean
+- body:auth.enable_mac_auth boolean
+- body:auth.key_idx integer
+- body:auth.keys array<string>
+- body:auth.multi_psk_only boolean
+- body:auth.owe string
+- body:auth.pairwise array<string>
+- body:auth.private_wlan boolean
+- body:auth.psk string
+- body:auth.type string enum[open|psk|wep|eap|psk-tkip|psk-wpa2-tkip]
+- body:auth.wep_as_secondary_auth boolean
+- body:auth_server_selection string enum[ordered|unordered]
+- body:auth_servers array<object>
+- body:auth_servers[].host string
+- body:auth_servers[].keywrap_enabled boolean
+- body:auth_servers[].keywrap_format string
+- body:auth_servers[].keywrap_kek string
+- body:auth_servers[].keywrap_mack string
+- body:auth_servers[].port integer
+- body:auth_servers[].secret string
+- body:auth_servers_nas_id string
+- body:auth_servers_nas_ip string
+- body:auth_servers_retries integer
+- body:auth_servers_timeout integer
+- body:band string
+- body:band_steer boolean
+- body:band_steer_force_band5 boolean
+- body:bands array<string> enum[24|5|6]
+- body:block_blacklist_clients boolean
+- body:bonjour object
+- body:bonjour.additional_vlan_ids array<integer>
+- body:bonjour.enabled boolean
+- body:bonjour.services object
+- body:cisco_cwa object
+- body:cisco_cwa.allowed_hostnames array<string>
+- body:cisco_cwa.allowed_subnets array<string>
+- body:cisco_cwa.blocked_subnets array<string>
+- body:cisco_cwa.enabled boolean
+- body:client_limit_down integer
+- body:client_limit_down_enabled boolean
+- body:client_limit_up integer
+- (183 truong bi cat)
+
+## S330-0033  POST /api/v1/sites/{site_id}/wxtags
+summary: createSiteWxTag
+desc: Create Site WxTag
+- path:site_id string
+- body:created_time number
+- body:for_site boolean
+- body:id string
+- body:last_ips array<string>
+- body:mac string
+- body:match string enum[ap_id|app|asset_mac|client_mac|hostname|ip_range_subnet|port|radius_attr|radius_group|radius_username|wlan_id|psk_name]
+- body:modified_time number
+- body:name string
+- body:op string enum[in|not_in]
+- body:org_id string
+- body:resource_mac string
+- body:services array<string>
+- body:site_id string
+- body:specs array<object>
+- body:specs[].port_range string
+- body:specs[].protocol string
+- body:specs[].subnets array<string>
+- body:subnet string
+- body:type string enum[match|client|resource|subnet|spec]
+- body:values array<string>
+
+## S330-0034  POST /webhook_example/_location_
+summary: location
+desc: Webhook sample for `location` topic **Note**: The server host will be your own server FQDN where the Mist Cloud is sending the webhook messages
+- body:events array<object>
+- body:events[].battery_voltage integer
+- body:events[].eddystone_uid_instance string
+- body:events[].eddystone_uid_namespace string
+- body:events[].eddystone_url_url string
+- body:events[].ibeacon_major integer
+- body:events[].ibeacon_minor integer
+- body:events[].ibeacon_uuid string
+- body:events[].id string
+- body:events[].mac string
+- body:events[].map_id string
+- body:events[].mfg_company_id integer
+- body:events[].mfg_data string
+- body:events[].name string
+- body:events[].site_id string
+- body:events[].timestamp integer
+- body:events[].type string
+- body:events[].wifi_beacon_extended_info array<object>
+- body:events[].wifi_beacon_extended_info[].frame_ctrl integer
+- body:events[].wifi_beacon_extended_info[].payload string
+- body:events[].wifi_beacon_extended_info[].seq_ctrl integer
+- body:events[].x integer
+- body:events[].y integer
+- body:topic string
+
+## S330-0035  POST /webhook_example/_ping_
+summary: ping
+desc: Webhook sample for `ping` topic **Note**: The server host will be your own server FQDN where the Mist Cloud is sending the webhook messages
+- body:events array<object>
+- body:events[].id string
+- body:events[].name string
+- body:events[].site_id string
+- body:events[].timestamp number
+- body:topic string
+
+## S330-0036  POST /webhook_example/_zone_
+summary: zone
+desc: Webhook sample for `zone` topic **Note**: The server host will be your own server FQDN where the Mist Cloud is sending the webhook messages
+- body:events array<object>
+- body:events[].asset_id string
+- body:events[].id string
+- body:events[].mac string
+- body:events[].map_id string
+- body:events[].name string
+- body:events[].site_id string
+- body:events[].timestamp integer
+- body:events[].trigger string enum[enter|exit]
+- body:events[].type string
+- body:events[].zone_id string
+- body:topic string
+
+## S331-0001  POST /apikeys/
+summary: Create a new API key.
+desc: Create a new API key. Required permission: global 'servers'.
+- query:description string
+
+## S331-0002  DELETE /attributes/
+summary: Delete all global attributes
+desc: Delete all global attributes. Required permission: global 'servers'.
+
+## S331-0003  POST /attributes/
+summary: Set all global attributes
+desc: Set the global attributes. Prior attributes with keys that are not provided in the body of the request will be deleted. Required permission: global 'servers'.
+- body:(body) object
+
+## S331-0004  PUT /attributes/
+summary: Update specified global attributes
+desc: Update the specified global attributes. Prior attributes with keys that are not provided in the body of the request will not be deleted. Required permission: 'servers'.
+- body:(body) object
+
+## S331-0005  DELETE /attributes/{attributekey}
+summary: Delete specific global attribute
+desc: Delete global attribute with the specified key. Required: global 'servers'.
+- path:attributekey string
+
+## S331-0006  POST /servers/
+summary: Create a new server
+desc: Create a new server. Required permission: global 'createserver'.
+- body:accountCount integer
+- body:appandroid string
+- body:appios string
+- body:appname string
+- body:appurl string
+- body:lastLogin integer
+- body:logo string
+- body:owner integer
+- body:pinTimeout integer
+- body:pinTransTimeout integer
+- body:pingTime integer
+- body:serverFlags array<string>
+- body:serverName string
+- body:serverid string
+- body:serverpk string
+- body:siteurl string
+- body:wsurl string
+
+## S331-0007  PUT /servers/{serverid}/
+summary: Update configuration of a specific server
+desc: Update the configuration of a specific server. Required permission: 'createserver'.
+- path:serverid string
+- body:accountCount integer
+- body:appandroid string
+- body:appios string
+- body:appname string
+- body:appurl string
+- body:lastLogin integer
+- body:logo string
+- body:owner integer
+- body:pinTimeout integer
+- body:pinTransTimeout integer
+- body:pingTime integer
+- body:serverFlags array<string>
+- body:serverName string
+- body:serverid string
+- body:serverpk string
+- body:siteurl string
+- body:wsurl string
+
+## S331-0008  DELETE /servers/{serverid}/accounts/{accountid}/
+summary: Delete specific account
+desc: Delete an account. Required permission: 'accounts'.
+- path:serverid string
+- path:accountid integer
+
+## S331-0009  PUT /servers/{serverid}/accounts/{accountid}/
+summary: Update specific account
+desc: Update an account. The only available change is (un)blocking the account. Required permission: 'accounts'.
+- path:serverid string
+- path:accountid integer
+- query:blocked boolean
+
+## S331-0010  POST /servers/{serverid}/accounts/{accountid}/provokelogin
+summary: Push a login confirmation to the user's app
+desc: Push a login to the nextAuth app for the user to confirm, based on the given account (app instance). Required permission: 'sessions' or 'accounts'.
+- path:serverid string
+- path:accountid integer
+- body:announceinfo object
+- body:announceinfo.info object
+- body:announceinfo.ip string
+- body:announceinfo.logo string
+- body:announceinfo.useragent string
+- body:sessioninfo object
+- body:sessioninfo.info object
+- body:sessioninfo.ip string
+- body:sessioninfo.logo string
+- body:sessioninfo.useragent string
+
+## S331-0011  PUT /servers/{serverid}/accounts/{accountid}/user
+summary: Update user of the given account.
+desc: Update the user of the given account. Required permission: 'accounts'.
+- path:serverid string
+- path:accountid integer
+- query:userid string
+
+## S331-0012  DELETE /servers/{serverid}/attributes/
+summary: Delete all attributes of a specific server
+desc: Delete all attributes of a specific server. Required permission: 'servers'.
+- path:serverid string
+
+## S331-0013  POST /servers/{serverid}/attributes/
+summary: Set all attributes of a specific server
+desc: Set the attributes of a specific server. Prior attributes with keys that are not provided in the body of the request will be deleted. Required permission: 'servers'.
+- path:serverid string
+- body:(body) object
+
+## S331-0014  PUT /servers/{serverid}/attributes/
+summary: Update specified attributes of a specific server
+desc: Update the specified attributes of a specific server. Prior attributes with keys that are not provided in the body of the request will not be deleted. Required permission: 'servers'.
+- path:serverid string
+- body:(body) object
+
+## S331-0015  DELETE /servers/{serverid}/attributes/{attributekey}
+summary: Delete specific attribute of a specific server
+desc: Delete attribute with the specified key of a specific server. Required permission: 'servers'.
+- path:serverid string
+- path:attributekey string
+
+## S331-0016  DELETE /servers/{serverid}/permissions/{roleid}
+summary: Revoke all permissions for the specified server and role.
+desc: Revoke all permissions for the specified server and role. Required permission: 'root'.
+- path:serverid string
+- path:roleid string
+
+## S331-0017  POST /servers/{serverid}/permissions/{roleid}
+summary: Set new permissions for the specified role on a server
+desc: Set new permissions for the specified role on a server. This overwrites any existing permissions on this server for the specified role. Required permission: 'root'.
+- path:serverid string
+- path:roleid string
+- body:(body) string
+
+## S331-0018  DELETE /servers/{serverid}/privilegedattributes/
+summary: Delete all privileged attributes of a specific server
+desc: Delete all privileged attributes of a specific server. Required permission: global 'servers'.
+- path:serverid string
+
+## S331-0019  POST /servers/{serverid}/privilegedattributes/
+summary: Set all privileged attributes of a specific server
+desc: Set the privileged attributes of a specific server. Prior attributes with keys that are not provided in the body of the request will be deleted. Required permission: global 'servers'.
+- path:serverid string
+- body:(body) object
+
+## S331-0020  PUT /servers/{serverid}/privilegedattributes/
+summary: Update privileged specified attributes of a specific server
+desc: Update the specified privileged attributes of a specific server. Prior privileged attributes with keys that are not provided in the body of the request will not be deleted. Required permission: global 'servers'.
+- path:serverid string
+- body:(body) object
+
+## S331-0021  DELETE /servers/{serverid}/privilegedattributes/{attributekey}
+summary: Delete specific privileged attribute of a specific server
+desc: Delete privileged attribute with the specified key of a specific server. Required permission: global 'servers'.
+- path:serverid string
+- path:attributekey string
+
+## S331-0022  POST /servers/{serverid}/sessions/logout
+summary: Force a logout on the given session
+desc: Force a logout on the given session. Required permission: 'sessions'.
+- path:serverid string
+
+## S331-0023  POST /servers/{serverid}/sessions/provokelogin
+summary: Push a login confirmation to the user's app
+desc: Push a login to the nextAuth app for the user to confirm, based on last account that successfully logged in for the given session. Required permission: 'sessions'.
+- path:serverid string
+- body:announceinfo object
+- body:announceinfo.info object
+- body:announceinfo.ip string
+- body:announceinfo.logo string
+- body:announceinfo.useragent string
+- body:sessioninfo object
+- body:sessioninfo.info object
+- body:sessioninfo.ip string
+- body:sessioninfo.logo string
+- body:sessioninfo.useragent string
+
+## S331-0024  POST /servers/{serverid}/sessions/registeruser
+summary: Register a userid for the currently logged in account.
+desc: Register a user for the currently logged in account. You can also directly pass a user name when generating an ENROL qr code. Required permission: 'users'.
+- path:serverid string
+- query:userid string
+
+## S331-0025  POST /servers/{serverid}/sessions/transactions
+summary: Create a transaction to be approved within the current session.
+desc: Create a transaction for approval within the current session. Required permission: 'sessions'.
+- path:serverid string
+- body:amount string
+- body:benificiary string
+- body:description string
+
+## S331-0026  DELETE /servers/{serverid}/users/{userid}/
+summary: Delete a specific user
+desc: Delete a user. Required permission: 'users'.
+- path:serverid string
+- path:userid string
+
+## S331-0027  DELETE /servers/{serverid}/users/{userid}/accounts
+summary: Delete all accounts of a specific user
+desc: Delete all accounts corresponding to this user. The user itself is not deleted. Required permission: 'accounts' or 'users'.
+- path:serverid string
+- path:userid string
+
+## S331-0028  DELETE /servers/{serverid}/users/{userid}/attributes/
+summary: Delete all attributes of a specific user
+desc: Delete all attributes of a specific user. Required permission: 'users'.
+- path:serverid string
+- path:userid string
+
+## S331-0029  POST /servers/{serverid}/users/{userid}/attributes/
+summary: Set all attributes of a specific user
+desc: Set the attributes of a specific user. Prior attributes with keys that are not provided in the body of the request will be deleted. Creates the user if not exists. Required permission: 'users'.
+- path:serverid string
+- path:userid string
+- body:(body) object
+
+## S331-0030  PUT /servers/{serverid}/users/{userid}/attributes/
+summary: Update specified attributes of a specific user
+desc: Update the specified attributes of a specific user. Prior attributes with keys that are not provided in the body of the request will not be deleted. Required permission: 'users'.
+- path:serverid string
+- path:userid string
+- body:(body) object
+
+## S331-0031  DELETE /servers/{serverid}/users/{userid}/attributes/{attributekey}
+summary: Delete specific attribute of a specific user
+desc: Delete attribute with the specified key of a specific user. Required permission: 'users'.
+- path:serverid string
+- path:userid string
+- path:attributekey string
+
+## S331-0032  POST /servers/{serverid}/users/{userid}/provokelogin
+summary: Push a login confirmation to the user's app
+desc: Push a login to the nextAuth app for the user to confirm, based on the given userid. Required permission: 'sessions' or 'users'.
+- path:serverid string
+- path:userid string
+- body:announceinfo object
+- body:announceinfo.info object
+- body:announceinfo.ip string
+- body:announceinfo.logo string
+- body:announceinfo.useragent string
+- body:sessioninfo object
+- body:sessioninfo.info object
+- body:sessioninfo.ip string
+- body:sessioninfo.logo string
+- body:sessioninfo.useragent string
+
+## S331-0033  POST /servers/{serverid}/users/{userid}/role/
+summary: Get or create a role for a specific user.
+desc: Get or create a role for a specific user. Required permission: 'users'.
+- path:serverid string
+- path:userid string

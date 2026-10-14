@@ -1,0 +1,563 @@
+## S615-0023  PUT /spaces/unlike/{itemId}
+desc: Unlike a space item | Unlike a space item OauthScopes: WRITE_SPACE, UPDATE_SPACE_CONTENT
+- path:itemId string
+
+## S615-0024  PUT /spaces/{id}
+desc: Update a space | Update a space OauthScopes: WRITE_SPACE, UPDATE_SPACE_CONTENT
+- path:id string
+- body:accessModeType string enum[INTERNAL_ONLY|INTERNAL_EXTERNAL|NO_CHANGE]
+- body:description string
+- body:largePictureBase64 string
+- body:name string
+- body:ownerId string
+- body:role string enum[MODERATOR|AUTHOR|PARTICIPANT|READER|NO_CHANGE]
+- body:smallPictureBase64 string
+- body:status string enum[ENABLED|DISABLED]
+- body:tags array<string>
+- body:type string enum[OPEN|CLOSED|SECRET|NO_CHANGE]
+
+## S615-0025  POST /spaces/{id}/leave
+desc: Leave a space | Leave a space OauthScopes: WRITE_SPACE
+- path:id string
+
+## S615-0026  POST /spaces/{spaceId}/participant/request
+desc: request access for a space | request access for a space OauthScopes: READ_SPACE
+- path:spaceId string
+- body:reason string
+
+## S615-0027  POST /spaces/{spaceId}/participant/{participantId}/deny
+desc: Deny access for a space | Deny access for a space OauthScopes: WRITE_SPACE, MANAGE_SPACE
+- path:spaceId string
+- path:participantId string
+- body:reason string
+
+## S615-0028  POST /spaces/{spaceId}/topic
+desc: creates a new space topic | creates a new space topic OauthScopes: WRITE_SPACE, MANAGE_SPACE, CREATE_SPACE_CONTENT
+- path:spaceId string
+- body:attachments array<string>
+- body:complex boolean
+- body:content string
+- body:contentTags array<string>
+- body:formMetaData string
+- body:mentionedUser string
+- body:subject string
+- body:tags array<string>
+
+## S615-0029  PUT /spaces/{topicId}/unpin
+desc: Unpin a topic | Unpin a topic OauthScopes: WRITE_SPACE, MANAGE_SPACE
+- path:topicId string
+
+## S615-0030  POST /users/labels
+desc: Add a user label | Add a label to the list of user labels OauthScopes: WRITE_USER_PROFILE, ORGANIZE_CONVERSATIONS
+- body:label string
+
+## S615-0031  DELETE /users/labels/{labelId}
+desc: Remove a user label | Remove a label from the list of user labels OauthScopes: WRITE_USER_PROFILE, ORGANIZE_CONVERSATIONS
+- path:labelId string
+
+## S615-0032  POST /webhooks/incoming/create/{conversationId}
+desc: Create a new webhook for existing conversation. | Create a new webhook. Conversation must exist and creater has to be participant. OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS
+- path:conversationId string
+- query:name string
+- query:userId string
+- query:description string
+
+## S615-0033  DELETE /webhooks/incoming/{webhookId}
+desc: Delete an existing webhook | Delete a new webhook. Webhook must exist OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS
+- path:webhookId string
+
+## S615-0034  POST /webhooks/incoming/{webhookId}
+desc: Post text item for conversation via webhook. | Post text items to conversations via slack apps.
+schema: IncomingWebhookSlackMessage
+- path:webhookId string
+- body:fileURL string
+- body:filename string
+- body:markdown boolean
+- body:subject string
+- body:text string
+
+## S615-0035  POST /webhooks/presence
+desc: Registers Presence WebHook registration | Registers a webHook that has a presence filter with the given URL and userIds. There is a maximum number of userIds allowed OauthScopes: READ_USER
+- body:url string
+- body:userIds array<string>
+
+## S615-0036  DELETE /webhooks/{id}
+desc: Removes a registered webHook | Unregisters the webHook with the given ID. OauthScopes: READ_CONVERSATIONS, READ_USER
+- path:id string
+
+## S616-0001  POST /atalk/{app_id}/{botname}
+desc: Anonymous Talk | Start a conversation with the bot using the Anonymous Talk API. This method will allow you to request creation of an end-user client_name that can maintain persistent predicates per end-user talking to your bot. If client_name is NOT sent in the request, then Pandorabots will create a end-user client_name and return it in the response. Similar to the Talk to Bot API, Pandorabots w
+- path:app_id string
+- path:botname string
+- query:input string
+- query:client_name string
+- query:sessionid string
+- query:recent string
+
+## S616-0002  DELETE /bot/{app_id}/{botname}
+desc: Delete a bot | Delete a bot on the Pandorabots server.<p>Deleting a bot that does not exist returns a 412 error. Invalid botname will return a 400 error. Invalid app_id, user_key, or referrer filter will return a 401 error.</p><p><pre class='prettyprint'>curl -v -X DELETE 'https://aiaas.pandorabots.com/bot/APP_ID/BOTNAME?user_key=USER_KEY'</pre></p>
+- path:app_id string
+- path:botname string
+
+## S616-0003  PUT /bot/{app_id}/{botname}
+desc: Create a bot | Create a new instance of a bot on the Pandorabots server.<p>If there is already a bot under the same app_id and botname, a 409 error is returned. Invalid botname will return a 400 error.</p><p>Creating more bots than your plan allows or using an invalid app_id or user_key (or if applicable referrer filter) returns a 401 error.</p><p><pre class='prettyprint'>curl -v -X PUT 'https://a
+- path:app_id string
+- path:botname string
+
+## S616-0004  DELETE /bot/{app_id}/{botname}/{file-kind}
+desc: Delete a bot file (pdefaults, properties) | Delete pdefaults or properties bot file.<p>For malformed file-kind, a 404 error is returned. For invalid botname, a 412 error is returned.</p><pre><p>curl -v -X DELETE 'https://aiaas.pandorabots.com/bot/APP_ID/BOTNAME/FILE-KIND?user_key=USER_KEY'</p></pre>
+- path:app_id string
+- path:botname string
+- path:file-kind string
+
+## S616-0005  PUT /bot/{app_id}/{botname}/{file-kind}
+desc: Upload a bot file (pdefaults, properties) | Upload bot personality files to your bot. Files must be named with only lowercase letters and numbers with one of the following extensions: <p><b>Properties: </b>Extension - .properties, file-kind - properties, No filename required in path</p><p><b>Predicate defaults: </b>Extension - .pdefaults, file-kind - pdefaults, No filename required in path</p><p>T
+- path:app_id string
+- path:botname string
+- path:file-kind string
+- body:(body) string
+
+## S616-0006  DELETE /bot/{app_id}/{botname}/{file-kind}/{filename}
+desc: Delete a bot file (AIML, set, map, substitution) | Delete an AIML, set, map or substitution bot file<p>For malformed file-kind, a 404 error is returned. For invalid file or botname, a 412 error is returned.</p><pre><p>curl -v -X DELETE 'https://aiaas.pandorabots.com/bot/APP_ID/BOTNAME/FILE-KIND/FILENAME?user_key=USER_KEY'</p></pre>
+- path:app_id string
+- path:botname string
+- path:file-kind string
+- path:filename string
+
+## S616-0007  PUT /bot/{app_id}/{botname}/{file-kind}/{filename}
+desc: Upload a bot file (AIML, set, substitution, map) | Upload bot personality files to your bot. Files must be named with only lowercase letters and numbers with one of the following extensions: <p><b>AIML: </b>Extention - .aiml, file-kind - file</p><p><b>Sets: </b>Extension - .set, file-kind - set</p><p><b>Maps: </b>Extension - .map, file-kind - map</p><p><b>Substitutions: </b>Extension - .substituti
+- path:app_id string
+- path:botname string
+- path:file-kind string
+- path:filename string
+- body:(body) string
+
+## S616-0008  POST /talk/{app_id}/{botname}
+desc: Debug a bot conversation | Use these tools to test/debug/trace bot categories. <p>Malformed requests such as exceeding size of input or invalid clientname returns 400 error code. Error code 412 is returned if the bot is not compiled or does not exist.</p><p><pre class='prettyprint'>curl -v -X POST 'https://aiaas.pandorabots.com/talk/APP_ID/BOTNAME?user_key=USER_KEY&input=INPUT'</pre></p>
+- path:app_id string
+- path:botname string
+- query:input string
+- query:client_name string
+- query:sessionid string
+- query:that string
+- query:topic string
+- query:extra string
+- query:reset string
+- query:trace string
+- query:reload string
+- query:recent string
+
+## S617-0001  POST /webhooks/feed/:token
+desc: Send data to a feed via webhook URL.
+- body:value string
+
+## S617-0002  POST /webhooks/feed/:token/raw
+desc: Send arbitrary data to a feed via webhook URL. | The raw data webhook receiver accepts POST requests and stores the raw request body on your feed. This is useful when you don't have control of the webhook sender. If feed history is turned on, payloads will be truncated at 1024 bytes. If feed history is turned off, payloads will be truncated at 100KB.
+
+## S617-0003  DELETE /{username}/activities
+desc: All activities for current user | Delete all your activities.
+- path:username string
+
+## S617-0004  POST /{username}/dashboards
+desc: Create a new Dashboard
+- path:username string
+- body:description string
+- body:key string
+- body:name string
+
+## S617-0005  POST /{username}/dashboards/{dashboard_id}/blocks
+desc: Create a new Block
+- path:username string
+- path:dashboard_id string
+- body:block_feeds array<object>
+- body:block_feeds[].feed_id string
+- body:block_feeds[].group_id string
+- body:column number
+- body:dashboard_id number
+- body:description string
+- body:key string
+- body:name string
+- body:properties object
+- body:row number
+- body:size_x number
+- body:size_y number
+- body:visual_type string
+
+## S617-0006  DELETE /{username}/dashboards/{dashboard_id}/blocks/{id}
+desc: Delete an existing Block
+- path:username string
+- path:dashboard_id string
+- path:id string
+
+## S617-0007  PATCH /{username}/dashboards/{dashboard_id}/blocks/{id}
+desc: Update properties of an existing Block
+- path:username string
+- path:dashboard_id string
+- path:id string
+- body:block_feeds array<object>
+- body:block_feeds[].feed_id string
+- body:block_feeds[].group_id string
+- body:column number
+- body:dashboard_id number
+- body:description string
+- body:key string
+- body:name string
+- body:properties object
+- body:row number
+- body:size_x number
+- body:size_y number
+- body:visual_type string
+
+## S617-0008  PUT /{username}/dashboards/{dashboard_id}/blocks/{id}
+desc: Replace an existing Block
+- path:username string
+- path:dashboard_id string
+- path:id string
+- body:block_feeds array<object>
+- body:block_feeds[].feed_id string
+- body:block_feeds[].group_id string
+- body:column number
+- body:dashboard_id number
+- body:description string
+- body:key string
+- body:name string
+- body:properties object
+- body:row number
+- body:size_x number
+- body:size_y number
+- body:visual_type string
+
+## S617-0009  DELETE /{username}/dashboards/{id}
+desc: Delete an existing Dashboard
+- path:username string
+- path:id string
+
+## S617-0010  PATCH /{username}/dashboards/{id}
+desc: Update properties of an existing Dashboard
+- path:username string
+- path:id string
+- body:description string
+- body:key string
+- body:name string
+
+## S617-0011  PUT /{username}/dashboards/{id}
+desc: Replace an existing Dashboard
+- path:username string
+- path:id string
+- body:description string
+- body:key string
+- body:name string
+
+## S617-0012  DELETE /{username}/feeds/{feed_key}
+desc: Delete an existing Feed
+- path:username string
+- path:feed_key string
+
+## S617-0013  PATCH /{username}/feeds/{feed_key}
+desc: Update properties of an existing Feed
+- path:username string
+- path:feed_key string
+- body:description string
+- body:key string
+- body:license string
+- body:name string
+
+## S617-0014  POST /{username}/feeds/{feed_key}/data
+desc: Create new Data | Create new data records on the given feed. **NOTE:** when feed history is on, data `value` size is limited to 1KB, when feed history is turned off data value size is limited to 100KB.
+- path:username string
+- path:feed_key string
+- body:created_at string
+- body:ele string
+- body:epoch number
+- body:lat string
+- body:lon string
+- body:value string
+
+## S617-0015  POST /{username}/feeds/{feed_key}/data/batch
+desc: Create multiple new Data records
+- path:username string
+- path:feed_key string
+- body:created_at string
+- body:ele string
+- body:epoch number
+- body:lat string
+- body:lon string
+- body:value string
+
+## S617-0016  DELETE /{username}/feeds/{feed_key}/data/{id}
+desc: Delete existing Data
+- path:username string
+- path:feed_key string
+- path:id string
+
+## S617-0017  PATCH /{username}/feeds/{feed_key}/data/{id}
+desc: Update properties of existing Data
+- path:username string
+- path:feed_key string
+- path:id string
+- body:created_at string
+- body:ele string
+- body:epoch number
+- body:lat string
+- body:lon string
+- body:value string
+
+## S617-0018  PUT /{username}/feeds/{feed_key}/data/{id}
+desc: Replace existing Data
+- path:username string
+- path:feed_key string
+- path:id string
+- body:created_at string
+- body:ele string
+- body:epoch number
+- body:lat string
+- body:lon string
+- body:value string
+
+## S617-0019  DELETE /{username}/groups/{group_key}
+desc: Delete an existing Group
+- path:username string
+- path:group_key string
+
+## S617-0020  PATCH /{username}/groups/{group_key}
+desc: Update properties of an existing Group
+- path:username string
+- path:group_key string
+- body:description string
+- body:key string
+- body:name string
+
+## S617-0021  PUT /{username}/groups/{group_key}
+desc: Replace an existing Group
+- path:username string
+- path:group_key string
+- body:description string
+- body:key string
+- body:name string
+
+## S617-0022  POST /{username}/groups/{group_key}/add
+desc: Add an existing Feed to a Group
+- path:group_key string
+- path:username string
+- query:feed_key string
+
+## S617-0023  POST /{username}/groups/{group_key}/feeds
+desc: Create a new Feed in a Group
+- path:username string
+- path:group_key string
+- body:description string
+- body:key string
+- body:license string
+- body:name string
+
+## S617-0024  POST /{username}/groups/{group_key}/feeds/{feed_key}/data
+desc: Create new Data in a feed belonging to a particular group
+- path:username string
+- path:group_key string
+- path:feed_key string
+- body:created_at string
+- body:ele string
+- body:epoch number
+- body:lat string
+- body:lon string
+- body:value string
+
+## S617-0025  POST /{username}/groups/{group_key}/feeds/{feed_key}/data/batch
+desc: Create multiple new Data records in a feed belonging to a particular group
+- path:username string
+- path:group_key string
+- path:feed_key string
+- body:created_at string
+- body:ele string
+- body:epoch number
+- body:lat string
+- body:lon string
+- body:value string
+
+## S617-0026  POST /{username}/groups/{group_key}/remove
+desc: Remove a Feed from a Group
+- path:group_key string
+- path:username string
+- query:feed_key string
+
+## S617-0027  POST /{username}/tokens
+desc: Create a new Token
+- path:username string
+- body:token string
+
+## S617-0028  DELETE /{username}/tokens/{id}
+desc: Delete an existing Token
+- path:username string
+- path:id string
+
+## S617-0029  PATCH /{username}/tokens/{id}
+desc: Update properties of an existing Token
+- path:username string
+- path:id string
+- body:token string
+
+## S617-0030  PUT /{username}/tokens/{id}
+desc: Replace an existing Token
+- path:username string
+- path:id string
+- body:token string
+
+## S617-0031  DELETE /{username}/triggers/{id}
+desc: Delete an existing Trigger
+- path:username string
+- path:id string
+
+## S617-0032  PATCH /{username}/triggers/{id}
+desc: Update properties of an existing Trigger
+- path:username string
+- path:id string
+- body:name string
+
+## S617-0033  PUT /{username}/triggers/{id}
+desc: Replace an existing Trigger
+- path:username string
+- path:id string
+- body:name string
+
+## S617-0034  DELETE /{username}/{type}/{type_id}/acl/{id}
+desc: Delete an existing Permission
+- path:username string
+- path:type string
+- path:type_id string
+- path:id string
+
+## S617-0035  PATCH /{username}/{type}/{type_id}/acl/{id}
+desc: Update properties of an existing Permission
+- path:username string
+- path:type string
+- path:type_id string
+- path:id string
+- body:mode string enum[r|w|rw]
+- body:scope string enum[secret|public|user|organization]
+- body:scope_value string
+
+## S617-0036  PUT /{username}/{type}/{type_id}/acl/{id}
+desc: Replace an existing Permission
+- path:username string
+- path:type string
+- path:type_id string
+- path:id string
+- body:mode string enum[r|w|rw]
+- body:scope string enum[secret|public|user|organization]
+- body:scope_value string
+
+## S618-0001  POST /v3/Analyze
+desc: Sentiment analysis service | Sample request: POST /Analyze { "DocumentText": "Excellent location, opposite a very large mall with wide variety of shops, restaurants and more.", "PrivateKey": "your_api_key", "Secret": "" }
+schema: Document
+- body:DocumentLanguage string
+- body:DocumentText string
+- body:IsTwitterContent boolean
+- body:PrivateKey string
+- body:RequestIdentifier string
+- body:Secret string
+- body:SerializeFormat integer
+- body:UserCategoryModelName string
+
+## S618-0002  POST /v3/Categorize
+desc: Document categorization service | Sample request: POST /Categorize { "DocumentText": "Excellent location, opposite a very large mall with wide variety of shops, restaurants and more.", "PrivateKey": "your_api_key", "UserCategoryModelName": "your_model_name", "Secret": "" }
+schema: Document
+- body:DocumentLanguage string
+- body:DocumentText string
+- body:IsTwitterContent boolean
+- body:PrivateKey string
+- body:RequestIdentifier string
+- body:Secret string
+- body:SerializeFormat integer
+- body:UserCategoryModelName string
+
+## S618-0003  POST /v3/Extract
+desc: Document extraction service | Sample request: POST /Extract { "DocumentText": "Excellent location, opposite a very large mall with wide variety of shops, restaurants and more.", "PrivateKey": "your_api_key", "UserCategoryModelName": "your_model_name", "Secret": "" }
+schema: Document
+- body:DocumentLanguage string
+- body:DocumentText string
+- body:IsTwitterContent boolean
+- body:PrivateKey string
+- body:RequestIdentifier string
+- body:Secret string
+- body:SerializeFormat integer
+- body:UserCategoryModelName string
+
+## S619-0001  POST /net/connect
+desc: connect | Initiate a connection to a specified peer.
+- body:endpoint string
+
+## S619-0002  POST /net/connections
+desc: connections | Returns an array of all peer connection statuses.
+- body:(body) object
+
+## S619-0003  POST /net/disconnect
+desc: disconnect | Initiate disconnection from a specified peer.
+- body:endpoint string
+
+## S619-0004  POST /net/status
+desc: status | Retrieves the connection status for a specified peer.
+- body:endpoint string
+
+## S620-0001  DELETE /audits/{id}
+desc: Delete a specific audit | Delete a specific audit
+- path:id integer
+
+## S620-0002  POST /extensions/{id}/ignore
+desc: Set 'ignore updates' for a given extension / site_id | Set 'ignore updates' for a given extension / site_id
+- path:id integer
+
+## S620-0003  POST /extensions/{id}/unignore
+desc: Remove 'ignore updates' for a given extension | Remove 'ignore updates' for a given extension
+- path:id integer
+
+## S620-0004  POST /extensions/{id}/update
+desc: Update the extension on the remote site | Update the extension on the remote site
+- path:id integer
+
+## S620-0005  POST /feedbacks
+desc: Create a feedback | Create a feedback
+schema: Feedback
+- body:id integer
+
+## S620-0006  DELETE /logs/{id}
+desc: Delete a specific log | Delete a specific log
+- path:id integer
+
+## S620-0007  POST /packages
+
+## S620-0008  POST /sites
+desc: Create a site | Create a site
+schema: PostSite
+- body:access_url string
+- body:admin_url string
+- body:akeebaProfile string
+- body:backupSchedule string
+- body:dateBackup string
+- body:name string
+- body:notes string
+- body:published boolean
+- body:secret_word string
+- body:tags string
+- body:word_akeeba string
+- body:word_check string
+
+## S620-0009  DELETE /sites/{id}
+desc: Delete a specific Site | Delete a specific Site
+- path:id integer
+
+## S620-0010  PUT /sites/{id}
+desc: Update a site | Update a site
+schema: PostSite
+- path:id integer
+- body:access_url string
+- body:admin_url string
+- body:akeebaProfile string
+- body:backupSchedule string
+- body:dateBackup string
+- body:name string
+- body:notes string
+- body:published boolean
+- body:secret_word string
+- body:tags string
+- body:word_akeeba string
+- body:word_check string

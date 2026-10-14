@@ -1,0 +1,665 @@
+## S520-0001  POST /api/v1/users
+summary: Create User in Group
+desc: Create User in Group
+- query:activate string
+- body:groupIds array<string>
+- body:profile object
+- body:profile.email string
+- body:profile.firstName string
+- body:profile.lastName string
+- body:profile.login string
+
+## S520-0002  PUT /api/v1/users/{userId}
+summary: Set Recovery Credential
+desc: Set Recovery Credential
+- path:userId string
+- body:credentials object
+- body:credentials.recovery_question object
+- body:credentials.recovery_question.answer string
+- body:credentials.recovery_question.question string
+
+## S520-0003  POST /api/v1/users/{userId}/credentials/change_password
+summary: Change Password
+desc: Change Password
+- path:userId string
+- body:newPassword object
+- body:newPassword.value string
+- body:oldPassword object
+- body:oldPassword.value string
+
+## S520-0004  POST /api/v1/users/{userId}/credentials/change_recovery_question
+summary: Change Recovery Question
+desc: Change Recovery Question
+- path:userId string
+- body:password object
+- body:password.value string
+- body:recovery_question object
+- body:recovery_question.answer string
+- body:recovery_question.question string
+
+## S520-0005  POST /api/v1/users/{userId}/credentials/forgot_password
+summary: Forgot Password (One Time Code)
+desc: Forgot Password (One Time Code)
+- path:userId string
+- query:sendEmail string
+
+## S520-0006  POST /api/v1/users/{userId}/lifecycle/activate
+summary: Activate User
+desc: Activate User
+- path:userId string
+- query:sendEmail string
+
+## S520-0007  POST /api/v1/users/{userId}/lifecycle/deactivate
+summary: Deactivate User
+desc: Deactivate User
+- path:userId string
+
+## S520-0008  POST /api/v1/users/{userId}/lifecycle/expire_password
+summary: Set Temp Password
+desc: Set Temp Password
+- path:userId string
+- query:tempPassword string
+
+## S520-0009  POST /api/v1/users/{userId}/lifecycle/reset_factors
+summary: Reset Factors
+desc: Reset Factors
+- path:userId string
+
+## S520-0010  POST /api/v1/users/{userId}/lifecycle/reset_password
+summary: Reset Password
+desc: Reset Password
+- path:userId string
+- query:sendEmail string
+
+## S520-0011  POST /api/v1/users/{userId}/lifecycle/suspend
+summary: Suspend User
+desc: Suspend User
+- path:userId string
+
+## S520-0012  POST /api/v1/users/{userId}/lifecycle/unlock
+summary: Unlock User
+desc: Unlock User
+- path:userId string
+
+## S520-0013  POST /api/v1/users/{userId}/lifecycle/unsuspend
+summary: Unsuspend User
+desc: Unsuspend User
+- path:userId string
+
+## S520-0014  DELETE /api/v1/users/{userId}/sessions
+summary: Clear User Sessions
+desc: Clear User Sessions
+- path:userId string
+
+## S521-0001  DELETE /apis/{owner}/{api}
+summary: Deletes the specified API
+- path:owner string
+- path:api string
+
+## S521-0002  POST /apis/{owner}/{api}
+summary: Saves the provided Swagger definition
+desc: Saves the provided Swagger definition; the owner must match the token owner. The version will be extracted from the Swagger definitions itself.
+- path:owner string
+- path:api string
+- query:private boolean
+- query:force boolean
+- body:(body) object
+
+## S521-0003  DELETE /apis/{owner}/{api}/{version}
+summary: Deletes a particular version of the specified API
+- path:owner string
+- path:api string
+- path:version string
+
+## S521-0004  POST /apis/{owner}/{api}/{version}
+summary: Publish a particular version of the specified API
+- path:owner string
+- path:api string
+- path:version string
+
+## S521-0005  POST /auth/login
+summary: Log in to OpenAPI space
+- body:password string
+- body:username string
+
+## S521-0006  POST /auth/login/apinf
+summary: Log in to OpenAPI space using an APInf account
+- body:password string
+- body:username string
+
+## S521-0007  POST /auth/login/apinf_token
+summary: Log in to OpenAPI space using an APInf authentication token
+- body:auth_token string
+- body:user_id string
+
+## S521-0008  POST /auth/logout
+summary: Log out from OpenAPI space
+
+## S521-0009  POST /auth/ping
+summary: Check whether or not you are authenticated
+
+## S521-0010  POST /auth/register
+summary: Register to OpenAPI space
+- body:password string
+- body:username string
+- body:email string
+
+## S522-0001  DELETE /attribute/{namespace}
+summary: Delete an attribute namespace and all attributes below.
+desc: Delete an attribute namespace and all attributes below. This operation is the same as the one defined with [DELETE /attribute/{namespace}/_meta](#/Attributes/delete_attribute__namespace___meta).
+
+## S522-0002  DELETE /attribute/{namespace}/_meta
+summary: Delete an attribute namespace and all attributes below.
+desc: Delete an attribute namespace and all attributes below. This operation is the same as the one defined with [DELETE /attribute/{namespace}](#/Attributes/delete_attribute__namespace_).
+
+## S522-0003  POST /attribute/{namespace}/_meta
+summary: Change attribute namespace. Create an attribute namespace if it doesn't exist.
+desc: This endpoint can be used for both, creating an attribute namespace and updating it: * If the attribute namespace passed as parameter doesn't exist, it will create the attribute namespace. * If the attribute namespace passed as parameter already exists, it will update the namespace attribute. This operation is the same as the one defined with [PUT](#/Attributes/put_attribute__namespace___meta).
+- body:(body) any
+
+## S522-0004  PUT /attribute/{namespace}/_meta
+summary: Change attribute namespace. Create an attribute namespace if it doesn't exist.
+desc: This endpoint can be used for both, creating an attribute namespace and updating it: * If the attribute namespace passed as parameter doesn't exist, it will create the attribute namespace. * If the attribute namespace passed as parameter already exists, it will update the namespace attribute. This operation is the same as the one defined with [POST](#/Attributes/post_attribute__namespace___meta).
+- body:(body) any
+
+## S522-0005  DELETE /attribute/{namespace}/{attribute_name}
+summary: Delete an attribute and all its values in projects or packages.
+desc: Delete an attribute and all its values in projects or packages. This operation is the same as the one defined with [DELETE /attribute/{namespace}/{attribute_name}/_meta](#/Attributes/delete_attribute__namespace___attribute_name___meta)
+- path:attribute_name string
+
+## S522-0006  DELETE /attribute/{namespace}/{attribute_name}/_meta
+summary: Delete an attribute and all its values in projects or packages.
+desc: Delete an attribute and all its values in projects or packages. This operation is the same as the one defined with [DELETE /attribute/{namespace}/{attribute_name}](#/Attributes/delete_attribute__namespace___attribute_name_)
+
+## S522-0007  POST /attribute/{namespace}/{attribute_name}/_meta
+summary: Change attribute data. Create an attribute if it doesn't exist.
+desc: This endpoint can be used for both, creating an attribute and updating it: * If the attribute passed as parameter doesn't exist, it will create the attribute. * If the attribute passed as parameter already exists, it will update the attribute. This operation is the same as the one defined with [PUT](#/Attributes/put_attribute__namespace___attribute_name___meta).
+- body:(body) any
+
+## S522-0008  PUT /attribute/{namespace}/{attribute_name}/_meta
+summary: Change attribute data. Create an attribute if it doesn't exist.
+desc: This endpoint can be used for both, creating an attribute and updating it: * If the attribute passed as parameter doesn't exist, it will create the attribute. * If the attribute passed as parameter already exists, it will update the attribute. This operation is the same as the one defined with [POST](#/Attributes/post_attribute__namespace___attribute_name___meta).
+- body:(body) any
+
+## S522-0009  POST /build/{project_name}
+summary: Apply different actions on builds/build processes of the specified project
+desc: Apply different actions on builds/build processes of the specified project
+- query:package string
+- query:arch string
+- query:repository string
+- query:cmd string enum[wipe|restartbuild|killbuild|abortbuild|rebuild|unpublish|sendsysrq]
+
+## S522-0010  PUT /build/{project_name}/{repository_name}/{architecture_name}/{package_name}/{file_name}
+summary: Update a specific artifact file contents
+desc: Given a project, repository, architecture and package, update the given file's content. This is for Admins only.
+- path:package_name array<string> enum[_repository]
+- body:file string
+
+## S522-0011  PUT /configuration
+summary: Update the configuration of this Open Build Service instance
+desc: Update the configuration of this Open Build Service instance. This is for admins only.
+- body:(body) any
+
+## S522-0012  POST /distributions
+summary: Create a distribution.
+desc: Create a distribution. This is only for admins.
+- body:architecture array<string>
+- body:icon array<object>
+- body:icon[].height integer
+- body:icon[].url string
+- body:icon[].width integer
+- body:id integer
+- body:link string
+- body:name string
+- body:project string
+- body:reponame string
+- body:repository string
+- body:vendor string
+- body:version string
+
+## S522-0013  PUT /distributions/bulk_replace
+summary: Bulk replace all distributions.
+desc: Bulk replace all distributions. This is only for admins.
+- body:(body) any
+
+## S522-0014  DELETE /distributions/{distribution_id}
+summary: Delete a distribution.
+desc: Delete a distribution. This is only for admins.
+
+## S522-0015  PUT /distributions/{distribution_id}
+summary: Update a distribution.
+desc: Update the data of a distribution.
+- body:(body) any
+
+## S522-0016  DELETE /group/{group_title}
+summary: Delete a group.
+desc: Delete a group.
+
+## S522-0017  POST /group/{group_title}
+summary: Modify group data.
+desc: Modify group data.
+- query:cmd string enum[add_user|remove_user|set_email]
+- query:userid string
+- query:email string
+
+## S522-0018  PUT /group/{group_title}
+summary: Write group data.
+desc: Write group data.
+- body:(body) any
+
+## S522-0019  POST /issue_trackers
+summary: Create an issue tracker.
+desc: Create an issue tracker.
+- body:(body) any
+
+## S522-0020  DELETE /issue_trackers/{issue_tracker_name}
+summary: Delete an issue tracker.
+desc: Delete an issue tracker.
+
+## S522-0021  PUT /issue_trackers/{issue_tracker_name}
+summary: Update or create an issue tracker.
+desc: Update the issue tracker given as path parameter. If it is not found, create it.
+- body:(body) any
+
+## S522-0022  POST /person
+summary: Executes a command on the person endpoint.
+desc: Allows executing command on the person endpoint. As of now, the only command allowed is 'register'.
+- query:cmd string enum[register]
+- body:email string
+- body:login string
+- body:note string
+- body:password string
+- body:realname string
+- body:state string
+
+## S522-0023  POST /person/register
+summary: Registers a new person
+- body:email string
+- body:login string
+- body:note string
+- body:password string
+- body:realname string
+- body:state string
+
+## S522-0024  POST /person/{login}
+summary: Perform changes on a registered person
+- query:cmd string enum[change_password|lock|delete]
+- body:(body) string
+
+## S522-0025  PUT /person/{login}
+summary: Update person
+- body:email string
+- body:login string
+- body:note string
+- body:password string
+- body:realname string
+- body:state string
+
+## S522-0026  POST /person/{login}/token
+summary: Create a new authentication token for a person.
+desc: Create a new authentication token for a person. The token may be limited to a specific package. In this case the query parameters `project` and `package` should be provided. With an empty request body, a token of the default kind 'runservice' is created.
+- query:project string
+- query:package string
+- query:operation string enum[runservice|rebuild|release]
+- query:scm_token string
+
+## S522-0027  DELETE /person/{login}/token/{id}
+summary: Delete a token of a person.
+desc: Delete a token of the specified person.
+- path:id string
+
+## S522-0028  POST /request
+summary: Create a request
+desc: Create a request
+- query:cmd string enum[create]
+- query:addrevision string enum[1]
+- query:ignore_delegate string enum[1]
+- query:ignore_build_state string enum[1]
+- body:action object
+- body:action.options object
+- body:action.options.sourceupdate string
+- body:action.source object
+- body:action.source.package string
+- body:action.source.project string
+- body:action.source.rev integer
+- body:action.target object
+- body:action.target.package string
+- body:action.target.project string
+- body:action.type string
+- body:creator string
+- body:description string
+- body:history array<object>
+- body:history[].comment string
+- body:history[].description string
+- body:history[].when string
+- body:history[].who string
+- body:id integer
+- body:review array<object>
+- body:review[].by_user string
+- body:review[].state string
+- body:review[].when string
+- body:review[].who string
+- body:review[].by_group string
+- body:review[].by_project string
+- body:review[].by_package string
+- body:state object
+- body:state.comment string
+- body:state.name string
+- body:state.when string
+- body:state.who string
+
+## S522-0029  DELETE /request/{id}
+summary: Delete a given request.
+desc: Delete a given request.
+
+## S522-0030  POST /request/{id}
+summary: Apply certain actions on a specified request.
+desc: Apply certain actions on a specified request.
+- query:cmd string
+- query:newstate string
+- query:priority string
+- query:by_user string
+- query:by_group string
+- query:by_project string
+- query:by_package string
+- query:incident string
+- query:time string
+- query:comment string
+
+## S522-0031  PUT /request/{id}
+summary: Modify a given request.
+desc: Modify a given request. **NOTE:** Certain parts of a request can only be changed by admins.
+- body:(body) any
+
+## S522-0032  POST /request/{id}?cmd=diff
+summary: Get the diff for all packages affected by the request.
+desc: Get the diff for all packages affected by the request.
+- query:diff_to_superseded string
+- query:view string enum[xml]
+- query:withissues string enum[True|1]
+
+## S522-0033  POST /worker?cmd=checkconstraints
+summary: Lists workers which match a constraints filter.
+desc: Given a project, package, repository and architecture, list workers which can build with that restrictions, and also match a constraints filter. This endpoint doesn't create or modify any data. More information about constraints can be found in the [user guide](https://openbuildservice.org/help/manuals/obs-user-guide/cha.obs.build_job_constraints.html). This operation is the same as `POST /worker/
+- query:project string
+- query:repository string
+- query:arch string
+- query:package string
+- body:hardware object
+- body:hardware.cpu object
+- body:hardware.cpu.flag array<string>
+- body:hardware.disk object
+- body:hardware.disk.size string
+- body:hardware.memory object
+- body:hardware.memory.size string
+- body:hardware.physicalmemory object
+- body:hardware.physicalmemory.size string
+- body:hardware.processors string
+- body:hostlabel string
+- body:linux object
+- body:linux.flavor string
+- body:linux.version object
+- body:linux.version.max string
+- body:linux.version.min string
+- body:sandbox string
+
+## S523-0001  DELETE /changes
+summary: Clear changes
+desc: Clear the full history stored in the changes log
+
+## S523-0002  DELETE /exports
+summary: Clear exports
+desc: Clear the full history stored in the exports log
+
+## S523-0003  DELETE /instances/{id}/attachments/{name}
+summary: Delete attachment
+desc: Delete an attachment associated with the given DICOM instance. This call will fail if trying to delete a system attachment (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+
+## S523-0004  POST /instances/{id}/attachments/{name}/uncompress
+summary: Uncompress attachment
+desc: Change the compression scheme that is used to store an attachment.
+- path:id string
+- path:name string
+
+## S523-0005  POST /instances/{id}/export
+summary: Write DICOM onto filesystem
+desc: Write the DICOM file onto the filesystem where Orthanc is running
+- path:id string
+- body:(body) any
+
+## S523-0006  POST /instances/{id}/modify
+summary: Modify instance
+desc: Download a modified version of the DICOM instance whose Orthanc identifier is provided in the URL: https://book.orthanc-server.com/users/anonymization.html#modification-of-a-single-instance
+- path:id string
+- body:Force boolean
+- body:Keep array<string>
+- body:KeepSource boolean
+- body:PrivateCreator string
+- body:Remove array<string>
+- body:RemovePrivateTags boolean
+- body:Replace object
+- body:Transcode string
+
+## S523-0007  POST /jobs/{id}/cancel
+summary: Cancel job
+desc: Cancel the job whose identifier is provided in the URL. Check out the Orthanc Book for more information about the state machine applicable to jobs: https://book.orthanc-server.com/users/advanced-rest.html#jobs
+- path:id string
+
+## S523-0008  DELETE /modalities/{id}
+summary: Delete DICOM modality
+desc: Delete one DICOM modality. This change is permanent iff. `DicomModalitiesInDatabase` is `true`, otherwise it is lost at the next restart of Orthanc.
+- path:id string
+
+## S523-0009  PUT /modalities/{id}
+summary: Update DICOM modality
+desc: Define a new DICOM modality, or update an existing one. This change is permanent iff. `DicomModalitiesInDatabase` is `true`, otherwise it is lost at the next restart of Orthanc.
+- path:id string
+- body:AET string
+- body:AllowEcho boolean
+- body:AllowFind boolean
+- body:AllowFindWorklist boolean
+- body:AllowGet boolean
+- body:AllowMove boolean
+- body:AllowStorageCommitment boolean
+- body:AllowStore boolean
+- body:AllowTranscoding boolean
+- body:Host string
+- body:Manufacturer string
+- body:Port number
+- body:UseDicomTls boolean
+
+## S523-0010  POST /modalities/{id}/find-instance
+summary: C-FIND SCU for instances
+desc: Trigger C-FIND SCU command against the DICOM modality whose identifier is provided in URL, in order to find an instance. Deprecated in favor of `/modalities/{id}/query`.
+- path:id string
+- body:(body) any
+
+## S523-0011  POST /modalities/{id}/find-patient
+summary: C-FIND SCU for patients
+desc: Trigger C-FIND SCU command against the DICOM modality whose identifier is provided in URL, in order to find a patient. Deprecated in favor of `/modalities/{id}/query`.
+- path:id string
+- body:(body) any
+
+## S523-0012  POST /modalities/{id}/find-worklist
+summary: C-FIND SCU for worklist
+desc: Trigger C-FIND SCU command against the remote worklists of the DICOM modality whose identifier is provided in URL
+- path:id string
+- body:Full boolean
+- body:Query object
+- body:Short boolean
+
+## S523-0013  POST /patients/{id}/attachments/{name}/verify-md5
+summary: Verify attachment
+desc: Verify that the attachment is not corrupted, by validating its MD5 hash
+- path:id string
+- path:name string
+
+## S523-0014  POST /patients/{id}/reconstruct
+summary: Reconstruct tags & optionally files of patient
+desc: Reconstruct the main DICOM tags in DB of the patient whose Orthanc identifier is provided in the URL. This is useful if child studies/series/instances have inconsistent values for higher-level tags, in order to force Orthanc to use the value from the resource of interest. Beware that this is a time-consuming operation, as all the children DICOM instances will be parsed again, and the Orthanc index
+- path:id string
+- body:ReconstructFiles boolean
+
+## S523-0015  POST /peers/{id}/store-straight
+summary: Straight store to peer
+desc: Synchronously send the DICOM instance in the POST body to the Orthanc peer whose identifier is provided in URL, without having to first store it locally within Orthanc. This is an alternative to command-line tools such as `curl`.
+- path:id string
+- body:(body) any
+
+## S523-0016  DELETE /queries/{id}
+summary: Delete a query
+desc: Delete the query/retrieve operation whose identifier is provided in the URL
+- path:id string
+
+## S523-0017  POST /queries/{id}/answers/{index}/retrieve
+summary: Retrieve one answer
+desc: Start a C-MOVE SCU command as a job, in order to retrieve one answer associated with the query/retrieve operation whose identifiers are provided in the URL: https://book.orthanc-server.com/users/rest.html#performing-retrieve-c-move
+- path:id string
+- path:index string
+- body:Asynchronous boolean
+- body:Full boolean
+- body:Permissive boolean
+- body:Priority number
+- body:Simplify boolean
+- body:Synchronous boolean
+- body:TargetAet string
+- body:Timeout number
+
+## S523-0018  DELETE /series/{id}/attachments/{name}
+summary: Delete attachment
+desc: Delete an attachment associated with the given DICOM series. This call will fail if trying to delete a system attachment (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+
+## S523-0019  POST /series/{id}/attachments/{name}/uncompress
+summary: Uncompress attachment
+desc: Change the compression scheme that is used to store an attachment.
+- path:id string
+- path:name string
+
+## S523-0020  POST /series/{id}/modify
+summary: Modify series
+desc: Start a job that will modify all the DICOM instances within the series whose identifier is provided in the URL. The modified DICOM instances will be stored into a brand new series, whose Orthanc identifiers will be returned by the job. https://book.orthanc-server.com/users/anonymization.html#modification-of-studies-or-series
+- path:id string
+- body:Asynchronous boolean
+- body:Force boolean
+- body:Keep array<string>
+- body:KeepSource boolean
+- body:Permissive boolean
+- body:Priority number
+- body:PrivateCreator string
+- body:Remove array<string>
+- body:RemovePrivateTags boolean
+- body:Replace object
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-0021  POST /series/{id}/reconstruct
+summary: Reconstruct tags & optionally files of series
+desc: Reconstruct the main DICOM tags in DB of the series whose Orthanc identifier is provided in the URL. This is useful if child studies/series/instances have inconsistent values for higher-level tags, in order to force Orthanc to use the value from the resource of interest. Beware that this is a time-consuming operation, as all the children DICOM instances will be parsed again, and the Orthanc index 
+- path:id string
+- body:ReconstructFiles boolean
+
+## S523-0022  DELETE /studies/{id}/attachments/{name}
+summary: Delete attachment
+desc: Delete an attachment associated with the given DICOM study. This call will fail if trying to delete a system attachment (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+
+## S523-0023  POST /studies/{id}/attachments/{name}/verify-md5
+summary: Verify attachment
+desc: Verify that the attachment is not corrupted, by validating its MD5 hash
+- path:id string
+- path:name string
+
+## S523-0024  DELETE /studies/{id}/metadata/{name}
+summary: Delete metadata
+desc: Delete some metadata associated with the given DICOM study. This call will fail if trying to delete a system metadata (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+
+## S523-0025  PUT /studies/{id}/metadata/{name}
+summary: Set metadata
+desc: Set the value of some metadata in the given DICOM study. This call will fail if trying to modify a system metadata (i.e. whose index is < 1024).
+- path:id string
+- path:name string
+- body:(body) any
+
+## S523-0026  POST /studies/{id}/modify
+summary: Modify study
+desc: Start a job that will modify all the DICOM instances within the study whose identifier is provided in the URL. The modified DICOM instances will be stored into a brand new study, whose Orthanc identifiers will be returned by the job. https://book.orthanc-server.com/users/anonymization.html#modification-of-studies-or-series
+- path:id string
+- body:Asynchronous boolean
+- body:Force boolean
+- body:Keep array<string>
+- body:KeepSource boolean
+- body:Permissive boolean
+- body:Priority number
+- body:PrivateCreator string
+- body:Remove array<string>
+- body:RemovePrivateTags boolean
+- body:Replace object
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-0027  POST /tools/create-dicom
+summary: Create one DICOM instance
+desc: Create one DICOM instance, and store it into Orthanc
+- body:Content string
+- body:Force boolean
+- body:InterpretBinaryTags boolean
+- body:Parent string
+- body:PrivateCreator string
+- body:Tags object
+
+## S523-0028  POST /tools/create-media
+summary: Create DICOMDIR media
+desc: Create a DICOMDIR media containing the DICOM resources (patients, studies, series, or instances) whose Orthanc identifiers are provided in the body
+- body:Asynchronous boolean
+- body:Extended boolean
+- body:Priority number
+- body:Resources array<string>
+- body:Synchronous boolean
+- body:Transcode string
+
+## S523-0029  PUT /tools/default-encoding
+summary: Set default encoding
+desc: Change the default encoding that is used by Orthanc if parsing a DICOM instance without the `SpecificCharacterEncoding` tag, or during C-FIND. This corresponds to the configuration option `DefaultEncoding`.
+- body:(body) any
+
+## S523-0030  PUT /tools/log-level-dicom
+summary: Set log level for `dicom`
+desc: Set the log level of the log category `dicom`
+- body:(body) any
+
+## S523-0031  PUT /tools/log-level-generic
+summary: Set log level for `generic`
+desc: Set the log level of the log category `generic`
+- body:(body) any
+
+## S523-0032  PUT /tools/log-level-http
+summary: Set log level for `http`
+desc: Set the log level of the log category `http`
+- body:(body) any
+
+## S523-0033  PUT /tools/log-level-jobs
+summary: Set log level for `jobs`
+desc: Set the log level of the log category `jobs`
+- body:(body) any
+
+## S523-0034  PUT /tools/log-level-plugins
+summary: Set log level for `plugins`
+desc: Set the log level of the log category `plugins`
+- body:(body) any
+
+## S523-0035  POST /tools/lookup
+summary: Look for DICOM identifiers
+desc: This URI can be used to convert one DICOM identifier to a list of matching Orthanc resources
+- body:(body) any
+
+## S523-0036  PUT /tools/metrics
+summary: Enable collection of metrics
+desc: Enable or disable the collection and publication of metrics at `/tools/metrics-prometheus`
+- body:(body) any

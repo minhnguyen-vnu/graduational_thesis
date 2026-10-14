@@ -1,0 +1,9 @@
+setup POST /roles handcheck-role admin 201
+source PATCH /roles/handcheck-role victim 200
+source PATCH /roles/handcheck-role viewer 403
+transition PATCH /users/victim@example.com roles=[] admin 200
+roles now []
+follow-up old token 200
+relogin victim ok
+follow-up new token 403
+restore PATCH /users/victim@example.com roles=[admin] admin 200

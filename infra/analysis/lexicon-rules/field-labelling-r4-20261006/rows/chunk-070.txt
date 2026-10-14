@@ -1,0 +1,814 @@
+## S319-N0022  DELETE /bundle_notifications/{id}
+desc: Delete Bundle Notification | Delete Bundle Notification
+- path:id integer
+
+## S319-N0023  PATCH /bundle_notifications/{id}
+desc: Update Bundle Notification | Update Bundle Notification
+- path:id integer
+- body:notify_on_registration boolean
+- body:notify_on_upload boolean
+
+## S319-N0025  POST /bundles
+desc: Create Bundle | Create Bundle
+- body:clickwrap_id integer
+- body:code string
+- body:description string
+- body:dont_separate_submissions_by_folder boolean
+- body:expires_at string
+- body:form_field_set_id integer
+- body:inbox_id integer
+- body:max_uses integer
+- body:note string
+- body:password string
+- body:path_template string
+- body:paths array<string>
+- body:permissions string enum[read|write|read_write|full|none|preview_only]
+- body:preview_only boolean
+- body:require_registration boolean
+- body:require_share_recipient boolean
+- body:send_email_receipt_to_uploader boolean
+- body:skip_company boolean
+- body:skip_email boolean
+- body:skip_name boolean
+- body:user_id integer
+- body:watermark_attachment_file string
+
+## S319-N0028  POST /bundles/{id}/share
+desc: Send email(s) with a link to bundle | Send email(s) with a link to bundle
+- path:id integer
+- body:note string
+- body:recipients array<object>
+- body:to array<string>
+
+## S319-N0031  PATCH /clickwraps/{id}
+desc: Update Clickwrap | Update Clickwrap
+- path:id integer
+- body:body string
+- body:name string
+- body:use_with_bundles string enum[none|available|require]
+- body:use_with_inboxes string enum[none|available|require]
+- body:use_with_users string enum[none|require]
+
+## S319-N0032  POST /external_events
+desc: Create External Event | Create External Event
+- body:body string
+- body:status string enum[success|failure|partial_failure|in_progress|skipped]
+
+## S319-N0033  POST /file_actions/begin_upload/{path}
+desc: Begin file upload | Begin file upload
+- path:path string
+- body:mkdir_parents boolean
+- body:part integer
+- body:parts integer
+- body:ref string
+- body:restart integer
+- body:size integer
+- body:with_rename boolean
+
+## S319-N0034  POST /file_actions/copy/{path}
+desc: Copy file/folder | Copy file/folder
+- path:path string
+- body:destination string
+- body:structure boolean
+
+## S319-N0036  POST /file_comment_reactions
+desc: Create File Comment Reaction | Create File Comment Reaction
+- body:emoji string
+- body:file_comment_id integer
+- body:user_id integer
+
+## S319-N0039  DELETE /file_comments/{id}
+desc: Delete File Comment | Delete File Comment
+- path:id integer
+
+## S319-N0041  DELETE /files/{path}
+desc: Delete file/folder | Delete file/folder
+- path:path string
+- query:recursive boolean
+
+## S319-N0043  POST /files/{path}
+desc: Upload file | Upload file
+- path:path string
+- body:action string
+- body:etags[etag] array<string>
+- body:etags[part] array<integer>
+- body:length integer
+- body:mkdir_parents boolean
+- body:part integer
+- body:parts integer
+- body:provided_mtime string
+- body:ref string
+- body:restart integer
+- body:size integer
+- body:structure string
+- body:with_rename boolean
+
+## S319-N0044  POST /folders/{path}
+desc: Create folder | Create folder
+- path:path string
+- body:mkdir_parents boolean
+- body:provided_mtime string
+
+## S319-N0046  DELETE /form_field_sets/{id}
+desc: Delete Form Field Set | Delete Form Field Set
+- path:id integer
+
+## S319-N0048  POST /group_users
+desc: Create Group User | Create Group User
+- body:admin boolean
+- body:group_id integer
+- body:user_id integer
+
+## S319-N0050  PATCH /group_users/{id}
+desc: Update Group User | Update Group User
+- path:id integer
+- body:admin boolean
+- body:group_id integer
+- body:user_id integer
+
+## S319-N0051  POST /groups
+desc: Create Group | Create Group
+- body:admin_ids string
+- body:name string
+- body:notes string
+- body:user_ids string
+
+## S319-N0052  DELETE /groups/{group_id}/memberships/{user_id}
+desc: Delete Group User | Delete Group User
+- path:group_id integer
+- path:user_id integer
+
+## S319-N0054  POST /groups/{group_id}/users
+desc: Create User | Create User
+- path:group_id integer
+- body:allowed_ips string
+- body:announcements_read boolean
+- body:attachments_permission boolean
+- body:authenticate_until string
+- body:authentication_method string enum[password|unused_former_ldap|sso|none|email_signup|password_with_imported_hash]
+- body:avatar_delete boolean
+- body:avatar_file string
+- body:billing_permission boolean
+- body:bypass_inactive_disable boolean
+- body:bypass_site_allowed_ips boolean
+- body:change_password string
+- body:change_password_confirmation string
+- body:company string
+- body:dav_permission boolean
+- body:disabled boolean
+- body:email string
+- body:ftp_permission boolean
+- body:grant_permission string
+- body:group_ids string
+- body:header_text string
+- body:imported_password_hash string
+- body:language string
+- body:name string
+- body:notes string
+- body:notification_daily_send_time integer
+- body:office_integration_enabled boolean
+- body:password string
+- body:password_confirmation string
+- body:password_validity_days integer
+- body:receive_admin_alerts boolean
+- body:require_2fa string enum[use_system_setting|always_require|never_require]
+- body:require_password_change boolean
+- body:restapi_permission boolean
+- body:self_managed boolean
+- body:sftp_permission boolean
+- body:site_admin boolean
+- body:skip_welcome_screen boolean
+- body:ssl_required string enum[use_system_setting|always_require|never_require]
+- body:sso_strategy_id integer
+- body:subscribe_to_newsletter boolean
+- body:time_zone string
+- body:user_root string
+- body:username string
+
+## S319-N0055  DELETE /groups/{id}
+desc: Delete Group | Delete Group
+- path:id integer
+
+## S319-N0056  PATCH /groups/{id}
+desc: Update Group | Update Group
+- path:id integer
+- body:admin_ids string
+- body:name string
+- body:notes string
+- body:user_ids string
+
+## S319-N0057  POST /history_exports
+desc: Create History Export | Create History Export
+- body:end_at string
+- body:query_action string
+- body:query_destination string
+- body:query_failure_type string
+- body:query_file_id string
+- body:query_folder string
+- body:query_interface string
+- body:query_ip string
+- body:query_parent_id string
+- body:query_path string
+- body:query_src string
+- body:query_target_id string
+- body:query_target_name string
+- body:query_target_permission string
+- body:query_target_permission_set string
+- body:query_target_platform string
+- body:query_target_user_id string
+- body:query_target_username string
+- body:query_user_id string
+- body:query_username string
+- body:start_at string
+- body:user_id integer
+
+## S319-N0060  POST /locks/{path}
+desc: Create Lock | Create Lock
+- path:path string
+- body:allow_access_by_any_user boolean
+- body:exclusive boolean
+- body:recursive string
+- body:timeout integer
+
+## S319-N0061  POST /message_comment_reactions
+desc: Create Message Comment Reaction | Create Message Comment Reaction
+- body:emoji string
+- body:user_id integer
+
+## S319-N0062  DELETE /message_comment_reactions/{id}
+desc: Delete Message Comment Reaction | Delete Message Comment Reaction
+- path:id integer
+
+## S319-N0063  POST /message_comments
+desc: Create Message Comment | Create Message Comment
+- body:body string
+- body:user_id integer
+
+## S319-N0064  DELETE /message_comments/{id}
+desc: Delete Message Comment | Delete Message Comment
+- path:id integer
+
+## S319-N0066  POST /message_reactions
+desc: Create Message Reaction | Create Message Reaction
+- body:emoji string
+- body:user_id integer
+
+## S319-N0068  POST /messages
+desc: Create Message | Create Message
+- body:body string
+- body:project_id integer
+- body:subject string
+- body:user_id integer
+
+## S319-N0069  DELETE /messages/{id}
+desc: Delete Message | Delete Message
+- path:id integer
+
+## S319-N0070  PATCH /messages/{id}
+desc: Update Message | Update Message
+- path:id integer
+- body:body string
+- body:project_id integer
+- body:subject string
+
+## S319-N0071  POST /notifications
+desc: Create Notification | Create Notification
+- body:group_id integer
+- body:message string
+- body:notify_on_copy boolean
+- body:notify_on_delete boolean
+- body:notify_on_download boolean
+- body:notify_on_move boolean
+- body:notify_on_upload boolean
+- body:notify_user_actions boolean
+- body:path string
+- body:recursive boolean
+- body:send_interval string
+- body:trigger_by_share_recipients boolean
+- body:triggering_filenames array<string>
+- body:triggering_group_ids array<integer>
+- body:triggering_user_ids array<integer>
+- body:user_id integer
+- body:username string
+
+## S319-N0072  DELETE /notifications/{id}
+desc: Delete Notification | Delete Notification
+- path:id integer
+
+## S319-N0073  PATCH /notifications/{id}
+desc: Update Notification | Update Notification
+- path:id integer
+- body:message string
+- body:notify_on_copy boolean
+- body:notify_on_delete boolean
+- body:notify_on_download boolean
+- body:notify_on_move boolean
+- body:notify_on_upload boolean
+- body:notify_user_actions boolean
+- body:recursive boolean
+- body:send_interval string
+- body:trigger_by_share_recipients boolean
+- body:triggering_filenames array<string>
+- body:triggering_group_ids array<integer>
+- body:triggering_user_ids array<integer>
+
+## S319-N0077  DELETE /projects/{id}
+desc: Delete Project | Delete Project
+- path:id integer
+
+## S319-N0079  POST /public_keys
+desc: Create Public Key | Create Public Key
+- body:public_key string
+- body:title string
+- body:user_id integer
+
+## S319-N0082  POST /remote_servers
+desc: Create Remote Server | Create Remote Server
+- body:aws_access_key string
+- body:aws_secret_key string
+- body:azure_blob_storage_access_key string
+- body:azure_blob_storage_account string
+- body:azure_blob_storage_container string
+- body:azure_blob_storage_sas_token string
+- body:azure_files_storage_access_key string
+- body:azure_files_storage_account string
+- body:azure_files_storage_sas_token string
+- body:azure_files_storage_share_name string
+- body:backblaze_b2_application_key string
+- body:backblaze_b2_bucket string
+- body:backblaze_b2_key_id string
+- body:backblaze_b2_s3_endpoint string
+- body:enable_dedicated_ips boolean
+- body:filebase_access_key string
+- body:filebase_bucket string
+- body:filebase_secret_key string
+- body:files_agent_permission_set string enum[read_write|read_only|write_only]
+- body:files_agent_root string
+- body:google_cloud_storage_bucket string
+- body:google_cloud_storage_credentials_json string
+- body:google_cloud_storage_project_id string
+- body:hostname string
+- body:max_connections integer
+- body:name string
+- body:one_drive_account_type string enum[personal|business_other]
+- body:password string
+- body:pin_to_site_region boolean
+- body:port integer
+- body:private_key string
+- body:private_key_passphrase string
+- body:rackspace_api_key string
+- body:rackspace_container string
+- body:rackspace_region string
+- body:rackspace_username string
+- body:reset_authentication boolean
+- body:s3_bucket string
+- body:s3_compatible_access_key string
+- body:s3_compatible_bucket string
+- body:s3_compatible_endpoint string
+- body:s3_compatible_region string
+- body:s3_compatible_secret_key string
+- body:s3_region string
+- body:server_certificate string enum[require_match|allow_any]
+- body:server_host_key string
+- body:server_type string enum[ftp|sftp|s3|google_cloud_storage|webdav|wasabi|backblaze_b2|one_drive|rackspace|box|dropbox|google_drive]
+- body:ssl string enum[if_available|require|require_implicit|never]
+- body:ssl_certificate string
+- body:username string
+- body:wasabi_access_key string
+- body:wasabi_bucket string
+- body:wasabi_region string
+- body:wasabi_secret_key string
+
+## S319-N0083  DELETE /remote_servers/{id}
+desc: Delete Remote Server | Delete Remote Server
+- path:id integer
+
+## S319-N0084  PATCH /remote_servers/{id}
+desc: Update Remote Server | Update Remote Server
+- path:id integer
+- body:aws_access_key string
+- body:aws_secret_key string
+- body:azure_blob_storage_access_key string
+- body:azure_blob_storage_account string
+- body:azure_blob_storage_container string
+- body:azure_blob_storage_sas_token string
+- body:azure_files_storage_access_key string
+- body:azure_files_storage_account string
+- body:azure_files_storage_sas_token string
+- body:azure_files_storage_share_name string
+- body:backblaze_b2_application_key string
+- body:backblaze_b2_bucket string
+- body:backblaze_b2_key_id string
+- body:backblaze_b2_s3_endpoint string
+- body:enable_dedicated_ips boolean
+- body:filebase_access_key string
+- body:filebase_bucket string
+- body:filebase_secret_key string
+- body:files_agent_permission_set string enum[read_write|read_only|write_only]
+- body:files_agent_root string
+- body:google_cloud_storage_bucket string
+- body:google_cloud_storage_credentials_json string
+- body:google_cloud_storage_project_id string
+- body:hostname string
+- body:max_connections integer
+- body:name string
+- body:one_drive_account_type string enum[personal|business_other]
+- body:password string
+- body:pin_to_site_region boolean
+- body:port integer
+- body:private_key string
+- body:private_key_passphrase string
+- body:rackspace_api_key string
+- body:rackspace_container string
+- body:rackspace_region string
+- body:rackspace_username string
+- body:reset_authentication boolean
+- body:s3_bucket string
+- body:s3_compatible_access_key string
+- body:s3_compatible_bucket string
+- body:s3_compatible_endpoint string
+- body:s3_compatible_region string
+- body:s3_compatible_secret_key string
+- body:s3_region string
+- body:server_certificate string enum[require_match|allow_any]
+- body:server_host_key string
+- body:server_type string enum[ftp|sftp|s3|google_cloud_storage|webdav|wasabi|backblaze_b2|one_drive|rackspace|box|dropbox|google_drive]
+- body:ssl string enum[if_available|require|require_implicit|never]
+- body:ssl_certificate string
+- body:username string
+- body:wasabi_access_key string
+- body:wasabi_bucket string
+- body:wasabi_region string
+- body:wasabi_secret_key string
+
+## S319-N0085  POST /remote_servers/{id}/configuration_file
+desc: Post local changes, check in, and download configuration file (used by some Remote Server integrations, such as the Files.com Agent) | Post local changes, check in, and download configuration file (used by some Remote Server integrations, such as the Files.com Agent)
+- path:id integer
+- body:api_token string
+- body:config_version string
+- body:hostname string
+- body:permission_set string
+- body:port integer
+- body:private_key string
+- body:public_key string
+- body:root string
+- body:server_host_key string
+- body:status string
+- body:subdomain string
+
+## S319-N0086  POST /requests
+desc: Create Request | Create Request
+- body:destination string
+- body:group_ids string
+- body:path string
+- body:user_ids string
+
+## S319-N0087  DELETE /requests/{id}
+desc: Delete Request | Delete Request
+- path:id integer
+
+## S319-N0088  DELETE /sessions
+desc: Delete user session (log out) | Delete user session (log out)
+
+## S319-N0089  POST /sessions
+desc: Create user session (log in) | Create user session (log in)
+- body:otp string
+- body:partial_session_id string
+- body:password string
+- body:username string
+
+## S319-N0091  DELETE /sftp_host_keys/{id}
+desc: Delete Sftp Host Key | Delete Sftp Host Key
+- path:id integer
+
+## S319-N0092  PATCH /sftp_host_keys/{id}
+desc: Update Sftp Host Key | Update Sftp Host Key
+- path:id integer
+- body:name string
+- body:private_key string
+
+## S319-N0093  PATCH /site
+desc: Update site settings. | Update site settings.
+- body:active_sftp_host_key_id integer
+- body:allow_bundle_names boolean
+- body:allowed_2fa_method_bypass_for_ftp_sftp_dav boolean
+- body:allowed_2fa_method_sms boolean
+- body:allowed_2fa_method_totp boolean
+- body:allowed_2fa_method_u2f boolean
+- body:allowed_2fa_method_webauthn boolean
+- body:allowed_2fa_method_yubi boolean
+- body:allowed_countries string
+- body:allowed_ips string
+- body:ask_about_overwrites boolean
+- body:bundle_activity_notifications string
+- body:bundle_expiration integer
+- body:bundle_password_required boolean
+- body:bundle_registration_notifications string
+- body:bundle_require_share_recipient boolean
+- body:bundle_upload_receipt_notifications string
+- body:bundle_watermark_attachment_delete boolean
+- body:bundle_watermark_attachment_file string
+- body:bundle_watermark_value object
+- body:color2_left string
+- body:color2_link string
+- body:color2_text string
+- body:color2_top string
+- body:color2_top_text string
+- body:custom_namespace boolean
+- body:days_to_retain_backups integer
+- body:default_time_zone string
+- body:desktop_app boolean
+- body:desktop_app_session_ip_pinning boolean
+- body:desktop_app_session_lifetime integer
+- body:disable_2fa_with_delay boolean
+- body:disable_files_certificate_generation boolean
+- body:disable_password_reset boolean
+- body:disable_users_from_inactivity_period_days integer
+- body:disallowed_countries string
+- body:domain string
+- body:domain_hsts_header boolean
+- body:domain_letsencrypt_chain string
+- body:email string
+- body:folder_permissions_groups_only boolean
+- body:ftp_enabled boolean
+- body:icon128_delete boolean
+- body:icon128_file string
+- body:icon16_delete boolean
+- body:icon16_file string
+- body:icon32_delete boolean
+- body:icon32_file string
+- body:icon48_delete boolean
+- body:icon48_file string
+- body:immutable_files boolean
+- body:include_password_in_welcome_email boolean
+- body:language string
+- body:ldap_base_dn string
+- body:ldap_domain string
+- body:ldap_enabled boolean
+- body:ldap_group_action string
+- body:ldap_group_exclusion string
+- body:ldap_group_inclusion string
+- body:ldap_host string
+- body:ldap_host_2 string
+- body:ldap_host_3 string
+- body:ldap_password_change string
+- body:ldap_password_change_confirmation string
+- body:ldap_port integer
+- body:ldap_secure boolean
+- body:ldap_type string
+- body:ldap_user_action string
+- body:ldap_user_include_groups string
+- body:ldap_username string
+- body:ldap_username_field string
+- body:login_help_text string
+- body:logo_delete boolean
+- body:logo_file string
+- body:max_prior_passwords integer
+- body:mobile_app boolean
+- body:mobile_app_session_ip_pinning boolean
+- body:mobile_app_session_lifetime integer
+- body:motd_text string
+- body:motd_use_for_ftp boolean
+(+54 fields cut)
+
+## S319-N0095  POST /site/test-webhook
+desc: Test webhook. | Test webhook.
+- body:action string
+- body:body object
+- body:encoding string
+- body:headers object
+- body:method string
+- body:url string
+
+## S319-N0096  POST /sso_strategies/{id}/sync
+desc: Synchronize provisioning data with the SSO remote server. | Synchronize provisioning data with the SSO remote server.
+- path:id integer
+
+## S319-N0097  DELETE /styles/{path}
+desc: Delete Style | Delete Style
+- path:path string
+
+## S319-N0099  PATCH /user
+desc: Update User | Update User
+- body:allowed_ips string
+- body:announcements_read boolean
+- body:attachments_permission boolean
+- body:authenticate_until string
+- body:authentication_method string enum[password|unused_former_ldap|sso|none|email_signup|password_with_imported_hash]
+- body:avatar_delete boolean
+- body:avatar_file string
+- body:billing_permission boolean
+- body:bypass_inactive_disable boolean
+- body:bypass_site_allowed_ips boolean
+- body:change_password string
+- body:change_password_confirmation string
+- body:company string
+- body:dav_permission boolean
+- body:disabled boolean
+- body:email string
+- body:ftp_permission boolean
+- body:grant_permission string
+- body:group_id integer
+- body:group_ids string
+- body:header_text string
+- body:imported_password_hash string
+- body:language string
+- body:name string
+- body:notes string
+- body:notification_daily_send_time integer
+- body:office_integration_enabled boolean
+- body:password string
+- body:password_confirmation string
+- body:password_validity_days integer
+- body:receive_admin_alerts boolean
+- body:require_2fa string enum[use_system_setting|always_require|never_require]
+- body:require_password_change boolean
+- body:restapi_permission boolean
+- body:self_managed boolean
+- body:sftp_permission boolean
+- body:site_admin boolean
+- body:skip_welcome_screen boolean
+- body:ssl_required string enum[use_system_setting|always_require|never_require]
+- body:sso_strategy_id integer
+- body:subscribe_to_newsletter boolean
+- body:time_zone string
+- body:user_root string
+- body:username string
+
+## S319-N0100  POST /user/api_keys
+desc: Create Api Key | Create Api Key
+- body:description string
+- body:expires_at string
+- body:name string
+- body:path string
+- body:permission_set string enum[none|full|desktop_app|sync_app|office_integration|mobile_app]
+- body:user_id integer
+
+## S319-N0101  POST /user/public_keys
+desc: Create Public Key | Create Public Key
+- body:public_key string
+- body:title string
+- body:user_id integer
+
+## S319-N0103  DELETE /user_requests/{id}
+desc: Delete User Request | Delete User Request
+- path:id integer
+
+## S319-N0105  DELETE /users/{id}
+desc: Delete User | Delete User
+- path:id integer
+
+## S319-N0106  PATCH /users/{id}
+desc: Update User | Update User
+- path:id integer
+- body:allowed_ips string
+- body:announcements_read boolean
+- body:attachments_permission boolean
+- body:authenticate_until string
+- body:authentication_method string enum[password|unused_former_ldap|sso|none|email_signup|password_with_imported_hash]
+- body:avatar_delete boolean
+- body:avatar_file string
+- body:billing_permission boolean
+- body:bypass_inactive_disable boolean
+- body:bypass_site_allowed_ips boolean
+- body:change_password string
+- body:change_password_confirmation string
+- body:company string
+- body:dav_permission boolean
+- body:disabled boolean
+- body:email string
+- body:ftp_permission boolean
+- body:grant_permission string
+- body:group_id integer
+- body:group_ids string
+- body:header_text string
+- body:imported_password_hash string
+- body:language string
+- body:name string
+- body:notes string
+- body:notification_daily_send_time integer
+- body:office_integration_enabled boolean
+- body:password string
+- body:password_confirmation string
+- body:password_validity_days integer
+- body:receive_admin_alerts boolean
+- body:require_2fa string enum[use_system_setting|always_require|never_require]
+- body:require_password_change boolean
+- body:restapi_permission boolean
+- body:self_managed boolean
+- body:sftp_permission boolean
+- body:site_admin boolean
+- body:skip_welcome_screen boolean
+- body:ssl_required string enum[use_system_setting|always_require|never_require]
+- body:sso_strategy_id integer
+- body:subscribe_to_newsletter boolean
+- body:time_zone string
+- body:user_root string
+- body:username string
+
+## S319-N0108  POST /users/{id}/resend_welcome_email
+desc: Resend user welcome email | Resend user welcome email
+- path:id integer
+
+## S319-N0109  POST /users/{id}/unlock
+desc: Unlock user who has been locked out due to failed logins. | Unlock user who has been locked out due to failed logins.
+- path:id integer
+
+## S319-N0110  POST /users/{user_id}/api_keys
+desc: Create Api Key | Create Api Key
+- path:user_id integer
+- body:description string
+- body:expires_at string
+- body:name string
+- body:path string
+- body:permission_set string enum[none|full|desktop_app|sync_app|office_integration|mobile_app]
+
+## S319-N0111  POST /users/{user_id}/public_keys
+desc: Create Public Key | Create Public Key
+- path:user_id integer
+- body:public_key string
+- body:title string
+
+## S319-N0112  POST /webhook_tests
+desc: Create Webhook Test | Create Webhook Test
+- body:action string
+- body:body object
+- body:encoding string
+- body:file_as_body boolean
+- body:file_form_field string
+- body:headers object
+- body:method string
+- body:raw_body string
+- body:url string
+
+## S615-N0001  POST /conversations/community
+desc: Creates a community conversation | Creates a community. Communities are open conversations that anyone in a Circuit domain (tenant) can join without having to be added by another user. OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS
+- body:description string
+- body:participants array<string>
+- body:topic string
+
+## S615-N0002  PUT /conversations/community/{convId}
+desc: Updates the information of a community | Updates the information of the given community. OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS
+- path:convId string
+- body:description string
+- body:topic string
+
+## S615-N0004  DELETE /conversations/community/{convId}/participants
+desc: Removes participants from a community | Removes one or more participants from the given community. The last participant of a community cannot be removed. This operation can only be performed by a user who is already a member of the community. OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS
+- path:convId string
+- query:participants array<string>
+
+## S615-N0010  POST /conversations/group/{convId}/participants
+desc: Adds participants to a group conversation | Adds one or more participants to the given group conversation. This operation can only be performed by a user who is already a member of the conversation. OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS
+- path:convId string
+- body:participants array<string>
+
+## S615-N0011  POST /conversations/moderate/{convId}
+desc: Set conversation moderated | Set a conversation in moderatd mode. Moderators can be added and removed OauthScopes: WRITE_CONVERSATIONS, MODERATE_CONVERSATIONS
+- path:convId string
+
+## S615-N0012  POST /conversations/unmoderate/{convId}
+desc: Set conversation unmoderated | Set a conversation to unmoderatd mode OauthScopes: WRITE_CONVERSATIONS, MODERATE_CONVERSATIONS
+- path:convId string
+
+## S615-N0013  DELETE /conversations/{convId}/archive
+desc: Unmute conversation | The conversation will no longer be archived but active again OauthScopes: WRITE_CONVERSATIONS
+- path:convId string
+
+## S615-N0014  POST /conversations/{convId}/archive
+desc: Archives conversation | Archives a conversation by muting it OauthScopes: WRITE_CONVERSATIONS
+- path:convId string
+
+## S615-N0018  DELETE /conversations/{convId}/label/{labelId}
+desc: Removes a label from a conversation | Removes a label from a conversation, you can search and organize your conversations based on these labels OauthScopes: WRITE_CONVERSATIONS
+- path:convId string
+- path:labelId string
+
+## S615-N0025  DELETE /conversations/{convId}/messages/{itemId}/like
+desc: Removes a "like" from a message | Removes a "like" from the given message in the given conversation OauthScopes: WRITE_CONVERSATIONS, UPDATE_CONVERSATION_CONTENT
+- path:convId string
+- path:itemId string
+
+## S615-N0031  POST /spaces/create
+desc: Create a space | Create a space OauthScopes: WRITE_SPACE, MANAGE_SPACE, CREATE_SPACE_CONTENT
+- body:accessModeType string enum[INTERNAL_ONLY|INTERNAL_EXTERNAL]
+- body:description string
+- body:largePictureBase64 string
+- body:name string
+- body:role string enum[MODERATOR|AUTHOR|PARTICIPANT|READER]
+- body:smallPictureBase64 string
+- body:status string enum[ENABLED|DISABLED]
+- body:tags array<string>
+- body:type string enum[OPEN|CLOSED|SECRET]
+
+## S615-N0032  PUT /spaces/flag/{itemId}
+desc: flag a space item | flag a space item OauthScopes: WRITE_SPACE, UPDATE_SPACE_CONTENT
+- path:itemId string
+
+## S615-N0033  DELETE /spaces/item/{itemId}
+desc: deletes a space item | deletes a space item OauthScopes: WRITE_SPACE, DELETE_SPACE_CONTENT
+- path:itemId string
+
+## S615-N0034  PUT /spaces/like/{itemId}
+desc: Like a space item | Like a space item OauthScopes: WRITE_SPACE, UPDATE_SPACE_CONTENT
+- path:itemId string

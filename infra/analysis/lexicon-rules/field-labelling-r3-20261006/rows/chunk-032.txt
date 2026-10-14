@@ -1,0 +1,547 @@
+## S501-0004  POST /v1/connections/sync
+desc: Trigger a manual sync of the connection
+schema: ConnectionIdRequestBody
+- body:connectionId string
+
+## S501-0005  POST /v1/connections/update
+desc: Update a connection | Apply a patch-style update to a connection. Only fields present on the update request body will be updated. Note that if a catalog is present in the request body, the connection's entire catalog will be replaced with the catalog from the request. This means that to modify a single stream, the entire new catalog containing the updated stream needs to be sent.
+schema: ConnectionUpdate
+- body:breakingChange boolean
+- body:connectionId string
+- body:geography string enum[auto|us|eu]
+- body:name string
+- body:namespaceDefinition string enum[source|destination|customformat]
+- body:namespaceFormat string
+- body:nonBreakingChangesPreference string enum[ignore|disable]
+- body:notifySchemaChanges boolean
+- body:operationIds array<string>
+- body:prefix string
+- body:resourceRequirements object
+- body:resourceRequirements.cpu_limit string
+- body:resourceRequirements.cpu_request string
+- body:resourceRequirements.memory_limit string
+- body:resourceRequirements.memory_request string
+- body:schedule object
+- body:schedule.timeUnit string enum[minutes|hours|days|weeks|months]
+- body:schedule.units integer
+- body:scheduleData object
+- body:scheduleData.basicSchedule object
+- body:scheduleData.basicSchedule.timeUnit string enum[minutes|hours|days|weeks|months]
+- body:scheduleData.basicSchedule.units integer
+- body:scheduleData.cron object
+- body:scheduleData.cron.cronExpression string
+- body:scheduleData.cron.cronTimeZone string
+- body:scheduleType string enum[manual|basic|cron]
+- body:sourceCatalogId string
+- body:status string enum[active|inactive|deprecated]
+- body:syncCatalog object
+- body:syncCatalog.streams array<object>
+- body:syncCatalog.streams[].config object
+- body:syncCatalog.streams[].stream object
+
+## S501-0006  POST /v1/destination_definitions/delete
+desc: Delete a destination definition
+schema: DestinationDefinitionIdRequestBody
+- body:destinationDefinitionId string
+
+## S501-0007  POST /v1/destination_definitions/revoke_definition
+desc: revoke a grant to a private, non-custom destinationDefinition from a given workspace
+schema: DestinationDefinitionIdWithWorkspaceId
+- body:destinationDefinitionId string
+- body:workspaceId string
+
+## S501-0008  POST /v1/destination_oauths/oauth_params/create
+desc: Sets instancewide variables to be used for the oauth flow when creating this destination. When set, these variables will be injected into a connector's configuration before any interaction with the connector image itself. This enables running oauth flows with consistent variables e.g: the company's Google Ads developer_token, client_id, and client_secret without the user having to know about these
+schema: SetInstancewideDestinationOauthParamsRequestBody
+- body:destinationDefinitionId string
+- body:params object
+
+## S501-0009  POST /v1/destinations/check_connection
+desc: Check connection to the destination
+schema: DestinationIdRequestBody
+- body:destinationId string
+
+## S501-0010  POST /v1/destinations/check_connection_for_update
+desc: Check connection for a proposed update to a destination
+schema: DestinationUpdate
+- body:connectionConfiguration any
+- body:destinationId string
+- body:name string
+
+## S501-0011  POST /v1/destinations/get
+desc: Get configured destination
+schema: DestinationIdRequestBody
+- body:destinationId string
+
+## S501-0012  POST /v1/destinations/list
+desc: List configured destinations for a workspace
+schema: WorkspaceIdRequestBody
+- body:workspaceId string
+
+## S501-0013  POST /v1/jobs/cancel
+desc: Cancels a job
+schema: JobIdRequestBody
+- body:id integer
+
+## S501-0014  POST /v1/jobs/get_last_replication_job
+schema: ConnectionIdRequestBody
+- body:connectionId string
+
+## S501-0015  POST /v1/jobs/get_normalization_status
+desc: Get normalization status to determine if we can bypass normalization phase
+schema: JobIdRequestBody
+- body:id integer
+
+## S501-0016  POST /v1/jobs/list
+desc: Returns recent jobs for a connection. Jobs are returned in descending order by createdAt.
+schema: JobListRequestBody
+- body:configId string
+- body:configTypes array<string> enum[check_connection_source|check_connection_destination|discover_schema|get_spec|sync|reset_connection]
+- body:includingJobId integer
+- body:pagination object
+- body:pagination.pageSize integer
+- body:pagination.rowOffset integer
+
+## S501-0017  POST /v1/operations/delete
+desc: Delete an operation
+schema: OperationIdRequestBody
+- body:operationId string
+
+## S501-0018  POST /v1/operations/update
+desc: Update an operation
+schema: OperationUpdate
+- body:name string
+- body:operationId string
+- body:operatorConfiguration object
+- body:operatorConfiguration.dbt object
+- body:operatorConfiguration.dbt.dbtArguments string
+- body:operatorConfiguration.dbt.dockerImage string
+- body:operatorConfiguration.dbt.gitRepoBranch string
+- body:operatorConfiguration.dbt.gitRepoUrl string
+- body:operatorConfiguration.normalization object
+- body:operatorConfiguration.normalization.option string enum[basic]
+- body:operatorConfiguration.operatorType string enum[normalization|dbt|webhook]
+- body:operatorConfiguration.webhook object
+- body:operatorConfiguration.webhook.dbtCloud object
+- body:operatorConfiguration.webhook.executionBody string
+- body:operatorConfiguration.webhook.executionUrl string
+- body:operatorConfiguration.webhook.webhookConfigId string
+- body:operatorConfiguration.webhook.webhookType string enum[dbtCloud]
+
+## S501-0019  POST /v1/scheduler/sources/check_connection
+desc: Run check connection for a given source configuration
+schema: SourceCoreConfig
+- body:connectionConfiguration any
+- body:sourceDefinitionId string
+- body:sourceId string
+- body:workspaceId string
+
+## S501-0020  POST /v1/source_definitions/delete
+desc: Delete a source definition
+schema: SourceDefinitionIdRequestBody
+- body:sourceDefinitionId string
+
+## S501-0021  POST /v1/source_definitions/get
+desc: Get source
+schema: SourceDefinitionIdRequestBody
+- body:sourceDefinitionId string
+
+## S501-0022  POST /v1/source_definitions/update
+desc: Update a sourceDefinition
+schema: SourceDefinitionUpdate
+- body:dockerImageTag string
+- body:resourceRequirements object
+- body:resourceRequirements.default object
+- body:resourceRequirements.default.cpu_limit string
+- body:resourceRequirements.default.cpu_request string
+- body:resourceRequirements.default.memory_limit string
+- body:resourceRequirements.default.memory_request string
+- body:resourceRequirements.jobSpecific array<object>
+- body:resourceRequirements.jobSpecific[].jobType string enum[get_spec|check_connection|discover_schema|sync|reset_connection|connection_updater|replicate]
+- body:resourceRequirements.jobSpecific[].resourceRequirements object
+- body:sourceDefinitionId string
+
+## S501-0023  POST /v1/source_oauths/get_consent_url
+desc: Given a source connector definition ID, return the URL to the consent screen where to redirect the user to.
+schema: SourceOauthConsentRequest
+- body:oAuthInputConfiguration any
+- body:redirectUrl string
+- body:sourceDefinitionId string
+- body:sourceId string
+- body:workspaceId string
+
+## S501-0024  POST /v1/sources/check_connection
+desc: Check connection to the source
+schema: SourceIdRequestBody
+- body:sourceId string
+
+## S501-0025  POST /v1/sources/check_connection_for_update
+desc: Check connection for a proposed update to a source
+schema: SourceUpdate
+- body:connectionConfiguration any
+- body:name string
+- body:sourceId string
+
+## S501-0026  POST /v1/sources/delete
+desc: Delete a source
+schema: SourceIdRequestBody
+- body:sourceId string
+
+## S501-0027  POST /v1/sources/most_recent_source_actor_catalog
+desc: Get most recent ActorCatalog for source
+schema: SourceIdRequestBody
+- body:sourceId string
+
+## S501-0028  POST /v1/sources/search
+desc: Search sources
+schema: SourceSearch
+- body:connectionConfiguration any
+- body:name string
+- body:sourceDefinitionId string
+- body:sourceId string
+- body:sourceName string
+- body:workspaceId string
+
+## S501-0029  POST /v1/sources/write_discover_catalog_result
+desc: Should only called from worker, to write result from discover activity back to DB.
+schema: SourceDiscoverSchemaWriteRequestBody
+- body:catalog object
+- body:catalog.streams array<object>
+- body:catalog.streams[].config object
+- body:catalog.streams[].stream object
+- body:configurationHash string
+- body:connectorVersion string
+- body:sourceId string
+
+## S501-0030  POST /v1/state/get
+desc: Fetch the current state for a connection.
+schema: ConnectionIdRequestBody
+- body:connectionId string
+
+## S501-0031  POST /v1/web_backend/check_updates
+desc: Returns a summary of source and destination definitions that could be updated.
+
+## S501-0032  POST /v1/workspaces/delete
+desc: Deletes a workspace
+schema: WorkspaceIdRequestBody
+- body:workspaceId string
+
+## S501-0033  POST /v1/workspaces/get_by_slug
+desc: Find workspace by slug
+schema: SlugRequestBody
+- body:slug string
+
+## S501-0034  POST /v1/workspaces/tag_feedback_status_as_done
+desc: Update workspace feedback state
+schema: WorkspaceGiveFeedback
+- body:workspaceId string
+
+## S501-0035  POST /v1/workspaces/update
+desc: Update workspace state
+schema: WorkspaceUpdate
+- body:anonymousDataCollection boolean
+- body:defaultGeography string enum[auto|us|eu]
+- body:displaySetupWizard boolean
+- body:email string
+- body:initialSetupComplete boolean
+- body:news boolean
+- body:notifications array<object>
+- body:notifications[].customerioConfiguration object
+- body:notifications[].notificationType string enum[slack|customerio]
+- body:notifications[].sendOnFailure boolean
+- body:notifications[].sendOnSuccess boolean
+- body:notifications[].slackConfiguration object
+- body:notifications[].slackConfiguration.webhook string
+- body:securityUpdates boolean
+- body:webhookConfigs array<object>
+- body:webhookConfigs[].authToken string
+- body:webhookConfigs[].name string
+- body:webhookConfigs[].validationUrl string
+- body:workspaceId string
+
+## S501-0036  POST /v1/workspaces/update_name
+desc: Update workspace name
+schema: WorkspaceUpdateName
+- body:name string
+- body:workspaceId string
+
+## S502-0001  POST /chrome/html
+desc: Convert raw HTML to PDF | Convert HTML to a PDF using Headless Chrome on AWS Lambda. ### Authorize via Header of Request **Authorization: YOUR-API-KEY**
+schema: ChromeHtmlToPdfRequest
+- body:fileName string
+- body:html string
+- body:inlinePdf boolean
+- body:options object
+- body:options.landscape string
+- body:options.printBackground boolean
+
+## S502-0002  POST /chrome/url
+desc: Convert URL to PDF | Convert a URL or Web Page to PDF using Headless Chrome on AWS Lambda.. ### Authorize via Header of Request **Authorization: YOUR-API-KEY**
+schema: ChromeUrlToPdfRequest
+- body:fileName string
+- body:inlinePdf boolean
+- body:options object
+- body:options.landscape string
+- body:options.printBackground boolean
+- body:url string
+
+## S502-0003  POST /libreoffice/convert
+desc: Convert office document or image to PDF | Convert an office document (Word, Excel, Powerpoint) or an image (jpg, gif, png) to a PDF using LibreOffice on AWS Lambda. ### Authorize via Header of Request **Authorization: YOUR-API-KEY**
+schema: LibreOfficeConvertRequest
+- body:fileName string
+- body:inlinePdf boolean
+- body:url string
+
+## S502-0004  POST /merge
+desc: Merge multiple PDFs together | Merge two or more PDFs together on AWS Lambda. ### Authorize via Header of Request **Authorization: YOUR-API-KEY**
+schema: MergeRequest
+- body:fileName string
+- body:inlinePdf boolean
+- body:urls array<string>
+
+## S502-0005  POST /wkhtmltopdf/html
+desc: Convert raw HTML to PDF | Convert HTML to a PDF using WkHtmlToPdf on AWS Lambda. ### Authorize via Header of Request **Authorization: YOUR-API-KEY**
+schema: WkHtmlToPdfHtmlToPdfRequest
+- body:fileName string
+- body:html string
+- body:inlinePdf boolean
+- body:options object
+- body:options.orientation string
+- body:options.pageSize string
+
+## S502-0006  POST /wkhtmltopdf/url
+desc: Convert URL to PDF | Convert a URL or Web Page to PDF using WkHtmlToPdf on AWS Lambda.. ### Authorize via Header of Request **Authorization: YOUR-API-KEY**
+schema: WkHtmlToPdfUrlToPdfRequest
+- body:fileName string
+- body:inlinePdf boolean
+- body:options object
+- body:options.orientation string
+- body:options.pageSize string
+- body:url string
+
+## S503-0001  DELETE /admin/config/properties/{propertyName}
+desc: Reset a configuration property | Resets the value of a single configuration property. This will return the property to its default value (see external documentation for supported properties and their default values). This operation may fail for one of the following reasons: * Property not found or not configured (HTTP error `404`) * A server error occurred (HTTP error `500`)
+- path:propertyName string
+
+## S503-0002  PUT /admin/config/properties/{propertyName}
+desc: Update a configuration property | Updates the value of a single configuration property. This operation may fail for one of the following reasons: * Property not found or not configured (HTTP error `404`) * A server error occurred (HTTP error `500`)
+schema: UpdateConfigurationProperty
+- path:propertyName string
+- body:value string
+
+## S503-0003  POST /admin/import
+desc: Import registry data | Imports registry data that was previously exported using the `/admin/export` operation.
+schema: FileContent
+- body:(body) string
+
+## S503-0004  DELETE /admin/loggers/{logger}
+desc: Removes logger configuration | Removes the configured logger configuration (if any) for the given logger.
+- path:logger string
+
+## S503-0005  PUT /admin/loggers/{logger}
+desc: Set a logger's configuration | Configures the logger referenced by the provided logger name with the given configuration.
+schema: LogConfiguration
+- path:logger string
+- body:level string enum[DEBUG|TRACE|WARN|ERROR|SEVERE|WARNING|INFO|CONFIG|FINE|FINER|FINEST]
+
+## S503-0006  POST /admin/roleMappings
+desc: Create a new role mapping | Creates a new mapping between a user/principal and a role. This operation can fail for the following reasons: * A server error occurred (HTTP error `500`)
+schema: RoleMapping
+- body:principalId string
+- body:principalName string
+- body:role string enum[READ_ONLY|DEVELOPER|ADMIN]
+
+## S503-0007  DELETE /admin/roleMappings/{principalId}
+desc: Delete a role mapping | Deletes a single role mapping, effectively denying access to a user/principal. This operation can fail for the following reasons: * No role mapping for the principalId exists (HTTP error `404`) * A server error occurred (HTTP error `500`)
+- path:principalId string
+
+## S503-0008  PUT /admin/roleMappings/{principalId}
+desc: Update a role mapping | Updates a single role mapping for one user/principal. This operation can fail for the following reasons: * No role mapping for the principalId exists (HTTP error `404`) * A server error occurred (HTTP error `500`)
+schema: UpdateRole
+- path:principalId string
+- body:role string enum[READ_ONLY|DEVELOPER|ADMIN]
+
+## S503-0009  DELETE /admin/rules
+desc: Delete all global rules | Deletes all globally configured rules. This operation can fail for the following reasons: * A server error occurred (HTTP error `500`)
+
+## S503-0010  POST /admin/rules
+desc: Create global rule | Adds a rule to the list of globally configured rules. This operation can fail for the following reasons: * The rule type is unknown (HTTP error `400`) * The rule already exists (HTTP error `409`) * A server error occurred (HTTP error `500`)
+schema: Rule
+- body:config string
+- body:type string enum[VALIDITY|COMPATIBILITY]
+
+## S503-0011  DELETE /admin/rules/{rule}
+desc: Delete global rule | Deletes a single global rule. If this is the only rule configured, this is the same as deleting **all** rules. This operation can fail for the following reasons: * Invalid rule name/type (HTTP error `400`) * No rule with name/type `rule` exists (HTTP error `404`) * Rule cannot be deleted (HTTP error `409`) * A server error occurred (HTTP error `500`)
+- path:rule string enum[VALIDITY|COMPATIBILITY]
+
+## S503-0012  PUT /admin/rules/{rule}
+desc: Update global rule configuration | Updates the configuration for a globally configured rule. This operation can fail for the following reasons: * Invalid rule name/type (HTTP error `400`) * No rule with name/type `rule` exists (HTTP error `404`) * A server error occurred (HTTP error `500`)
+schema: Rule
+- path:rule string enum[VALIDITY|COMPATIBILITY]
+- body:config string
+- body:type string enum[VALIDITY|COMPATIBILITY]
+
+## S503-0013  POST /groups
+desc: Create a new group | Creates a new group. This operation can fail for the following reasons: * A server error occurred (HTTP error `500`) * The group already exist (HTTP error `409`)
+schema: CreateGroupMetaData
+- body:description string
+- body:id string
+- body:properties object
+
+## S503-0014  DELETE /groups/{groupId}
+desc: Delete a group by the specified ID. | Deletes a group by identifier. This operation can fail for the following reasons: * A server error occurred (HTTP error `500`) * The group does not exist (HTTP error `404`)
+- path:groupId string
+
+## S503-0015  DELETE /groups/{groupId}/artifacts
+desc: Delete artifacts in group | Deletes all of the artifacts that exist in a given group.
+- path:groupId string
+
+## S503-0016  POST /groups/{groupId}/artifacts
+desc: Create artifact | Creates a new artifact by posting the artifact content. The body of the request should be the raw content of the artifact. This is typically in JSON format for *most* of the supported types, but may be in another format for a few (for example, `PROTOBUF`). The registry attempts to figure out what kind of artifact is being added from the following supported list: * Avro (`AVRO`) *
+schema: FileContent
+- path:groupId string
+- query:ifExists string enum[FAIL|UPDATE|RETURN|RETURN_OR_UPDATE]
+- query:canonical boolean
+- body:(body) string
+
+## S503-0017  DELETE /groups/{groupId}/artifacts/{artifactId}
+desc: Delete artifact | Deletes an artifact completely, resulting in all versions of the artifact also being deleted. This may fail for one of the following reasons: * No artifact with the `artifactId` exists (HTTP error `404`) * A server error occurred (HTTP error `500`)
+- path:groupId string
+- path:artifactId string
+
+## S503-0018  PUT /groups/{groupId}/artifacts/{artifactId}
+desc: Update artifact | Updates an artifact by uploading new content. The body of the request can be the raw content of the artifact or a JSON object containing both the raw content and a set of references to other artifacts.. This is typically in JSON format for *most* of the supported types, but may be in another format for a few (for example, `PROTOBUF`). The type of the content should be compatible 
+schema: FileContent
+- path:groupId string
+- path:artifactId string
+- body:(body) string
+
+## S503-0019  POST /groups/{groupId}/artifacts/{artifactId}/meta
+desc: Get artifact version metadata by content | Gets the metadata for an artifact that matches the raw content. Searches the registry for a version of the given artifact matching the content provided in the body of the POST. This operation can fail for the following reasons: * Provided content (request body) was empty (HTTP error `400`) * No artifact with the `artifactId` exists (HTTP error `404`) * No
+schema: FileContent
+- path:groupId string
+- path:artifactId string
+- query:canonical boolean
+- body:(body) string
+
+## S503-0020  PUT /groups/{groupId}/artifacts/{artifactId}/meta
+desc: Update artifact metadata | Updates the editable parts of the artifact's metadata. Not all metadata fields can be updated. For example, `createdOn` and `createdBy` are both read-only properties. This operation can fail for the following reasons: * No artifact with the `artifactId` exists (HTTP error `404`) * A server error occurred (HTTP error `500`)
+schema: EditableMetaData
+- path:groupId string
+- path:artifactId string
+- body:description string
+- body:labels array<string>
+- body:name string
+- body:properties object
+
+## S503-0021  PUT /groups/{groupId}/artifacts/{artifactId}/owner
+desc: Update artifact owner | Changes the ownership of an artifact. This operation can fail for the following reasons: * No artifact with this `artifactId` exists (HTTP error `404`) * A server error occurred (HTTP error `500`)
+schema: ArtifactOwner
+- path:groupId string
+- path:artifactId string
+- body:owner string
+
+## S503-0022  DELETE /groups/{groupId}/artifacts/{artifactId}/rules
+desc: Delete artifact rules | Deletes all of the rules configured for the artifact. After this is done, the global rules apply to the artifact again. This operation can fail for the following reasons: * No artifact with this `artifactId` exists (HTTP error `404`) * A server error occurred (HTTP error `500`)
+- path:groupId string
+- path:artifactId string
+
+## S503-0023  POST /groups/{groupId}/artifacts/{artifactId}/rules
+desc: Create artifact rule | Adds a rule to the list of rules that get applied to the artifact when adding new versions. All configured rules must pass to successfully add a new artifact version. This operation can fail for the following reasons: * No artifact with this `artifactId` exists (HTTP error `404`) * Rule (named in the request body) is unknown (HTTP error `400`) * A server error occurred (HTTP
+schema: Rule
+- path:groupId string
+- path:artifactId string
+- body:config string
+- body:type string enum[VALIDITY|COMPATIBILITY]
+
+## S503-0024  DELETE /groups/{groupId}/artifacts/{artifactId}/rules/{rule}
+desc: Delete artifact rule | Deletes a rule from the artifact. This results in the rule no longer applying for this artifact. If this is the only rule configured for the artifact, this is the same as deleting **all** rules, and the globally configured rules now apply to this artifact. This operation can fail for the following reasons: * No artifact with this `artifactId` exists (HTTP error `404`) * No r
+- path:groupId string
+- path:artifactId string
+- path:rule string enum[VALIDITY|COMPATIBILITY]
+
+## S503-0025  PUT /groups/{groupId}/artifacts/{artifactId}/rules/{rule}
+desc: Update artifact rule configuration | Updates the configuration of a single rule for the artifact. The configuration data is specific to each rule type, so the configuration of the `COMPATIBILITY` rule is in a different format from the configuration of the `VALIDITY` rule. This operation can fail for the following reasons: * No artifact with this `artifactId` exists (HTTP error `404`) * No rule wit
+schema: Rule
+- path:groupId string
+- path:artifactId string
+- path:rule string enum[VALIDITY|COMPATIBILITY]
+- body:config string
+- body:type string enum[VALIDITY|COMPATIBILITY]
+
+## S503-0026  PUT /groups/{groupId}/artifacts/{artifactId}/state
+desc: Update artifact state | Updates the state of the artifact. For example, you can use this to mark the latest version of an artifact as `DEPRECATED`. The operation changes the state of the latest version of the artifact. If multiple versions exist, only the most recent is changed. This operation can fail for the following reasons: * No artifact with this `artifactId` exists (HTTP error `404`) * A se
+schema: UpdateState
+- path:groupId string
+- path:artifactId string
+- body:state string enum[ENABLED|DISABLED|DEPRECATED]
+
+## S503-0027  PUT /groups/{groupId}/artifacts/{artifactId}/test
+desc: Test update artifact | Tests whether an update to the artifact's content *would* succeed for the provided content. Ultimately, this applies any rules configured for the artifact against the given content to determine whether the rules would pass or fail, but without actually updating the artifact content. The body of the request should be the raw content of the artifact. This is typically in JSON 
+schema: FileContent
+- path:groupId string
+- path:artifactId string
+- body:(body) string
+
+## S503-0028  POST /groups/{groupId}/artifacts/{artifactId}/versions
+desc: Create artifact version | Creates a new version of the artifact by uploading new content. The configured rules for the artifact are applied, and if they all pass, the new content is added as the most recent version of the artifact. If any of the rules fail, an error is returned. The body of the request can be the raw content of the new artifact version, or the raw content and a set of references p
+schema: FileContent
+- path:groupId string
+- path:artifactId string
+- body:(body) string
+
+## S503-0029  DELETE /groups/{groupId}/artifacts/{artifactId}/versions/{version}/meta
+desc: Delete artifact version metadata | Deletes the user-editable metadata properties of the artifact version. Any properties that are not user-editable are preserved. This operation can fail for the following reasons: * No artifact with this `artifactId` exists (HTTP error `404`) * No version with this `version` exists (HTTP error `404`) * A server error occurred (HTTP error `500`)
+- path:groupId string
+- path:artifactId string
+- path:version string
+
+## S503-0030  PUT /groups/{groupId}/artifacts/{artifactId}/versions/{version}/meta
+desc: Update artifact version metadata | Updates the user-editable portion of the artifact version's metadata. Only some of the metadata fields are editable by the user. For example, `description` is editable, but `createdOn` is not. This operation can fail for the following reasons: * No artifact with this `artifactId` exists (HTTP error `404`) * No version with this `version` exists (HTTP error `404`)
+schema: EditableMetaData
+- path:groupId string
+- path:artifactId string
+- path:version string
+- body:description string
+- body:labels array<string>
+- body:name string
+- body:properties object
+
+## S503-0031  PUT /groups/{groupId}/artifacts/{artifactId}/versions/{version}/state
+desc: Update artifact version state | Updates the state of a specific version of an artifact. For example, you can use this operation to disable a specific version. This operation can fail for the following reasons: * No artifact with this `artifactId` exists (HTTP error `404`) * No version with this `version` exists (HTTP error `404`) * A server error occurred (HTTP error `500`)
+schema: UpdateState
+- path:groupId string
+- path:artifactId string
+- path:version string
+- body:state string enum[ENABLED|DISABLED|DEPRECATED]
+
+## S503-0032  POST /search/artifacts
+desc: Search for artifacts by content | Returns a paginated list of all artifacts with at least one version that matches the posted content.
+schema: FileContent
+- query:canonical boolean
+- query:artifactType string
+- query:offset integer
+- query:limit integer
+- query:order string enum[asc|desc]
+- query:orderby string enum[name|createdOn]
+- body:(body) string
+
+## S504-0001  POST /batch
+desc: Create batch. Batch is then being processed until all provided items have been completed. At any time it can be `get` to provide current status with results optionally.
+- body:domains array<string>
+- body:operation string enum[whois|check]
+- body:options object
+- body:options.format string enum[raw|formatted|json]
+
+## S504-0002  DELETE /batch/{id}
+desc: Delete batch
+- path:id string
+
+## S505-0001  DELETE /account
+desc: Delete Account | Delete a currently logged in user account. Behind the scene, the user record is not deleted but permanently blocked from any access. This is done to avoid deleted accounts being overtaken by new users with the same email address. Any user-related resources like documents or storage files should be deleted separately.
+
+## S505-0002  POST /account
+desc: Create Account | Use this endpoint to allow a new user to register a new account in your project. After the user registration completes successfully, you can use the [/account/verfication](/docs/client/account#accountCreateVerification) route to start verifying the user email address. To allow the new user to login to their new account, you need to create a new [account session](/docs/client/accou
+- body:email string
+- body:name string
+- body:password string

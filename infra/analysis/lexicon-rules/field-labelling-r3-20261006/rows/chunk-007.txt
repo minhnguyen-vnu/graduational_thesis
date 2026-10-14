@@ -1,0 +1,845 @@
+## S133-0031  POST /webhooks
+desc: Create Webhook | Create a webhook that triggers a collection with your custom payload. You can specify the webhook name and the collection to trigger by using the following attributes of the `webhook` object on your JSON body: * `name`: the name of the webhook that you're creating. * `collection`: the ID of the collection that you want to trigger once this webhook is called. Once created, the webh
+- query:workspace string
+- body:webhook object
+- body:webhook.collection string
+- body:webhook.name string
+
+## S133-0032  POST /workspaces
+desc: Create Workspace | This endpoint allows you to create a workspace and populate it with entities like `collections`, `environments`, `mocks` and `monitors` using their `uid`. On successful creation of the workspace, the response returns the workspcae `name` and `id`. > Requires <a href="#authentication">API Key</a> as `X-Api-Key` request header or `apikey` URL query parameter.
+- body:workspace object
+- body:workspace.collections array<object>
+- body:workspace.collections[].id string
+- body:workspace.collections[].name string
+- body:workspace.collections[].uid string
+- body:workspace.description string
+- body:workspace.environments array<object>
+- body:workspace.environments[].id string
+- body:workspace.environments[].name string
+- body:workspace.environments[].uid string
+- body:workspace.mocks array<object>
+- body:workspace.mocks[].id string
+- body:workspace.monitors array<object>
+- body:workspace.monitors[].id string
+- body:workspace.name string
+- body:workspace.type string
+
+## S135-0001  POST /checkCode
+desc: Check verification code | Checks the user's emailed code is valid. If this returns success=true, you can safely assume the user you are interacting with is the owner of that email address.
+- body:code string
+- body:email string
+
+## S135-0002  POST /sendCode
+desc: Send verification code | This request send's a code to the given email address, which should be returned to check it is correct.
+- body:email string
+
+## S136-0002  DELETE /apps/access/invite/{accessToken}
+desc: Delete an invitation from token | Remove an invitation from token
+- path:accessToken string
+
+## S136-0003  POST /apps/access/invite/{accessToken}/register
+desc: Create an User by invitation | Registration for an invited user
+- path:accessToken string
+- query:password string
+- query:firstname string
+- query:lastname string
+- query:cgu boolean
+
+## S136-0004  POST /apps/{appId}/access/invite
+desc: Invite an user | Invites a user to access the organization panel
+- path:appId integer
+- query:email string
+- query:policy_profile_id integer
+- query:firstname string
+- query:lastname string
+- query:civility string
+- query:password string
+
+## S136-0005  DELETE /apps/{appId}/access/invite/{id}
+desc: Delete an invitation | Remove an invitation
+- path:appId integer
+- path:id integer
+
+## S136-0006  DELETE /apps/{appId}/access/{userId}
+desc: Delete police for an user | Cancel access for an user on an app
+- path:appId integer
+- path:userId string
+
+## S136-0007  POST /apps/{appId}/access/{userId}
+desc: Update police for an user | Update police for an user on an app
+- path:appId integer
+- path:userId string
+- query:policy_profile_id integer
+
+## S136-0011  POST /apps/{appId}/accounts/
+desc: Create a Account
+- path:appId integer
+- query:journalcode string
+- query:name string
+- query:description string
+- query:keywords string
+- query:accounting_number string
+- query:is_cashflow boolean
+- query:is_sales boolean
+- query:is_purchase boolean
+
+## S136-0013  DELETE /apps/{appId}/accounts/{id}
+desc: Remove a Account
+- path:appId integer
+- path:id integer
+
+## S136-0017  POST /apps/{appId}/attachments
+desc: Attach a file on an object
+- path:appId integer
+- query:type string enum[none|purchase|invoice|quote|transaction|relationship]
+- query:attachable_id integer
+- query:file string
+
+## S136-0022  POST /apps/{appId}/bankdetails/{id}
+desc: Update a BankDetails
+- path:appId integer
+- path:id integer
+- query:name string
+- query:iban string
+- query:bic string
+
+## S136-0037  POST /apps/{appId}/invoices
+desc: Create an invoice | Create a new invoice with an Organization or a Person. Relationship store notes, metadata and accounting settings parameters
+- path:appId integer
+- query:contact_infos object
+- query:third_account object
+- query:title string
+- query:content array<object>
+- query:columns object
+- query:reference string
+- query:discount object
+- query:currency string
+- query:legal_notice string
+- query:bank_details_id integer
+- query:vat_exemption object
+- query:tags array<any>
+- query:metadata array<any>
+- query:downpayments array<integer>
+- query:downpayment_cash integer
+- query:avoid_of integer
+- query:delivered_at string
+- query:payment_period integer
+- query:payment_methods string
+- query:number_from_other_software string
+
+## S136-0042  POST /apps/{appId}/invoices/{id}
+desc: Update an invoice | Update an invoice by id
+- path:appId integer
+- path:id integer
+- query:contact_infos object
+- query:third_account object
+- query:title string
+- query:content array<object>
+- query:columns object
+- query:reference string
+- query:discount object
+- query:currency string
+- query:legal_notice string
+- query:bank_details_id integer
+- query:vat_exemption object
+- query:tags array<any>
+- query:metadata array<any>
+- query:downpayments array<integer>
+- query:downpayment_cash integer
+- query:avoid_of integer
+- query:delivered_at string
+- query:payment_period integer
+- query:payment_methods string
+
+## S136-0043  DELETE /apps/{appId}/invoices/{id}/attach
+desc: Detach a file at an invoice
+- path:appId integer
+- path:id integer
+- query:file_id integer
+
+## S136-0048  DELETE /apps/{appId}/invoices/{id}/tag
+desc: Delete a tag on an invoice
+- path:appId integer
+- path:id integer
+- query:tag string
+
+## S136-0050  POST /apps/{appId}/invoices/{id}/updatestatus
+desc: Update the status of an invoice
+- path:appId integer
+- path:id integer
+- query:status string enum[draft|final|paid]
+
+## S136-0056  DELETE /apps/{appId}/organizations/{id}
+desc: Remove an organization | Remove an organization
+- path:appId integer
+- path:id integer
+
+## S136-0057  POST /apps/{appId}/organizations/{id}
+desc: Update an organization | Update an organization by id
+- path:appId integer
+- path:id integer
+- query:name string
+- query:billing_name string
+- query:logo string
+- query:legal_form string
+- query:country_iso2 string
+- query:founding_date string
+- query:founding_location string
+- query:dissolution_date string
+- query:vat_system string
+- query:closeaccounting_period string
+- query:national_id string
+- query:vat_id string
+- query:code_naf string
+- query:number_of_employees string
+- query:slogan string
+- query:rcs string
+- query:greffe string
+- query:capital integer
+- query:metadata array<any>
+
+## S136-0059  POST /apps/{appId}/persons
+desc: Create a person | Create a new person. Represent a private contact
+- path:appId integer
+- query:civility string
+- query:lastname string
+- query:firstname string
+- query:picture string
+- query:metadata array<any>
+
+## S136-0061  DELETE /apps/{appId}/persons/{id}
+desc: Remove a person | Remove an person
+- path:appId integer
+- path:id integer
+
+## S136-0062  POST /apps/{appId}/persons/{id}
+desc: Update a person | Update a person by id
+- path:appId integer
+- path:id integer
+- query:civility string
+- query:lastname string
+- query:firstname string
+- query:picture string
+- query:metadata array<any>
+
+## S136-0069  POST /apps/{appId}/products/{id}
+desc: Update a product | Update a product by id
+- path:appId integer
+- path:id integer
+- query:name string
+- query:amount integer
+- query:amount_accurately integer
+- query:vat_percent integer
+- query:image string
+- query:lifetime integer
+- query:description string
+- query:type string enum[product|service]
+- query:quantity_name string
+- query:reference string
+- query:account_id string
+- query:tags array<any>
+- query:category_id integer
+- query:metadata array<any>
+
+## S136-0072  POST /apps/{appId}/productstocks
+desc: Create a stocks | Create a new stocks
+- path:appId integer
+- query:product_id integer
+- query:purchase_id integer
+- query:quantity integer
+- query:bar_code string
+- query:location string
+- query:entered_at string
+- query:expired_at string
+- query:cost_amount integer
+- query:use_duration integer
+
+## S136-0084  POST /apps/{appId}/purchases/{id}/attach
+desc: Attach a file at a purchase
+- path:appId integer
+- path:id integer
+- query:file string
+
+## S136-0088  POST /apps/{appId}/quotes
+desc: Create a quote | Create a new quote with an Organization or a Person. Relationship store notes, metadata and accounting settings parameters
+- path:appId integer
+- query:contact_infos object
+- query:third_account object
+- query:title string
+- query:content array<object>
+- query:columns object
+- query:reference string
+- query:discount object
+- query:currency string
+- query:legal_notice string
+- query:bank_details_id integer
+- query:vat_exemption object
+- query:tags array<any>
+- query:metadata array<any>
+- query:downpayment_request object
+- query:commercialvalidity_deadline string
+- query:number_from_other_software string
+
+## S136-0094  POST /apps/{appId}/quotes/{id}
+desc: Update a quote | Update a quote by id
+- path:appId integer
+- path:id integer
+- query:contact_infos object
+- query:third_account object
+- query:title string
+- query:content array<object>
+- query:columns object
+- query:reference string
+- query:discount object
+- query:currency string
+- query:legal_notice string
+- query:bank_details_id integer
+- query:vat_exemption object
+- query:tags array<any>
+- query:metadata array<any>
+- query:downpayment_request object
+- query:commercialvalidity_deadline string
+
+## S136-0095  DELETE /apps/{appId}/quotes/{id}/attach
+desc: Detach a file at a quote
+- path:appId integer
+- path:id integer
+- query:file_id integer
+
+## S136-0107  POST /apps/{appId}/reconcile/batch
+desc: Reconcile several transactions | Create new payments and categorizations by one-to-many
+- path:appId integer
+- query:data array<object>
+
+## S136-0108  POST /apps/{appId}/recurringinvoices
+desc: Create a RecurringInvoice
+- path:appId integer
+- query:contact_infos object
+- query:title string
+- query:content array<object>
+- query:columns object
+- query:currency string
+- query:legal_notice string
+- query:bank_details_id integer
+- query:vat_exemption object
+- query:tags array<any>
+- query:metadata array<any>
+- query:payment_period integer
+- query:next_invoice_at string
+- query:end_at string
+- query:frequency_count integer
+- query:frequency_duration string enum[day|week|month|trimester|semester|year]
+- query:discount integer
+- query:discount_mode string enum[percent]
+- query:discount_start_at string
+- query:discount_end_at string
+- query:details string
+- query:orders_plan array<object>
+
+## S136-0112  POST /apps/{appId}/recurringinvoices/{id}
+desc: Update a RecurringInvoice
+- path:appId integer
+- path:id integer
+- query:contact_infos object
+- query:title string
+- query:content array<object>
+- query:columns object
+- query:currency string
+- query:legal_notice string
+- query:bank_details_id integer
+- query:vat_exemption object
+- query:tags array<any>
+- query:metadata array<any>
+- query:payment_period integer
+- query:next_invoice_at string
+- query:end_at string
+- query:frequency_count integer
+- query:frequency_duration string enum[day|week|month|trimester|semester|year]
+- query:discount integer
+- query:discount_mode string enum[percent]
+- query:discount_start_at string
+- query:discount_end_at string
+- query:details string
+- query:orders_plan array<object>
+
+## S136-0124  POST /apps/{appId}/sepamandates/
+desc: Create a SEPAMandate
+- path:appId integer
+- query:customer_organization_id integer
+- query:customer_person_id integer
+- query:old_mandate_id integer
+- query:mandate_id string
+- query:signed_at string
+- query:electronic_signature string
+- query:customer_name string
+- query:iban string
+- query:bic string
+- query:is_first boolean
+
+## S136-0141  POST /apps/{appId}/subscription/source
+desc: Add creditcard or sepadebit
+- path:appId integer
+- query:stripe_source string
+
+## S136-0147  POST /apps/{appId}/transactions/batch
+desc: Create multiple transactions
+- path:appId integer
+- query:data array<object>
+
+## S136-0149  POST /apps/{appId}/transactions/{id}
+desc: Update a Transaction
+- path:appId integer
+- path:id integer
+- query:contact_organization_id integer
+- query:contact_person_id integer
+- query:account_id integer
+- query:cashflow_source_id integer
+- query:contact_name string
+- query:amount integer
+- query:method string enum[check|transfer|cash|creditcard|automatic_debit|creditnote]
+- query:received_at string
+- query:label string
+- query:details string
+
+## S136-0159  POST /register
+desc: Create an User | Create a new `User` from the registration form. The user will be created without an application or access, there is nothing he can do without another step such as creating an application or inviting access
+- query:email string
+- query:password string
+- query:cgu boolean
+- query:firstname string
+- query:lastname string
+- query:metadata array<any>
+
+## S137-0001  POST /api/Accounts
+desc: Description: The operation creates an Account.<br /> Purpose: Allows for creation of Accounts on a Fact Finder.
+schema: AccountModel
+- body:accountType integer
+- body:description string
+- body:externalDestinationId string
+- body:externalSourceId string
+- body:externalSourceName string
+- body:factFinderId integer
+- body:lastUpdated string
+- body:marketValue number
+- body:owner string enum[Client|CoClient|Joint|Dependent|Other]
+- body:ownerDependentId integer
+
+## S137-0005  PUT /api/Accounts/{accountId}/Holdings/{id}
+desc: Updates a holding associated with an account
+schema: AccountHoldingModel
+- path:accountId integer
+- path:id integer
+- body:costBasis number
+- body:cusip string
+- body:description string
+- body:externalDestinationId string
+- body:marketValue number
+- body:symbol string
+- body:valuationDate string
+
+## S137-0011  PUT /api/Accounts/{id}
+desc: Description: The operation updates an Account, deletes associated saving strategies if the account type changes.<br /> Purpose: Allows for complete replacement of an Account on a Fact Finder.
+schema: AccountModel
+- path:id integer
+- body:accountType integer
+- body:description string
+- body:externalDestinationId string
+- body:externalSourceId string
+- body:externalSourceName string
+- body:factFinderId integer
+- body:lastUpdated string
+- body:marketValue number
+- body:owner string enum[Client|CoClient|Joint|Dependent|Other]
+- body:ownerDependentId integer
+
+## S137-0014  DELETE /api/CriticalIllnessInsurancePolicies/{id}
+desc: Description: The operation removes a Critical Illness Insurance Policy tied to a Fact Finder.<br /> Purpose: Allows for removal of a Critical Illness Insurance Policy from a Fact Finder.
+- path:id integer
+
+## S137-0018  PUT /api/DefinedBenefitPensions/{id}
+desc: Description: The operation updates a Defined Benefit Pension.<br /> Purpose: Allows for complete replacement of a Defined Benefit Pension on a Fact Finder.
+schema: DefinedBenefitPensionModel
+- path:id integer
+- body:description string
+- body:estimatedAmount number
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:member string enum[Client|CoClient]
+- body:startDate string
+
+## S137-0023  PUT /api/Demographics/{id}
+desc: Description: The operation updates Demographic information.<br /> Purpose: Allows for complete replacement of Demographic information on a Fact Finder.
+schema: DemographicsModel
+- path:id integer
+- body:city string
+- body:externalDestinationId string
+- body:externalSourceId string
+- body:factFinderId integer
+- body:head1 object
+- body:head1.alreadyRetired boolean
+- body:head1.birthDate string
+- body:head1.externalDestinationId string
+- body:head1.firstName string
+- body:head1.gender string enum[Male|Female|None]
+- body:head1.lastName string
+- body:head1.taxFilingStatus integer
+- body:head2 object
+- body:head2.alreadyRetired boolean
+- body:head2.birthDate string
+- body:head2.externalDestinationId string
+- body:head2.firstName string
+- body:head2.gender string enum[Male|Female|None]
+- body:head2.lastName string
+- body:head2.taxFilingStatus integer
+- body:jointAnalysis boolean
+- body:state integer
+
+## S137-0024  POST /api/DisabilityInsurancePolicies
+desc: Description: The operation creates a Disability Insurance Policy.<br /> Purpose: Allows for creation of Disability Insurance Policies on a Fact Finder.
+schema: DisabilityInsurancePolicyModel
+- body:benefit number
+- body:benefitFrequency integer
+- body:benefitType string enum[Dollar|Percent]
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:insured string enum[Client|CoClient]
+- body:policyType integer
+- body:premium number
+- body:premiumFrequency integer
+
+## S137-0027  POST /api/EducationGoals
+desc: Description: The operation creates an Education Goal.<br /> Purpose: Allows for creation of Education Goals on a Fact Finder.
+schema: EducationGoalModel
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:projectedCost number
+
+## S137-0028  POST /api/EducationGoals/{educationGoalId}/Expenses
+desc: Description: The operation creates an Education Goal Expense.<br /> Purpose: Allows for creation of Education Goal Expenses on a Fact Finder.
+schema: EducationExpenseModel
+- path:educationGoalId integer
+- body:annualCost number
+- body:externalDestinationId string
+- body:member string enum[Client|CoClient|Dependent]
+- body:memberDependentId integer
+- body:startYear string
+- body:years integer
+
+## S137-0038  PUT /api/FactFinders/{factFinderId}/Modules/{id}
+desc: Description: The operation updates a Fact Finder Module.<br /> Purpose: Allows for complete replacement of a Fact Finder Module on a Fact Finder.
+schema: FactFinderModuleModel
+- path:factFinderId integer
+- path:id integer
+- body:available boolean
+- body:moduleName string enum[Demographics|Assets|Liabilities|Incomes|Expenses|Insurance|Retirement|Education|MajorPurchase]
+- body:visited boolean
+
+## S137-0045  PUT /api/Incomes/{id}
+desc: Description: The operation updates an Income.<br /> Purpose: Allows for complete replacement of an Income on a Fact Finder.
+schema: IncomeModel
+- path:id integer
+- body:annualAmount number
+- body:description string
+- body:endDate string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:incomeTypeId integer
+- body:owner string enum[Client|CoClient]
+- body:startDate string
+
+## S137-0046  POST /api/Liabilities
+desc: Description: The operation creates a Liability.<br /> Purpose: Allows for creation of Liabilities on a Fact Finder.
+schema: LiabilityModel
+- body:balance number
+- body:balanceAsOfDate string
+- body:description string
+- body:externalDestinationId string
+- body:externalSourceId string
+- body:externalSourceName string
+- body:factFinderId integer
+- body:frequency integer
+- body:interestRate number
+- body:lastUpdated string
+- body:liabilityType integer
+- body:loanDate string
+- body:originalPrincipal number
+- body:owner string enum[Client|CoClient|Joint]
+- body:payment number
+- body:paymentType string enum[InterestOnly|PrincipalAndInterest|SetPrincipal|LastPeriod]
+
+## S137-0048  PUT /api/Liabilities/{id}
+desc: Description: The operation updates a Liability.<br /> Purpose: Allows for complete replacement of a Liability on a Fact Finder.
+schema: LiabilityModel
+- path:id integer
+- body:balance number
+- body:balanceAsOfDate string
+- body:description string
+- body:externalDestinationId string
+- body:externalSourceId string
+- body:externalSourceName string
+- body:factFinderId integer
+- body:frequency integer
+- body:interestRate number
+- body:lastUpdated string
+- body:liabilityType integer
+- body:loanDate string
+- body:originalPrincipal number
+- body:owner string enum[Client|CoClient|Joint]
+- body:payment number
+- body:paymentType string enum[InterestOnly|PrincipalAndInterest|SetPrincipal|LastPeriod]
+
+## S137-0050  DELETE /api/LifeInsurancePolicies/{id}
+desc: Description: The operation removes a Life Insurance Policy tied to a Fact Finder.<br /> Purpose: Allows for removal of a Life Insurance Policy and associated subaccounts from a Fact Finder.
+- path:id integer
+
+## S137-0051  PUT /api/LifeInsurancePolicies/{id}
+desc: Description: The operation updates a Life Insurance Policy, deletes associated sub-accounts if the policy type changes.<br /> Purpose: Allows for complete replacement of a Life Insurance Policy on a Fact Finder.
+schema: LifeInsurancePolicyModel
+- path:id integer
+- body:beneficiary string enum[Client|CoClient|Dependent|Other]
+- body:beneficiaryDependentId integer
+- body:benefit number
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:frequency integer
+- body:generalAccountMarketValue number
+- body:insured string enum[Client|CoClient|FirstToDie|SecondToDie|Other]
+- body:payer string enum[Client|CoClient|Joint|Other]
+- body:policyType integer
+- body:premium number
+
+## S137-0053  DELETE /api/LifeInsurancePolicies/{lifeInsurancePolicyId}/Subaccounts/{id}
+desc: Description: Deletes an existing Life Insurance Policy Subaccount for an existing Life Insurance Policy.<br /> Purpose: Allows for removal of a subaccount from a Life Insurance Policy.
+- path:lifeInsurancePolicyId integer
+- path:id integer
+
+## S137-0057  PUT /api/LifestyleAssets/{id}
+desc: Description: The operation updates a Lifestyle Asset.<br /> Purpose: Allows for complete replacement of a Lifestyle Asset on a Fact Finder.
+schema: LifestyleAssetModel
+- path:id integer
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:marketValue number
+- body:owner string enum[Client|CoClient|Joint]
+- body:purchaseAmount number
+- body:purchaseDate string
+- body:type integer
+
+## S137-0058  POST /api/LongTermCareInsurancePolicies
+desc: Description: The operation creates a Long Term Care Insurance Policy.<br /> Purpose: Allows for creation of Long Term Care Insurance Policies on a Fact Finder.
+schema: LongTermCareInsurancePolicyModel
+- body:benefit number
+- body:benefitFrequency integer
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:insured string enum[Client|CoClient]
+- body:premium number
+- body:premiumFrequency integer
+
+## S137-0063  PUT /api/MajorPurchaseGoals/{id}
+desc: Description: The operation updates a Major Purchase.<br /> Purpose: Allows for complete replacement of a Major Purchase on a Fact Finder.
+schema: MajorPurchaseGoalModel
+- path:id integer
+- body:amount number
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:majorPurchaseGoalTypeId integer
+- body:member string enum[Client|CoClient|Joint]
+- body:targetDate string
+
+## S137-0064  POST /api/RealEstateAssets
+desc: Description: The operation creates a Real Estate Asset.<br /> Purpose: Allows for creation of Real Estate Assets on a Fact Finder.
+schema: RealEstateAssetModel
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:frequency integer
+- body:marketValue number
+- body:owner string enum[Client|CoClient|Joint]
+- body:purchaseAmount number
+- body:purchaseDate string
+- body:rentalIncome number
+
+## S137-0065  DELETE /api/RealEstateAssets/{id}
+desc: Description: The operation removes a Real Estate Asset tied to a Fact Finder.<br /> Purpose: Allows for removal of a Real Estate Asset from a Fact Finder.
+- path:id integer
+
+## S137-0066  PUT /api/RealEstateAssets/{id}
+desc: Description: The operation updates a Real Estate Asset.<br /> Purpose: Allows for complete replacement of a Real Estate Asset on a Fact Finder.
+schema: RealEstateAssetModel
+- path:id integer
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:frequency integer
+- body:marketValue number
+- body:owner string enum[Client|CoClient|Joint]
+- body:purchaseAmount number
+- body:purchaseDate string
+- body:rentalIncome number
+
+## S137-0070  POST /api/RetirementGoals/{retirementGoalId}/Expenses
+desc: Description: The operation creates a Retirement Goal Expense.<br /> Purpose: Allows for creation of Retirement Goal Expenses on a Fact Finder.
+schema: RetirementExpenseModel
+- path:retirementGoalId integer
+- body:amount number
+- body:annualPeriod integer
+- body:description string
+- body:endDate string
+- body:externalDestinationId string
+- body:frequency integer
+- body:member string enum[Client|CoClient|Joint]
+- body:startDate string
+
+## S200-0001  POST /api/oauth/v1/token
+desc: Get authentication token | This endpoint allows you to get an authentication token. No need to be authenticated to use this endpoint.
+- body:grant_type string
+- body:password string
+- body:username string
+
+## S200-0002  PATCH /api/rest/v1/asset-categories
+desc: Update/create several PAM asset categories | This endpoint allows you to update several PAM asset categories at once.
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:parent string
+
+## S200-0005  PATCH /api/rest/v1/asset-families/{asset_family_code}/assets
+desc: Update/create several assets | This endpoint allows you to update and/or create several assets of one given asset family at once. Learn more about the <a href="/documentation/update.html#patch-asset-attribute-values">Update behavior</a>. Note that if the asset does not already exist for the given asset family, it creates it. This endpoint is case sensitive on the asset family code.
+- path:asset_family_code string
+- body:code string
+- body:created string
+- body:updated string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].channel string
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].locale string
+
+## S200-0006  DELETE /api/rest/v1/asset-families/{asset_family_code}/assets/{code}
+desc: Delete an asset | This endpoint allows you to delete a given asset. This endpoint is case sensitive on the asset family code.
+- path:asset_family_code string
+- path:code string
+
+## S200-0008  PATCH /api/rest/v1/asset-families/{asset_family_code}/attributes/{attribute_code}/options/{code}
+desc: Update/create an asset attribute option for a given asset family | This endpoint allows you to update a given option for a given attribute and a given asset family. Learn more about the <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if the option does not already exist for the given attribute of the given asset family, it creates it.
+- path:asset_family_code string
+- path:attribute_code string
+- path:code string
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+
+## S200-0010  PATCH /api/rest/v1/asset-families/{code}
+desc: Update/create an asset family | This endpoint allows you to update a given asset family. Note that if the asset family does not already exist, it creates it.
+- path:code string
+- body:attribute_as_main_media string
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:naming_convention object
+- body:naming_convention.abort_asset_creation_on_error boolean
+- body:naming_convention.pattern string
+- body:naming_convention.source object
+- body:product_link_rules array<object>
+- body:product_link_rules[].assign_assets_to array<object>
+- body:product_link_rules[].assign_assets_to[].attribute string
+- body:product_link_rules[].assign_assets_to[].channel string
+- body:product_link_rules[].assign_assets_to[].locale string
+- body:product_link_rules[].assign_assets_to[].mode string
+- body:product_link_rules[].product_selections array<object>
+- body:product_link_rules[].product_selections[].channel string
+- body:product_link_rules[].product_selections[].field string
+- body:product_link_rules[].product_selections[].locale string
+- body:product_link_rules[].product_selections[].operator string
+- body:product_link_rules[].product_selections[].value string
+- body:transformations array<object>
+- body:transformations[].filename_prefix string
+- body:transformations[].filename_suffix string
+- body:transformations[].label string
+- body:transformations[].operations object
+- body:transformations[].operations.parameters object
+- body:transformations[].operations.type string
+- body:transformations[].source object
+- body:transformations[].source.attribute string
+- body:transformations[].source.channel string
+- body:transformations[].source.locale string
+- body:transformations[].target object
+- body:transformations[].target.attribute string
+- body:transformations[].target.channel string
+- body:transformations[].target.locale string
+
+## S200-0011  POST /api/rest/v1/asset-media-files
+desc: Create a new media file for an asset | This endpoint allows you to create a new media file and associate it to a media file attribute value of an asset.
+- body:file string
+
+## S200-0012  PATCH /api/rest/v1/asset-tags/{code}
+desc: Update/create a PAM asset tag | This endpoint allows you to update a given PAM asset tag. Know more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no tag exists for the given code, it creates it.
+- path:code string
+- body:code string
+
+## S200-0014  POST /api/rest/v1/assets
+desc: Create a new PAM asset | This endpoint allows you to create a new PAM asset.
+- body:categories array<string>
+- body:code string
+- body:description string
+- body:end_of_use string
+- body:localizable boolean
+- body:reference_files array<object>
+- body:reference_files[]._link object
+- body:reference_files[]._link.download object
+- body:reference_files[]._link.self object
+- body:reference_files[].code string
+- body:reference_files[].locale string
+- body:tags array<string>
+- body:variation_files array<object>
+- body:variation_files[]._link object
+- body:variation_files[]._link.download object
+- body:variation_files[]._link.self object
+- body:variation_files[].code string
+- body:variation_files[].locale string
+- body:variation_files[].scope string
+
+## S200-0015  POST /api/rest/v1/assets/{asset_code}/reference-files/{locale_code}
+desc: Upload a new reference file | This endpoint allows you to upload a new reference file for a given PAM asset and locale. It will also automatically generate all the variation files corresponding to this reference file.
+- path:asset_code string
+- path:locale_code string
+- body:file string
+
+## S200-0016  POST /api/rest/v1/assets/{asset_code}/variation-files/{channel_code}/{locale_code}
+desc: Upload a new variation file | This endpoint allows you to upload a new variation file for a given PAM asset, channel and locale.
+- path:asset_code string
+- path:channel_code string
+- path:locale_code string
+- body:file string
+
+## S200-0021  PATCH /api/rest/v1/attribute-groups
+desc: Update/create several attribute groups | This endpoint allows you to update and/or create several attribute groups at once.
+- body:attributes array<string>
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:sort_order integer
+
+## S200-0022  POST /api/rest/v1/attribute-groups
+desc: Create a new attribute group | This endpoint allows you to create a new attribute group.
+- body:attributes array<string>
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:sort_order integer
+
+## S200-0023  PATCH /api/rest/v1/attribute-groups/{code}
+desc: Update/create an attribute group | This endpoint allows you to update a given attribute group. Know more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no attribute group exists for the given code, it creates it.
+- path:code string
+- body:attributes array<string>
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:sort_order integer

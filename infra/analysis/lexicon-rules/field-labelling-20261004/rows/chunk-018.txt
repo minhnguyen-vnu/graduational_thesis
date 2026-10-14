@@ -1,0 +1,918 @@
+## S332-0001  POST /
+summary: Send a JSON-RPC call to a localhost neblio-Qt or nebliod node
+desc: Call any Neblio RPC command from the Neblio API libraries. Useful for signing transactions with a local node and other functions. Will not work from a browser due to CORS restrictions. Requires a node to be running locally at 127.0.0.1
+- body:id string
+- body:jsonrpc string
+- body:method string
+- body:params array<string>
+
+## S332-0002  POST /ins/tx/send
+summary: Broadcasts a signed raw transaction to the network (not NTP1 specific)
+desc: Broadcasts a signed raw transaction to the network. If successful returns the txid of the broadcast trasnaction.
+- body:rawtx string
+
+## S332-0003  POST /ntp1/broadcast
+summary: Broadcasts a signed raw transaction to the network
+desc: Broadcasts a signed raw transaction to the network. If successful returns the txid of the broadcast trasnaction.
+- body:txHex string
+
+## S332-0004  POST /ntp1/burntoken
+summary: Builds a transaction that burns an NTP1 Token
+desc: Builds an unsigned raw transaction that burns an NTP1 token on the Neblio blockchain.
+- body:burn array<object>
+- body:burn[].amount number
+- body:burn[].tokenId string
+- body:fee number
+- body:from array<string>
+- body:transfer array<object>
+- body:transfer[].address string
+- body:transfer[].amount number
+- body:transfer[].tokenId string
+
+## S332-0005  POST /ntp1/issue
+summary: Builds a transaction that issues a new NTP1 Token
+desc: Builds an unsigned raw transaction that issues a new NTP1 token on the Neblio blockchain.
+- body:amount number
+- body:divisibility number
+- body:fee number
+- body:flags object
+- body:flags.splitChange boolean
+- body:issueAddress string
+- body:metadata object
+- body:metadata.description string
+- body:metadata.encryptions array<object>
+- body:metadata.encryptions[].format string
+- body:metadata.encryptions[].key string
+- body:metadata.encryptions[].pubkey string
+- body:metadata.encryptions[].type string
+- body:metadata.issuer string
+- body:metadata.rules object
+- body:metadata.rules.expiration object
+- body:metadata.rules.fees object
+- body:metadata.rules.holders array<object>
+- body:metadata.tokenName string
+- body:metadata.urls array<object>
+- body:metadata.urls[].dataHash string
+- body:metadata.urls[].mimeType string
+- body:metadata.urls[].name string
+- body:metadata.urls[].url string
+- body:metadata.userData object
+- body:metadata.userData.meta array<object>
+- body:reissuable boolean
+- body:transfer array<object>
+- body:transfer[].address string
+- body:transfer[].amount number
+
+## S332-0006  POST /ntp1/sendtoken
+summary: Builds a transaction that sends an NTP1 Token
+desc: Builds an unsigned raw transaction that sends an NTP1 token on the Neblio blockchain.
+- body:fee number
+- body:flags object
+- body:flags.splitChange boolean
+- body:from array<string>
+- body:metadata object
+- body:metadata.description string
+- body:metadata.encryptions array<object>
+- body:metadata.encryptions[].format string
+- body:metadata.encryptions[].key string
+- body:metadata.encryptions[].pubkey string
+- body:metadata.encryptions[].type string
+- body:metadata.issuer string
+- body:metadata.rules object
+- body:metadata.rules.expiration object
+- body:metadata.rules.fees object
+- body:metadata.rules.holders array<object>
+- body:metadata.tokenName string
+- body:metadata.urls array<object>
+- body:metadata.urls[].dataHash string
+- body:metadata.urls[].mimeType string
+- body:metadata.urls[].name string
+- body:metadata.urls[].url string
+- body:metadata.userData object
+- body:metadata.userData.meta array<object>
+- body:sendutxo array<string>
+- body:to array<object>
+- body:to[].address string
+- body:to[].amount number
+- body:to[].tokenId string
+
+## S332-0007  POST /testnet/ins/tx/send
+summary: Broadcasts a signed raw transaction to the network (not NTP1 specific)
+desc: Broadcasts a signed raw transaction to the network. If successful returns the txid of the broadcast trasnaction.
+- body:rawtx string
+
+## S332-0008  POST /testnet/ntp1/broadcast
+summary: Broadcasts a signed raw transaction to the network
+desc: Broadcasts a signed raw transaction to the network. If successful returns the txid of the broadcast trasnaction.
+- body:txHex string
+
+## S332-0009  POST /testnet/ntp1/burntoken
+summary: Builds a transaction that burns an NTP1 Token
+desc: Builds an unsigned raw transaction that burns an NTP1 token on the Neblio blockchain.
+- body:burn array<object>
+- body:burn[].amount number
+- body:burn[].tokenId string
+- body:fee number
+- body:from array<string>
+- body:transfer array<object>
+- body:transfer[].address string
+- body:transfer[].amount number
+- body:transfer[].tokenId string
+
+## S332-0010  POST /testnet/ntp1/issue
+summary: Builds a transaction that issues a new NTP1 Token
+desc: Builds an unsigned raw transaction that issues a new NTP1 token on the Neblio blockchain.
+- body:amount number
+- body:divisibility number
+- body:fee number
+- body:flags object
+- body:flags.splitChange boolean
+- body:issueAddress string
+- body:metadata object
+- body:metadata.description string
+- body:metadata.encryptions array<object>
+- body:metadata.encryptions[].format string
+- body:metadata.encryptions[].key string
+- body:metadata.encryptions[].pubkey string
+- body:metadata.encryptions[].type string
+- body:metadata.issuer string
+- body:metadata.rules object
+- body:metadata.rules.expiration object
+- body:metadata.rules.fees object
+- body:metadata.rules.holders array<object>
+- body:metadata.tokenName string
+- body:metadata.urls array<object>
+- body:metadata.urls[].dataHash string
+- body:metadata.urls[].mimeType string
+- body:metadata.urls[].name string
+- body:metadata.urls[].url string
+- body:metadata.userData object
+- body:metadata.userData.meta array<object>
+- body:reissuable boolean
+- body:transfer array<object>
+- body:transfer[].address string
+- body:transfer[].amount number
+
+## S332-0011  POST /testnet/ntp1/sendtoken
+summary: Builds a transaction that sends an NTP1 Token
+desc: Builds an unsigned raw transaction that sends an NTP1 token on the Neblio blockchain.
+- body:fee number
+- body:flags object
+- body:flags.splitChange boolean
+- body:from array<string>
+- body:metadata object
+- body:metadata.description string
+- body:metadata.encryptions array<object>
+- body:metadata.encryptions[].format string
+- body:metadata.encryptions[].key string
+- body:metadata.encryptions[].pubkey string
+- body:metadata.encryptions[].type string
+- body:metadata.issuer string
+- body:metadata.rules object
+- body:metadata.rules.expiration object
+- body:metadata.rules.fees object
+- body:metadata.rules.holders array<object>
+- body:metadata.tokenName string
+- body:metadata.urls array<object>
+- body:metadata.urls[].dataHash string
+- body:metadata.urls[].mimeType string
+- body:metadata.urls[].name string
+- body:metadata.urls[].url string
+- body:metadata.userData object
+- body:metadata.userData.meta array<object>
+- body:sendutxo array<string>
+- body:to array<object>
+- body:to[].address string
+- body:to[].amount number
+- body:to[].tokenId string
+
+## S333-0001  POST /consumer/v1/appointments
+summary: Create Appointment
+desc: <p>Use this endpoint to <b>Create</b> a new appointment. The appointment will be created with an "IN", Initial status. Posting an appointment with "IN" status requires minimal information and requires a "PUT book" call to complete the booking transaction, <i>PUT ​/consumer​/v1​/appointments​/{id}​/book</i>. Alternatively, you can post an appointment using the <b>completeBooking</b> option which co
+- query:completeBooking string
+- body:appointmentBookingFields array<object>
+- body:appointmentBookingFields[].name string
+- body:appointmentBookingFields[].value string
+- body:bookedBy string
+- body:bookingWindowId string
+- body:calendarId string
+- body:customFields object
+- body:customFields.field1 string
+- body:customFields.field10 string
+- body:customFields.field2 string
+- body:customFields.field3 string
+- body:customFields.field4 string
+- body:customFields.field5 string
+- body:customFields.field6 string
+- body:customFields.field7 string
+- body:customFields.field8 string
+- body:customFields.field9 string
+- body:customerBookingFields array<object>
+- body:customerBookingFields[].name string
+- body:customerBookingFields[].value string
+- body:customerId string
+- body:customerMessage string
+- body:email string
+- body:endDateTime string
+- body:groupSize integer
+- body:location string
+- body:locationId string
+- body:name string
+- body:notes string
+- body:phone string
+- body:phoneType string
+- body:resourceGroupId string
+- body:resourceId string
+- body:resourceIds string
+- body:serviceAllocationId string
+- body:serviceId string
+- body:startDateTime string
+- body:timezoneName string
+- body:travelAppointmentId string
+- body:travelTimeMins integer
+
+## S333-0002  DELETE /consumer/v1/appointments/{id}
+summary: Delete Appointment
+desc: <p>Use this endpoint to permanently <b>Delete</b> an appointment. Only appointments with a of "IN" status, initial, can be deleted. Past dated appointments cannot be deleted. A valid <b>appointment id</b> is required. Use the appointment id returned from the initial <i>POST /consumer/v1/appointments</i> endpoint.</p> <p>For more information: <a href="https://onsched.readme.io/docs/appointments-ove
+- path:id string
+
+## S333-0003  PUT /consumer/v1/appointments/{id}/book
+summary: Book Appointment
+desc: <p>Use this endpoint to <b>Book</b> an appointment. Only appointments with an "IN" status, Initial, can be booked. A valid <b>appointment id</b> is required. Use the appointment id returned from the initial <i>POST /consumer/v1/appointments</i> endpoint. Other pertinent fields can also be updated at the time of booking by including them in the post body. <b>Note: If no name or email address was pr
+- path:id string
+- body:appointmentBookingFields array<object>
+- body:appointmentBookingFields[].name string
+- body:appointmentBookingFields[].value string
+- body:customFields object
+- body:customFields.field1 string
+- body:customFields.field10 string
+- body:customFields.field2 string
+- body:customFields.field3 string
+- body:customFields.field4 string
+- body:customFields.field5 string
+- body:customFields.field6 string
+- body:customFields.field7 string
+- body:customFields.field8 string
+- body:customFields.field9 string
+- body:customerBookingFields array<object>
+- body:customerBookingFields[].name string
+- body:customerBookingFields[].value string
+- body:customerMessage string
+- body:email string
+- body:groupSize integer
+- body:name string
+- body:notes string
+- body:phone string
+- body:phoneExt string
+- body:phoneType string
+
+## S333-0004  PUT /consumer/v1/appointments/{id}/cancel
+summary: Cancel Appointment
+desc: <p>Use this endpoint to <b>Cancel</b> an appointment booking or reservation. Only appointments with a "BK", booked or "RS", reserved status can be cancelled. Past dated appointments cannot be cancelled. A valid <b>appointment id</b> is required. For more information: <a href="https://onsched.readme.io/docs/appointments-overview">Appointment Overview</a></p>
+- path:id string
+
+## S333-0005  PUT /consumer/v1/appointments/{id}/confirm
+summary: Confirm Appointment
+desc: <p>Use this endpoint to <b>Confirm</b> an appointment. This updates the boolean confirmed field to TRUE. <b>NOTE:</b> If the appointment status is set to "RS", Reserved, it also updates the status of the appointment to "BK", Booked. </p> <p>For more information: <a href="https://onsched.readme.io/docs/appointments-overview">Appointment Overview</a></p>
+- path:id integer
+- query:undo boolean
+
+## S333-0006  PUT /consumer/v1/appointments/{id}/noshow
+summary: Set NoShow Status
+desc: <p>Use this endpoint to change the status of an appointment from "BK", Booked to <b>"NS", NoShow</b>. This gives API consumers a way to internally track No Show appointments. It provides no added functionality in OnSched.</p> <p>For more information: <a href="https://onsched.readme.io/docs/appointments-overview">Appointment Overview</a></p>
+- path:id integer
+- body:(body) object
+
+## S333-0007  PUT /consumer/v1/appointments/{id}/reschedule
+summary: Reschedule Appointment
+desc: <p>Use this endpoint to <b>Reschedule</b> an appointment booking. Only appointments in "BK", booked status, can be Rescheduled. Past dated appointments cannot be rescheduled. A valid <b>appointment id</b> is required.</p> <p>The <b>StartDateTime</b> and <b>EndDateTime</b> are required. Use the ISO 8601 format for DateTime Timezone, e.g., <b>2016-10-30T09:00:00-5:00</b>.</p> <p>The serviceId is opt
+- path:id string
+- body:endDateTime string
+- body:resourceId string
+- body:resourceIds string
+- body:serviceId string
+- body:startDateTime string
+- body:travelAppointmentId string
+- body:travelTimeMins integer
+
+## S333-0008  PUT /consumer/v1/appointments/{id}/reserve
+summary: Reserve Appointment
+desc: <p>Use this endpoint to <b>Reserve</b> an appointment. Only appointments with an "IN" status, Initial, can be reserved. A valid <b>appointment id</b> is required. Use the appointment id returned from the initial <i>POST /consumer/v1/appointments</i> endpoint.</p> <p> <b>NOTE: Reservations are different from Bookings as reservations are a two-step booking process that must be managed by the API con
+- path:id string
+- query:sendNotifications boolean
+- body:appointmentBookingFields array<object>
+- body:appointmentBookingFields[].name string
+- body:appointmentBookingFields[].value string
+- body:customFields object
+- body:customFields.field1 string
+- body:customFields.field10 string
+- body:customFields.field2 string
+- body:customFields.field3 string
+- body:customFields.field4 string
+- body:customFields.field5 string
+- body:customFields.field6 string
+- body:customFields.field7 string
+- body:customFields.field8 string
+- body:customFields.field9 string
+- body:customerBookingFields array<object>
+- body:customerBookingFields[].name string
+- body:customerBookingFields[].value string
+- body:customerMessage string
+- body:email string
+- body:name string
+- body:notes string
+- body:phone string
+- body:phoneExt string
+- body:phoneType string
+
+## S333-0009  POST /consumer/v1/customers
+summary: Create Customer
+desc: <p>Use this endpoint to <b>Create</b> a new Customer. A customer object is automatically created with the first appointment booking if it doesn't already exist. If not specified, the business location id defaults to the primary business location.</p> <p>Required Fields: <b>Email</b> and <b>Name</b> or <b>First and Lastname</b> depending on customer type. Type 0 = Person, Type 1 = Business. For typ
+- body:address object
+- body:address.addressLine1 string
+- body:address.addressLine2 string
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.state string
+- body:contact object
+- body:contact.businessPhone string
+- body:contact.businessPhoneExt string
+- body:contact.conferenceInfo string
+- body:contact.homePhone string
+- body:contact.mobilePhone string
+- body:contact.preferredPhoneType string
+- body:contact.skypeUsername string
+- body:customFields object
+- body:customFields.field1 string
+- body:customFields.field10 string
+- body:customFields.field2 string
+- body:customFields.field3 string
+- body:customFields.field4 string
+- body:customFields.field5 string
+- body:customFields.field6 string
+- body:customFields.field7 string
+- body:customFields.field8 string
+- body:customFields.field9 string
+- body:email string
+- body:firstname string
+- body:lastname string
+- body:locationId string
+- body:name string
+- body:notificationType string
+- body:sendLeadNotification boolean
+- body:stripeCustomerId string
+- body:type integer
+
+## S333-0010  DELETE /consumer/v1/customers/{id}
+summary: Delete Customer
+desc: <p>Use this endpoint to permanently <b>Delete</b> a Customer object. A valid <b>customer id</b> is required.</p>
+- path:id string
+
+## S333-0011  PUT /consumer/v1/customers/{id}
+summary: Update Customer
+desc: <p>Use this endpoint to <b>Update</b> a Customer object. A valid <b>customer id</b> is required. Note: Blank fields are not changed.</p>
+- path:id string
+- body:address object
+- body:address.addressLine1 string
+- body:address.addressLine2 string
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.state string
+- body:contact object
+- body:contact.businessPhone string
+- body:contact.businessPhoneExt string
+- body:contact.conferenceInfo string
+- body:contact.homePhone string
+- body:contact.mobilePhone string
+- body:contact.preferredPhoneType string
+- body:contact.skypeUsername string
+- body:customFields object
+- body:customFields.field1 string
+- body:customFields.field10 string
+- body:customFields.field2 string
+- body:customFields.field3 string
+- body:customFields.field4 string
+- body:customFields.field5 string
+- body:customFields.field6 string
+- body:customFields.field7 string
+- body:customFields.field8 string
+- body:customFields.field9 string
+- body:email string
+- body:firstname string
+- body:lastname string
+- body:locationId string
+- body:name string
+- body:notificationType string
+- body:stripeCustomerId string
+- body:type integer
+
+## S334-0001  POST /api/gen/clients/{language}
+summary: Generates a client library
+desc: Accepts a `GeneratorInput` options map for spec location and generation options
+- path:language string
+- body:authorizationValue object
+- body:authorizationValue.keyName string
+- body:authorizationValue.type string
+- body:authorizationValue.urlMatcher object
+- body:authorizationValue.value string
+- body:openAPIUrl string
+- body:options object
+- body:spec object
+
+## S334-0002  POST /api/gen/servers/{framework}
+summary: Generates a server library
+desc: Accepts a `GeneratorInput` options map for spec location and generation options.
+- path:framework string
+- body:authorizationValue object
+- body:authorizationValue.keyName string
+- body:authorizationValue.type string
+- body:authorizationValue.urlMatcher object
+- body:authorizationValue.value string
+- body:openAPIUrl string
+- body:options object
+- body:spec object
+
+## S335-0001  POST /startscan
+summary: Start a new scan
+desc: Start a new scan.
+- body:assets array<object>
+- body:assets[].criticity string enum[low|medium|high]
+- body:assets[].datatype string enum[ip|ip-range|ip-subnet|fqdn|domain|url|keyword|person|organisation|path|application]
+- body:assets[].id string
+- body:assets[].value string
+- body:options object
+- body:scan_id integer
+
+## S336-0001  POST /api-specification
+desc: Upload an API specification to ReadMe. Or, to use a newer solution see https://docs.readme.com/guides/docs/automatically-sync-api-specification-with-github
+- body:spec string
+
+## S336-0002  DELETE /api-specification/{id}
+desc: Delete an API specification in ReadMe
+- path:id string
+
+## S336-0003  PUT /api-specification/{id}
+desc: Update an API specification in ReadMe
+- path:id string
+- body:spec string
+
+## S336-0004  POST /changelogs
+summary: Create changelog
+desc: Create a new changelog inside of this project
+- body:body string
+- body:hidden boolean
+- body:title string
+- body:type string enum[|added|fixed|improved|deprecated|removed]
+
+## S336-0005  DELETE /changelogs/{slug}
+summary: Delete changelog
+desc: Delete the changelog with this slug
+- path:slug string
+
+## S336-0006  PUT /changelogs/{slug}
+summary: Update changelog
+desc: Update a changelog with this slug
+- path:slug string
+- body:body string
+- body:hidden boolean
+- body:title string
+- body:type string enum[|added|fixed|improved|deprecated|removed]
+
+## S336-0007  POST /custompages
+summary: Create custom page
+desc: Create a new custom page inside of this project
+- body:body string
+- body:hidden boolean
+- body:html string
+- body:htmlmode boolean
+- body:title string
+
+## S336-0008  DELETE /custompages/{slug}
+summary: Delete custom page
+desc: Delete the custom page with this slug
+- path:slug string
+
+## S336-0009  PUT /custompages/{slug}
+summary: Update custom page
+desc: Update a custom page with this slug
+- path:slug string
+- body:body string
+- body:hidden boolean
+- body:html string
+- body:htmlmode boolean
+- body:title string
+
+## S336-0010  POST /docs
+summary: Create doc
+desc: Create a new doc inside of this project
+- body:body string
+- body:category string
+- body:hidden boolean
+- body:parentDoc string
+- body:title string
+- body:type string enum[basic|error|link]
+
+## S336-0011  POST /docs/search
+summary: Search docs
+desc: Returns all docs that match the search
+- query:search string
+
+## S336-0012  DELETE /docs/{slug}
+summary: Delete doc
+desc: Delete the doc with this slug
+- path:slug string
+
+## S336-0013  PUT /docs/{slug}
+summary: Update doc
+desc: Update a doc with this slug
+- path:slug string
+- body:body string
+- body:category string
+- body:hidden boolean
+- body:parentDoc string
+- body:title string
+- body:type string enum[basic|error|link]
+
+## S336-0014  POST /swagger
+desc: DEPRECATED. Instead use https://docs.readme.com/developers/reference/api-specification#uploadapispecification to upload a Swagger file to ReadMe
+- body:swagger string
+
+## S336-0015  DELETE /swagger/{id}
+desc: DEPRECATED. Instead, use https://docs.readme.com/developers/reference/api-specification#deleteapispecification to delete a Swagger file in ReadMe
+- path:id string
+
+## S336-0016  PUT /swagger/{id}
+desc: DEPRECATED. Instead, use https://docs.readme.com/developers/reference/api-specification#updateapispecification to update a Swagger file.
+- path:id string
+- body:swagger string
+
+## S336-0017  POST /version
+summary: Create version
+desc: Create a new version
+- body:codename string
+- body:from string
+- body:is_beta boolean
+- body:is_deprecated boolean
+- body:is_hidden boolean
+- body:is_stable boolean
+- body:version string
+
+## S336-0018  DELETE /version/{versionId}
+summary: Delete version
+desc: Delete a version
+- path:versionId string
+
+## S336-0019  PUT /version/{versionId}
+summary: Update version
+desc: Update an existing version
+- path:versionId string
+- body:codename string
+- body:from string
+- body:is_beta boolean
+- body:is_deprecated boolean
+- body:is_hidden boolean
+- body:is_stable boolean
+- body:version string
+
+## S337-0001  POST /apply-yara-rules
+desc: apply given YARA rules to the given executable. (upto 10 rules)
+- body:file string
+- body:is_unpacking_required string enum[true|false]
+- body:rules array<string>
+
+## S337-0002  POST /emulation-output
+desc: try to get the emulation output after unpacking the file
+- body:file string
+
+## S337-0003  POST /generate-partial-yara-rules
+desc: generate partial YARA rules for give executable. (Rule without the condition section)
+- body:file string
+- body:is_unpacking_required string enum[true|false]
+- body:minimum_string_length string
+- body:strings_to_ignore array<string>
+
+## S337-0004  POST /unpack
+desc: try to unpack the given file
+- body:file string
+
+## S338-0001  POST /branding
+summary: Update web interface customization
+desc: change color, logo, label etc.
+- body:barColor object
+- body:barColor.alpha number
+- body:barColor.blue number
+- body:barColor.green number
+- body:barColor.red number
+- body:displayBar boolean
+- body:displayBarLogin boolean
+- body:displayLabel boolean
+- body:displayMotd boolean
+- body:labelColor object
+- body:labelColor.alpha number
+- body:labelColor.blue number
+- body:labelColor.green number
+- body:labelColor.red number
+- body:labelText string
+- body:motd string
+- body:smallLogo object
+- body:smallLogo.enable boolean
+- body:wideLogo object
+- body:wideLogo.enable boolean
+
+## S338-0002  DELETE /changeRequests/{changeRequestId}
+summary: Decline a request details
+desc: Refuse a change request
+- path:changeRequestId integer
+
+## S338-0003  POST /changeRequests/{changeRequestId}/accept
+summary: Accept a request details
+desc: Accept a change request
+- path:changeRequestId integer
+- body:status string enum[pending deployment|deployed]
+
+## S338-0004  POST /cve/list
+summary: Get a list of CVE details
+desc: Get CVE details, from a list passed as parameter
+- body:cveIds array<string>
+
+## S338-0005  POST /cve/update/
+summary: Update CVE database from remote source
+desc: Update CVE database from remote source
+- body:url string
+- body:years array<string>
+
+## S338-0006  POST /datasources/reload
+summary: Update properties from data sources
+desc: Update properties from all data source on all nodes. The call is asynchronous.
+
+## S338-0007  PUT /directives
+summary: Create a directive
+desc: Create a new directive from provided parameters. You can specify a source directive to clone it.
+- body:displayName string
+- body:enabled boolean
+- body:id string
+- body:longDescription string
+- body:parameters object
+- body:priority integer
+- body:shortDescription string
+- body:source string
+- body:system boolean
+- body:tags array<object>
+- body:tags[].name string
+- body:techniqueName string
+- body:techniqueVersion string
+
+## S338-0008  DELETE /directives/{directiveId}
+summary: Delete a directive
+desc: Delete a directive
+- path:directiveId string
+
+## S338-0009  PUT /groups/categories
+summary: Create a group category
+desc: Create a new group category
+- body:description string
+- body:id string
+- body:name string
+- body:parent string
+
+## S338-0010  DELETE /groups/categories/{groupCategoryId}
+summary: Delete group category
+desc: Delete a group category. It must have no child groups and no children categories.
+- path:groupCategoryId string
+
+## S338-0011  POST /groups/categories/{groupCategoryId}
+summary: Update group category details
+desc: Update detailed information about a group category
+- path:groupCategoryId string
+- body:description string
+- body:name string
+- body:parent string
+
+## S338-0012  DELETE /groups/{groupId}
+summary: Delete a group
+desc: Update detailed information about a group
+- path:groupId string
+
+## S338-0013  POST /groups/{groupId}
+summary: Update group details
+desc: Update detailed information about a group
+- path:groupId string
+- body:category string
+- body:description string
+- body:displayName string
+- body:dynamic boolean
+- body:enabled boolean
+- body:query object
+- body:query.composition string enum[and|or]
+- body:query.select string
+- body:query.where array<object>
+- body:query.where[].attribute string
+- body:query.where[].comparator string
+- body:query.where[].objectType string
+- body:query.where[].value string
+
+## S338-0014  POST /groups/{groupId}/reload
+summary: Reload a group
+desc: Recompute the content of a group
+- path:groupId string
+
+## S338-0015  POST /inventories/watcher/start
+summary: Start inventory watcher
+desc: Start the inventory watcher if necessary
+
+## S338-0016  PUT /nodes
+summary: Create one or several new nodes
+desc: Use the provided array of node information to create new nodes
+- body:agentKey object
+- body:agentKey.status string enum[certified|undefined]
+- body:agentKey.value string
+- body:hostname string
+- body:id string
+- body:ipAddresses array<string>
+- body:machineType string enum[vmware|physical|vm|solariszone|qemu|xen|aixlpar|hyperv|bsdjail]
+- body:os object
+- body:os.fullName string
+- body:os.name string enum[debian|kali|ubuntu|redhat|centos|fedora|suse|oracle|scientific|slackware|xp|vista]
+- body:os.servicePack string
+- body:os.type string enum[linux|windows|solaris|aix|freebsd|unknown]
+- body:os.version string
+- body:policyMode string enum[enforce|audit]
+- body:policyServerId string
+- body:properties array<object>
+- body:properties[].name string
+- body:properties[].value any
+- body:state string enum[enabled|ignored|empty-policies|initializing|preparing-eol]
+- body:status string enum[accepted|pending]
+- body:timezone object
+- body:timezone.name string
+- body:timezone.offset string
+
+## S338-0017  POST /nodes/applyPolicy
+summary: Trigger an agent run on all nodes
+desc: This API allows to trigger an agent run on all nodes. Response contains a json stating if agent could be started on each node, but not if the run went fine and do not display any output from it. You can see the result of the run in Rudder web interface or in the each agent logs.
+
+## S338-0018  POST /nodes/{nodeId}/fetchData
+summary: Update properties for one node from all data sources
+desc: Update properties from all data sources on one nodes. The call is asynchronous.
+- path:nodeId string
+
+## S338-0019  POST /parameters/{parameterId}
+summary: Update a parameter's value
+desc: Update the properties of a parameter
+- path:parameterId string
+
+## S338-0020  PUT /rules
+summary: Create a rule
+desc: Create a new rule. You can specify a source rule to clone it.
+- body:category string
+- body:directives array<string>
+- body:displayName string
+- body:enabled boolean
+- body:id string
+- body:longDescription string
+- body:shortDescription string
+- body:source string
+- body:system boolean
+- body:tags array<object>
+- body:tags[].name string
+- body:targets array<object>
+- body:targets[].exclude object
+- body:targets[].exclude.or array<string> enum[special:all|special:all_exceptPolicyServers|special:all_policyServers|policyServer:${policyServerId}|group:${nodeGroupId}]
+- body:targets[].include object
+- body:targets[].include.or array<string> enum[special:all|special:all_exceptPolicyServers|special:all_policyServers|policyServer:${policyServerId}|group:${nodeGroupId}]
+
+## S338-0021  POST /rules/categories/{ruleCategoryId}
+summary: Update rule category details
+desc: Update detailed information about a rule category
+- path:ruleCategoryId string
+- body:description string
+- body:name string
+- body:parent string
+
+## S338-0022  DELETE /rules/{ruleId}
+summary: Delete a rule
+desc: Delete a rule.
+- path:ruleId string
+
+## S338-0023  POST /rules/{ruleId}
+summary: Update a rule details
+desc: Update the details of a rule
+- path:ruleId string
+- body:category string
+- body:directives array<string>
+- body:displayName string
+- body:enabled boolean
+- body:id string
+- body:longDescription string
+- body:shortDescription string
+- body:system boolean
+- body:tags array<object>
+- body:tags[].name string
+- body:targets array<object>
+- body:targets[].exclude object
+- body:targets[].exclude.or array<string> enum[special:all|special:all_exceptPolicyServers|special:all_policyServers|policyServer:${policyServerId}|group:${nodeGroupId}]
+- body:targets[].include object
+- body:targets[].include.or array<string> enum[special:all|special:all_exceptPolicyServers|special:all_policyServers|policyServer:${policyServerId}|group:${nodeGroupId}]
+
+## S338-0024  POST /scaleoutrelay/promote/{nodeId}
+summary: Promote a node to relay
+desc: Promote a node to relay
+- path:nodeId string
+
+## S338-0025  POST /settings/allowed_networks/{nodeId}/diff
+summary: Modify allowed networks for a policy server
+desc: Add or delete allowed networks for a policy server
+- path:nodeId string
+- body:allowed_networks object
+- body:allowed_networks.add array<any>
+- body:allowed_networks.delete array<any>
+
+## S338-0026  POST /system/archives/{archiveKind}
+summary: Create an archive
+desc: Create new archive of the given kind
+- path:archiveKind string enum[full|groups|rules|directives|parameters]
+
+## S338-0027  POST /system/maintenance/purgeSoftware
+summary: Trigger batch for cleaning unreferenced software
+desc: Start the software cleaning batch asynchronously.
+
+## S338-0028  POST /system/reload
+summary: Reload both techniques and dynamic groups
+desc: Reload both techniques and dynamic groups
+
+## S338-0029  POST /system/reload/groups
+summary: Reload dynamic groups
+desc: Reload dynamic groups
+
+## S338-0030  POST /system/reload/techniques
+summary: Reload techniques
+desc: Reload techniques from local technique library
+
+## S338-0031  POST /system/update/policies
+summary: Trigger update of policies
+desc: Update configuration policies if needed
+
+## S338-0032  PUT /techniques
+summary: Create technique
+desc: Create a new technique in Rudder from a technique in the technique editor
+- body:calls array<object>
+- body:calls[].component string
+- body:calls[].condition string
+- body:calls[].disableReporting boolean
+- body:calls[].id string
+- body:calls[].method string
+- body:calls[].parameters array<object>
+- body:calls[].parameters[].name string
+- body:calls[].parameters[].value string
+- body:calls[].calls array<object>
+- body:calls[].calls[].component string
+- body:calls[].calls[].condition string
+- body:calls[].calls[].disableReporting boolean
+- body:calls[].calls[].id string
+- body:calls[].calls[].method string
+- body:calls[].calls[].parameters array<object>
+- body:calls[].calls[].calls array<object>
+- body:calls[].calls[].reportingLogic object
+- body:calls[].reportingLogic object
+- body:calls[].reportingLogic.type string
+- body:calls[].reportingLogic.value string
+- body:category string
+- body:description string
+- body:id string
+- body:name string
+- body:parameters array<object>
+- body:parameters[].description string
+- body:parameters[].id string
+- body:parameters[].mayBeEmpty boolean
+- body:parameters[].name string
+- body:resources array<object>
+- body:resources[].name string
+- body:resources[].state string
+- body:source string
+- body:version string
+
+## S338-0033  DELETE /techniques/{techniqueId}/{techniqueVersion}
+summary: Delete technique
+desc: Delete a technique from technique editor
+- path:techniqueId string
+- path:techniqueVersion string
+
+## S338-0034  POST /usermanagement
+summary: Add user
+desc: Add a new user
+- body:isPreHahed boolean enum[False|True]
+- body:password string
+- body:role array<string>
+- body:username string
+
+## S338-0035  POST /validatedUsers
+summary: Update validated user list
+desc: Add and remove user from validated users
+- body:validatedUsers array<string>
+
+## S338-0036  DELETE /validatedUsers/{username}
+summary: Remove an user from validated user list
+desc: The user is again subject to workflow validation
+- path:username string

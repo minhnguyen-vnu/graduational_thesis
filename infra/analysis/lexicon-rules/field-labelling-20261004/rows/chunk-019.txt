@@ -1,0 +1,767 @@
+## S339-0001  POST /comments/{id}/delete
+desc: Deletes a comment. Use an access_token with write_access to delete a comment. In practice, this method will never return an object.
+- path:id integer
+- query:filter string
+- query:callback string
+- query:site string
+- query:preview boolean
+
+## S339-0002  POST /comments/{id}/edit
+desc: Edit an existing comment. Use an access_token with write_access to edit an existing comment. This method return the created comment.
+- path:id integer
+- query:filter string
+- query:callback string
+- query:site string
+- query:body string
+- query:preview boolean
+
+## S339-0003  POST /posts/{id}/comments/add
+desc: Create a new comment. Use an access_token with write_access to create a new comment on a post. This method returns the created comment.
+- path:id integer
+- query:filter string
+- query:callback string
+- query:site string
+- query:body string
+- query:preview boolean
+
+## S340-0001  DELETE /annotation_layer/
+desc: Deletes multiple annotation layers in a bulk operation.
+- query:q any
+
+## S340-0002  POST /annotation_layer/
+desc: Create an Annotation layer
+- body:descr string
+- body:name string
+
+## S340-0003  DELETE /annotation_layer/{pk}
+desc: Delete Annotation layer
+- path:pk integer
+
+## S340-0004  PUT /annotation_layer/{pk}
+desc: Update an Annotation layer
+- path:pk integer
+- body:descr string
+- body:name string
+
+## S340-0005  DELETE /annotation_layer/{pk}/annotation/
+desc: Deletes multiple annotation in a bulk operation.
+- path:pk integer
+- query:q any
+
+## S340-0006  POST /annotation_layer/{pk}/annotation/
+desc: Create an Annotation layer
+- path:pk integer
+- body:end_dttm string
+- body:json_metadata string
+- body:long_descr string
+- body:short_descr string
+- body:start_dttm string
+
+## S340-0007  DELETE /annotation_layer/{pk}/annotation/{annotation_id}
+desc: Delete Annotation layer
+- path:pk integer
+- path:annotation_id integer
+
+## S340-0008  POST /cachekey/invalidate
+desc: Takes a list of datasources, finds the associated cache records and invalidates them and removes the database records
+- body:datasource_uids array<string>
+- body:datasources array<object>
+- body:datasources[].database_name string
+- body:datasources[].datasource_name string
+- body:datasources[].datasource_type string enum[druid|table|view]
+- body:datasources[].schema string
+
+## S340-0009  POST /chart/
+desc: Create a new Chart.
+- body:cache_timeout integer
+- body:dashboards array<integer>
+- body:datasource_id integer
+- body:datasource_name string
+- body:datasource_type string enum[druid|table|view]
+- body:description string
+- body:owners array<integer>
+- body:params string
+- body:query_context string
+- body:slice_name string
+- body:viz_type string
+
+## S340-0010  POST /chart/data
+desc: Takes a query context constructed in the client and returns payload data response for the given query.
+- body:datasource object
+- body:datasource.id integer
+- body:datasource.type string enum[druid|table]
+- body:force boolean
+- body:queries array<object>
+- body:queries[].annotation_layers array<object>
+- body:queries[].annotation_layers[].annotationType string enum[FORMULA|INTERVAL|EVENT|TIME_SERIES]
+- body:queries[].annotation_layers[].color string
+- body:queries[].annotation_layers[].descriptionColumns array<string>
+- body:queries[].annotation_layers[].hideLine boolean
+- body:queries[].annotation_layers[].intervalEndColumn string
+- body:queries[].annotation_layers[].name string
+- body:queries[].annotation_layers[].opacity string enum[|opacityLow|opacityMedium|opacityHigh]
+- body:queries[].annotation_layers[].overrides object
+- body:queries[].annotation_layers[].show boolean
+- body:queries[].annotation_layers[].showMarkers boolean
+- body:queries[].annotation_layers[].sourceType string enum[|line|NATIVE|table]
+- body:queries[].annotation_layers[].style string enum[dashed|dotted|solid|longDashed]
+- body:queries[].annotation_layers[].timeColumn string
+- body:queries[].annotation_layers[].titleColumn string
+- body:queries[].annotation_layers[].value any
+- body:queries[].annotation_layers[].width number
+- body:queries[].applied_time_extras object
+- body:queries[].apply_fetch_values_predicate boolean
+- body:queries[].columns array<string>
+- body:queries[].datasource object
+- body:queries[].datasource.id integer
+- body:queries[].datasource.type string enum[druid|table]
+- body:queries[].druid_time_origin string
+- body:queries[].extras object
+- body:queries[].extras.druid_time_origin string
+- body:queries[].extras.having string
+- body:queries[].extras.having_druid array<object>
+- body:queries[].extras.relative_end string enum[today|now]
+- body:queries[].extras.relative_start string enum[today|now]
+- body:queries[].extras.time_grain_sqla string enum[PT1S|PT5S|PT30S|PT1M|PT5M|PT10M|PT15M|PT0.5H|PT1H|PT6H|P1D|P1W]
+- body:queries[].extras.time_range_endpoints array<any>
+- body:queries[].extras.where string
+- body:queries[].filters array<object>
+- body:queries[].filters[].col string
+- body:queries[].filters[].op string enum[==|!=|>|<|>=|<=|LIKE|ILIKE|IS NULL|IS NOT NULL|IN|NOT IN]
+- body:queries[].filters[].val any
+- body:queries[].granularity string
+- body:queries[].granularity_sqla string
+- body:queries[].groupby array<string>
+- body:queries[].having string
+- body:queries[].having_filters array<object>
+- body:queries[].having_filters[].col string
+- body:queries[].having_filters[].op string enum[==|!=|>|<|>=|<=|LIKE|ILIKE|IS NULL|IS NOT NULL|IN|NOT IN]
+- body:queries[].having_filters[].val any
+- body:queries[].is_rowcount boolean
+- body:queries[].is_timeseries boolean
+- body:queries[].metrics array<any>
+- body:queries[].order_desc boolean
+- body:queries[].orderby array<any>
+- body:queries[].post_processing array<object>
+- body:queries[].post_processing[].operation string enum[aggregate|boxplot|contribution|cum|geodetic_parse|geohash_decode|geohash_encode|pivot|prophet|rolling|select|sort]
+- body:queries[].post_processing[].options object
+- body:queries[].result_type any
+- body:queries[].row_limit integer
+- body:queries[].row_offset integer
+- body:queries[].time_offsets array<string>
+- body:queries[].time_range string
+- body:queries[].time_shift string
+- body:queries[].timeseries_limit integer
+- body:queries[].timeseries_limit_metric any
+- body:queries[].url_params object
+- body:queries[].where string
+- body:result_format any
+- body:result_type any
+
+## S340-0011  POST /chart/import/
+- body:formData string
+- body:overwrite boolean
+- body:passwords string
+
+## S340-0012  DELETE /chart/{pk}
+desc: Deletes a Chart.
+- path:pk integer
+
+## S340-0013  DELETE /css_template/
+desc: Deletes multiple css templates in a bulk operation.
+- query:q any
+
+## S340-0014  DELETE /dashboard/
+desc: Deletes multiple Dashboards in a bulk operation.
+- query:q any
+
+## S340-0015  POST /dashboard/
+desc: Create a new Dashboard.
+- body:css string
+- body:dashboard_title string
+- body:json_metadata string
+- body:owners array<integer>
+- body:position_json string
+- body:published boolean
+- body:roles array<integer>
+- body:slug string
+
+## S340-0016  POST /dashboard/import/
+- body:formData string
+- body:overwrite boolean
+- body:passwords string
+
+## S340-0017  DELETE /dashboard/{pk}
+desc: Deletes a Dashboard.
+- path:pk integer
+
+## S340-0018  PUT /dashboard/{pk}
+desc: Changes a Dashboard.
+- path:pk integer
+- body:css string
+- body:dashboard_title string
+- body:json_metadata string
+- body:owners array<integer>
+- body:position_json string
+- body:published boolean
+- body:roles array<integer>
+- body:slug string
+
+## S340-0019  POST /database/import/
+- body:formData string
+- body:overwrite boolean
+- body:passwords string
+
+## S340-0020  POST /database/test_connection
+desc: Tests a database connection
+- body:configuration_method any
+- body:database_name string
+- body:encrypted_extra string
+- body:engine string
+- body:extra string
+- body:impersonate_user boolean
+- body:parameters object
+- body:server_cert string
+- body:sqlalchemy_uri string
+
+## S340-0021  DELETE /database/{pk}
+desc: Deletes a Database.
+- path:pk integer
+
+## S340-0022  PUT /database/{pk}
+desc: Changes a Database.
+- path:pk integer
+- body:allow_csv_upload boolean
+- body:allow_ctas boolean
+- body:allow_cvas boolean
+- body:allow_dml boolean
+- body:allow_multi_schema_metadata_fetch boolean
+- body:allow_run_async boolean
+- body:cache_timeout integer
+- body:configuration_method any
+- body:database_name string
+- body:encrypted_extra string
+- body:engine string
+- body:expose_in_sqllab boolean
+- body:extra string
+- body:force_ctas_schema string
+- body:impersonate_user boolean
+- body:parameters object
+- body:server_cert string
+- body:sqlalchemy_uri string
+
+## S340-0023  DELETE /dataset/
+desc: Deletes multiple Datasets in a bulk operation.
+- query:q any
+
+## S340-0024  POST /dataset/
+desc: Create a new Dataset
+- body:database integer
+- body:owners array<integer>
+- body:schema string
+- body:table_name string
+
+## S340-0025  POST /dataset/import/
+- body:formData string
+- body:overwrite boolean
+- body:passwords string
+
+## S340-0026  PUT /dataset/{pk}
+desc: Changes a Dataset
+- path:pk integer
+- query:override_columns boolean
+- body:cache_timeout integer
+- body:columns array<object>
+- body:columns[].column_name string
+- body:columns[].description string
+- body:columns[].expression string
+- body:columns[].filterable boolean
+- body:columns[].groupby boolean
+- body:columns[].id integer
+- body:columns[].is_active boolean
+- body:columns[].is_dttm boolean
+- body:columns[].python_date_format string
+- body:columns[].type string
+- body:columns[].uuid string
+- body:columns[].verbose_name string
+- body:database_id integer
+- body:default_endpoint string
+- body:description string
+- body:extra string
+- body:fetch_values_predicate string
+- body:filter_select_enabled boolean
+- body:is_sqllab_view boolean
+- body:main_dttm_col string
+- body:metrics array<object>
+- body:metrics[].d3format string
+- body:metrics[].description string
+- body:metrics[].expression string
+- body:metrics[].id integer
+- body:metrics[].metric_name string
+- body:metrics[].metric_type string
+- body:metrics[].warning_text string
+- body:offset integer
+- body:owners array<integer>
+- body:schema string
+- body:sql string
+- body:table_name string
+- body:template_params string
+
+## S340-0027  DELETE /dataset/{pk}/column/{column_id}
+desc: Delete a Dataset column
+- path:pk integer
+- path:column_id integer
+
+## S340-0028  PUT /dataset/{pk}/refresh
+desc: Refreshes and updates columns of a dataset
+- path:pk integer
+
+## S340-0029  POST /log/
+- body:id integer
+
+## S340-0030  POST /report/
+desc: Create a report schedule
+- body:active boolean
+- body:chart integer
+- body:context_markdown string
+- body:creation_method any
+- body:crontab string
+- body:dashboard integer
+- body:database integer
+- body:description string
+- body:grace_period integer
+- body:log_retention integer
+- body:name string
+- body:owners array<integer>
+- body:recipients array<object>
+- body:recipients[].recipient_config_json object
+- body:recipients[].recipient_config_json.target string
+- body:recipients[].type string enum[Email|Slack]
+- body:report_format string enum[PNG|CSV|TEXT]
+- body:sql string
+- body:timezone string
+- body:type string enum[Alert|Report]
+- body:validator_config_json object
+- body:validator_config_json.op string enum[<|<=|>|>=|==|!=]
+- body:validator_config_json.threshold integer
+- body:validator_type string enum[not null|operator]
+- body:working_timeout integer
+
+## S340-0031  PUT /report/{pk}
+desc: Update a report schedule
+- path:pk integer
+- body:active boolean
+- body:chart integer
+- body:context_markdown string
+- body:creation_method any
+- body:crontab string
+- body:dashboard integer
+- body:database integer
+- body:description string
+- body:grace_period integer
+- body:log_retention integer
+- body:name string
+- body:owners array<integer>
+- body:recipients array<object>
+- body:recipients[].recipient_config_json object
+- body:recipients[].recipient_config_json.target string
+- body:recipients[].type string enum[Email|Slack]
+- body:report_format string enum[PNG|CSV|TEXT]
+- body:sql string
+- body:timezone string
+- body:type string enum[Alert|Report]
+- body:validator_config_json object
+- body:validator_config_json.op string enum[<|<=|>|>=|==|!=]
+- body:validator_config_json.threshold integer
+- body:validator_type string enum[not null|operator]
+- body:working_timeout integer
+
+## S340-0032  POST /saved_query/
+desc: Create a saved query
+- body:db_id integer
+- body:description string
+- body:label string
+- body:schema string
+- body:sql string
+
+## S340-0033  DELETE /saved_query/{pk}
+desc: Delete saved query
+- path:pk integer
+
+## S340-0034  PUT /saved_query/{pk}
+desc: Update a saved query
+- path:pk integer
+- body:db_id integer
+- body:description string
+- body:label string
+- body:schema string
+- body:sql string
+
+## S340-0035  POST /security/login
+desc: Authenticate and get a JWT access and refresh token
+- body:password string
+- body:provider string enum[db|ldap]
+- body:refresh boolean
+- body:username string
+
+## S340-0036  POST /security/refresh
+desc: Use the refresh token to get a new JWT access token
+
+## S341-0001  POST /gen/clients/{language}
+summary: Generates a client library
+desc: Accepts a `GeneratorInput` options map for spec location and generation options
+- path:language string enum[ada|akka-scala|android|apex|bash|clojure|cpprest|csharp|csharp-dotnet2|cwiki|dart|dart-jaguar]
+- body:authorizationValue object
+- body:authorizationValue.keyName string
+- body:authorizationValue.type string
+- body:authorizationValue.urlMatcher object
+- body:authorizationValue.value string
+- body:options object
+- body:securityDefinition object
+- body:securityDefinition.description string
+- body:securityDefinition.type string
+- body:spec object
+- body:swaggerUrl string
+- body:usingFlattenSpec boolean
+
+## S341-0002  POST /gen/servers/{framework}
+summary: Generates a server library
+desc: Accepts a `GeneratorInput` options map for spec location and generation options.
+- path:framework string enum[ada-server|aspnetcore|erlang-server|finch|go-server|haskell|inflector|java-pkmst|java-play-framework|java-vertx|jaxrs|jaxrs-cxf]
+- body:authorizationValue object
+- body:authorizationValue.keyName string
+- body:authorizationValue.type string
+- body:authorizationValue.urlMatcher object
+- body:authorizationValue.value string
+- body:options object
+- body:securityDefinition object
+- body:securityDefinition.description string
+- body:securityDefinition.type string
+- body:spec object
+- body:swaggerUrl string
+- body:usingFlattenSpec boolean
+
+## S342-0001  DELETE /apis/{owner}/{api}
+summary: Delete an API
+- path:owner string
+- path:api string
+
+## S342-0002  POST /apis/{owner}/{api}
+summary: Create or update an API
+desc: Use this operation to create a new API or update an existing API by uploading its OpenAPI definition in YAML or JSON format. The authenticating user must have permissions to create or update APIs in the specified `owner` account. The API name and version must follow SwaggerHub naming rules, otherwise the request will be rejected. Refer to: * [API name format](https://support.smartbear.com/swaggerh
+- path:owner string
+- path:api string
+- query:isPrivate boolean
+- query:version string
+- query:force boolean
+- body:(body) string
+
+## S342-0003  POST /apis/{owner}/{api}/rename
+summary: Rename an API
+desc: The new name must follow the [naming rules](https://support.smartbear.com/swaggerhub/docs/apis/creating-api.html).
+- path:owner string
+- path:api string
+- query:newName string
+
+## S342-0004  PUT /apis/{owner}/{api}/settings/default
+summary: Set the default API version
+- path:owner string
+- path:api string
+- body:version string
+
+## S342-0005  DELETE /apis/{owner}/{api}/{version}
+summary: Delete an API version
+- path:owner string
+- path:api string
+- path:version string
+
+## S342-0006  POST /apis/{owner}/{api}/{version}/comments
+summary: Add a new comment
+- path:owner string
+- path:api string
+- path:version string
+- body:body string
+- body:position integer
+- body:replies array<object>
+- body:replies[].body string
+
+## S342-0007  POST /apis/{owner}/{api}/{version}/comments/batch
+summary: Bulk update comments
+- path:owner string
+- path:api string
+- path:version string
+- body:addComment array<object>
+- body:addComment[].body string
+- body:addComment[].position integer
+- body:addComment[].replies array<object>
+- body:addComment[].replies[].body string
+- body:addReply object
+- body:deleteComment array<string>
+- body:deleteReply object
+- body:updateComment object
+- body:updateReply object
+- body:updateStatus object
+
+## S342-0008  DELETE /apis/{owner}/{api}/{version}/comments/{comment}
+summary: Delete a comment
+- path:owner string
+- path:api string
+- path:version string
+- path:comment string
+
+## S342-0009  PATCH /apis/{owner}/{api}/{version}/comments/{comment}
+summary: Update a comment
+- path:owner string
+- path:api string
+- path:version string
+- path:comment string
+- body:body string
+- body:position integer
+
+## S342-0010  POST /apis/{owner}/{api}/{version}/comments/{comment}/replies
+summary: Reply to a comment
+- path:owner string
+- path:api string
+- path:version string
+- path:comment string
+- body:body string
+
+## S342-0011  DELETE /apis/{owner}/{api}/{version}/comments/{comment}/replies/{reply}
+summary: Delete a comment reply
+- path:owner string
+- path:api string
+- path:version string
+- path:comment string
+- path:reply string
+
+## S342-0012  POST /apis/{owner}/{api}/{version}/fork
+summary: Fork an API
+desc: Creates a [fork](https://support.smartbear.com/swaggerhub/docs/apis/forking-api.html) of the specified API definition and version. The fork can be created as a new API, or as a new version in another existing API.
+- path:owner string
+- path:api string
+- path:version string
+- body:name string
+- body:owner string
+- body:private boolean
+- body:project string
+- body:version string
+
+## S342-0013  POST /apis/{owner}/{api}/{version}/integrations
+summary: Create an integration for the specified API and version
+desc: Use this operation to configure an integration for a specific API version. The integration type is determined by which object is provided in the request body (specifically, by the `configType` value). For a list of fields that need to be provided in the request body, see the descriptions of the following objects in the "Models" section at the bottom of API docs: * `AmazonApiGatewayIntegration` * `
+- path:owner string
+- path:api string
+- path:version string
+- body:(body) object
+
+## S342-0014  DELETE /apis/{owner}/{api}/{version}/integrations/{integrationId}
+summary: Delete an integration
+desc: Delete an existing integration specified by its ID.
+- path:owner string
+- path:api string
+- path:version string
+- path:integrationId string
+
+## S342-0015  PATCH /apis/{owner}/{api}/{version}/integrations/{integrationId}
+summary: Partially update integration settings
+desc: Use this operation to partially update integration settings for the specified API and integration ID. For example, enable or disable an integration, or specify a new access token. Only the fields provided in the request body will be updated; other settings will remain unchanged. For a list of fields that can be updated, see the following objects in the "Models" section at the bottom of API docs: *
+- path:owner string
+- path:api string
+- path:version string
+- path:integrationId string
+- body:(body) object
+
+## S342-0016  POST /apis/{owner}/{api}/{version}/integrations/{integrationId}/execute
+summary: Run an integration
+desc: Use this operation to trigger an existing integration. Source control integrations push to (not pull from) the configured repository and branch. You can optionally provide a custom commit message. **Note:** Webhooks cannot be triggered by this operation, they are only triggered when an API is saved or published. An attempt to trigger a webhook will return status code 400.
+- path:owner string
+- path:api string
+- path:version string
+- path:integrationId string
+- query:commitMessage string
+
+## S342-0017  PUT /apis/{owner}/{api}/{version}/settings/lifecycle
+summary: Publish or unpublish an API version
+- path:owner string
+- path:api string
+- path:version string
+- query:force boolean
+- body:published boolean
+
+## S342-0018  DELETE /domains/{owner}/{domain}
+summary: Delete a domain
+- path:owner string
+- path:domain string
+- query:force boolean
+
+## S342-0019  POST /domains/{owner}/{domain}/rename
+summary: Rename a domain
+desc: The new name must follow the [naming rules](https://support.smartbear.com/swaggerhub/docs/apis/creating-api.html).
+- path:owner string
+- path:domain string
+- query:newName string
+- query:force boolean
+
+## S342-0020  DELETE /domains/{owner}/{domain}/{version}
+summary: Delete a domain version
+- path:owner string
+- path:domain string
+- path:version string
+- query:force boolean
+
+## S342-0021  POST /domains/{owner}/{domain}/{version}/comments
+summary: Add a new comment
+- path:owner string
+- path:domain string
+- path:version string
+- body:body string
+- body:position integer
+- body:replies array<object>
+- body:replies[].body string
+
+## S342-0022  POST /domains/{owner}/{domain}/{version}/comments/batch
+summary: Bulk update comments
+- path:owner string
+- path:domain string
+- path:version string
+- body:addComment array<object>
+- body:addComment[].body string
+- body:addComment[].position integer
+- body:addComment[].replies array<object>
+- body:addComment[].replies[].body string
+- body:addReply object
+- body:deleteComment array<string>
+- body:deleteReply object
+- body:updateComment object
+- body:updateReply object
+- body:updateStatus object
+
+## S342-0023  DELETE /domains/{owner}/{domain}/{version}/comments/{comment}
+summary: Delete a comment
+- path:owner string
+- path:domain string
+- path:version string
+- path:comment string
+
+## S342-0024  POST /domains/{owner}/{domain}/{version}/comments/{comment}/replies
+summary: Reply to a comment
+- path:owner string
+- path:domain string
+- path:version string
+- path:comment string
+- body:body string
+
+## S342-0025  DELETE /domains/{owner}/{domain}/{version}/comments/{comment}/replies/{reply}
+summary: Delete a comment reply
+- path:owner string
+- path:domain string
+- path:version string
+- path:comment string
+- path:reply string
+
+## S342-0026  PATCH /domains/{owner}/{domain}/{version}/comments/{comment}/replies/{reply}
+summary: Update a comment reply
+- path:owner string
+- path:domain string
+- path:version string
+- path:comment string
+- path:reply string
+- body:body string
+
+## S342-0027  POST /domains/{owner}/{domain}/{version}/fork
+summary: Fork a domain
+desc: Creates a [fork](https://support.smartbear.com/swaggerhub/docs/apis/forking-api.html) of the specified domain definition and version. The fork can be created as a new domain, or as a new version in another existing domain.
+- path:owner string
+- path:domain string
+- path:version string
+- body:name string
+- body:owner string
+- body:private boolean
+- body:project string
+- body:version string
+
+## S342-0028  PUT /domains/{owner}/{domain}/{version}/settings/lifecycle
+summary: Publish or unpublish a domain version
+- path:owner string
+- path:domain string
+- path:version string
+- query:force boolean
+- body:published boolean
+
+## S342-0029  PUT /domains/{owner}/{domain}/{version}/settings/private
+summary: Set the visibility (public or private) of a domain version
+- path:owner string
+- path:domain string
+- path:version string
+- query:force boolean
+- body:private boolean
+
+## S342-0030  POST /projects/{owner}
+summary: Create a project in an organization
+- path:owner string
+- body:apis array<string>
+- body:description string
+- body:domains array<string>
+- body:name string
+
+## S342-0031  PUT /projects/{owner}/{projectId}
+summary: Update a project
+desc: Use this operation to update an existing project, for example, add or remove APIs, or change the project description. When updating a project, the `apis` and `domains` lists _replace_ the existing ones. This means that to add new APIs and domains to a project, you need to send the `apis` and `domains` lists containing both the existing and new APIs and domains. To add a single API or domain to a p
+- path:owner string
+- path:projectId string
+- body:apis array<string>
+- body:description string
+- body:domains array<string>
+- body:name string
+
+## S342-0032  PUT /projects/{owner}/{projectId}/members
+summary: Update a project's members list
+desc: When updating a project, the `members` list _replaces_ the existing one. This means that to add new members to a project, you need to send the `members` list containing both the existing and new members.
+- path:owner string
+- path:projectId string
+- body:members array<object>
+- body:members[].name string
+- body:members[].roles array<string> enum[MEMBER|OWNER]
+- body:members[].type string enum[USER|TEAM]
+
+## S342-0033  POST /templates/{owner}/{templateId}
+summary: Create or update a template
+desc: Saves the provided template definition; the owner must match the token owner. The version will be extracted from the template definitions itself.
+- path:owner string
+- path:templateId string
+- query:isPrivate boolean
+- query:version string
+- query:force boolean
+- query:projectName string
+- body:(body) string
+
+## S342-0034  POST /templates/{owner}/{templateId}/rename
+summary: Rename a template
+- path:owner string
+- path:templateId string
+- query:newName string
+
+## S342-0035  POST /templates/{owner}/{templateId}/{version}/comments/batch
+summary: Update the list of comments for a template
+- path:owner string
+- path:templateId string
+- path:version string
+- body:addComment array<object>
+- body:addComment[].body string
+- body:addComment[].position integer
+- body:addComment[].replies array<object>
+- body:addComment[].replies[].body string
+- body:addReply object
+- body:deleteComment array<string>
+- body:deleteReply object
+- body:updateComment object
+- body:updateReply object
+- body:updateStatus object
+
+## S342-0036  PUT /templates/{owner}/{templateId}/{version}/settings/lifecycle
+summary: Update lifecycle settings for a template
+- path:owner string
+- path:templateId string
+- path:version string
+- query:force boolean
+- body:published boolean

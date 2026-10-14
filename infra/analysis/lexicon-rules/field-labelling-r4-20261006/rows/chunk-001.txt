@@ -1,0 +1,712 @@
+## S200-N0003  POST /api/rest/v1/asset-categories
+desc: Create a new PAM asset category | This endpoint allows you to create a new PAM asset category.
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:parent string
+
+## S200-N0004  PATCH /api/rest/v1/asset-categories/{code}
+desc: Update/create a PAM asset category | This endpoint allows you to update a given PAM asset category. Know more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no category exists for the given code, it creates it.
+- path:code string
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:parent string
+
+## S200-N0007  PATCH /api/rest/v1/asset-families/{asset_family_code}/assets/{code}
+desc: Update/create an asset | This endpoint allows you to update a given asset of a given asset family. Learn more about the <a href="/documentation/update.html#patch-asset-attribute-values">Update behavior</a>. Note that if the asset does not already exist for the given asset family, it creates it. This endpoint is case sensitive on the asset family code.
+- path:asset_family_code string
+- path:code string
+- body:code string
+- body:created string
+- body:updated string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].channel string
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].locale string
+
+## S200-N0009  PATCH /api/rest/v1/asset-families/{asset_family_code}/attributes/{code}
+desc: Update/create an attribute of a given asset family | This endpoint allows you to update a given attribute for a given asset family. Note that if the attribute does not already exist for the given asset family, it creates it.
+- path:asset_family_code string
+- path:code string
+- body:allowed_extensions array<string>
+- body:code string
+- body:decimals_allowed boolean
+- body:is_read_only boolean
+- body:is_required_for_completeness boolean
+- body:is_rich_text_editor boolean
+- body:is_textarea boolean
+- body:labels object
+- body:labels.localeCode string
+- body:max_characters integer
+- body:max_file_size string
+- body:max_value string
+- body:media_type string enum[image|pdf|youtube|vimeo|other]
+- body:min_value string
+- body:prefix string
+- body:suffix string
+- body:type string enum[text|media_link|number|media_file|single_option|multiple_options|reference_entity_single_link|reference_entity_multiple_links|boolean]
+- body:validation_regexp string
+- body:validation_rule string enum[email|url|regexp|none]
+- body:value_per_channel boolean
+- body:value_per_locale boolean
+
+## S200-N0013  PATCH /api/rest/v1/assets
+desc: Update/create several PAM assets | This endpoint allows you to update several PAM assets at once.
+- body:categories array<string>
+- body:code string
+- body:description string
+- body:end_of_use string
+- body:localizable boolean
+- body:reference_files array<object>
+- body:reference_files[]._link object
+- body:reference_files[]._link.download object
+- body:reference_files[]._link.self object
+- body:reference_files[].code string
+- body:reference_files[].locale string
+- body:tags array<string>
+- body:variation_files array<object>
+- body:variation_files[]._link object
+- body:variation_files[]._link.download object
+- body:variation_files[]._link.self object
+- body:variation_files[].code string
+- body:variation_files[].locale string
+- body:variation_files[].scope string
+
+## S200-N0017  PATCH /api/rest/v1/assets/{code}
+desc: Update/create a PAM asset | This endpoint allows you to update a given PAM asset. Know more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no asset exists for the given code, it creates it.
+- path:code string
+- body:categories array<string>
+- body:code string
+- body:description string
+- body:end_of_use string
+- body:localizable boolean
+- body:reference_files array<object>
+- body:reference_files[]._link object
+- body:reference_files[]._link.download object
+- body:reference_files[]._link.self object
+- body:reference_files[].code string
+- body:reference_files[].locale string
+- body:tags array<string>
+- body:variation_files array<object>
+- body:variation_files[]._link object
+- body:variation_files[]._link.download object
+- body:variation_files[]._link.self object
+- body:variation_files[].code string
+- body:variation_files[].locale string
+- body:variation_files[].scope string
+
+## S200-N0018  PATCH /api/rest/v1/association-types
+desc: Update/create several association types | This endpoint allows you to update and/or create several association types at once.
+- body:code string
+- body:is_quantified boolean
+- body:is_two_way boolean
+- body:labels object
+- body:labels.localeCode string
+
+## S200-N0019  POST /api/rest/v1/association-types
+desc: Create a new association type | This endpoint allows you to create a new association type.
+- body:code string
+- body:is_quantified boolean
+- body:is_two_way boolean
+- body:labels object
+- body:labels.localeCode string
+
+## S200-N0020  PATCH /api/rest/v1/association-types/{code}
+desc: Update/create an association type | This endpoint allows you to update a given association type. Know more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no association type exists for the given code, it creates it.
+- path:code string
+- body:code string
+- body:is_quantified boolean
+- body:is_two_way boolean
+- body:labels object
+- body:labels.localeCode string
+
+## S200-N0025  POST /api/rest/v1/attributes
+desc: Create a new attribute | This endpoint allows you to create a new attribute.
+- body:allowed_extensions array<string>
+- body:available_locales array<string>
+- body:code string
+- body:date_max string
+- body:date_min string
+- body:decimals_allowed boolean
+- body:default_metric_unit string
+- body:default_value boolean
+- body:group string
+- body:group_labels object
+- body:group_labels.localeCode string
+- body:labels object
+- body:labels.localeCode string
+- body:localizable boolean
+- body:max_characters integer
+- body:max_file_size string
+- body:metric_family string
+- body:negative_allowed boolean
+- body:number_max string
+- body:number_min string
+- body:reference_data_name string
+- body:scopable boolean
+- body:sort_order integer
+- body:table_configuration array<object>
+- body:table_configuration[].code string
+- body:table_configuration[].data_type string enum[select|text|number|boolean]
+- body:table_configuration[].is_required_for_completeness boolean
+- body:table_configuration[].labels object
+- body:table_configuration[].labels.localeCode string
+- body:table_configuration[].validations object
+- body:table_configuration[].validations.decimals_allowed boolean
+- body:table_configuration[].validations.max number
+- body:table_configuration[].validations.max_length number
+- body:table_configuration[].validations.min number
+- body:type string enum[pim_catalog_identifier|pim_catalog_metric|pim_catalog_number|pim_catalog_reference_data_multi_select|pim_catalog_reference_data_simple_select|pim_catalog_simpleselect|pim_catalog_multiselect|pim_catalog_date|pim_catalog_textarea|pim_catalog_text|pim_catalog_file|pim_catalog_image]
+- body:unique boolean
+- body:useable_as_grid_filter boolean
+- body:validation_regexp string
+- body:validation_rule string
+- body:wysiwyg_enabled boolean
+
+## S200-N0029  PATCH /api/rest/v1/attributes/{code}
+desc: Update/create an attribute | This endpoint allows you to update a given attribute. Know more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no attribute exists for the given code, it creates it.
+- path:code string
+- body:allowed_extensions array<string>
+- body:available_locales array<string>
+- body:code string
+- body:date_max string
+- body:date_min string
+- body:decimals_allowed boolean
+- body:default_metric_unit string
+- body:default_value boolean
+- body:group string
+- body:group_labels object
+- body:group_labels.localeCode string
+- body:labels object
+- body:labels.localeCode string
+- body:localizable boolean
+- body:max_characters integer
+- body:max_file_size string
+- body:metric_family string
+- body:negative_allowed boolean
+- body:number_max string
+- body:number_min string
+- body:reference_data_name string
+- body:scopable boolean
+- body:sort_order integer
+- body:table_configuration array<object>
+- body:table_configuration[].code string
+- body:table_configuration[].data_type string enum[select|text|number|boolean]
+- body:table_configuration[].is_required_for_completeness boolean
+- body:table_configuration[].labels object
+- body:table_configuration[].labels.localeCode string
+- body:table_configuration[].validations object
+- body:table_configuration[].validations.decimals_allowed boolean
+- body:table_configuration[].validations.max number
+- body:table_configuration[].validations.max_length number
+- body:table_configuration[].validations.min number
+- body:type string enum[pim_catalog_identifier|pim_catalog_metric|pim_catalog_number|pim_catalog_reference_data_multi_select|pim_catalog_reference_data_simple_select|pim_catalog_simpleselect|pim_catalog_multiselect|pim_catalog_date|pim_catalog_textarea|pim_catalog_text|pim_catalog_file|pim_catalog_image]
+- body:unique boolean
+- body:useable_as_grid_filter boolean
+- body:validation_regexp string
+- body:validation_rule string
+- body:wysiwyg_enabled boolean
+
+## S200-N0030  POST /api/rest/v1/catalogs
+desc: Create a new catalog | This endpoint allows you to create a new catalog.
+- body:name string
+
+## S200-N0032  PATCH /api/rest/v1/catalogs/{id}
+desc: Update a catalog | This endpoint allows you to update a catalog.
+- path:id string
+- body:name string
+
+## S200-N0033  PATCH /api/rest/v1/categories
+desc: Update/create several categories | This endpoint allows you to update several categories at once.
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:parent string
+- body:position integer
+- body:updated string
+- body:values object
+- body:values.attributeCode|attributeUuid|channelCode|localeCode array<object>
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].attribute_code string
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].channel string
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].data object
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].locale string
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].type string
+
+## S200-N0035  PATCH /api/rest/v1/categories/{code}
+desc: Update/create a category | This endpoint allows you to update a given category. Know more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no category exists for the given code, it creates it.
+- path:code string
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:parent string
+- body:position integer
+- body:updated string
+- body:values object
+- body:values.attributeCode|attributeUuid|channelCode|localeCode array<object>
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].attribute_code string
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].channel string
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].data object
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].locale string
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].type string
+
+## S200-N0037  POST /api/rest/v1/channels
+desc: Create a new channel | This endpoint allows you to create a new channel.
+- body:category_tree string
+- body:code string
+- body:conversion_units object
+- body:conversion_units.attributeCode string
+- body:currencies array<string>
+- body:labels object
+- body:labels.localeCode string
+- body:locales array<string>
+
+## S200-N0038  PATCH /api/rest/v1/channels/{code}
+desc: Update/create a channel | This endpoint allows you to update a given channel. Know more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no channel exists for the given code, it creates it.
+- path:code string
+- body:category_tree string
+- body:code string
+- body:conversion_units object
+- body:conversion_units.attributeCode string
+- body:currencies array<string>
+- body:labels object
+- body:labels.localeCode string
+- body:locales array<string>
+
+## S200-N0040  POST /api/rest/v1/families
+desc: Create a new family | This endpoint allows you to create a new family.
+- body:attribute_as_image string
+- body:attribute_as_label string
+- body:attribute_requirements object
+- body:attribute_requirements.channelCode array<string>
+- body:attributes array<string>
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+
+## S200-N0041  PATCH /api/rest/v1/families/{code}
+desc: Update/create a family | This endpoint allows you to update a given family. Know more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no family exists for the given code, it creates it.
+- path:code string
+- body:attribute_as_image string
+- body:attribute_as_label string
+- body:attribute_requirements object
+- body:attribute_requirements.channelCode array<string>
+- body:attributes array<string>
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+
+## S200-N0042  PATCH /api/rest/v1/families/{family_code}/variants
+desc: Update/create several family variants | This endpoint allows you to update and/or create several family variants at once, for a given family.
+- path:family_code string
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:variant_attribute_sets array<object>
+- body:variant_attribute_sets[].attributes array<string>
+- body:variant_attribute_sets[].axes array<string>
+- body:variant_attribute_sets[].level integer
+
+## S200-N0044  PATCH /api/rest/v1/families/{family_code}/variants/{code}
+desc: Update/create a family variant | This endpoint allows you to update a given family variant. Know more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no family variant exists for the given code, it creates it.
+- path:family_code string
+- path:code string
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:variant_attribute_sets array<object>
+- body:variant_attribute_sets[].attributes array<string>
+- body:variant_attribute_sets[].axes array<string>
+- body:variant_attribute_sets[].level integer
+
+## S200-N0046  POST /api/rest/v1/media-files
+desc: Create a new product media file | This endpoint allows you to create a new media file and associate it to an attribute value of a given product or product model.
+- body:file string
+- body:product string
+- body:product_model string
+
+## S200-N0047  PATCH /api/rest/v1/product-models
+desc: Update/create several product models | This endpoint allows you to update and/or create several product models at once. Learn more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no product models exists for the given code, it creates it. In the Enterprise Edition, since the v2.3, permissions based on your user groups are applied to the product models y
+- body:associations object
+- body:associations.associationTypeCode object
+- body:associations.associationTypeCode.groups array<string>
+- body:associations.associationTypeCode.product_models array<string>
+- body:associations.associationTypeCode.products array<string>
+- body:categories array<string>
+- body:code string
+- body:created string
+- body:family string
+- body:family_variant string
+- body:metadata object
+- body:metadata.workflow_status string enum[read_only|draft_in_progress|proposal_waiting_for_approval|working_copy]
+- body:parent string
+- body:quality_scores object
+- body:quantified_associations object
+- body:quantified_associations.quantifiedAssociationTypeCode object
+- body:quantified_associations.quantifiedAssociationTypeCode.product_models array<object>
+- body:quantified_associations.quantifiedAssociationTypeCode.products array<object>
+- body:updated string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].locale string
+- body:values.attributeCode[].scope string
+
+## S200-N0048  POST /api/rest/v1/product-models
+desc: Create a new product model | This endpoint allows you to create a new product model. In the Enterprise Edition, since the v2.3, permissions based on your user groups are applied to the product model you try to create.
+- body:associations object
+- body:associations.associationTypeCode object
+- body:associations.associationTypeCode.groups array<string>
+- body:associations.associationTypeCode.product_models array<string>
+- body:associations.associationTypeCode.products array<string>
+- body:categories array<string>
+- body:code string
+- body:created string
+- body:family string
+- body:family_variant string
+- body:metadata object
+- body:metadata.workflow_status string enum[read_only|draft_in_progress|proposal_waiting_for_approval|working_copy]
+- body:parent string
+- body:quality_scores object
+- body:quantified_associations object
+- body:quantified_associations.quantifiedAssociationTypeCode object
+- body:quantified_associations.quantifiedAssociationTypeCode.product_models array<object>
+- body:quantified_associations.quantifiedAssociationTypeCode.products array<object>
+- body:updated string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].locale string
+- body:values.attributeCode[].scope string
+
+## S200-N0049  DELETE /api/rest/v1/product-models/{code}
+desc: Delete a product model | This endpoint allows you to delete a given product model. All its children, product models and variant products, will be also deleted. In the Enterprise Edition, the permissions based on your connection user group are applied to the product model you try to delete.
+- path:code string
+
+## S200-N0052  PATCH /api/rest/v1/products
+desc: Update/create several products | This endpoint allows you to update and/or create several products at once. Learn more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no product exists for the given identifier, it creates it. In the Enterprise Edition, since the v2.0, permissions based on your user groups are applied to the products you try to update. I
+- body:associations object
+- body:associations.associationTypeCode object
+- body:associations.associationTypeCode.groups array<string>
+- body:associations.associationTypeCode.product_models array<string>
+- body:associations.associationTypeCode.products array<string>
+- body:categories array<string>
+- body:completenesses array<object>
+- body:completenesses[].data integer
+- body:completenesses[].locale string
+- body:completenesses[].scope string
+- body:created string
+- body:enabled boolean
+- body:family string
+- body:groups array<string>
+- body:identifier string
+- body:metadata object
+- body:metadata.workflow_status string enum[read_only|draft_in_progress|proposal_waiting_for_approval|working_copy]
+- body:parent string
+- body:quality_scores object
+- body:quantified_associations object
+- body:quantified_associations.quantifiedAssociationTypeCode object
+- body:quantified_associations.quantifiedAssociationTypeCode.product_models array<object>
+- body:quantified_associations.quantifiedAssociationTypeCode.products array<object>
+- body:updated string
+- body:uuid string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].linked_data object
+- body:values.attributeCode[].locale string
+- body:values.attributeCode[].scope string
+
+## S200-N0055  POST /api/rest/v1/products-uuid
+desc: Create a new product | This endpoint allows you to create a new product. In the Enterprise Edition, permissions based on your user groups are applied to the product you try to create. If no uuid is provided, the PIM will generate one for you.
+- body:associations object
+- body:associations.associationTypeCode object
+- body:associations.associationTypeCode.groups array<string>
+- body:associations.associationTypeCode.product_models array<string>
+- body:associations.associationTypeCode.products array<string>
+- body:categories array<string>
+- body:completenesses array<object>
+- body:completenesses[].data integer
+- body:completenesses[].locale string
+- body:completenesses[].scope string
+- body:created string
+- body:enabled boolean
+- body:family string
+- body:groups array<string>
+- body:metadata object
+- body:metadata.workflow_status string enum[read_only|draft_in_progress|proposal_waiting_for_approval|working_copy]
+- body:parent string
+- body:quality_scores object
+- body:quantified_associations object
+- body:quantified_associations.quantifiedAssociationTypeCode object
+- body:quantified_associations.quantifiedAssociationTypeCode.product_models array<object>
+- body:quantified_associations.quantifiedAssociationTypeCode.products array<object>
+- body:updated string
+- body:uuid string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].linked_data object
+- body:values.attributeCode[].locale string
+- body:values.attributeCode[].scope string
+
+## S200-N0060  PATCH /api/rest/v1/products/{code}
+desc: Update/create a product | This endpoint allows you to update a given product. Learn more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no product exists for the given identifier, it creates it. In the Entreprise Edition, since the v2.0, permissions based on your user groups are applied to the product you try to update. It may result in the creation of
+- path:code string
+- body:associations object
+- body:associations.associationTypeCode object
+- body:associations.associationTypeCode.groups array<string>
+- body:associations.associationTypeCode.product_models array<string>
+- body:associations.associationTypeCode.products array<string>
+- body:categories array<string>
+- body:completenesses array<object>
+- body:completenesses[].data integer
+- body:completenesses[].locale string
+- body:completenesses[].scope string
+- body:created string
+- body:enabled boolean
+- body:family string
+- body:groups array<string>
+- body:identifier string
+- body:metadata object
+- body:metadata.workflow_status string enum[read_only|draft_in_progress|proposal_waiting_for_approval|working_copy]
+- body:parent string
+- body:quality_scores object
+- body:quantified_associations object
+- body:quantified_associations.quantifiedAssociationTypeCode object
+- body:quantified_associations.quantifiedAssociationTypeCode.product_models array<object>
+- body:quantified_associations.quantifiedAssociationTypeCode.products array<object>
+- body:updated string
+- body:uuid string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].linked_data object
+- body:values.attributeCode[].locale string
+- body:values.attributeCode[].scope string
+
+## S200-N0063  PATCH /api/rest/v1/reference-entities/{code}
+desc: Update/create a reference entity | This endpoint allows you to update a given reference entity. Note that if the reference entity does not already exist, it creates it.
+- path:code string
+- body:code string
+- body:image string
+- body:labels object
+- body:labels.localeCode string
+
+## S200-N0065  PATCH /api/rest/v1/reference-entities/{reference_entity_code}/attributes/{code}
+desc: Update/create an attribute of a given reference entity | This endpoint allows you to update a given attribute for a given renference entity. Note that if the attribute does not already exist for the given reference entity, it creates it.
+- path:reference_entity_code string
+- path:code string
+- body:allowed_extensions array<string>
+- body:code string
+- body:decimals_allowed boolean
+- body:is_required_for_completeness boolean
+- body:is_rich_text_editor boolean
+- body:is_textarea boolean
+- body:labels object
+- body:labels.localeCode string
+- body:max_characters integer
+- body:max_file_size string
+- body:max_value string
+- body:min_value string
+- body:reference_entity_code string
+- body:type string enum[text|image|number|single_option|multiple_options|reference_entity_single_link|reference_entity_multiple_links]
+- body:validation_regexp string
+- body:validation_rule string enum[email|url|regexp|none]
+- body:value_per_channel boolean
+- body:value_per_locale boolean
+
+## S200-N0066  PATCH /api/rest/v1/reference-entities/{reference_entity_code}/records
+desc: Update/create several reference entity records | This endpoint allows you to update and/or create several records of one given reference entity at once. Learn more about <a href="/documentation/update.html#patch-reference-entity-record-values">Update behavior</a>. Note that if the record does not already exist for the given reference entity, it creates it.
+- path:reference_entity_code string
+- body:code string
+- body:created string
+- body:updated string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].channel string
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].locale string
+
+## S513-N0001  PUT /api/2/application-properties/{id}
+desc: Modify an application property via PUT. The "value" field present in the PUT will override the existing value.
+- path:id string
+
+## S513-N0002  PUT /api/2/applicationrole
+desc: Updates the ApplicationRoles with the passed data if the version hash is the same as the server. Only the groups and default groups setting of the role may be updated. Requests to change the key or the name of the role will be silently ignored. It is acceptable to pass only the roles that are updated as roles that are present in the server but not in data to update with, will not be deleted.
+
+## S513-N0003  PUT /api/2/applicationrole/{key}
+desc: Updates the ApplicationRole with the passed data. Only the groups and default groups setting of the role may be updated. Requests to change the key or the name of the role will be silently ignored. <p> Optional: If versionHash is passed through the If-Match header the request will be rejected if not the same as server
+- path:key string
+
+## S513-N0004  DELETE /api/2/attachment/{id}
+desc: Remove an attachment from an issue.
+- path:id string
+
+## S513-N0005  POST /api/2/auditing/record
+desc: Store a record in Audit Log
+
+## S513-N0006  POST /api/2/avatar/{type}/temporary
+desc: Creates temporary avatar
+- path:type string
+- query:filename string
+- query:size integer
+
+## S513-N0007  POST /api/2/avatar/{type}/temporaryCrop
+desc: Updates the cropping instructions of the temporary avatar.
+- path:type string
+
+## S513-N0008  POST /api/2/cluster/zdu/approve
+
+## S513-N0009  POST /api/2/cluster/zdu/cancel
+
+## S513-N0010  POST /api/2/cluster/zdu/retryUpgrade
+
+## S513-N0011  POST /api/2/cluster/zdu/start
+
+## S513-N0012  DELETE /api/2/comment/{commentId}/properties/{propertyKey}
+desc: Removes the property from the comment identified by the key or by the id. Ths user removing the property is required to have permissions to administer the comment.
+- path:commentId string
+- path:propertyKey string
+
+## S513-N0013  PUT /api/2/comment/{commentId}/properties/{propertyKey}
+desc: Sets the value of the specified comment's property. <p> You can use this resource to store a custom data against the comment identified by the key or by the id. The user who stores the data is required to have permissions to administer the comment. </p>
+- path:commentId string
+- path:propertyKey string
+
+## S513-N0014  POST /api/2/component
+desc: Create a component via POST.
+
+## S513-N0015  DELETE /api/2/component/{id}
+desc: Delete a project component.
+- path:id string
+- query:moveIssuesTo string
+
+## S513-N0016  PUT /api/2/component/{id}
+desc: Modify a component via PUT. Any fields present in the PUT will override existing values. As a convenience, if a field is not present, it is silently ignored. <p> If leadUserName is an empty string ("") the component lead will be removed.
+- path:id string
+
+## S513-N0019  POST /api/2/field
+desc: Creates a custom field using a definition (object encapsulating custom field data)
+
+## S513-N0021  PUT /api/2/filter/defaultShareScope
+desc: Sets the default share scope of the logged-in user. Available values are GLOBAL and PRIVATE.
+
+## S513-N0023  PUT /api/2/filter/{id}
+desc: Updates an existing filter, and returns its new value.
+- path:id integer
+- query:expand string
+
+## S513-N0025  PUT /api/2/filter/{id}/columns
+desc: Sets the default columns for the given filter.
+- path:id integer
+
+## S513-N0026  POST /api/2/filter/{id}/permission
+desc: Adds a share permissions to the given filter. Adding a global permission removes all previous permissions from the filter.
+- path:id integer
+
+## S513-N0027  DELETE /api/2/filter/{id}/permission/{permission-id}
+desc: Removes a share permissions from the given filter.
+- path:id integer
+- path:permission-id integer
+
+## S513-N0029  POST /api/2/group
+desc: Creates a group by given group parameter <p> Returns REST representation for the requested group.
+
+## S513-N0030  DELETE /api/2/group/user
+desc: Removes given user from a group. <p> Returns no content
+- query:groupname string
+- query:username string
+
+## S513-N0031  POST /api/2/group/user
+desc: Adds given user to a group. <p> Returns the current state of the group.
+- query:groupname string
+
+## S513-N0032  POST /api/2/issue
+desc: Creates an issue or a sub-task from a JSON representation. <p/> The fields that can be set on create, in either the fields parameter or the update parameter can be determined using the <b>/rest/api/2/issue/createmeta</b> resource. If a field is not configured to appear on the create screen, then it will not be in the createmeta, and a field validation error will occur if it is submitted. <p/> Crea
+
+## S513-N0033  POST /api/2/issue/bulk
+desc: Creates issues or sub-tasks from a JSON representation. <p/> Creates many issues in one bulk operation. <p/> Creating a sub-task is similar to creating a regular issue. More details can be found in createIssue section: {@link IssueResource#createIssue(IssueUpdateBean)}}
+
+## S513-N0035  PUT /api/2/issue/{issueIdOrKey}
+desc: Edits an issue from a JSON representation. <p/> The issue can either be updated by setting explicit the field value(s) or by using an operation to change the field value. <p/> The fields that can be updated, in either the fields parameter or the update parameter, can be determined using the <b>/rest/api/2/issue/{issueIdOrKey}/editmeta</b> resource.<br> If a field is not configured to appear on the
+- path:issueIdOrKey string
+- query:notifyUsers boolean
+
+## S513-N0037  POST /api/2/issue/{issueIdOrKey}/attachments
+desc: Add one or more attachments to an issue. <p> This resource expects a multipart post. The media-type multipart/form-data is defined in RFC 1867. Most client libraries have classes that make dealing with multipart posts simple. For instance, in Java the Apache HTTP Components library provides a <a href="http://hc.apache.org/httpcomponents-client-ga/httpmime/apidocs/org/apache/http/entity/mime/Multip
+- path:issueIdOrKey string
+
+## S513-N0040  PUT /api/2/issue/{issueIdOrKey}/comment/{id}
+desc: Updates an existing comment using its JSON representation.
+- path:issueIdOrKey string
+- path:id string
+- query:expand string
+
+## S513-N0042  DELETE /api/2/issue/{issueIdOrKey}/properties/{propertyKey}
+desc: Removes the property from the issue identified by the key or by the id. Ths user removing the property is required to have permissions to edit the issue.
+- path:issueIdOrKey string
+- path:propertyKey string
+
+## S513-N0043  PUT /api/2/issue/{issueIdOrKey}/properties/{propertyKey}
+desc: Sets the value of the specified issue's property. <p> You can use this resource to store a custom data against the issue identified by the key or by the id. The user who stores the data is required to have permissions to edit the issue. </p>
+- path:issueIdOrKey string
+- path:propertyKey string
+
+## S513-N0044  DELETE /api/2/issue/{issueIdOrKey}/remotelink
+desc: Delete the remote issue link with the given global id on the issue.
+- path:issueIdOrKey string
+- query:globalId string
+
+## S513-N0045  POST /api/2/issue/{issueIdOrKey}/remotelink
+desc: Creates or updates a remote issue link from a JSON representation. If a globalId is provided and a remote issue link exists with that globalId, the remote issue link is updated. Otherwise, the remote issue link is created.
+- path:issueIdOrKey string
+
+## S513-N0046  DELETE /api/2/issue/{issueIdOrKey}/remotelink/{linkId}
+desc: Delete the remote issue link with the given id on the issue.
+- path:linkId string
+- path:issueIdOrKey string
+
+## S513-N0047  PUT /api/2/issue/{issueIdOrKey}/remotelink/{linkId}
+desc: Updates a remote issue link from a JSON representation. Any fields not provided are set to null.
+- path:linkId string
+- path:issueIdOrKey string
+
+## S513-N0048  POST /api/2/issue/{issueIdOrKey}/subtask/move
+desc: Reorders an issue's subtasks by moving the subtask at index "from" to index "to".
+- path:issueIdOrKey string
+
+## S513-N0049  POST /api/2/issue/{issueIdOrKey}/transitions
+desc: Perform a transition on an issue. When performing the transition you can update or set other issue fields. <p/> The fields that can be set on transtion, in either the fields parameter or the update parameter can be determined using the <b>/rest/api/2/issue/{issueIdOrKey}/transitions?expand=transitions.fields</b> resource. If a field is not configured to appear on the transition screen, then it wil
+- path:issueIdOrKey string
+
+## S513-N0050  DELETE /api/2/issue/{issueIdOrKey}/votes
+desc: Remove your vote from an issue. (i.e. "unvote")
+- path:issueIdOrKey string
+
+## S513-N0051  POST /api/2/issue/{issueIdOrKey}/votes
+desc: Cast your vote in favour of an issue.
+- path:issueIdOrKey string
+
+## S513-N0053  POST /api/2/issue/{issueIdOrKey}/watchers
+desc: Adds a user to an issue's watcher list.
+- path:issueIdOrKey string
+
+## S513-N0054  POST /api/2/issue/{issueIdOrKey}/worklog
+desc: Adds a new worklog entry to an issue.
+- path:issueIdOrKey string
+- query:adjustEstimate string
+- query:newEstimate string
+- query:reduceBy string
+
+## S513-N0055  DELETE /api/2/issue/{issueIdOrKey}/worklog/{id}
+desc: Deletes an existing worklog entry.
+- path:issueIdOrKey string
+- path:id string
+- query:adjustEstimate string
+- query:newEstimate string
+- query:increaseBy string
+
+## S513-N0057  POST /api/2/issueLink
+desc: Creates an issue link between two issues. The user requires the link issue permission for the issue which will be linked to another issue. The specified link type in the request is used to create the link and will create a link from the first issue to the second issue using the outward description. It also create a link from the second issue to the first issue using the inward description of the i

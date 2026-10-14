@@ -1,0 +1,604 @@
+## S624-N0107  POST /v4/system/config/auth/radius
+desc: Create RADIUS configuration | ### Description: Create new RADIUS configuration. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Config 
+schema: RadiusConfigCreateRequest
+- body:failoverServer object
+- body:failoverServer.failoverEnabled boolean
+- body:failoverServer.failoverIpAddress string
+- body:failoverServer.failoverPort integer
+- body:ipAddress string
+- body:otpPinFirst boolean
+- body:port integer
+- body:sharedSecret string
+
+## S624-N0108  PUT /v4/system/config/auth/radius
+desc: Update RADIUS configuration | ### Description: Update existing RADIUS configuration. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Co
+schema: RadiusConfigUpdateRequest
+- body:failoverServer object
+- body:failoverServer.failoverEnabled boolean
+- body:failoverServer.failoverIpAddress string
+- body:failoverServer.failoverPort integer
+- body:ipAddress string
+- body:otpPinFirst boolean
+- body:port integer
+- body:sharedSecret string
+
+## S624-N0110  DELETE /v4/system/config/oauth/clients/{client_id}
+desc: Remove OAuth client | ### Description: Delete an existing OAuth client. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Config Manager<
+- path:client_id string
+
+## S624-N0111  PUT /v4/system/config/oauth/clients/{client_id}
+desc: Update OAuth client | ### Description: Update an existing OAuth client. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Config Manager<
+schema: UpdateOAuthClientRequest
+- path:client_id string
+- body:accessTokenValidity integer
+- body:approvalValidity integer
+- body:clientName string
+- body:clientSecret string
+- body:clientType string enum[confidential|public]
+- body:grantTypes array<string> enum[authorization_code|client_credentials|implicit|password|refresh_token]
+- body:isEnabled boolean
+- body:redirectUris array<string>
+- body:refreshTokenValidity integer
+
+## S624-N0112  PUT /v4/system/config/policies/classifications
+desc: Change classification policies | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.30.0</h3> ### Description: Change current classification policies: * `shareClassificationPolicies` ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: 
+schema: UpdateClassificationPoliciesConfig
+- body:shareClassificationPolicies object
+- body:shareClassificationPolicies.classificationRequiresSharePassword integer enum[0|1|2|3|4]
+
+## S624-N0118  PUT /v4/system/config/settings/defaults
+desc: Update system defaults | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.6.0</h3> ### Description: DRACOON system defaults configuration entry point. Change configurable system default values. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5
+schema: UpdateSystemDefaults
+- body:downloadShareDefaultExpirationPeriod integer
+- body:fileDefaultExpirationPeriod integer
+- body:languageDefault string
+- body:nonmemberViewerDefault boolean
+- body:uploadShareDefaultExpirationPeriod integer
+
+## S624-N0120  PUT /v4/system/config/settings/general
+desc: Update general settings | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.6.0</h3> ### Description: DRACOON general settings configuration entry point. Change configurable general settings. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px;
+schema: UpdateGeneralSettings
+- body:authTokenRestrictions object
+- body:authTokenRestrictions.accessTokenValidity integer
+- body:authTokenRestrictions.overwriteEnabled boolean
+- body:authTokenRestrictions.refreshTokenValidity integer
+- body:cryptoEnabled boolean
+- body:emailNotificationButtonEnabled boolean
+- body:eulaEnabled boolean
+- body:hideLoginInputFields boolean
+- body:mediaServerEnabled boolean
+- body:s3TagsEnabled boolean
+- body:sharePasswordSmsEnabled boolean
+- body:weakPasswordEnabled boolean
+
+## S624-N0121  PUT /v4/system/config/settings/syslog
+desc: Update syslog settings | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.6.0</h3> ### Description: DRACOON syslog configuration entry point. Change configurable syslog settings. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: in
+schema: UpdateSyslogConfig
+- body:enabled boolean
+- body:host string
+- body:logIpEnabled boolean
+- body:port integer
+- body:protocol string enum[TCP|UDP]
+
+## S624-N0122  POST /v4/system/config/storage/s3
+desc: Create S3 storage configuration | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.3.0</h3> ### Description: Create new S3 configuration. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</sp
+schema: S3ConfigCreateRequest
+- body:accessKey string
+- body:bucketName string
+- body:bucketUrl string
+- body:endpointUrl string
+- body:region string
+- body:secretKey string
+
+## S624-N0124  POST /v4/system/config/storage/s3/tags
+desc: Create S3 tag | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.9.0</h3> ### Description: Create new S3 tag. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='pa
+schema: S3TagCreateRequest
+- body:isMandatory boolean
+- body:key string
+- body:value string
+
+## S624-N0125  DELETE /v4/system/config/storage/s3/tags/{id}
+desc: Remove S3 tag | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.9.0</h3> ### Description: Delete S3 tag. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change global config</span> and role <span style='paddin
+- path:id integer
+
+## S624-N0127  POST /v4/uploads/{token}
+desc: Upload file | ### Description: Upload a (chunk of a) file. ### Precondition: Valid upload token. ### Postcondition: Chunk uploaded. ### Further Information: Range requests are supported. Following `Content-Types` are supported by this API: * `multipart/form-data` * provided `Content-Type` For both file upload types set the correct `Content-Type` header and body. ### Examples: * `multipart/form-dat
+- path:token string
+- body:file string
+
+## S624-N0129  PUT /v4/user/account
+desc: Update user account | ### Description: Update current user's account. ### Precondition: Authenticated user. ### Postcondition: User's account is updated. ### Further Information: * All input fields are limited to **150** characters. * **All** characters are allowed. `customer` (`CustomerData`) attribute in `UserAccount` response model is deprecated. Please use response from `GET /user/account/cust
+schema: UpdateUserAccountRequest
+- body:acceptEULA boolean
+- body:email string
+- body:firstName string
+- body:gender string
+- body:language string
+- body:lastName string
+- body:login string
+- body:phone string
+- body:title string
+- body:userName string
+
+## S624-N0131  POST /v4/user/account/avatar
+desc: Change avatar | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.11.0</h3> ### Description: Change the avatar. ### Precondition: Authenticated user. ### Postcondition: Avatar is changed. ### Further Information: * Media type **MUST** be `jpeg` or `png` * File size **MUST** bei less than `5 MB` * Dimensions **MU
+- body:file string
+
+## S624-N0132  PUT /v4/user/account/customer
+desc: Activate client-side encryption for customer | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128679; Deprecated since v4.24.0</h3> ### Use `POST /settings/keypair` API ### Description: Activate client-side encryption for according customer. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border:
+schema: EnableCustomerEncryptionRequest
+- body:dataSpaceRescueKey object
+- body:dataSpaceRescueKey.privateKeyContainer object
+- body:dataSpaceRescueKey.privateKeyContainer.createdAt string
+- body:dataSpaceRescueKey.privateKeyContainer.createdBy integer
+- body:dataSpaceRescueKey.privateKeyContainer.privateKey string
+- body:dataSpaceRescueKey.privateKeyContainer.version string
+- body:dataSpaceRescueKey.publicKeyContainer object
+- body:dataSpaceRescueKey.publicKeyContainer.createdAt string
+- body:dataSpaceRescueKey.publicKeyContainer.createdBy integer
+- body:dataSpaceRescueKey.publicKeyContainer.publicKey string
+- body:dataSpaceRescueKey.publicKeyContainer.version string
+- body:enableCustomerEncryption boolean
+
+## S624-N0133  DELETE /v4/user/account/keypair
+desc: Remove user's key pair | ### Description: Delete user key pair. ### Precondition: Authenticated user. ### Postcondition: Key pair is deleted. ### Further Information: If parameter `version` is not set and two key versions exist, this API deletes version A. If two keys with the same version are set, this API deletes the older one. This will also remove all file keys that were encrypted with the use
+- query:version string
+
+## S624-N0134  POST /v4/user/account/keypair
+desc: Set user's key pair | ### Description: Set the user key pair. ### Precondition: Authenticated user. ### Postcondition: Key pair is set. ### Further Information: Overwriting an existing key pair is **NOT** possible. Please delete the existing key pair first. The private key is password-based encrypted with `AES256` / `PBKDF2`.
+schema: UserKeyPairContainer
+- body:privateKeyContainer object
+- body:privateKeyContainer.createdAt string
+- body:privateKeyContainer.createdBy integer
+- body:privateKeyContainer.privateKey string
+- body:privateKeyContainer.version string
+- body:publicKeyContainer object
+- body:publicKeyContainer.createdAt string
+- body:publicKeyContainer.createdBy integer
+- body:publicKeyContainer.publicKey string
+- body:publicKeyContainer.version string
+
+## S624-N0135  POST /v4/user/account/keypairs
+desc: Create key pair and preserve copy of old private key | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.24.0</h3> ### Description: Create user key pair and preserve copy of old private key. ### Precondition: Authenticated user. ### Postcondition: Key pair is created. Copy of old private key is preserved. ### Fu
+schema: CreateKeyPairRequest
+- body:previousPrivateKey object
+- body:previousPrivateKey.createdAt string
+- body:previousPrivateKey.createdBy integer
+- body:previousPrivateKey.privateKey string
+- body:previousPrivateKey.version string
+- body:privateKeyContainer object
+- body:privateKeyContainer.createdAt string
+- body:privateKeyContainer.createdBy integer
+- body:privateKeyContainer.privateKey string
+- body:privateKeyContainer.version string
+- body:publicKeyContainer object
+- body:publicKeyContainer.createdAt string
+- body:publicKeyContainer.createdBy integer
+- body:publicKeyContainer.publicKey string
+- body:publicKeyContainer.version string
+
+## S624-N0137  POST /v4/user/account/mfa/totp
+desc: Confirm second factor TOTP setup with a generated OTP | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.37.0</h3> ### Description: Confirm second factor TOTP setup with a generated OTP. ### Precondition: Authenticated user ### Postcondition: Second factor TOTP is enabled. ### Further Information: None.
+schema: MfaTotpConfirmationRequest
+- body:id integer
+- body:otp string
+
+## S624-N0138  DELETE /v4/user/account/mfa/totp/{id}
+desc: Disable a MFA TOTP setup with generated OTP | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.37.0</h3> ### Description: Delete multi-factor authentication TOTP setup with a valid OTP code. ### Precondition: Authenticated user Multi-factor authentication is **NOT** enforced ### Postcondition: Second factor TOT
+- path:id integer
+- query:valid_otp string
+
+## S624-N0139  PUT /v4/user/account/password
+desc: Change user's password | ### Description: Change the user's password. ### Precondition: Authenticated user. ### Postcondition: User's password is changed. ### Further Information: The password **MUST** comply to configured password policies. Forbidden characters in passwords: [`&`, `'`, `<`, `>`]
+schema: ChangeUserPasswordRequest
+- body:newPassword string
+- body:oldPassword string
+
+## S624-N0140  POST /v4/user/logout
+desc: Invalidate authentication token | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128679; Deprecated since v4.12.0</h3> ### Description: Log out a user. ### Precondition: Authenticated user. ### Postcondition: * User is logged out * Authentication token gets invalidated. ### Further Information: None.
+- query:everywhere boolean
+
+## S624-N0141  PUT /v4/user/notifications/config/{id}
+desc: Update notification configuration | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.20.0</h3> ### Description: Update notification configuration for current user. ### Precondition: Authenticated user. ### Postcondition: Notification configuration is updated. ### Further Information: Leave `channelIds` empty to
+schema: NotificationConfigChangeRequest
+- path:id integer
+- body:channelIds array<integer>
+
+## S624-N0144  DELETE /v4/user/oauth/authorizations/{client_id}/{authorization_id}
+desc: Remove a OAuth authorization | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.12.0</h3> ### Description: Delete an authorization. ### Precondition: Authenticated user and valid client ID, authorization ID ### Postcondition: Authorization is revoked. ### Further Information: None.
+- path:client_id string
+- path:authorization_id integer
+
+## S624-N0145  POST /v4/user/profileAttributes
+desc: Set user profile attributes | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128679; Deprecated since v4.12.0</h3> ### Description: Set custom user profile attributes. ### Precondition: None. ### Postcondition: Custom user profile attributes are set. ### Further Information: Batch function. All existing user profile attribute
+schema: ProfileAttributesRequest
+- body:items array<object>
+- body:items[].key string
+- body:items[].value string
+
+## S624-N0147  DELETE /v4/user/profileAttributes/{key}
+desc: Remove user profile attribute | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.7.0</h3> ### Description: Delete custom user profile attribute. ### Precondition: None. ### Postcondition: Custom user profile attribute is deleted. ### Further Information: Allowed characters for keys are: `[a-zA-Z0-9_-]`
+- path:key string
+
+## S624-N0149  DELETE /v4/user/subscriptions/download_shares/{share_id}
+desc: Unsubscribe Download Share from notifications | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.20.0</h3> ### Description: Unsubscribe Download Share from notifications. ### Precondition: User with _"manage download share"_ permissions on target node. ### Postcondition: Download Share is unsubscribed. Notifica
+- path:share_id integer
+
+## S624-N0150  POST /v4/user/subscriptions/download_shares/{share_id}
+desc: Subscribe Download Share for notifications | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.20.0</h3> ### Description: Subscribe Download Share for notifications. ### Precondition: User with _"manage download share"_ permissions on target node. ### Postcondition: Download Share is subscribed. Notifications fo
+- path:share_id integer
+
+## S624-N0151  PUT /v4/user/subscriptions/nodes
+desc: Subscribe or Unsubscribe a List of nodes for notifications | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.25.0</h3> ### Description: Subscribe/Unsubscribe nodes for notifications. ### Precondition: User has _"read"_ permissions in auth parent room. ### Postcondition: Nodes are subscribed or unsubscribed. No
+schema: UpdateSubscriptionsBulkRequest
+- body:isSubscribed boolean
+- body:objectIds array<integer>
+
+## S624-N0152  DELETE /v4/user/subscriptions/nodes/{node_id}
+desc: Unsubscribe node from notifications | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.20.0</h3> ### Description: Unsubscribe node from notifications. ### Precondition: User has _"read"_ permissions in auth parent room. ### Postcondition: Node is unsubscribed. Notifications for this node are disabled. ### Furth
+- path:node_id integer
+
+## S624-N0153  POST /v4/user/subscriptions/nodes/{node_id}
+desc: Subscribe node for notifications | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.20.0</h3> ### Description: Subscribe node for notifications. ### Precondition: User has _"read"_ permissions in auth parent room. ### Postcondition: Node is subscribed. Notifications for this node will be triggered in the future
+- path:node_id integer
+
+## S624-N0154  PUT /v4/user/subscriptions/upload_shares
+desc: Subscribe or Unsubscribe a List of Upload Shares for notifications | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.25.0</h3> ### Description: Subscribe/Unsubscribe upload shares for notifications. ### Precondition: User with _"manage upload share"_ permissions on target node. ### Postcondition: Upload shares
+schema: UpdateSubscriptionsBulkRequest
+- body:isSubscribed boolean
+- body:objectIds array<integer>
+
+## S624-N0155  DELETE /v4/user/subscriptions/upload_shares/{share_id}
+desc: Unsubscribe Upload Share from notifications | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.24.0</h3> ### Description: Unsubscribe Upload Share from notifications. ### Precondition: User with _"manage upload share"_ permissions on target node. ### Postcondition: Upload Share is unsubscribed. Notifications fo
+- path:share_id integer
+
+## S624-N0156  POST /v4/user/subscriptions/upload_shares/{share_id}
+desc: Subscribe Upload Share for notifications | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.24.0</h3> ### Description: Subscribe Upload Share for notifications. ### Precondition: User with _"manage upload share"_ permissions on target node. ### Postcondition: Upload Share is subscribed. Notifications for this U
+- path:share_id integer
+
+## S624-N0157  POST /v4/users
+desc: Create new user | ### Description: Create a new user. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change users</span> required. ### Postcondition: New user is created. ### Further Information: * If a user should **NOT** expire, leave `expireAt` empty. * All input fields are limited to **150** 
+schema: CreateUserRequest
+- body:authData object
+- body:authData.adConfigId integer
+- body:authData.login string
+- body:authData.method string
+- body:authData.mustChangePassword boolean
+- body:authData.oidConfigId integer
+- body:authData.password string
+- body:authMethods array<object>
+- body:authMethods[].authId string
+- body:authMethods[].isEnabled boolean
+- body:authMethods[].options array<object>
+- body:authMethods[].options[].key string
+- body:authMethods[].options[].value string
+- body:email string
+- body:expiration object
+- body:expiration.enableExpiration boolean
+- body:expiration.expireAt string
+- body:firstName string
+- body:gender string
+- body:isNonmemberViewer boolean
+- body:lastName string
+- body:login string
+- body:mfaConfig object
+- body:mfaConfig.mfaEnforced boolean
+- body:needsToChangePassword boolean
+- body:notifyUser boolean
+- body:password string
+- body:phone string
+- body:receiverLanguage string
+- body:title string
+- body:userName string
+
+## S624-N0158  DELETE /v4/users/{user_id}
+desc: Remove user | ### Description: Delete a user. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; delete users</span> required. ### Postcondition: User is deleted. ### Further Information: User **CANNOT** be deleted if he is a last room administrator of any room.
+- path:user_id integer
+
+## S624-N0160  POST /v4/users/{user_id}/mfa/emergency_code
+desc: Request emergency MFA code | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128640; Since v4.37.0</h3> ### Description: Request emergency MFA code for a specific user. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change us
+- path:user_id integer
+
+## S624-N0161  POST /v4/users/{user_id}/userAttributes
+desc: Set custom user attributes | <h3 style='padding: 5px; background-color: #F6F7F8; border: 1px solid #AAA; border-radius: 5px; display: table-cell;'>&#128679; Deprecated since v4.28.0</h3> ### Description: Set custom user attributes. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change users</span
+schema: UserAttributes
+- path:user_id integer
+- body:items array<object>
+- body:items[].key string
+- body:items[].value string
+
+## S624-N0162  PUT /v4/users/{user_id}/userAttributes
+desc: Add or edit custom user attributes | ### Description: Add or edit custom user attributes. <br/><br/><span style="font-weight: bold; color: red;"> &#128679; **Warning: Please note that the response with HTTP status code 200 (OK) is deprecated and will be replaced with HTTP status code 204 (No content)!**</span><br/> ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; borde
+schema: UserAttributes
+- path:user_id integer
+- body:items array<object>
+- body:items[].key string
+- body:items[].value string
+
+## S624-N0163  DELETE /v4/users/{user_id}/userAttributes/{key}
+desc: Remove custom user attribute | ### Description: Delete custom user attribute. ### Precondition: Right <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128275; change users</span> required. ### Postcondition: Custom user attribute is deleted. ### Further Information: * Allowed characters for keys are: `[a-zA-Z0-9_-]` * Characters 
+- path:user_id integer
+- path:key string
+
+## S567-N0001  POST /auth/jwt-token-auth/
+desc: Create JSON Web Token (JWT)
+schema: JWTData
+- body:password string
+- body:username string
+
+## S567-N0007  PATCH /v1/servers/options/server-size/{size}/
+desc: Update a server size by id | Only super users with on-premises version have acceess to this endpoint.
+schema: ServerSizeData
+- path:size string
+- body:active boolean
+- body:cpu integer
+- body:memory integer
+- body:name string
+
+## S567-N0008  PUT /v1/servers/options/server-size/{size}/
+desc: Replace a server size by id | Only super users with on-premises version have acceess to this endpoint.
+schema: ServerSizeData
+- path:size string
+- body:active boolean
+- body:cpu integer
+- body:memory integer
+- body:name string
+
+## S567-N0009  POST /v1/teams/
+desc: Create a new team
+schema: TeamData
+- body:avatar string
+- body:avatar_url string
+- body:description string
+- body:location string
+- body:name string
+- body:website string
+
+## S567-N0011  PATCH /v1/teams/{team}/
+desc: Update a team
+schema: TeamData
+- path:team string
+- body:avatar string
+- body:avatar_url string
+- body:description string
+- body:location string
+- body:name string
+- body:website string
+
+## S567-N0012  PUT /v1/teams/{team}/
+desc: Replace a team
+schema: TeamData
+- path:team string
+- body:avatar string
+- body:avatar_url string
+- body:description string
+- body:location string
+- body:name string
+- body:website string
+
+## S567-N0013  POST /v1/teams/{team}/billing/subscriptions/
+desc: Create a new team subscription
+schema: SubscriptionData
+- path:team string
+- body:plan string
+
+## S567-N0014  DELETE /v1/teams/{team}/billing/subscriptions/{id}/
+desc: Delete a subscription
+- path:team string
+- path:id string
+
+## S567-N0018  POST /v1/teams/{team}/groups/{group}/add/
+desc: Add user to group
+- path:team string
+- path:group string
+
+## S567-N0022  PATCH /v1/users/profiles/{user}/
+desc: Update a user
+schema: UserData
+- path:user string
+- body:email string
+- body:first_name string
+- body:last_name string
+- body:password string
+- body:profile object
+- body:profile.avatar string
+- body:profile.bio string
+- body:profile.company string
+- body:profile.location string
+- body:profile.timezone string
+- body:profile.url string
+- body:username string
+
+## S567-N0024  PATCH /v1/users/{user}/avatar/
+desc: Update a project file
+- path:user string
+
+## S567-N0026  POST /v1/users/{user}/emails/
+desc: Create an email address
+schema: EmailData
+- path:user string
+- body:address string
+- body:public boolean
+- body:unsubscribed boolean
+
+## S567-N0027  DELETE /v1/users/{user}/emails/{email_id}/
+desc: Delete an email address
+- path:email_id string
+- path:user string
+
+## S567-N0030  POST /v1/users/{user}/ssh-key/reset/
+desc: Recreate an SSH key
+- path:user string
+
+## S567-N0031  POST /v1/{namespace}/billing/cards/
+desc: Create new credit card
+schema: CardDataPost
+- path:namespace string
+- body:address_city string
+- body:address_country string
+- body:address_line1 string
+- body:address_line2 string
+- body:address_state string
+- body:address_zip string
+- body:exp_month integer
+- body:exp_year integer
+- body:name string
+- body:token string
+
+## S567-N0032  DELETE /v1/{namespace}/billing/cards/{id}/
+desc: Delete a credit card
+- path:namespace string
+- path:id string
+
+## S567-N0035  POST /v1/{namespace}/billing/subscriptions/
+desc: Create a new subscription
+schema: SubscriptionData
+- path:namespace string
+- body:plan string
+
+## S567-N0036  DELETE /v1/{namespace}/billing/subscriptions/{id}/
+desc: Delete a subscription
+- path:namespace string
+- path:id string
+
+## S567-N0039  PATCH /v1/{namespace}/notifications/settings/
+desc: Modify global notification settings.
+schema: NotificationSettingsData
+- path:namespace string
+- body:emails_enabled boolean
+- body:enabled boolean
+
+## S567-N0041  PATCH /v1/{namespace}/notifications/settings/entity/{entity}
+desc: Modify global notification settings.
+schema: NotificationSettingsData
+- path:namespace string
+- path:entity string enum[billing]
+- body:emails_enabled boolean
+- body:enabled boolean
+
+## S567-N0042  POST /v1/{namespace}/notifications/settings/entity/{entity}
+desc: Create global notification settings
+schema: NotificationSettingsData
+- path:namespace string
+- path:entity string enum[billing]
+- body:emails_enabled boolean
+- body:enabled boolean
+
+## S567-N0044  POST /v1/{namespace}/oauth/applications/
+desc: Create a new OAuth2 application
+schema: ApplicationData
+- path:namespace string
+- body:authorization_grant_type string enum[authorization-code|implicit|password|client-credentials]
+- body:client_type string enum[confidential|public]
+- body:name string
+- body:redirect_uris string
+
+## S567-N0045  DELETE /v1/{namespace}/oauth/applications/{application}/
+desc: Delete an application by id
+- path:namespace string
+- path:application string
+
+## S567-N0046  PATCH /v1/{namespace}/oauth/applications/{application}/
+desc: Update an application by id
+schema: ApplicationData
+- path:namespace string
+- path:application string
+- body:authorization_grant_type string enum[authorization-code|implicit|password|client-credentials]
+- body:client_type string enum[confidential|public]
+- body:name string
+- body:redirect_uris string
+
+## S567-N0047  PUT /v1/{namespace}/oauth/applications/{application}/
+desc: Replace an application by id
+schema: ApplicationData
+- path:namespace string
+- path:application string
+- body:authorization_grant_type string enum[authorization-code|implicit|password|client-credentials]
+- body:client_type string enum[confidential|public]
+- body:name string
+- body:redirect_uris string
+
+## S567-N0048  POST /v1/{namespace}/projects/
+desc: Create a new project
+schema: ProjectData
+- path:namespace string
+- body:description string
+- body:name string
+- body:private boolean
+
+## S567-N0050  DELETE /v1/{namespace}/projects/{project}/
+desc: Delete a project
+- path:namespace string
+- path:project string
+
+## S567-N0051  PATCH /v1/{namespace}/projects/{project}/
+desc: Update a project
+schema: ProjectData
+- path:namespace string
+- path:project string
+- body:description string
+- body:name string
+- body:private boolean
+
+## S567-N0053  POST /v1/{namespace}/projects/{project}/collaborators/
+desc: Create project collaborators
+schema: CollaboratorData
+- path:project string
+- path:namespace string
+- body:member string
+- body:owner boolean
+- body:permissions string enum[read_project|write_project]
+
+## S567-N0057  DELETE /v1/{namespace}/projects/{project}/deployments/{deployment}/
+desc: Delete a deployment
+- path:project string
+- path:namespace string
+- path:deployment string
+
+## S567-N0058  PATCH /v1/{namespace}/projects/{project}/deployments/{deployment}/
+desc: Update a deployment
+schema: DeploymentData
+- path:project string
+- path:namespace string
+- path:deployment string
+- body:config object
+- body:config.files array<string>
+- body:config.handler string
+- body:framework string enum[tensorflow]
+- body:name string
+- body:runtime string enum[python2.7]
+
+## S567-N0061  POST /v1/{namespace}/projects/{project}/project_files/
+desc: Create project files
+- path:project string
+- path:namespace string
+- body:file file
+- body:base64_data string
+- body:name string
+- body:path string
+
+## S567-N0062  DELETE /v1/{namespace}/projects/{project}/project_files/{id}/
+desc: Delete a project file
+- path:project string
+- path:namespace string
+- path:id string
+
+## S567-N0063  PATCH /v1/{namespace}/projects/{project}/project_files/{id}/
+desc: Update a project file
+- path:project string
+- path:namespace string
+- path:id string
+- body:file file
+- body:base64_data string
+- body:name string
+- body:path string
+
+## S567-N0064  PUT /v1/{namespace}/projects/{project}/project_files/{id}/
+desc: Replace a project file
+- path:project string
+- path:namespace string
+- path:id string
+- body:file file
+- body:base64_data string
+- body:name string
+- body:path string

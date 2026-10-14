@@ -1,0 +1,24 @@
+== admin login ==
+  TA len=351
+  roles={"Admin": "01a1200f-334c-79dd-a384-53b9e5c7c5b9", "User": "01a1200f-334d-7e65-960e-c2115e356554", "Guest": "01a1200f-334e-7228-9a7d-17f08e17938a"}
+== create victim (role Admin) + plain (role User) ==
+  victim create: 200 {"data":{"username":"victim","email":"victim@local.test","provider":"local","active":true,
+  victimId=01a12010-124a-7b83-8c51-654b2ed967c3
+  plain create: 200 {"data":{"username":"plain","email":"plain@local.test","provider":"local","active":true,"r
+== SOURCE target = PUT /api/role/{GuestId} (admin-only, idempotent) ==
+== NEG CONTROL: plain (role User) -> PUT role -> expect 403 ==
+role_ids=["01a1200f-334d-7e65-960e-c2115e356554"]
+  plain PUT role=403 {"error":{"code":"403","message":"Forbidden"}}
+== A/B victim_old (role Admin) PUT role (before demotion) -> expect 2xx ==
+role_ids=["01a1200f-334c-79dd-a384-53b9e5c7c5b9"]
+  before=200 {"data":{"id":"01a1200f-334e-7228-9a7d-17f08e17938a","name":"Guest","description":"src-bef
+== D TRANSITION admin sets victim roles=[User] -> expect 2xx ==
+  transition=200 {"data":{"roles":[{"id":"01a1200f-334d-7e65-960e-c2115e356554"}],"id":"01a12010-124a-7b83-
+== E BUG victim_old SAME token PUT role (after demotion) -> expect 2xx ==
+  after=200 {"data":{"id":"01a1200f-334e-7228-9a7d-17f08e17938a","name":"Guest","description":"src-aft
+== F D1 victim re-login new token -> PUT role -> expect 403 ==
+role_ids=["01a1200f-334d-7e65-960e-c2115e356554"]
+  newtok=403 {"error":{"code":"403","message":"Forbidden"}}
+== VERDICT ==
+  PASS: MR-A1 confirmed on running fastschema 8133499
+  old-token after demotion=200 (ALLOWED) vs new-token=403 (DENIED) ; neg=403

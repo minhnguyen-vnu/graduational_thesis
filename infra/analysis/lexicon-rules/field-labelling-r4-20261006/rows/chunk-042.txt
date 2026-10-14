@@ -1,0 +1,669 @@
+## S399-N0016  POST /api/discussions/folders
+schema: DiscussionFolderContract
+- body:description string
+- body:id integer
+- body:lastTopicAuthor object
+- body:lastTopicAuthor.active boolean
+- body:lastTopicAuthor.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:lastTopicAuthor.id integer
+- body:lastTopicAuthor.knownLanguages array<object>
+- body:lastTopicAuthor.knownLanguages[].cultureCode string
+- body:lastTopicAuthor.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:lastTopicAuthor.mainPicture object
+- body:lastTopicAuthor.mainPicture.mime string
+- body:lastTopicAuthor.mainPicture.name string
+- body:lastTopicAuthor.mainPicture.urlOriginal string
+- body:lastTopicAuthor.mainPicture.urlSmallThumb string
+- body:lastTopicAuthor.mainPicture.urlThumb string
+- body:lastTopicAuthor.mainPicture.urlTinyThumb string
+- body:lastTopicAuthor.memberSince string
+- body:lastTopicAuthor.name string
+- body:lastTopicAuthor.oldUsernames array<object>
+- body:lastTopicAuthor.oldUsernames[].date string
+- body:lastTopicAuthor.oldUsernames[].oldName string
+- body:lastTopicAuthor.verifiedArtist boolean
+- body:lastTopicDate string
+- body:name string
+- body:topicCount integer
+
+## S399-N0018  DELETE /api/discussions/topics/{topicId}
+- path:topicId integer
+
+## S399-N0023  DELETE /api/releaseEvents/{id}
+- path:id integer
+- query:notes string
+- query:hardDelete boolean
+
+## S399-N0025  DELETE /api/songLists/comments/{commentId}
+- path:commentId integer
+
+## S399-N0029  DELETE /api/songs/comments/{commentId}
+- path:commentId integer
+
+## S399-N0036  POST /api/tags/comments/{commentId}
+schema: CommentForApiContract
+- path:commentId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-N0039  POST /api/tags/{tagId}/reports
+- path:tagId integer
+- query:reportType string enum[InvalidInfo|Duplicate|Inappropriate|Other]
+- query:notes string
+- query:versionNumber integer
+
+## S399-N0040  POST /api/users/current/albums/{albumId}
+- path:albumId integer
+- query:collectionStatus string enum[Nothing|Wishlisted|Ordered|Owned]
+- query:mediaType string enum[PhysicalDisc|DigitalDownload|Other]
+- query:rating integer
+
+## S399-N0048  POST /api/users/{id}/messages
+schema: UserMessageContract
+- path:id integer
+- body:body string
+- body:createdFormatted string
+- body:highPriority boolean
+- body:id integer
+- body:inbox string enum[Nothing|Received|Sent|Notifications]
+- body:read boolean
+- body:receiver object
+- body:receiver.active boolean
+- body:receiver.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:receiver.id integer
+- body:receiver.knownLanguages array<object>
+- body:receiver.knownLanguages[].cultureCode string
+- body:receiver.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:receiver.mainPicture object
+- body:receiver.mainPicture.mime string
+- body:receiver.mainPicture.name string
+- body:receiver.mainPicture.urlOriginal string
+- body:receiver.mainPicture.urlSmallThumb string
+- body:receiver.mainPicture.urlThumb string
+- body:receiver.mainPicture.urlTinyThumb string
+- body:receiver.memberSince string
+- body:receiver.name string
+- body:receiver.oldUsernames array<object>
+- body:receiver.oldUsernames[].date string
+- body:receiver.oldUsernames[].oldName string
+- body:receiver.verifiedArtist boolean
+- body:sender object
+- body:sender.active boolean
+- body:sender.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:sender.id integer
+- body:sender.knownLanguages array<object>
+- body:sender.knownLanguages[].cultureCode string
+- body:sender.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:sender.mainPicture object
+- body:sender.mainPicture.mime string
+- body:sender.mainPicture.name string
+- body:sender.mainPicture.urlOriginal string
+- body:sender.mainPicture.urlSmallThumb string
+- body:sender.mainPicture.urlThumb string
+- body:sender.mainPicture.urlTinyThumb string
+- body:sender.memberSince string
+- body:sender.name string
+- body:sender.oldUsernames array<object>
+- body:sender.oldUsernames[].date string
+- body:sender.oldUsernames[].oldName string
+- body:sender.verifiedArtist boolean
+- body:subject string
+
+## S399-N0052  DELETE /api/venues/{id}
+- path:id integer
+- query:notes string
+- query:hardDelete boolean
+
+## S131-N0001  PATCH /v1/ageRatingDeclarations/{id}
+schema: AgeRatingDeclarationUpdateRequest
+- path:id string
+- body:alcoholTobaccoOrDrugUseOrReferences string enum[NONE|INFREQUENT_OR_MILD|FREQUENT_OR_INTENSE]
+- body:contests string enum[NONE|INFREQUENT_OR_MILD|FREQUENT_OR_INTENSE]
+- body:gambling boolean
+- body:gamblingAndContests boolean
+- body:gamblingSimulated string enum[NONE|INFREQUENT_OR_MILD|FREQUENT_OR_INTENSE]
+- body:horrorOrFearThemes string enum[NONE|INFREQUENT_OR_MILD|FREQUENT_OR_INTENSE]
+- body:kidsAgeBand string enum[FIVE_AND_UNDER|SIX_TO_EIGHT|NINE_TO_ELEVEN]
+- body:matureOrSuggestiveThemes string enum[NONE|INFREQUENT_OR_MILD|FREQUENT_OR_INTENSE]
+- body:medicalOrTreatmentInformation string enum[NONE|INFREQUENT_OR_MILD|FREQUENT_OR_INTENSE]
+- body:profanityOrCrudeHumor string enum[NONE|INFREQUENT_OR_MILD|FREQUENT_OR_INTENSE]
+- body:seventeenPlus boolean
+- body:sexualContentGraphicAndNudity string enum[NONE|INFREQUENT_OR_MILD|FREQUENT_OR_INTENSE]
+- body:sexualContentOrNudity string enum[NONE|INFREQUENT_OR_MILD|FREQUENT_OR_INTENSE]
+- body:unrestrictedWebAccess boolean
+- body:violenceCartoonOrFantasy string enum[NONE|INFREQUENT_OR_MILD|FREQUENT_OR_INTENSE]
+- body:violenceRealistic string enum[NONE|INFREQUENT_OR_MILD|FREQUENT_OR_INTENSE]
+- body:violenceRealisticProlongedGraphicOrSadistic string enum[NONE|INFREQUENT_OR_MILD|FREQUENT_OR_INTENSE]
+
+## S131-N0002  POST /v1/appEncryptionDeclarations/{id}/relationships/builds
+schema: AppEncryptionDeclarationBuildsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[builds]
+
+## S131-N0003  POST /v1/appInfoLocalizations
+schema: AppInfoLocalizationCreateRequest
+- body:locale string
+- body:name string
+- body:privacyPolicyText string
+- body:privacyPolicyUrl string
+- body:subtitle string
+- body:appInfo object
+- body:appInfo.data object
+- body:appInfo.data.id string
+- body:appInfo.data.type string enum[appInfos]
+
+## S131-N0004  DELETE /v1/appInfoLocalizations/{id}
+- path:id string
+
+## S131-N0005  PATCH /v1/appInfoLocalizations/{id}
+schema: AppInfoLocalizationUpdateRequest
+- path:id string
+- body:name string
+- body:privacyPolicyText string
+- body:privacyPolicyUrl string
+- body:subtitle string
+
+## S131-N0006  PATCH /v1/appInfos/{id}
+schema: AppInfoUpdateRequest
+- path:id string
+- body:id string
+- body:relationships object
+- body:relationships.primaryCategory object
+- body:relationships.primaryCategory.data object
+- body:relationships.primarySubcategoryOne object
+- body:relationships.primarySubcategoryOne.data object
+- body:relationships.primarySubcategoryTwo object
+- body:relationships.primarySubcategoryTwo.data object
+- body:relationships.secondaryCategory object
+- body:relationships.secondaryCategory.data object
+- body:relationships.secondarySubcategoryOne object
+- body:relationships.secondarySubcategoryOne.data object
+- body:relationships.secondarySubcategoryTwo object
+- body:relationships.secondarySubcategoryTwo.data object
+- body:type string enum[appInfos]
+
+## S131-N0007  POST /v1/appPreOrders
+schema: AppPreOrderCreateRequest
+- body:appReleaseDate string
+- body:app object
+- body:app.data object
+- body:app.data.id string
+- body:app.data.type string enum[apps]
+
+## S131-N0008  DELETE /v1/appPreOrders/{id}
+- path:id string
+
+## S131-N0009  PATCH /v1/appPreOrders/{id}
+schema: AppPreOrderUpdateRequest
+- path:id string
+- body:appReleaseDate string
+
+## S131-N0010  POST /v1/appPreviewSets
+schema: AppPreviewSetCreateRequest
+- body:previewType string enum[IPHONE_65|IPHONE_58|IPHONE_55|IPHONE_47|IPHONE_40|IPHONE_35|IPAD_PRO_3GEN_129|IPAD_PRO_3GEN_11|IPAD_PRO_129|IPAD_105|IPAD_97|DESKTOP]
+- body:appStoreVersionLocalization object
+- body:appStoreVersionLocalization.data object
+- body:appStoreVersionLocalization.data.id string
+- body:appStoreVersionLocalization.data.type string enum[appStoreVersionLocalizations]
+
+## S131-N0011  DELETE /v1/appPreviewSets/{id}
+- path:id string
+
+## S131-N0012  PATCH /v1/appPreviewSets/{id}/relationships/appPreviews
+schema: AppPreviewSetAppPreviewsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[appPreviews]
+
+## S131-N0013  POST /v1/appPreviews
+schema: AppPreviewCreateRequest
+- body:fileName string
+- body:fileSize integer
+- body:mimeType string
+- body:previewFrameTimeCode string
+- body:appPreviewSet object
+- body:appPreviewSet.data object
+- body:appPreviewSet.data.id string
+- body:appPreviewSet.data.type string enum[appPreviewSets]
+
+## S131-N0014  DELETE /v1/appPreviews/{id}
+- path:id string
+
+## S131-N0015  PATCH /v1/appPreviews/{id}
+schema: AppPreviewUpdateRequest
+- path:id string
+- body:previewFrameTimeCode string
+- body:sourceFileChecksum string
+- body:uploaded boolean
+
+## S131-N0016  POST /v1/appScreenshotSets
+schema: AppScreenshotSetCreateRequest
+- body:screenshotDisplayType string enum[APP_IPHONE_65|APP_IPHONE_58|APP_IPHONE_55|APP_IPHONE_47|APP_IPHONE_40|APP_IPHONE_35|APP_IPAD_PRO_3GEN_129|APP_IPAD_PRO_3GEN_11|APP_IPAD_PRO_129|APP_IPAD_105|APP_IPAD_97|APP_DESKTOP]
+- body:appStoreVersionLocalization object
+- body:appStoreVersionLocalization.data object
+- body:appStoreVersionLocalization.data.id string
+- body:appStoreVersionLocalization.data.type string enum[appStoreVersionLocalizations]
+
+## S131-N0017  DELETE /v1/appScreenshotSets/{id}
+- path:id string
+
+## S131-N0018  PATCH /v1/appScreenshotSets/{id}/relationships/appScreenshots
+schema: AppScreenshotSetAppScreenshotsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[appScreenshots]
+
+## S131-N0019  POST /v1/appScreenshots
+schema: AppScreenshotCreateRequest
+- body:fileName string
+- body:fileSize integer
+- body:appScreenshotSet object
+- body:appScreenshotSet.data object
+- body:appScreenshotSet.data.id string
+- body:appScreenshotSet.data.type string enum[appScreenshotSets]
+
+## S131-N0020  DELETE /v1/appScreenshots/{id}
+- path:id string
+
+## S131-N0021  PATCH /v1/appScreenshots/{id}
+schema: AppScreenshotUpdateRequest
+- path:id string
+- body:sourceFileChecksum string
+- body:uploaded boolean
+
+## S131-N0022  POST /v1/appStoreReviewAttachments
+schema: AppStoreReviewAttachmentCreateRequest
+- body:fileName string
+- body:fileSize integer
+- body:appStoreReviewDetail object
+- body:appStoreReviewDetail.data object
+- body:appStoreReviewDetail.data.id string
+- body:appStoreReviewDetail.data.type string enum[appStoreReviewDetails]
+
+## S131-N0023  DELETE /v1/appStoreReviewAttachments/{id}
+- path:id string
+
+## S131-N0024  PATCH /v1/appStoreReviewAttachments/{id}
+schema: AppStoreReviewAttachmentUpdateRequest
+- path:id string
+- body:sourceFileChecksum string
+- body:uploaded boolean
+
+## S131-N0025  POST /v1/appStoreReviewDetails
+schema: AppStoreReviewDetailCreateRequest
+- body:contactEmail string
+- body:contactFirstName string
+- body:contactLastName string
+- body:contactPhone string
+- body:demoAccountName string
+- body:demoAccountPassword string
+- body:demoAccountRequired boolean
+- body:notes string
+- body:appStoreVersion object
+- body:appStoreVersion.data object
+- body:appStoreVersion.data.id string
+- body:appStoreVersion.data.type string enum[appStoreVersions]
+
+## S131-N0026  PATCH /v1/appStoreReviewDetails/{id}
+schema: AppStoreReviewDetailUpdateRequest
+- path:id string
+- body:contactEmail string
+- body:contactFirstName string
+- body:contactLastName string
+- body:contactPhone string
+- body:demoAccountName string
+- body:demoAccountPassword string
+- body:demoAccountRequired boolean
+- body:notes string
+
+## S131-N0028  DELETE /v1/appStoreVersionLocalizations/{id}
+- path:id string
+
+## S131-N0029  PATCH /v1/appStoreVersionLocalizations/{id}
+schema: AppStoreVersionLocalizationUpdateRequest
+- path:id string
+- body:description string
+- body:keywords string
+- body:marketingUrl string
+- body:promotionalText string
+- body:supportUrl string
+- body:whatsNew string
+
+## S131-N0031  DELETE /v1/appStoreVersionPhasedReleases/{id}
+- path:id string
+
+## S131-N0033  POST /v1/appStoreVersionSubmissions
+schema: AppStoreVersionSubmissionCreateRequest
+- body:relationships object
+- body:relationships.appStoreVersion object
+- body:relationships.appStoreVersion.data object
+- body:type string enum[appStoreVersionSubmissions]
+
+## S131-N0034  DELETE /v1/appStoreVersionSubmissions/{id}
+- path:id string
+
+## S131-N0035  POST /v1/appStoreVersions
+schema: AppStoreVersionCreateRequest
+- body:copyright string
+- body:earliestReleaseDate string
+- body:platform string enum[IOS|MAC_OS|TV_OS]
+- body:releaseType string enum[MANUAL|AFTER_APPROVAL|SCHEDULED]
+- body:usesIdfa boolean
+- body:versionString string
+- body:app object
+- body:app.data object
+- body:app.data.id string
+- body:app.data.type string enum[apps]
+- body:build object
+- body:build.data object
+- body:build.data.id string
+- body:build.data.type string enum[builds]
+
+## S131-N0036  DELETE /v1/appStoreVersions/{id}
+- path:id string
+
+## S131-N0037  PATCH /v1/appStoreVersions/{id}
+schema: AppStoreVersionUpdateRequest
+- path:id string
+- body:copyright string
+- body:downloadable boolean
+- body:earliestReleaseDate string
+- body:releaseType string enum[MANUAL|AFTER_APPROVAL|SCHEDULED]
+- body:usesIdfa boolean
+- body:versionString string
+- body:build object
+- body:build.data object
+- body:build.data.id string
+- body:build.data.type string enum[builds]
+
+## S131-N0038  PATCH /v1/appStoreVersions/{id}/relationships/build
+schema: AppStoreVersionBuildLinkageRequest
+- path:id string
+- body:id string
+- body:type string enum[builds]
+
+## S131-N0040  DELETE /v1/apps/{id}/relationships/betaTesters
+schema: AppBetaTestersLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[betaTesters]
+
+## S131-N0041  POST /v1/betaAppLocalizations
+schema: BetaAppLocalizationCreateRequest
+- body:description string
+- body:feedbackEmail string
+- body:locale string
+- body:marketingUrl string
+- body:privacyPolicyUrl string
+- body:tvOsPrivacyPolicy string
+- body:app object
+- body:app.data object
+- body:app.data.id string
+- body:app.data.type string enum[apps]
+
+## S131-N0042  DELETE /v1/betaAppLocalizations/{id}
+- path:id string
+
+## S131-N0043  PATCH /v1/betaAppLocalizations/{id}
+schema: BetaAppLocalizationUpdateRequest
+- path:id string
+- body:description string
+- body:feedbackEmail string
+- body:marketingUrl string
+- body:privacyPolicyUrl string
+- body:tvOsPrivacyPolicy string
+
+## S131-N0044  PATCH /v1/betaAppReviewDetails/{id}
+schema: BetaAppReviewDetailUpdateRequest
+- path:id string
+- body:contactEmail string
+- body:contactFirstName string
+- body:contactLastName string
+- body:contactPhone string
+- body:demoAccountName string
+- body:demoAccountPassword string
+- body:demoAccountRequired boolean
+- body:notes string
+
+## S131-N0045  POST /v1/betaAppReviewSubmissions
+schema: BetaAppReviewSubmissionCreateRequest
+- body:relationships object
+- body:relationships.build object
+- body:relationships.build.data object
+- body:type string enum[betaAppReviewSubmissions]
+
+## S131-N0046  POST /v1/betaBuildLocalizations
+schema: BetaBuildLocalizationCreateRequest
+- body:locale string
+- body:whatsNew string
+- body:build object
+- body:build.data object
+- body:build.data.id string
+- body:build.data.type string enum[builds]
+
+## S131-N0047  DELETE /v1/betaBuildLocalizations/{id}
+- path:id string
+
+## S131-N0049  POST /v1/betaGroups
+schema: BetaGroupCreateRequest
+- body:feedbackEnabled boolean
+- body:name string
+- body:publicLinkEnabled boolean
+- body:publicLinkLimit integer
+- body:publicLinkLimitEnabled boolean
+- body:app object
+- body:app.data object
+- body:app.data.id string
+- body:app.data.type string enum[apps]
+- body:betaTesters object
+- body:betaTesters.data array<object>
+- body:betaTesters.data[].id string
+- body:betaTesters.data[].type string enum[betaTesters]
+- body:builds object
+- body:builds.data array<object>
+- body:builds.data[].id string
+- body:builds.data[].type string enum[builds]
+
+## S131-N0050  DELETE /v1/betaGroups/{id}
+- path:id string
+
+## S131-N0051  PATCH /v1/betaGroups/{id}
+schema: BetaGroupUpdateRequest
+- path:id string
+- body:feedbackEnabled boolean
+- body:name string
+- body:publicLinkEnabled boolean
+- body:publicLinkLimit integer
+- body:publicLinkLimitEnabled boolean
+
+## S131-N0052  DELETE /v1/betaGroups/{id}/relationships/betaTesters
+schema: BetaGroupBetaTestersLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[betaTesters]
+
+## S131-N0054  DELETE /v1/betaGroups/{id}/relationships/builds
+schema: BetaGroupBuildsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[builds]
+
+## S131-N0055  POST /v1/betaGroups/{id}/relationships/builds
+schema: BetaGroupBuildsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[builds]
+
+## S131-N0056  PATCH /v1/betaLicenseAgreements/{id}
+schema: BetaLicenseAgreementUpdateRequest
+- path:id string
+- body:agreementText string
+
+## S131-N0057  POST /v1/betaTesterInvitations
+schema: BetaTesterInvitationCreateRequest
+- body:relationships object
+- body:relationships.app object
+- body:relationships.app.data object
+- body:relationships.betaTester object
+- body:relationships.betaTester.data object
+- body:type string enum[betaTesterInvitations]
+
+## S131-N0059  DELETE /v1/betaTesters/{id}
+- path:id string
+
+## S131-N0060  DELETE /v1/betaTesters/{id}/relationships/apps
+schema: BetaTesterAppsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[apps]
+
+## S131-N0061  DELETE /v1/betaTesters/{id}/relationships/betaGroups
+schema: BetaTesterBetaGroupsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[betaGroups]
+
+## S131-N0062  POST /v1/betaTesters/{id}/relationships/betaGroups
+schema: BetaTesterBetaGroupsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[betaGroups]
+
+## S131-N0063  DELETE /v1/betaTesters/{id}/relationships/builds
+schema: BetaTesterBuildsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[builds]
+
+## S131-N0064  POST /v1/betaTesters/{id}/relationships/builds
+schema: BetaTesterBuildsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[builds]
+
+## S131-N0066  POST /v1/buildBetaNotifications
+schema: BuildBetaNotificationCreateRequest
+- body:relationships object
+- body:relationships.build object
+- body:relationships.build.data object
+- body:type string enum[buildBetaNotifications]
+
+## S131-N0067  PATCH /v1/builds/{id}
+schema: BuildUpdateRequest
+- path:id string
+- body:expired boolean
+- body:usesNonExemptEncryption boolean
+- body:appEncryptionDeclaration object
+- body:appEncryptionDeclaration.data object
+- body:appEncryptionDeclaration.data.id string
+- body:appEncryptionDeclaration.data.type string enum[appEncryptionDeclarations]
+
+## S131-N0068  PATCH /v1/builds/{id}/relationships/appEncryptionDeclaration
+schema: BuildAppEncryptionDeclarationLinkageRequest
+- path:id string
+- body:id string
+- body:type string enum[appEncryptionDeclarations]
+
+## S131-N0069  DELETE /v1/builds/{id}/relationships/betaGroups
+schema: BuildBetaGroupsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[betaGroups]
+
+## S131-N0070  POST /v1/builds/{id}/relationships/betaGroups
+schema: BuildBetaGroupsLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[betaGroups]
+
+## S131-N0072  POST /v1/builds/{id}/relationships/individualTesters
+schema: BuildIndividualTestersLinkagesRequest
+- path:id string
+- body:id string
+- body:type string enum[betaTesters]
+
+## S131-N0074  DELETE /v1/bundleIdCapabilities/{id}
+- path:id string
+
+## S131-N0076  POST /v1/bundleIds
+schema: BundleIdCreateRequest
+- body:identifier string
+- body:name string
+- body:platform string enum[IOS|MAC_OS]
+- body:seedId string

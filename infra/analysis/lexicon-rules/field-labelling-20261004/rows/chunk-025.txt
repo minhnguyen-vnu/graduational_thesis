@@ -1,0 +1,1013 @@
+## S391-0001  POST /actions
+desc: Create a new action
+- body:channelId integer
+- body:codes object
+- body:desc string
+- body:functionId string
+- body:name string
+- body:parameters object
+
+## S391-0002  DELETE /actions/{action_id}
+desc: Delete an action
+- path:action_id string
+
+## S391-0003  PATCH /actions/{action_id}
+desc: Update information about a specific action
+- path:action_id string
+- body:channelId integer
+- body:codes object
+- body:desc string
+- body:functionId string
+- body:name string
+- body:parameters object
+
+## S391-0004  POST /admin/log
+desc: Log a message
+- body:(body) object
+
+## S391-0005  POST /apps
+desc: Create a new app
+- body:desc string
+- body:name string
+
+## S391-0006  POST /apps/ext/api/credentials
+desc: Create new external credentials
+- body:authType string enum[apikey|basic|none|oauth2]
+- body:channel_id string
+- body:credentials object
+- body:name string
+
+## S391-0007  DELETE /apps/ext/api/credentials/{channel_id}
+desc: Delete credentials for a channel
+- path:channel_id string
+
+## S391-0008  PATCH /apps/ext/api/credentials/{channel_id}
+desc: Update credentials for a channel
+- path:channel_id string
+- body:authType string enum[apikey|basic|none|oauth2]
+- body:channel_id string
+- body:credentials object
+- body:name string
+
+## S391-0009  POST /apps/rulegroup/run/{rule_id_list}
+desc: Run specified rule group in the app
+- path:rule_id_list string
+- query:break_when_rule_fires boolean
+- body:(body) object
+
+## S391-0010  POST /apps/rules/run
+desc: Run active app rules
+- query:break_when_rule_fires boolean
+- body:(body) object
+
+## S391-0011  DELETE /apps/{app_id}
+desc: Delete an app
+- path:app_id string
+
+## S391-0012  PATCH /apps/{app_id}
+desc: Update an app
+- path:app_id string
+- body:desc string
+- body:name string
+
+## S391-0013  POST /channels
+desc: Create a channel
+- body:description string
+- body:functions array<object>
+- body:functions[].id string
+- body:functions[].name string
+- body:functions[].parameters array<object>
+- body:functions[].parameters[].key string
+- body:functions[].parameters[].value string
+- body:functions[].type string enum[action|trigger]
+- body:id string
+- body:name string
+- body:type object
+
+## S391-0014  DELETE /channels/{channel_id}
+desc: Delete a channel
+- path:channel_id string
+
+## S391-0015  PATCH /channels/{channel_id}
+desc: Update a channel
+- path:channel_id string
+- body:actionIds string
+- body:description string
+- body:name string
+- body:status string enum[active|inactive]
+- body:triggerIds string
+
+## S391-0016  POST /channels/{channel_id}/functions
+desc: Create a channel function
+- path:channel_id string
+- body:apiType string enum[Internal|REST|SDK]
+- body:desc string
+- body:endpoint string
+- body:httpMethod string enum[DELETE|GET|PATCH|POST]
+- body:name string
+- body:requestParameters array<object>
+- body:requestParameters[].description string
+- body:requestParameters[].fieldType string
+- body:requestParameters[].label string
+- body:requestParameters[].name string
+- body:requestParameters[].schema object
+- body:requestParameters[].schema.datatype object
+- body:requestParameters[].schema.default string
+- body:requestParameters[].schema.expose object
+- body:requestParameters[].schema.required object
+- body:requestParameters[].schema.style string enum[postbody|query|template]
+- body:responseFormat string enum[Html|Json|Text|Xml]
+- body:type string enum[action|trigger]
+
+## S391-0017  POST /orgs
+desc: Create an org
+- body:desc string
+- body:name string
+- body:type string
+
+## S391-0018  POST /rules
+desc: Create a new rule
+- body:actionIds string
+- body:description string
+- body:name string
+- body:status string enum[active|inactive]
+- body:triggerIds string
+
+## S391-0019  DELETE /rules/{rule_id}
+desc: Delete a rule
+- path:rule_id string
+
+## S391-0020  PATCH /rules/{rule_id}
+desc: Update information about a specific rule
+- path:rule_id string
+- body:actionIds string
+- body:description string
+- body:name string
+- body:status string enum[active|inactive]
+- body:triggerIds string
+
+## S391-0021  POST /rules/{rule_id}/run
+desc: Run a rule
+- path:rule_id string
+- body:(body) object
+
+## S391-0022  POST /triggers
+desc: Create a new trigger in an app
+- body:channelId integer
+- body:codes object
+- body:desc string
+- body:functionId string
+- body:name string
+- body:parameters object
+
+## S391-0023  DELETE /triggers/{trigger_id}
+desc: Delete a trigger
+- path:trigger_id string
+
+## S391-0024  PATCH /triggers/{trigger_id}
+desc: Update a trigger
+- path:trigger_id string
+- body:channelId integer
+- body:codes object
+- body:desc string
+- body:functionId string
+- body:name string
+- body:parameters object
+
+## S391-0025  POST /users
+desc: Create a new App User
+- body:config object
+- body:name string
+- body:password string
+
+## S391-0026  POST /users/admin
+desc: Create a new admin user
+- body:email string
+- body:password string
+- body:type string enum[admin|guest]
+
+## S391-0027  DELETE /users/admin/{user_id}
+desc: Remove an admin user
+- path:user_id string
+
+## S391-0028  PATCH /users/admin/{user_id}
+desc: Update information about an admin user
+- path:user_id string
+- body:email string
+- body:password string
+- body:type string enum[admin|guest]
+
+## S391-0029  POST /users/authenticate/{user_id}/channel/{channel_id}
+desc: Authenticate a user for a channel
+- path:user_id string
+- path:channel_id string
+
+## S391-0030  DELETE /users/{user_id}
+desc: Remove a user
+- path:user_id string
+
+## S391-0031  PATCH /users/{user_id}
+desc: Update information about an App User
+- path:user_id string
+- body:config object
+- body:name string
+- body:password string
+
+## S391-0032  POST /users/{user_id}/channels
+desc: Assign a channel to a user
+- path:user_id string
+- body:(body) string
+
+## S391-0033  DELETE /users/{user_id}/channels/{channel_id}
+desc: Remove a user channel assignment
+- path:user_id string
+- path:channel_id string
+
+## S391-0034  DELETE /users/{user_id}/rules/{rule_id}
+desc: Remove a rule user
+- path:user_id string
+- path:rule_id string
+
+## S391-0035  POST /users/{user_id}/rules/{rule_id}
+desc: Assign a user to a rule
+- path:user_id string
+- path:rule_id string
+
+## S391-0036  POST /users/{user_id}/rules/{rule_id}/run
+desc: Run rule for a user
+- path:user_id string
+- path:rule_id string
+
+## S392-0001  POST /api2/convert
+summary: Performs a html to pdf conversion
+desc: Converts provided HTML string or url to PDF
+- body:base_url string
+- body:html string
+- body:key string
+- body:margin_bottom integer
+- body:margin_left integer
+- body:margin_right integer
+- body:margin_top integer
+- body:page_orientation string enum[Portrait|Landscape]
+- body:page_size string enum[A1|A2|A3|A4|A5|Letter|HalfLetter|Ledger|Legal]
+- body:url string
+
+## S393-0001  POST /v1/addresses/validate
+summary: Validate An Address
+desc: Address validation ensures accurate addresses and can lead to reduced shipping costs by preventing address correction surcharges. ShipEngine cross references multiple databases to validate addresses and identify potential deliverability issues.
+- body:address_line1 string
+- body:address_line2 string
+- body:address_line3 string
+- body:address_residential_indicator string enum[unknown|yes|no]
+- body:city_locality string
+- body:company_name string
+- body:country_code string
+- body:email string
+- body:name string
+- body:phone string
+- body:postal_code string
+- body:state_province string
+
+## S393-0002  POST /v1/batches
+summary: Create A Batch
+desc: Create a Batch
+- body:batch_notes string
+- body:external_batch_id string
+- body:rate_ids array<string>
+- body:shipment_ids array<string>
+
+## S393-0003  DELETE /v1/batches/{batch_id}
+summary: Delete Batch By Id
+desc: Delete Batch By Id
+- path:batch_id string
+
+## S393-0004  POST /v1/batches/{batch_id}/process/labels
+summary: Process Batch ID Labels
+desc: Process Batch ID Labels
+- path:batch_id string
+- body:display_scheme string enum[label|qr_code|label_and_qr_code]
+- body:label_format string enum[pdf|png|zpl]
+- body:label_layout string enum[4x6|letter]
+- body:ship_date string
+
+## S393-0005  POST /v1/connections/carriers/{carrier_name}
+summary: Connect a carrier account
+desc: Connect a carrier account
+- path:carrier_name string enum[access_worldwide|amazon_buy_shipping|amazon_shipping_uk|apc|asendia|australia_post|canada_post|dhl_ecommerce|dhl_express|dhl_express_au|dhl_express_ca|dhl_express_uk]
+- body:nickname string
+- body:password string
+- body:username string
+- body:email string
+- body:merchant_seller_id string
+- body:mws_auth_token string
+- body:auth_code string
+- body:account_number string
+- body:ftp_password string
+- body:ftp_username string
+- body:api_key string
+- body:api_secret string
+- body:contract_id string
+- body:ancillary_endorsement string enum[none|return_service_requested|forwarding_service_requested|address_service_requested|change_service_requested|leave_if_no_response]
+- body:client_id string
+- body:distribution_center string
+- body:pickup_number string
+- body:registration_id string
+- body:software_name string
+- body:sold_to string
+- body:country_code string
+- body:site_id string
+- body:account string
+- body:passphrase string
+- body:address1 string
+- body:address2 string
+- body:agree_to_eula boolean
+- body:city string
+- body:company string
+- body:first_name string
+- body:last_name string
+- body:meter_number string
+- body:phone string
+- body:postal_code string
+- body:state string
+- body:mailer_id string
+- body:profile_name string
+- body:induction_site string
+- body:merchant_id integer
+- body:activation_key string
+- body:company_name string
+- body:contact_name string
+- body:oba_email string
+- body:street_line1 string
+- body:street_line2 string
+- body:street_line3 string
+- body:access_key string
+- body:sendle_id string
+- body:account_country_code string
+- body:account_postal_code string
+- body:agree_to_technology_agreement boolean
+- body:invoice object
+- body:invoice.control_id string
+- body:invoice.invoice_amount number
+- body:invoice.invoice_currency_code string
+- body:invoice.invoice_date string
+- body:invoice.invoice_number string
+- body:invoice_amount number
+- body:invoice_currency_code string
+- body:title string
+
+## S393-0006  DELETE /v1/connections/carriers/{carrier_name}/{carrier_id}
+summary: Disconnect a carrier
+desc: Disconnect a carrier
+- path:carrier_name string enum[access_worldwide|amazon_buy_shipping|amazon_shipping_uk|apc|asendia|australia_post|canada_post|dhl_ecommerce|dhl_express|dhl_express_au|dhl_express_ca|dhl_express_uk]
+- path:carrier_id string
+
+## S393-0007  PUT /v1/connections/carriers/{carrier_name}/{carrier_id}/settings
+summary: Update carrier settings
+desc: Update carrier settings
+- path:carrier_name string enum[dhl_express|fedex|newgistics|ups]
+- path:carrier_id string
+- body:is_primary_account boolean
+- body:nickname string
+- body:should_hide_account_number_on_archive_doc boolean
+- body:letterhead_image string
+- body:pickup_type string enum[none|regular_pickup|request_courier|drop_box|business_service_center|station]
+- body:signature_image string
+- body:smart_post_endorsement string enum[none|return_service_requested|forwarding_service_requested|address_service_requested|change_service_requested|leave_if_no_response]
+- body:smart_post_hub string enum[none|allentown_pa|atlanta_ga|baltimore_md|charlotte_nc|chino_ca|dallas_tx|denver_co|detroit_mi|edison_nj|grove_city_oh|groveport_oh]
+- body:include_barcode_with_order_number boolean
+- body:receive_email_on_manifest_processing boolean
+- body:account_postal_code string
+- body:invoice object
+- body:invoice.control_id string
+- body:invoice.invoice_amount number
+- body:invoice.invoice_currency_code string
+- body:invoice.invoice_date string
+- body:invoice.invoice_number string
+- body:mail_innovations_cost_center string
+- body:mail_innovations_endorsement string enum[none|return_service_requested|forwarding_service_requested|address_service_requested|change_service_requested|leave_if_no_response]
+- body:use_carbon_neutral_shipping_program boolean
+- body:use_consolidation_services boolean
+- body:use_ground_freight_pricing boolean
+- body:use_negotiated_rates boolean
+- body:use_order_number_on_mail_innovations_labels boolean
+- body:email string
+
+## S393-0008  DELETE /v1/connections/insurance/shipsurance
+summary: Disconnect a Shipsurance Account
+desc: Disconnect a Shipsurance Account
+
+## S393-0009  POST /v1/connections/insurance/shipsurance
+summary: Connect a Shipsurance Account
+desc: Connect a Shipsurance Account
+- body:email string
+- body:policy_id string
+
+## S393-0010  POST /v1/environment/webhooks
+summary: Create a Webhook
+desc: Create a webook for specific events in the environment.
+- body:event string enum[batch|carrier_connected|order_source_refresh_complete|rate|report_complete|sales_orders_imported|track]
+- body:url string
+
+## S393-0011  PATCH /v1/insurance/shipsurance/add_funds
+summary: Add Funds To Insurance
+desc: You may need to auto fund your account from time to time. For example, if you don't normally ship items over $100, and may want to add funds to insurance rather than keeping the account funded.
+- body:amount number
+- body:currency string
+
+## S393-0012  POST /v1/labels
+summary: Purchase Label
+desc: Purchase and print a label for shipment
+- body:ship_from_service_point_id string
+- body:ship_to_service_point_id string
+- body:alternative_identifiers array<object>
+- body:alternative_identifiers[].type string
+- body:alternative_identifiers[].value string
+- body:batch_id string
+- body:carrier_code string
+- body:carrier_id string
+- body:charge_event string enum[carrier_default|on_creation|on_carrier_acceptance]
+- body:created_at string
+- body:display_scheme string enum[label|qr_code|label_and_qr_code]
+- body:form_download object
+- body:form_download.href string
+- body:form_download.type string
+- body:insurance_claim object
+- body:insurance_claim.href string
+- body:insurance_claim.type string
+- body:insurance_cost object
+- body:insurance_cost.amount number
+- body:insurance_cost.currency string
+- body:is_international boolean
+- body:is_return_label boolean
+- body:label_download object
+- body:label_download.href string
+- body:label_download.pdf string
+- body:label_download.png string
+- body:label_download.zpl string
+- body:label_download_type string enum[url|inline]
+- body:label_format string enum[pdf|png|zpl]
+- body:label_id string
+- body:label_image_id string
+- body:label_layout string enum[4x6|letter]
+- body:outbound_label_id string
+- body:package_code string
+- body:packages array<object>
+- body:packages[].content_description string
+- body:packages[].dimensions object
+- body:packages[].dimensions.height number
+- body:packages[].dimensions.length number
+- body:packages[].dimensions.unit string enum[inch|centimeter]
+- body:packages[].dimensions.width number
+- body:packages[].external_package_id string
+- body:packages[].form_download object
+- body:packages[].form_download.href string
+- body:packages[].form_download.type string
+- body:packages[].insured_value object
+- body:packages[].insured_value.amount number
+- body:packages[].insured_value.currency string
+- body:packages[].label_download object
+- body:packages[].label_download.href string
+- body:packages[].label_download.pdf string
+- body:packages[].label_download.png string
+- body:packages[].label_download.zpl string
+- body:packages[].label_messages object
+- body:packages[].label_messages.reference1 string
+- body:packages[].label_messages.reference2 string
+- body:packages[].label_messages.reference3 string
+- body:packages[].package_code string
+- body:packages[].package_id string
+- body:packages[].sequence integer
+- body:packages[].tracking_number string
+- body:packages[].weight object
+- body:packages[].weight.unit string enum[pound|ounce|gram|kilogram]
+- body:packages[].weight.value number
+- body:rma_number string
+- body:service_code string
+- body:ship_date string
+- body:shipment object
+- body:shipment.advanced_options object
+- body:shipment.advanced_options.bill_to_account string
+- body:shipment.advanced_options.bill_to_country_code string
+- body:shipment.advanced_options.bill_to_party string enum[recipient|third_party]
+- body:shipment.advanced_options.bill_to_postal_code string
+- body:shipment.advanced_options.collect_on_delivery object
+- body:shipment.advanced_options.contains_alcohol boolean
+- body:shipment.advanced_options.custom_field1 string
+- body:shipment.advanced_options.custom_field2 string
+- body:shipment.advanced_options.custom_field3 string
+- body:shipment.advanced_options.delivered_duty_paid boolean
+- body:shipment.advanced_options.dry_ice boolean
+- (115 truong bi cat)
+
+## S393-0013  POST /v1/labels/shipment/{shipment_id}
+summary: Purchase Label with Shipment ID
+desc: Purchase a label using a shipment ID that has already been created with the desired address and package info.
+- path:shipment_id string
+- body:display_scheme string enum[label|qr_code|label_and_qr_code]
+- body:label_download_type string enum[url|inline]
+- body:label_format string enum[pdf|png|zpl]
+- body:label_layout string enum[4x6|letter]
+- body:validate_address string enum[no_validation|validate_only|validate_and_clean]
+
+## S393-0014  POST /v1/labels/{label_id}/return
+summary: Create a return label
+desc: Create a return label
+- path:label_id string
+- body:charge_event string enum[carrier_default|on_creation|on_carrier_acceptance]
+- body:display_scheme string enum[label|qr_code|label_and_qr_code]
+- body:label_download_type string enum[url|inline]
+- body:label_format string enum[pdf|png|zpl]
+- body:label_image_id string
+- body:label_layout string enum[4x6|letter]
+
+## S393-0015  PUT /v1/labels/{label_id}/void
+summary: Void a Label By ID
+desc: Void a label by ID to get a refund.
+- path:label_id string
+
+## S393-0016  POST /v1/manifests
+summary: Create Manifest
+desc: Each ShipEngine manifest is created for a specific warehouse, so you'll need to provide the warehouse_id rather than the ship_from address. You can create a warehouse for each location that you want to create manifests for.
+- body:carrier_id string
+- body:excluded_label_ids array<string>
+- body:label_ids array<string>
+- body:ship_date string
+- body:warehouse_id string
+
+## S393-0017  PUT /v1/packages/{package_id}
+summary: Update Custom Package Type By ID
+desc: Update the custom package type object by ID
+- path:package_id string
+- body:description string
+- body:dimensions object
+- body:dimensions.height number
+- body:dimensions.length number
+- body:dimensions.unit string enum[inch|centimeter]
+- body:dimensions.width number
+- body:name string
+- body:package_code string
+- body:package_id string
+
+## S393-0018  POST /v1/pickups
+summary: Schedule a Pickup
+desc: Schedule a package pickup with a carrier
+- body:cancelled_at string
+- body:carrier_id string
+- body:confirmation_number string
+- body:contact_details object
+- body:contact_details.email string
+- body:contact_details.name string
+- body:contact_details.phone string
+- body:created_at string
+- body:label_ids array<string>
+- body:pickup_address object
+- body:pickup_address.address_line1 string
+- body:pickup_address.address_line2 string
+- body:pickup_address.address_line3 string
+- body:pickup_address.address_residential_indicator string enum[unknown|yes|no]
+- body:pickup_address.city_locality string
+- body:pickup_address.company_name string
+- body:pickup_address.country_code string
+- body:pickup_address.email string
+- body:pickup_address.name string
+- body:pickup_address.phone string
+- body:pickup_address.postal_code string
+- body:pickup_address.state_province string
+- body:pickup_id string
+- body:pickup_notes string
+- body:pickup_window object
+- body:pickup_window.end_at string
+- body:pickup_window.start_at string
+- body:pickup_windows array<object>
+- body:pickup_windows[].end_at string
+- body:pickup_windows[].start_at string
+- body:warehouse_id string
+
+## S393-0019  DELETE /v1/pickups/{pickup_id}
+summary: Delete a Scheduled Pickup
+desc: Delete a previously-scheduled pickup by ID
+- path:pickup_id string
+
+## S393-0020  POST /v1/rates
+summary: Get Shipping Rates
+desc: It's not uncommon that you want to give your customer the choice between whether they want to ship the fastest, cheapest, or the most trusted route. Most companies don't solely ship things using a single shipping option; so we provide functionality to show you all your options!
+- body:rate_options object
+- body:rate_options.calculate_tax_amount boolean
+- body:rate_options.carrier_ids array<string>
+- body:rate_options.is_return boolean
+- body:rate_options.package_types array<string>
+- body:rate_options.preferred_currency string
+- body:rate_options.service_codes array<string>
+- body:shipment_id string
+- body:shipment object
+- body:shipment.validate_address string enum[no_validation|validate_only|validate_and_clean]
+- body:shipment.advanced_options object
+- body:shipment.advanced_options.bill_to_account string
+- body:shipment.advanced_options.bill_to_country_code string
+- body:shipment.advanced_options.bill_to_party string enum[recipient|third_party]
+- body:shipment.advanced_options.bill_to_postal_code string
+- body:shipment.advanced_options.collect_on_delivery object
+- body:shipment.advanced_options.contains_alcohol boolean
+- body:shipment.advanced_options.custom_field1 string
+- body:shipment.advanced_options.custom_field2 string
+- body:shipment.advanced_options.custom_field3 string
+- body:shipment.advanced_options.delivered_duty_paid boolean
+- body:shipment.advanced_options.dry_ice boolean
+- body:shipment.advanced_options.dry_ice_weight object
+- body:shipment.advanced_options.fedex_freight object
+- body:shipment.advanced_options.freight_class string
+- body:shipment.advanced_options.non_machinable boolean
+- body:shipment.advanced_options.origin_type string enum[pickup|drop_off]
+- body:shipment.advanced_options.saturday_delivery boolean
+- body:shipment.advanced_options.shipper_release boolean
+- body:shipment.advanced_options.third_party_consignee boolean
+- body:shipment.advanced_options.use_ups_ground_freight_pricing boolean
+- body:shipment.carrier_id string
+- body:shipment.confirmation string enum[none|delivery|signature|adult_signature|direct_signature|delivery_mailed|verbal_confirmation]
+- body:shipment.created_at string
+- body:shipment.customs object
+- body:shipment.customs.contents string enum[merchandise|documents|gift|returned_goods|sample]
+- body:shipment.customs.customs_items array<object>
+- body:shipment.customs.non_delivery string enum[return_to_sender|treat_as_abandoned]
+- body:shipment.external_order_id string
+- body:shipment.external_shipment_id string
+- body:shipment.insurance_provider string enum[none|shipsurance|carrier|third_party]
+- body:shipment.items array<object>
+- body:shipment.items[].asin string
+- body:shipment.items[].external_order_id string
+- body:shipment.items[].external_order_item_id string
+- body:shipment.items[].name string
+- body:shipment.items[].order_source_code string enum[amazon_ca|amazon_us|brightpearl|channel_advisor|cratejoy|ebay|etsy|jane|groupon_goods|magento|paypal|seller_active]
+- body:shipment.items[].quantity integer
+- body:shipment.items[].sales_order_id string
+- body:shipment.items[].sales_order_item_id string
+- body:shipment.items[].sku string
+- body:shipment.modified_at string
+- body:shipment.order_source_code string enum[amazon_ca|amazon_us|brightpearl|channel_advisor|cratejoy|ebay|etsy|jane|groupon_goods|magento|paypal|seller_active]
+- body:shipment.origin_type string enum[pickup|drop_off]
+- body:shipment.packages array<object>
+- body:shipment.packages[].content_description string
+- body:shipment.packages[].dimensions object
+- body:shipment.packages[].external_package_id string
+- body:shipment.packages[].form_download object
+- body:shipment.packages[].insured_value object
+- body:shipment.packages[].label_download object
+- body:shipment.packages[].label_messages object
+- body:shipment.packages[].package_code string
+- body:shipment.packages[].package_id string
+- body:shipment.packages[].sequence integer
+- body:shipment.packages[].tracking_number string
+- body:shipment.packages[].weight object
+- body:shipment.return_to object
+- body:shipment.return_to.address_line1 string
+- body:shipment.return_to.address_line2 string
+- body:shipment.return_to.address_line3 string
+- body:shipment.return_to.address_residential_indicator string enum[unknown|yes|no]
+- body:shipment.return_to.city_locality string
+- body:shipment.return_to.company_name string
+- body:shipment.return_to.country_code string
+- body:shipment.return_to.email string
+- body:shipment.return_to.name string
+- body:shipment.return_to.phone string
+- body:shipment.return_to.postal_code string
+- body:shipment.return_to.state_province string
+- (45 truong bi cat)
+
+## S393-0021  POST /v1/rates/estimate
+summary: Estimate Rates
+desc: Get Rate Estimates
+- body:address_residential_indicator string enum[unknown|yes|no]
+- body:confirmation string enum[none|delivery|signature|adult_signature|direct_signature|delivery_mailed|verbal_confirmation]
+- body:dimensions object
+- body:dimensions.height number
+- body:dimensions.length number
+- body:dimensions.unit string enum[inch|centimeter]
+- body:dimensions.width number
+- body:from_city_locality string
+- body:from_country_code string
+- body:from_postal_code string
+- body:from_state_province string
+- body:ship_date string
+- body:to_city_locality string
+- body:to_country_code string
+- body:to_postal_code string
+- body:to_state_province string
+- body:weight object
+- body:weight.unit string enum[pound|ounce|gram|kilogram]
+- body:weight.value number
+- body:carrier_id string
+- body:carrier_ids array<string>
+
+## S393-0022  POST /v1/service_points/list
+summary: List Service Points
+desc: List carrier service points by location
+- body:address object
+- body:address.address_line1 string
+- body:address.address_line2 string
+- body:address.address_line3 string
+- body:address.city_locality string
+- body:address.country_code string
+- body:address.postal_code string
+- body:address.state_province string
+- body:address_query string
+- body:lat number
+- body:long number
+- body:max_results integer
+- body:providers array<object>
+- body:providers[].carrier_id string
+- body:providers[].service_code array<string>
+- body:radius integer
+
+## S393-0023  PUT /v1/shipments/recognize
+summary: Parse shipping info
+desc: The shipment-recognition API makes it easy for you to extract shipping data from unstructured text, including people's names, addresses, package weights and dimensions, insurance and delivery requirements, and more. Data often enters your system as unstructured text (for example: emails, SMS messages, support tickets, or other documents). ShipEngine's shipment-recognition API helps you extract mea
+- body:shipment object
+- body:shipment.advanced_options object
+- body:shipment.advanced_options.bill_to_account string
+- body:shipment.advanced_options.bill_to_country_code string
+- body:shipment.advanced_options.bill_to_party string enum[recipient|third_party]
+- body:shipment.advanced_options.bill_to_postal_code string
+- body:shipment.advanced_options.collect_on_delivery object
+- body:shipment.advanced_options.contains_alcohol boolean
+- body:shipment.advanced_options.custom_field1 string
+- body:shipment.advanced_options.custom_field2 string
+- body:shipment.advanced_options.custom_field3 string
+- body:shipment.advanced_options.delivered_duty_paid boolean
+- body:shipment.advanced_options.dry_ice boolean
+- body:shipment.advanced_options.dry_ice_weight object
+- body:shipment.advanced_options.fedex_freight object
+- body:shipment.advanced_options.freight_class string
+- body:shipment.advanced_options.non_machinable boolean
+- body:shipment.advanced_options.origin_type string enum[pickup|drop_off]
+- body:shipment.advanced_options.saturday_delivery boolean
+- body:shipment.advanced_options.shipper_release boolean
+- body:shipment.advanced_options.third_party_consignee boolean
+- body:shipment.advanced_options.use_ups_ground_freight_pricing boolean
+- body:shipment.carrier_id string
+- body:shipment.confirmation string enum[none|delivery|signature|adult_signature|direct_signature|delivery_mailed|verbal_confirmation]
+- body:shipment.created_at string
+- body:shipment.customs object
+- body:shipment.customs.contents string enum[merchandise|documents|gift|returned_goods|sample]
+- body:shipment.customs.customs_items array<object>
+- body:shipment.customs.non_delivery string enum[return_to_sender|treat_as_abandoned]
+- body:shipment.external_order_id string
+- body:shipment.external_shipment_id string
+- body:shipment.insurance_provider string enum[none|shipsurance|carrier|third_party]
+- body:shipment.items array<object>
+- body:shipment.items[].asin string
+- body:shipment.items[].external_order_id string
+- body:shipment.items[].external_order_item_id string
+- body:shipment.items[].name string
+- body:shipment.items[].order_source_code string enum[amazon_ca|amazon_us|brightpearl|channel_advisor|cratejoy|ebay|etsy|jane|groupon_goods|magento|paypal|seller_active]
+- body:shipment.items[].quantity integer
+- body:shipment.items[].sales_order_id string
+- body:shipment.items[].sales_order_item_id string
+- body:shipment.items[].sku string
+- body:shipment.modified_at string
+- body:shipment.order_source_code string enum[amazon_ca|amazon_us|brightpearl|channel_advisor|cratejoy|ebay|etsy|jane|groupon_goods|magento|paypal|seller_active]
+- body:shipment.origin_type string enum[pickup|drop_off]
+- body:shipment.packages array<object>
+- body:shipment.packages[].content_description string
+- body:shipment.packages[].dimensions object
+- body:shipment.packages[].external_package_id string
+- body:shipment.packages[].form_download object
+- body:shipment.packages[].insured_value object
+- body:shipment.packages[].label_download object
+- body:shipment.packages[].label_messages object
+- body:shipment.packages[].package_code string
+- body:shipment.packages[].package_id string
+- body:shipment.packages[].sequence integer
+- body:shipment.packages[].tracking_number string
+- body:shipment.packages[].weight object
+- body:shipment.return_to object
+- body:shipment.return_to.address_line1 string
+- body:shipment.return_to.address_line2 string
+- body:shipment.return_to.address_line3 string
+- body:shipment.return_to.address_residential_indicator string enum[unknown|yes|no]
+- body:shipment.return_to.city_locality string
+- body:shipment.return_to.company_name string
+- body:shipment.return_to.country_code string
+- body:shipment.return_to.email string
+- body:shipment.return_to.name string
+- body:shipment.return_to.phone string
+- body:shipment.return_to.postal_code string
+- body:shipment.return_to.state_province string
+- body:shipment.return_to.instructions string
+- body:shipment.service_code string
+- body:shipment.ship_date string
+- body:shipment.ship_from object
+- body:shipment.ship_from.address_line1 string
+- body:shipment.ship_from.address_line2 string
+- body:shipment.ship_from.address_line3 string
+- body:shipment.ship_from.address_residential_indicator string enum[unknown|yes|no]
+- body:shipment.ship_from.city_locality string
+- (37 truong bi cat)
+
+## S393-0024  PUT /v1/shipments/{shipment_id}
+summary: Update Shipment By ID
+desc: Update a shipment object based on its ID
+- path:shipment_id string
+- body:advanced_options object
+- body:advanced_options.bill_to_account string
+- body:advanced_options.bill_to_country_code string
+- body:advanced_options.bill_to_party string enum[recipient|third_party]
+- body:advanced_options.bill_to_postal_code string
+- body:advanced_options.collect_on_delivery object
+- body:advanced_options.collect_on_delivery.payment_amount object
+- body:advanced_options.collect_on_delivery.payment_type string enum[any|cash|cash_equivalent|none]
+- body:advanced_options.contains_alcohol boolean
+- body:advanced_options.custom_field1 string
+- body:advanced_options.custom_field2 string
+- body:advanced_options.custom_field3 string
+- body:advanced_options.delivered_duty_paid boolean
+- body:advanced_options.dry_ice boolean
+- body:advanced_options.dry_ice_weight object
+- body:advanced_options.dry_ice_weight.unit string enum[pound|ounce|gram|kilogram]
+- body:advanced_options.dry_ice_weight.value number
+- body:advanced_options.fedex_freight object
+- body:advanced_options.fedex_freight.booking_confirmation string
+- body:advanced_options.fedex_freight.shipper_load_and_count string
+- body:advanced_options.freight_class string
+- body:advanced_options.non_machinable boolean
+- body:advanced_options.origin_type string enum[pickup|drop_off]
+- body:advanced_options.saturday_delivery boolean
+- body:advanced_options.shipper_release boolean
+- body:advanced_options.third_party_consignee boolean
+- body:advanced_options.use_ups_ground_freight_pricing boolean
+- body:carrier_id string
+- body:confirmation string enum[none|delivery|signature|adult_signature|direct_signature|delivery_mailed|verbal_confirmation]
+- body:created_at string
+- body:customs object
+- body:customs.contents string enum[merchandise|documents|gift|returned_goods|sample]
+- body:customs.customs_items array<object>
+- body:customs.customs_items[].country_of_origin string
+- body:customs.customs_items[].customs_item_id string
+- body:customs.customs_items[].description string
+- body:customs.customs_items[].harmonized_tariff_code string
+- body:customs.customs_items[].quantity integer
+- body:customs.customs_items[].sku string
+- body:customs.customs_items[].sku_description string
+- body:customs.customs_items[].unit_of_measure string
+- body:customs.customs_items[].value object
+- body:customs.customs_items[].weight object
+- body:customs.non_delivery string enum[return_to_sender|treat_as_abandoned]
+- body:external_order_id string
+- body:external_shipment_id string
+- body:insurance_provider string enum[none|shipsurance|carrier|third_party]
+- body:items array<object>
+- body:items[].asin string
+- body:items[].external_order_id string
+- body:items[].external_order_item_id string
+- body:items[].name string
+- body:items[].order_source_code string enum[amazon_ca|amazon_us|brightpearl|channel_advisor|cratejoy|ebay|etsy|jane|groupon_goods|magento|paypal|seller_active]
+- body:items[].quantity integer
+- body:items[].sales_order_id string
+- body:items[].sales_order_item_id string
+- body:items[].sku string
+- body:modified_at string
+- body:order_source_code string enum[amazon_ca|amazon_us|brightpearl|channel_advisor|cratejoy|ebay|etsy|jane|groupon_goods|magento|paypal|seller_active]
+- body:origin_type string enum[pickup|drop_off]
+- body:packages array<object>
+- body:packages[].content_description string
+- body:packages[].dimensions object
+- body:packages[].dimensions.height number
+- body:packages[].dimensions.length number
+- body:packages[].dimensions.unit string enum[inch|centimeter]
+- body:packages[].dimensions.width number
+- body:packages[].external_package_id string
+- body:packages[].form_download object
+- body:packages[].form_download.href string
+- body:packages[].form_download.type string
+- body:packages[].insured_value object
+- body:packages[].insured_value.amount number
+- body:packages[].insured_value.currency string
+- body:packages[].label_download object
+- body:packages[].label_download.href string
+- body:packages[].label_download.pdf string
+- body:packages[].label_download.png string
+- body:packages[].label_download.zpl string
+- (70 truong bi cat)
+
+## S393-0025  PUT /v1/shipments/{shipment_id}/cancel
+summary: Cancel a Shipment
+desc: Mark a shipment cancelled, if it is no longer needed or being used by your organized. Any label associated with the shipment needs to be voided first An example use case would be if a batch label creation job is going to run at a set time and only queries `pending` shipments. Marking a shipment as cancelled would remove it from this process
+- path:shipment_id string
+
+## S393-0026  DELETE /v1/shipments/{shipment_id}/tags/{tag_name}
+summary: Remove Tag from Shipment
+desc: Remove an existing tag from the Shipment object
+- path:shipment_id string
+- path:tag_name string
+
+## S393-0027  POST /v1/shipments/{shipment_id}/tags/{tag_name}
+summary: Add Tag to Shipment
+desc: Add a tag to the shipment object
+- path:shipment_id string
+- path:tag_name string
+
+## S393-0028  DELETE /v1/tags/{tag_name}
+summary: Delete Tag
+desc: Delete a tag that is no longer needed
+- path:tag_name string
+
+## S393-0029  POST /v1/tags/{tag_name}
+summary: Create a New Tag
+desc: Create a new Tag for customizing how you track your shipments
+- path:tag_name string
+
+## S393-0030  PUT /v1/tags/{tag_name}/{new_tag_name}
+summary: Update Tag Name
+desc: Change a tag name while still keeping the relevant shipments attached to it
+- path:tag_name string
+- path:new_tag_name string
+
+## S393-0031  POST /v1/tokens/ephemeral
+summary: Get Ephemeral Token
+desc: This endpoint returns a token that can be passed to an application for authorized access. The lifetime of this token is 10 seconds.
+- query:redirect string enum[shipengine-dashboard]
+
+## S393-0032  POST /v1/tracking/start
+summary: Start Tracking a Package
+desc: Allows you to subscribe to tracking updates for a package. You specify the carrier_code and tracking_number of the package, and receive notifications via webhooks whenever the shipping status changes.
+- query:carrier_code string
+- query:tracking_number string
+
+## S393-0033  POST /v1/tracking/stop
+summary: Stop Tracking a Package
+desc: Unsubscribe from tracking updates for a package.
+- query:carrier_code string
+- query:tracking_number string
+
+## S393-0034  POST /v1/warehouses
+summary: Create Warehouse
+desc: Create a warehouse location that you can use to create shipping items by simply passing in the generated warehouse id. If the return address is not supplied in the request body then it is assumed that the origin address is the return address as well
+- body:created_at string
+- body:is_default boolean
+- body:name string
+- body:origin_address object
+- body:origin_address.address_line1 string
+- body:origin_address.address_line2 string
+- body:origin_address.address_line3 string
+- body:origin_address.address_residential_indicator string enum[unknown|yes|no]
+- body:origin_address.city_locality string
+- body:origin_address.company_name string
+- body:origin_address.country_code string
+- body:origin_address.email string
+- body:origin_address.name string
+- body:origin_address.phone string
+- body:origin_address.postal_code string
+- body:origin_address.state_province string
+- body:return_address object
+- body:return_address.address_line1 string
+- body:return_address.address_line2 string
+- body:return_address.address_line3 string
+- body:return_address.address_residential_indicator string enum[unknown|yes|no]
+- body:return_address.city_locality string
+- body:return_address.company_name string
+- body:return_address.country_code string
+- body:return_address.email string
+- body:return_address.name string
+- body:return_address.phone string
+- body:return_address.postal_code string
+- body:return_address.state_province string
+- body:warehouse_id string
+
+## S393-0035  DELETE /v1/warehouses/{warehouse_id}
+summary: Delete Warehouse By ID
+desc: Delete a warehouse by ID
+- path:warehouse_id string
+
+## S393-0036  PUT /v1/warehouses/{warehouse_id}
+summary: Update Warehouse By Id
+desc: Update Warehouse object information
+- path:warehouse_id string
+- body:created_at string
+- body:is_default boolean
+- body:name string
+- body:origin_address object
+- body:origin_address.address_line1 string
+- body:origin_address.address_line2 string
+- body:origin_address.address_line3 string
+- body:origin_address.address_residential_indicator string enum[unknown|yes|no]
+- body:origin_address.city_locality string
+- body:origin_address.company_name string
+- body:origin_address.country_code string
+- body:origin_address.email string
+- body:origin_address.name string
+- body:origin_address.phone string
+- body:origin_address.postal_code string
+- body:origin_address.state_province string
+- body:return_address object
+- body:return_address.address_line1 string
+- body:return_address.address_line2 string
+- body:return_address.address_line3 string
+- body:return_address.address_residential_indicator string enum[unknown|yes|no]
+- body:return_address.city_locality string
+- body:return_address.company_name string
+- body:return_address.country_code string
+- body:return_address.email string
+- body:return_address.name string
+- body:return_address.phone string
+- body:return_address.postal_code string
+- body:return_address.state_province string
+- body:warehouse_id string

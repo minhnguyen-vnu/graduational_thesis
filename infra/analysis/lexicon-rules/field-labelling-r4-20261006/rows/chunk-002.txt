@@ -1,0 +1,333 @@
+## S513-N0059  POST /api/2/issueLinkType
+desc: Create a new issue link type.
+
+## S513-N0060  DELETE /api/2/issueLinkType/{issueLinkTypeId}
+desc: Delete the specified issue link type.
+- path:issueLinkTypeId string
+
+## S513-N0061  PUT /api/2/issueLinkType/{issueLinkTypeId}
+desc: Update the specified issue link type.
+- path:issueLinkTypeId string
+
+## S513-N0062  POST /api/2/issuetype
+desc: Creates an issue type from a JSON representation and adds the issue newly created issue type to the default issue type scheme.
+
+## S513-N0063  DELETE /api/2/issuetype/{id}
+desc: Deletes the specified issue type. If the issue type has any associated issues, these issues will be migrated to the alternative issue type specified in the parameter. You can determine the alternative issue types by calling the <b>/rest/api/2/issuetype/{id}/alternatives</b> resource.
+- path:id string
+- query:alternativeIssueTypeId string
+
+## S513-N0064  PUT /api/2/issuetype/{id}
+desc: Updates the specified issue type from a JSON representation.
+- path:id string
+
+## S513-N0065  POST /api/2/issuetype/{id}/avatar
+desc: Converts temporary avatar into a real avatar
+- path:id string
+
+## S513-N0066  POST /api/2/issuetype/{id}/avatar/temporary
+desc: Creates temporary avatar using multipart. The response is sent back as JSON stored in a textarea. This is because the client uses remote iframing to submit avatars using multipart. So we must send them a valid HTML page back from which the client parses the JSON from. <p> Creating a temporary avatar is part of a 3-step process in uploading a new avatar for an issue type: upload, crop, confirm. Thi
+- path:id string
+
+## S513-N0067  DELETE /api/2/issuetype/{issueTypeId}/properties/{propertyKey}
+desc: Removes the property from the issue type identified by the id. Ths user removing the property is required to have permissions to edit the issue type.
+- path:issueTypeId string
+- path:propertyKey string
+
+## S513-N0069  POST /api/2/licenseValidator
+
+## S513-N0070  DELETE /api/2/mypreferences
+desc: Removes preference of the currently logged in user. Preference key must be provided as input parameters (key). If key parameter is not provided or wrong - status code 404. If preference is unset - status code 204.
+- query:key string
+
+## S513-N0071  PUT /api/2/mypreferences
+desc: Sets preference of the currently logged in user. Preference key must be provided as input parameters (key). Value must be provided as post body. If key or value parameter is not provided - status code 404. If preference is set - status code 204.
+- query:key string
+
+## S513-N0072  PUT /api/2/myself
+desc: Modify currently logged user. The "value" fields present will override the existing value. Fields skipped in request will not be changed. Only email and display name can be change that way. Requires user password.
+
+## S513-N0074  POST /api/2/password/policy/createUser
+desc: Returns a list of statements explaining why the password policy would disallow a proposed password for a new user. <p> You can use this method to test the password policy validation. This could be done prior to an action where a new user and related password are created, using methods like the ones in <a href="https://docs.atlassian.com/jira/latest/com/atlassian/jira/bc/user/UserService.html">User
+
+## S513-N0076  POST /api/2/permissionscheme
+desc: Create a new permission scheme. This method can create schemes with a defined permission set, or without.
+- query:expand string
+
+## S513-N0077  PUT /api/2/permissionscheme/{permissionSchemeId}/attribute/{key}
+desc: Updates or inserts the attribute for a permission scheme specified by permission scheme id. The attribute consists of the key and the value. The value will be converted to Boolean using Boolean#valueOf.
+- path:permissionSchemeId integer
+- path:key string
+
+## S513-N0078  DELETE /api/2/permissionscheme/{schemeId}
+desc: Deletes a permission scheme identified by the given id.
+- path:schemeId integer
+
+## S513-N0079  PUT /api/2/permissionscheme/{schemeId}
+desc: Updates a permission scheme. <p> If the permissions list is present then it will be set in the permission scheme, which basically means it will overwrite any permission grants that existed in the permission scheme. Sending an empty list will remove all permission grants from the permission scheme. </p> <p> To update just the name and description, do not send permissions list at all. </p> <p> To ad
+- path:schemeId integer
+- query:expand string
+
+## S513-N0080  POST /api/2/permissionscheme/{schemeId}/permission
+desc: Creates a permission grant in a permission scheme.
+- path:schemeId integer
+- query:expand string
+
+## S513-N0081  DELETE /api/2/permissionscheme/{schemeId}/permission/{permissionId}
+desc: Deletes a permission grant from a permission scheme.
+- path:permissionId integer
+- path:schemeId integer
+
+## S513-N0082  POST /api/2/project
+desc: Creates a new project.
+
+## S513-N0083  DELETE /api/2/project/{projectIdOrKey}
+desc: Deletes a project.
+- path:projectIdOrKey string
+
+## S513-N0084  PUT /api/2/project/{projectIdOrKey}
+desc: Updates a project. <p> Only non null values sent in JSON will be updated in the project.</p> <p> Values available for the assigneeType field are: "PROJECT_LEAD" and "UNASSIGNED".</p>
+- path:projectIdOrKey string
+- query:expand string
+
+## S513-N0085  POST /api/2/project/{projectIdOrKey}/avatar
+desc: Converts temporary avatar into a real avatar
+- path:projectIdOrKey string
+
+## S513-N0086  PUT /api/2/project/{projectIdOrKey}/avatar
+- path:projectIdOrKey string
+
+## S513-N0088  DELETE /api/2/project/{projectIdOrKey}/avatar/{id}
+desc: Deletes avatar
+- path:projectIdOrKey string
+- path:id integer
+
+## S513-N0089  DELETE /api/2/project/{projectIdOrKey}/properties/{propertyKey}
+desc: Removes the property from the project identified by the key or by the id. Ths user removing the property is required to have permissions to administer the project.
+- path:projectIdOrKey string
+- path:propertyKey string
+
+## S513-N0090  PUT /api/2/project/{projectIdOrKey}/properties/{propertyKey}
+desc: Sets the value of the specified project's property. <p> You can use this resource to store a custom data against the project identified by the key or by the id. The user who stores the data is required to have permissions to administer the project. </p>
+- path:projectIdOrKey string
+- path:propertyKey string
+
+## S513-N0091  DELETE /api/2/project/{projectIdOrKey}/role/{id}
+desc: Deletes actors (users or groups) from a project role. <p> <ul> <li>Delete a user from the role: <code>/rest/api/2/project/{projectIdOrKey}/role/{roleId}?user={username}</code></li> <li>Delete a group from the role: <code>/rest/api/2/project/{projectIdOrKey}/role/{roleId}?group={groupname}</code></li> </ul>
+- path:projectIdOrKey string
+- path:id integer
+- query:user string
+- query:group string
+
+## S513-N0092  POST /api/2/project/{projectIdOrKey}/role/{id}
+desc: Adds an actor (user or group) to a project role.
+- path:projectIdOrKey string
+- path:id integer
+
+## S513-N0094  PUT /api/2/project/{projectIdOrKey}/type/{newProjectTypeKey}
+desc: Updates the type of a project.
+- path:projectIdOrKey string
+- path:newProjectTypeKey string
+
+## S513-N0095  PUT /api/2/project/{projectKeyOrId}/permissionscheme
+desc: Assigns a permission scheme with a project.
+- path:projectKeyOrId string
+- query:expand string
+
+## S513-N0096  POST /api/2/projectCategory
+desc: Create a project category via POST.
+
+## S513-N0097  DELETE /api/2/projectCategory/{id}
+desc: Delete a project category.
+- path:id integer
+
+## S513-N0098  PUT /api/2/projectCategory/{id}
+desc: Modify a project category via PUT. Any fields present in the PUT will override existing values. As a convenience, if a field is not present, it is silently ignored.
+- path:id integer
+
+## S513-N0099  POST /api/2/reindex
+desc: Kicks off a reindex. Need Admin permissions to perform this reindex.
+- query:type string
+- query:indexComments boolean
+- query:indexChangeHistory boolean
+- query:indexWorklogs boolean
+
+## S513-N0100  POST /api/2/reindex/issue
+desc: Reindexes one or more individual issues. Indexing is performed synchronously - the call returns when indexing of the issues has completed or a failure occurs. <p> Use either explicitly specified issue IDs or a JQL query to select issues to reindex.
+- query:issueId string
+- query:indexComments boolean
+- query:indexChangeHistory boolean
+- query:indexWorklogs boolean
+
+## S513-N0101  POST /api/2/reindex/request
+desc: Executes any pending reindex requests. Returns a JSON array containing the IDs of the reindex requests that are being processed. Execution is asynchronous - progress of the returned tasks can be monitored through other REST calls.
+
+## S513-N0102  POST /api/2/role
+desc: Creates a new ProjectRole to be available in JIRA. The created role does not have any default actors assigned.
+
+## S513-N0104  POST /api/2/role/{id}
+desc: Partially updates a roles name or description.
+- path:id integer
+
+## S513-N0108  POST /api/2/screens/addToDefault/{fieldId}
+desc: Adds field or custom field to the default tab
+- path:fieldId string
+
+## S513-N0111  PUT /api/2/screens/{screenId}/tabs/{tabId}
+desc: Renames tab on given screen
+- path:screenId integer
+- path:tabId integer
+
+## S513-N0112  POST /api/2/screens/{screenId}/tabs/{tabId}/fields
+desc: Adds field to the given tab.
+- path:screenId integer
+- path:tabId integer
+
+## S513-N0113  DELETE /api/2/screens/{screenId}/tabs/{tabId}/fields/{id}
+desc: Removes field from given tab
+- path:screenId integer
+- path:tabId integer
+- path:id string
+
+## S513-N0114  POST /api/2/screens/{screenId}/tabs/{tabId}/fields/{id}/move
+desc: Moves field on the given tab
+- path:screenId integer
+- path:tabId integer
+- path:id string
+
+## S513-N0115  POST /api/2/screens/{screenId}/tabs/{tabId}/move/{pos}
+desc: Moves tab position
+- path:screenId integer
+- path:tabId integer
+- path:pos integer
+
+## S513-N0116  POST /api/2/search
+desc: Performs a search using JQL.
+
+## S513-N0117  PUT /api/2/settings/baseUrl
+desc: Sets the base URL that is configured for this JIRA instance.
+
+## S513-N0118  PUT /api/2/settings/columns
+desc: Sets the default system columns for issue navigator. Admin permission will be required.
+
+## S513-N0120  DELETE /api/2/universal_avatar/type/{type}/owner/{owningObjectId}/avatar/{id}
+desc: Deletes avatar
+- path:id integer
+- path:type string
+- path:owningObjectId string
+
+## S513-N0121  POST /api/2/universal_avatar/type/{type}/owner/{owningObjectId}/temp
+- path:type string
+- path:owningObjectId string
+
+## S513-N0122  POST /api/2/upgrade
+desc: Runs any pending delayed upgrade tasks. Need Admin permissions to do this.
+
+## S513-N0123  DELETE /api/2/user
+desc: Removes user.
+- query:username string
+- query:key string
+
+## S513-N0124  POST /api/2/user
+desc: Create user. By default created user will not be notified with email. If password field is not set then password will be randomly generated.
+
+## S513-N0125  PUT /api/2/user
+desc: Modify user. The "value" fields present will override the existing value. Fields skipped in request will not be changed.
+- query:username string
+- query:key string
+
+## S513-N0126  DELETE /api/2/user/application
+desc: Remove user from given application. Admin permission will be required to perform this operation.
+- query:username string
+- query:applicationKey string
+
+## S513-N0127  POST /api/2/user/application
+desc: Add user to given application. Admin permission will be required to perform this operation.
+- query:username string
+- query:applicationKey string
+
+## S513-N0128  POST /api/2/user/avatar
+desc: Converts temporary avatar into a real avatar
+- query:username string
+
+## S513-N0129  PUT /api/2/user/avatar
+- query:username string
+
+## S513-N0130  POST /api/2/user/avatar/temporary
+desc: Creates temporary avatar using multipart. The response is sent back as JSON stored in a textarea. This is because the client uses remote iframing to submit avatars using multipart. So we must send them a valid HTML page back from which the client parses the JSON from. <p> Creating a temporary avatar is part of a 3-step process in uploading a new avatar for a user: upload, crop, confirm. This endpo
+- query:username string
+
+## S513-N0131  DELETE /api/2/user/avatar/{id}
+desc: Deletes avatar
+- path:id integer
+- query:username string
+
+## S513-N0134  PUT /api/2/user/password
+desc: Modify user password.
+- query:username string
+- query:key string
+
+## S513-N0135  DELETE /api/2/user/properties/{propertyKey}
+desc: Removes the property from the user identified by the key or by the id. Ths user removing the property is required to have permissions to administer the user.
+- path:propertyKey string
+- query:userKey string
+- query:username string
+
+## S513-N0136  PUT /api/2/user/properties/{propertyKey}
+desc: Sets the value of the specified user's property. <p> You can use this resource to store a custom data against the user identified by the key or by the id. The user who stores the data is required to have permissions to administer the user. </p>
+- path:propertyKey string
+- query:userKey string
+- query:username string
+
+## S513-N0137  POST /api/2/version
+desc: Create a version via POST.
+
+## S513-N0138  DELETE /api/2/version/{id}
+desc: Delete a project version.
+- path:id string
+- query:moveFixIssuesTo string
+- query:moveAffectedIssuesTo string
+
+## S513-N0139  PUT /api/2/version/{id}
+desc: Modify a version via PUT. Any fields present in the PUT will override existing values. As a convenience, if a field is not present, it is silently ignored.
+- path:id string
+
+## S513-N0140  PUT /api/2/version/{id}/mergeto/{moveIssuesTo}
+desc: Merge versions
+- path:moveIssuesTo string
+- path:id string
+
+## S513-N0142  POST /api/2/version/{id}/removeAndSwap
+desc: Delete a project version.
+- path:id string
+
+## S513-N0145  DELETE /api/2/version/{versionId}/remotelink/{globalId}
+desc: Delete a specific remote version link with the given version ID and global ID.
+- path:versionId string
+- path:globalId string
+
+## S513-N0146  POST /api/2/version/{versionId}/remotelink/{globalId}
+desc: Create a remote version link via POST. The link's global ID will be taken from the JSON payload if provided; otherwise, it will be generated.
+- path:versionId string
+- path:globalId string
+
+## S513-N0148  POST /api/2/workflow/api/2/transitions/{id}/properties
+desc: Add a new property to a transition. Trying to add a property that already exists will fail.
+- path:id integer
+- query:key string
+- query:workflowName string
+- query:workflowMode string
+
+## S513-N0149  PUT /api/2/workflow/api/2/transitions/{id}/properties
+desc: Update/add new property to a transition. Trying to update a property that does not exist will result in a new property being added.
+- path:id integer
+- query:key string
+- query:workflowName string
+- query:workflowMode string
+
+## S513-N0150  POST /api/2/workflowscheme
+desc: Create a new workflow scheme. <p/> The body contains a representation of the new scheme. Values not passed are assumed to be set to their defaults.
+
+## S513-N0151  DELETE /api/2/workflowscheme/{id}
+desc: Delete the passed workflow scheme.
+- path:id integer

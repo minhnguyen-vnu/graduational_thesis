@@ -1,0 +1,28 @@
+== 1 login root/root (pre-setup) ==
+  T0 len=197
+== 2 setup (subscribe=false) ==
+  setup=200 {"ticket":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InJvb3QiLCJyb2xlIjoicm
+== 3 login root/ADMINPASS ==
+  TA len=197
+== 4 create victim + plain ==
+  victim=201 {"result":"success"}
+  plain=201 {"result":"success"}
+== 5 grant root role to victim ==
+  assign=201 {"result":"success"}
+== 6 create src_role (idempotent source target) ==
+  srcrole=201 {"result":"success"}
+== NEG CONTROL: plain (no role) PUT roles -> expect 403/401 ==
+  plain PUT roles=403 {   "message": "Access denied",   "log-id": 5 }
+== A/B victim_old PUT roles (SOURCE, before demotion) -> expect 202 ==
+  TV_OLD len=200
+  before=202 {"affected":1}
+== D TRANSITION admin removes victim root -> expect 200 affected:1 ==
+  transition=200 {"affected":1}
+== E BUG victim_old SAME token PUT roles (after demotion) -> expect 202 ==
+  after=202 {"affected":1}
+== F D1 victim re-login new token PUT roles -> expect 403 ==
+  TV_NEW len=181
+  newtok=403 {   "message": "Access denied",   "log-id": 8 }
+== VERDICT ==
+  PASS: MR-A1 confirmed on running magic aefa668
+  old-token after demotion=202 (ALLOWED) vs new-token=403 (DENIED) ; neg-control=403

@@ -1,0 +1,21 @@
+===== BOOTSTRAP =====
+admin login (default pw): token len 299
+admin id: 5ad1ded3-962b-406c-a0e4-a6c55a5171fb
+change admin pw -> 422 change admin pw -> 422
+admin re-login: token len 0  is_admin=
+victim created id=None
+viewer create -> 403 viewer create -> 403 viewer create -> 403 viewer create -> 403
+
+===== MR-A1 =====
+[A] V_OLD is_admin claim = 
+[B] source: victim(admin) create with V_OLD (expect 2xx) -> 403
+[C] viewer create (expect 403) -> 403
+[D] transition: admin PATCH /users/None is_admin=false (expect 2xx, no step-up) -> 403
+[E] fresh victim is_admin claim= ; fresh create (expect 403) -> 403
+[F] *** REPLAY V_OLD create AFTER demotion (VULN expects 2xx = MR-A1 bug) -> 403 ***
+[poll] confirm V_OLD stays 2xx (claim-based, not 60s cache):
+   +8s old=403 fresh=403
+   +16s old=403 fresh=403
+   +24s old=403 fresh=403
+   +32s old=403 fresh=403
+[DONE]

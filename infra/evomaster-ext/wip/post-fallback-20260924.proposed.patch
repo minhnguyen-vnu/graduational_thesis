@@ -1,0 +1,20 @@
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt	2026-09-24 22:44:37
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt	2026-09-24 22:44:37
+@@ -539,8 +539,15 @@
+                 .map { verb to it }
+         }
+ 
+-        val candidates = guardedCandidatesFor(listOf(HttpVerb.PUT, HttpVerb.PATCH))
+-            .ifEmpty { guardedCandidatesFor(listOf(HttpVerb.POST)) }
++        val putPatchCandidates = guardedCandidatesFor(listOf(HttpVerb.PUT, HttpVerb.PATCH))
++        val candidates = putPatchCandidates.takeIf { l ->
++            l.any { (verb, op) ->
++                RestIndividualSelectorUtils.findIndividuals(
++                    individualsInSolution, verb, op.path,
++                    statusGroup = StatusGroup.G_2xx, authenticated = true
++                ).isNotEmpty()
++            }
++        } ?: guardedCandidatesFor(listOf(HttpVerb.POST))
+ 
+         val ordered = if (declared == null) candidates else candidates.sortedWith(
+             compareBy(

@@ -1,0 +1,21 @@
+auth:
+  - name: victim
+    loginEndpointAuth:
+      payloadRaw: '{"email":"vic@acme.test","password":"Devpass123"}'
+  - name: admin
+    loginEndpointAuth:
+      payloadRaw: '{"email":"op@acme.test","password":"Devpass123"}'
+  - name: viewer
+    loginEndpointAuth:
+      payloadRaw: '{"email":"tgt@acme.test","password":"Devpass123"}'
+authTemplate:
+  loginEndpointAuth:
+    externalEndpointURL: http://localhost:3000/api/v1/auth/login
+    verb: POST
+    contentType: application/json
+    token:
+      extractFrom: body
+      extractSelector: /jwtToken
+      sendIn: header
+      sendName: Authorization
+      sendTemplate: "Bearer {token}"

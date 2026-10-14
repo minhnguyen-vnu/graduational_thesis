@@ -1,0 +1,967 @@
+## S537-0003  PATCH /apps/{app_id}/keys/{key_id}
+desc: Updates a key | Update the API key with the specified key ID, for the application with the specified application ID.
+schema: key_patch
+- path:app_id string
+- path:key_id string
+- body:capabilities array<string> enum[publish|subscribe|history|presence|channel-metadata|push-admin|push-subscribe|statistics]
+- body:channels string
+- body:name string
+
+## S537-0004  POST /apps/{app_id}/keys/{key_id}/revoke
+desc: Revokes a key | Revokes the API key with the specified ID, with the Application ID. This deletes the key.
+- path:app_id string
+- path:key_id string
+
+## S537-0005  POST /apps/{app_id}/namespaces
+desc: Creates a namespace | Creates a namespace for the specified application ID.
+schema: namespace_post
+- path:app_id string
+- body:authenticated boolean
+- body:id string
+- body:persistLast boolean
+- body:persisted boolean
+- body:pushEnabled boolean
+- body:tlsOnly boolean
+
+## S537-0006  DELETE /apps/{app_id}/namespaces/{namespace_id}
+desc: Deletes a namespace | Deletes the namespace with the specified ID, for the specified application ID.
+- path:app_id string
+- path:namespace_id string
+
+## S537-0007  PATCH /apps/{app_id}/namespaces/{namespace_id}
+desc: Updates a namespace | Updates the namespace with the specified ID, for the application with the specified application ID.
+schema: namespace_patch
+- path:app_id string
+- path:namespace_id string
+- body:authenticated boolean
+- body:persistLast boolean
+- body:persisted boolean
+- body:pushEnabled boolean
+- body:tlsOnly boolean
+
+## S537-0008  POST /apps/{app_id}/queues
+desc: Creates a queue | Creates a queue for the application specified by application ID. The properties for the queue to be created are specified in the request body.
+schema: queue
+- path:app_id string
+- body:maxLength integer
+- body:name string
+- body:region string
+- body:ttl integer
+
+## S537-0009  DELETE /apps/{app_id}/queues/{queue_id}
+desc: Deletes a queue | Delete the queue with the specified queue name, from the application with the specified application ID.
+- path:app_id string
+- path:queue_id string
+
+## S537-0010  POST /apps/{app_id}/rules
+desc: Creates a Reactor rule | Creates a rule for the application with the specified application ID.
+schema: rule_post
+- path:app_id string
+- body:requestMode string enum[single|batch]
+- body:ruleType string enum[http]
+- body:source object
+- body:source.channelFilter string
+- body:source.type string enum[channel.message|channel.presence|channel.lifecycle|channel.occupancy]
+- body:status string enum[enabled|disabled]
+- body:target object
+- body:target.enveloped boolean
+- body:target.format string enum[json|msgpack]
+- body:target.headers array<object>
+- body:target.headers[].name string
+- body:target.headers[].value string
+- body:target.signingKeyId string
+- body:target.url string
+- body:_links object
+- body:appId string
+- body:created number
+- body:id string
+- body:modified number
+- body:version string
+
+## S537-0011  DELETE /apps/{app_id}/rules/{rule_id}
+desc: Deletes a Reactor rule
+- path:app_id string
+- path:rule_id string
+
+## S537-0012  PATCH /apps/{app_id}/rules/{rule_id}
+desc: Updates a Reactor rule
+schema: rule_patch
+- path:app_id string
+- path:rule_id string
+- body:requestMode string enum[single|batch]
+- body:ruleType string enum[http]
+- body:source object
+- body:source.channelFilter string
+- body:source.type string enum[channel.message|channel.presence|channel.lifecycle|channel.occupancy]
+- body:status string enum[enabled|disabled]
+- body:target object
+- body:target.enveloped boolean
+- body:target.format string enum[json|msgpack]
+- body:target.headers array<object>
+- body:target.headers[].name string
+- body:target.headers[].value string
+- body:target.signingKeyId string
+- body:target.url string
+
+## S537-0013  DELETE /apps/{id}
+desc: Deletes an app | Deletes the application with the specified application ID.
+- path:id string
+
+## S537-0014  PATCH /apps/{id}
+desc: Updates an app | Updates the application with the specified application ID.
+schema: app_patch
+- path:id string
+- body:apnsCertificate string
+- body:apnsPrivateKey string
+- body:apnsUseSandboxEndpoint boolean
+- body:fcmKey string
+- body:name string
+- body:status string enum[enabled|disabled]
+- body:tlsOnly boolean
+
+## S537-0015  POST /apps/{id}/pkcs12
+desc: Updates app's APNs info from a `.p12` file | Updates the application's Apple Push Notification service (APNs) information.
+schema: app_pkcs12
+- path:id string
+- body:p12File string
+- body:p12Pass string
+
+## S538-0001  POST /.cqactions.html
+- query:authorizableId string
+- query:changelog string
+
+## S538-0002  POST /apps/system/config/com.adobe.granite.auth.saml.SamlAuthenticationHandler.config
+- query:keyStorePassword string
+- query:keyStorePassword@TypeHint string
+- query:service.ranking integer
+- query:service.ranking@TypeHint string
+- query:idpHttpRedirect boolean
+- query:idpHttpRedirect@TypeHint string
+- query:createUser boolean
+- query:createUser@TypeHint string
+- query:defaultRedirectUrl string
+- query:defaultRedirectUrl@TypeHint string
+- query:userIDAttribute string
+- query:userIDAttribute@TypeHint string
+- query:defaultGroups array<string>
+- query:defaultGroups@TypeHint string
+- query:idpCertAlias string
+- query:idpCertAlias@TypeHint string
+- query:addGroupMemberships boolean
+- query:addGroupMemberships@TypeHint string
+- query:path array<string>
+- query:path@TypeHint string
+- query:synchronizeAttributes array<string>
+- query:synchronizeAttributes@TypeHint string
+- query:clockTolerance integer
+- query:clockTolerance@TypeHint string
+- query:groupMembershipAttribute string
+- query:groupMembershipAttribute@TypeHint string
+- query:idpUrl string
+- query:idpUrl@TypeHint string
+- query:logoutUrl string
+- query:logoutUrl@TypeHint string
+- query:serviceProviderEntityId string
+- query:serviceProviderEntityId@TypeHint string
+- query:assertionConsumerServiceURL string
+- query:assertionConsumerServiceURL@TypeHint string
+- query:handleLogout boolean
+- query:handleLogout@TypeHint string
+- query:spPrivateKeyAlias string
+- query:spPrivateKeyAlias@TypeHint string
+- query:useEncryption boolean
+- query:useEncryption@TypeHint string
+- query:nameIdFormat string
+- query:nameIdFormat@TypeHint string
+- query:digestMethod string
+- query:digestMethod@TypeHint string
+- query:signatureMethod string
+- query:signatureMethod@TypeHint string
+- query:userIntermediatePath string
+- query:userIntermediatePath@TypeHint string
+
+## S538-0003  POST /apps/system/config/com.shinesolutions.aem.passwordreset.Activator
+- query:pwdreset.authorizables array<string>
+- query:pwdreset.authorizables@TypeHint string
+
+## S538-0004  POST /apps/system/config/com.shinesolutions.healthcheck.hc.impl.ActiveBundleHealthCheck
+- query:bundles.ignored array<string>
+- query:bundles.ignored@TypeHint string
+
+## S538-0005  POST /apps/system/config/org.apache.felix.http
+- query:org.apache.felix.https.nio boolean
+- query:org.apache.felix.https.nio@TypeHint string
+- query:org.apache.felix.https.keystore string
+- query:org.apache.felix.https.keystore@TypeHint string
+- query:org.apache.felix.https.keystore.password string
+- query:org.apache.felix.https.keystore.password@TypeHint string
+- query:org.apache.felix.https.keystore.key string
+- query:org.apache.felix.https.keystore.key@TypeHint string
+- query:org.apache.felix.https.keystore.key.password string
+- query:org.apache.felix.https.keystore.key.password@TypeHint string
+- query:org.apache.felix.https.truststore string
+- query:org.apache.felix.https.truststore@TypeHint string
+- query:org.apache.felix.https.truststore.password string
+- query:org.apache.felix.https.truststore.password@TypeHint string
+- query:org.apache.felix.https.clientcertificate string
+- query:org.apache.felix.https.clientcertificate@TypeHint string
+- query:org.apache.felix.https.enable boolean
+- query:org.apache.felix.https.enable@TypeHint string
+- query:org.osgi.service.http.port.secure string
+- query:org.osgi.service.http.port.secure@TypeHint string
+
+## S538-0006  POST /apps/system/config/org.apache.http.proxyconfigurator.config
+- query:proxy.host string
+- query:proxy.host@TypeHint string
+- query:proxy.port integer
+- query:proxy.port@TypeHint string
+- query:proxy.exceptions array<string>
+- query:proxy.exceptions@TypeHint string
+- query:proxy.enabled boolean
+- query:proxy.enabled@TypeHint string
+- query:proxy.user string
+- query:proxy.user@TypeHint string
+- query:proxy.password string
+- query:proxy.password@TypeHint string
+
+## S538-0007  POST /apps/system/config/org.apache.sling.jcr.davex.impl.servlets.SlingDavExServlet
+- query:alias string
+- query:alias@TypeHint string
+- query:dav.create-absolute-uri boolean
+- query:dav.create-absolute-uri@TypeHint string
+
+## S538-0008  POST /apps/system/config/org.apache.sling.security.impl.ReferrerFilter
+- query:allow.empty boolean
+- query:allow.empty@TypeHint string
+- query:allow.hosts string
+- query:allow.hosts@TypeHint string
+- query:allow.hosts.regexp string
+- query:allow.hosts.regexp@TypeHint string
+- query:filter.methods string
+- query:filter.methods@TypeHint string
+
+## S538-0009  POST /apps/system/config/org.apache.sling.servlets.get.DefaultGetServlet
+- query:json.maximumresults string
+- query:json.maximumresults@TypeHint string
+- query:enable.html boolean
+- query:enable.html@TypeHint string
+- query:enable.txt boolean
+- query:enable.txt@TypeHint string
+- query:enable.xml boolean
+- query:enable.xml@TypeHint string
+
+## S538-0010  POST /apps/system/config/{configNodeName}
+- path:configNodeName string
+
+## S538-0011  POST /bin/querybuilder.json
+- query:path string
+- query:p.limit number
+- query:1_property string
+- query:1_property.value string
+
+## S538-0012  POST /crx/explorer/ui/setpassword.jsp
+- query:old string
+- query:plain string
+- query:verify string
+
+## S538-0013  POST /crx/packmgr/service.jsp
+- query:cmd string
+
+## S538-0014  POST /crx/packmgr/service/.json/{path}
+- path:path string
+- query:cmd string
+- query:groupName string
+- query:packageName string
+- query:packageVersion string
+- query:_charset_ string
+- query:force boolean
+- query:recursive boolean
+- body:package string
+
+## S538-0015  POST /crx/packmgr/update.jsp
+- query:groupName string
+- query:packageName string
+- query:version string
+- query:path string
+- query:filter string
+- query:_charset_ string
+
+## S538-0016  DELETE /etc/replication/agents.{runmode}/{name}
+- path:runmode string
+- path:name string
+
+## S538-0017  POST /etc/replication/agents.{runmode}/{name}
+- path:runmode string
+- path:name string
+- query:jcr:content/cq:distribute boolean
+- query:jcr:content/cq:distribute@TypeHint string
+- query:jcr:content/cq:name string
+- query:jcr:content/cq:template string
+- query:jcr:content/enabled boolean
+- query:jcr:content/jcr:description string
+- query:jcr:content/jcr:lastModified string
+- query:jcr:content/jcr:lastModifiedBy string
+- query:jcr:content/jcr:mixinTypes string
+- query:jcr:content/jcr:title string
+- query:jcr:content/logLevel string
+- query:jcr:content/noStatusUpdate boolean
+- query:jcr:content/noVersioning boolean
+- query:jcr:content/protocolConnectTimeout number
+- query:jcr:content/protocolHTTPConnectionClosed boolean
+- query:jcr:content/protocolHTTPExpired string
+- query:jcr:content/protocolHTTPHeaders array<string>
+- query:jcr:content/protocolHTTPHeaders@TypeHint string
+- query:jcr:content/protocolHTTPMethod string
+- query:jcr:content/protocolHTTPSRelaxed boolean
+- query:jcr:content/protocolInterface string
+- query:jcr:content/protocolSocketTimeout number
+- query:jcr:content/protocolVersion string
+- query:jcr:content/proxyNTLMDomain string
+- query:jcr:content/proxyNTLMHost string
+- query:jcr:content/proxyHost string
+- query:jcr:content/proxyPassword string
+- query:jcr:content/proxyPort number
+- query:jcr:content/proxyUser string
+- query:jcr:content/queueBatchMaxSize number
+- query:jcr:content/queueBatchMode string
+- query:jcr:content/queueBatchWaitTime number
+- query:jcr:content/retryDelay string
+- query:jcr:content/reverseReplication boolean
+- query:jcr:content/serializationType string
+- query:jcr:content/sling:resourceType string
+- query:jcr:content/ssl string
+- query:jcr:content/transportNTLMDomain string
+- query:jcr:content/transportNTLMHost string
+- query:jcr:content/transportPassword string
+- query:jcr:content/transportUri string
+- query:jcr:content/transportUser string
+- query:jcr:content/triggerDistribute boolean
+- query:jcr:content/triggerModified boolean
+- query:jcr:content/triggerOnOffTime boolean
+- query:jcr:content/triggerReceive boolean
+- query:jcr:content/triggerSpecific boolean
+- query:jcr:content/userId string
+- query:jcr:primaryType string
+- query::operation string
+
+## S538-0018  POST /etc/truststore
+- body:truststore.p12 string
+
+## S538-0019  POST /libs/granite/security/post/authorizables
+- query:authorizableId string
+- query:intermediatePath string
+- query:createUser string
+- query:createGroup string
+- query:rep:password string
+- query:profile/givenName string
+
+## S538-0020  POST /libs/granite/security/post/sslSetup.html
+- query:keystorePassword string
+- query:keystorePasswordConfirm string
+- query:truststorePassword string
+- query:truststorePasswordConfirm string
+- query:httpsHostname string
+- query:httpsPort string
+- body:certificateFile string
+- body:privatekeyFile string
+
+## S538-0021  POST /libs/granite/security/post/truststore
+- query::operation string
+- query:newPassword string
+- query:rePassword string
+- query:keyStoreType string
+- query:removeAlias string
+- body:certificate string
+
+## S538-0022  POST /libs/replication/treeactivation.html
+- query:ignoredeactivated boolean
+- query:onlymodified boolean
+- query:path string
+- query:cmd string
+
+## S538-0023  POST /system/console/bundles/{name}
+- path:name string
+- query:action string
+
+## S538-0024  POST /system/console/configMgr/com.adobe.granite.auth.saml.SamlAuthenticationHandler
+- query:post boolean
+- query:apply boolean
+- query:delete boolean
+- query:action string
+- query:$location string
+- query:path array<string>
+- query:service.ranking integer
+- query:idpUrl string
+- query:idpCertAlias string
+- query:idpHttpRedirect boolean
+- query:serviceProviderEntityId string
+- query:assertionConsumerServiceURL string
+- query:spPrivateKeyAlias string
+- query:keyStorePassword string
+- query:defaultRedirectUrl string
+- query:userIDAttribute string
+- query:useEncryption boolean
+- query:createUser boolean
+- query:addGroupMemberships boolean
+- query:groupMembershipAttribute string
+- query:defaultGroups array<string>
+- query:nameIdFormat string
+- query:synchronizeAttributes array<string>
+- query:handleLogout boolean
+- query:logoutUrl string
+- query:clockTolerance integer
+- query:digestMethod string
+- query:signatureMethod string
+- query:userIntermediatePath string
+- query:propertylist array<string>
+
+## S538-0025  POST /system/console/jmx/com.adobe.granite:type=Repository/op/{action}
+- path:action string
+
+## S538-0026  POST /{intermediatePath}/{authorizableId}.ks.html
+- path:intermediatePath string
+- path:authorizableId string
+- query::operation string
+- query:currentPassword string
+- query:newPassword string
+- query:rePassword string
+- query:keyPassword string
+- query:keyStorePass string
+- query:alias string
+- query:newAlias string
+- query:removeAlias string
+- body:cert-chain string
+- body:keyStore string
+- body:pk string
+
+## S538-0027  POST /{path}/
+- path:path string
+- query:jcr:primaryType string
+- query::name string
+
+## S538-0028  DELETE /{path}/{name}
+- path:path string
+- path:name string
+
+## S538-0029  POST /{path}/{name}
+- path:path string
+- path:name string
+- query::operation string
+- query:deleteAuthorizable string
+- body:file string
+
+## S538-0030  POST /{path}/{name}.rw.html
+- path:path string
+- path:name string
+- query:addMembers string
+
+## S539-0001  POST /queues
+desc: Create new queue.
+
+## S539-0002  DELETE /queues/{queueName}
+desc: Delete Queue.
+- path:queueName string
+- query:confirm boolean
+
+## S539-0003  PUT /queues/{queueName}/config
+desc: Update Queue configuration.
+- path:queueName string
+
+## S539-0004  POST /queues/{queueName}/messages
+desc: Send Queue Message with a binary data (blob) payload.
+- path:queueName string
+- query:regions string
+- query:delay string
+- query:expiration string
+- query:contentType string
+- body:(body) string
+
+## S539-0005  DELETE /queues/{queueName}/messages/{queueMessageId}
+desc: Acknowledge that Queue Message has been processed.
+- path:queueName string
+- path:queueMessageId string
+
+## S540-0001  POST /v1/vehicles
+desc: Get vehicle details by registration number | Returns vehicle details based on registration number
+schema: VehicleRequest
+- body:registrationNumber string
+
+## S541-0001  POST /client/configure/set
+desc: set client filters | set client filters
+- query:api_key string
+- query:country string enum[US|CA|UK]
+- body:csvfile string
+
+## S541-0002  POST /search/car/active/rank
+desc: Compute relative rank for car listings. | Computer rank for car listings based on inputs provided.Weights for ranking parameters can also be provided.
+schema: CarRankRequest
+- query:api_key string
+- query:append_api_key boolean
+- query:latitude number
+- query:longitude number
+- query:radius integer
+- query:zip string
+- query:include_lease boolean
+- query:include_finance boolean
+- query:lease_term string
+- query:lease_down_payment string
+- query:lease_emp string
+- query:finance_loan_term string
+- query:finance_loan_apr string
+- query:finance_emp string
+- query:finance_down_payment string
+- query:finance_down_payment_per string
+- query:car_type string enum[new|used|certified]
+- query:carfax_1_owner string enum[true|false]
+- query:carfax_clean_title string enum[true|false]
+- query:year string
+- query:make string
+- query:model string
+- query:trim string
+- query:vin string
+- query:body_type string
+- query:body_subtype string
+- query:vehicle_type string
+- query:vins string
+- query:taxonomy_vins string
+- query:ymmt string
+- query:match string
+- query:cylinders string
+- query:transmission string
+- query:doors string
+- query:drivetrain string
+- query:exterior_color string
+- query:interior_color string
+- query:base_exterior_color string
+- query:base_interior_color string
+- query:engine string
+- query:engine_size string
+- query:engine_aspiration string
+- query:engine_block string
+- query:highway_mpg_range string
+- query:city_mpg_range string
+- query:miles_range string
+- query:price_range string
+- query:msrp_range string
+- query:dom_range string
+- query:sort_by string
+- query:sort_order string enum[asc|desc|ASC|DESC]
+- query:rows integer
+- query:start integer
+- query:include_non_vin_listings boolean
+- query:msa_code string
+- query:facets string
+- query:range_facets string
+- query:facet_sort string enum[count|index]
+- query:stats string
+- query:country string enum[US|CA|us|ca|all|ALL]
+- query:plot boolean
+- query:nodedup boolean
+- query:dedup boolean
+- query:owned boolean
+- query:state string
+- query:city string
+- query:trim_o string
+- query:trim_r string
+- query:dom_active_range string
+- query:dom_180_range string
+- query:exclude_certified boolean
+- query:fuel_type string
+- query:dealer_type string enum[franchise|independent]
+- query:photo_links boolean
+- query:photo_links_cached boolean
+- query:stock_no string
+- query:last_seen_range string
+- query:first_seen_range string
+- query:first_seen_at_source_range string
+- query:first_seen_at_mc_range string
+(+8 fields cut)
+
+## S541-0003  POST /search/car/active/rank/listings
+desc: Compute relative rank for car listings. | Computer rank for car listings based on inputs provided.Weights for ranking parameters can also be provided.
+schema: CarRankRequest
+- query:api_key string
+- query:append_api_key boolean
+- body:listing_ids array<string>
+- body:ranking_criteria object
+
+## S544-0001  DELETE /grocerylist
+desc: Delete all the items on a grocery list; faster operation than a sync with deleted items.
+
+## S544-0002  POST /grocerylist/clearcheckedlines
+desc: Clears the checked lines.
+
+## S544-0003  POST /grocerylist/department
+desc: Departmentalize a list of strings -- used for ad-hoc grocery list item addition
+schema: API2.Controllers.WebAPI.GroceryListController.DepartmentModel
+- body:items string
+
+## S544-0004  POST /grocerylist/item
+desc: Add a single line item to the grocery list
+schema: API2.Controllers.WebAPI.GroceryListController.PostToGroceryListRecipeRequest
+- body:department string
+- body:name string
+- body:notes string
+- body:quantity string
+- body:unit string
+
+## S544-0005  DELETE /grocerylist/item/{guid}
+desc: /grocerylist/item/{guid} DELETE will delete this item assuming you own it.
+- path:guid string
+
+## S544-0006  PUT /grocerylist/item/{guid}
+desc: Update a grocery item by GUID
+schema: API2.Controllers.WebAPI.GroceryListController.UpdateItemByGuidRequest
+- path:guid string
+- body:department string
+- body:guid string
+- body:ischecked boolean
+- body:name string
+- body:notes string
+- body:quantity string
+- body:unit string
+
+## S544-0007  POST /grocerylist/line
+desc: Add a single line item to the grocery list
+schema: API2.Controllers.WebAPI.GroceryListController.PostGroceryListAddLineRequest
+- body:text string
+
+## S544-0008  POST /grocerylist/recipe
+desc: Add a Recipe to the grocery list. In the request data, pass in recipeId, scale (scale=1.0 says to keep the recipe the same size as originally posted), markAsPending (true/false) to indicate that the lines in the recipe should be marked in a "pending" (unconfirmed by user) state.
+schema: API2.Controllers.WebAPI.GroceryListController.PostGroceryListRecipeRequest
+- body:markAsPending boolean
+- body:recipeId integer
+- body:scale number
+
+## S544-0009  POST /grocerylist/sync
+desc: Synchronize the grocery list. Call this with a POST to /grocerylist/sync
+schema: API2.Controllers.WebAPI.GroceryListController.PostGroceryListSyncRequest
+- body:list object
+- body:list.Items array<object>
+- body:list.Items[].BigOvenObject string
+- body:list.Items[].CreationDate string
+- body:list.Items[].Department string
+- body:list.Items[].DisplayQuantity string
+- body:list.Items[].GUID string
+- body:list.Items[].IsChecked boolean
+- body:list.Items[].ItemID integer
+- body:list.Items[].LastModified string
+- body:list.Items[].LocalStatus string
+- body:list.Items[].Name string
+- body:list.Items[].Notes string
+- body:list.Items[].RecipeID integer
+- body:list.Items[].ThirdPartyURL string
+- body:list.LastModified string
+- body:list.Recipes array<object>
+- body:list.Recipes[].BookmarkURL string
+- body:list.Recipes[].Category string
+- body:list.Recipes[].CreationDate string
+- body:list.Recipes[].Cuisine string
+- body:list.Recipes[].HasVideos boolean
+- body:list.Recipes[].HeroPhotoUrl string
+- body:list.Recipes[].HideFromPublicSearch boolean
+- body:list.Recipes[].ImageURL string
+- body:list.Recipes[].ImageURL120 string
+- body:list.Recipes[].IsBookmark boolean
+- body:list.Recipes[].IsPrivate boolean
+- body:list.Recipes[].MaxImageSquare integer
+- body:list.Recipes[].Microcategory string
+- body:list.Recipes[].Poster object
+- body:list.Recipes[].QualityScore number
+- body:list.Recipes[].RecipeID integer
+- body:list.Recipes[].ReviewCount integer
+- body:list.Recipes[].StarRating number
+- body:list.Recipes[].StarRatingIMG string
+- body:list.Recipes[].Subcategory string
+- body:list.Recipes[].Title string
+- body:list.Recipes[].TotalTries integer
+- body:list.Recipes[].WebURL string
+- body:list.Recipes[].YieldNumber number
+- body:list.VersionGuid string
+- body:since string
+
+## S544-0010  POST /image/avatar
+desc: POST: /image/avatar Testing with Postman (validated 11/20/2015): 1) Remove the Content-Type header; add authentication information 2) On the request, click Body and choose "form-data", then add a line item with "key" column set to "file" and on the right, change the type of the input from Text to File. Browse and choose a JPG.
+
+## S544-0011  PUT /me
+desc: Puts me.
+schema: API2.Models.BigOvenUser
+- body:Accounting object
+- body:Accounting.CreditBalance integer
+- body:Accounting.MemberSince string
+- body:Accounting.PremiumExpiryDate string
+- body:Accounting.UserLevel string
+- body:BOAuthToken string
+- body:LastChangeLogID string
+- body:Personal object
+- body:Personal.Email string
+- body:Personal.Location object
+- body:Personal.Location.City string
+- body:Personal.Location.Country string
+- body:Personal.Location.DMA integer
+- body:Preferences object
+- body:Preferences.EatingStyle string
+- body:Profile object
+- body:Profile.AboutMe string
+- body:Profile.BackgroundUrl string
+- body:Profile.Counts object
+- body:Profile.Counts.AddedCount integer
+- body:Profile.Counts.FollowersCount integer
+- body:Profile.Counts.FollowingCount integer
+- body:Profile.Counts.PrivateRecipeCount integer
+- body:Profile.Counts.PublicRecipeCount integer
+- body:Profile.Counts.TotalRecipes integer
+- body:Profile.FirstName string
+- body:Profile.FullName string
+- body:Profile.HomeUrl string
+- body:Profile.LastName string
+- body:Profile.PhotoUrl string
+- body:Profile.UserID integer
+- body:Profile.UserName string
+
+## S544-0012  PUT /me/personal
+desc: Puts me personal.
+schema: API2.Models.Personal
+- body:Email string
+- body:Location object
+- body:Location.City string
+- body:Location.Country string
+- body:Location.DMA integer
+
+## S544-0013  PUT /me/preferences
+desc: Puts me preferences.
+schema: API2.Models.Preference
+- body:EatingStyle string
+
+## S544-0014  PUT /me/profile
+desc: Puts me.
+schema: API2.Models.Profile
+- body:AboutMe string
+- body:BackgroundUrl string
+- body:Counts object
+- body:Counts.AddedCount integer
+- body:Counts.FollowersCount integer
+- body:Counts.FollowingCount integer
+- body:Counts.PrivateRecipeCount integer
+- body:Counts.PublicRecipeCount integer
+- body:Counts.TotalRecipes integer
+- body:FirstName string
+- body:FullName string
+- body:HomeUrl string
+- body:LastName string
+- body:PhotoUrl string
+- body:UserID integer
+- body:UserName string
+
+## S544-0015  POST /recipe
+desc: Add a new recipe
+schema: BigOven.Model.API.Recipe
+- body:ActiveMinutes integer
+- body:AdTags string
+- body:AdminBoost integer
+- body:AllCategoriesText string
+- body:BookmarkImageURL string
+- body:BookmarkSiteLogo string
+- body:BookmarkURL string
+- body:Category string
+- body:Collection string
+- body:CollectionID integer
+- body:CreationDate string
+- body:Cuisine string
+- body:Description string
+- body:FavoriteCount integer
+- body:HeroPhotoUrl string
+- body:ImageSquares array<integer>
+- body:ImageURL string
+- body:Ingredients array<object>
+- body:Ingredients[].DisplayIndex integer
+- body:Ingredients[].DisplayQuantity string
+- body:Ingredients[].HTMLName string
+- body:Ingredients[].IngredientID integer
+- body:Ingredients[].IngredientInfo object
+- body:Ingredients[].IngredientInfo.Department string
+- body:Ingredients[].IngredientInfo.MasterIngredientID integer
+- body:Ingredients[].IngredientInfo.Name string
+- body:Ingredients[].IngredientInfo.UsuallyOnHand boolean
+- body:Ingredients[].IsHeading boolean
+- body:Ingredients[].IsLinked boolean
+- body:Ingredients[].MetricDisplayQuantity string
+- body:Ingredients[].MetricQuantity number
+- body:Ingredients[].MetricUnit string
+- body:Ingredients[].Name string
+- body:Ingredients[].PreparationNotes string
+- body:Ingredients[].Quantity number
+- body:Ingredients[].Unit string
+- body:IngredientsTextBlock string
+- body:Instructions string
+- body:IsBookmark boolean
+- body:IsPrivate boolean
+- body:IsRecipeScan boolean
+- body:IsSponsored boolean
+- body:LastModified string
+- body:MaxImageSquare integer
+- body:MedalCount integer
+- body:MenuCount integer
+- body:Microcategory string
+- body:NotesCount integer
+- body:NutritionInfo object
+- body:NutritionInfo.CaloriesFromFat number
+- body:NutritionInfo.Cholesterol number
+- body:NutritionInfo.CholesterolPct number
+- body:NutritionInfo.DietaryFiber number
+- body:NutritionInfo.DietaryFiberPct number
+- body:NutritionInfo.MonoFat number
+- body:NutritionInfo.PolyFat number
+- body:NutritionInfo.Potassium number
+- body:NutritionInfo.PotassiumPct number
+- body:NutritionInfo.Protein number
+- body:NutritionInfo.ProteinPct number
+- body:NutritionInfo.SatFat number
+- body:NutritionInfo.SatFatPct number
+- body:NutritionInfo.SingularYieldUnit string
+- body:NutritionInfo.Sodium number
+- body:NutritionInfo.SodiumPct number
+- body:NutritionInfo.Sugar number
+- body:NutritionInfo.TotalCalories number
+- body:NutritionInfo.TotalCarbs number
+- body:NutritionInfo.TotalCarbsPct number
+- body:NutritionInfo.TotalFat number
+- body:NutritionInfo.TotalFatPct number
+- body:NutritionInfo.TransFat number
+- body:Poster object
+- body:Poster.FirstName string
+- body:Poster.ImageUrl48 string
+- body:Poster.IsKitchenHelper boolean
+- body:Poster.IsPremium boolean
+- body:Poster.IsUsingRecurly boolean
+- body:Poster.LastName string
+- body:Poster.MemberSince string
+(+19 fields cut)
+
+## S544-0016  PUT /recipe
+desc: Update a recipe
+schema: BigOven.Model.API.Recipe
+- body:ActiveMinutes integer
+- body:AdTags string
+- body:AdminBoost integer
+- body:AllCategoriesText string
+- body:BookmarkImageURL string
+- body:BookmarkSiteLogo string
+- body:BookmarkURL string
+- body:Category string
+- body:Collection string
+- body:CollectionID integer
+- body:CreationDate string
+- body:Cuisine string
+- body:Description string
+- body:FavoriteCount integer
+- body:HeroPhotoUrl string
+- body:ImageSquares array<integer>
+- body:ImageURL string
+- body:Ingredients array<object>
+- body:Ingredients[].DisplayIndex integer
+- body:Ingredients[].DisplayQuantity string
+- body:Ingredients[].HTMLName string
+- body:Ingredients[].IngredientID integer
+- body:Ingredients[].IngredientInfo object
+- body:Ingredients[].IngredientInfo.Department string
+- body:Ingredients[].IngredientInfo.MasterIngredientID integer
+- body:Ingredients[].IngredientInfo.Name string
+- body:Ingredients[].IngredientInfo.UsuallyOnHand boolean
+- body:Ingredients[].IsHeading boolean
+- body:Ingredients[].IsLinked boolean
+- body:Ingredients[].MetricDisplayQuantity string
+- body:Ingredients[].MetricQuantity number
+- body:Ingredients[].MetricUnit string
+- body:Ingredients[].Name string
+- body:Ingredients[].PreparationNotes string
+- body:Ingredients[].Quantity number
+- body:Ingredients[].Unit string
+- body:IngredientsTextBlock string
+- body:Instructions string
+- body:IsBookmark boolean
+- body:IsPrivate boolean
+- body:IsRecipeScan boolean
+- body:IsSponsored boolean
+- body:LastModified string
+- body:MaxImageSquare integer
+- body:MedalCount integer
+- body:MenuCount integer
+- body:Microcategory string
+- body:NotesCount integer
+- body:NutritionInfo object
+- body:NutritionInfo.CaloriesFromFat number
+- body:NutritionInfo.Cholesterol number
+- body:NutritionInfo.CholesterolPct number
+- body:NutritionInfo.DietaryFiber number
+- body:NutritionInfo.DietaryFiberPct number
+- body:NutritionInfo.MonoFat number
+- body:NutritionInfo.PolyFat number
+- body:NutritionInfo.Potassium number
+- body:NutritionInfo.PotassiumPct number
+- body:NutritionInfo.Protein number
+- body:NutritionInfo.ProteinPct number
+- body:NutritionInfo.SatFat number
+- body:NutritionInfo.SatFatPct number
+- body:NutritionInfo.SingularYieldUnit string
+- body:NutritionInfo.Sodium number
+- body:NutritionInfo.SodiumPct number
+- body:NutritionInfo.Sugar number
+- body:NutritionInfo.TotalCalories number
+- body:NutritionInfo.TotalCarbs number
+- body:NutritionInfo.TotalCarbsPct number
+- body:NutritionInfo.TotalFat number
+- body:NutritionInfo.TotalFatPct number
+- body:NutritionInfo.TransFat number
+- body:Poster object
+- body:Poster.FirstName string
+- body:Poster.ImageUrl48 string
+- body:Poster.IsKitchenHelper boolean
+- body:Poster.IsPremium boolean
+- body:Poster.IsUsingRecurly boolean
+- body:Poster.LastName string
+- body:Poster.MemberSince string
+(+19 fields cut)
+
+## S544-0017  POST /recipe/get/saved/step
+desc: Gets recipe single step as text
+- query:userName string
+- query:recipeId integer
+- query:stepId integer
+
+## S544-0018  POST /recipe/get/step/number
+desc: Returns stored step number and number of steps in recipe
+- query:userName string
+- query:recipeId integer
+
+## S544-0019  POST /recipe/post/step
+desc: Stores recipe step number and returns saved step data
+- query:userName string
+- query:recipeId integer
+- query:stepId integer
+
+## S544-0020  DELETE /recipe/review/replies/{replyId}
+desc: DELETE a reply to a given review. Authenticated user must be the one who originally posted the reply.
+- path:replyId string
+
+## S544-0021  PUT /recipe/review/replies/{replyId}
+desc: Update (PUT) a reply to a given review. Authenticated user must be the original one that posted the reply.
+schema: API2.Controllers.WebAPI.ReviewController.PostReplyReq
+- path:replyId string
+- body:Comment string
+
+## S544-0022  PUT /recipe/review/{reviewId}
+desc: Update a given top-level review.
+schema: API2.Controllers.WebAPI.ReviewController.ReviewRequest
+- path:reviewId string
+- body:ActiveMinutes integer
+- body:Comment string
+- body:MakeAgain string
+- body:StarRating integer
+- body:TotalMinutes integer
+
+## S544-0023  POST /recipe/review/{reviewId}/replies
+desc: POST a reply to a given review. The date will be set by server. Note that replies no longer have star ratings, only top-level reviews do.
+schema: API2.Controllers.WebAPI.ReviewController.PostReplyReq
+- path:reviewId string
+- body:Comment string

@@ -1,0 +1,342 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "pyLoad /json web-UI API",
+    "version": "0.5.0b3.dev97",
+    "description": "HAND-WRITTEN specification, not shipped by pyLoad.\n\npyLoad generates an OpenAPI document for its RPC surface (/api/*) only. The /json/* surface used by the web UI is real, authenticated and undocumented. A black-box fuzzer needs a specification, so this one was written by reading pyload/webui/app/blueprints/json_blueprint.py at version 0.5.0b3.dev97.\n\nMETHODOLOGICAL NOTE. A specification is an INPUT to black-box fuzzing, not a part of the system under test: writing one changes no application behaviour, and supplying a specification for an undocumented API is routine practice. To avoid spoon-feeding the search, ALL 20 /json/* routes are described here, not only the three that the MR-A1 triple happens to need. The fuzzer therefore has to locate the guarded write, the role transition and the replay among the full surface, exactly as on every other target in this evaluation.\n\nAuthorization is by session cookie, obtained from POST /login (form fields username, password). That endpoint is deliberately absent from this document: it is configured as a login endpoint for the fuzzer rather than exposed as a fuzzing target.\n\nEach route's required permission, taken from its @login_required decorator, is stated in the operation description. ADMIN-guarded routes deny with 403 (helpers.py:276); this is what makes the /json surface usable for the temporal-authorization oracle, whereas /api/* answers 401 on an authorization failure and so is inconclusive."
+  },
+  "servers": [{ "url": "/" }],
+  "components": {
+    "securitySchemes": {
+      "sessionCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "pyload_session_8000"
+      }
+    },
+    "responses": {
+      "Forbidden": { "description": "Authenticated, but lacking the required permission" },
+      "Unauthenticated": { "description": "No valid session" }
+    }
+  },
+  "security": [{ "sessionCookie": [] }],
+  "paths": {
+    "/json/status": {
+      "get": {
+        "operationId": "status",
+        "description": "Server status. Requires permission LIST.",
+        "responses": { "200": { "description": "Status object" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      },
+      "post": {
+        "operationId": "statusPost",
+        "description": "Server status. Requires permission LIST.",
+        "responses": { "200": { "description": "Status object" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/links": {
+      "get": {
+        "operationId": "links",
+        "description": "Currently downloading links. Requires permission LIST.",
+        "responses": { "200": { "description": "Link list" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      },
+      "post": {
+        "operationId": "linksPost",
+        "description": "Currently downloading links. Requires permission LIST.",
+        "responses": { "200": { "description": "Link list" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/package": {
+      "get": {
+        "operationId": "package",
+        "description": "One package by id. Requires permission LIST.",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Package" }, "403": { "$ref": "#/components/responses/Forbidden" }, "404": { "description": "Unknown package" } }
+      }
+    },
+    "/json/package_order": {
+      "post": {
+        "operationId": "packageOrder",
+        "description": "Reorder a package. Requires permission MODIFY.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "required": ["pack_id", "pos"],
+            "properties": { "pack_id": { "type": "integer" }, "pos": { "type": "integer" } }
+          } } }
+        },
+        "responses": { "200": { "description": "Reordered" }, "400": { "description": "Invalid parameters" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/abort_link": {
+      "post": {
+        "operationId": "abortLink",
+        "description": "Abort a download. Requires permission MODIFY.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "required": ["link_id"],
+            "properties": { "link_id": { "type": "integer" } }
+          } } }
+        },
+        "responses": { "200": { "description": "Aborted" }, "400": { "description": "Invalid parameters" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/link_order": {
+      "post": {
+        "operationId": "linkOrder",
+        "description": "Reorder a link within its package. Requires permission MODIFY.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "required": ["file_id", "pos"],
+            "properties": { "file_id": { "type": "integer" }, "pos": { "type": "integer" } }
+          } } }
+        },
+        "responses": { "200": { "description": "Reordered" }, "400": { "description": "Invalid parameters" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/add_package": {
+      "post": {
+        "operationId": "addPackage",
+        "description": "Add a download package. Requires permission ADD.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/x-www-form-urlencoded": { "schema": {
+            "type": "object",
+            "required": ["add_dest", "add_links"],
+            "properties": {
+              "add_name": { "type": "string" },
+              "add_dest": { "type": "integer", "enum": [0, 1] },
+              "add_links": { "type": "string" },
+              "add_password": { "type": "string" }
+            }
+          } } }
+        },
+        "responses": { "200": { "description": "Added" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/move_package": {
+      "post": {
+        "operationId": "movePackage",
+        "description": "Move a package between queue and collector. Requires permission MODIFY.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "required": ["pack_id", "dest"],
+            "properties": { "pack_id": { "type": "integer" }, "dest": { "type": "integer", "enum": [0, 1] } }
+          } } }
+        },
+        "responses": { "200": { "description": "Moved" }, "400": { "description": "Invalid parameters" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/edit_package": {
+      "post": {
+        "operationId": "editPackage",
+        "description": "Edit package metadata. Requires permission MODIFY.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "required": ["pack_id", "pack_name", "pack_folder", "pack_pwd"],
+            "properties": {
+              "pack_id": { "type": "integer" },
+              "pack_name": { "type": "string" },
+              "pack_folder": { "type": "string" },
+              "pack_pwd": { "type": "string" }
+            }
+          } } }
+        },
+        "responses": { "200": { "description": "Edited" }, "400": { "description": "Invalid parameters" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/set_captcha": {
+      "get": {
+        "operationId": "getCaptcha",
+        "description": "Current captcha task. Requires permission STATUS.",
+        "responses": { "200": { "description": "Captcha task" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      },
+      "post": {
+        "operationId": "setCaptcha",
+        "description": "Submit a captcha result. Requires permission STATUS.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/x-www-form-urlencoded": { "schema": {
+            "type": "object",
+            "required": ["cap_id", "cap_result"],
+            "properties": { "cap_id": { "type": "integer" }, "cap_result": { "type": "string" } }
+          } } }
+        },
+        "responses": { "200": { "description": "Submitted" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/load_config": {
+      "get": {
+        "operationId": "loadConfig",
+        "description": "Read a configuration section. Requires permission SETTINGS.",
+        "responses": { "200": { "description": "Configuration" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/save_config": {
+      "post": {
+        "operationId": "saveConfig",
+        "description": "Write a configuration section. Requires permission SETTINGS.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "required": ["category", "config"],
+            "properties": {
+              "category": { "type": "string", "enum": ["core", "plugin"] },
+              "config": { "type": "object", "additionalProperties": true }
+            }
+          } } }
+        },
+        "responses": { "200": { "description": "Saved" }, "400": { "description": "Invalid parameters" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/add_account": {
+      "post": {
+        "operationId": "addAccount",
+        "description": "Add a hoster account. Requires permission ACCOUNTS.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "required": ["account_login", "account_password", "account_type"],
+            "properties": {
+              "account_login": { "type": "string" },
+              "account_password": { "type": "string" },
+              "account_type": { "type": "string" }
+            }
+          } } }
+        },
+        "responses": { "200": { "description": "Added" }, "400": { "description": "Invalid parameters" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/update_accounts": {
+      "post": {
+        "operationId": "updateAccounts",
+        "description": "Bulk-update hoster accounts. Requires permission ACCOUNTS. Form keys are of the form '<plugin>;<login>;<field>'.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/x-www-form-urlencoded": { "schema": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          } } }
+        },
+        "responses": { "200": { "description": "Updated" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/change_password": {
+      "post": {
+        "operationId": "changePassword",
+        "description": "Change a user's password. Requires role ADMIN.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "required": ["user_login", "user_curpw", "user_newpw"],
+            "properties": {
+              "user_login": { "type": "string" },
+              "user_curpw": { "type": "string" },
+              "user_newpw": { "type": "string" }
+            }
+          } } }
+        },
+        "responses": { "200": { "description": "Changed" }, "400": { "description": "Invalid parameters" }, "403": { "description": "Wrong current password, or lacking role ADMIN" } }
+      }
+    },
+    "/json/add_user": {
+      "post": {
+        "operationId": "addUser",
+        "description": "Create a user. Requires role ADMIN. Consuming: repeating the call with an existing name answers 500, so this is NOT a repeatable guarded action.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/x-www-form-urlencoded": { "schema": {
+            "type": "object",
+            "required": ["new_user", "new_password"],
+            "properties": {
+              "new_user": { "type": "string" },
+              "new_password": { "type": "string" },
+              "new_role": { "type": "string", "enum": ["on"] },
+              "new_perms": { "type": "array", "items": { "type": "string" } }
+            }
+          } } }
+        },
+        "responses": { "200": { "description": "Created" }, "403": { "$ref": "#/components/responses/Forbidden" }, "500": { "description": "Duplicate user" } }
+      }
+    },
+    "/json/update_users": {
+      "post": {
+        "operationId": "updateUsers",
+        "description": "Bulk-update users: role and permissions. Requires role ADMIN. Keys of update_data are '<name>|admin', '<name>|perms' and '<name>|delete'; a user absent from '<name>|admin' is reduced to role USER. THIS IS A PERMISSION-REDUCING TRANSITION.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "required": ["update_data"],
+            "properties": {
+              "update_data": { "type": "object", "additionalProperties": true }
+            }
+          } } }
+        },
+        "responses": { "200": { "description": "Updated" }, "400": { "description": "Invalid parameters" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/get_apikeys": {
+      "post": {
+        "operationId": "getApikeys",
+        "description": "List a user's API keys. Requires role ADMIN.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "properties": { "user": { "type": "string" } }
+          } } }
+        },
+        "responses": { "200": { "description": "Key list" }, "400": { "description": "Invalid parameters" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/generate_apikey": {
+      "post": {
+        "operationId": "generateApikey",
+        "description": "Generate an API key for a user. Requires role ADMIN. Non-consuming: each call mints a new key, so the call is repeatable with identical parameters.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "required": ["user", "password", "name", "expires"],
+            "properties": {
+              "user": { "type": "string" },
+              "password": { "type": "string" },
+              "name": { "type": "string" },
+              "expires": { "type": "integer", "nullable": true }
+            }
+          } } }
+        },
+        "responses": { "200": { "description": "Key generated" }, "400": { "description": "Invalid parameters" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    },
+    "/json/delete_apikey": {
+      "post": {
+        "operationId": "deleteApikey",
+        "description": "Delete one of a user's API keys. Requires role ADMIN.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "required": ["user", "key"],
+            "properties": { "user": { "type": "string" }, "key": { "type": "string" } }
+          } } }
+        },
+        "responses": { "200": { "description": "Deleted" }, "400": { "description": "Invalid parameters" }, "403": { "$ref": "#/components/responses/Forbidden" } }
+      }
+    }
+  }
+}

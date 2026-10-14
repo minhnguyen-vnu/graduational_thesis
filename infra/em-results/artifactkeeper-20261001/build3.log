@@ -1,0 +1,46 @@
+=== 11:09:57 rebuild image (+protoc) + recreate backend ===
+#10 naming to docker.io/library/src-backend:latest done
+#10 unpacking to docker.io/library/src-backend:latest
+#10 unpacking to docker.io/library/src-backend:latest 2.4s done
+#10 DONE 10.8s
+
+#11 resolving provenance for metadata file
+#11 DONE 0.0s
+ Image src-backend Built 
+ Container artifact-keeper-dev-db Running 
+ Container artifact-keeper-dev-backend Recreate 
+ Container artifact-keeper-dev-backend Recreated 
+ Container artifact-keeper-dev-db Waiting 
+ Container artifact-keeper-dev-db Healthy 
+ Container artifact-keeper-dev-backend Starting 
+ Container artifact-keeper-dev-backend Started 
+=== 11:10:37 waiting: health | failure | container-exit ===
+[60s] compiling... tail:
+   Compiling opentelemetry-otlp v0.28.0
+   Compiling sqlx v0.8.6
+[120s] compiling... tail:
+   Compiling opentelemetry-otlp v0.28.0
+   Compiling sqlx v0.8.6
+[180s] compiling... tail:
+   Compiling opentelemetry-otlp v0.28.0
+   Compiling sqlx v0.8.6
+[205s] BUILD FAILURE DETECTED:
+Error: Config("Cannot persist admin password file at /data/storage/admin.password. Fix file permissions and restart.")
+[Finished running. Exit status: 1]
+--- tail ---
+[2m2026-10-01T04:13:57.852222Z[0m [33m WARN[0m [2martifact_keeper_backend::config[0m[2m:[0m PEER_API_KEY not set, generated random key. Set PEER_API_KEY in your environment for stable peer authentication.
+[2m2026-10-01T04:13:57.854627Z[0m [33m WARN[0m [2martifact_keeper_backend::config[0m[2m:[0m JWT_SECRET weakness: it is shorter than 32 characters. This is tolerated outside production, but the value MUST be replaced with a strong random secret before deploying to production. Generate one with `openssl rand -base64 48`. [3menvironment[0m[2m=[0mdevelopment
+[2m2026-10-01T04:13:57.854717Z[0m [32m INFO[0m [2martifact_keeper[0m[2m:[0m Global allocator: system
+[2m2026-10-01T04:13:57.854727Z[0m [32m INFO[0m [2martifact_keeper[0m[2m:[0m Starting Artifact Keeper
+[2m2026-10-01T04:13:58.128739Z[0m [32m INFO[0m [2martifact_keeper[0m[2m:[0m Connected to database
+[2m2026-10-01T04:13:58.128785Z[0m [32m INFO[0m [2martifact_keeper[0m[2m:[0m Running database migrations...
+[2m2026-10-01T04:13:58.465281Z[0m [32m INFO[0m [2msqlx::postgres::notice[0m[2m:[0m trigger "format_handlers_updated_at" for relation "format_handlers" does not exist, skipping
+[2m2026-10-01T04:13:58.964990Z[0m [32m INFO[0m [2msqlx::postgres::notice[0m[2m:[0m constraint "incus_upload_sessions_status_check" of relation "incus_upload_sessions" does not exist, skipping
+[2m2026-10-01T04:13:58.977641Z[0m [32m INFO[0m [2martifact_keeper[0m[2m:[0m Database migrations complete
+[2m2026-10-01T04:13:58.979750Z[0m [33m WARN[0m [2martifact_keeper[0m[2m:[0m ADMIN_PASSWORD matches a well-known default.
+[2m2026-10-01T04:13:58.980118Z[0m [31mERROR[0m [2martifact_keeper[0m[2m:[0m Failed to write admin password file: Permission denied (os error 13)
+[2m2026-10-01T04:13:58.980170Z[0m [31mERROR[0m [2martifact_keeper[0m[2m:[0m Admin password could not be persisted. Re-run the server or check file permissions for: /data/storage/admin.password
+[2m2026-10-01T04:13:58.980661Z[0m [32m INFO[0m [2mopentelemetry_sdk[0m[2m:[0m  [3mname[0m[2m=[0m"BatchSpanProcessor.ThreadStopped"
+Error: Config("Cannot persist admin password file at /data/storage/admin.password. Fix file permissions and restart.")
+[Finished running. Exit status: 1]
+=== 11:14:00 DONE ===

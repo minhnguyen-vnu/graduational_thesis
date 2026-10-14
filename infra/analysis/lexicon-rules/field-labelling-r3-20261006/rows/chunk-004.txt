@@ -1,0 +1,1318 @@
+## S109-0191  DELETE /v3/user/keys/{key_id}
+desc: Delete an SSH key from the currently authenticated user | Delete an SSH key from the currently authenticated user
+- path:key_id integer
+
+## S109-0192  POST /v3/users
+desc: Create a user. Available only for admins. | Create a user. Available only for admins.
+- body:email string
+- body:password string
+- body:name string
+- body:username string
+- body:skype string
+- body:linkedin string
+- body:twitter string
+- body:website_url string
+- body:organization string
+- body:projects_limit integer
+- body:extern_uid string
+- body:provider string
+- body:bio string
+- body:location string
+- body:admin boolean
+- body:can_create_group boolean
+- body:confirm boolean
+- body:external boolean
+
+## S109-0194  PUT /v3/users/{id}
+desc: Update a user. Available only for admins. | Update a user. Available only for admins.
+- path:id integer
+- body:email string
+- body:password string
+- body:name string
+- body:username string
+- body:skype string
+- body:linkedin string
+- body:twitter string
+- body:website_url string
+- body:organization string
+- body:projects_limit integer
+- body:extern_uid string
+- body:provider string
+- body:bio string
+- body:location string
+- body:admin boolean
+- body:can_create_group boolean
+- body:confirm boolean
+- body:external boolean
+
+## S109-0195  PUT /v3/users/{id}/block
+desc: Block a user. Available only for admins. | Block a user. Available only for admins.
+- path:id integer
+
+## S109-0198  POST /v3/users/{id}/keys
+desc: Add an SSH key to a specified user. Available only for admins. | Add an SSH key to a specified user. Available only for admins.
+- path:id integer
+- body:key string
+- body:title string
+
+## S109-0199  DELETE /v3/users/{id}/keys/{key_id}
+desc: Delete an existing SSH key from a specified user. Available only for admins. | Delete an existing SSH key from a specified user. Available only for admins.
+- path:id integer
+- path:key_id integer
+
+## S109-0200  PUT /v3/users/{id}/unblock
+desc: Unblock a user. Available only for admins. | Unblock a user. Available only for admins.
+- path:id integer
+
+## S112-0003  PUT /{realm}
+desc: Update the top-level information of the realm Any user, roles or client information in the representation will be ignored.
+schema: RealmRepresentation
+- path:realm string
+- body:accessCodeLifespan integer
+- body:accessCodeLifespanLogin integer
+- body:accessCodeLifespanUserAction integer
+- body:accessTokenLifespan integer
+- body:accessTokenLifespanForImplicitFlow integer
+- body:accountTheme string
+- body:actionTokenGeneratedByAdminLifespan integer
+- body:actionTokenGeneratedByUserLifespan integer
+- body:adminEventsDetailsEnabled boolean
+- body:adminEventsEnabled boolean
+- body:adminTheme string
+- body:attributes object
+- body:authenticationFlows array<object>
+- body:authenticationFlows[].alias string
+- body:authenticationFlows[].authenticationExecutions array<object>
+- body:authenticationFlows[].authenticationExecutions[].authenticator string
+- body:authenticationFlows[].authenticationExecutions[].authenticatorConfig string
+- body:authenticationFlows[].authenticationExecutions[].authenticatorFlow boolean
+- body:authenticationFlows[].authenticationExecutions[].autheticatorFlow boolean
+- body:authenticationFlows[].authenticationExecutions[].flowAlias string
+- body:authenticationFlows[].authenticationExecutions[].priority integer
+- body:authenticationFlows[].authenticationExecutions[].requirement string
+- body:authenticationFlows[].authenticationExecutions[].userSetupAllowed boolean
+- body:authenticationFlows[].builtIn boolean
+- body:authenticationFlows[].description string
+- body:authenticationFlows[].id string
+- body:authenticationFlows[].providerId string
+- body:authenticationFlows[].topLevel boolean
+- body:authenticatorConfig array<object>
+- body:authenticatorConfig[].alias string
+- body:authenticatorConfig[].config object
+- body:authenticatorConfig[].id string
+- body:browserFlow string
+- body:browserSecurityHeaders object
+- body:bruteForceProtected boolean
+- body:clientAuthenticationFlow string
+- body:clientScopeMappings object
+- body:clientScopes array<object>
+- body:clientScopes[].attributes object
+- body:clientScopes[].description string
+- body:clientScopes[].id string
+- body:clientScopes[].name string
+- body:clientScopes[].protocol string
+- body:clientScopes[].protocolMappers array<object>
+- body:clientScopes[].protocolMappers[].config object
+- body:clientScopes[].protocolMappers[].id string
+- body:clientScopes[].protocolMappers[].name string
+- body:clientScopes[].protocolMappers[].protocol string
+- body:clientScopes[].protocolMappers[].protocolMapper string
+- body:clientSessionIdleTimeout integer
+- body:clientSessionMaxLifespan integer
+- body:clients array<object>
+- body:clients[].access object
+- body:clients[].adminUrl string
+- body:clients[].alwaysDisplayInConsole boolean
+- body:clients[].attributes object
+- body:clients[].authenticationFlowBindingOverrides object
+- body:clients[].authorizationServicesEnabled boolean
+- body:clients[].authorizationSettings object
+- body:clients[].authorizationSettings.allowRemoteResourceManagement boolean
+- body:clients[].authorizationSettings.clientId string
+- body:clients[].authorizationSettings.decisionStrategy string enum[AFFIRMATIVE|UNANIMOUS|CONSENSUS]
+- body:clients[].authorizationSettings.id string
+- body:clients[].authorizationSettings.name string
+- body:clients[].authorizationSettings.policies array<object>
+- body:clients[].authorizationSettings.policyEnforcementMode string enum[ENFORCING|PERMISSIVE|DISABLED]
+- body:clients[].authorizationSettings.resources array<object>
+- body:clients[].authorizationSettings.scopes array<object>
+- body:clients[].baseUrl string
+- body:clients[].bearerOnly boolean
+- body:clients[].clientAuthenticatorType string
+- body:clients[].clientId string
+- body:clients[].consentRequired boolean
+- body:clients[].defaultClientScopes array<string>
+- body:clients[].defaultRoles array<string>
+- body:clients[].description string
+- body:clients[].directAccessGrantsEnabled boolean
+- body:clients[].enabled boolean
+- body:clients[].frontchannelLogout boolean
+(+270 fields cut)
+
+## S112-0005  DELETE /{realm}/attack-detection/brute-force/users
+desc: Clear any user login failures for all users This can release temporary disabled users
+- path:realm string
+
+## S112-0010  DELETE /{realm}/authentication/executions/{executionId}
+desc: Delete execution
+- path:realm string
+- path:executionId string
+
+## S112-0030  POST /{realm}/client-scopes
+desc: Create a new client scope Client Scope’s name must be unique!
+schema: ClientScopeRepresentation
+- path:realm string
+- body:attributes object
+- body:description string
+- body:id string
+- body:name string
+- body:protocol string
+- body:protocolMappers array<object>
+- body:protocolMappers[].config object
+- body:protocolMappers[].id string
+- body:protocolMappers[].name string
+- body:protocolMappers[].protocol string
+- body:protocolMappers[].protocolMapper string
+
+## S112-0032  PUT /{realm}/client-scopes/{id1}/protocol-mappers/models/{id2}
+desc: Update the mapper
+schema: ProtocolMapperRepresentation
+- path:realm string
+- path:id1 string
+- path:id2 string
+- body:config object
+- body:id string
+- body:name string
+- body:protocol string
+- body:protocolMapper string
+
+## S112-0037  DELETE /{realm}/client-scopes/{id}/scope-mappings/clients/{client}
+desc: Remove client-level roles from the client’s scope.
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- path:client string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-0038  POST /{realm}/client-scopes/{id}/scope-mappings/clients/{client}
+desc: Add client-level roles to the client’s scope
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- path:client string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-0039  DELETE /{realm}/client-scopes/{id}/scope-mappings/realm
+desc: Remove a set of realm-level roles from the client’s scope
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-0042  POST /{realm}/clients-initial-access
+desc: Create a new initial access token.
+schema: ClientInitialAccessCreatePresentation
+- path:realm string
+- body:count integer
+- body:expiration integer
+
+## S112-0047  PUT /{realm}/clients/{id}
+desc: Update the client
+schema: ClientRepresentation
+- path:realm string
+- path:id string
+- body:access object
+- body:adminUrl string
+- body:alwaysDisplayInConsole boolean
+- body:attributes object
+- body:authenticationFlowBindingOverrides object
+- body:authorizationServicesEnabled boolean
+- body:authorizationSettings object
+- body:authorizationSettings.allowRemoteResourceManagement boolean
+- body:authorizationSettings.clientId string
+- body:authorizationSettings.decisionStrategy string enum[AFFIRMATIVE|UNANIMOUS|CONSENSUS]
+- body:authorizationSettings.id string
+- body:authorizationSettings.name string
+- body:authorizationSettings.policies array<object>
+- body:authorizationSettings.policies[].config object
+- body:authorizationSettings.policies[].decisionStrategy string enum[AFFIRMATIVE|UNANIMOUS|CONSENSUS]
+- body:authorizationSettings.policies[].description string
+- body:authorizationSettings.policies[].id string
+- body:authorizationSettings.policies[].logic string enum[POSITIVE|NEGATIVE]
+- body:authorizationSettings.policies[].name string
+- body:authorizationSettings.policies[].owner string
+- body:authorizationSettings.policies[].policies array<string>
+- body:authorizationSettings.policies[].resources array<string>
+- body:authorizationSettings.policies[].resourcesData array<object>
+- body:authorizationSettings.policies[].scopes array<string>
+- body:authorizationSettings.policies[].scopesData array<object>
+- body:authorizationSettings.policies[].type string
+- body:authorizationSettings.policyEnforcementMode string enum[ENFORCING|PERMISSIVE|DISABLED]
+- body:authorizationSettings.resources array<object>
+- body:authorizationSettings.resources[].attributes object
+- body:authorizationSettings.resources[].displayName string
+- body:authorizationSettings.resources[].icon_uri string
+- body:authorizationSettings.resources[].id string
+- body:authorizationSettings.resources[].name string
+- body:authorizationSettings.resources[].ownerManagedAccess boolean
+- body:authorizationSettings.resources[].scopes array<object>
+- body:authorizationSettings.resources[].type string
+- body:authorizationSettings.resources[].uris array<string>
+- body:authorizationSettings.scopes array<object>
+- body:authorizationSettings.scopes[].displayName string
+- body:authorizationSettings.scopes[].iconUri string
+- body:authorizationSettings.scopes[].id string
+- body:authorizationSettings.scopes[].name string
+- body:authorizationSettings.scopes[].policies array<object>
+- body:authorizationSettings.scopes[].resources array<object>
+- body:baseUrl string
+- body:bearerOnly boolean
+- body:clientAuthenticatorType string
+- body:clientId string
+- body:consentRequired boolean
+- body:defaultClientScopes array<string>
+- body:defaultRoles array<string>
+- body:description string
+- body:directAccessGrantsEnabled boolean
+- body:enabled boolean
+- body:frontchannelLogout boolean
+- body:fullScopeAllowed boolean
+- body:id string
+- body:implicitFlowEnabled boolean
+- body:name string
+- body:nodeReRegistrationTimeout integer
+- body:notBefore integer
+- body:optionalClientScopes array<string>
+- body:origin string
+- body:protocol string
+- body:protocolMappers array<object>
+- body:protocolMappers[].config object
+- body:protocolMappers[].id string
+- body:protocolMappers[].name string
+- body:protocolMappers[].protocol string
+- body:protocolMappers[].protocolMapper string
+- body:publicClient boolean
+- body:redirectUris array<string>
+- body:registeredNodes object
+- body:registrationAccessToken string
+- body:rootUrl string
+- body:secret string
+- body:serviceAccountsEnabled boolean
+- body:standardFlowEnabled boolean
+(+2 fields cut)
+
+## S112-0057  POST /{realm}/clients/{id}/nodes
+desc: Register a cluster node with the client Manually register cluster node to this client - usually it’s not needed to call this directly as adapter should handle by sending registration request to Keycloak
+- path:realm string
+- path:id string
+- body:(body) object
+
+## S112-0068  DELETE /{realm}/clients/{id}/roles/{role-name}/composites
+desc: Remove roles from the role’s composite
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- path:role-name string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-0070  PUT /{realm}/clients/{id}/roles/{role-name}/management/permissions
+desc: Return object stating whether role Authoirzation permissions have been initialized or not and a reference
+schema: ManagementPermissionReference
+- path:realm string
+- path:id string
+- path:role-name string
+- body:enabled boolean
+- body:resource string
+- body:scopePermissions object
+
+## S112-0074  POST /{realm}/clients/{id}/scope-mappings/realm
+desc: Add a set of realm-level roles to the client’s scope
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-0078  DELETE /{realm}/default-default-client-scopes/{clientScopeId}
+- path:realm string
+- path:clientScopeId string
+
+## S112-0083  PUT /{realm}/default-optional-client-scopes/{clientScopeId}
+- path:realm string
+- path:clientScopeId string
+
+## S112-0086  POST /{realm}/groups
+desc: create or add a top level realm groupSet or create child.
+schema: GroupRepresentation
+- path:realm string
+- body:access object
+- body:attributes object
+- body:clientRoles object
+- body:id string
+- body:name string
+- body:path string
+- body:realmRoles array<string>
+- body:subGroups array<object>
+- body:subGroups[].access object
+- body:subGroups[].attributes object
+- body:subGroups[].clientRoles object
+- body:subGroups[].id string
+- body:subGroups[].name string
+- body:subGroups[].path string
+- body:subGroups[].realmRoles array<string>
+- body:subGroups[].subGroups array<object>
+- body:subGroups[].subGroups[].access object
+- body:subGroups[].subGroups[].attributes object
+- body:subGroups[].subGroups[].clientRoles object
+- body:subGroups[].subGroups[].id string
+- body:subGroups[].subGroups[].name string
+- body:subGroups[].subGroups[].path string
+- body:subGroups[].subGroups[].realmRoles array<string>
+- body:subGroups[].subGroups[].subGroups array<object>
+
+## S112-0087  DELETE /{realm}/groups/{id}
+- path:realm string
+- path:id string
+
+## S112-0090  PUT /{realm}/groups/{id}/management/permissions
+desc: Return object stating whether client Authorization permissions have been initialized or not and a reference
+schema: ManagementPermissionReference
+- path:realm string
+- path:id string
+- body:enabled boolean
+- body:resource string
+- body:scopePermissions object
+
+## S112-0091  DELETE /{realm}/groups/{id}/role-mappings/clients/{client}
+desc: Delete client-level roles from user role mapping
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- path:client string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-0093  DELETE /{realm}/groups/{id}/role-mappings/realm
+desc: Delete realm-level role mappings
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-0094  POST /{realm}/groups/{id}/role-mappings/realm
+desc: Add realm-level role mappings to the user
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-0096  POST /{realm}/identity-provider/instances
+desc: Create a new identity provider
+schema: IdentityProviderRepresentation
+- path:realm string
+- body:addReadTokenRoleOnCreate boolean
+- body:alias string
+- body:config object
+- body:displayName string
+- body:enabled boolean
+- body:firstBrokerLoginFlowAlias string
+- body:internalId string
+- body:linkOnly boolean
+- body:postBrokerLoginFlowAlias string
+- body:providerId string
+- body:storeToken boolean
+- body:trustEmail boolean
+
+## S112-0097  DELETE /{realm}/identity-provider/instances/{alias}
+desc: Delete the identity provider
+- path:realm string
+- path:alias string
+
+## S112-0098  PUT /{realm}/identity-provider/instances/{alias}
+desc: Update the identity provider
+schema: IdentityProviderRepresentation
+- path:realm string
+- path:alias string
+- body:addReadTokenRoleOnCreate boolean
+- body:alias string
+- body:config object
+- body:displayName string
+- body:enabled boolean
+- body:firstBrokerLoginFlowAlias string
+- body:internalId string
+- body:linkOnly boolean
+- body:postBrokerLoginFlowAlias string
+- body:providerId string
+- body:storeToken boolean
+- body:trustEmail boolean
+
+## S112-0106  POST /{realm}/push-revocation
+desc: Push the realm’s revocation policy to any client that has an admin url associated with it.
+- path:realm string
+
+## S112-0124  POST /{realm}/user-storage/{parentId}/mappers/{id}/sync
+desc: Trigger sync of mapper data related to ldap mapper (roles, groups, …​) direction is "fedToKeycloak" or "keycloakToFed"
+- path:realm string
+- path:parentId string
+- path:id string
+- query:direction string
+
+## S112-0125  POST /{realm}/users
+desc: Create a new user Username must be unique.
+schema: UserRepresentation
+- path:realm string
+- body:access object
+- body:attributes object
+- body:clientConsents array<object>
+- body:clientConsents[].clientId string
+- body:clientConsents[].createdDate integer
+- body:clientConsents[].grantedClientScopes array<string>
+- body:clientConsents[].lastUpdatedDate integer
+- body:clientRoles object
+- body:createdTimestamp integer
+- body:credentials array<object>
+- body:credentials[].createdDate integer
+- body:credentials[].credentialData string
+- body:credentials[].id string
+- body:credentials[].priority integer
+- body:credentials[].secretData string
+- body:credentials[].temporary boolean
+- body:credentials[].type string
+- body:credentials[].userLabel string
+- body:credentials[].value string
+- body:disableableCredentialTypes array<string>
+- body:email string
+- body:emailVerified boolean
+- body:enabled boolean
+- body:federatedIdentities array<object>
+- body:federatedIdentities[].identityProvider string
+- body:federatedIdentities[].userId string
+- body:federatedIdentities[].userName string
+- body:federationLink string
+- body:firstName string
+- body:groups array<string>
+- body:id string
+- body:lastName string
+- body:notBefore integer
+- body:origin string
+- body:realmRoles array<string>
+- body:requiredActions array<string>
+- body:self string
+- body:serviceAccountClientId string
+- body:username string
+
+## S112-0126  PUT /{realm}/users-management-permissions
+schema: ManagementPermissionReference
+- path:realm string
+- body:enabled boolean
+- body:resource string
+- body:scopePermissions object
+
+## S112-0129  DELETE /{realm}/users/{id}/consents/{client}
+desc: Revoke consent and offline tokens for particular client from user
+- path:realm string
+- path:id string
+- path:client string
+
+## S112-0133  PUT /{realm}/users/{id}/credentials/{credentialId}/userLabel
+desc: Update a credential label for a user
+- path:realm string
+- path:id string
+- path:credentialId string
+- body:(body) string
+
+## S112-0140  POST /{realm}/users/{id}/impersonation
+desc: Impersonate the user
+- path:realm string
+- path:id string
+
+## S112-0141  POST /{realm}/users/{id}/logout
+desc: Remove all user sessions associated with the user Also send notification to all clients that have an admin URL to invalidate the sessions for the particular user.
+- path:realm string
+- path:id string
+
+## S112-0144  POST /{realm}/users/{id}/role-mappings/clients/{client}
+desc: Add client-level roles to the user role mapping
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- path:client string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-0145  DELETE /{realm}/users/{id}/role-mappings/realm
+desc: Delete realm-level role mappings
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S112-0146  POST /{realm}/users/{id}/role-mappings/realm
+desc: Add realm-level role mappings to the user
+schema: RoleRepresentation
+- path:realm string
+- path:id string
+- body:attributes object
+- body:clientRole boolean
+- body:composite boolean
+- body:composites object
+- body:composites.client object
+- body:composites.realm array<string>
+- body:containerId string
+- body:description string
+- body:id string
+- body:name string
+
+## S114-0001  POST /1.1/workgroups/{workgroup_id}/projects/{project_id}/files
+desc: Upload File to Project. A multipart/form-data request with a name "file" | Upload File to Project. A multipart/form-data request with a name "file"
+- path:workgroup_id string
+- path:project_id string
+- body:(body) string
+
+## S114-0002  PUT /1.1/workgroups/{workgroup_id}/projects/{project_id}/specs/{spec_id}
+desc: Update a specific Spec | Update a specific Spec
+schema: V1X1SpecUpdatingPO
+- path:workgroup_id string
+- path:project_id string
+- path:spec_id string
+- body:first_level_custom_fields object
+- body:first_level_custom_fields.property_attributes array<object>
+- body:first_level_custom_fields.property_attributes[].attribute_id integer
+- body:first_level_custom_fields.property_attributes[].attribute_value any
+- body:first_level_custom_fields.property_attributes[].label string
+- body:first_level_custom_fields.property_attributes[].param_id integer
+- body:first_level_custom_fields.property_attributes[].param_name string
+- body:first_level_custom_fields.property_id integer
+- body:first_level_custom_fields.property_name string
+- body:header_custom_fields object
+- body:header_custom_fields.property_attributes array<object>
+- body:header_custom_fields.property_attributes[].attribute_id integer
+- body:header_custom_fields.property_attributes[].attribute_value any
+- body:header_custom_fields.property_attributes[].label string
+- body:header_custom_fields.property_attributes[].param_id integer
+- body:header_custom_fields.property_attributes[].param_name string
+- body:header_custom_fields.property_id integer
+- body:header_custom_fields.property_name string
+- body:product_type_id integer
+- body:quantity_1 integer
+- body:quantity_2 integer
+- body:quantity_3 integer
+- body:quantity_4 integer
+- body:quantity_5 integer
+- body:second_level_custom_fields array<object>
+- body:second_level_custom_fields[].property_attributes array<object>
+- body:second_level_custom_fields[].property_attributes[].attribute_id integer
+- body:second_level_custom_fields[].property_attributes[].attribute_value any
+- body:second_level_custom_fields[].property_attributes[].label string
+- body:second_level_custom_fields[].property_attributes[].param_id integer
+- body:second_level_custom_fields[].property_attributes[].param_name string
+- body:second_level_custom_fields[].property_id integer
+- body:second_level_custom_fields[].property_name string
+- body:sku string
+- body:spec_name string
+- body:spec_type_id integer
+- body:versions array<object>
+- body:versions[].description string
+- body:versions[].qty integer
+
+## S114-0003  POST /1.1/workgroups/{workgroup_id}/projects/{project_id}/teammembers
+desc: Invite a team member or all the members of team template for the specific project. | Invite a team member or all the members of team template for the specific project.
+schema: TeamMemberPO
+- path:workgroup_id string
+- path:project_id string
+- body:role_id integer
+- body:team_template_id integer
+- body:user_id integer
+
+## S114-0004  PUT /v1/workgroups/{workgroup_id}/detail
+desc: Update a specific Workgroup | Update a specific Workgroup
+schema: WorkgroupUpdPersistVO
+- path:workgroup_id string
+- body:address_line1 string
+- body:address_line2 string
+- body:address_line3 string
+- body:city string
+- body:country string
+- body:custom_fields array<object>
+- body:custom_fields[].date_value string
+- body:custom_fields[].number_value any
+- body:custom_fields[].param_name string
+- body:custom_fields[].string_value string
+- body:decimal_places integer
+- body:postal string
+- body:state string
+- body:workgroup_name string
+
+## S114-0005  POST /v1/workgroups/{workgroup_id}/exchangeRate
+desc: Create Exchange Rates | Create Exchange Rates
+schema: MultiExchangeRatePersistListVO
+- path:workgroup_id string
+- body:exchange_rates array<object>
+- body:exchange_rates[].activate_date string
+- body:exchange_rates[].buClientWorkgroupId integer
+- body:exchange_rates[].currency string
+- body:exchange_rates[].rate any
+- body:exchange_rates[].target string
+
+## S114-0007  POST /v1/workgroups/{workgroup_id}/profileImage
+desc: Upload Profile Image. A multipart/form-data request with a name "file" | Upload Profile Image. A multipart/form-data request with a name "file"
+- path:workgroup_id string
+- body:(body) string
+
+## S114-0008  POST /v1/workgroups/{workgroup_id}/projects
+desc: Create a Project | Create a Project
+schema: ProjectPersistVO
+- path:workgroup_id string
+- body:client_account string
+- body:client_user_id integer
+- body:client_workgroup_id integer
+- body:comments string
+- body:completion_date string
+- body:custom_fields array<object>
+- body:custom_fields[].date_value string
+- body:custom_fields[].number_value any
+- body:custom_fields[].param_name string
+- body:custom_fields[].string_value string
+- body:deactivation_reason_id integer
+- body:is_active boolean
+- body:is_hot boolean
+- body:is_paper_direct boolean
+- body:project_category_id integer
+- body:project_description string
+- body:project_name string
+- body:project_number string
+- body:project_owner_user_id integer
+- body:project_status_id integer
+
+## S114-0010  PATCH /v1/workgroups/{workgroup_id}/projects/{project_id}
+desc: Patch a specific Project | Patch a specific Project
+schema: ProjectPatchPO
+- path:workgroup_id string
+- path:project_id string
+- body:client_user_id integer
+- body:client_workgroup_id integer
+- body:comments string
+- body:completion_date string
+- body:custom_fields array<object>
+- body:custom_fields[].date_value string
+- body:custom_fields[].number_value any
+- body:custom_fields[].param_name string
+- body:custom_fields[].string_value string
+- body:deactivation_reason_id integer
+- body:is_active boolean
+- body:is_hot boolean
+- body:project_category_id integer
+- body:project_description string
+- body:project_name string
+- body:project_number string
+- body:project_status_id integer
+
+## S114-0011  PUT /v1/workgroups/{workgroup_id}/projects/{project_id}
+desc: Update a specific Project | Update a specific Project
+schema: ProjectPersistVO
+- path:workgroup_id string
+- path:project_id string
+- body:client_account string
+- body:client_user_id integer
+- body:client_workgroup_id integer
+- body:comments string
+- body:completion_date string
+- body:custom_fields array<object>
+- body:custom_fields[].date_value string
+- body:custom_fields[].number_value any
+- body:custom_fields[].param_name string
+- body:custom_fields[].string_value string
+- body:deactivation_reason_id integer
+- body:is_active boolean
+- body:is_hot boolean
+- body:is_paper_direct boolean
+- body:project_category_id integer
+- body:project_description string
+- body:project_name string
+- body:project_number string
+- body:project_owner_user_id integer
+- body:project_status_id integer
+
+## S114-0012  POST /v1/workgroups/{workgroup_id}/projects/{project_id}/buyOrders
+desc: Create a quick buy order | Create a quick buy order
+schema: OrderPO
+- path:workgroup_id string
+- path:project_id string
+- body:buyer_user_id integer
+- body:comments string
+- body:custom_fields array<object>
+- body:custom_fields[].date_value string
+- body:custom_fields[].number_value any
+- body:custom_fields[].param_name string
+- body:custom_fields[].string_value string
+- body:invoice_or_billing_recipient integer
+- body:order_completion_date string
+- body:order_items array<object>
+- body:order_items[].completion_date string
+- body:order_items[].custom_fields array<object>
+- body:order_items[].custom_fields[].date_value string
+- body:order_items[].custom_fields[].number_value any
+- body:order_items[].custom_fields[].param_name string
+- body:order_items[].custom_fields[].string_value string
+- body:order_items[].ex_tax_value_calculated any
+- body:order_items[].notes string
+- body:order_items[].per integer
+- body:order_items[].price any
+- body:order_items[].quantity any
+- body:order_items[].shipping any
+- body:order_items[].spec_id integer
+- body:order_items[].spec_reference_id integer
+- body:order_items[].tax string
+- body:other_selection_reason string
+- body:payment_method_id integer
+- body:payment_reference_no string
+- body:sellOrder boolean
+- body:shipping any
+- body:supplier_reference string
+- body:supplier_selection_reason_id integer
+- body:supplier_user_id integer
+- body:tax string
+- body:title string
+
+## S114-0013  PUT /v1/workgroups/{workgroup_id}/projects/{project_id}/buyOrders/{order_id}
+desc: Update a specific buy order | Update a specific buy order
+schema: OrderUpdPersistVO
+- path:workgroup_id string
+- path:project_id string
+- path:order_id string
+- body:action string
+- body:budget_type_field_id integer
+- body:comments string
+- body:custom_fields array<object>
+- body:custom_fields[].date_value string
+- body:custom_fields[].number_value any
+- body:custom_fields[].param_name string
+- body:custom_fields[].string_value string
+- body:order_completion_date string
+- body:order_id integer
+- body:other_selection_reason string
+- body:overs_percent any
+- body:payment_method_id integer
+- body:payment_reference_no string
+- body:reject_reason string
+- body:supplier_selection_reason_id integer
+- body:unders_percent any
+
+## S114-0014  POST /v1/workgroups/{workgroup_id}/projects/{project_id}/children
+desc: Attach children projects to specific Project | Attach children projects to specific Project
+schema: ProjectIdListVO
+- path:workgroup_id string
+- path:project_id string
+- body:childProjectIds array<integer>
+
+## S114-0015  POST /v1/workgroups/{workgroup_id}/projects/{project_id}/estimates
+desc: Create a Estimate | Create a Estimate
+schema: EstimatePO
+- path:workgroup_id string
+- path:project_id string
+- body:comments string
+- body:description string
+- body:estimate_items array<object>
+- body:estimate_items[].paper_items array<object>
+- body:estimate_items[].paper_items[].min_uom_qty integer
+- body:estimate_items[].paper_items[].paper_id integer
+- body:estimate_items[].paper_items[].price_1 any
+- body:estimate_items[].paper_items[].price_2 any
+- body:estimate_items[].paper_items[].price_3 any
+- body:estimate_items[].paper_items[].price_4 any
+- body:estimate_items[].paper_items[].price_5 any
+- body:estimate_items[].paper_items[].price_per_tonne any
+- body:estimate_items[].paper_items[].qty_uom string
+- body:estimate_items[].paper_items[].quantity_1 integer
+- body:estimate_items[].paper_items[].quantity_2 integer
+- body:estimate_items[].paper_items[].quantity_3 integer
+- body:estimate_items[].paper_items[].quantity_4 integer
+- body:estimate_items[].paper_items[].quantity_5 integer
+- body:estimate_items[].paper_items[].size string
+- body:estimate_items[].paper_items[].sku string
+- body:estimate_items[].paper_items[].unit_price_1 any
+- body:estimate_items[].paper_items[].unit_price_2 any
+- body:estimate_items[].paper_items[].unit_price_3 any
+- body:estimate_items[].paper_items[].unit_price_4 any
+- body:estimate_items[].paper_items[].unit_price_5 any
+- body:estimate_items[].quantity_1_price any
+- body:estimate_items[].quantity_1_shipping any
+- body:estimate_items[].quantity_1_tax any
+- body:estimate_items[].quantity_2_price any
+- body:estimate_items[].quantity_2_shipping any
+- body:estimate_items[].quantity_2_tax any
+- body:estimate_items[].quantity_3_price any
+- body:estimate_items[].quantity_3_shipping any
+- body:estimate_items[].quantity_3_tax any
+- body:estimate_items[].quantity_4_price any
+- body:estimate_items[].quantity_4_shipping any
+- body:estimate_items[].quantity_4_tax any
+- body:estimate_items[].quantity_5_price any
+- body:estimate_items[].quantity_5_shipping any
+- body:estimate_items[].quantity_5_tax any
+- body:estimate_items[].rfe_item_id integer
+- body:estimate_title string
+- body:expiration_date string
+- body:owner_reference string
+- body:rfe_id integer
+
+## S114-0016  PUT /v1/workgroups/{workgroup_id}/projects/{project_id}/quotes/{quote_id}
+desc: Accept / Reject a Quote | Accept / Reject a Quote
+schema: QuotePutPersistVO
+- path:workgroup_id string
+- path:project_id string
+- path:quote_id string
+- body:action string
+- body:po_number string
+- body:quote_id integer
+- body:state_change_comments string
+
+## S114-0017  POST /v1/workgroups/{workgroup_id}/projects/{project_id}/rfes
+desc: Create a RFE | Create a RFE
+schema: RfePO
+- path:workgroup_id string
+- path:project_id string
+- body:description string
+- body:details string
+- body:estimate_due_date string
+- body:proposed_order_completion_date string
+- body:rfe_number string
+- body:rfe_title string
+- body:specs array<object>
+- body:specs[].quantity_1 integer
+- body:specs[].quantity_2 integer
+- body:specs[].quantity_3 integer
+- body:specs[].quantity_4 integer
+- body:specs[].quantity_5 integer
+- body:specs[].spec_id integer
+- body:supplier_user_ids array<integer>
+
+## S114-0019  POST /v1/workgroups/{workgroup_id}/projects/{project_id}/shipments
+desc: Create a shipment | Create a shipment
+schema: ShipmentLocationPostPersistVO
+- path:workgroup_id string
+- path:project_id string
+- body:address_line1 string
+- body:address_line2 string
+- body:address_line3 string
+- body:batch_label string
+- body:city string
+- body:company_name string
+- body:country_iso_code string
+- body:delivery_date string
+- body:description_or_title string
+- body:email string
+- body:first_name string
+- body:inner_carton_label string
+- body:last_name string
+- body:middle_name string
+- body:outer_carton_label string
+- body:pallet_lablel string
+- body:poof_type string
+- body:postal_code string
+- body:request_type string
+- body:requested_quantity integer
+- body:shipment_custom_fields array<object>
+- body:shipment_custom_fields[].date_value string
+- body:shipment_custom_fields[].number_value any
+- body:shipment_custom_fields[].param_name string
+- body:shipment_custom_fields[].string_value string
+- body:shipment_request_custom_fields array<object>
+- body:shipment_request_custom_fields[].date_value string
+- body:shipment_request_custom_fields[].number_value any
+- body:shipment_request_custom_fields[].param_name string
+- body:shipment_request_custom_fields[].string_value string
+- body:shipping_carrier string
+- body:shipping_instruction string
+- body:shpping_method string
+- body:spec_ids string
+- body:state string
+- body:work_phone_number string
+- body:workgroup_name string
+
+## S114-0020  PUT /v1/workgroups/{workgroup_id}/projects/{project_id}/shipments/{shipment_id}/locations/{location_id}
+desc: Update a specific shipment location | Update a specific shipment location
+schema: ShipmentLocationPersistVO
+- path:workgroup_id string
+- path:project_id string
+- path:shipment_id string
+- path:location_id string
+- body:due_date string
+- body:qty_received integer
+- body:qty_requested integer
+- body:qty_shipped integer
+- body:received_date string
+- body:shipped_date string
+- body:shipping_cost any
+- body:type string
+
+## S114-0022  PUT /v1/workgroups/{workgroup_id}/projects/{project_id}/specs/{spec_id}
+desc: Update a specific Spec | Update a specific Spec
+schema: SpecUpdatePersistVO
+- path:workgroup_id string
+- path:project_id string
+- path:spec_id string
+- body:inks_and_paper array<object>
+- body:inks_and_paper[].custom_fields array<object>
+- body:inks_and_paper[].custom_fields[].date_value string
+- body:inks_and_paper[].custom_fields[].number_value any
+- body:inks_and_paper[].custom_fields[].param_name string
+- body:inks_and_paper[].custom_fields[].string_value string
+- body:inks_and_paper[].paper_id integer
+- body:product_type_id integer
+- body:quantity_1 integer
+- body:quantity_2 integer
+- body:quantity_3 integer
+- body:quantity_4 integer
+- body:quantity_5 integer
+- body:sku string
+- body:spec_name string
+
+## S114-0023  POST /v1/workgroups/{workgroup_id}/projects/{project_id}/tasks
+desc: Create a new task | Create a new task
+schema: TaskPersistVO
+- path:workgroup_id string
+- path:project_id string
+- body:actual_duration number
+- body:actual_duration_hour number
+- body:actual_end_date string
+- body:actual_start_date string
+- body:assign_to_user_id integer
+- body:comments string
+- body:contributors string
+- body:custom_status_id integer
+- body:description string
+- body:name string
+- body:percentage_complete integer
+- body:priority integer
+- body:revised_duration number
+- body:revised_duration_hour number
+- body:revised_end_date string
+- body:revised_start_date string
+- body:status_id integer
+- body:task_id integer
+- body:task_type_id integer
+
+## S114-0024  POST /v1/workgroups/{workgroup_id}/projects/{project_id}/teammembers
+desc: Deprecated, please use 1.1 Version | Deprecated, please use 1.1 Version
+schema: ContactUserVO
+- path:workgroup_id string
+- path:project_id string
+- body:role_id integer
+- body:user_id integer
+
+## S114-0025  DELETE /v1/workgroups/{workgroup_id}/projects/{project_id}/teammembers/{teammember_id}
+desc: Delete a team member for the specific project. | Delete a team member for the specific project.
+- path:workgroup_id string
+- path:project_id string
+- path:teammember_id string
+
+## S115-0001  POST /api/v1/actions/{serviceId}/{actionId}/exec
+desc: Execute action | Executes a registered service action and returns any output from the action. The data returned in the POST response body may be: * the raw action output, * a URL encapsulating the action request which executes the action when dereferenced (only for actions using GET), * RDF generated from the action output, * a URL to an RDF viewer's display of the generated RDF. Any parameters re
+schema: ExecBody
+- path:serviceId string
+- path:actionId string
+- body:action_specific_property1 string
+- body:action_specific_property2 string
+- body:osdb:body_data_encoding string
+- body:osdb:body_data_raw string
+- body:osdb:body_data_src_url string
+- body:osdb:output_type string enum[url_only|generate_rdf|display_rdf]
+- body:osdb:response_format string
+
+## S115-0002  POST /api/v1/services
+desc: Load service | Loads a service description into the OSDB Service Registry
+- body:service_description_url string
+- body:service_moniker string
+
+## S115-0003  DELETE /api/v1/services/{serviceId}
+desc: Unload service | Removes a service description from the OSDB Service Registry
+- path:serviceId string
+
+## S116-0002  PATCH /analyses/{webId}
+desc: Update an Analysis.
+schema: Analysis
+- path:webId string
+- body:AnalysisRulePlugInName string
+- body:AutoCreated boolean
+- body:CategoryNames array<string>
+- body:Description string
+- body:GroupId integer
+- body:HasNotification boolean
+- body:HasTarget boolean
+- body:HasTemplate boolean
+- body:Id string
+- body:IsConfigured boolean
+- body:IsTimeRuleDefinedByTemplate boolean
+- body:Links object
+- body:Links.AnalysisRule string
+- body:Links.AnalysisRulePlugIn string
+- body:Links.Categories string
+- body:Links.Database string
+- body:Links.Security string
+- body:Links.SecurityEntries string
+- body:Links.Self string
+- body:Links.Target string
+- body:Links.Template string
+- body:Links.TimeRule string
+- body:Links.TimeRulePlugIn string
+- body:MaximumQueueSize integer
+- body:Name string
+- body:OutputTime string
+- body:Path string
+- body:Priority string
+- body:PublishResults boolean
+- body:Status string
+- body:TargetWebId string
+- body:TemplateName string
+- body:TimeRulePlugInName string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-0006  DELETE /analysiscategories/{webId}
+desc: Delete an analysis category.
+- path:webId string
+
+## S116-0024  POST /assetdatabases/{webId}/attributecategories
+desc: Create an attribute category at the Asset Database root.
+schema: AttributeCategory
+- path:webId string
+- query:webIdType string
+- body:Description string
+- body:Id string
+- body:Links object
+- body:Links.Database string
+- body:Links.Security string
+- body:Links.SecurityEntries string
+- body:Links.Self string
+- body:Name string
+- body:Path string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-0044  POST /assetservers/{webId}/securitymappings
+desc: Create a security mapping.
+schema: SecurityMapping
+- path:webId string
+- query:webIdType string
+- body:Account string
+- body:Description string
+- body:Id string
+- body:Links object
+- body:Links.AssetServer string
+- body:Links.Security string
+- body:Links.SecurityEntries string
+- body:Links.SecurityIdentity string
+- body:Links.Self string
+- body:Name string
+- body:Path string
+- body:SecurityIdentityWebId string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+
+## S116-0049  DELETE /attributecategories/{webId}/securityentries/{name}
+desc: Delete a security entry owned by the attribute category.
+- path:name string
+- path:webId string
+- query:applyToChildren boolean
+
+## S116-0051  DELETE /attributes/{webId}
+desc: Delete an attribute.
+- path:webId string
+
+## S116-0052  PATCH /attributes/{webId}
+desc: Update an attribute by replacing items in its definition. | If an attribute is based on a template, the user must make sure to update the attribute appropriately so that it does not conflict with the template's design. Once a template is applied to an attribute, it can not be changed.
+schema: Attribute
+- path:webId string
+- body:CategoryNames array<string>
+- body:ConfigString string
+- body:DataReference object
+- body:DataReference.PIPoint object
+- body:DataReference.PIPoint.Descriptor string
+- body:DataReference.PIPoint.DigitalSetName string
+- body:DataReference.PIPoint.DisplayDigits integer
+- body:DataReference.PIPoint.EngineeringUnits string
+- body:DataReference.PIPoint.Future boolean
+- body:DataReference.PIPoint.Id integer
+- body:DataReference.PIPoint.Name string
+- body:DataReference.PIPoint.Path string
+- body:DataReference.PIPoint.PointClass string
+- body:DataReference.PIPoint.PointType string
+- body:DataReference.PIPoint.Span number
+- body:DataReference.PIPoint.Step boolean
+- body:DataReference.PIPoint.WebId string
+- body:DataReference.PIPoint.Zero number
+- body:DataReference.Type string
+- body:DataReference.WebException object
+- body:DataReference.WebException.Errors array<string>
+- body:DataReference.WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:DataReferencePlugIn string
+- body:DefaultUnitsName string
+- body:DefaultUnitsNameAbbreviation string
+- body:Description string
+- body:DisplayDigits integer
+- body:HasChildren boolean
+- body:Id string
+- body:IsConfigurationItem boolean
+- body:IsExcluded boolean
+- body:IsHidden boolean
+- body:IsManualDataEntry boolean
+- body:Links object
+- body:Links.Attributes string
+- body:Links.Categories string
+- body:Links.Element string
+- body:Links.EndValue string
+- body:Links.EnumerationSet string
+- body:Links.EnumerationValues string
+- body:Links.EventFrame string
+- body:Links.InterpolatedData string
+- body:Links.Parent string
+- body:Links.PlotData string
+- body:Links.Point string
+- body:Links.RecordedData string
+- body:Links.Self string
+- body:Links.SummaryData string
+- body:Links.Template string
+- body:Links.Trait string
+- body:Links.Value string
+- body:Name string
+- body:Path string
+- body:Paths array<string>
+- body:Span number
+- body:Step boolean
+- body:TraitName string
+- body:Type string
+- body:TypeQualifier string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string
+- body:Zero number
+
+## S116-0058  POST /attributetemplates/{webId}/attributetemplates
+desc: Create an attribute template as a child of another attribute template.
+schema: AttributeTemplate
+- path:webId string
+- query:webIdType string
+- body:CategoryNames array<string>
+- body:ConfigString string
+- body:DataReferencePlugIn string
+- body:DefaultUnitsName string
+- body:DefaultUnitsNameAbbreviation string
+- body:DefaultValue object
+- body:Description string
+- body:HasChildren boolean
+- body:Id string
+- body:IsConfigurationItem boolean
+- body:IsExcluded boolean
+- body:IsHidden boolean
+- body:IsManualDataEntry boolean
+- body:Links object
+- body:Links.AttributeTemplates string
+- body:Links.Categories string
+- body:Links.ElementTemplate string
+- body:Links.Parent string
+- body:Links.Self string
+- body:Links.Trait string
+- body:Name string
+- body:Path string
+- body:TraitName string
+- body:Type string
+- body:TypeQualifier string
+- body:WebException object
+- body:WebException.Errors array<string>
+- body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+- body:WebId string

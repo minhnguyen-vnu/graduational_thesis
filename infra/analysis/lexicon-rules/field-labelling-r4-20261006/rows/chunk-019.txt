@@ -1,0 +1,1466 @@
+## S404-N0114  PUT /snippets/{workspace}/{encoded_id}/{node_id}
+desc: Update a previous revision of a snippet | Identical to `UPDATE /snippets/encoded_id`, except that this endpoint takes an explicit commit revision. Only the snippet's "HEAD"/"tip" (most recent) version can be updated and requests on all other, older revisions fail by returning a 405 status. Usage of this endpoint over the unrestricted `/snippets/encoded_id` could be desired if the caller wants to b
+- path:encoded_id string
+- path:node_id string
+- path:workspace string
+
+## S404-N0115  POST /teams/{username}/pipelines_config/variables/
+desc: Create a variable for a user | Create an account level variable. This endpoint has been deprecated, and you should use the new workspaces endpoint. For more information, see [the announcement](https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-teams-deprecation/).
+schema: pipeline_variable
+- path:username string
+- body:type string
+- body:key string
+- body:secured boolean
+- body:uuid string
+- body:value string
+
+## S404-N0117  PUT /teams/{username}/pipelines_config/variables/{variable_uuid}
+desc: Update a variable for a team | Update a team level variable. This endpoint has been deprecated, and you should use the new workspaces endpoint. For more information, see [the announcement](https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-teams-deprecation/).
+schema: pipeline_variable
+- path:username string
+- path:variable_uuid string
+- body:type string
+- body:key string
+- body:secured boolean
+- body:uuid string
+- body:value string
+
+## S404-N0118  POST /users/{selected_user}/pipelines_config/variables/
+desc: Create a variable for a user | Create a user level variable. This endpoint has been deprecated, and you should use the new workspaces endpoint. For more information, see [the announcement](https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-teams-deprecation/).
+schema: pipeline_variable
+- path:selected_user string
+- body:type string
+- body:key string
+- body:secured boolean
+- body:uuid string
+- body:value string
+
+## S404-N0121  DELETE /users/{selected_user}/properties/{app_key}/{property_name}
+desc: Delete a user application property | Delete an [application property](/cloud/bitbucket/application-properties/) value stored against a user.
+- path:selected_user string
+- path:app_key string
+- path:property_name string
+
+## S404-N0123  POST /users/{selected_user}/ssh-keys
+desc: Add a new SSH key | Adds a new SSH public key to the specified user account and returns the resulting key. Example: ``` $ curl -X POST -H "Content-Type: application/json" -d '{"key": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKqP3Cr632C2dNhhgKVcon4ldUSAeKiku2yP9O9/bDtY user@myhost"}' https://api.bitbucket.org/2.0/users/{ed08f5e1-605b-4f4a-aee4-6c97628a673e}/ssh-keys { "comment": "user@myhost", "created
+schema: ssh_account_key
+- path:selected_user string
+- body:type string
+- body:comment string
+- body:created_on string
+- body:key string
+- body:label string
+- body:last_used string
+- body:links object
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:uuid string
+- body:owner object
+- body:owner.type string
+- body:owner.created_on string
+- body:owner.display_name string
+- body:owner.links object
+- body:owner.links.avatar object
+- body:owner.username string
+- body:owner.uuid string
+
+## S404-N0124  DELETE /users/{selected_user}/ssh-keys/{key_id}
+desc: Delete a SSH key | Deletes a specific SSH public key from a user's account Example: ``` $ curl -X DELETE https://api.bitbucket.org/2.0/users/{ed08f5e1-605b-4f4a-aee4-6c97628a673e}/ssh-keys/{b15b6026-9c02-4626-b4ad-b905f99f763a} ```
+- path:key_id string
+- path:selected_user string
+
+## S404-N0125  PUT /users/{selected_user}/ssh-keys/{key_id}
+desc: Update a SSH key | Updates a specific SSH public key on a user's account Note: Only the 'comment' field can be updated using this API. To modify the key or comment values, you must delete and add the key again. Example: ``` $ curl -X PUT -H "Content-Type: application/json" -d '{"label": "Work key"}' https://api.bitbucket.org/2.0/users/{ed08f5e1-605b-4f4a-aee4-6c97628a673e}/ssh-keys/{b15b6026-9c02-
+schema: ssh_account_key
+- path:key_id string
+- path:selected_user string
+- body:type string
+- body:comment string
+- body:created_on string
+- body:key string
+- body:label string
+- body:last_used string
+- body:links object
+- body:links.self object
+- body:links.self.href string
+- body:links.self.name string
+- body:uuid string
+- body:owner object
+- body:owner.type string
+- body:owner.created_on string
+- body:owner.display_name string
+- body:owner.links object
+- body:owner.links.avatar object
+- body:owner.username string
+- body:owner.uuid string
+
+## S404-N0126  POST /workspaces/{workspace}/hooks
+desc: Create a webhook for a workspace | Creates a new webhook on the specified workspace. Workspace webhooks are fired for events from all repositories contained by that workspace. Example: ``` $ curl -X POST -u credentials -H 'Content-Type: application/json' https://api.bitbucket.org/2.0/workspaces/my-workspace/hooks -d ' { "description": "Webhook Description", "url": "https://example.com/", "active":
+- path:workspace string
+
+## S404-N0127  DELETE /workspaces/{workspace}/hooks/{uid}
+desc: Delete a webhook for a workspace | Deletes the specified webhook subscription from the given workspace.
+- path:uid string
+- path:workspace string
+
+## S404-N0128  PUT /workspaces/{workspace}/hooks/{uid}
+desc: Update a webhook for a workspace | Updates the specified webhook subscription. The following properties can be mutated: * `description` * `url` * `active` * `events`
+- path:uid string
+- path:workspace string
+
+## S404-N0129  POST /workspaces/{workspace}/pipelines-config/variables
+desc: Create a variable for a workspace | Create a workspace level variable.
+schema: pipeline_variable
+- path:workspace string
+- body:type string
+- body:key string
+- body:secured boolean
+- body:uuid string
+- body:value string
+
+## S404-N0131  PUT /workspaces/{workspace}/pipelines-config/variables/{variable_uuid}
+desc: Update variable for a workspace | Update a workspace level variable.
+schema: pipeline_variable
+- path:workspace string
+- path:variable_uuid string
+- body:type string
+- body:key string
+- body:secured boolean
+- body:uuid string
+- body:value string
+
+## S404-N0132  POST /workspaces/{workspace}/projects
+desc: Create a project in a workspace | Creates a new project. Note that the avatar has to be embedded as either a data-url or a URL to an external image as shown in the examples below: ``` $ body=$(cat << EOF { "name": "Mars Project", "key": "MARS", "description": "Software for colonizing mars.", "links": { "avatar": { "href": "data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGol
+schema: project
+- path:workspace string
+- body:type string
+- body:created_on string
+- body:description string
+- body:has_publicly_visible_repos boolean
+- body:is_private boolean
+- body:key string
+- body:links object
+- body:links.avatar object
+- body:links.avatar.href string
+- body:links.avatar.name string
+- body:links.html object
+- body:links.html.href string
+- body:links.html.name string
+- body:name string
+- body:owner object
+- body:owner.type string
+- body:owner.created_on string
+- body:owner.display_name string
+- body:owner.links object
+- body:owner.links.avatar object
+- body:owner.username string
+- body:owner.uuid string
+- body:updated_on string
+- body:uuid string
+
+## S404-N0133  DELETE /workspaces/{workspace}/projects/{project_key}
+desc: Delete a project for a workspace | Deletes this project. This is an irreversible operation. You cannot delete a project that still contains repositories. To delete the project, [delete](/cloud/bitbucket/rest/api-group-repositories/#api-repositories-workspace-repo-slug-delete) or transfer the repositories first. Example: ``` $ curl -X DELETE https://api.bitbucket.org/2.0/bbworkspace1/PROJ ```
+- path:project_key string
+- path:workspace string
+
+## S404-N0134  PUT /workspaces/{workspace}/projects/{project_key}
+desc: Update a project for a workspace | Since this endpoint can be used to both update and to create a project, the request body depends on the intent. #### Creation See the POST documentation for the project collection for an example of the request body. Note: The `key` should not be specified in the body of request (since it is already present in the URL). The `name` is required, everything else is o
+schema: project
+- path:project_key string
+- path:workspace string
+- body:type string
+- body:created_on string
+- body:description string
+- body:has_publicly_visible_repos boolean
+- body:is_private boolean
+- body:key string
+- body:links object
+- body:links.avatar object
+- body:links.avatar.href string
+- body:links.avatar.name string
+- body:links.html object
+- body:links.html.href string
+- body:links.html.name string
+- body:name string
+- body:owner object
+- body:owner.type string
+- body:owner.created_on string
+- body:owner.display_name string
+- body:owner.links object
+- body:owner.links.avatar object
+- body:owner.username string
+- body:owner.uuid string
+- body:updated_on string
+- body:uuid string
+
+## S404-N0135  PUT /workspaces/{workspace}/projects/{project_key}/branching-model/settings
+desc: Update the branching model config for a project | Update the branching model configuration for a project. The `development` branch can be configured to a specific branch or to track the main branch. Any branch name can be supplied, but will only successfully be applied to a repository via inheritance if that branch exists for that repository. Only the passed properties will be updated. The propert
+- path:project_key string
+- path:workspace string
+
+## S404-N0137  PUT /workspaces/{workspace}/projects/{project_key}/default-reviewers/{selected_user}
+desc: Add the specific user as a default reviewer for the project | Adds the specified user to the project's list of default reviewers. The method is idempotent. Accepts an optional body containing the `uuid` of the user to be added. Example: ``` $ curl -XPUT https://api.bitbucket.org/2.0/.../default-reviewers/%7Bf0e0e8e9-66c1-4b85-a784-44a9eb9ef1a6%7D -d { 'uuid': '{f0e0e8e9-66c1-4b85-a784-44a9eb9ef1a6
+- path:project_key string
+- path:selected_user string
+- path:workspace string
+
+## S404-N0139  DELETE /workspaces/{workspace}/projects/{project_key}/deploy-keys/{key_id}
+desc: Delete a deploy key from a project | This deletes a deploy key from a project. Example: ``` $ curl -XDELETE \ -H "Authorization <auth header>" \ https://api.bitbucket.org/2.0/workspaces/jzeng/projects/JZ/deploy-keys/1234 ```
+- path:key_id string
+- path:project_key string
+- path:workspace string
+
+## S395-N0001  POST /v1/account_links
+desc: <p>Creates an AccountLink object that includes a single-use Stripe URL that the platform can redirect their user to in order to take them through the Connect Onboarding flow.</p>
+- body:account string
+- body:collect string enum[currently_due|eventually_due]
+- body:expand array<string>
+- body:refresh_url string
+- body:return_url string
+- body:type string enum[account_onboarding|account_update]
+
+## S395-N0002  POST /v1/accounts
+desc: <p>With <a href="/docs/connect">Connect</a>, you can create Stripe accounts for your users. To do this, you’ll first need to <a href="https://dashboard.stripe.com/account/applications/settings">register your platform</a>.</p> <p>If you’ve already collected information for your connected accounts, you <a href="/docs/connect/best-practices#onboarding">can pre-fill that information</a> when creating 
+- body:account_token string
+- body:bank_account object
+- body:bank_account.account_holder_name string
+- body:bank_account.account_holder_type string enum[company|individual]
+- body:bank_account.account_number string
+- body:bank_account.account_type string enum[checking|futsu|savings|toza]
+- body:bank_account.country string
+- body:bank_account.currency string
+- body:bank_account.object string enum[bank_account]
+- body:bank_account.routing_number string
+- body:business_profile object
+- body:business_profile.mcc string
+- body:business_profile.name string
+- body:business_profile.product_description string
+- body:business_profile.support_address object
+- body:business_profile.support_address.city string
+- body:business_profile.support_address.country string
+- body:business_profile.support_address.line1 string
+- body:business_profile.support_address.line2 string
+- body:business_profile.support_address.postal_code string
+- body:business_profile.support_address.state string
+- body:business_profile.support_email string
+- body:business_profile.support_phone string
+- body:business_profile.support_url string enum[]
+- body:business_profile.url string
+- body:business_type string enum[company|government_entity|individual|non_profit]
+- body:capabilities object
+- body:capabilities.acss_debit_payments object
+- body:capabilities.acss_debit_payments.requested boolean
+- body:capabilities.affirm_payments object
+- body:capabilities.affirm_payments.requested boolean
+- body:capabilities.afterpay_clearpay_payments object
+- body:capabilities.afterpay_clearpay_payments.requested boolean
+- body:capabilities.au_becs_debit_payments object
+- body:capabilities.au_becs_debit_payments.requested boolean
+- body:capabilities.bacs_debit_payments object
+- body:capabilities.bacs_debit_payments.requested boolean
+- body:capabilities.bancontact_payments object
+- body:capabilities.bancontact_payments.requested boolean
+- body:capabilities.bank_transfer_payments object
+- body:capabilities.bank_transfer_payments.requested boolean
+- body:capabilities.blik_payments object
+- body:capabilities.blik_payments.requested boolean
+- body:capabilities.boleto_payments object
+- body:capabilities.boleto_payments.requested boolean
+- body:capabilities.card_issuing object
+- body:capabilities.card_issuing.requested boolean
+- body:capabilities.card_payments object
+- body:capabilities.card_payments.requested boolean
+- body:capabilities.cartes_bancaires_payments object
+- body:capabilities.cartes_bancaires_payments.requested boolean
+- body:capabilities.eps_payments object
+- body:capabilities.eps_payments.requested boolean
+- body:capabilities.fpx_payments object
+- body:capabilities.fpx_payments.requested boolean
+- body:capabilities.giropay_payments object
+- body:capabilities.giropay_payments.requested boolean
+- body:capabilities.grabpay_payments object
+- body:capabilities.grabpay_payments.requested boolean
+- body:capabilities.ideal_payments object
+- body:capabilities.ideal_payments.requested boolean
+- body:capabilities.india_international_payments object
+- body:capabilities.india_international_payments.requested boolean
+- body:capabilities.jcb_payments object
+- body:capabilities.jcb_payments.requested boolean
+- body:capabilities.klarna_payments object
+- body:capabilities.klarna_payments.requested boolean
+- body:capabilities.konbini_payments object
+- body:capabilities.konbini_payments.requested boolean
+- body:capabilities.legacy_payments object
+- body:capabilities.legacy_payments.requested boolean
+- body:capabilities.link_payments object
+- body:capabilities.link_payments.requested boolean
+- body:capabilities.oxxo_payments object
+- body:capabilities.oxxo_payments.requested boolean
+- body:capabilities.p24_payments object
+- body:capabilities.p24_payments.requested boolean
+- body:capabilities.paynow_payments object
+- body:capabilities.paynow_payments.requested boolean
+- body:capabilities.promptpay_payments object
+(+161 fields cut)
+
+## S395-N0003  DELETE /v1/accounts/{account}
+desc: <p>With <a href="/docs/connect">Connect</a>, you can delete accounts you manage.</p> <p>Accounts created using test-mode keys can be deleted at any time. Standard accounts created using live-mode keys cannot be deleted. Custom or Express accounts created using live-mode keys can only be deleted once all balances are zero.</p> <p>If you want to delete your own account, use the <a href="https://dash
+- path:account string
+- body:(body) object
+
+## S395-N0004  POST /v1/accounts/{account}
+desc: <p>Updates a <a href="/docs/connect/accounts">connected account</a> by setting the values of the parameters passed. Any parameters not provided are left unchanged.</p> <p>For Custom accounts, you can update any information on the account. For other accounts, you can update all information until that account has started to go through Connect Onboarding. Once you create an <a href="/docs/api/account
+- path:account string
+- body:account_token string
+- body:business_profile object
+- body:business_profile.mcc string
+- body:business_profile.name string
+- body:business_profile.product_description string
+- body:business_profile.support_address object
+- body:business_profile.support_address.city string
+- body:business_profile.support_address.country string
+- body:business_profile.support_address.line1 string
+- body:business_profile.support_address.line2 string
+- body:business_profile.support_address.postal_code string
+- body:business_profile.support_address.state string
+- body:business_profile.support_email string
+- body:business_profile.support_phone string
+- body:business_profile.support_url string enum[]
+- body:business_profile.url string
+- body:business_type string enum[company|government_entity|individual|non_profit]
+- body:capabilities object
+- body:capabilities.acss_debit_payments object
+- body:capabilities.acss_debit_payments.requested boolean
+- body:capabilities.affirm_payments object
+- body:capabilities.affirm_payments.requested boolean
+- body:capabilities.afterpay_clearpay_payments object
+- body:capabilities.afterpay_clearpay_payments.requested boolean
+- body:capabilities.au_becs_debit_payments object
+- body:capabilities.au_becs_debit_payments.requested boolean
+- body:capabilities.bacs_debit_payments object
+- body:capabilities.bacs_debit_payments.requested boolean
+- body:capabilities.bancontact_payments object
+- body:capabilities.bancontact_payments.requested boolean
+- body:capabilities.bank_transfer_payments object
+- body:capabilities.bank_transfer_payments.requested boolean
+- body:capabilities.blik_payments object
+- body:capabilities.blik_payments.requested boolean
+- body:capabilities.boleto_payments object
+- body:capabilities.boleto_payments.requested boolean
+- body:capabilities.card_issuing object
+- body:capabilities.card_issuing.requested boolean
+- body:capabilities.card_payments object
+- body:capabilities.card_payments.requested boolean
+- body:capabilities.cartes_bancaires_payments object
+- body:capabilities.cartes_bancaires_payments.requested boolean
+- body:capabilities.eps_payments object
+- body:capabilities.eps_payments.requested boolean
+- body:capabilities.fpx_payments object
+- body:capabilities.fpx_payments.requested boolean
+- body:capabilities.giropay_payments object
+- body:capabilities.giropay_payments.requested boolean
+- body:capabilities.grabpay_payments object
+- body:capabilities.grabpay_payments.requested boolean
+- body:capabilities.ideal_payments object
+- body:capabilities.ideal_payments.requested boolean
+- body:capabilities.india_international_payments object
+- body:capabilities.india_international_payments.requested boolean
+- body:capabilities.jcb_payments object
+- body:capabilities.jcb_payments.requested boolean
+- body:capabilities.klarna_payments object
+- body:capabilities.klarna_payments.requested boolean
+- body:capabilities.konbini_payments object
+- body:capabilities.konbini_payments.requested boolean
+- body:capabilities.legacy_payments object
+- body:capabilities.legacy_payments.requested boolean
+- body:capabilities.link_payments object
+- body:capabilities.link_payments.requested boolean
+- body:capabilities.oxxo_payments object
+- body:capabilities.oxxo_payments.requested boolean
+- body:capabilities.p24_payments object
+- body:capabilities.p24_payments.requested boolean
+- body:capabilities.paynow_payments object
+- body:capabilities.paynow_payments.requested boolean
+- body:capabilities.promptpay_payments object
+- body:capabilities.promptpay_payments.requested boolean
+- body:capabilities.sepa_debit_payments object
+- body:capabilities.sepa_debit_payments.requested boolean
+- body:capabilities.sofort_payments object
+- body:capabilities.sofort_payments.requested boolean
+- body:capabilities.tax_reporting_us_1099_k object
+- body:capabilities.tax_reporting_us_1099_k.requested boolean
+- body:capabilities.tax_reporting_us_1099_misc object
+(+151 fields cut)
+
+## S395-N0005  POST /v1/accounts/{account}/bank_accounts
+desc: <p>Create an external account for a given account.</p>
+- path:account string
+- body:bank_account object
+- body:bank_account.account_holder_name string
+- body:bank_account.account_holder_type string enum[company|individual]
+- body:bank_account.account_number string
+- body:bank_account.account_type string enum[checking|futsu|savings|toza]
+- body:bank_account.country string
+- body:bank_account.currency string
+- body:bank_account.object string enum[bank_account]
+- body:bank_account.routing_number string
+- body:default_for_currency boolean
+- body:expand array<string>
+- body:external_account string
+- body:metadata object
+
+## S395-N0006  DELETE /v1/accounts/{account}/bank_accounts/{id}
+desc: <p>Delete a specified external account for a given account.</p>
+- path:account string
+- path:id string
+- body:(body) object
+
+## S395-N0007  POST /v1/accounts/{account}/bank_accounts/{id}
+desc: <p>Updates the metadata, account holder name, account holder type of a bank account belonging to a <a href="/docs/connect/custom-accounts">Custom account</a>, and optionally sets it as the default for its currency. Other bank account details are not editable by design.</p> <p>You can re-enable a disabled bank account by performing an update call without providing any arguments or changes.</p>
+- path:account string
+- path:id string
+- body:account_holder_name string
+- body:account_holder_type string enum[|company|individual]
+- body:account_type string enum[checking|futsu|savings|toza]
+- body:address_city string
+- body:address_country string
+- body:address_line1 string
+- body:address_line2 string
+- body:address_state string
+- body:address_zip string
+- body:default_for_currency boolean
+- body:exp_month string
+- body:exp_year string
+- body:expand array<string>
+- body:metadata object enum[]
+- body:name string
+
+## S395-N0008  POST /v1/accounts/{account}/capabilities/{capability}
+desc: <p>Updates an existing Account Capability.</p>
+- path:account string
+- path:capability string
+- body:expand array<string>
+- body:requested boolean
+
+## S395-N0009  POST /v1/accounts/{account}/external_accounts
+desc: <p>Create an external account for a given account.</p>
+- path:account string
+- body:bank_account object
+- body:bank_account.account_holder_name string
+- body:bank_account.account_holder_type string enum[company|individual]
+- body:bank_account.account_number string
+- body:bank_account.account_type string enum[checking|futsu|savings|toza]
+- body:bank_account.country string
+- body:bank_account.currency string
+- body:bank_account.object string enum[bank_account]
+- body:bank_account.routing_number string
+- body:default_for_currency boolean
+- body:expand array<string>
+- body:external_account string
+- body:metadata object
+
+## S395-N0010  DELETE /v1/accounts/{account}/external_accounts/{id}
+desc: <p>Delete a specified external account for a given account.</p>
+- path:account string
+- path:id string
+- body:(body) object
+
+## S395-N0011  POST /v1/accounts/{account}/external_accounts/{id}
+desc: <p>Updates the metadata, account holder name, account holder type of a bank account belonging to a <a href="/docs/connect/custom-accounts">Custom account</a>, and optionally sets it as the default for its currency. Other bank account details are not editable by design.</p> <p>You can re-enable a disabled bank account by performing an update call without providing any arguments or changes.</p>
+- path:account string
+- path:id string
+- body:account_holder_name string
+- body:account_holder_type string enum[|company|individual]
+- body:account_type string enum[checking|futsu|savings|toza]
+- body:address_city string
+- body:address_country string
+- body:address_line1 string
+- body:address_line2 string
+- body:address_state string
+- body:address_zip string
+- body:default_for_currency boolean
+- body:exp_month string
+- body:exp_year string
+- body:expand array<string>
+- body:metadata object enum[]
+- body:name string
+
+## S395-N0012  POST /v1/accounts/{account}/login_links
+desc: <p>Creates a single-use login link for an Express account to access their Stripe dashboard.</p> <p><strong>You may only create login links for <a href="/docs/connect/express-accounts">Express accounts</a> connected to your platform</strong>.</p>
+- path:account string
+- body:expand array<string>
+
+## S395-N0015  POST /v1/accounts/{account}/people/{person}
+desc: <p>Updates an existing person.</p>
+- path:account string
+- path:person string
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.line1 string
+- body:address.line2 string
+- body:address.postal_code string
+- body:address.state string
+- body:address_kana object
+- body:address_kana.city string
+- body:address_kana.country string
+- body:address_kana.line1 string
+- body:address_kana.line2 string
+- body:address_kana.postal_code string
+- body:address_kana.state string
+- body:address_kana.town string
+- body:address_kanji object
+- body:address_kanji.city string
+- body:address_kanji.country string
+- body:address_kanji.line1 string
+- body:address_kanji.line2 string
+- body:address_kanji.postal_code string
+- body:address_kanji.state string
+- body:address_kanji.town string
+- body:dob object enum[]
+- body:dob.day integer
+- body:dob.month integer
+- body:dob.year integer
+- body:documents object
+- body:documents.company_authorization object
+- body:documents.company_authorization.files array<string>
+- body:documents.passport object
+- body:documents.passport.files array<string>
+- body:documents.visa object
+- body:documents.visa.files array<string>
+- body:email string
+- body:expand array<string>
+- body:first_name string
+- body:first_name_kana string
+- body:first_name_kanji string
+- body:full_name_aliases array<string> enum[]
+- body:gender string
+- body:id_number string
+- body:id_number_secondary string
+- body:last_name string
+- body:last_name_kana string
+- body:last_name_kanji string
+- body:maiden_name string
+- body:metadata object enum[]
+- body:nationality string
+- body:person_token string
+- body:phone string
+- body:political_exposure string
+- body:registered_address object
+- body:registered_address.city string
+- body:registered_address.country string
+- body:registered_address.line1 string
+- body:registered_address.line2 string
+- body:registered_address.postal_code string
+- body:registered_address.state string
+- body:relationship object
+- body:relationship.director boolean
+- body:relationship.executive boolean
+- body:relationship.owner boolean
+- body:relationship.percent_ownership number enum[]
+- body:relationship.representative boolean
+- body:relationship.title string
+- body:ssn_last_4 string
+- body:verification object
+- body:verification.additional_document object
+- body:verification.additional_document.back string
+- body:verification.additional_document.front string
+- body:verification.document object
+- body:verification.document.back string
+- body:verification.document.front string
+
+## S395-N0016  POST /v1/accounts/{account}/persons
+desc: <p>Creates a new person.</p>
+- path:account string
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.line1 string
+- body:address.line2 string
+- body:address.postal_code string
+- body:address.state string
+- body:address_kana object
+- body:address_kana.city string
+- body:address_kana.country string
+- body:address_kana.line1 string
+- body:address_kana.line2 string
+- body:address_kana.postal_code string
+- body:address_kana.state string
+- body:address_kana.town string
+- body:address_kanji object
+- body:address_kanji.city string
+- body:address_kanji.country string
+- body:address_kanji.line1 string
+- body:address_kanji.line2 string
+- body:address_kanji.postal_code string
+- body:address_kanji.state string
+- body:address_kanji.town string
+- body:dob object enum[]
+- body:dob.day integer
+- body:dob.month integer
+- body:dob.year integer
+- body:documents object
+- body:documents.company_authorization object
+- body:documents.company_authorization.files array<string>
+- body:documents.passport object
+- body:documents.passport.files array<string>
+- body:documents.visa object
+- body:documents.visa.files array<string>
+- body:email string
+- body:expand array<string>
+- body:first_name string
+- body:first_name_kana string
+- body:first_name_kanji string
+- body:full_name_aliases array<string> enum[]
+- body:gender string
+- body:id_number string
+- body:id_number_secondary string
+- body:last_name string
+- body:last_name_kana string
+- body:last_name_kanji string
+- body:maiden_name string
+- body:metadata object enum[]
+- body:nationality string
+- body:person_token string
+- body:phone string
+- body:political_exposure string
+- body:registered_address object
+- body:registered_address.city string
+- body:registered_address.country string
+- body:registered_address.line1 string
+- body:registered_address.line2 string
+- body:registered_address.postal_code string
+- body:registered_address.state string
+- body:relationship object
+- body:relationship.director boolean
+- body:relationship.executive boolean
+- body:relationship.owner boolean
+- body:relationship.percent_ownership number enum[]
+- body:relationship.representative boolean
+- body:relationship.title string
+- body:ssn_last_4 string
+- body:verification object
+- body:verification.additional_document object
+- body:verification.additional_document.back string
+- body:verification.additional_document.front string
+- body:verification.document object
+- body:verification.document.back string
+- body:verification.document.front string
+
+## S395-N0017  DELETE /v1/accounts/{account}/persons/{person}
+desc: <p>Deletes an existing person’s relationship to the account’s legal entity. Any person with a relationship for an account can be deleted through the API, except if the person is the <code>account_opener</code>. If your integration is using the <code>executive</code> parameter, you cannot delete the only verified <code>executive</code> on file.</p>
+- path:account string
+- path:person string
+- body:(body) object
+
+## S395-N0018  POST /v1/accounts/{account}/persons/{person}
+desc: <p>Updates an existing person.</p>
+- path:account string
+- path:person string
+- body:address object
+- body:address.city string
+- body:address.country string
+- body:address.line1 string
+- body:address.line2 string
+- body:address.postal_code string
+- body:address.state string
+- body:address_kana object
+- body:address_kana.city string
+- body:address_kana.country string
+- body:address_kana.line1 string
+- body:address_kana.line2 string
+- body:address_kana.postal_code string
+- body:address_kana.state string
+- body:address_kana.town string
+- body:address_kanji object
+- body:address_kanji.city string
+- body:address_kanji.country string
+- body:address_kanji.line1 string
+- body:address_kanji.line2 string
+- body:address_kanji.postal_code string
+- body:address_kanji.state string
+- body:address_kanji.town string
+- body:dob object enum[]
+- body:dob.day integer
+- body:dob.month integer
+- body:dob.year integer
+- body:documents object
+- body:documents.company_authorization object
+- body:documents.company_authorization.files array<string>
+- body:documents.passport object
+- body:documents.passport.files array<string>
+- body:documents.visa object
+- body:documents.visa.files array<string>
+- body:email string
+- body:expand array<string>
+- body:first_name string
+- body:first_name_kana string
+- body:first_name_kanji string
+- body:full_name_aliases array<string> enum[]
+- body:gender string
+- body:id_number string
+- body:id_number_secondary string
+- body:last_name string
+- body:last_name_kana string
+- body:last_name_kanji string
+- body:maiden_name string
+- body:metadata object enum[]
+- body:nationality string
+- body:person_token string
+- body:phone string
+- body:political_exposure string
+- body:registered_address object
+- body:registered_address.city string
+- body:registered_address.country string
+- body:registered_address.line1 string
+- body:registered_address.line2 string
+- body:registered_address.postal_code string
+- body:registered_address.state string
+- body:relationship object
+- body:relationship.director boolean
+- body:relationship.executive boolean
+- body:relationship.owner boolean
+- body:relationship.percent_ownership number enum[]
+- body:relationship.representative boolean
+- body:relationship.title string
+- body:ssn_last_4 string
+- body:verification object
+- body:verification.additional_document object
+- body:verification.additional_document.back string
+- body:verification.additional_document.front string
+- body:verification.document object
+- body:verification.document.back string
+- body:verification.document.front string
+
+## S395-N0019  POST /v1/accounts/{account}/reject
+desc: <p>With <a href="/docs/connect">Connect</a>, you may flag accounts as suspicious.</p> <p>Test-mode Custom and Express accounts can be rejected at any time. Accounts created using live-mode keys may only be rejected once all balances are zero.</p>
+- path:account string
+- body:expand array<string>
+- body:reason string
+
+## S395-N0020  POST /v1/apple_pay/domains
+desc: <p>Create an apple pay domain.</p>
+- body:domain_name string
+- body:expand array<string>
+
+## S395-N0022  POST /v1/application_fees/{fee}/refunds/{id}
+desc: <p>Updates the specified application fee refund by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p> <p>This request only accepts metadata as an argument.</p>
+- path:fee string
+- path:id string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0023  POST /v1/application_fees/{id}/refund
+- path:id string
+- body:amount integer
+- body:directive string
+- body:expand array<string>
+
+## S395-N0024  POST /v1/application_fees/{id}/refunds
+desc: <p>Refunds an application fee that has previously been collected but not yet refunded. Funds will be refunded to the Stripe account from which the fee was originally collected.</p> <p>You can optionally refund only part of an application fee. You can do so multiple times, until the entire fee has been refunded.</p> <p>Once entirely refunded, an application fee can’t be refunded again. This method 
+- path:id string
+- body:amount integer
+- body:expand array<string>
+- body:metadata object
+
+## S395-N0025  POST /v1/apps/secrets
+desc: <p>Create or replace a secret in the secret store.</p>
+- body:expand array<string>
+- body:expires_at integer
+- body:name string
+- body:payload string
+- body:scope object
+- body:scope.type string enum[account|user]
+- body:scope.user string
+
+## S395-N0026  POST /v1/apps/secrets/delete
+desc: <p>Deletes a secret from the secret store by name and scope.</p>
+- body:expand array<string>
+- body:name string
+- body:scope object
+- body:scope.type string enum[account|user]
+- body:scope.user string
+
+## S395-N0027  POST /v1/billing_portal/configurations
+desc: <p>Creates a configuration that describes the functionality and behavior of a PortalSession</p>
+- body:business_profile object
+- body:business_profile.headline string
+- body:business_profile.privacy_policy_url string
+- body:business_profile.terms_of_service_url string
+- body:default_return_url string enum[]
+- body:expand array<string>
+- body:features object
+- body:features.customer_update object
+- body:features.customer_update.allowed_updates array<string> enum[address|email|name|phone|shipping|tax_id]
+- body:features.customer_update.enabled boolean
+- body:features.invoice_history object
+- body:features.invoice_history.enabled boolean
+- body:features.payment_method_update object
+- body:features.payment_method_update.enabled boolean
+- body:features.subscription_cancel object
+- body:features.subscription_cancel.cancellation_reason object
+- body:features.subscription_cancel.enabled boolean
+- body:features.subscription_cancel.mode string enum[at_period_end|immediately]
+- body:features.subscription_cancel.proration_behavior string enum[always_invoice|create_prorations|none]
+- body:features.subscription_pause object
+- body:features.subscription_pause.enabled boolean
+- body:features.subscription_update object
+- body:features.subscription_update.default_allowed_updates array<string> enum[price|promotion_code|quantity]
+- body:features.subscription_update.enabled boolean
+- body:features.subscription_update.products array<object> enum[]
+- body:features.subscription_update.proration_behavior string enum[always_invoice|create_prorations|none]
+- body:login_page object
+- body:login_page.enabled boolean
+- body:metadata object
+
+## S395-N0028  POST /v1/billing_portal/configurations/{configuration}
+desc: <p>Updates a configuration that describes the functionality of the customer portal.</p>
+- path:configuration string
+- body:active boolean
+- body:business_profile object
+- body:business_profile.headline string
+- body:business_profile.privacy_policy_url string enum[]
+- body:business_profile.terms_of_service_url string enum[]
+- body:default_return_url string enum[]
+- body:expand array<string>
+- body:features object
+- body:features.customer_update object
+- body:features.customer_update.allowed_updates array<string> enum[address|email|name|phone|shipping|tax_id]
+- body:features.customer_update.enabled boolean
+- body:features.invoice_history object
+- body:features.invoice_history.enabled boolean
+- body:features.payment_method_update object
+- body:features.payment_method_update.enabled boolean
+- body:features.subscription_cancel object
+- body:features.subscription_cancel.cancellation_reason object
+- body:features.subscription_cancel.enabled boolean
+- body:features.subscription_cancel.mode string enum[at_period_end|immediately]
+- body:features.subscription_cancel.proration_behavior string enum[always_invoice|create_prorations|none]
+- body:features.subscription_pause object
+- body:features.subscription_pause.enabled boolean
+- body:features.subscription_update object
+- body:features.subscription_update.default_allowed_updates array<string> enum[price|promotion_code|quantity]
+- body:features.subscription_update.enabled boolean
+- body:features.subscription_update.products array<object> enum[]
+- body:features.subscription_update.proration_behavior string enum[always_invoice|create_prorations|none]
+- body:login_page object
+- body:login_page.enabled boolean
+- body:metadata object enum[]
+
+## S395-N0029  POST /v1/billing_portal/sessions
+desc: <p>Creates a session of the customer portal.</p>
+- body:configuration string
+- body:customer string
+- body:expand array<string>
+- body:flow_data object
+- body:flow_data.after_completion object
+- body:flow_data.after_completion.hosted_confirmation object
+- body:flow_data.after_completion.redirect object
+- body:flow_data.after_completion.type string enum[hosted_confirmation|portal_homepage|redirect]
+- body:flow_data.subscription_cancel object
+- body:flow_data.subscription_cancel.subscription string
+- body:flow_data.type string enum[payment_method_update|subscription_cancel]
+- body:locale string enum[auto|bg|cs|da|de|el|en|en-AU|en-CA|en-GB|en-IE|en-IN]
+- body:on_behalf_of string
+- body:return_url string
+
+## S395-N0030  POST /v1/charges
+desc: <p>To charge a credit card or other payment source, you create a <code>Charge</code> object. If your API key is in test mode, the supplied payment source (e.g., card) won’t actually be charged, although everything else will occur as if in live mode. (Stripe assumes that the charge would have completed successfully).</p>
+- body:amount integer
+- body:application_fee integer
+- body:application_fee_amount integer
+- body:capture boolean
+- body:card object
+- body:card.address_city string
+- body:card.address_country string
+- body:card.address_line1 string
+- body:card.address_line2 string
+- body:card.address_state string
+- body:card.address_zip string
+- body:card.cvc string
+- body:card.exp_month integer
+- body:card.exp_year integer
+- body:card.metadata object
+- body:card.name string
+- body:card.number string
+- body:card.object string enum[card]
+- body:currency string
+- body:customer string
+- body:description string
+- body:destination object
+- body:destination.account string
+- body:destination.amount integer
+- body:expand array<string>
+- body:metadata object enum[]
+- body:on_behalf_of string
+- body:radar_options object
+- body:radar_options.session string
+- body:receipt_email string
+- body:shipping object
+- body:shipping.address object
+- body:shipping.address.city string
+- body:shipping.address.country string
+- body:shipping.address.line1 string
+- body:shipping.address.line2 string
+- body:shipping.address.postal_code string
+- body:shipping.address.state string
+- body:shipping.carrier string
+- body:shipping.name string
+- body:shipping.phone string
+- body:shipping.tracking_number string
+- body:source string
+- body:statement_descriptor string
+- body:statement_descriptor_suffix string
+- body:transfer_data object
+- body:transfer_data.amount integer
+- body:transfer_data.destination string
+- body:transfer_group string
+
+## S395-N0032  POST /v1/charges/{charge}/capture
+desc: <p>Capture the payment of an existing, uncaptured, charge. This is the second half of the two-step payment flow, where first you <a href="#create_charge">created a charge</a> with the capture option set to false.</p> <p>Uncaptured payments expire a set number of days after they are created (<a href="/docs/charges/placing-a-hold">7 by default</a>). If they are not captured by that point in time, th
+- path:charge string
+- body:amount integer
+- body:application_fee integer
+- body:application_fee_amount integer
+- body:expand array<string>
+- body:receipt_email string
+- body:statement_descriptor string
+- body:statement_descriptor_suffix string
+- body:transfer_data object
+- body:transfer_data.amount integer
+- body:transfer_group string
+
+## S395-N0034  POST /v1/charges/{charge}/dispute/close
+- path:charge string
+- body:expand array<string>
+
+## S395-N0035  POST /v1/charges/{charge}/refund
+desc: <p>When you create a new refund, you must specify a Charge or a PaymentIntent object on which to create it.</p> <p>Creating a new refund will refund a charge that has previously been created but not yet refunded. Funds will be refunded to the credit or debit card that was originally charged.</p> <p>You can optionally refund only part of a charge. You can do so multiple times, until the entire char
+- path:charge string
+- body:amount integer
+- body:expand array<string>
+- body:instructions_email string
+- body:metadata object enum[]
+- body:payment_intent string
+- body:reason string enum[duplicate|fraudulent|requested_by_customer]
+- body:refund_application_fee boolean
+- body:reverse_transfer boolean
+
+## S395-N0036  POST /v1/charges/{charge}/refunds
+desc: <p>Create a refund.</p>
+- path:charge string
+- body:amount integer
+- body:currency string
+- body:customer string
+- body:expand array<string>
+- body:instructions_email string
+- body:metadata object enum[]
+- body:origin string enum[customer_balance]
+- body:payment_intent string
+- body:reason string enum[duplicate|fraudulent|requested_by_customer]
+- body:refund_application_fee boolean
+- body:reverse_transfer boolean
+
+## S395-N0037  POST /v1/charges/{charge}/refunds/{refund}
+desc: <p>Update a specified refund.</p>
+- path:charge string
+- path:refund string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0038  POST /v1/checkout/sessions
+desc: <p>Creates a Session object.</p>
+- body:after_expiration object
+- body:after_expiration.recovery object
+- body:after_expiration.recovery.allow_promotion_codes boolean
+- body:after_expiration.recovery.enabled boolean
+- body:allow_promotion_codes boolean
+- body:automatic_tax object
+- body:automatic_tax.enabled boolean
+- body:billing_address_collection string enum[auto|required]
+- body:cancel_url string
+- body:client_reference_id string
+- body:consent_collection object
+- body:consent_collection.promotions string enum[auto|none]
+- body:consent_collection.terms_of_service string enum[none|required]
+- body:currency string
+- body:custom_fields array<object>
+- body:custom_fields[].dropdown object
+- body:custom_fields[].dropdown.options array<object>
+- body:custom_fields[].key string
+- body:custom_fields[].label object
+- body:custom_fields[].label.custom string
+- body:custom_fields[].label.type string enum[custom]
+- body:custom_fields[].optional boolean
+- body:custom_fields[].type string enum[dropdown|numeric|text]
+- body:custom_text object
+- body:custom_text.shipping_address object enum[]
+- body:custom_text.shipping_address.message string
+- body:custom_text.submit object enum[]
+- body:custom_text.submit.message string
+- body:customer string
+- body:customer_creation string enum[always|if_required]
+- body:customer_email string
+- body:customer_update object
+- body:customer_update.address string enum[auto|never]
+- body:customer_update.name string enum[auto|never]
+- body:customer_update.shipping string enum[auto|never]
+- body:discounts array<object>
+- body:discounts[].coupon string
+- body:discounts[].promotion_code string
+- body:expand array<string>
+- body:expires_at integer
+- body:invoice_creation object
+- body:invoice_creation.enabled boolean
+- body:invoice_creation.invoice_data object
+- body:invoice_creation.invoice_data.account_tax_ids array<string> enum[]
+- body:invoice_creation.invoice_data.custom_fields array<object> enum[]
+- body:invoice_creation.invoice_data.description string
+- body:invoice_creation.invoice_data.footer string
+- body:invoice_creation.invoice_data.metadata object
+- body:invoice_creation.invoice_data.rendering_options object enum[]
+- body:line_items array<object>
+- body:line_items[].adjustable_quantity object
+- body:line_items[].adjustable_quantity.enabled boolean
+- body:line_items[].adjustable_quantity.maximum integer
+- body:line_items[].adjustable_quantity.minimum integer
+- body:line_items[].dynamic_tax_rates array<string>
+- body:line_items[].price string
+- body:line_items[].price_data object
+- body:line_items[].price_data.currency string
+- body:line_items[].price_data.product string
+- body:line_items[].price_data.product_data object
+- body:line_items[].price_data.recurring object
+- body:line_items[].price_data.tax_behavior string enum[exclusive|inclusive|unspecified]
+- body:line_items[].price_data.unit_amount integer
+- body:line_items[].price_data.unit_amount_decimal string
+- body:line_items[].quantity integer
+- body:line_items[].tax_rates array<string>
+- body:locale string enum[auto|bg|cs|da|de|el|en|en-GB|es|es-419|et|fi]
+- body:metadata object
+- body:mode string enum[payment|setup|subscription]
+- body:payment_intent_data object
+- body:payment_intent_data.application_fee_amount integer
+- body:payment_intent_data.capture_method string enum[automatic|manual]
+- body:payment_intent_data.description string
+- body:payment_intent_data.metadata object
+- body:payment_intent_data.on_behalf_of string
+- body:payment_intent_data.receipt_email string
+- body:payment_intent_data.setup_future_usage string enum[off_session|on_session]
+- body:payment_intent_data.shipping object
+- body:payment_intent_data.shipping.address object
+- body:payment_intent_data.shipping.carrier string
+(+113 fields cut)
+
+## S395-N0039  POST /v1/checkout/sessions/{session}/expire
+desc: <p>A Session can be expired when it is in one of these statuses: <code>open</code> </p> <p>After it expires, a customer can’t complete a Session and customers loading the Session see a message saying the Session is expired.</p>
+- path:session string
+- body:expand array<string>
+
+## S395-N0040  POST /v1/coupons
+desc: <p>You can create coupons easily via the <a href="https://dashboard.stripe.com/coupons">coupon management</a> page of the Stripe dashboard. Coupon creation is also accessible via the API if you need to create coupons on the fly.</p> <p>A coupon has either a <code>percent_off</code> or an <code>amount_off</code> and <code>currency</code>. If you set an <code>amount_off</code>, that amount will be s
+- body:amount_off integer
+- body:applies_to object
+- body:applies_to.products array<string>
+- body:currency string
+- body:currency_options object
+- body:duration string enum[forever|once|repeating]
+- body:duration_in_months integer
+- body:expand array<string>
+- body:id string
+- body:max_redemptions integer
+- body:metadata object enum[]
+- body:name string
+- body:percent_off number
+- body:redeem_by integer
+
+## S395-N0041  DELETE /v1/coupons/{coupon}
+desc: <p>You can delete coupons via the <a href="https://dashboard.stripe.com/coupons">coupon management</a> page of the Stripe dashboard. However, deleting a coupon does not affect any customers who have already applied the coupon; it means that new customers can’t redeem the coupon. You can also delete coupons via the API.</p>
+- path:coupon string
+- body:(body) object
+
+## S395-N0042  POST /v1/coupons/{coupon}
+desc: <p>Updates the metadata of a coupon. Other coupon details (currency, duration, amount_off) are, by design, not editable.</p>
+- path:coupon string
+- body:currency_options object
+- body:expand array<string>
+- body:metadata object enum[]
+- body:name string
+
+## S395-N0043  POST /v1/credit_notes
+desc: <p>Issue a credit note to adjust the amount of a finalized invoice. For a <code>status=open</code> invoice, a credit note reduces its <code>amount_due</code>. For a <code>status=paid</code> invoice, a credit note does not affect its <code>amount_due</code>. Instead, it can result in any combination of the following:</p> <ul> <li>Refund: create a new refund (using <code>refund_amount</code>) or lin
+- body:amount integer
+- body:credit_amount integer
+- body:expand array<string>
+- body:invoice string
+- body:lines array<object>
+- body:lines[].amount integer
+- body:lines[].description string
+- body:lines[].invoice_line_item string
+- body:lines[].quantity integer
+- body:lines[].tax_rates array<string> enum[]
+- body:lines[].type string enum[custom_line_item|invoice_line_item]
+- body:lines[].unit_amount integer
+- body:lines[].unit_amount_decimal string
+- body:memo string
+- body:metadata object
+- body:out_of_band_amount integer
+- body:reason string enum[duplicate|fraudulent|order_change|product_unsatisfactory]
+- body:refund string
+- body:refund_amount integer
+- body:shipping_cost object
+- body:shipping_cost.shipping_rate string
+
+## S395-N0044  POST /v1/credit_notes/{id}
+desc: <p>Updates an existing credit note.</p>
+- path:id string
+- body:expand array<string>
+- body:memo string
+- body:metadata object
+
+## S395-N0046  POST /v1/customers
+desc: <p>Creates a new customer object.</p>
+- body:address object enum[]
+- body:address.city string
+- body:address.country string
+- body:address.line1 string
+- body:address.line2 string
+- body:address.postal_code string
+- body:address.state string
+- body:balance integer
+- body:cash_balance object
+- body:cash_balance.settings object
+- body:cash_balance.settings.reconciliation_mode string enum[automatic|manual|merchant_default]
+- body:coupon string
+- body:description string
+- body:email string
+- body:expand array<string>
+- body:invoice_prefix string
+- body:invoice_settings object
+- body:invoice_settings.custom_fields array<object> enum[]
+- body:invoice_settings.custom_fields[].name string
+- body:invoice_settings.custom_fields[].value string
+- body:invoice_settings.default_payment_method string
+- body:invoice_settings.footer string
+- body:invoice_settings.rendering_options object enum[]
+- body:invoice_settings.rendering_options.amount_tax_display string enum[|exclude_tax|include_inclusive_tax]
+- body:metadata object enum[]
+- body:name string
+- body:next_invoice_sequence integer
+- body:payment_method string
+- body:phone string
+- body:preferred_locales array<string>
+- body:promotion_code string
+- body:shipping object enum[]
+- body:shipping.address object
+- body:shipping.address.city string
+- body:shipping.address.country string
+- body:shipping.address.line1 string
+- body:shipping.address.line2 string
+- body:shipping.address.postal_code string
+- body:shipping.address.state string
+- body:shipping.name string
+- body:shipping.phone string
+- body:source string
+- body:tax object
+- body:tax.ip_address string enum[]
+- body:tax_exempt string enum[|exempt|none|reverse]
+- body:tax_id_data array<object>
+- body:tax_id_data[].type string enum[ae_trn|au_abn|au_arn|bg_uic|br_cnpj|br_cpf|ca_bn|ca_gst_hst|ca_pst_bc|ca_pst_mb|ca_pst_sk|ca_qst]
+- body:tax_id_data[].value string
+- body:test_clock string
+
+## S395-N0048  POST /v1/customers/{customer}
+desc: <p>Updates the specified customer by setting the values of the parameters passed. Any parameters not provided will be left unchanged. For example, if you pass the <strong>source</strong> parameter, that becomes the customer’s active source (e.g., a card) to be used for all charges in the future. When you update a customer to a new valid card source by passing the <strong>source</strong> parameter:
+- path:customer string
+- body:address object enum[]
+- body:address.city string
+- body:address.country string
+- body:address.line1 string
+- body:address.line2 string
+- body:address.postal_code string
+- body:address.state string
+- body:balance integer
+- body:bank_account object
+- body:bank_account.account_holder_name string
+- body:bank_account.account_holder_type string enum[company|individual]
+- body:bank_account.account_number string
+- body:bank_account.country string
+- body:bank_account.currency string
+- body:bank_account.object string enum[bank_account]
+- body:bank_account.routing_number string
+- body:card object
+- body:card.address_city string
+- body:card.address_country string
+- body:card.address_line1 string
+- body:card.address_line2 string
+- body:card.address_state string
+- body:card.address_zip string
+- body:card.cvc string
+- body:card.exp_month integer
+- body:card.exp_year integer
+- body:card.metadata object
+- body:card.name string
+- body:card.number string
+- body:card.object string enum[card]
+- body:cash_balance object
+- body:cash_balance.settings object
+- body:cash_balance.settings.reconciliation_mode string enum[automatic|manual|merchant_default]
+- body:coupon string
+- body:default_alipay_account string
+- body:default_bank_account string
+- body:default_card string
+- body:default_source string
+- body:description string
+- body:email string
+- body:expand array<string>
+- body:invoice_prefix string
+- body:invoice_settings object
+- body:invoice_settings.custom_fields array<object> enum[]
+- body:invoice_settings.custom_fields[].name string
+- body:invoice_settings.custom_fields[].value string
+- body:invoice_settings.default_payment_method string
+- body:invoice_settings.footer string
+- body:invoice_settings.rendering_options object enum[]
+- body:invoice_settings.rendering_options.amount_tax_display string enum[|exclude_tax|include_inclusive_tax]
+- body:metadata object enum[]
+- body:name string
+- body:next_invoice_sequence integer
+- body:phone string
+- body:preferred_locales array<string>
+- body:promotion_code string
+- body:shipping object enum[]
+- body:shipping.address object
+- body:shipping.address.city string
+- body:shipping.address.country string
+- body:shipping.address.line1 string
+- body:shipping.address.line2 string
+- body:shipping.address.postal_code string
+- body:shipping.address.state string
+- body:shipping.name string
+- body:shipping.phone string
+- body:source string
+- body:tax object
+- body:tax.ip_address string enum[]
+- body:tax_exempt string enum[|exempt|none|reverse]
+
+## S395-N0049  POST /v1/customers/{customer}/balance_transactions
+desc: <p>Creates an immutable transaction that updates the customer’s credit <a href="/docs/billing/customer/balance">balance</a>.</p>
+- path:customer string
+- body:amount integer
+- body:currency string
+- body:description string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0050  POST /v1/customers/{customer}/balance_transactions/{transaction}
+desc: <p>Most credit balance transaction fields are immutable, but you may update its <code>description</code> and <code>metadata</code>.</p>
+- path:customer string
+- path:transaction string
+- body:description string
+- body:expand array<string>
+- body:metadata object enum[]
+
+## S395-N0051  POST /v1/customers/{customer}/bank_accounts
+desc: <p>When you create a new credit card, you must specify a customer or recipient on which to create it.</p> <p>If the card’s owner has no default card, then the new card will become the default. However, if the owner already has a default, then it will not change. To change the default, you should <a href="/docs/api#update_customer">update the customer</a> to have a new <code>default_source</code>.<
+- path:customer string
+- body:alipay_account string
+- body:bank_account object
+- body:bank_account.account_holder_name string
+- body:bank_account.account_holder_type string enum[company|individual]
+- body:bank_account.account_number string
+- body:bank_account.country string
+- body:bank_account.currency string
+- body:bank_account.object string enum[bank_account]
+- body:bank_account.routing_number string
+- body:card object
+- body:card.address_city string
+- body:card.address_country string
+- body:card.address_line1 string
+- body:card.address_line2 string
+- body:card.address_state string
+- body:card.address_zip string
+- body:card.cvc string
+- body:card.exp_month integer
+- body:card.exp_year integer
+- body:card.metadata object
+- body:card.name string
+- body:card.number string
+- body:card.object string enum[card]
+- body:expand array<string>
+- body:metadata object
+- body:source string
+
+## S395-N0052  DELETE /v1/customers/{customer}/bank_accounts/{id}
+desc: <p>Delete a specified source for a given customer.</p>
+- path:customer string
+- path:id string
+- body:expand array<string>
+
+## S395-N0053  POST /v1/customers/{customer}/bank_accounts/{id}
+desc: <p>Update a specified source for a given customer.</p>
+- path:customer string
+- path:id string
+- body:account_holder_name string
+- body:account_holder_type string enum[company|individual]
+- body:address_city string
+- body:address_country string
+- body:address_line1 string
+- body:address_line2 string
+- body:address_state string
+- body:address_zip string
+- body:exp_month string
+- body:exp_year string
+- body:expand array<string>
+- body:metadata object enum[]
+- body:name string
+- body:owner object
+- body:owner.address object
+- body:owner.address.city string
+- body:owner.address.country string
+- body:owner.address.line1 string
+- body:owner.address.line2 string
+- body:owner.address.postal_code string
+- body:owner.address.state string
+- body:owner.email string
+- body:owner.name string
+- body:owner.phone string
+
+## S395-N0054  POST /v1/customers/{customer}/bank_accounts/{id}/verify
+desc: <p>Verify a specified bank account for a given customer.</p>
+- path:customer string
+- path:id string
+- body:amounts array<integer>
+- body:expand array<string>
+
+## S395-N0056  DELETE /v1/customers/{customer}/cards/{id}
+desc: <p>Delete a specified source for a given customer.</p>
+- path:customer string
+- path:id string
+- body:expand array<string>
+
+## S395-N0057  POST /v1/customers/{customer}/cards/{id}
+desc: <p>Update a specified source for a given customer.</p>
+- path:customer string
+- path:id string
+- body:account_holder_name string
+- body:account_holder_type string enum[company|individual]
+- body:address_city string
+- body:address_country string
+- body:address_line1 string
+- body:address_line2 string
+- body:address_state string
+- body:address_zip string
+- body:exp_month string
+- body:exp_year string
+- body:expand array<string>
+- body:metadata object enum[]
+- body:name string
+- body:owner object
+- body:owner.address object
+- body:owner.address.city string
+- body:owner.address.country string
+- body:owner.address.line1 string
+- body:owner.address.line2 string
+- body:owner.address.postal_code string
+- body:owner.address.state string
+- body:owner.email string
+- body:owner.name string
+- body:owner.phone string
+
+## S395-N0058  POST /v1/customers/{customer}/cash_balance
+desc: <p>Changes the settings on a customer’s cash balance.</p>
+- path:customer string
+- body:expand array<string>
+- body:settings object
+- body:settings.reconciliation_mode string enum[automatic|manual|merchant_default]
+
+## S395-N0059  DELETE /v1/customers/{customer}/discount
+desc: <p>Removes the currently applied discount on a customer.</p>
+- path:customer string
+- body:(body) object
+
+## S395-N0060  POST /v1/customers/{customer}/funding_instructions
+desc: <p>Retrieve funding instructions for a customer cash balance. If funding instructions do not yet exist for the customer, new funding instructions will be created. If funding instructions have already been created for a given customer, the same funding instructions will be retrieved. In other words, we will return the same funding instructions each time.</p>
+- path:customer string
+- body:bank_transfer object
+- body:bank_transfer.eu_bank_transfer object
+- body:bank_transfer.eu_bank_transfer.country string
+- body:bank_transfer.requested_address_types array<string> enum[iban|sort_code|spei|zengin]
+- body:bank_transfer.type string enum[eu_bank_transfer|gb_bank_transfer|jp_bank_transfer|mx_bank_transfer]
+- body:currency string
+- body:expand array<string>
+- body:funding_type string enum[bank_transfer]
+
+## S395-N0061  POST /v1/customers/{customer}/sources
+desc: <p>When you create a new credit card, you must specify a customer or recipient on which to create it.</p> <p>If the card’s owner has no default card, then the new card will become the default. However, if the owner already has a default, then it will not change. To change the default, you should <a href="/docs/api#update_customer">update the customer</a> to have a new <code>default_source</code>.<
+- path:customer string
+- body:alipay_account string
+- body:bank_account object
+- body:bank_account.account_holder_name string
+- body:bank_account.account_holder_type string enum[company|individual]
+- body:bank_account.account_number string
+- body:bank_account.country string
+- body:bank_account.currency string
+- body:bank_account.object string enum[bank_account]
+- body:bank_account.routing_number string
+- body:card object
+- body:card.address_city string
+- body:card.address_country string
+- body:card.address_line1 string
+- body:card.address_line2 string
+- body:card.address_state string
+- body:card.address_zip string
+- body:card.cvc string
+- body:card.exp_month integer
+- body:card.exp_year integer
+- body:card.metadata object
+- body:card.name string
+- body:card.number string
+- body:card.object string enum[card]
+- body:expand array<string>
+- body:metadata object
+- body:source string
+
+## S395-N0062  DELETE /v1/customers/{customer}/sources/{id}
+desc: <p>Delete a specified source for a given customer.</p>
+- path:customer string
+- path:id string
+- body:expand array<string>
+
+## S395-N0063  POST /v1/customers/{customer}/sources/{id}
+desc: <p>Update a specified source for a given customer.</p>
+- path:customer string
+- path:id string
+- body:account_holder_name string
+- body:account_holder_type string enum[company|individual]
+- body:address_city string
+- body:address_country string
+- body:address_line1 string
+- body:address_line2 string
+- body:address_state string
+- body:address_zip string
+- body:exp_month string
+- body:exp_year string
+- body:expand array<string>
+- body:metadata object enum[]
+- body:name string
+- body:owner object
+- body:owner.address object
+- body:owner.address.city string
+- body:owner.address.country string
+- body:owner.address.line1 string
+- body:owner.address.line2 string
+- body:owner.address.postal_code string
+- body:owner.address.state string
+- body:owner.email string
+- body:owner.name string
+- body:owner.phone string
+
+## S395-N0064  POST /v1/customers/{customer}/sources/{id}/verify
+desc: <p>Verify a specified bank account for a given customer.</p>
+- path:customer string
+- path:id string
+- body:amounts array<integer>
+- body:expand array<string>

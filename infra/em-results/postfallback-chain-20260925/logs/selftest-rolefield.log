@@ -1,0 +1,15 @@
+jar 0607485b6286ab24
+PASS  no-role-field-skipped   harvestReducedRoleCandidates returns [] for POST:/auth/login, which has a body and no role field
+PASS  loop-reaches-role       the loop passes POST:/auth/login, chooses PUT:/users/{username}/role and raises 970
+PASS  no-content-type-value   values for PUT:/users/{username}/role are [VIEWER, ADMIN, EVOMASTER], no content type among them
+PASS  role-enum-kept          VIEWER, the enum value of the role field, is still proposed (3 values)
+PASS  tier1-970               the shipped lexicon still chooses PUT:/users/{username}/role and raises 970
+PASS  sources-logged          Stateful-authorization guarded source candidates: 1 [PUT:/reports/{id}]
+PASS  victims-logged          PUT:/reports/{id} victims [alice, superadmin]
+PASS  operators-logged        victim 'alice' operators [superadmin, bob], the victim is not its own operator
+PASS  exhausted-logged        1 triple attempts logged at the end, 1 assembled
+PASS  fixed-no-970            the patched app stays silent
+PASS  debug-only              at the default log level the new lines print nothing
+PASS  declared-untouched      a declared transition skips ranking, logs its sources and still raises 970
+
+tat ca kiem tra dat, ket qua o /Users/minhnguyen/IdeaProjects/graduational-thesis/infra/em-results/postfallback-chain-20260925/selftest-rolefield

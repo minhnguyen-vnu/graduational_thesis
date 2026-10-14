@@ -1,0 +1,505 @@
+## S586-N0069  PUT /marketing/contacts/imports
+desc: Import Contacts | **This endpoint allows a CSV upload containing up to one million contacts or 5GB of data, whichever is smaller.** Imports take place asynchronously: the endpoint returns a URL (`upload_uri`) and HTTP headers (`upload_headers`) which can subsequently be used to `PUT` a file of contacts to be imported into our system. Uploaded CSV files may also be [gzip-compressed](https://en.wiki
+- body:field_mappings array<string>
+- body:file_type string enum[csv]
+- body:list_ids array<string>
+
+## S586-N0070  POST /marketing/contacts/search
+desc: Search Contacts | **Use this endpoint to locate contacts**. The request body's `query` field accepts valid [SGQL](https://sendgrid.com/docs/for-developers/sending-email/segmentation-query-language/) for searching for a contact. Because contact emails are stored in lower case, using SGQL to search by email address requires the provided email address to be in lower case. The SGQL `lower()` function 
+- body:query string
+
+## S586-N0071  POST /marketing/contacts/search/emails
+desc: Get Contacts by Emails | **This endpoint allows you to retrieve up to 100 contacts matching the searched `email` address(es), including any `alternate_emails`.** Email addresses are unique to a contact, meaning this endpoint can treat an email address as a primary key to search by. The contact object associated with the address, whether it is their `email` or one of their `alternate_emails` will b
+- body:emails array<string>
+
+## S586-N0072  POST /marketing/field_definitions
+desc: Create Custom Field Definition | **This endpoint creates a new custom field definition.** Custom field definitions are created with the given `name` and `field_type`. Although field names are stored in a case-sensitive manner, all field names must be case-insensitively unique. This means you may create a field named `CamelCase` or `camelcase`, but not both. Additionally, a Custom Field name cannot
+- body:field_type string enum[Text|Number|Date]
+- body:name string
+
+## S586-N0074  PATCH /marketing/field_definitions/{custom_field_id}
+desc: Update Custom Field Definition | **This endopoint allows you to update a defined Custom Field.** Only your Custom fields can be modified; Reserved Fields cannot be updated.
+- path:custom_field_id string
+- body:name string
+
+## S586-N0075  POST /marketing/lists
+desc: Create List | **This endpoint creates a new contacts list.** Once you create a list, you can use the UI to [trigger an automation](https://sendgrid.com/docs/ui/sending-email/getting-started-with-automation/#create-an-automation) every time you add a new contact to the list. A link to the newly created object is in `_metadata`.
+- body:name string
+
+## S586-N0076  DELETE /marketing/lists/{id}
+desc: Delete a list | **This endpoint allows you to deletes a specific list.** Optionally, you can also delete contacts associated to the list. The query parameter, `delete_contacts=true`, will delete the list and start an asynchronous job to delete associated contacts.
+- path:id string
+- query:delete_contacts boolean
+
+## S586-N0077  PATCH /marketing/lists/{id}
+desc: Update List | **This endpoint updates the name of a list.**
+- path:id string
+- body:name string
+
+## S586-N0078  DELETE /marketing/lists/{id}/contacts
+desc: Remove Contacts from a List | **This endpoint allows you to remove contacts from a given list.** The contacts will not be deleted. Only their list membership will be changed.
+- path:id string
+- query:contact_ids string
+
+## S586-N0079  POST /marketing/segments
+desc: Create Segment | **This endpoint allows you to create a segment.**
+schema: segment_write_v2
+- body:name string
+- body:parent_list_ids array<string>
+- body:query_dsl string
+- body:parent_list_id string
+
+## S586-N0080  POST /marketing/segments/2.0
+desc: Create Segment | **The Segmentation V2 API is currently in private beta. If you'd like to be added to the beta, please fill out this [form]({https://docs.google.com/forms/d/e/1FAIpQLSd5zwC9dRk8lAp1oTWjdGc-aSY69flW_7wnutvKBhpUluSnfQ/viewform)** Segment `name` has to be unique. A user can not create a new segment with an existing segment name.
+schema: segment_write_v2
+- body:name string
+- body:parent_list_ids array<string>
+- body:query_dsl string
+
+## S586-N0081  DELETE /marketing/segments/2.0/{segment_id}
+desc: Delete segment | **The Segmentation V2 API is currently in private beta. If you'd like to be added to the beta, please fill out this [form]({https://docs.google.com/forms/d/e/1FAIpQLSd5zwC9dRk8lAp1oTWjdGc-aSY69flW_7wnutvKBhpUluSnfQ/viewform)**
+- path:segment_id string
+
+## S586-N0082  PATCH /marketing/segments/2.0/{segment_id}
+desc: Update Segment | **The Segmentation V2 API is currently in private beta. If you'd like to be added to the beta, please fill out this [form]({https://docs.google.com/forms/d/e/1FAIpQLSd5zwC9dRk8lAp1oTWjdGc-aSY69flW_7wnutvKBhpUluSnfQ/viewform)** Segment `name` has to be unique. A user can not create a new segment with an existing segment name.
+schema: segment_update
+- path:segment_id string
+- body:name string
+- body:query_dsl string
+
+## S586-N0084  DELETE /marketing/segments/{segment_id}
+desc: Delete Segment | **This endpoint allows you to delete a segment by `segment_id`.** Note that deleting a segment does not delete the contacts associated with the segment by default. Contacts associated with a deleted segment will remain in your list of all contacts and any other segments they belong to.
+- path:segment_id string
+
+## S586-N0085  PATCH /marketing/segments/{segment_id}
+desc: Update Segment | **This endpoint allows you to update a segment.** Segment `name` needs to be unique. A user can not update a segment name to an existing one.
+schema: segment_write_v2
+- path:segment_id string
+- body:name string
+- body:parent_list_ids array<string>
+- body:query_dsl string
+
+## S586-N0087  DELETE /marketing/singlesends
+desc: Bulk Delete Single Sends | **This endpoint allows you to delete multiple Single Sends using an array of Single Sends IDs.** To first retrieve all your Single Sends' IDs, you can make a GET request to the `/marketing/singlensends` endpoint. Please note that a DELETE request is permanent, and your Single Sends will not be recoverable after deletion.
+- query:ids array<string>
+
+## S586-N0088  POST /marketing/singlesends
+desc: Create Single Send | **This endpoint allows you to create a new Single Send.** Please note that if you are migrating from the previous version of Single Sends, you no longer need to pass a template ID with your request to this endpoint. Instead, you will pass all template data in the `email_config` object.
+schema: singlesend_request
+- body:categories array<string>
+- body:email_config object
+- body:email_config.custom_unsubscribe_url string
+- body:email_config.design_id string
+- body:email_config.editor string enum[code|design]
+- body:email_config.generate_plain_content boolean
+- body:email_config.html_content string
+- body:email_config.ip_pool string
+- body:email_config.plain_content string
+- body:email_config.sender_id integer
+- body:email_config.subject string
+- body:email_config.suppression_group_id integer
+- body:name string
+- body:send_at string
+- body:send_to object
+- body:send_to.all boolean
+- body:send_to.list_ids array<string>
+- body:send_to.segment_ids array<string>
+
+## S586-N0090  DELETE /marketing/singlesends/{id}
+desc: Delete Single Send by ID | **This endpoint allows you to delete one Single Send using a Single Send ID.** To first retrieve all your Single Sends' IDs, you can make a GET request to the `/marketing/singlensends` endpoint. Please note that a `DELETE` request is permanent, and your Single Send will not be recoverable after deletion.
+- path:id string
+
+## S586-N0091  PATCH /marketing/singlesends/{id}
+desc: Update Single Send | **This endpoint allows you to update a Single Send using a Single Send ID.** You only need to pass the fields you want to update. Any blank/missing fields will remain unaltered.
+schema: singlesend_request
+- path:id string
+- body:categories array<string>
+- body:email_config object
+- body:email_config.custom_unsubscribe_url string
+- body:email_config.design_id string
+- body:email_config.editor string enum[code|design]
+- body:email_config.generate_plain_content boolean
+- body:email_config.html_content string
+- body:email_config.ip_pool string
+- body:email_config.plain_content string
+- body:email_config.sender_id integer
+- body:email_config.subject string
+- body:email_config.suppression_group_id integer
+- body:name string
+- body:send_at string
+- body:send_to object
+- body:send_to.all boolean
+- body:send_to.list_ids array<string>
+- body:send_to.segment_ids array<string>
+
+## S586-N0095  POST /marketing/test/send_email
+desc: Send a Test Marketing Email | **This endpoint allows you to send a test marketing email to a list of email addresses**. Before sending a marketing message, you can test it using this endpoint. You may specify up to **10 contacts** in the `emails` request body field. You must also specify a `template_id` and include either a `from_address` or `sender_id`. You can manage your templates with the [Twi
+- body:custom_unsubscribe_url string
+- body:emails array<string>
+- body:from_address string
+- body:sender_id integer
+- body:suppression_group_id integer
+- body:template_id string
+- body:version_id_override string
+
+## S586-N0096  POST /messages/download
+desc: Request CSV | This is BETA functionality. You may not have access, and we reserve the right to change functionality without notice. This request will kick off a backend process to generate a CSV file. Once generated, the worker will then send an email for the user download the file. The link will expire in 3 days. The CSV fill contain the last 1 million messages. This endpoint will be rate limited
+- query:query string
+
+## S586-N0097  PATCH /partner_settings/new_relic
+desc: Updates New Relic partner settings. | **This endpoint allows you to update or change your New Relic partner settings.** Our partner settings allow you to integrate your SendGrid account with our partners to increase your SendGrid experience and functionality. For more information about our partners, and how you can begin integrating with them, please visit our [Partners documentation](https://send
+- body:enable_subuser_statistics boolean
+- body:enabled boolean
+- body:license_key string
+
+## S586-N0098  DELETE /scopes/requests/{request_id}
+desc: Deny access request | **This endpoint allows you to deny an attempt to access your account.** **Note:** Only teammate admins may delete a teammate's access request.
+- path:request_id string
+
+## S586-N0099  PATCH /scopes/requests/{request_id}/approve
+desc: Approve access request | **This endpoint allows you to approve an access attempt.** **Note:** Only teammate admins may approve another teammate’s access request.
+- path:request_id string
+
+## S586-N0100  POST /senders
+desc: Create a Sender Identity | **This endpoint allows you to create a new sender identity.** You may create up to 100 unique sender identities.
+schema: sender-id-request
+- body:address string
+- body:address_2 string
+- body:city string
+- body:country string
+- body:from object
+- body:from.email string
+- body:from.name string
+- body:nickname string
+- body:reply_to object
+- body:reply_to.email string
+- body:reply_to.name string
+- body:state string
+- body:zip string
+
+## S586-N0101  DELETE /senders/{sender_id}
+desc: Delete a Sender Identity | **This endoint allows you to delete one of your sender identities.**
+- path:sender_id integer
+
+## S586-N0102  PATCH /senders/{sender_id}
+desc: Update a Sender Identity | **This endpoint allows you to update a sender identity.** Updates to `from.email` require re-verification. Partial updates are allowed, but fields that are marked as "required" in the POST (create) endpoint must not be nil if that field is included in the PATCH request.
+schema: sender-id-request
+- path:sender_id integer
+- body:address string
+- body:address_2 string
+- body:city string
+- body:country string
+- body:from object
+- body:from.email string
+- body:from.name string
+- body:nickname string
+- body:reply_to object
+- body:reply_to.email string
+- body:reply_to.name string
+- body:state string
+- body:zip string
+
+## S586-N0103  POST /senders/{sender_id}/resend_verification
+desc: Resend Sender Identity Verification | **This enpdoint allows you to resend a sender identity verification email.**
+- path:sender_id integer
+
+## S586-N0105  DELETE /sso/certificates/{cert_id}
+desc: Delete an SSO Certificate | **This endpoint allows you to delete an SSO certificate.** You can retrieve a certificate's ID from the response provided by the "Get All SSO Integrations" endpoint.
+- path:cert_id string
+
+## S586-N0106  PATCH /sso/certificates/{cert_id}
+desc: Update SSO Certificate | **This endpoint allows you to update an existing certificate by ID.** You can retrieve a certificate's ID from the response provided by the "Get All SSO Integrations" endpoint.
+- path:cert_id string
+- body:enabled boolean
+- body:integration_id string
+- body:public_certificate string
+
+## S586-N0107  POST /sso/integrations
+desc: Create an SSO Integration | **This endpoint allows you to create an SSO integration.**
+schema: create-integration-request
+- body:completed_integration boolean
+- body:enabled boolean
+- body:entity_id string
+- body:name string
+- body:signin_url string
+- body:signout_url string
+
+## S586-N0108  DELETE /sso/integrations/{id}
+desc: Delete an SSO Integration | **This endpoint allows you to delete an IdP configuration by ID.** You can retrieve the IDs for your configurations from the response provided by the "Get All SSO Integrations" endpoint.
+- path:id string
+
+## S586-N0110  POST /sso/teammates
+desc: Create SSO Teammate | **This endpoint allows you to create an SSO Teammate.** The email provided for this user will also function as the Teammate’s username.
+schema: sso-teammate-request
+- body:email string
+- body:first_name string
+- body:is_admin boolean
+- body:is_read_only boolean
+- body:last_name string
+- body:scopes array<string>
+
+## S586-N0111  PATCH /sso/teammates/{username}
+desc: Edit an SSO Teammate | **This endpoint allows you to modify an existing SSO Teammate.** To turn a teammate into an admin, the request body should contain the `is_admin` field set to `true`. Otherwise, set `is_admin` to false and pass in all the scopes that a teammate should have. Only the parent user and Teammates with admin permissions can update another Teammate’s permissions. Admin users can on
+- path:username string
+- body:first_name string
+- body:is_admin boolean
+- body:last_name string
+- body:scopes array<string>
+
+## S586-N0112  POST /subusers
+desc: Create Subuser | **This endpoint allows you to create a new subuser.**
+- body:email string
+- body:ips array<string>
+- body:password string
+- body:username string
+
+## S586-N0113  DELETE /subusers/{subuser_name}
+desc: Delete a subuser | **This endpoint allows you to delete a subuser.** This is a permanent action. Once deleted, a subuser cannot be retrieved.
+- path:subuser_name string
+
+## S586-N0114  PATCH /subusers/{subuser_name}
+desc: Enable/disable a subuser | **This endpoint allows you to enable or disable a subuser.**
+- path:subuser_name string
+- body:disabled boolean
+
+## S586-N0115  PUT /subusers/{subuser_name}/ips
+desc: Update IPs assigned to a subuser | **This endpoint allows you update your subusers' assigned IP.** Each subuser should be assigned to an IP address from which all of this subuser's mail will be sent. Often, this is the same IP as the parent account, but each subuser can have one or more of their own IP addresses as well. More information: * [How to request more IPs](https://sendgrid.com/docs/ui/ac
+- path:subuser_name string
+- body:(body) string
+
+## S586-N0116  DELETE /subusers/{subuser_name}/monitor
+desc: Delete monitor settings
+- path:subuser_name string
+
+## S586-N0117  POST /subusers/{subuser_name}/monitor
+desc: Create monitor settings
+schema: monitor
+- path:subuser_name string
+- body:email string
+- body:frequency number
+
+## S586-N0118  PUT /subusers/{subuser_name}/monitor
+desc: Update Monitor Settings for a subuser
+schema: monitor
+- path:subuser_name string
+- body:email string
+- body:frequency number
+
+## S586-N0119  DELETE /suppression/blocks
+desc: Delete blocks | **This endpoint allows you to delete all email addresses on your blocks list.** There are two options for deleting blocked emails: 1. You can delete all blocked emails by setting `delete_all` to `true` in the request body. 2. You can delete a selection of blocked emails by specifying the email addresses in the `emails` array of the request body.
+- body:delete_all boolean
+- body:emails array<string>
+
+## S586-N0120  DELETE /suppression/blocks/{email}
+desc: Delete a specific block | **This endpoint allows you to delete a specific email address from your blocks list.**
+- path:email string
+
+## S586-N0121  DELETE /suppression/bounces
+desc: Delete bounces | **This endpoint allows you to delete all emails on your bounces list.** There are two options for deleting bounced emails: 1. You can delete all bounced emails by setting `delete_all` to `true` in the request body. 2. You can delete a selection of bounced emails by specifying the email addresses in the `emails` array of the request body.
+- body:delete_all boolean
+- body:emails array<string>
+
+## S586-N0122  DELETE /suppression/bounces/{email}
+desc: Delete a bounce | **This endpoint allows you to remove an email address from your bounce list.**
+- path:email string
+- query:email_address string
+- body:(body) any
+
+## S586-N0123  DELETE /suppression/invalid_emails
+desc: Delete invalid emails | **This endpoint allows you to remove email addresses from your invalid email address list.** There are two options for deleting invalid email addresses: 1) You can delete all invalid email addresses by setting `delete_all` to true in the request body. 2) You can delete some invalid email addresses by specifying certain addresses in an array in the request body.
+- body:delete_all boolean
+- body:emails array<string>
+
+## S586-N0124  DELETE /suppression/invalid_emails/{email}
+desc: Delete a specific invalid email | **This endpoint allows you to remove a specific email address from the invalid email address list.**
+- path:email string
+
+## S586-N0125  DELETE /suppression/spam_reports
+desc: Delete spam reports | **This endpoint allows you to delete your spam reports.** Deleting a spam report will remove the suppression, meaning email will once again be sent to the previously suppressed address. This should be avoided unless a recipient indicates they wish to receive email from you again. You can use our [bypass filters](https://sendgrid.com/docs/ui/sending-email/index-suppressions/#b
+- body:delete_all boolean
+- body:emails array<string>
+
+## S586-N0127  POST /teammates
+desc: Invite teammate | **This endpoint allows you to invite a Teammate to your account via email.** You can set a Teammate's initial permissions using the `scopes` array in the request body. Teammate's will receive a minimum set of scopes from Twilio SendGrid that are necessary for the Teammate to function. **Note:** A teammate invite will expire after 7 days, but you may resend the invitation at any t
+- body:email string
+- body:is_admin boolean
+- body:scopes array<string>
+
+## S586-N0131  PATCH /teammates/{username}
+desc: Update teammate's permissions | **This endpoint allows you to update a teammate’s permissions.** To turn a teammate into an admin, the request body should contain an `is_admin` set to `true`. Otherwise, set `is_admin` to `false` and pass in all the scopes that a teammate should have. **Only the parent user or other admin teammates can update another teammate’s permissions.** **Admin users can only
+- path:username string
+- body:is_admin boolean
+- body:scopes array<string>
+
+## S586-N0132  POST /templates
+desc: Create a transactional template. | **This endpoint allows you to create a transactional template.**
+- body:generation string enum[legacy|dynamic]
+- body:name string
+
+## S586-N0133  DELETE /templates/{template_id}
+desc: Delete a template. | **This endpoint allows you to delete a transactional template.**
+- path:template_id string
+
+## S586-N0134  PATCH /templates/{template_id}
+desc: Edit a transactional template. | **This endpoint allows you to edit the name of a transactional template.** To edit the template itself, [create a new transactional template version](https://sendgrid.api-docs.io/v3.0/transactional-templates-versions/create-a-new-transactional-template-version).
+- path:template_id string
+- body:name string
+
+## S586-N0135  POST /templates/{template_id}
+desc: Duplicate a transactional template. | **This endpoint allows you to duplicate a transactional template.**
+- path:template_id string
+- body:name string
+
+## S586-N0136  POST /templates/{template_id}/versions
+desc: Create a new transactional template version. | **This endpoint allows you to create a new version of a template.**
+schema: transactional_template_version_create
+- path:template_id string
+- body:active integer enum[0|1]
+- body:editor string enum[code|design]
+- body:generate_plain_content boolean
+- body:html_content string
+- body:name string
+- body:plain_content string
+- body:subject string
+- body:test_data string
+
+## S586-N0137  DELETE /templates/{template_id}/versions/{version_id}
+desc: Delete a transactional template version. | **This endpoint allows you to delete a transactional template version.**
+- path:template_id string
+- path:version_id string
+
+## S586-N0138  PATCH /templates/{template_id}/versions/{version_id}
+desc: Edit a transactional template version. | **This endpoint allows you to edit the content of your template version.**
+schema: transactional_template_version_create
+- path:template_id string
+- path:version_id string
+- body:active integer enum[0|1]
+- body:editor string enum[code|design]
+- body:generate_plain_content boolean
+- body:html_content string
+- body:name string
+- body:plain_content string
+- body:subject string
+- body:test_data string
+
+## S586-N0140  PATCH /tracking_settings/click
+desc: Update Click Tracking Settings | **This endpoint allows you to enable or disable your current click tracking setting.** Click Tracking overrides all the links and URLs in your emails and points them to either SendGrid’s servers or the domain with which you branded your link. When a customer clicks a link, SendGrid tracks those [clicks](https://sendgrid.com/docs/glossary/clicks/). Click tracking he
+- body:enabled boolean
+
+## S586-N0141  PATCH /tracking_settings/google_analytics
+desc: Update Google Analytics Settings | **This endpoint allows you to update your current setting for Google Analytics.** Google Analytics helps you understand how users got to your site and what they're doing there. For more information about using Google Analytics, please refer to [Google’s URL Builder](https://support.google.com/analytics/answer/1033867?hl=en) and their article on ["Best Practices f
+schema: google_analytics_settings
+- body:enabled boolean
+- body:utm_campaign string
+- body:utm_content string
+- body:utm_medium string
+- body:utm_source string
+- body:utm_term string
+
+## S586-N0142  PATCH /tracking_settings/open
+desc: Update Open Tracking Settings | **This endpoint allows you to update your current settings for open tracking.** Open Tracking adds an invisible image at the end of the email which can track email opens. If the email recipient has images enabled on their email client, a request to SendGrid’s server for the invisible image is executed and an open event is logged. These events are logged in the Stati
+- body:enabled boolean
+
+## S586-N0144  PUT /user/email
+desc: Update your account email address | **This endpoint allows you to update the email address currently on file for your account.**
+- body:email string
+
+## S586-N0145  PUT /user/password
+desc: Update your password | **This endpoint allows you to update your password.**
+- body:new_password string
+- body:old_password string
+
+## S586-N0147  POST /user/scheduled_sends
+desc: Cancel or pause a scheduled send | **This endpoint allows you to cancel or pause a scheduled send associated with a `batch_id`.** Passing this endpoint a `batch_id` and status will cancel or pause the scheduled send. Once a scheduled send is set to `pause` or `cancel` you must use the "Update a scheduled send" endpoint to change its status or the "Delete a cancellation or pause from a scheduled se
+- body:batch_id string
+- body:status string enum[pause|cancel]
+
+## S586-N0148  DELETE /user/scheduled_sends/{batch_id}
+desc: Delete a cancellation or pause from a scheduled send | **This endpoint allows you to delete the cancellation/pause of a scheduled send.** Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
+- path:batch_id string
+
+## S586-N0149  PATCH /user/scheduled_sends/{batch_id}
+desc: Update a scheduled send | **This endpoint allows you to update the status of a scheduled send for the given `batch_id`.** If you have already set a `cancel` or `pause` status on a scheduled send using the "Cancel or pause a scheduled send" endpoint, you can update it's status using this endpoint. Attempting to update a status once it has been set with the "Cancel or pause a scheduled send" endpoin
+- path:batch_id string
+- body:status string enum[cancel|pause]
+
+## S586-N0150  PATCH /user/settings/enforced_tls
+desc: Update Enforced TLS settings | **This endpoint allows you to update your Enforced TLS settings.** To require TLS from recipients, set `require_tls` to `true`. If either `require_tls` or `require_valid_cert` is set to `true`, the recipient must support TLS 1.1 or higher or have a valid certificate. If these conditions are not met, Twilio SendGrid will drop the message and send a block event with “T
+schema: enforced-tls-request-response
+- body:require_tls boolean
+- body:require_valid_cert boolean
+
+## S586-N0151  PUT /user/username
+desc: Update your username | **This endpoint allows you to update the username for your account.**
+- body:username string
+
+## S586-N0152  PATCH /user/webhooks/event/settings
+desc: Update Event Notification Settings | **This endpoint allows you to update your current event webhook settings.** If an event type is marked as `true`, then the event webhook will include information about that event. SendGrid’s Event Webhook will notify a URL of your choice via HTTP POST with information about events that occur as SendGrid processes your email. Common uses of this data are to remo
+schema: event-webhook-update-oauth-request
+- body:bounce boolean
+- body:click boolean
+- body:deferred boolean
+- body:delivered boolean
+- body:dropped boolean
+- body:enabled boolean
+- body:group_resubscribe boolean
+- body:group_unsubscribe boolean
+- body:oauth_client_id string
+- body:oauth_client_secret string
+- body:oauth_token_url string
+- body:open boolean
+- body:processed boolean
+- body:spam_report boolean
+- body:unsubscribe boolean
+- body:url string
+
+## S586-N0154  POST /user/webhooks/event/test
+desc: Test Event Notification Settings | **This endpoint allows you to test your event webhook by sending a fake event notification post to the provided URL.** SendGrid’s Event Webhook will notify a URL of your choice via HTTP POST with information about events that occur as SendGrid processes your email. Common uses of this data are to remove unsubscribes, react to spam reports, determine unengaged rec
+- body:oauth_client_id string
+- body:oauth_client_secret string
+- body:oauth_token_url string
+- body:url string
+
+## S586-N0155  POST /user/webhooks/parse/settings
+desc: Create a parse setting | **This endpoint allows you to create a new inbound parse setting.** Creating an Inbound Parse setting requires two pieces of information: a `url` and a `hostname`. The `hostname` must correspond to a domain authenticated by Twilio SendGrid on your account. If you need to complete domain authentication, you can use the [Twilio SendGrid App](https://app.sendgrid.com/settings
+schema: parse-setting
+- body:hostname string
+- body:send_raw boolean
+- body:spam_check boolean
+- body:url string
+
+## S586-N0156  DELETE /user/webhooks/parse/settings/{hostname}
+desc: Delete a parse setting | **This endpoint allows you to delete a specific inbound parse setting by hostname.** You can retrieve all your Inbound Parse settings and their associated host names with the "Retrieve all parse settings" endpoint.
+- path:hostname string
+
+## S586-N0157  PATCH /user/webhooks/parse/settings/{hostname}
+desc: Update a parse setting | **This endpoint allows you to update a specific inbound parse setting by hostname.** You can retrieve all your Inbound Parse settings and their associated host names with the "Retrieve all parse settings" endpoint.
+schema: parse-setting
+- path:hostname string
+- body:hostname string
+- body:send_raw boolean
+- body:spam_check boolean
+- body:url string
+
+## S586-N0159  POST /verified_senders
+desc: Create Verified Sender Request | **This endpoint allows you to create a new Sender Identify**. Upon successful submission of a `POST` request to this endpoint, an identity will be created, and a verification email will be sent to the address assigned to the `from_email` field. You must complete the verification process using the sent email to fully verify the sender. If you need to resend the veri
+schema: verified-sender-request-schema
+- body:address string
+- body:address2 string
+- body:city string
+- body:country string
+- body:from_email string
+- body:from_name string
+- body:nickname string
+- body:reply_to string
+- body:reply_to_name string
+- body:state string
+- body:zip string
+
+## S586-N0160  POST /verified_senders/resend/{id}
+desc: Resend Verified Sender Request | **This endpoint allows you to resend a verification email to a specified Sender Identity**. Passing the `id` assigned to a Sender Identity to this endpoint will resend a verification email to the `from_address` associated with the Sender Identity. This can be useful if someone loses their verification email or needs to have it resent for any other reason. You can r
+- path:id string
+
+## S586-N0161  DELETE /verified_senders/{id}
+desc: Delete Verified Sender | **This endpoint allows you to delete a Sender Identity**. Pass the `id` assigned to a Sender Identity to this endpoint to delete the Sender Identity from your account. You can retrieve the IDs associated with Sender Identities using the "Get All Verified Senders" endpoint.
+- path:id string

@@ -1,0 +1,552 @@
+## S585-0014  POST /v2/external_emails.json
+desc: Create an External Email | Creates an external email object.
+- body:mailbox string
+- body:raw string
+
+## S585-0015  POST /v2/imports.json
+desc: Create an import | Creates an import.
+- body:name string
+- body:user_id integer
+
+## S585-0016  DELETE /v2/imports/{id}.json
+desc: Delete an import | Deletes an import, by ID only. The associated people can be deleted as part of the deletion process. Admin users can access imports for the entire team, but non-admin users can only access their own imports.
+- path:id string
+- query:undo string
+
+## S585-0017  PUT /v2/imports/{id}.json
+desc: Update an import | Updates an import, by ID only. Admin users can access imports for the entire team, but non-admin users can only access their own imports.
+- path:id string
+- body:name string
+- body:user_id integer
+
+## S585-0018  POST /v2/live_website_tracking_parameters.json
+desc: Create an Live Website Tracking Parameter | Creates a Live Website Tracking parameter to identify a person
+- body:person_id integer
+
+## S585-0019  POST /v2/meetings/settings/searches.json
+desc: List meeting settings | Fetches multiple meeting setting records. The records can be filtered, paged, and sorted according to the respective parameters.
+- query:user_guids array<string>
+- query:updated_at array<string>
+- query:calendar_type string
+- query:per_page integer
+- query:page integer
+- query:include_paging_counts boolean
+- query:limit_paging_counts boolean
+
+## S585-0020  PUT /v2/meetings/settings/{id}.json
+desc: Update a meeting setting | Updates a meeting setting, by ID only.
+- path:id string
+- body:allow_booking_on_behalf boolean
+- body:allow_booking_overtime boolean
+- body:allow_event_overlap boolean
+- body:availability_limit integer
+- body:availability_limit_enabled boolean
+- body:buffer_time_duration integer
+- body:calendar_type string
+- body:default_meeting_length integer
+- body:description string
+- body:enable_calendar_sync boolean
+- body:enable_dynamic_location boolean
+- body:location string
+- body:primary_calendar_connection_failed boolean
+- body:primary_calendar_id string
+- body:primary_calendar_name string
+- body:schedule_buffer_enabled boolean
+- body:schedule_delay integer
+- body:share_event_detail boolean
+- body:time_zone string
+- body:times_available object
+- body:title string
+
+## S585-0021  PUT /v2/meetings/{id}.json
+desc: Update a meeting | Updates a meeting, by ID only.
+- path:id string
+- body:event_id string
+- body:i_cal_uid string
+- body:no_show boolean
+- body:status string
+
+## S585-0022  POST /v2/notes.json
+desc: Create a note | Creates a note.
+- body:associated_with_id integer
+- body:associated_with_type string
+- body:call_id integer
+- body:content string
+- body:skip_crm_sync boolean
+- body:subject string
+- body:user_guid string
+
+## S585-0023  DELETE /v2/notes/{id}.json
+desc: Delete a note | Deletes a note owned by authorized account. This operation is not reversible without contacting support. This operation can be called multiple times successfully.
+- path:id string
+
+## S585-0024  PUT /v2/notes/{id}.json
+desc: Update a note | Updates a note. Any changes to the note or associated records will not reflect in your CRM.
+- path:id string
+- body:call_id integer
+- body:content string
+
+## S585-0025  POST /v2/ongoing_actions.json
+desc: Create an ongoing action | Creates an ongoing action. An ongoing action is an action that is not yet completed, but progress has been made towards the completion. The user should not need to do anything for an ongoing action to be completed. An ongoing action can be later completed by creating an activity. Ongoing actions are marked as status=pending_activity.
+- body:action_id integer
+
+## S585-0026  POST /v2/people.json
+desc: Create a person | Creates a person. Either email_address or phone/last_name must be provided as a unique lookup on the team.
+- body:account_id integer
+- body:autotag_date boolean
+- body:city string
+- body:contact_restrictions array<string>
+- body:country string
+- body:crm_id string
+- body:crm_id_type string
+- body:custom_fields object
+- body:do_not_contact boolean
+- body:email_address string
+- body:first_name string
+- body:home_phone string
+- body:import_id integer
+- body:job_seniority string
+- body:last_name string
+- body:linkedin_url string
+- body:locale string
+- body:mobile_phone string
+- body:owner_id integer
+- body:person_company_industry string
+- body:person_company_name string
+- body:person_company_website string
+- body:person_stage_id integer
+- body:personal_email_address string
+- body:personal_website string
+- body:phone string
+- body:phone_extension string
+- body:secondary_email_address string
+- body:state string
+- body:tags array<string>
+- body:title string
+- body:twitter_handle string
+- body:work_city string
+- body:work_country string
+- body:work_state string
+
+## S585-0027  PUT /v2/people/{id}.json
+desc: Update a person | Updates a person.
+- path:id string
+- body:account_id integer
+- body:city string
+- body:contact_restrictions array<string>
+- body:country string
+- body:crm_id string
+- body:crm_id_type string
+- body:custom_fields object
+- body:do_not_contact boolean
+- body:email_address string
+- body:first_name string
+- body:home_phone string
+- body:import_id integer
+- body:job_seniority string
+- body:last_name string
+- body:linkedin_url string
+- body:locale string
+- body:mobile_phone string
+- body:owner_id integer
+- body:person_company_industry string
+- body:person_company_name string
+- body:person_company_website string
+- body:person_stage_id integer
+- body:personal_email_address string
+- body:personal_website string
+- body:phone string
+- body:phone_extension string
+- body:secondary_email_address string
+- body:state string
+- body:tags array<string>
+- body:title string
+- body:twitter_handle string
+- body:work_city string
+- body:work_country string
+- body:work_state string
+
+## S585-0028  DELETE /v2/person_stages/{id}.json
+desc: Delete an person stage | Deletes a person stage. This operation is not reversible without contacting support. This operation can be called multiple times successfully.
+- path:id string
+
+## S585-0029  PUT /v2/person_stages/{id}.json
+desc: Update a person stage | Updates a person stage.
+- path:id string
+- body:name string
+
+## S585-0030  DELETE /v2/saved_list_views/{id}.json
+desc: Delete a saved list view | Deletes a saved list view. This operation is not reversible without contacting support. This operation can be called multiple times successfully.
+- path:id string
+
+## S585-0031  PUT /v2/saved_list_views/{id}.json
+desc: Update a saved list view | Updates a saved list view.
+- path:id string
+- body:is_default boolean
+- body:name string
+- body:view_params string
+
+## S585-0032  POST /v2/tasks.json
+desc: Create a Task | Creates a task.
+- body:current_state string
+- body:description string
+- body:due_date string
+- body:idempotency_key string
+- body:person_id string
+- body:remind_at string
+- body:subject string
+- body:task_type string
+- body:user_id integer
+
+## S585-0033  PUT /v2/tasks/{id}.json
+desc: Update a Task | Updates a task.
+- path:id string
+- body:current_state string
+- body:description string
+- body:due_date string
+- body:is_logged boolean
+- body:remind_at string
+- body:subject string
+
+## S585-0034  POST /v2/third_party_live_feed_items
+desc: Create a live feed item | Creates a live feed item that can be sent to users. May only be used by whitelisted Frontend Integrations. Reference the Salesloft App Directory and Frontend Integrations sections for additional details.
+- body:event_occurred_at string
+- body:idempotency_key string
+- body:message string
+- body:subject_id integer
+- body:subject_type string
+- body:user_guid string
+
+## S585-0035  POST /v2/webhook_subscriptions
+desc: Create a webhook subscription | Creates a webhook subscription. Visit the <a href="/webhooks.html" target="_blank" rel="noopener noreferrer">webhooks page</a> for additional details and a list of available webhooks. Request must be made with a valid Oauth token or API key.
+- body:callback_token string
+- body:callback_url string
+- body:event_type string
+
+## S585-0036  PUT /v2/webhook_subscriptions/{id}
+desc: Update a webhook subscription | Updates a webhook subscription. Request must be made with a valid Oauth token or API key.
+- path:id integer
+- body:enabled boolean
+
+## S586-0001  DELETE /alerts/{alert_id}
+desc: Delete an alert | **This endpoint allows you to delete an alert.** Alerts allow you to specify an email address to receive notifications regarding your email usage or statistics. * Usage alerts allow you to set the threshold at which an alert will be sent. * Stats notifications allow you to set how frequently you would like to receive email statistics reports. For example, "daily", "weekly", or "m
+- path:alert_id integer
+
+## S586-0002  POST /asm/groups
+desc: Create a new suppression group | **This endpoint allows you to create a new suppression group.** To add an email address to the suppression group, [create a Suppression](https://sendgrid.api-docs.io/v3.0/suppressions-suppressions/add-suppressions-to-a-suppression-group).
+schema: suppression-group-request-base
+- body:description string
+- body:is_default boolean
+- body:name string
+
+## S586-0003  PATCH /asm/groups/{group_id}
+desc: Update a suppression group. | **This endpoint allows you to update or change a suppression group.**
+schema: suppression-group-request-base
+- path:group_id string
+- body:description string
+- body:is_default boolean
+- body:name string
+
+## S586-0004  POST /campaigns
+desc: Create a Campaign | **This endpoint allows you to create a campaign.** In order to send or schedule the campaign, you will be required to provide a subject, sender ID, content (we suggest both html and plain text), and at least one list or segment ID. This information is not required when you create a campaign.
+schema: campaign_request
+- body:categories array<string>
+- body:custom_unsubscribe_url string
+- body:editor string enum[code|design]
+- body:html_content string
+- body:ip_pool string
+- body:list_ids array<integer>
+- body:plain_content string
+- body:segment_ids array<integer>
+- body:sender_id integer
+- body:subject string
+- body:suppression_group_id integer
+- body:title string
+
+## S586-0005  POST /contactdb/custom_fields
+desc: Create a Custom Field | **This endpoint allows you to create a custom field.** **You can create up to 120 custom fields.**
+- body:name string
+- body:type string
+
+## S586-0006  DELETE /contactdb/lists
+desc: Delete Multiple lists | **This endpoint allows you to delete multiple recipient lists.**
+- body:(body) integer
+
+## S586-0007  DELETE /contactdb/recipients/{recipient_id}
+desc: Delete a Recipient | **This endpoint allows you to delete a single recipient with the given ID from your contact database.** > Use this to permanently delete your recipients from all of your contact lists and all segments if required by applicable law.
+- path:recipient_id string
+
+## S586-0008  PATCH /contactdb/segments/{segment_id}
+desc: Update a segment | **This endpoint allows you to update a segment.**
+- path:segment_id string
+- query:segment_id string
+- body:conditions array<object>
+- body:conditions[].and_or string enum[and|or|]
+- body:conditions[].field string
+- body:conditions[].operator string enum[eq|ne|lt|gt|contains]
+- body:conditions[].value string
+- body:list_id number
+- body:name string
+
+## S586-0009  POST /designs
+desc: Create Design | **This endpoint allows you to create a new design**. You can add a new design by passing data, including a string of HTML email content, to `/designs`. When creating designs from scratch, be aware of the styling constraints inherent to many email clients. For a list of best practices, see our guide to [Cross-Platform Email Design](https://sendgrid.com/docs/ui/sending-email/cross-pl
+schema: design-input
+- body:editor string enum[code|design]
+- body:name string
+- body:categories array<string>
+- body:generate_plain_content boolean
+- body:subject string
+- body:html_content string
+- body:plain_content string
+
+## S586-0010  DELETE /ips/warmup/{ip_address}
+desc: Stop warming up an IP address | **This endpoint allows you to remove an IP address from warmup mode.** Your request will return a 204 status code if the specified IP was successfully removed from warmup mode. To retrieve details of the IP’s warmup status *before* removing it from warmup mode, call the "Retrieve the warmpup status for a specific IP address" endpoint.
+- path:ip_address string
+
+## S586-0011  PATCH /mail_settings/address_whitelist
+desc: Update address whitelist mail settings | **This endpoint allows you to update your current email address whitelist settings.** You can select whether or not this setting should be enabled by assigning the `enabled` field a `true` or `false` value. Passing only the `enabled` field to this endpoint will not alter your current `list` of whitelist entries. However, any modifications to your `list` of 
+- body:enabled boolean
+- body:list array<string>
+
+## S586-0012  PATCH /mail_settings/bounce_purge
+desc: Update bounce purge mail settings | **This endpoint allows you to update your current bounce and purge settings.** The Bounce Perge setting allows you to set a schedule that Twilio SendGrid will use to automatically delete contacts from your soft and hard bounce suppression lists. The schedule is set in full days by assigning the number of days, an integer, to the `soft_bounces` and/or `hard_bounc
+schema: mail_settings_bounce_purge
+- body:enabled boolean
+- body:hard_bounces integer
+- body:soft_bounces integer
+
+## S586-0013  PATCH /mail_settings/forward_bounce
+desc: Update forward bounce mail settings | **This endpoint allows you to update your current bounce forwarding mail settings.** Enabling the Forward Bounce setting allows you to specify an `email` address to which bounce reports will be forwarded. You can also configure the Forward Spam mail settings in the [Mail Settings section of the Twilio SendGrid App](https://app.sendgrid.com/settings/mail_settin
+schema: mail_settings_forward_bounce
+- body:email string
+- body:enabled boolean
+
+## S586-0014  PATCH /mail_settings/template
+desc: Update template mail settings | **This endpoint allows you to update your current legacy email template settings.** This setting refers to our original email templates. We currently support more fully featured [Dynamic Transactional Templates](https://sendgrid.com/docs/ui/sending-email/how-to-send-an-email-with-dynamic-transactional-templates/). The legacy email template setting wraps an HTML temp
+- body:enabled boolean
+- body:html_content string
+
+## S586-0015  POST /marketing/contacts/exports
+desc: Export Contacts | **Use this endpoint to export lists or segments of contacts**. If you would just like to have a link to the exported list sent to your email set the `notifications.email` option to `true` in the `POST` payload. If you would like to download the list, take the `id` that is returned and use the "Export Contacts Status" endpoint to get the `urls`. Once you have the list of URLs, mak
+- body:file_type string enum[csv|json]
+- body:list_ids array<string>
+- body:max_file_size integer
+- body:notifications object
+- body:notifications.email boolean
+- body:segment_ids array<string>
+
+## S586-0016  DELETE /marketing/field_definitions/{custom_field_id}
+desc: Delete Custom Field Definition | **This endpoint deletes a defined Custom Field.** You cand delete only Custom Fields; Reserved Fields cannot be deleted.
+- path:custom_field_id string
+
+## S586-0017  POST /marketing/segments/delete
+desc: Bulk Delete Segments | This endpoint allows you to delete segments in bulk. If the segments are used by automations or the segments do not exist in the database, the segment IDs that could not be deleted along with automation IDs that are associated to those segments will be returned.
+- body:ids array<string>
+
+## S586-0018  POST /marketing/senders
+desc: Create a Sender Identity | **This endpoint allows you to create a new sender identity.** *You may create up to 100 unique sender identities.* Sender identities are required to be verified before use. If your domain has been authenticated, a new sender identity will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+- body:address string
+- body:address_2 string
+- body:city string
+- body:country string
+- body:from object
+- body:from.email string
+- body:from.name string
+- body:nickname string
+- body:reply_to object
+- body:reply_to.email string
+- body:reply_to.name string
+- body:state string
+- body:zip string
+
+## S586-0019  POST /marketing/singlesends/search
+desc: Get Single Sends Search | **This endpoint allows you to search for Single Sends based on specified criteria.** You can search for Single Sends by passing a combination of values using the `name`, `status`, and `categories` request body fields. For example, if you want to search for all Single Sends that are "drafts" or "scheduled" and also associated with the category "shoes," your request body ma
+schema: singlesend_search
+- query:page_size integer
+- query:page_token string
+- body:categories array<string>
+- body:name string
+- body:status array<string> enum[draft|scheduled|triggered]
+
+## S586-0020  POST /marketing/singlesends/{id}
+desc: Duplicate Single Send | **This endpoint allows you to duplicate an existing Single Send using its Single Send ID.** Duplicating a Single Send is useful when you want to create a Single Send but don't want to start from scratch. Once duplicated, you can update or edit the Single Send by making a PATCH request to the `/marketing/singlesends/{id}` endpoint. If you leave the `name` field blank, your d
+- path:id string
+- body:name string
+
+## S586-0021  DELETE /marketing/singlesends/{id}/schedule
+desc: Delete Single Send Schedule | **This endpoint allows you to cancel a scheduled Single Send using a Single Send ID.** Making a DELETE request to this endpoint will cancel the scheduled sending of a Single Send. The request will not delete the Single Send itself. Deleting a Single Send can be done by passing a DELETE request to `/marketing/singlesends/{id}`.
+- path:id string
+
+## S586-0022  PUT /marketing/singlesends/{id}/schedule
+desc: Schedule Single Send | **This endpoint allows you to schedule a Single Send for future delivery using a Single Send ID.** To schedule a Single Send, you must pass a date string in ISO 8601 time format (yyyy-MM-ddTHH:mm:ssZ) using the required `send_at` field. For example, the ISO 8601 format for 9:00 AM UTC on May 6, 2020 would be `2020-05-06T09:00:00Z`. You may also pass the string `"now"` to sen
+- path:id string
+- body:send_at string enum[now]
+
+## S586-0023  POST /sso/certificates
+desc: Create an SSO Certificate | **This endpoint allows you to create an SSO certificate.**
+- body:enabled boolean
+- body:integration_id string
+- body:public_certificate string
+
+## S586-0024  PATCH /sso/integrations/{id}
+desc: Update an SSO Integration | **This endpoint allows you to modify an exisiting SSO integration.** You can retrieve the IDs for your configurations from the response provided by the "Get All SSO Integrations" endpoint.
+schema: create-integration-request
+- path:id string
+- query:si boolean
+- body:completed_integration boolean
+- body:enabled boolean
+- body:entity_id string
+- body:name string
+- body:signin_url string
+- body:signout_url string
+
+## S586-0025  DELETE /suppression/spam_reports/{email}
+desc: Delete a specific spam report | **This endpoint allows you to delete a specific spam report by email address.** Deleting a spam report will remove the suppression, meaning email will once again be sent to the previously suppressed address. This should be avoided unless a recipient indicates they wish to receive email from you again. You can use our [bypass filters](https://sendgrid.com/docs/ui/sen
+- path:email string
+
+## S586-0026  DELETE /teammates/pending/{token}
+desc: Delete pending teammate | **This endpoint allows you to delete a pending teammate invite.**
+- path:token string
+
+## S586-0027  POST /teammates/pending/{token}/resend
+desc: Resend teammate invite | **This endpoint allows you to resend a Teammate invitation.** Teammate invitations will expire after 7 days. Resending an invitation will reset the expiration date.
+- path:token string
+
+## S586-0028  DELETE /teammates/{username}
+desc: Delete teammate | **This endpoint allows you to delete a teammate.** **Only the parent user or an admin teammate can delete another teammate.**
+- path:username string
+
+## S586-0029  POST /templates/{template_id}/versions/{version_id}/activate
+desc: Activate a transactional template version. | **This endpoint allows you to activate a version of one of your templates.**
+- path:template_id string
+- path:version_id string
+
+## S586-0030  PATCH /tracking_settings/subscription
+desc: Update Subscription Tracking Settings | **This endpoint allows you to update your current settings for subscription tracking.** Subscription tracking adds links to the bottom of your emails that allows your recipients to subscribe to, or unsubscribe from, your emails.
+schema: subscription_tracking_settings
+- body:enabled boolean
+- body:html_content string
+- body:landing string
+- body:plain_content string
+- body:replace string
+- body:url string
+
+## S586-0031  PATCH /user/profile
+desc: Update a user's profile | **This endpoint allows you to update your current profile details.** Any one or more of the parameters can be updated via the PATCH `/user/profile` endpoint. You must include at least one when you PATCH.
+schema: user_profile
+- body:address string
+- body:address2 string
+- body:city string
+- body:company string
+- body:country string
+- body:first_name string
+- body:last_name string
+- body:phone string
+- body:state string
+- body:website string
+- body:zip string
+
+## S586-0032  PATCH /user/webhooks/event/settings/signed
+desc: Enable/Disable Signed Webhook | **This endpoint allows you to enable or disable signing of the Event Webhook.** This endpoint takes a single boolean request parameter, `enabled`. You may either enable or disable signing of the Event Webhook using this endpoint. Once enabled, you can retrieve your public key using the `/webhooks/event/settings/signed` endpoint. For more information about cryptograp
+- body:enabled boolean
+
+## S586-0033  POST /validations/email
+desc: Validate an email | **This endpoint allows you to validate an email address.**
+- body:email string
+- body:source string
+
+## S586-0034  POST /whitelabel/dns/email
+desc: Email DNS records to a co-worker | **This endpoint is used to share DNS records with a colleagues** Use this endpoint to send SendGrid-generated DNS record information to a co-worker so they can enter it into your DNS provider to validate your domain and link branding. What type of records are sent will depend on whether you have chosen Automated Security or not. When using Automated Security, Sen
+- body:domain_id integer
+- body:email string
+- body:link_id integer
+- body:message string
+
+## S586-0035  DELETE /whitelabel/domains/{domain_id}
+desc: Delete an authenticated domain. | **This endpoint allows you to delete an authenticated domain.**
+- path:domain_id string
+
+## S586-0036  POST /whitelabel/domains/{domain_id}/subuser
+desc: Associate an authenticated domain with a given user. | **This endpoint allows you to associate a specific authenticated domain with a subuser.** Authenticated domains can be associated with (i.e. assigned to) subusers from a parent account. This functionality allows subusers to send mail using their parent's domain authentication. To associate an authenticated domain with a subuser, the parent acc
+- path:domain_id integer
+- body:username string
+
+## S587-0001  POST /questions
+desc: Create a New Question | You may create your own question using this action. It takes a JSON object containing a question and a collection of answers in the form of choices.
+- body:choices array<string>
+- body:question string
+
+## S588-0001  POST /oauth/token
+desc: Get a Bearer token
+- body:email string
+- body:password string
+
+## S589-0001  DELETE /me/albums
+desc: Remove Users' Saved Albums | Remove one or more albums from the current user's 'Your Music' library.
+- query:ids string
+- body:ids array<string>
+
+## S589-0002  PUT /me/albums
+desc: Save Albums for Current User | Save one or more albums to the current user's 'Your Music' library.
+- query:ids string
+- body:ids array<string>
+
+## S589-0003  DELETE /me/audiobooks
+desc: Remove User's Saved Audiobooks | Remove one or more audiobooks from the Spotify user's library.
+- query:ids string
+
+## S589-0004  PUT /me/audiobooks
+desc: Save Audiobooks for Current User | Save one or more audiobooks to the current Spotify user's library.
+- query:ids string
+
+## S589-0005  DELETE /me/episodes
+desc: Remove User's Saved Episodes | Remove one or more episodes from the current user's library.
+- query:ids string
+- body:ids array<string>
+
+## S589-0006  PUT /me/episodes
+desc: Save Episodes for Current User | Save one or more episodes to the current user's library.
+- query:ids string
+- body:ids array<string>
+
+## S589-0007  DELETE /me/following
+desc: Unfollow Artists or Users | Remove the current user as a follower of one or more artists or other Spotify users.
+- query:type string enum[artist|user]
+- query:ids string
+- body:ids array<string>
+
+## S589-0008  PUT /me/following
+desc: Follow Artists or Users | Add the current user as a follower of one or more artists or other Spotify users.
+- query:type string enum[artist|user]
+- query:ids string
+- body:ids array<string>
+
+## S589-0009  PUT /me/player
+desc: Transfer Playback | Transfer playback to a new device and determine if it should start playing.
+- body:device_ids array<string>
+- body:play boolean
+
+## S589-0010  POST /me/player/next
+desc: Skip To Next | Skips to next track in the user’s queue.
+- query:device_id string
+
+## S589-0011  PUT /me/player/pause
+desc: Pause Playback | Pause playback on the user's account.
+- query:device_id string
+
+## S589-0012  PUT /me/player/play
+desc: Start/Resume Playback | Start a new context or resume current playback on the user's active device.
+- query:device_id string
+- body:context_uri string
+- body:offset object
+- body:position_ms integer
+- body:uris array<string>
+
+## S589-0013  POST /me/player/previous
+desc: Skip To Previous | Skips to previous track in the user’s queue.
+- query:device_id string
+
+## S589-0014  POST /me/player/queue
+desc: Add Item to Playback Queue | Add an item to the end of the user's current playback queue.
+- query:uri string
+- query:device_id string

@@ -1,0 +1,627 @@
+## S544-0024  POST /recipe/scan
+desc: POST an image as a new RecipeScan request 1) Fetch the filename -- DONE 2) Copy it to the pics/scan folder - ENSURE NO NAMING COLLISIONS -- DONE 3) Create 120 thumbnail size in pics/scan/120 -- DONE 4) Insert the CloudTasks record 5) Create the HIT 6) Update the CloudTasks record with the HIT ID 7) Email the requesing user 8) Call out to www.bigoven.com to fetch the image and re-create the thumbna
+- query:test boolean
+- query:devicetype string
+- query:lat number
+- query:lng number
+
+## S544-0025  DELETE /recipe/{id}
+desc: Delete a Recipe (you must be authenticated as an owner of the recipe)
+- path:id integer
+
+## S544-0026  POST /recipe/{recipeId}/feedback
+desc: Feedback on a Recipe -- for internal BigOven editors
+schema: API2.Models.Recipes.FeedbackDTO
+- path:recipeId integer
+- body:feedback string
+
+## S544-0027  POST /recipe/{recipeId}/image
+desc: POST: /recipe/{recipeId}/image?lat=42&amp;lng=21&amp;caption=this%20is%20my%20caption Note that caption, lng and lat are all optional, but must go on the request URI as params because this endpoint needs a multipart/mime content header and will not parse JSON in the body along with it. Testing with Postman (validated 11/20/2015): 1) Remove the Content-Type header; add authentication information 2)
+- path:recipeId string
+- query:caption string
+- query:lat number
+- query:lng number
+
+## S544-0028  POST /recipe/{recipeId}/note
+desc: HTTP POST a new note into the system.
+schema: API2.Controllers.WebAPI.NoteController.NoteRequest
+- path:recipeId integer
+- body:CreationDate string
+- body:Date string
+- body:DateDT string
+- body:GUID string
+- body:ID integer
+- body:Notes string
+- body:People string
+- body:RecipeID integer
+- body:UserID integer
+- body:Variations string
+
+## S544-0029  DELETE /recipe/{recipeId}/note/{noteId}
+desc: Delete a review do a DELETE Http request of /note/{ID}
+- path:recipeId integer
+- path:noteId integer
+
+## S544-0030  PUT /recipe/{recipeId}/note/{noteId}
+desc: HTTP PUT (update) a Recipe note (RecipeNote).
+schema: API2.Controllers.WebAPI.NoteController.NoteRequest
+- path:recipeId integer
+- path:noteId integer
+- body:CreationDate string
+- body:Date string
+- body:DateDT string
+- body:GUID string
+- body:ID integer
+- body:Notes string
+- body:People string
+- body:RecipeID integer
+- body:UserID integer
+- body:Variations string
+
+## S544-0031  POST /recipe/{recipeId}/review
+desc: Add a new review. Only one review can be provided per {userId, recipeId} pair. Otherwise your review will be updated.
+schema: API2.Controllers.WebAPI.ReviewController.ReviewRequest
+- path:recipeId integer
+- body:ActiveMinutes integer
+- body:Comment string
+- body:MakeAgain string
+- body:StarRating integer
+- body:TotalMinutes integer
+
+## S544-0032  DELETE /recipe/{recipeId}/review/{reviewId}
+desc: DEPRECATED! - Deletes a review by recipeId and reviewId. Please use recipe/review/{reviewId} instead.
+- path:recipeId integer
+- path:reviewId integer
+
+## S544-0033  PUT /recipe/{recipeId}/review/{reviewId}
+desc: HTTP PUT (update) a recipe review. DEPRECATED. Please see recipe/review/{reviewId} PUT for the new endpoint. We are moving to a string-based primary key system, no longer integers, for reviews and replies.
+schema: API2.Controllers.WebAPI.ReviewController.ReviewRequestLegacy
+- path:reviewId integer
+- path:recipeId integer
+- body:ActiveMinutes integer
+- body:Comment string
+- body:GUID string
+- body:MakeAgain string
+- body:ParentID integer
+- body:StarRating integer
+- body:TotalMinutes integer
+
+## S546-0001  POST /order/{orderId}/shipment/cancel
+desc: Confirm shipment canceletion (when requested by the customer) or failure to deliver | Confirm shipment canceletion (when requested by the customer) or failure to deliver one shipment
+schema: NewTrackingRefund
+- path:orderId string
+- body:courier object
+- body:courier.name string
+- body:courier.taxID string
+- body:cte string
+- body:info string
+- body:items array<object>
+- body:items[].quantity integer
+- body:items[].skuSellerId string
+- body:number string
+- body:occurredAt string
+- body:sellerShipmentId string
+- body:tranckingUrl string
+
+## S546-0002  POST /order/{orderId}/shipment/delivered
+desc: Confirms that a shipment was delivered | Confirms that a shipment was delivered. Must inform quantity of successfully deliverd items even if items deliverd was less than the original order
+schema: Newshipmentstatus
+- path:orderId string
+- body:courier object
+- body:courier.name string
+- body:courier.taxID string
+- body:cte string
+- body:invoice object
+- body:invoice.accessKey string
+- body:invoice.cnpj string
+- body:invoice.issuedAt string
+- body:invoice.linkDanfe string
+- body:invoice.linkXml string
+- body:invoice.number string
+- body:invoice.serie string
+- body:items array<string>
+- body:number string
+- body:occurredAt string
+- body:sellerShipmentId string
+- body:trackingUrl string
+
+## S546-0003  POST /order/{orderId}/shipment/exchange
+desc: Confirm item exchange | This enpoint to confirm item exchange when failure to deliver or requested by the customer. All customer requests are tracket via trouble tickets
+schema: NewTrackingRefund
+- path:orderId string
+- body:courier object
+- body:courier.name string
+- body:courier.taxID string
+- body:cte string
+- body:info string
+- body:items array<object>
+- body:items[].quantity integer
+- body:items[].skuSellerId string
+- body:number string
+- body:occurredAt string
+- body:sellerShipmentId string
+- body:tranckingUrl string
+
+## S546-0004  POST /order/{orderId}/shipment/return
+desc: Confirm order item return and refund | Use this endpoint to return and refund items froma a order. In order to fully return an order list all items and applicate quantity.
+schema: NewTrackingRefund
+- path:orderId string
+- body:courier object
+- body:courier.name string
+- body:courier.taxID string
+- body:cte string
+- body:info string
+- body:items array<object>
+- body:items[].quantity integer
+- body:items[].skuSellerId string
+- body:number string
+- body:occurredAt string
+- body:sellerShipmentId string
+- body:tranckingUrl string
+
+## S546-0005  POST /order/{orderId}/shipment/sent
+desc: Update new order to include shipment information | Updates order to include shipment shiped information. This endpoint can be used to include a single or multiple shipments for any give order. In order to inform that all items of a order where shipped list all of them, including applicable quantities in the payload.
+schema: Newshipmentstatus
+- path:orderId string
+- body:courier object
+- body:courier.name string
+- body:courier.taxID string
+- body:cte string
+- body:invoice object
+- body:invoice.accessKey string
+- body:invoice.cnpj string
+- body:invoice.issuedAt string
+- body:invoice.linkDanfe string
+- body:invoice.linkXml string
+- body:invoice.number string
+- body:invoice.serie string
+- body:items array<string>
+- body:number string
+- body:occurredAt string
+- body:sellerShipmentId string
+- body:trackingUrl string
+
+## S546-0006  POST /orders/shipments/delivered
+desc: Bulk update of order shipments | Bulk update of order shipments status. This alows to inform multiple shipments status
+schema: OrdersShipments
+- body:shipments array<object>
+- body:shipments[].courier object
+- body:shipments[].courier.name string
+- body:shipments[].courier.taxID string
+- body:shipments[].cte string
+- body:shipments[].invoice object
+- body:shipments[].invoice.accessKey string
+- body:shipments[].invoice.cnpj string
+- body:shipments[].invoice.issuedAt string
+- body:shipments[].invoice.linkDanfe string
+- body:shipments[].invoice.linkXml string
+- body:shipments[].invoice.number string
+- body:shipments[].invoice.serie string
+- body:shipments[].items array<object>
+- body:shipments[].items[].quantity integer
+- body:shipments[].items[].skuSellerId string
+- body:shipments[].number string
+- body:shipments[].occurredAt string
+- body:shipments[].order string
+- body:shipments[].sellerShipmentId string
+- body:shipments[].status string
+- body:shipments[].trackingUrl string
+
+## S546-0007  POST /orders/shipments/shipped
+desc: Bulk update of order shipments | Allows bulk updates of orders shippments.
+schema: OrdersShipments
+- body:shipments array<object>
+- body:shipments[].courier object
+- body:shipments[].courier.name string
+- body:shipments[].courier.taxID string
+- body:shipments[].cte string
+- body:shipments[].invoice object
+- body:shipments[].invoice.accessKey string
+- body:shipments[].invoice.cnpj string
+- body:shipments[].invoice.issuedAt string
+- body:shipments[].invoice.linkDanfe string
+- body:shipments[].invoice.linkXml string
+- body:shipments[].invoice.number string
+- body:shipments[].invoice.serie string
+- body:shipments[].items array<object>
+- body:shipments[].items[].quantity integer
+- body:shipments[].items[].skuSellerId string
+- body:shipments[].number string
+- body:shipments[].occurredAt string
+- body:shipments[].order string
+- body:shipments[].sellerShipmentId string
+- body:shipments[].status string
+- body:shipments[].trackingUrl string
+
+## S546-0008  POST /product
+desc: Create a new product to the marketplace | Use this enpoint to create a single new product to the Marketplace. This enpoint expects a json document with one product. If you whant to upload multiple products in a single API call use POST /products method. The server will load each product as an individual item that can be manipulated using your own `skuSellerId`. This system is idenpontent, this mea
+schema: Product
+- body:attributes array<object>
+- body:attributes[].name string
+- body:attributes[].value string
+- body:brand string
+- body:categories array<string>
+- body:description string
+- body:dimensions object
+- body:dimensions.height integer
+- body:dimensions.length integer
+- body:dimensions.weight integer
+- body:dimensions.width integer
+- body:giftWrap object
+- body:giftWrap.available boolean
+- body:giftWrap.messageSupport boolean
+- body:giftWrap.value integer
+- body:gtin array<string>
+- body:images array<string>
+- body:price object
+- body:price.default integer
+- body:price.offer integer
+- body:productGroupId string
+- body:productId string
+- body:skuSellerId string
+- body:stock integer
+- body:title string
+- body:videos array<string>
+
+## S546-0009  PUT /product/{skuSellerId}
+desc: Update product details | Update a single product information such as name, brand, attribute, dimension, etc. Please note that data from your request will be merged with existing data. This allows you to easliy update only certain fields without the need to re-inform the other unchanged fields. For example in order to update just the field `title` simply send just this field with new information, r
+schema: ProductUpdate
+- path:skuSellerId string
+- body:attributes array<object>
+- body:attributes[].name string
+- body:attributes[].value string
+- body:brand string
+- body:categories array<string>
+- body:description string
+- body:dimensions object
+- body:dimensions.height integer
+- body:dimensions.length integer
+- body:dimensions.weight integer
+- body:dimensions.width integer
+- body:giftWrap object
+- body:giftWrap.available boolean
+- body:giftWrap.messageSupport boolean
+- body:giftWrap.value integer
+- body:gtin array<string>
+- body:images array<string>
+- body:price object
+- body:price.default integer
+- body:price.offer integer
+- body:productGroupId string
+- body:productId string
+- body:skuSellerId string
+- body:stock integer
+- body:title string
+- body:videos array<string>
+
+## S546-0010  PUT /product/{skuSellerId}/prices
+desc: Allows seller to update prices of a single SKU | Allows seller to set the SKU prices (MSRP and/or offer price). All prices must be informed in cents. No commas or periods are accepeted. For example one dollar should be informed as 100. Same as $1,2345.67 must be informed solely as 1234567
+schema: ProductPrice
+- path:skuSellerId string
+- body:default integer
+- body:offer integer
+
+## S546-0011  PUT /product/{skuSellerId}/status
+desc: Enable/disable a single product in the Marketplace | Update product status in the Marketplace. Set to `true` to enable, `false` to disable sale.
+schema: SellerItemStatus
+- path:skuSellerId string
+- body:active boolean
+
+## S546-0012  PUT /product/{skuSellerId}/stock
+desc: Update a single product stock | Update a single product inventory information. Products with zero stock will not be eligible for sale.
+schema: Stock
+- path:skuSellerId string
+- body:crossDockingTime integer
+- body:quantity integer
+
+## S546-0013  POST /products
+desc: Allows new products from the seller to be loaded into the marketplace | This enpoint to creates new products in the Marketplace using `skuSellerId` as a primary key. This enpoint expects a json document with array of products. The server will load each product as an individual item that can be manipulated using your own `skuSellerId`. All requests to This endpoint are idenpontent with respect of t
+schema: Product
+- body:attributes array<object>
+- body:attributes[].name string
+- body:attributes[].value string
+- body:brand string
+- body:categories array<string>
+- body:description string
+- body:dimensions object
+- body:dimensions.height integer
+- body:dimensions.length integer
+- body:dimensions.weight integer
+- body:dimensions.width integer
+- body:giftWrap object
+- body:giftWrap.available boolean
+- body:giftWrap.messageSupport boolean
+- body:giftWrap.value integer
+- body:gtin array<string>
+- body:images array<string>
+- body:price object
+- body:price.default integer
+- body:price.offer integer
+- body:productGroupId string
+- body:productId string
+- body:skuSellerId string
+- body:stock integer
+- body:title string
+- body:videos array<string>
+
+## S546-0014  PUT /products/prices
+desc: Allows bulk update of product prices. | Allows bulk update of product prices. This endpoint expects a json document with an array of products with the `skuSellerId` and the new price. Server will process each new product update individually and will ackwlodge as much updates as possible, even if a single product update fails. After this request you can query product final status with GET /product/
+schema: SellerItemPrices
+- body:price object
+- body:price.default integer
+- body:price.offer integer
+- body:skuSellerId string
+
+## S546-0015  PUT /products/status
+desc: Bulk enable/disable products in the marketplace | Bulk enable/disable products in the marketplace. This endpoint requires an array of objects with the seller SKU `skuSellerId` and boolean value that defines if the product is enabled or not for sale. This endpoint can be used to set a single product or many products.
+schema: ProductStatusUpdate
+- body:active boolean
+- body:skuSellerId string
+
+## S546-0016  PUT /products/stocks
+desc: Bulk product stock update | Bulk product stock update. This endpoint expect a array of products `skuSellerId` with new inventory data
+schema: ProductStock
+- body:skuSellerId string
+- body:stocks array<object>
+- body:stocks[].crossDockingTime integer
+- body:stocks[].quantity integer
+
+## S546-0017  POST /ticket
+desc: Creates a new trouble ticket | Use this service to create a new trouble ticket. Use this to include relevant information about the order, comunicate with the customer or marketplace team. Whenever possible message will be pushed to Mobile first. This is the primary mean of comunicaiton with the customer regarding orders, shippments, shippments status. New tickets will be automatically be set to 'O
+schema: NewTicket
+- body:body string
+- body:customer object
+- body:customer.name string
+- body:customer.phoneNumber string
+- body:description string
+- body:from string
+- body:message object
+- body:message.body string
+- body:message.visibility string
+- body:orderId string
+- body:type string
+
+## S546-0018  POST /ticket/{ticketId}/message
+desc: Add new message to trouble ticket | Add a new message to this trouble ticket. Messages can be `CUSTOMER` (customer will be able to see it) or `INTERNAL`.
+schema: NewTicketMessage
+- path:ticketId string
+- body:body string
+- body:visibility string
+
+## S546-0019  PUT /ticket/{ticketId}/status
+desc: Update trouble ticket status | Alows the seller to update the status of a trouble ticket
+schema: TicketStatus
+- path:ticketId string
+- body:ticketStatus string
+
+## S547-0001  POST /contentpro-similar-text
+desc: The /contentpro-similar-text endpoint accepts and arbitrary piece of text and returns similar articles and blogs written by companies.
+- body:text string
+
+## S549-0001  POST /setup/connection
+desc: Create or update a connection | Creates or updates the specified connection by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+
+## S549-0002  DELETE /setup/connection/{id}
+desc: Delete a connection | Permanently deletes a connection. It cannot be undone.
+- path:id string
+
+## S549-0003  POST /setup/connection_role
+desc: Create or update a connection role | Creates or updates the specified connection role by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+
+## S549-0004  DELETE /setup/connection_role/{id}
+desc: Delete a connection role. | Deletes the specified connection role.
+- path:id string
+
+## S549-0005  POST /setup/data_type/
+desc: Create or update a data type | Creates or updates the specified data type by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+
+## S549-0006  DELETE /setup/data_type/{id}
+desc: Delete a data type | Deletes the specified data type.
+- path:id string
+
+## S549-0007  POST /setup/flow/
+desc: Create or update a flow | Creates or updates the specified flow. Any parameters not provided will be left unchanged.
+
+## S549-0008  DELETE /setup/flow/{id}
+desc: Delete a flow. | Deletes the specified flow.
+- path:id string
+
+## S549-0009  POST /setup/namespace/
+desc: Create or update a namespace | Creates or updates the specified namespace. Any parameters not provided will be left unchanged.
+
+## S549-0010  DELETE /setup/namespace/{id}
+desc: Delete a namespace | Deletes the specified namespace.
+- path:id string
+
+## S549-0011  POST /setup/observer/
+desc: Create or update an event | Creates or updates the specified event observer. Any parameters not provided will be left unchanged.
+
+## S549-0012  DELETE /setup/observer/{id}
+desc: Delete an event | Deletes the specified event observer.
+- path:id string
+
+## S549-0013  POST /setup/scheduler/
+desc: Create or update an scheduler | Creates or updates the specified scheduler. Any parameters not provided will be left unchanged.
+
+## S549-0014  DELETE /setup/scheduler/{id}
+desc: Delete an schedule | Deletes the specified scheduler.
+- path:id string
+
+## S549-0015  POST /setup/schema/
+desc: Create or update an schema | Creates or updates the specified schema. Any parameters not provided will be left unchanged.
+
+## S549-0016  DELETE /setup/schema/{id}
+desc: Delete an schema. | Deletes the specified schema.
+- path:id string
+
+## S549-0017  POST /setup/translator/
+desc: Create or update a translator | Creates or updates the specified translator. Any parameters not provided will be left unchanged.
+
+## S549-0018  DELETE /setup/translator/{id}
+desc: Delete a translator | Deletes the specified translator.
+- path:id string
+
+## S549-0019  POST /setup/webhook/
+desc: Create or update a webhook | Creates or updates the specified webhook. Any parameters not provided will be left unchanged.
+
+## S549-0020  DELETE /setup/webhook/{id}
+desc: Delete a webhook | Deletes the specified webhook.
+- path:id string
+
+## S552-0001  POST /file
+desc: Faz o upload de um arquivo | Processa um arquivo CNAB para obter informações sobre o mesmo. Retorna um ID temporário para o mesmo.
+- body:file file
+
+## S554-0001  POST /api/v1/clips
+desc: create clip
+- body:end_time number
+- body:media_id string
+- body:name string
+- body:start_time number
+
+## S554-0002  DELETE /api/v1/clips/{id}
+desc: delete clip
+- path:id string
+
+## S554-0003  PUT /api/v1/clips/{id}
+desc: update clip
+- path:id string
+- body:end_time number
+- body:name string
+- body:start_time number
+
+## S554-0004  POST /api/v1/medias
+desc: create media
+- body:description string
+- body:name string
+- body:source_url string
+- body:upload_id string
+
+## S554-0005  DELETE /api/v1/medias/{id}
+desc: delete media
+- path:id string
+
+## S554-0006  PUT /api/v1/medias/{id}
+desc: update media
+- path:id string
+- body:description string
+- body:name string
+
+## S554-0007  POST /api/v1/webhook_subscriptions
+desc: create webhook subscription
+- body:subscribed_events array<any>
+- body:url string
+
+## S554-0008  DELETE /api/v1/webhook_subscriptions/{id}
+desc: delete webhook subscription
+- path:id string
+
+## S556-0001  POST /noauth/upload
+schema: UploadRequest
+- body:imageBase64Encoded string
+- body:imageSize integer
+- body:optimizeForPrint boolean
+- body:partnerId string
+- body:styleId string
+- body:useOriginalColors boolean
+
+## S559-0001  POST /make-pdf
+desc: Generate a PDF from HTML or URL.
+- body:html string
+- body:key string
+- body:url string
+
+## S560-0001  POST /v1/history/delete
+desc: Delete History Items | Delete a number of history items by their IDs.
+schema: Body_Delete_history_items_v1_history_delete_post
+- body:history_item_ids array<string>
+
+## S560-0002  POST /v1/history/download
+desc: Download History Items | Download one or more history items. If one history item ID is provided, we will return a single audio file. If more than one history item IDs are provided, we will provide the history items packed into a .zip file.
+schema: Body_Download_history_items_v1_history_download_post
+- body:history_item_ids array<string>
+
+## S560-0003  DELETE /v1/history/{history_item_id}
+desc: Delete History Item | Delete a history item by its ID
+- path:history_item_id string
+
+## S560-0004  POST /v1/text-to-speech/{voice_id}
+desc: Text To Speech | Converts text into speech using a voice of your choice and returns audio.
+schema: Body_Text_to_speech_v1_text_to_speech__voice_id__post
+- path:voice_id string
+- body:text string
+- body:voice_settings object
+- body:voice_settings.similarity_boost number
+- body:voice_settings.stability number
+
+## S560-0005  POST /v1/text-to-speech/{voice_id}/stream
+desc: Text To Speech | Converts text into speech using a voice of your choice and returns audio as an audio stream.
+schema: Body_Text_to_speech_v1_text_to_speech__voice_id__stream_post
+- path:voice_id string
+- body:text string
+- body:voice_settings object
+- body:voice_settings.similarity_boost number
+- body:voice_settings.stability number
+
+## S560-0006  POST /v1/voices/add
+desc: Add Voice | Add a new voice to your collection of voices in VoiceLab.
+schema: Body_Add_voice_v1_voices_add_post
+- body:description string
+- body:files array<string>
+- body:labels string
+- body:name string
+
+## S560-0007  DELETE /v1/voices/{voice_id}
+desc: Delete Voice | Deletes a voice by its ID.
+- path:voice_id string
+
+## S560-0008  POST /v1/voices/{voice_id}/edit
+desc: Edit Voice | Edit a voice created by you.
+schema: Body_Edit_voice_v1_voices__voice_id__edit_post
+- path:voice_id string
+- body:description string
+- body:files array<string>
+- body:labels string
+- body:name string
+
+## S560-0009  DELETE /v1/voices/{voice_id}/samples/{sample_id}
+desc: Delete Sample | Removes a sample by its ID.
+- path:voice_id string
+- path:sample_id string
+
+## S560-0010  POST /v1/voices/{voice_id}/settings/edit
+desc: Edit Voice Settings | Edit your settings for a specific voice. "similarity_boost" corresponds to"Clarity + Similarity Enhancement" in the web app and "stability" corresponds to "Stability" slider in the web app.
+schema: VoiceSettingsResponseModel
+- path:voice_id string
+- body:similarity_boost number
+- body:stability number
+
+## S561-0001  POST /v3/deployments
+desc: Create a new deployment. | Required permission: `deployments_write`
+schema: CreateDeployment
+- body:created string
+- body:description string
+- body:logId string
+- body:userEmail string
+- body:userName string
+- body:version string
+
+## S561-0002  DELETE /v3/deployments/{id}
+desc: Delete a deployment by its ID. | This endpoint doesn't clear the version number of messages already annotated with this deployment version.<br/><br/>Required permission: `deployments_delete`
+- path:id string
+
+## S561-0003  POST /v3/heartbeats/{logId}/{id}
+desc: Create a new heartbeat. | Required permission: `heartbeats_write`
+schema: CreateHeartbeat
+- path:id string
+- path:logId string
+- body:application string
+- body:reason string
+- body:result string
+- body:took integer
+- body:version string
+
+## S561-0004  POST /v3/logs
+desc: Create a new log. | Required permission: `logs_write`
+schema: CreateLog
+- body:name string

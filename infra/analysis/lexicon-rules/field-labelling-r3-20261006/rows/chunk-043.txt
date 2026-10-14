@@ -1,0 +1,708 @@
+## S561-0005  POST /v3/logs/{id}/_disable
+desc: Disable a log by its ID. | Required permission: `logs_write`
+- path:id string
+
+## S561-0006  POST /v3/logs/{id}/_enable
+desc: Enable a log by its ID. | Required permission: `logs_write`
+- path:id string
+
+## S561-0007  DELETE /v3/messages/{logId}
+desc: Deletes a list of messages by logid and query. | Required permission: `messages_delete`
+schema: Search
+- path:logId string
+- body:from string
+- body:query string
+- body:to string
+
+## S561-0008  POST /v3/messages/{logId}
+desc: Create a new message. | Required permission: `messages_write`
+schema: CreateMessage
+- path:logId string
+- body:application string
+- body:breadcrumbs array<object>
+- body:breadcrumbs[].action string
+- body:breadcrumbs[].dateTime string
+- body:breadcrumbs[].message string
+- body:breadcrumbs[].severity string
+- body:category string
+- body:code string
+- body:cookies array<object>
+- body:cookies[].key string
+- body:cookies[].value string
+- body:correlationId string
+- body:data array<object>
+- body:data[].key string
+- body:data[].value string
+- body:dateTime string
+- body:detail string
+- body:form array<object>
+- body:form[].key string
+- body:form[].value string
+- body:hostname string
+- body:method string
+- body:queryString array<object>
+- body:queryString[].key string
+- body:queryString[].value string
+- body:serverVariables array<object>
+- body:serverVariables[].key string
+- body:serverVariables[].value string
+- body:severity string
+- body:source string
+- body:statusCode integer
+- body:title string
+- body:titleTemplate string
+- body:type string
+- body:url string
+- body:user string
+- body:version string
+
+## S561-0009  POST /v3/messages/{logId}/_bulk
+desc: Create one or more new messages. | Required permission: `messages_write`
+schema: CreateMessage
+- path:logId string
+- body:application string
+- body:breadcrumbs array<object>
+- body:breadcrumbs[].action string
+- body:breadcrumbs[].dateTime string
+- body:breadcrumbs[].message string
+- body:breadcrumbs[].severity string
+- body:category string
+- body:code string
+- body:cookies array<object>
+- body:cookies[].key string
+- body:cookies[].value string
+- body:correlationId string
+- body:data array<object>
+- body:data[].key string
+- body:data[].value string
+- body:dateTime string
+- body:detail string
+- body:form array<object>
+- body:form[].key string
+- body:form[].value string
+- body:hostname string
+- body:method string
+- body:queryString array<object>
+- body:queryString[].key string
+- body:queryString[].value string
+- body:serverVariables array<object>
+- body:serverVariables[].key string
+- body:serverVariables[].value string
+- body:severity string
+- body:source string
+- body:statusCode integer
+- body:title string
+- body:titleTemplate string
+- body:type string
+- body:url string
+- body:user string
+- body:version string
+
+## S561-0010  POST /v3/messages/{logId}/_fix
+desc: Mark a list of messages as fixed by logid and query. | Required permission: `messages_write`
+schema: Search
+- path:logId string
+- body:from string
+- body:query string
+- body:to string
+
+## S561-0011  DELETE /v3/messages/{logId}/{id}
+desc: Delete a message by its ID. | Required permission: `messages_delete`
+- path:id string
+- path:logId string
+
+## S561-0012  POST /v3/messages/{logId}/{id}/_fix
+desc: Fix a message by its ID. | Required permission: `messages_write`
+- path:id string
+- path:logId string
+- query:markAllAsFixed boolean
+
+## S561-0013  POST /v3/messages/{logId}/{id}/_hide
+desc: Hide a message by its ID. | Required permission: `messages_write`
+- path:id string
+- path:logId string
+
+## S561-0014  POST /v3/sourcemaps/{logId}
+desc: Create or update a translation between a minified JavaScript path to the minified JavaScript and source map files. | Required permission: `sourcemaps_write`
+- path:logId string
+- body:MinifiedJavaScript string
+- body:Path string
+- body:SourceMap string
+
+## S564-0001  POST /v1/verification/send
+desc: Send an SMS with verification code and a custom message for authentication purpose.
+- query:country_code string
+- query:format string enum[json|xml]
+- query:tel string
+- query:key string
+- query:mesg string
+
+## S567-0001  POST /auth/jwt-token-refresh/
+desc: Refresh a JSON Web Token (JWT) | Obtains a new JSON Web Token using existing user credentials.
+schema: RefreshJSONWebTokenData
+- body:token string
+
+## S567-0002  POST /auth/jwt-token-verify/
+desc: Validate JSON Web Token (JWT) | Checks veraciy of token.
+schema: VerifyJSONWebTokenData
+- body:token string
+
+## S567-0003  POST /auth/register/
+desc: Register a user | User registration requires confirming email address to activate user.
+schema: UserData
+- body:email string
+- body:first_name string
+- body:last_name string
+- body:password string
+- body:profile object
+- body:profile.avatar string
+- body:profile.bio string
+- body:profile.company string
+- body:profile.location string
+- body:profile.timezone string
+- body:profile.url string
+- body:username string
+
+## S567-0004  POST /v1/servers/options/server-size/
+desc: Create a new server size item | Only super users with on-premises version have acceess to this endpoint.
+schema: ServerSizeData
+- body:active boolean
+- body:cpu integer
+- body:memory integer
+- body:name string
+
+## S567-0005  DELETE /v1/servers/options/server-size/{size}/
+desc: Delete a server size by id | Only super users with on-premises version have acceess to this endpoint.
+- path:size string
+
+## S567-0006  DELETE /v1/teams/{team}/
+desc: Delete a team
+- path:team string
+
+## S567-0007  DELETE /v1/teams/{team}/groups/{group}/
+desc: Delete team group
+- path:team string
+- path:group string
+
+## S567-0008  PATCH /v1/teams/{team}/groups/{group}/
+desc: Patch team group
+schema: GroupData
+- path:team string
+- path:group string
+- body:description string
+- body:name string
+- body:parent string
+- body:private boolean
+
+## S567-0009  PUT /v1/teams/{team}/groups/{group}/
+desc: Patch team group
+schema: GroupData
+- path:team string
+- path:group string
+- body:description string
+- body:name string
+- body:parent string
+- body:private boolean
+
+## S567-0010  POST /v1/teams/{team}/groups/{group}/remove/
+desc: User removed from group
+- path:team string
+- path:group string
+
+## S567-0011  POST /v1/users/profiles/
+desc: Create new user | Only admin users can create new users. New users have active status by default.
+schema: UserData
+- body:email string
+- body:first_name string
+- body:last_name string
+- body:password string
+- body:profile object
+- body:profile.avatar string
+- body:profile.bio string
+- body:profile.company string
+- body:profile.location string
+- body:profile.timezone string
+- body:profile.url string
+- body:username string
+
+## S567-0012  DELETE /v1/users/profiles/{user}/
+desc: Delete a user
+- path:user string
+
+## S567-0013  DELETE /v1/users/{user}/avatar/
+desc: Delete avatar
+- path:user string
+
+## S567-0014  POST /v1/users/{user}/avatar/
+desc: Add user avatar
+- path:user string
+
+## S567-0015  PATCH /v1/users/{user}/emails/{email_id}/
+desc: Update an email address
+schema: EmailData
+- path:email_id string
+- path:user string
+- body:address string
+- body:public boolean
+- body:unsubscribed boolean
+
+## S567-0016  PUT /v1/users/{user}/emails/{email_id}/
+desc: Replace an email address
+schema: EmailData
+- path:email_id string
+- path:user string
+- body:address string
+- body:public boolean
+- body:unsubscribed boolean
+
+## S567-0017  PATCH /v1/{namespace}/billing/cards/{id}/
+desc: Update a credit card
+schema: CardDataPutandPatch
+- path:namespace string
+- path:id string
+- body:address_city string
+- body:address_country string
+- body:address_line1 string
+- body:address_line2 string
+- body:address_state string
+- body:address_zip string
+- body:exp_month integer
+- body:exp_year integer
+- body:name string
+
+## S567-0018  PUT /v1/{namespace}/billing/cards/{id}/
+desc: Replace a credit card
+schema: CardDataPutandPatch
+- path:namespace string
+- path:id string
+- body:address_city string
+- body:address_country string
+- body:address_line1 string
+- body:address_line2 string
+- body:address_state string
+- body:address_zip string
+- body:exp_month integer
+- body:exp_year integer
+- body:name string
+
+## S567-0019  PATCH /v1/{namespace}/notifications/
+desc: Mark a list of notifications as either read or unread.
+schema: NotificationListUpdateData
+- path:namespace string
+- body:notifications array<string>
+- body:read boolean
+
+## S567-0020  PATCH /v1/{namespace}/notifications/entity/{entity}
+desc: Mark a list of notifications as either read or unread.
+schema: NotificationListUpdateData
+- path:namespace string
+- path:entity string enum[billing]
+- body:notifications array<string>
+- body:read boolean
+
+## S567-0021  POST /v1/{namespace}/notifications/settings/
+desc: Create global notification settings
+schema: NotificationSettingsData
+- path:namespace string
+- body:emails_enabled boolean
+- body:enabled boolean
+
+## S567-0022  PATCH /v1/{namespace}/notifications/{notification_id}
+desc: Mark a specific notification as either read or unread.
+schema: NotificationUpdateData
+- path:namespace string
+- path:notification_id string
+- body:read boolean
+
+## S567-0023  POST /v1/{namespace}/projects/project-copy/
+desc: Copy a project to your own account.
+- path:namespace string
+- body:name string
+- body:project string
+
+## S567-0024  PUT /v1/{namespace}/projects/{project}/
+desc: Replace a project
+schema: ProjectData
+- path:namespace string
+- path:project string
+- body:description string
+- body:name string
+- body:private boolean
+
+## S567-0025  DELETE /v1/{namespace}/projects/{project}/collaborators/{collaborator}/
+desc: Delete a project collaborator
+- path:project string
+- path:namespace string
+- path:collaborator string
+
+## S567-0026  PATCH /v1/{namespace}/projects/{project}/collaborators/{collaborator}/
+desc: Update project collaborator
+schema: CollaboratorData
+- path:project string
+- path:namespace string
+- path:collaborator string
+- body:member string
+- body:owner boolean
+- body:permissions string enum[read_project|write_project]
+
+## S567-0027  POST /v1/{namespace}/projects/{project}/deployments/
+desc: Create a new deployment
+schema: DeploymentData
+- path:project string
+- path:namespace string
+- body:config object
+- body:config.files array<string>
+- body:config.handler string
+- body:framework string enum[tensorflow]
+- body:name string
+- body:runtime string enum[python2.7]
+
+## S567-0028  PUT /v1/{namespace}/projects/{project}/deployments/{deployment}/
+desc: Replace a deployment
+schema: DeploymentData
+- path:project string
+- path:namespace string
+- path:deployment string
+- body:config object
+- body:config.files array<string>
+- body:config.handler string
+- body:framework string enum[tensorflow]
+- body:name string
+- body:runtime string enum[python2.7]
+
+## S567-0029  POST /v1/{namespace}/projects/{project}/deployments/{deployment}/deploy/
+desc: Deploy an existing model
+- path:project string
+- path:namespace string
+- path:deployment string
+
+## S567-0030  POST /v1/{namespace}/projects/{project}/servers/
+desc: Create a new server
+schema: ServerData
+- path:project string
+- path:namespace string
+- body:config object
+- body:config.command string
+- body:config.function string
+- body:config.script string
+- body:config.type string enum[jupyter|restful|cron]
+- body:connected array<string>
+- body:host string
+- body:image_name string
+- body:name string
+- body:server_size string
+- body:startup_script string
+
+## S567-0031  DELETE /v1/{namespace}/projects/{project}/servers/{server}/
+desc: Delete a server
+- path:project string
+- path:namespace string
+- path:server string
+
+## S567-0032  PUT /v1/{namespace}/projects/{project}/servers/{server}/
+desc: Replace a server
+schema: ServerData
+- path:project string
+- path:namespace string
+- path:server string
+- body:config object
+- body:config.command string
+- body:config.function string
+- body:config.script string
+- body:config.type string enum[jupyter|restful|cron]
+- body:connected array<string>
+- body:host string
+- body:image_name string
+- body:name string
+- body:server_size string
+- body:startup_script string
+
+## S567-0033  POST /v1/{namespace}/projects/{project}/servers/{server}/auth/
+desc: Server api key validation
+- path:project string
+- path:namespace string
+- path:server string
+
+## S567-0034  PATCH /v1/{namespace}/projects/{project}/servers/{server}/run-stats/{id}/
+desc: Update a server's statistics
+schema: ServerRunStatisticsData
+- path:server string
+- path:project string
+- path:namespace string
+- path:id string
+- body:exit_code integer
+- body:size integer
+- body:stacktrace string
+- body:start string
+- body:stop string
+
+## S567-0035  DELETE /v1/{namespace}/projects/{project}/servers/{server}/ssh-tunnels/{tunnel}/
+desc: Delete an SSH Tunnel associated to a server
+- path:server string
+- path:project string
+- path:namespace string
+- path:tunnel string
+
+## S567-0036  PATCH /v1/{namespace}/projects/{project}/servers/{server}/triggers/{trigger}/
+desc: Update a server trigger
+schema: ServerActionData
+- path:server string
+- path:project string
+- path:namespace string
+- path:trigger string
+- body:name string
+- body:operation string enum[start|stop|terminate]
+- body:webhook object
+- body:webhook.payload object
+- body:webhook.url string
+
+## S569-0001  DELETE /Devices
+desc: Deletes a device.
+- query:id string
+
+## S569-0002  POST /Dlna/{serverId}/MediaReceiverRegistrar/Control
+desc: Process a media receiver registrar control request.
+- path:serverId string
+
+## S569-0003  POST /Items/{itemId}/PlaybackInfo
+desc: Gets live playback media info for an item. | For backwards compatibility parameters can be sent via Query or Body, with Query having higher precedence.
+schema: PlaybackInfoDto
+- path:itemId string
+- query:userId string
+- query:maxStreamingBitrate integer
+- query:startTimeTicks integer
+- query:audioStreamIndex integer
+- query:subtitleStreamIndex integer
+- query:maxAudioChannels integer
+- query:mediaSourceId string
+- query:liveStreamId string
+- query:autoOpenLiveStream boolean
+- query:enableDirectPlay boolean
+- query:enableDirectStream boolean
+- query:enableTranscoding boolean
+- query:allowVideoStreamCopy boolean
+- query:allowAudioStreamCopy boolean
+- body:AllowAudioStreamCopy boolean
+- body:AllowVideoStreamCopy boolean
+- body:AudioStreamIndex integer
+- body:AutoOpenLiveStream boolean
+- body:DeviceProfile object
+- body:DeviceProfile.AlbumArtPn string
+- body:DeviceProfile.CodecProfiles array<object>
+- body:DeviceProfile.CodecProfiles[].ApplyConditions array<object>
+- body:DeviceProfile.CodecProfiles[].Codec string
+- body:DeviceProfile.CodecProfiles[].Conditions array<object>
+- body:DeviceProfile.CodecProfiles[].Container string
+- body:DeviceProfile.CodecProfiles[].Type string enum[Video|VideoAudio|Audio]
+- body:DeviceProfile.ContainerProfiles array<object>
+- body:DeviceProfile.ContainerProfiles[].Conditions array<object>
+- body:DeviceProfile.ContainerProfiles[].Container string
+- body:DeviceProfile.ContainerProfiles[].Type string enum[Audio|Video|Photo]
+- body:DeviceProfile.DirectPlayProfiles array<object>
+- body:DeviceProfile.DirectPlayProfiles[].AudioCodec string
+- body:DeviceProfile.DirectPlayProfiles[].Container string
+- body:DeviceProfile.DirectPlayProfiles[].Type string enum[Audio|Video|Photo]
+- body:DeviceProfile.DirectPlayProfiles[].VideoCodec string
+- body:DeviceProfile.EnableAlbumArtInDidl boolean
+- body:DeviceProfile.EnableMSMediaReceiverRegistrar boolean
+- body:DeviceProfile.EnableSingleAlbumArtLimit boolean
+- body:DeviceProfile.EnableSingleSubtitleLimit boolean
+- body:DeviceProfile.FriendlyName string
+- body:DeviceProfile.Id string
+- body:DeviceProfile.Identification object
+- body:DeviceProfile.Identification.FriendlyName string
+- body:DeviceProfile.Identification.Headers array<object>
+- body:DeviceProfile.Identification.Manufacturer string
+- body:DeviceProfile.Identification.ManufacturerUrl string
+- body:DeviceProfile.Identification.ModelDescription string
+- body:DeviceProfile.Identification.ModelName string
+- body:DeviceProfile.Identification.ModelNumber string
+- body:DeviceProfile.Identification.ModelUrl string
+- body:DeviceProfile.Identification.SerialNumber string
+- body:DeviceProfile.IgnoreTranscodeByteRangeRequests boolean
+- body:DeviceProfile.Manufacturer string
+- body:DeviceProfile.ManufacturerUrl string
+- body:DeviceProfile.MaxAlbumArtHeight integer
+- body:DeviceProfile.MaxAlbumArtWidth integer
+- body:DeviceProfile.MaxIconHeight integer
+- body:DeviceProfile.MaxIconWidth integer
+- body:DeviceProfile.MaxStaticBitrate integer
+- body:DeviceProfile.MaxStaticMusicBitrate integer
+- body:DeviceProfile.MaxStreamingBitrate integer
+- body:DeviceProfile.ModelDescription string
+- body:DeviceProfile.ModelName string
+- body:DeviceProfile.ModelNumber string
+- body:DeviceProfile.ModelUrl string
+- body:DeviceProfile.MusicStreamingTranscodingBitrate integer
+- body:DeviceProfile.Name string
+- body:DeviceProfile.ProtocolInfo string
+- body:DeviceProfile.RequiresPlainFolders boolean
+- body:DeviceProfile.RequiresPlainVideoItems boolean
+- body:DeviceProfile.ResponseProfiles array<object>
+- body:DeviceProfile.ResponseProfiles[].AudioCodec string
+- body:DeviceProfile.ResponseProfiles[].Conditions array<object>
+- body:DeviceProfile.ResponseProfiles[].Container string
+- body:DeviceProfile.ResponseProfiles[].MimeType string
+- body:DeviceProfile.ResponseProfiles[].OrgPn string
+- body:DeviceProfile.ResponseProfiles[].Type string enum[Audio|Video|Photo]
+- body:DeviceProfile.ResponseProfiles[].VideoCodec string
+- body:DeviceProfile.SerialNumber string
+(+39 fields cut)
+
+## S569-0004  POST /Library/VirtualFolders/Name
+desc: Renames a virtual folder.
+- query:name string
+- query:newName string
+- query:refreshLibrary boolean
+
+## S569-0005  POST /LiveTv/ListingProviders
+desc: Adds a listings provider.
+schema: ListingsProviderInfo
+- query:pw string
+- query:validateListings boolean
+- query:validateLogin boolean
+- body:ChannelMappings array<object>
+- body:ChannelMappings[].Name string
+- body:ChannelMappings[].Value string
+- body:Country string
+- body:EnableAllTuners boolean
+- body:EnabledTuners array<string>
+- body:Id string
+- body:KidsCategories array<string>
+- body:ListingsId string
+- body:MovieCategories array<string>
+- body:MoviePrefix string
+- body:NewsCategories array<string>
+- body:Password string
+- body:Path string
+- body:PreferredLanguage string
+- body:SportsCategories array<string>
+- body:Type string
+- body:UserAgent string
+- body:Username string
+- body:ZipCode string
+
+## S569-0006  POST /LiveTv/TunerHosts
+desc: Adds a tuner host.
+schema: TunerHostInfo
+- body:AllowHWTranscoding boolean
+- body:DeviceId string
+- body:EnableStreamLooping boolean
+- body:FriendlyName string
+- body:Id string
+- body:ImportFavoritesOnly boolean
+- body:Source string
+- body:TunerCount integer
+- body:Type string
+- body:Url string
+- body:UserAgent string
+
+## S569-0007  POST /Notifications/Admin
+desc: Sends a notification to all admins.
+- query:url string
+- query:level string enum[Normal|Warning|Error]
+- query:name string
+- query:description string
+
+## S569-0008  POST /Packages/Installed/{name}
+desc: Installs a package.
+- path:name string
+- query:assemblyGuid string
+- query:version string
+- query:repositoryUrl string
+
+## S569-0009  POST /Playlists
+desc: Creates a new playlist. | For backwards compatibility parameters can be sent via Query or Body, with Query having higher precedence.
+schema: CreatePlaylistDto
+- query:name string
+- query:ids array<string>
+- query:userId string
+- query:mediaType string
+- body:Ids array<string>
+- body:MediaType string
+- body:Name string
+- body:UserId string
+
+## S569-0010  DELETE /Plugins/{pluginId}/{version}
+desc: Uninstalls a plugin by version.
+- path:pluginId string
+- path:version object
+
+## S569-0011  POST /Plugins/{pluginId}/{version}/Enable
+desc: Enables a disabled plugin.
+- path:pluginId string
+- path:version object
+
+## S569-0012  POST /QuickConnect/Activate
+desc: Temporarily activates quick connect for five minutes.
+
+## S569-0013  POST /QuickConnect/Available
+desc: Enables or disables quick connect.
+- query:status string enum[Unavailable|Available|Active]
+
+## S569-0014  POST /QuickConnect/Deauthorize
+desc: Deauthorize all quick connect devices for the current user.
+
+## S569-0015  DELETE /ScheduledTasks/Running/{taskId}
+desc: Stop specified task.
+- path:taskId string
+
+## S569-0016  POST /Sessions/Logout
+desc: Reports that a session has ended.
+
+## S569-0017  POST /Sessions/{sessionId}/Command/{command}
+desc: Issues a general command to a client.
+- path:sessionId string
+- path:command string enum[MoveUp|MoveDown|MoveLeft|MoveRight|PageUp|PageDown|PreviousLetter|NextLetter|ToggleOsd|ToggleContextMenu|Select|Back]
+
+## S569-0018  POST /Sessions/{sessionId}/System/{command}
+desc: Issues a system command to a client.
+- path:sessionId string
+- path:command string enum[MoveUp|MoveDown|MoveLeft|MoveRight|PageUp|PageDown|PreviousLetter|NextLetter|ToggleOsd|ToggleContextMenu|Select|Back]
+
+## S569-0019  POST /Sessions/{sessionId}/User/{userId}
+desc: Adds an additional user to a session.
+- path:sessionId string
+- path:userId string
+
+## S569-0020  POST /SyncPlay/Leave
+desc: Leave the joined SyncPlay group.
+
+## S569-0021  POST /SyncPlay/MovePlaylistItem
+desc: Request to move an item in the playlist in SyncPlay group.
+schema: MovePlaylistItemRequestDto
+- body:NewIndex integer
+- body:PlaylistItemId string
+
+## S569-0022  POST /SyncPlay/NextItem
+desc: Request next item in SyncPlay group.
+schema: NextItemRequestDto
+- body:PlaylistItemId string
+
+## S569-0023  POST /SyncPlay/SetIgnoreWait
+desc: Request SyncPlay group to ignore member during group-wait.
+schema: IgnoreWaitRequestDto
+- body:IgnoreWait boolean
+
+## S569-0024  POST /SyncPlay/SetNewQueue
+desc: Request to set new playlist in SyncPlay group.
+schema: PlayRequestDto
+- body:PlayingItemPosition integer
+- body:PlayingQueue array<string>
+- body:StartPositionTicks integer
+
+## S569-0025  POST /SyncPlay/SetRepeatMode
+desc: Request to set repeat mode in SyncPlay group.
+schema: SetRepeatModeRequestDto
+- body:Mode string enum[RepeatOne|RepeatAll|RepeatNone]
+
+## S569-0026  POST /System/Ping
+desc: Pings the system.
+
+## S569-0027  POST /System/Shutdown
+desc: Shuts down the application.
+
+## S569-0028  POST /Users/AuthenticateWithQuickConnect
+desc: Authenticates a user with quick connect.
+schema: QuickConnectDto
+- body:Token string

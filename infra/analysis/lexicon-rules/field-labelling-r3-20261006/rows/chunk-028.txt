@@ -1,0 +1,2522 @@
+## S398-0002  POST /search/{versionNumber}/geometrySearch/{query}.{ext}
+desc: Geometry Search
+- path:versionNumber integer enum[2]
+- path:query string
+- path:ext string enum[json|jsonp|js|xml]
+- query:limit integer
+- query:language string
+- query:extendedPostalCodesFor string
+- query:idxSet string
+- body:geometryList array<object>
+- body:geometryList[].position string
+- body:geometryList[].radius integer
+- body:geometryList[].type string
+- body:geometryList[].vertices array<string>
+
+## S398-0003  POST /search/{versionNumber}/routedFilter/{position}/{heading}.{ext}
+desc: Routed Filter
+- path:versionNumber integer enum[2]
+- path:position string
+- path:heading number
+- path:ext string enum[json|jsonp|js|xml]
+- query:routingTimeout integer
+- body:poiList array<object>
+- body:poiList[].address object
+- body:poiList[].address.freeformAddress string
+- body:poiList[].poi object
+- body:poiList[].poi.name string
+- body:poiList[].position object
+- body:poiList[].position.lat number
+- body:poiList[].position.lon number
+
+## S398-0004  POST /search/{versionNumber}/searchAlongRoute/{query}.{ext}
+desc: Along Route Search
+- path:versionNumber integer enum[2]
+- path:query string
+- path:ext string enum[json|jsonp|js|xml]
+- query:maxDetourTime integer
+- query:limit integer
+- body:route object
+- body:route.points array<object>
+- body:route.points[].lat number
+- body:route.points[].lon number
+
+## S399-0001  DELETE /api/albums/comments/{commentId}
+- path:commentId integer
+
+## S399-0002  POST /api/albums/comments/{commentId}
+schema: CommentForApiContract
+- path:commentId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0003  DELETE /api/albums/{id}
+- path:id integer
+- query:notes string
+
+## S399-0004  DELETE /api/artists/comments/{commentId}
+- path:commentId integer
+
+## S399-0005  POST /api/artists/comments/{commentId}
+schema: CommentForApiContract
+- path:commentId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0006  DELETE /api/artists/{id}
+- path:id integer
+- query:notes string
+
+## S399-0007  DELETE /api/comments/{entryType}-comments/{commentId}
+- path:entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- path:commentId integer
+
+## S399-0008  POST /api/discussions/comments/{commentId}
+schema: CommentForApiContract
+- path:commentId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0009  POST /api/discussions/folders/{folderId}/topics
+schema: DiscussionTopicContract
+- path:folderId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:commentCount integer
+- body:comments array<object>
+- body:comments[].author object
+- body:comments[].author.active boolean
+- body:comments[].author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:comments[].author.id integer
+- body:comments[].author.knownLanguages array<object>
+- body:comments[].author.mainPicture object
+- body:comments[].author.memberSince string
+- body:comments[].author.name string
+- body:comments[].author.oldUsernames array<object>
+- body:comments[].author.verifiedArtist boolean
+- body:comments[].authorName string
+- body:comments[].created string
+- body:comments[].entry object
+- body:comments[].entry.activityDate string
+- body:comments[].entry.additionalNames string
+- body:comments[].entry.artistString string
+- body:comments[].entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:comments[].entry.createDate string
+- body:comments[].entry.defaultName string
+- body:comments[].entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:comments[].entry.description string
+- body:comments[].entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:comments[].entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:comments[].entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:comments[].entry.id integer
+- body:comments[].entry.mainPicture object
+- body:comments[].entry.name string
+- body:comments[].entry.names array<object>
+- body:comments[].entry.pvs array<object>
+- body:comments[].entry.releaseEventSeriesName string
+- body:comments[].entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:comments[].entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:comments[].entry.status string enum[Draft|Finished|Approved|Locked]
+- body:comments[].entry.tagCategoryName string
+- body:comments[].entry.tags array<object>
+- body:comments[].entry.urlSlug string
+- body:comments[].entry.version integer
+- body:comments[].entry.webLinks array<object>
+- body:comments[].id integer
+- body:comments[].message string
+- body:content string
+- body:created string
+- body:folderId integer
+- body:id integer
+- body:lastComment object
+- body:lastComment.author object
+- body:lastComment.author.active boolean
+- body:lastComment.author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:lastComment.author.id integer
+- body:lastComment.author.knownLanguages array<object>
+- body:lastComment.author.mainPicture object
+- body:lastComment.author.memberSince string
+- body:lastComment.author.name string
+- body:lastComment.author.oldUsernames array<object>
+- body:lastComment.author.verifiedArtist boolean
+- body:lastComment.authorName string
+- body:lastComment.created string
+(+30 fields cut)
+
+## S399-0010  POST /api/discussions/topics/{topicId}
+schema: DiscussionTopicContract
+- path:topicId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:commentCount integer
+- body:comments array<object>
+- body:comments[].author object
+- body:comments[].author.active boolean
+- body:comments[].author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:comments[].author.id integer
+- body:comments[].author.knownLanguages array<object>
+- body:comments[].author.mainPicture object
+- body:comments[].author.memberSince string
+- body:comments[].author.name string
+- body:comments[].author.oldUsernames array<object>
+- body:comments[].author.verifiedArtist boolean
+- body:comments[].authorName string
+- body:comments[].created string
+- body:comments[].entry object
+- body:comments[].entry.activityDate string
+- body:comments[].entry.additionalNames string
+- body:comments[].entry.artistString string
+- body:comments[].entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:comments[].entry.createDate string
+- body:comments[].entry.defaultName string
+- body:comments[].entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:comments[].entry.description string
+- body:comments[].entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:comments[].entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:comments[].entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:comments[].entry.id integer
+- body:comments[].entry.mainPicture object
+- body:comments[].entry.name string
+- body:comments[].entry.names array<object>
+- body:comments[].entry.pvs array<object>
+- body:comments[].entry.releaseEventSeriesName string
+- body:comments[].entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:comments[].entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:comments[].entry.status string enum[Draft|Finished|Approved|Locked]
+- body:comments[].entry.tagCategoryName string
+- body:comments[].entry.tags array<object>
+- body:comments[].entry.urlSlug string
+- body:comments[].entry.version integer
+- body:comments[].entry.webLinks array<object>
+- body:comments[].id integer
+- body:comments[].message string
+- body:content string
+- body:created string
+- body:folderId integer
+- body:id integer
+- body:lastComment object
+- body:lastComment.author object
+- body:lastComment.author.active boolean
+- body:lastComment.author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:lastComment.author.id integer
+- body:lastComment.author.knownLanguages array<object>
+- body:lastComment.author.mainPicture object
+- body:lastComment.author.memberSince string
+- body:lastComment.author.name string
+- body:lastComment.author.oldUsernames array<object>
+- body:lastComment.author.verifiedArtist boolean
+- body:lastComment.authorName string
+- body:lastComment.created string
+(+30 fields cut)
+
+## S399-0011  POST /api/discussions/topics/{topicId}/comments
+schema: CommentForApiContract
+- path:topicId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0012  DELETE /api/releaseEventSeries/{id}
+- path:id integer
+- query:notes string
+- query:hardDelete boolean
+
+## S399-0013  POST /api/releaseEvents/{eventId}/reports
+- path:eventId integer
+- query:reportType string enum[InvalidInfo|Duplicate|Inappropriate|Other]
+- query:notes string
+- query:versionNumber integer
+
+## S399-0014  POST /api/songLists
+schema: SongListForEditForApiContract
+- body:deleted boolean
+- body:description string
+- body:eventDate string
+- body:featuredCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:id integer
+- body:mainPicture object
+- body:mainPicture.mime string
+- body:mainPicture.name string
+- body:mainPicture.urlOriginal string
+- body:mainPicture.urlSmallThumb string
+- body:mainPicture.urlThumb string
+- body:mainPicture.urlTinyThumb string
+- body:name string
+- body:songLinks array<object>
+- body:songLinks[].notes string
+- body:songLinks[].order integer
+- body:songLinks[].song object
+- body:songLinks[].song.additionalNames string
+- body:songLinks[].song.albums array<object>
+- body:songLinks[].song.artistString string
+- body:songLinks[].song.artists array<object>
+- body:songLinks[].song.createDate string
+- body:songLinks[].song.defaultName string
+- body:songLinks[].song.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:songLinks[].song.deleted boolean
+- body:songLinks[].song.favoritedTimes integer
+- body:songLinks[].song.id integer
+- body:songLinks[].song.lengthSeconds integer
+- body:songLinks[].song.lyrics array<object>
+- body:songLinks[].song.mainPicture object
+- body:songLinks[].song.maxMilliBpm integer
+- body:songLinks[].song.mergedTo integer
+- body:songLinks[].song.minMilliBpm integer
+- body:songLinks[].song.name string
+- body:songLinks[].song.names array<object>
+- body:songLinks[].song.originalVersionId integer
+- body:songLinks[].song.publishDate string
+- body:songLinks[].song.pvServices string enum[Nothing|NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:songLinks[].song.pvs array<object>
+- body:songLinks[].song.ratingScore integer
+- body:songLinks[].song.releaseEvent object
+- body:songLinks[].song.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:songLinks[].song.status string enum[Draft|Finished|Approved|Locked]
+- body:songLinks[].song.tags array<object>
+- body:songLinks[].song.thumbUrl string
+- body:songLinks[].song.version integer
+- body:songLinks[].song.webLinks array<object>
+- body:songLinks[].songInListId integer
+- body:status string enum[Draft|Finished|Approved|Locked]
+- body:updateNotes string
+
+## S399-0015  POST /api/songLists/comments/{commentId}
+schema: CommentForApiContract
+- path:commentId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0016  DELETE /api/songLists/{id}
+- path:id integer
+- query:notes string
+- query:hardDelete boolean
+
+## S399-0017  POST /api/songLists/{listId}/comments
+schema: CommentForApiContract
+- path:listId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0018  POST /api/songs/comments/{commentId}
+schema: CommentForApiContract
+- path:commentId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0019  DELETE /api/songs/{id}
+- path:id integer
+- query:notes string
+
+## S399-0020  POST /api/songs/{id}/comments
+schema: CommentForApiContract
+- path:id integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0021  POST /api/songs/{id}/ratings
+schema: SongRatingContract
+- path:id integer
+- body:rating string enum[Nothing|Dislike|Like|Favorite]
+
+## S399-0022  POST /api/tags
+- query:name string
+
+## S399-0023  DELETE /api/tags/comments/{commentId}
+- path:commentId integer
+
+## S399-0024  DELETE /api/tags/{id}
+- path:id integer
+- query:notes string
+- query:hardDelete boolean
+
+## S399-0025  POST /api/tags/{tagId}/comments
+schema: CommentForApiContract
+- path:tagId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0026  DELETE /api/users/current/followedTags/{tagId}
+- path:tagId integer
+
+## S399-0027  POST /api/users/current/followedTags/{tagId}
+- path:tagId integer
+
+## S399-0028  POST /api/users/current/refreshEntryEdit
+- query:entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- query:entryId integer
+
+## S399-0029  POST /api/users/current/songTags/{songId}
+- path:songId integer
+
+## S399-0030  DELETE /api/users/profileComments/{commentId}
+- path:commentId integer
+
+## S399-0031  POST /api/users/profileComments/{commentId}
+schema: CommentForApiContract
+- path:commentId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0032  DELETE /api/users/{id}/messages
+- path:id integer
+- query:messageId array<integer>
+
+## S399-0033  POST /api/users/{id}/profileComments
+schema: CommentForApiContract
+- path:id integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0034  POST /api/users/{id}/reports
+schema: CreateReportModel
+- path:id integer
+- body:reason string
+- body:reportType string enum[MaliciousIP|Spamming|RemovePermissions|Other]
+
+## S399-0035  POST /api/users/{id}/settings/{settingName}
+- path:id integer
+- path:settingName string
+- body:(body) string
+
+## S399-0036  POST /api/venues/{id}/reports
+- path:id integer
+- query:reportType string enum[InvalidInfo|Duplicate|Inappropriate|Other]
+- query:notes string
+- query:versionNumber integer
+
+## S400-0001  POST /api/v1/namespaces
+desc: create a Namespace
+schema: io.k8s.api.core.v1.Namespace
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.finalizers array<string>
+- body:status object
+- body:status.conditions array<object>
+- body:status.conditions[].lastTransitionTime string
+- body:status.conditions[].message string
+- body:status.conditions[].reason string
+- body:status.conditions[].status string
+- body:status.conditions[].type string
+- body:status.phase string
+
+## S400-0002  DELETE /api/v1/namespaces/{namespace}/configmaps/{name}
+desc: delete a ConfigMap
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:gracePeriodSeconds integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-0003  POST /api/v1/namespaces/{namespace}/pods/{name}/binding
+desc: create binding of a Pod
+schema: io.k8s.api.core.v1.Binding
+- path:name string
+- path:namespace string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:pretty string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:target object
+- body:target.apiVersion string
+- body:target.fieldPath string
+- body:target.kind string
+- body:target.name string
+- body:target.namespace string
+- body:target.resourceVersion string
+- body:target.uid string
+
+## S400-0004  PATCH /api/v1/namespaces/{namespace}/replicationcontrollers/{name}/scale
+desc: partially update scale of the specified ReplicationController
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-0005  PUT /api/v1/namespaces/{namespace}/replicationcontrollers/{name}/status
+desc: replace status of the specified ReplicationController
+schema: io.k8s.api.core.v1.ReplicationController
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.minReadySeconds integer
+- body:spec.replicas integer
+- body:spec.selector object
+- body:spec.template object
+- body:spec.template.metadata object
+- body:spec.template.spec object
+- body:status object
+- body:status.availableReplicas integer
+- body:status.conditions array<object>
+- body:status.conditions[].lastTransitionTime string
+- body:status.conditions[].message string
+- body:status.conditions[].reason string
+- body:status.conditions[].status string
+- body:status.conditions[].type string
+- body:status.fullyLabeledReplicas integer
+- body:status.observedGeneration integer
+- body:status.readyReplicas integer
+- body:status.replicas integer
+
+## S400-0006  POST /api/v1/namespaces/{namespace}/serviceaccounts
+desc: create a ServiceAccount
+schema: io.k8s.api.core.v1.ServiceAccount
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:automountServiceAccountToken boolean
+- body:imagePullSecrets array<object>
+- body:imagePullSecrets[].name string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:secrets array<object>
+- body:secrets[].apiVersion string
+- body:secrets[].fieldPath string
+- body:secrets[].kind string
+- body:secrets[].name string
+- body:secrets[].namespace string
+- body:secrets[].resourceVersion string
+- body:secrets[].uid string
+
+## S400-0007  DELETE /api/v1/namespaces/{namespace}/serviceaccounts/{name}
+desc: delete a ServiceAccount
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:gracePeriodSeconds integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-0008  DELETE /api/v1/namespaces/{namespace}/services/{name}
+desc: delete a Service
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:gracePeriodSeconds integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-0009  PUT /api/v1/namespaces/{namespace}/services/{name}
+desc: replace the specified Service
+schema: io.k8s.api.core.v1.Service
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.allocateLoadBalancerNodePorts boolean
+- body:spec.clusterIP string
+- body:spec.clusterIPs array<string>
+- body:spec.externalIPs array<string>
+- body:spec.externalName string
+- body:spec.externalTrafficPolicy string
+- body:spec.healthCheckNodePort integer
+- body:spec.internalTrafficPolicy string
+- body:spec.ipFamilies array<string>
+- body:spec.ipFamilyPolicy string
+- body:spec.loadBalancerClass string
+- body:spec.loadBalancerIP string
+- body:spec.loadBalancerSourceRanges array<string>
+- body:spec.ports array<object>
+- body:spec.ports[].appProtocol string
+- body:spec.ports[].name string
+- body:spec.ports[].nodePort integer
+- body:spec.ports[].port integer
+- body:spec.ports[].protocol string
+- body:spec.ports[].targetPort string
+- body:spec.publishNotReadyAddresses boolean
+- body:spec.selector object
+- body:spec.sessionAffinity string
+- body:spec.sessionAffinityConfig object
+- body:spec.sessionAffinityConfig.clientIP object
+- body:spec.type string
+- body:status object
+- body:status.conditions array<object>
+- body:status.conditions[].lastTransitionTime string
+- body:status.conditions[].message string
+- body:status.conditions[].observedGeneration integer
+- body:status.conditions[].reason string
+- body:status.conditions[].status string
+- body:status.conditions[].type string
+- body:status.loadBalancer object
+- body:status.loadBalancer.ingress array<object>
+
+## S400-0010  PUT /api/v1/namespaces/{namespace}/services/{name}/proxy/{path}
+desc: connect PUT requests to proxy of Service
+- path:name string
+- path:namespace string
+- path:path string
+- query:path string
+
+## S400-0011  PUT /api/v1/namespaces/{namespace}/services/{name}/status
+desc: replace status of the specified Service
+schema: io.k8s.api.core.v1.Service
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.allocateLoadBalancerNodePorts boolean
+- body:spec.clusterIP string
+- body:spec.clusterIPs array<string>
+- body:spec.externalIPs array<string>
+- body:spec.externalName string
+- body:spec.externalTrafficPolicy string
+- body:spec.healthCheckNodePort integer
+- body:spec.internalTrafficPolicy string
+- body:spec.ipFamilies array<string>
+- body:spec.ipFamilyPolicy string
+- body:spec.loadBalancerClass string
+- body:spec.loadBalancerIP string
+- body:spec.loadBalancerSourceRanges array<string>
+- body:spec.ports array<object>
+- body:spec.ports[].appProtocol string
+- body:spec.ports[].name string
+- body:spec.ports[].nodePort integer
+- body:spec.ports[].port integer
+- body:spec.ports[].protocol string
+- body:spec.ports[].targetPort string
+- body:spec.publishNotReadyAddresses boolean
+- body:spec.selector object
+- body:spec.sessionAffinity string
+- body:spec.sessionAffinityConfig object
+- body:spec.sessionAffinityConfig.clientIP object
+- body:spec.type string
+- body:status object
+- body:status.conditions array<object>
+- body:status.conditions[].lastTransitionTime string
+- body:status.conditions[].message string
+- body:status.conditions[].observedGeneration integer
+- body:status.conditions[].reason string
+- body:status.conditions[].status string
+- body:status.conditions[].type string
+- body:status.loadBalancer object
+- body:status.loadBalancer.ingress array<object>
+
+## S400-0012  PATCH /api/v1/namespaces/{name}/status
+desc: partially update status of the specified Namespace
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-0013  DELETE /api/v1/nodes
+desc: delete collection of Node
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- query:pretty string
+- query:continue string
+- query:dryRun string
+- query:fieldSelector string
+- query:gracePeriodSeconds integer
+- query:labelSelector string
+- query:limit integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- query:resourceVersion string
+- query:resourceVersionMatch string
+- query:sendInitialEvents boolean
+- query:timeoutSeconds integer
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-0014  PATCH /api/v1/persistentvolumes/{name}/status
+desc: partially update status of the specified PersistentVolume
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-0015  PUT /api/v1/persistentvolumes/{name}/status
+desc: replace status of the specified PersistentVolume
+schema: io.k8s.api.core.v1.PersistentVolume
+- path:name string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.accessModes array<string>
+- body:spec.awsElasticBlockStore object
+- body:spec.awsElasticBlockStore.fsType string
+- body:spec.awsElasticBlockStore.partition integer
+- body:spec.awsElasticBlockStore.readOnly boolean
+- body:spec.awsElasticBlockStore.volumeID string
+- body:spec.azureDisk object
+- body:spec.azureDisk.cachingMode string
+- body:spec.azureDisk.diskName string
+- body:spec.azureDisk.diskURI string
+- body:spec.azureDisk.fsType string
+- body:spec.azureDisk.kind string
+- body:spec.azureDisk.readOnly boolean
+- body:spec.azureFile object
+- body:spec.azureFile.readOnly boolean
+- body:spec.azureFile.secretName string
+- body:spec.azureFile.secretNamespace string
+- body:spec.azureFile.shareName string
+- body:spec.capacity object
+- body:spec.cephfs object
+- body:spec.cephfs.monitors array<string>
+- body:spec.cephfs.path string
+- body:spec.cephfs.readOnly boolean
+- body:spec.cephfs.secretFile string
+- body:spec.cephfs.secretRef object
+- body:spec.cephfs.user string
+- body:spec.cinder object
+- body:spec.cinder.fsType string
+- body:spec.cinder.readOnly boolean
+- body:spec.cinder.secretRef object
+- body:spec.cinder.volumeID string
+- body:spec.claimRef object
+- body:spec.claimRef.apiVersion string
+- body:spec.claimRef.fieldPath string
+- body:spec.claimRef.kind string
+- body:spec.claimRef.name string
+- body:spec.claimRef.namespace string
+- body:spec.claimRef.resourceVersion string
+- body:spec.claimRef.uid string
+- body:spec.csi object
+- body:spec.csi.controllerExpandSecretRef object
+- body:spec.csi.controllerPublishSecretRef object
+- body:spec.csi.driver string
+(+109 fields cut)
+
+## S400-0016  PATCH /apis/admissionregistration.k8s.io/v1/mutatingwebhookconfigurations/{name}
+desc: partially update the specified MutatingWebhookConfiguration
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-0017  POST /apis/apiregistration.k8s.io/v1/apiservices
+desc: create an APIService
+schema: io.k8s.kube-aggregator.pkg.apis.apiregistration.v1.APIService
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.caBundle string
+- body:spec.group string
+- body:spec.groupPriorityMinimum integer
+- body:spec.insecureSkipTLSVerify boolean
+- body:spec.service object
+- body:spec.service.name string
+- body:spec.service.namespace string
+- body:spec.service.port integer
+- body:spec.version string
+- body:spec.versionPriority integer
+- body:status object
+- body:status.conditions array<object>
+- body:status.conditions[].lastTransitionTime string
+- body:status.conditions[].message string
+- body:status.conditions[].reason string
+- body:status.conditions[].status string
+- body:status.conditions[].type string
+
+## S400-0018  DELETE /apis/apps/v1/namespaces/{namespace}/controllerrevisions/{name}
+desc: delete a ControllerRevision
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:gracePeriodSeconds integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-0019  PUT /apis/apps/v1/namespaces/{namespace}/daemonsets/{name}
+desc: replace the specified DaemonSet
+schema: io.k8s.api.apps.v1.DaemonSet
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.minReadySeconds integer
+- body:spec.revisionHistoryLimit integer
+- body:spec.selector object
+- body:spec.selector.matchExpressions array<object>
+- body:spec.selector.matchLabels object
+- body:spec.template object
+- body:spec.template.metadata object
+- body:spec.template.spec object
+- body:spec.updateStrategy object
+- body:spec.updateStrategy.rollingUpdate object
+- body:spec.updateStrategy.type string
+- body:status object
+- body:status.collisionCount integer
+- body:status.conditions array<object>
+- body:status.conditions[].lastTransitionTime string
+- body:status.conditions[].message string
+- body:status.conditions[].reason string
+- body:status.conditions[].status string
+- body:status.conditions[].type string
+- body:status.currentNumberScheduled integer
+- body:status.desiredNumberScheduled integer
+- body:status.numberAvailable integer
+- body:status.numberMisscheduled integer
+- body:status.numberReady integer
+- body:status.numberUnavailable integer
+- body:status.observedGeneration integer
+- body:status.updatedNumberScheduled integer
+
+## S400-0020  PATCH /apis/apps/v1/namespaces/{namespace}/statefulsets/{name}/scale
+desc: partially update scale of the specified StatefulSet
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-0021  POST /apis/authorization.k8s.io/v1/selfsubjectaccessreviews
+desc: create a SelfSubjectAccessReview
+schema: io.k8s.api.authorization.v1.SelfSubjectAccessReview
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:pretty string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.nonResourceAttributes object
+- body:spec.nonResourceAttributes.path string
+- body:spec.nonResourceAttributes.verb string
+- body:spec.resourceAttributes object
+- body:spec.resourceAttributes.group string
+- body:spec.resourceAttributes.name string
+- body:spec.resourceAttributes.namespace string
+- body:spec.resourceAttributes.resource string
+- body:spec.resourceAttributes.subresource string
+- body:spec.resourceAttributes.verb string
+- body:spec.resourceAttributes.version string
+- body:status object
+- body:status.allowed boolean
+- body:status.denied boolean
+- body:status.evaluationError string
+- body:status.reason string
+
+## S400-0022  DELETE /apis/autoscaling/v2/namespaces/{namespace}/horizontalpodautoscalers
+desc: delete collection of HorizontalPodAutoscaler
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:namespace string
+- query:pretty string
+- query:continue string
+- query:dryRun string
+- query:fieldSelector string
+- query:gracePeriodSeconds integer
+- query:labelSelector string
+- query:limit integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- query:resourceVersion string
+- query:resourceVersionMatch string
+- query:sendInitialEvents boolean
+- query:timeoutSeconds integer
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-0023  PATCH /apis/autoscaling/v2/namespaces/{namespace}/horizontalpodautoscalers/{name}
+desc: partially update the specified HorizontalPodAutoscaler
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-0024  POST /apis/batch/v1/namespaces/{namespace}/jobs
+desc: create a Job
+schema: io.k8s.api.batch.v1.Job
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.activeDeadlineSeconds integer
+- body:spec.backoffLimit integer
+- body:spec.completionMode string
+- body:spec.completions integer
+- body:spec.manualSelector boolean
+- body:spec.parallelism integer
+- body:spec.podFailurePolicy object
+- body:spec.podFailurePolicy.rules array<object>
+- body:spec.selector object
+- body:spec.selector.matchExpressions array<object>
+- body:spec.selector.matchLabels object
+- body:spec.suspend boolean
+- body:spec.template object
+- body:spec.template.metadata object
+- body:spec.template.spec object
+- body:spec.ttlSecondsAfterFinished integer
+- body:status object
+- body:status.active integer
+- body:status.completedIndexes string
+- body:status.completionTime string
+- body:status.conditions array<object>
+- body:status.conditions[].lastProbeTime string
+- body:status.conditions[].lastTransitionTime string
+- body:status.conditions[].message string
+- body:status.conditions[].reason string
+- body:status.conditions[].status string
+- body:status.conditions[].type string
+- body:status.failed integer
+- body:status.ready integer
+- body:status.startTime string
+- body:status.succeeded integer
+- body:status.uncountedTerminatedPods object
+- body:status.uncountedTerminatedPods.failed array<string>
+- body:status.uncountedTerminatedPods.succeeded array<string>
+
+## S400-0025  PUT /apis/certificates.k8s.io/v1/certificatesigningrequests/{name}/status
+desc: replace status of the specified CertificateSigningRequest
+schema: io.k8s.api.certificates.v1.CertificateSigningRequest
+- path:name string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.expirationSeconds integer
+- body:spec.extra object
+- body:spec.groups array<string>
+- body:spec.request string
+- body:spec.signerName string
+- body:spec.uid string
+- body:spec.usages array<string>
+- body:spec.username string
+- body:status object
+- body:status.certificate string
+- body:status.conditions array<object>
+- body:status.conditions[].lastTransitionTime string
+- body:status.conditions[].lastUpdateTime string
+- body:status.conditions[].message string
+- body:status.conditions[].reason string
+- body:status.conditions[].status string
+- body:status.conditions[].type string
+
+## S400-0026  PUT /apis/coordination.k8s.io/v1/namespaces/{namespace}/leases/{name}
+desc: replace the specified Lease
+schema: io.k8s.api.coordination.v1.Lease
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.acquireTime string
+- body:spec.holderIdentity string
+- body:spec.leaseDurationSeconds integer
+- body:spec.leaseTransitions integer
+- body:spec.renewTime string
+
+## S400-0027  DELETE /apis/discovery.k8s.io/v1/namespaces/{namespace}/endpointslices/{name}
+desc: delete an EndpointSlice
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:gracePeriodSeconds integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-0028  PATCH /apis/discovery.k8s.io/v1/namespaces/{namespace}/endpointslices/{name}
+desc: partially update the specified EndpointSlice
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- path:namespace string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-0029  DELETE /apis/flowcontrol.apiserver.k8s.io/v1beta2/prioritylevelconfigurations
+desc: delete collection of PriorityLevelConfiguration
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- query:pretty string
+- query:continue string
+- query:dryRun string
+- query:fieldSelector string
+- query:gracePeriodSeconds integer
+- query:labelSelector string
+- query:limit integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- query:resourceVersion string
+- query:resourceVersionMatch string
+- query:sendInitialEvents boolean
+- query:timeoutSeconds integer
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-0030  PUT /apis/flowcontrol.apiserver.k8s.io/v1beta2/prioritylevelconfigurations/{name}
+desc: replace the specified PriorityLevelConfiguration
+schema: io.k8s.api.flowcontrol.v1beta2.PriorityLevelConfiguration
+- path:name string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:spec object
+- body:spec.limited object
+- body:spec.limited.assuredConcurrencyShares integer
+- body:spec.limited.borrowingLimitPercent integer
+- body:spec.limited.lendablePercent integer
+- body:spec.limited.limitResponse object
+- body:spec.type string
+- body:status object
+- body:status.conditions array<object>
+- body:status.conditions[].lastTransitionTime string
+- body:status.conditions[].message string
+- body:status.conditions[].reason string
+- body:status.conditions[].status string
+- body:status.conditions[].type string
+
+## S400-0031  PATCH /apis/flowcontrol.apiserver.k8s.io/v1beta3/prioritylevelconfigurations/{name}
+desc: partially update the specified PriorityLevelConfiguration
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-0032  DELETE /apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings
+desc: delete collection of RoleBinding
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:namespace string
+- query:pretty string
+- query:continue string
+- query:dryRun string
+- query:fieldSelector string
+- query:gracePeriodSeconds integer
+- query:labelSelector string
+- query:limit integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- query:resourceVersion string
+- query:resourceVersionMatch string
+- query:sendInitialEvents boolean
+- query:timeoutSeconds integer
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-0033  POST /apis/resource.k8s.io/v1alpha1/resourceclasses
+desc: create a ResourceClass
+schema: io.k8s.api.resource.v1alpha1.ResourceClass
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- body:apiVersion string
+- body:driverName string
+- body:kind string
+- body:metadata object
+- body:metadata.annotations object
+- body:metadata.creationTimestamp string
+- body:metadata.deletionGracePeriodSeconds integer
+- body:metadata.deletionTimestamp string
+- body:metadata.finalizers array<string>
+- body:metadata.generateName string
+- body:metadata.generation integer
+- body:metadata.labels object
+- body:metadata.managedFields array<object>
+- body:metadata.managedFields[].apiVersion string
+- body:metadata.managedFields[].fieldsType string
+- body:metadata.managedFields[].fieldsV1 object
+- body:metadata.managedFields[].manager string
+- body:metadata.managedFields[].operation string
+- body:metadata.managedFields[].subresource string
+- body:metadata.managedFields[].time string
+- body:metadata.name string
+- body:metadata.namespace string
+- body:metadata.ownerReferences array<object>
+- body:metadata.ownerReferences[].apiVersion string
+- body:metadata.ownerReferences[].blockOwnerDeletion boolean
+- body:metadata.ownerReferences[].controller boolean
+- body:metadata.ownerReferences[].kind string
+- body:metadata.ownerReferences[].name string
+- body:metadata.ownerReferences[].uid string
+- body:metadata.resourceVersion string
+- body:metadata.selfLink string
+- body:metadata.uid string
+- body:parametersRef object
+- body:parametersRef.apiGroup string
+- body:parametersRef.kind string
+- body:parametersRef.name string
+- body:parametersRef.namespace string
+- body:suitableNodes object
+- body:suitableNodes.nodeSelectorTerms array<object>
+- body:suitableNodes.nodeSelectorTerms[].matchExpressions array<object>
+- body:suitableNodes.nodeSelectorTerms[].matchFields array<object>
+
+## S400-0034  DELETE /apis/storage.k8s.io/v1/storageclasses/{name}
+desc: delete a StorageClass
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:name string
+- query:pretty string
+- query:dryRun string
+- query:gracePeriodSeconds integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string
+
+## S400-0035  PATCH /apis/storage.k8s.io/v1/volumeattachments/{name}
+desc: partially update the specified VolumeAttachment
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.Patch
+- path:name string
+- query:pretty string
+- query:dryRun string
+- query:fieldManager string
+- query:fieldValidation string
+- query:force boolean
+- body:(body) object
+
+## S400-0036  DELETE /apis/storage.k8s.io/v1beta1/namespaces/{namespace}/csistoragecapacities
+desc: delete collection of CSIStorageCapacity
+schema: io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions
+- path:namespace string
+- query:pretty string
+- query:continue string
+- query:dryRun string
+- query:fieldSelector string
+- query:gracePeriodSeconds integer
+- query:labelSelector string
+- query:limit integer
+- query:orphanDependents boolean
+- query:propagationPolicy string
+- query:resourceVersion string
+- query:resourceVersionMatch string
+- query:sendInitialEvents boolean
+- query:timeoutSeconds integer
+- body:apiVersion string
+- body:dryRun array<string>
+- body:gracePeriodSeconds integer
+- body:kind string
+- body:orphanDependents boolean
+- body:preconditions object
+- body:preconditions.resourceVersion string
+- body:preconditions.uid string
+- body:propagationPolicy string

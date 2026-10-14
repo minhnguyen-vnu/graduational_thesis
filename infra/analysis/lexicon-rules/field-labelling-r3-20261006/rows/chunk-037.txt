@@ -1,0 +1,570 @@
+## S517-0034  PUT /virtualization/cluster-groups/
+schema: ClusterGroup
+- body:cluster_count integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:slug string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-0035  PUT /wireless/wireless-lan-groups/{id}/
+schema: WritableWirelessLANGroup
+- path:id integer
+- body:_depth integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:parent integer
+- body:slug string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+- body:wirelesslan_count integer
+
+## S517-0036  POST /wireless/wireless-links/
+schema: WritableWirelessLink
+- body:auth_cipher string enum[auto|tkip|aes]
+- body:auth_psk string
+- body:auth_type string enum[open|wep|wpa-personal|wpa-enterprise]
+- body:comments string
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:interface_a integer
+- body:interface_b integer
+- body:last_updated string
+- body:ssid string
+- body:status string enum[connected|planned|decommissioning]
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:tenant integer
+- body:url string
+
+## S518-0001  POST /license
+desc: Create License | Creates a new License
+- body:active boolean
+- body:currency string
+- body:hidden boolean
+- body:licenseTemplateNumber string
+- body:licenseeNumber string
+- body:name string
+- body:number string
+- body:parentfeature string
+- body:price number
+- body:quantity string
+- body:startDate string
+- body:timeVolume string
+- body:timeVolumePeriod string
+- body:usedQuantity string
+
+## S518-0002  DELETE /license/{licenseNumber}
+desc: Delete License | Delete License by a 'licenseNumber'
+- path:licenseNumber string
+
+## S518-0003  POST /license/{licenseNumber}
+desc: Update License | Update License by a 'licenseNumber'
+- path:licenseNumber string
+- body:active boolean
+- body:currency string
+- body:hidden boolean
+- body:name string
+- body:number string
+- body:parentfeature string
+- body:price number
+- body:quantity string
+- body:startDate string
+- body:timeVolume string
+- body:timeVolumePeriod string
+- body:usedQuantity string
+
+## S518-0004  POST /licensee
+desc: Create Licensee | Creates a new Licensee
+- body:active boolean
+- body:markedForTransfer boolean
+- body:name string
+- body:number string
+- body:productNumber string
+
+## S518-0005  DELETE /licensee/{licenseeNumber}
+desc: Delete Licensee | Delete a Licensee by 'number'
+- path:licenseeNumber string
+- query:forceCascade boolean
+
+## S518-0006  POST /licensee/{licenseeNumber}
+desc: Update Licensee | Sets the provided properties to a Licensee. Return an updated Licensee
+- path:licenseeNumber string
+- body:active boolean
+- body:markedForTransfer boolean
+- body:name string
+- body:number string
+
+## S518-0007  POST /licensee/{licenseeNumber}/transfer
+desc: Transfer Licenses | Licenses transfer between Licensees
+- path:licenseeNumber string
+- body:sourceLicenseeNumber string
+
+## S518-0008  POST /licensee/{licenseeNumber}/validate
+desc: Validate Licensee | Validates active Licenses of the Licensee
+- path:licenseeNumber string
+- body:action string enum[checkOut|checkIn]
+- body:licenseeName string
+- body:nodeSecret string
+- body:productModuleNumber string
+- body:productNumber string
+- body:sessionId string
+
+## S518-0009  POST /licensetemplate
+desc: Create License Template | Creates a new License Template
+- body:active boolean
+- body:automatic boolean
+- body:currency string
+- body:hidden boolean
+- body:hideLicenses boolean
+- body:licenseType string
+- body:maxSessions string
+- body:name string
+- body:number string
+- body:price number
+- body:productModuleNumber string
+- body:quantity string
+- body:quota string
+- body:timeVolume string
+- body:timeVolumePeriod string
+
+## S518-0010  DELETE /licensetemplate/{licenseTemplateNumber}
+desc: Delete License Template | Delete a License Template by 'number'.
+- path:licenseTemplateNumber string
+- query:forceCascade boolean
+
+## S518-0011  POST /licensetemplate/{licenseTemplateNumber}
+desc: Update License Template | Sets the provided properties to a License Template. Return an updated License Template
+- path:licenseTemplateNumber string
+- body:active boolean
+- body:automatic boolean
+- body:currency string
+- body:hidden boolean
+- body:hideLicenses boolean
+- body:licenseType string
+- body:maxSessions string
+- body:name string
+- body:number string
+- body:price number
+- body:quantity string
+- body:quota string
+- body:timeVolume string
+- body:timeVolumePeriod string
+
+## S518-0012  POST /paymentmethod/{paymentMethodNumber}
+desc: Update Payment Method | Sets the provided properties to a Payment Method. Return an updated Payment Method
+- path:paymentMethodNumber string
+- body:active boolean
+- body:paypal.subject string
+
+## S518-0013  POST /product
+desc: Create Product | Creates a new Product
+- body:active boolean
+- body:description string
+- body:licenseeAutoCreate boolean
+- body:licensingInfo string
+- body:name string
+- body:number string
+- body:vatMode string enum[GROSS|NET]
+- body:version string
+
+## S518-0014  DELETE /product/{productNumber}
+desc: Delete Product | Delete a Product by 'number'
+- path:productNumber string
+- query:forceCascade boolean
+
+## S518-0015  POST /product/{productNumber}
+desc: Update Product | Sets the provided properties to a Product. Return an updated Product
+- path:productNumber string
+- body:active boolean
+- body:description string
+- body:licenseeAutoCreate boolean
+- body:licensingInfo string
+- body:name string
+- body:number string
+- body:vatMode string enum[GROSS|NET]
+- body:version string
+
+## S518-0016  POST /productmodule
+desc: Create Product Module | Creates a new Product Module
+- body:active boolean
+- body:licenseTemplate array<string> enum[TIMEVOLUME|FEATURE]
+- body:licensingModel string
+- body:maxCheckoutValidity integer
+- body:name string
+- body:nodeSecretMode array<string> enum[PREDEFINED|CLIENT]
+- body:number string
+- body:productNumber string
+- body:redThreshold integer
+- body:yellowThreshold integer
+
+## S518-0017  DELETE /productmodule/{productModuleNumber}
+desc: Delete Product Module | Delete a Product Module by 'number'
+- path:productModuleNumber string
+- query:forceCascade boolean
+
+## S518-0018  POST /productmodule/{productModuleNumber}
+desc: Update Product Module | Sets the provided properties to a Product Module. Return an updated Product Module
+- path:productModuleNumber string
+- body:active boolean
+- body:licenseTemplate array<string> enum[TIMEVOLUME|FEATURE]
+- body:licensingModel string
+- body:maxCheckoutValidity integer
+- body:name string
+- body:nodeSecretMode array<string> enum[PREDEFINED|CLIENT]
+- body:number string
+- body:redThreshold integer
+- body:yellowThreshold integer
+
+## S518-0019  POST /token
+desc: Create token | Create token by 'tokenType' and additional token parameters
+- body:action string enum[licenseeLogin]
+- body:apiKeyRole string enum[ROLE_APIKEY_LICENSEE|ROLE_APIKEY_ANALYTICS|ROLE_APIKEY_OPERATION|ROLE_APIKEY_MAINTENANCE|ROLE_APIKEY_ADMIN]
+- body:cancelURL string
+- body:cancelURLTitle string
+- body:licenseTemplateNumber string
+- body:licenseeNumber string
+- body:predefinedShoppingItem string
+- body:privateKey string
+- body:productNumber string
+- body:successURL string
+- body:successURLTitle string
+- body:tokenType string enum[DEFAULT|SHOP|APIKEY]
+- body:type string enum[ACTION]
+
+## S518-0020  DELETE /token/{tokenNumber}
+desc: Delete token | Delete a token by 'number'
+- path:tokenNumber string
+
+## S518-0021  POST /transaction
+desc: Create Transaction | Creates a new Transaction
+- body:active boolean
+- body:dateClosed string
+- body:dateCreated string
+- body:licenseeNumber string
+- body:number string
+- body:paymentMethod string
+- body:source string enum[SHOP]
+- body:status string enum[CANCELLED|CLOSED|PENDING]
+
+## S518-0022  POST /transaction/{transactionNumber}
+desc: Update Transaction | Sets the provided properties to a Transaction. Return an updated Transaction
+- path:transactionNumber string
+- body:active boolean
+- body:dateClosed string
+- body:dateCreated string
+- body:number string
+- body:paymentMethod string
+- body:source string enum[SHOP]
+- body:status string enum[CANCELLED|CLOSED|PENDING]
+
+## S520-0001  POST /api/v1/users
+desc: Create User in Group | Create User in Group
+- query:activate string
+- body:groupIds array<string>
+- body:profile object
+- body:profile.email string
+- body:profile.firstName string
+- body:profile.lastName string
+- body:profile.login string
+
+## S520-0002  PUT /api/v1/users/{userId}
+desc: Set Recovery Credential | Set Recovery Credential
+- path:userId string
+- body:credentials object
+- body:credentials.recovery_question object
+- body:credentials.recovery_question.answer string
+- body:credentials.recovery_question.question string
+
+## S520-0003  POST /api/v1/users/{userId}/credentials/change_password
+desc: Change Password | Change Password
+- path:userId string
+- body:newPassword object
+- body:newPassword.value string
+- body:oldPassword object
+- body:oldPassword.value string
+
+## S520-0004  POST /api/v1/users/{userId}/credentials/change_recovery_question
+desc: Change Recovery Question | Change Recovery Question
+- path:userId string
+- body:password object
+- body:password.value string
+- body:recovery_question object
+- body:recovery_question.answer string
+- body:recovery_question.question string
+
+## S520-0005  POST /api/v1/users/{userId}/credentials/forgot_password
+desc: Forgot Password (One Time Code) | Forgot Password (One Time Code)
+- path:userId string
+- query:sendEmail string
+
+## S520-0006  POST /api/v1/users/{userId}/lifecycle/activate
+desc: Activate User | Activate User
+- path:userId string
+- query:sendEmail string
+
+## S520-0007  POST /api/v1/users/{userId}/lifecycle/deactivate
+desc: Deactivate User | Deactivate User
+- path:userId string
+
+## S520-0008  POST /api/v1/users/{userId}/lifecycle/expire_password
+desc: Set Temp Password | Set Temp Password
+- path:userId string
+- query:tempPassword string
+
+## S520-0009  POST /api/v1/users/{userId}/lifecycle/reset_factors
+desc: Reset Factors | Reset Factors
+- path:userId string
+
+## S520-0010  POST /api/v1/users/{userId}/lifecycle/reset_password
+desc: Reset Password | Reset Password
+- path:userId string
+- query:sendEmail string
+
+## S520-0011  POST /api/v1/users/{userId}/lifecycle/suspend
+desc: Suspend User | Suspend User
+- path:userId string
+
+## S520-0012  POST /api/v1/users/{userId}/lifecycle/unlock
+desc: Unlock User | Unlock User
+- path:userId string
+
+## S520-0013  POST /api/v1/users/{userId}/lifecycle/unsuspend
+desc: Unsuspend User | Unsuspend User
+- path:userId string
+
+## S520-0014  DELETE /api/v1/users/{userId}/sessions
+desc: Clear User Sessions | Clear User Sessions
+- path:userId string
+
+## S521-0001  DELETE /apis/{owner}/{api}
+desc: Deletes the specified API
+- path:owner string
+- path:api string
+
+## S521-0002  POST /apis/{owner}/{api}
+desc: Saves the provided Swagger definition | Saves the provided Swagger definition; the owner must match the token owner. The version will be extracted from the Swagger definitions itself.
+- path:owner string
+- path:api string
+- query:private boolean
+- query:force boolean
+- body:(body) object
+
+## S521-0003  DELETE /apis/{owner}/{api}/{version}
+desc: Deletes a particular version of the specified API
+- path:owner string
+- path:api string
+- path:version string
+
+## S521-0004  POST /apis/{owner}/{api}/{version}
+desc: Publish a particular version of the specified API
+- path:owner string
+- path:api string
+- path:version string
+
+## S521-0005  POST /auth/login
+desc: Log in to OpenAPI space
+schema: Credentials
+- body:password string
+- body:username string
+
+## S521-0006  POST /auth/login/apinf
+desc: Log in to OpenAPI space using an APInf account
+- body:password string
+- body:username string
+
+## S521-0007  POST /auth/login/apinf_token
+desc: Log in to OpenAPI space using an APInf authentication token
+- body:auth_token string
+- body:user_id string
+
+## S521-0008  POST /auth/logout
+desc: Log out from OpenAPI space
+
+## S521-0009  POST /auth/ping
+desc: Check whether or not you are authenticated
+
+## S521-0010  POST /auth/register
+desc: Register to OpenAPI space
+schema: Registration
+- body:password string
+- body:username string
+- body:email string
+
+## S522-0001  DELETE /attribute/{namespace}
+desc: Delete an attribute namespace and all attributes below. | Delete an attribute namespace and all attributes below. This operation is the same as the one defined with [DELETE /attribute/{namespace}/_meta](#/Attributes/delete_attribute__namespace___meta).
+
+## S522-0002  DELETE /attribute/{namespace}/_meta
+desc: Delete an attribute namespace and all attributes below. | Delete an attribute namespace and all attributes below. This operation is the same as the one defined with [DELETE /attribute/{namespace}](#/Attributes/delete_attribute__namespace_).
+
+## S522-0003  POST /attribute/{namespace}/_meta
+desc: Change attribute namespace. Create an attribute namespace if it doesn't exist. | This endpoint can be used for both, creating an attribute namespace and updating it: * If the attribute namespace passed as parameter doesn't exist, it will create the attribute namespace. * If the attribute namespace passed as parameter already exists, it will update the namespace attribute. This operation is the sam
+schema: schema
+- body:(body) any
+
+## S522-0004  PUT /attribute/{namespace}/_meta
+desc: Change attribute namespace. Create an attribute namespace if it doesn't exist. | This endpoint can be used for both, creating an attribute namespace and updating it: * If the attribute namespace passed as parameter doesn't exist, it will create the attribute namespace. * If the attribute namespace passed as parameter already exists, it will update the namespace attribute. This operation is the sam
+schema: schema
+- body:(body) any
+
+## S522-0005  DELETE /attribute/{namespace}/{attribute_name}
+desc: Delete an attribute and all its values in projects or packages. | Delete an attribute and all its values in projects or packages. This operation is the same as the one defined with [DELETE /attribute/{namespace}/{attribute_name}/_meta](#/Attributes/delete_attribute__namespace___attribute_name___meta)
+- path:attribute_name string
+
+## S522-0006  DELETE /attribute/{namespace}/{attribute_name}/_meta
+desc: Delete an attribute and all its values in projects or packages. | Delete an attribute and all its values in projects or packages. This operation is the same as the one defined with [DELETE /attribute/{namespace}/{attribute_name}](#/Attributes/delete_attribute__namespace___attribute_name_)
+
+## S522-0007  POST /attribute/{namespace}/{attribute_name}/_meta
+desc: Change attribute data. Create an attribute if it doesn't exist. | This endpoint can be used for both, creating an attribute and updating it: * If the attribute passed as parameter doesn't exist, it will create the attribute. * If the attribute passed as parameter already exists, it will update the attribute. This operation is the same as the one defined with [PUT](#/Attributes/put_attribute__names
+schema: schema
+- body:(body) any
+
+## S522-0008  PUT /attribute/{namespace}/{attribute_name}/_meta
+desc: Change attribute data. Create an attribute if it doesn't exist. | This endpoint can be used for both, creating an attribute and updating it: * If the attribute passed as parameter doesn't exist, it will create the attribute. * If the attribute passed as parameter already exists, it will update the attribute. This operation is the same as the one defined with [POST](#/Attributes/post_attribute__nam
+schema: schema
+- body:(body) any
+
+## S522-0009  POST /build/{project_name}
+desc: Apply different actions on builds/build processes of the specified project | Apply different actions on builds/build processes of the specified project
+- query:package string
+- query:arch string
+- query:repository string
+- query:cmd string enum[wipe|restartbuild|killbuild|abortbuild|rebuild|unpublish|sendsysrq]
+
+## S522-0010  PUT /build/{project_name}/{repository_name}/{architecture_name}/{package_name}/{file_name}
+desc: Update a specific artifact file contents | Given a project, repository, architecture and package, update the given file's content. This is for Admins only.
+- path:package_name array<string> enum[_repository]
+- body:file string
+
+## S522-0011  PUT /configuration
+desc: Update the configuration of this Open Build Service instance | Update the configuration of this Open Build Service instance. This is for admins only.
+schema: schema
+- body:(body) any
+
+## S522-0012  POST /distributions
+desc: Create a distribution. | Create a distribution. This is only for admins.
+- body:architecture array<string>
+- body:icon array<object>
+- body:icon[].height integer
+- body:icon[].url string
+- body:icon[].width integer
+- body:id integer
+- body:link string
+- body:name string
+- body:project string
+- body:reponame string
+- body:repository string
+- body:vendor string
+- body:version string
+
+## S522-0013  PUT /distributions/bulk_replace
+desc: Bulk replace all distributions. | Bulk replace all distributions. This is only for admins.
+schema: schema
+- body:(body) any
+
+## S522-0014  DELETE /distributions/{distribution_id}
+desc: Delete a distribution. | Delete a distribution. This is only for admins.
+
+## S522-0015  PUT /distributions/{distribution_id}
+desc: Update a distribution. | Update the data of a distribution.
+schema: schema
+- body:(body) any
+
+## S522-0016  DELETE /group/{group_title}
+desc: Delete a group. | Delete a group.
+
+## S522-0017  POST /group/{group_title}
+desc: Modify group data. | Modify group data.
+- query:cmd string enum[add_user|remove_user|set_email]
+- query:userid string
+- query:email string
+
+## S522-0018  PUT /group/{group_title}
+desc: Write group data. | Write group data.
+schema: schema
+- body:(body) any
+
+## S522-0019  POST /issue_trackers
+desc: Create an issue tracker. | Create an issue tracker.
+schema: items
+- body:(body) any
+
+## S522-0020  DELETE /issue_trackers/{issue_tracker_name}
+desc: Delete an issue tracker. | Delete an issue tracker.
+
+## S522-0021  PUT /issue_trackers/{issue_tracker_name}
+desc: Update or create an issue tracker. | Update the issue tracker given as path parameter. If it is not found, create it.
+schema: items
+- body:(body) any
+
+## S522-0022  POST /person
+desc: Executes a command on the person endpoint. | Allows executing command on the person endpoint. As of now, the only command allowed is 'register'.
+- query:cmd string enum[register]
+- body:email string
+- body:login string
+- body:note string
+- body:password string
+- body:realname string
+- body:state string
+
+## S522-0023  POST /person/register
+desc: Registers a new person
+schema: schema
+- body:email string
+- body:login string
+- body:note string
+- body:password string
+- body:realname string
+- body:state string
+
+## S522-0024  POST /person/{login}
+desc: Perform changes on a registered person
+- query:cmd string enum[change_password|lock|delete]
+- body:(body) string
+
+## S522-0025  PUT /person/{login}
+desc: Update person
+schema: schema
+- body:email string
+- body:login string
+- body:note string
+- body:password string
+- body:realname string
+- body:state string
+
+## S522-0026  POST /person/{login}/token
+desc: Create a new authentication token for a person. | Create a new authentication token for a person. The token may be limited to a specific package. In this case the query parameters `project` and `package` should be provided. With an empty request body, a token of the default kind 'runservice' is created.
+- query:project string
+- query:package string
+- query:operation string enum[runservice|rebuild|release]
+- query:scm_token string

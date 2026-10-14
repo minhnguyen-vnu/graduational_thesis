@@ -1,0 +1,40 @@
+# EvoMaster black-box auth config for the Tier-1 reports-api (WFC format).
+# Seeded users come from docs/tier1-spring-boot-spec.md §4.4 (reset via POST /reset).
+# Login: POST /auth/login  body {username,password}  -> field "token"
+# Sent as: Authorization: Bearer <token>   (JWT, 1h expiry -> survives a full run)
+
+auth:
+  - name: alice            # ADMIN, the A1 demotion victim
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: alice
+        password: "alicepass"
+        usernameField: username
+        passwordField: password
+  - name: superadmin       # ADMIN, stable (never demoted)
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: superadmin
+        password: "superpass"
+        usernameField: username
+        passwordField: password
+  - name: bob              # VIEWER, negative control
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: bob
+        password: "bobpass"
+        usernameField: username
+        passwordField: password
+
+# Shared settings applied to every user above (avoids repetition).
+authTemplate:
+  loginEndpointAuth:
+    endpoint: /auth/login
+    verb: POST
+    contentType: application/json
+    token:                       # v6.1.1 WFC TokenHandling keys
+      extractFrom: body          # token is in the JSON response body
+      extractSelector: /token    # JSON Pointer to the token field (this app: "token", not "auth_token")
+      sendIn: header
+      sendName: Authorization
+      sendTemplate: "Bearer {token}"

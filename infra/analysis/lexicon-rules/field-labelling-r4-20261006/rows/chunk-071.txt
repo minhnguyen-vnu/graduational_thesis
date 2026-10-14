@@ -1,0 +1,509 @@
+## S615-N0037  PUT /spaces/topic/{topicId}/updateTags
+desc: Update tags | Update the tags of a topic OauthScopes: WRITE_SPACE, UPDATE_SPACE_CONTENT
+- path:topicId string
+- body:tags array<string>
+
+## S615-N0038  PUT /spaces/unflag/{itemId}
+desc: Unflag a space item | Unflag a space item OauthScopes: WRITE_SPACE, UPDATE_SPACE_CONTENT
+- path:itemId string
+
+## S615-N0040  DELETE /spaces/{id}
+desc: Delete a space | Delete a space OauthScopes: WRITE_SPACE, MANAGE_SPACE, DELETE_SPACE_CONTENT
+- path:id string
+
+## S615-N0042  POST /spaces/{id}/join
+desc: Join a space | Join a space OauthScopes: WRITE_SPACE
+- path:id string
+
+## S615-N0043  POST /spaces/{id}/labels/assign
+desc: Assign labels | Assign labels to space OauthScopes: WRITE_SPACE, ORGANIZE_SPACE
+- path:id string
+- body:labels array<string>
+
+## S615-N0044  DELETE /spaces/{id}/labels/unassign
+desc: Unassign labels | Unassign labels from a space OauthScopes: WRITE_SPACE, ORGANIZE_SPACE
+- path:id string
+- body:labelIds array<string>
+
+## S615-N0046  POST /spaces/{id}/participant
+desc: Add Participant to Space | Add a participant to a space OauthScopes: WRITE_SPACE, MANAGE_SPACE
+- path:id string
+- body:role string enum[DEFAULT|MODERATOR|AUTHOR|PARTICIPANT|READER]
+- body:userId array<string>
+
+## S615-N0047  POST /spaces/{id}/participant/remove
+desc: Removes participants from a space | removes Participants from a space OauthScopes: WRITE_SPACE, MANAGE_SPACE, ORGANIZE_SPACE
+- path:id string
+- body:userIds array<string>
+
+## S615-N0048  PUT /spaces/{id}/updateTimestamp
+desc: Update read timestamp | Update read timestamp OauthScopes: READ_SPACE, WRITE_SPACE
+- path:id string
+- body:timestamp string
+
+## S615-N0049  PUT /spaces/{spaceId}/participant
+desc: Update participant | Update participant in space OauthScopes: WRITE_SPACE, MANAGE_SPACE, ORGANIZE_SPACE
+- path:spaceId string
+- body:role string enum[MODERATOR|AUTHOR|PARTICIPANT|READER]
+- body:userId string
+
+## S615-N0052  POST /spaces/{spaceId}/participant/{participantId}/grant
+desc: grant access for a space | grant access for a space OauthScopes: WRITE_SPACE, MANAGE_SPACE
+- path:spaceId string
+- path:participantId string
+
+## S615-N0054  PUT /spaces/{spaceId}/topic/{topicId}
+desc: Updates a topic | Updates a topic OauthScopes: WRITE_SPACE, UPDATE_SPACE_CONTENT
+- path:spaceId string
+- path:topicId string
+- body:attachments array<string>
+- body:complex boolean
+- body:content string
+- body:contentTags array<string>
+- body:formMetaData string
+- body:mentionedUsers array<string>
+- body:subject string
+- body:tags array<string>
+
+## S615-N0055  POST /spaces/{spaceId}/topic/{topicId}/reply
+desc: creates a reply to a topic | creates a reply to a topic OauthScopes: WRITE_SPACE
+- path:spaceId string
+- path:topicId string
+- body:attachments array<string>
+- body:complex boolean
+- body:content string
+- body:formMetaData string
+- body:mentionedUser string
+
+## S615-N0056  PUT /spaces/{spaceId}/topic/{topicId}/reply/{replyId}
+desc: Updates a space reply | Updates a space reply OauthScopes: WRITE_SPACE, UPDATE_SPACE_CONTENT
+- path:spaceId string
+- path:topicId string
+- path:replyId string
+- body:attachments array<string>
+- body:complex boolean
+- body:content string
+- body:formMetaData string
+- body:mentionedUsers array<string>
+
+## S615-N0057  PUT /spaces/{spaceId}/welcomebox/{content}
+desc: Update content of welcome box | Update content of the welcome box of a space OauthScopes: MANAGE_SPACE, WRITE_SPACE
+- path:spaceId string
+- path:content string
+- body:displayWelcomeBox boolean
+
+## S615-N0058  PUT /spaces/{topicId}/pin
+desc: Pin a topic | Pin a topic OauthScopes: WRITE_SPACE, MANAGE_SPACE
+- path:topicId string
+- body:position number
+
+## S615-N0062  PUT /users/presence
+desc: Updates the presence status | Updates the presence status of the authenticated user. OauthScopes: WRITE_USER_PROFILE, MANAGE_PRESENCE
+- body:clearDND boolean
+- body:dndUntil string
+- body:state string
+- body:statusMessage string
+
+## S615-N0063  PUT /users/profile
+desc: Updates the user profile | Updates the user profile of the authenticated user OauthScopes: WRITE_USER_PROFILE
+- body:firstname string
+- body:jobTitle string
+- body:lastname string
+- body:locale string enum[EN_US|DE_DE|EN_GB|ES_ES|FR_FR|IT_IT|RU_RU|ZH_HANS_CN|PT_BR|NL_NL|CA_ES]
+
+## S615-N0064  DELETE /webhooks
+desc: Removes all webHooks | Unregisters all webHooks of the authenticated user OauthScopes: READ_CONVERSATIONS, READ_USER
+
+## S615-N0065  POST /webhooks
+desc: Registers a WebHook | Registers the webHook with the given filter and callback URL. OauthScopes: READ_CONVERSATIONS, READ_USER
+- body:filter array<string> enum[CONVERSATION.CREATE|CONVERSATION.UPDATE|CONVERSATION.ADD_ITEM|CONVERSATION.UPDATE_ITEM|USER.INCOMING_CALL|USER.USER_UPDATED|USER.USER_SETTING_UPDATED|USER.SUBMIT_FORM_DATA]
+- body:url string
+
+## S615-N0070  PUT /webhooks/presence/{id}
+desc: Updates a Presence WebHook registration | Updates a registration of a webHook that has a presence filter. The update can be performed either on the URL and/or the userIds. The new userIds, if any, will override any existing userIds. OauthScopes: READ_USER
+- path:id string
+- body:url string
+- body:userIds array<string>
+
+## S615-N0072  PUT /webhooks/{id}
+desc: Updates a WebHook registration | Updates a webHook registration with the given filter and callback URL. OauthScopes: READ_CONVERSATIONS, READ_USER
+- path:id string
+- body:filter array<string> enum[CONVERSATION.CREATE|CONVERSATION.UPDATE|CONVERSATION.ADD_ITEM|CONVERSATION.UPDATE_ITEM|USER.INCOMING_CALL|USER.USER_UPDATED|USER.USER_SETTING_UPDATED|USER.SUBMIT_FORM_DATA]
+- body:url string
+
+## S586-N0001  DELETE /access_settings/whitelist
+desc: Remove one or more IPs from the allow list | **This endpoint allows you to remove one or more IP addresses from your list of allowed addresses.** To remove one or more IP addresses, pass this endpoint an array containing the ID(s) associated with the IP(s) you intend to remove. You can retrieve the IDs associated with your allowed IP addresses using the "Retrieve a list of currently allowed IPs" e
+- body:ids array<integer>
+
+## S586-N0002  POST /access_settings/whitelist
+desc: Add one or more IPs to the allow list | **This endpoint allows you to add one or more allowed IP addresses.** To allow one or more IP addresses, pass them to this endpoint in an array. Once an IP address is added to your allow list, it will be assigned an `id` that can be used to remove the address. You can retrieve the ID associated with an IP using the "Retrieve a list of currently allowed IPs" 
+- body:ips array<object>
+- body:ips[].ip string
+
+## S586-N0003  DELETE /access_settings/whitelist/{rule_id}
+desc: Remove a specific IP from the allowed list | **This endpoint allows you to remove a specific IP address from your list of allowed addresses.** When removing a specific IP address from your list, you must include the ID in your call. You can retrieve the IDs associated with your allowed IP addresses using the "Retrieve a list of currently allowed IPs" endpoint.
+- path:rule_id string
+
+## S586-N0004  POST /alerts
+desc: Create a new Alert | **This endpoint allows you to create a new alert.** Alerts allow you to specify an email address to receive notifications regarding your email usage or statistics. There are two types of alerts that can be created with this endpoint: * `usage_limit` allows you to set the threshold at which an alert will be sent. * `stats_notification` allows you to set how frequently you would
+- body:email_to string
+- body:frequency string
+- body:percentage integer
+- body:type string enum[stats_notification|usage_limit]
+
+## S586-N0006  PATCH /alerts/{alert_id}
+desc: Update an alert | **This endpoint allows you to update an alert.** Alerts allow you to specify an email address to receive notifications regarding your email usage or statistics. * Usage alerts allow you to set the threshold at which an alert will be sent. * Stats notifications allow you to set how frequently you would like to receive email statistics reports. For example, "daily", "weekly", or "m
+- path:alert_id integer
+- body:email_to string
+- body:frequency string
+- body:percentage integer
+
+## S586-N0007  POST /api_keys
+desc: Create API keys | **This endpoint allows you to create a new API Key for the user.** To create your initial SendGrid API Key, you should [use the SendGrid App](https://app.sendgrid.com/settings/api_keys). Once you have created a first key with scopes to manage additional API keys, you can use this API for all other key management. > There is a limit of 100 API Keys on your account. A JSON request 
+- body:name string
+- body:scopes array<string>
+
+## S586-N0008  DELETE /api_keys/{api_key_id}
+desc: Delete API keys | **This endpoint allows you to revoke an existing API Key using an `api_key_id`** Authentications using a revoked API Key will fail after after some small propogation delay. If the API Key ID does not exist, a `404` status will be returned.
+- path:api_key_id string
+
+## S586-N0009  PATCH /api_keys/{api_key_id}
+desc: Update API key name | **This endpoint allows you to update the name of an existing API Key.** You must pass this endpoint a JSON request body with a `name` property, which will be used to rename the key associated with the `api_key_id` passed in the URL.
+- path:api_key_id string
+- body:name string
+
+## S586-N0010  PUT /api_keys/{api_key_id}
+desc: Update API key name and scopes | **This endpoint allows you to update the name and scopes of a given API key.** You must pass this endpoint a JSON request body with a `name` field and a `scopes` array containing at least one scope. The `name` and `scopes` fields will be used to update the key associated with the `api_key_id` in the request URL. If you need to update a key's scopes only, pass the `
+- path:api_key_id string
+- body:name string
+- body:scopes array<string>
+
+## S586-N0012  DELETE /asm/groups/{group_id}
+desc: Delete a Suppression Group | **This endpoint allows you to delete a suppression group.** If a recipient uses the "one-click unsubscribe" option on an email associated with a deleted group, that recipient will be added to the global suppression list. Deleting a suppression group will remove the suppression, meaning email will once again be sent to the previously suppressed addresses. This should be
+- path:group_id string
+
+## S586-N0014  POST /asm/groups/{group_id}/suppressions
+desc: Add suppressions to a suppression group | **This endpoint allows you to add email addresses to an unsubscribe group.** If you attempt to add suppressions to a group that has been deleted or does not exist, the suppressions will be added to the global suppressions list.
+schema: suppressions-request
+- path:group_id string
+- body:recipient_emails array<string>
+
+## S586-N0015  POST /asm/groups/{group_id}/suppressions/search
+desc: Search for suppressions within a group | **This endpoint allows you to search a suppression group for multiple suppressions.** When given a list of email addresses and a group ID, this endpoint will only return the email addresses that have been unsubscribed from the given group.
+schema: suppressions-request
+- path:group_id string
+- body:recipient_emails array<string>
+
+## S586-N0016  DELETE /asm/groups/{group_id}/suppressions/{email}
+desc: Delete a suppression from a suppression group | **This endpoint allows you to remove a suppressed email address from the given suppression group.** Removing an address will remove the suppression, meaning email will once again be sent to the previously suppressed addresses. This should be avoided unless a recipient indicates they wish to receive email from you again. You can use our [bypass filter
+- path:group_id string
+- path:email string
+
+## S586-N0017  POST /asm/suppressions/global
+desc: Add recipient addresses to the global suppression group. | **This endpoint allows you to add one or more email addresses to the global suppressions group.**
+schema: suppressions-request
+- body:recipient_emails array<string>
+
+## S586-N0018  DELETE /asm/suppressions/global/{email}
+desc: Delete a Global Suppression | **This endpoint allows you to remove an email address from the global suppressions group.** Deleting a suppression group will remove the suppression, meaning email will once again be sent to the previously suppressed addresses. This should be avoided unless a recipient indicates they wish to receive email from you again. You can use our [bypass filters](https://sendgr
+- path:email string
+
+## S586-N0020  DELETE /campaigns/{campaign_id}
+desc: Delete a Campaign | **This endpoint allows you to delete a specific campaign.**
+- path:campaign_id integer
+
+## S586-N0021  PATCH /campaigns/{campaign_id}
+desc: Update a Campaign | **This endpoint allows you to update a specific campaign.** This is especially useful if you only set up the campaign using POST /campaigns, but didn't set many of the parameters.
+- path:campaign_id integer
+- body:categories array<string>
+- body:html_content string
+- body:plain_content string
+- body:subject string
+- body:title string
+
+## S586-N0022  DELETE /campaigns/{campaign_id}/schedules
+desc: Unschedule a Scheduled Campaign | **This endpoint allows you to unschedule a campaign that has already been scheduled to be sent.** A successful unschedule will return a 204. If the specified campaign is in the process of being sent, the only option is to cancel (a different method).
+- path:campaign_id integer
+
+## S586-N0023  PATCH /campaigns/{campaign_id}/schedules
+desc: Update a Scheduled Campaign | **This endpoint allows to you change the scheduled time and date for a campaign to be sent.**
+- path:campaign_id integer
+- body:send_at integer
+
+## S586-N0024  POST /campaigns/{campaign_id}/schedules
+desc: Schedule a Campaign | **This endpoint allows you to schedule a specific date and time for your campaign to be sent.** If you have the flexibility, it's better to schedule mail for off-peak times. Most emails are scheduled and sent at the top of the hour or half hour. Scheduling email to avoid those times (for example, scheduling at 10:53) can result in lower deferral rates because it won't be goin
+- path:campaign_id integer
+- body:send_at integer
+
+## S586-N0025  POST /campaigns/{campaign_id}/schedules/now
+desc: Send a Campaign | **This endpoint allows you to immediately send an existing campaign.** Normally a POST request would have a body, but since this endpoint is telling us to send a resource that is already created, a request body is not needed.
+- path:campaign_id integer
+
+## S586-N0026  POST /campaigns/{campaign_id}/schedules/test
+desc: Send a Test Campaign | **This endpoint allows you to send a test campaign.** To send to multiple addresses, use an array for the JSON "to" value ["one@address","two@address"]
+- path:campaign_id integer
+- body:to string
+
+## S586-N0028  DELETE /contactdb/custom_fields/{custom_field_id}
+desc: Delete a Custom Field | **This endpoint allows you to delete a custom field by ID.**
+- path:custom_field_id integer
+
+## S586-N0030  POST /contactdb/lists
+desc: Create a List | **This endpoint allows you to create a list for your recipients.**
+- body:name string
+
+## S586-N0031  DELETE /contactdb/lists/{list_id}
+desc: Delete a List | **This endpoint allows you to delete a specific recipient list with the given ID.**
+- path:list_id string
+- query:delete_contacts boolean enum[True|False]
+- body:(body) any
+
+## S586-N0032  PATCH /contactdb/lists/{list_id}
+desc: Update a List | **This endpoint allows you to update the name of one of your recipient lists.**
+- path:list_id string
+- query:list_id integer
+- body:name string
+
+## S586-N0033  POST /contactdb/lists/{list_id}/recipients
+desc: Add Multiple Recipients to a List | **This endpoint allows you to add multiple recipients to a list.** Adds existing recipients to a list, passing in the recipient IDs to add. Recipient IDs should be passed exactly as they are returned from recipient endpoints.
+- path:list_id integer
+- body:(body) integer
+
+## S586-N0034  DELETE /contactdb/lists/{list_id}/recipients/{recipient_id}
+desc: Delete a Single Recipient from a Single List | **This endpoint allows you to delete a single recipient from a list.**
+- path:list_id integer
+- path:recipient_id string
+- query:list_id integer
+- query:recipient_id integer
+- body:(body) any
+
+## S586-N0035  POST /contactdb/lists/{list_id}/recipients/{recipient_id}
+desc: Add a Single Recipient to a List | **This endpoint allows you to add a single recipient to a list.**
+- path:list_id integer
+- path:recipient_id string
+
+## S586-N0036  DELETE /contactdb/recipients
+desc: Delete Recipients | **This endpoint allows you to deletes one or more recipients.** The body of an API call to this endpoint must include an array of recipient IDs of the recipients you want to delete.
+- body:(body) string
+
+## S586-N0037  PATCH /contactdb/recipients
+desc: Update Recipient | **This endpoint allows you to update one or more recipients.** The body of an API call to this endpoint must include an array of one or more recipient objects. It is of note that you can add custom field data as parameters on recipient objects. We have provided an example using some of the default custom fields SendGrid provides.
+- body:email string
+- body:first_name string
+- body:last_name string
+
+## S586-N0038  POST /contactdb/recipients
+desc: Add recipients | **This endpoint allows you to add a Marketing Campaigns recipient.** You can add custom field data as a parameter on this endpoint. We have provided an example using some of the default custom fields SendGrid provides. The rate limit is three requests every 2 seconds. You can upload 1000 contacts per request. So the maximum upload rate is 1500 recipients per second.
+- body:age integer
+- body:email string
+- body:first_name string
+- body:last_name string
+
+## S586-N0039  POST /contactdb/recipients/search
+desc: Search recipients | <p> Search using segment conditions without actually creating a segment. Body contains a JSON object with <code>conditions</code>, a list of conditions as described below, and an optional <code>list_id</code>, which is a valid list ID for a list to limit the search on. </p> <p> Valid operators for create and update depend on the type of the field for which you are searching. </
+- body:conditions array<any>
+- body:list_id integer
+
+## S586-N0041  POST /contactdb/segments
+desc: Create a Segment | **This endpoint allows you to create a new segment.** Valid operators for create and update depend on the type of the field for which you are searching. **Dates** - "eq", "ne", "lt" (before), "gt" (after) - You may use MM/DD/YYYY for day granularity or an epoch for second granularity. - "empty", "not_empty" - "is within" - You may use an [ISO 8601 date format](https://en.wikiped
+schema: contactdb_segments
+- body:conditions array<object>
+- body:conditions[].and_or string enum[and|or|]
+- body:conditions[].field string
+- body:conditions[].operator string enum[eq|ne|lt|gt|contains]
+- body:conditions[].value string
+- body:list_id integer
+- body:name string
+- body:recipient_count number
+
+## S586-N0042  DELETE /contactdb/segments/{segment_id}
+desc: Delete a segment | **This endpoint allows you to delete a segment from your recipients database.** You also have the option to delete all the contacts from your Marketing Campaigns recipient database who were in this segment.
+- path:segment_id string
+- query:delete_contacts boolean
+- body:(body) any
+
+## S586-N0045  POST /designs/pre-builts/{id}
+desc: Duplicate SendGrid Pre-built Design | **This endpoint allows you to duplicate one of the pre-built Twilio SendGrid designs**. Like duplicating one of your existing designs, you are not required to pass any data in the body of a request to this endpoint. If you choose to leave the `name` field blank, your duplicate will be assigned the name of the design it was copied from with the text "Duplicate:
+schema: design-duplicate-input
+- path:id string
+- body:editor string enum[code|design]
+- body:name string
+
+## S586-N0046  DELETE /designs/{id}
+desc: Delete Design | **This endpoint allows you to delete a single design**. Be sure to check the ID of the design you intend to delete before making this request; deleting a design is a permanent action.
+- path:id string
+
+## S586-N0047  PATCH /designs/{id}
+desc: Update Design | **This endpoint allows you to edit a design**. The Design API supports PATCH requests, which allow you to make partial updates to a single design. Passing data to a specific field will update only the data stored in that field; all other fields will be unaltered. For example, updating a design's name requires that you make a PATCH request to this endpoint with data specified for th
+- path:id string
+- body:categories array<string>
+- body:generate_plain_content boolean
+- body:html_content string
+- body:name string
+- body:plain_content string
+- body:subject string
+
+## S586-N0048  POST /designs/{id}
+desc: Duplicate Design | **This endpoint allows you to duplicate one of your existing designs**. Modifying an existing design is often the easiest way to create something new. You are not required to pass any data in the body of a request to this endpoint. If you choose to leave the `name` field blank, your duplicate will be assigned the name of the design it was copied from with the text "Duplicate: " 
+schema: design-duplicate-input
+- path:id string
+- body:editor string enum[code|design]
+- body:name string
+
+## S586-N0049  POST /ips
+desc: Add IPs | **This endpoint is for adding a(n) IP Address(es) to your account.**
+- body:count integer
+- body:subusers array<string>
+- body:warmup boolean
+
+## S586-N0050  POST /ips/pools
+desc: Create an IP pool | **This endpoint allows you to create an IP pool.** Before you can create an IP pool, you need to activate the IP in your SendGrid account: 1. Log into your SendGrid account. 1. Navigate to **Settings** and then select **IP Addresses**. 1. Find the IP address you want to activate and then click **Edit**. 1. Check **Allow my account to send mail using this IP address**. 1. Click 
+- body:name string
+
+## S586-N0051  DELETE /ips/pools/{pool_name}
+desc: Delete an IP pool | **This endpoint allows you to delete an IP pool.**
+- path:pool_name string
+
+## S586-N0052  PUT /ips/pools/{pool_name}
+desc: Rename an IP pool | **This endpoint allows you to update the name of an IP pool.**
+- path:pool_name string
+- body:name string
+
+## S586-N0053  POST /ips/pools/{pool_name}/ips
+desc: Add an IP address to a pool | **This endpoint allows you to add an IP address to an IP pool.** You can add the same IP address to multiple pools. It may take up to 60 seconds for your IP address to be added to a pool after your request is made. Before you can add an IP to a pool, you need to activate it in your SendGrid account: 1. Log into your SendGrid account. 1. Navigate to **Settings** and th
+- path:pool_name string
+- body:ip string
+
+## S586-N0054  DELETE /ips/pools/{pool_name}/ips/{ip}
+desc: Remove an IP address from a pool | **This endpoint allows you to remove an IP address from an IP pool.**
+- path:pool_name string
+- path:ip string
+
+## S586-N0055  POST /ips/warmup
+desc: Start warming up an IP address | **This endpoint allows you to put an IP address into warmup mode.**
+- body:ip string
+
+## S586-N0057  POST /mail/batch
+desc: Create a batch ID | **This endpoint allows you to generate a new batch ID.** Once a `batch_id` is created, you can associate it with a scheduled send using the `/mail/send` endpoint. Passing the `batch_id` as a field in the `/mail/send` request body will assign the ID to the send you are creating. Once an ID is associated with a scheduled send, the send can be accessed and its send status can be m
+
+## S586-N0058  POST /mail/send
+desc: v3 Mail Send | The Mail Send endpoint allows you to send email over SendGrid’s v3 Web API, the most recent version of our API. If you are looking for documentation about the v2 Mail Send endpoint, see our [v2 API Reference](https://sendgrid.com/docs/API_Reference/Web_API/mail.html). ## Helper Libraries Twilio SendGrid provides libraries to help you quickly and easily integrate with the v3 Web API 
+- body:asm object
+- body:asm.group_id integer
+- body:asm.groups_to_display array<integer>
+- body:attachments array<object>
+- body:attachments[].content string
+- body:attachments[].content_id string
+- body:attachments[].disposition string enum[inline|attachment]
+- body:attachments[].filename string
+- body:attachments[].type string
+- body:batch_id string
+- body:categories array<string>
+- body:content array<object>
+- body:content[].type string
+- body:content[].value string
+- body:custom_args string
+- body:from object
+- body:from.email string
+- body:from.name string
+- body:headers object
+- body:ip_pool_name string
+- body:mail_settings object
+- body:mail_settings.bypass_bounce_management object
+- body:mail_settings.bypass_bounce_management.enable boolean
+- body:mail_settings.bypass_list_management object
+- body:mail_settings.bypass_list_management.enable boolean
+- body:mail_settings.bypass_spam_management object
+- body:mail_settings.bypass_spam_management.enable boolean
+- body:mail_settings.bypass_unsubscribe_management object
+- body:mail_settings.bypass_unsubscribe_management.enable boolean
+- body:mail_settings.footer object
+- body:mail_settings.footer.enable boolean
+- body:mail_settings.footer.html string
+- body:mail_settings.footer.text string
+- body:mail_settings.sandbox_mode object
+- body:mail_settings.sandbox_mode.enable boolean
+- body:personalizations array<object>
+- body:personalizations[].bcc array<object>
+- body:personalizations[].bcc[].email string
+- body:personalizations[].bcc[].name string
+- body:personalizations[].cc array<object>
+- body:personalizations[].cc[].email string
+- body:personalizations[].cc[].name string
+- body:personalizations[].custom_args object
+- body:personalizations[].dynamic_template_data object
+- body:personalizations[].from object
+- body:personalizations[].from.email string
+- body:personalizations[].from.name string
+- body:personalizations[].headers object
+- body:personalizations[].send_at integer
+- body:personalizations[].subject string
+- body:personalizations[].substitutions object
+- body:personalizations[].to array<object>
+- body:personalizations[].to[].email string
+- body:personalizations[].to[].name string
+- body:reply_to object
+- body:reply_to.email string
+- body:reply_to.name string
+- body:reply_to_list array<object>
+- body:reply_to_list[].email string
+- body:reply_to_list[].name string
+- body:send_at integer
+- body:subject string
+- body:template_id string
+- body:tracking_settings object
+- body:tracking_settings.click_tracking object
+- body:tracking_settings.click_tracking.enable boolean
+- body:tracking_settings.click_tracking.enable_text boolean
+- body:tracking_settings.ganalytics object
+- body:tracking_settings.ganalytics.enable boolean
+- body:tracking_settings.ganalytics.utm_campaign string
+- body:tracking_settings.ganalytics.utm_content string
+- body:tracking_settings.ganalytics.utm_medium string
+- body:tracking_settings.ganalytics.utm_source string
+- body:tracking_settings.ganalytics.utm_term string
+- body:tracking_settings.open_tracking object
+- body:tracking_settings.open_tracking.enable boolean
+- body:tracking_settings.open_tracking.substitution_tag string
+- body:tracking_settings.subscription_tracking object
+- body:tracking_settings.subscription_tracking.enable boolean
+- body:tracking_settings.subscription_tracking.html string
+(+2 fields cut)
+
+## S586-N0061  PATCH /mail_settings/footer
+desc: Update footer mail settings | **This endpoint allows you to update your current Footer mail settings.** The Footer setting will insert a custom footer at the bottom of your text and HTML email message bodies. You can insert your HTML or plain text directly using this endpoint, or you can create the footer using the [Mail Settings menu in the Twilio SendGrid App](https://app.sendgrid.com/settings/m
+schema: mail_settings_footer
+- body:enabled boolean
+- body:html_content string
+- body:plain_content string
+
+## S586-N0063  PATCH /mail_settings/forward_spam
+desc: Update forward spam mail settings | **This endpoint allows you to update your current Forward Spam mail settings.** Enabling the Forward Spam setting allows you to specify `email` addresses to which spam reports will be forwarded. You can set multiple addresses by passing this endpoint a comma separated list of emails in a single string. ``` { "email": "address1@example.com, address2@exapmle.com",
+schema: mail_settings_forward_spam
+- body:email string
+- body:enabled boolean
+
+## S586-N0065  DELETE /marketing/contacts
+desc: Delete Contacts | **This endpoint can be used to delete one or more contacts**. The query parameter `ids` must set to a comma-separated list of contact IDs for bulk contact deletion. The query parameter `delete_all_contacts` must be set to `"true"` to delete **all** contacts. You must set either `ids` or `delete_all_contacts`. Deletion jobs are processed asynchronously. Twilio SendGrid recommends 
+- query:delete_all_contacts string
+- query:ids string
+
+## S586-N0066  PUT /marketing/contacts
+desc: Add or Update a Contact | **This endpoint allows the [upsert](https://en.wiktionary.org/wiki/upsert) (insert or update) of up to 30,000 contacts, or 6MB of data, whichever is lower**. Because the creation and update of contacts is an asynchronous process, the response will not contain immediate feedback on the processing of your upserted contacts. Rather, it will contain an HTTP 202 response indic
+- body:contacts array<object>
+- body:contacts[].address_line_1 string
+- body:contacts[].address_line_2 string
+- body:contacts[].alternate_emails array<string>
+- body:contacts[].city string
+- body:contacts[].country string
+- body:contacts[].custom_fields object
+- body:contacts[].email string
+- body:contacts[].first_name string
+- body:contacts[].last_name string
+- body:contacts[].postal_code string
+- body:contacts[].state_province_region string
+- body:list_ids array<string>
+
+## S586-N0067  POST /marketing/contacts/batch
+desc: Get Batched Contacts by IDs | **This endpoint is used to retrieve a set of contacts identified by their IDs.** This can be more efficient endpoint to get contacts than making a series of individual `GET` requests to the "Get a Contact by ID" endpoint. You can supply up to 100 IDs. Pass them into the `ids` field in your request body as an array or one or more strings. Twilio SendGrid recommends exp
+- body:ids array<string>

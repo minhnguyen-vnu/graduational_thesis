@@ -1,0 +1,767 @@
+## S305-0001  POST /ScheduleSeries/AddBooking
+summary: Create new Schedule Booking
+- body:CategoryIDFK integer
+- body:DurationType string
+- body:EndDate string
+- body:HoursPerDay number
+- body:Notes string
+- body:ProjectIDFK integer
+- body:ScheduleOnDaysOff boolean
+- body:StartDate string
+- body:TaskIDFK integer
+- body:TotalDuration number
+- body:UserIDFK integer
+
+## S305-0002  POST /ScheduleSeries/AddLeave
+summary: Create new Leave Booking
+- body:LeaveEndDate string
+- body:LeaveHoursPerDay number
+- body:LeaveNotes string
+- body:LeaveNotify boolean
+- body:LeaveStartDate string
+- body:LeaveTypeIDFK integer
+- body:LeaveUserIDFK integer
+
+## S305-0003  PUT /ScheduleSeries/EditBooking
+summary: Edit Booking
+- body:CategoryIDFK integer
+- body:DurationType string
+- body:EndDate string
+- body:HoursPerDay number
+- body:Notes string
+- body:ProjectIDFK integer
+- body:ScheduleOnDaysOff boolean
+- body:ScheduleSeriesID integer
+- body:StartDate string
+- body:TaskIDFK integer
+- body:TotalDuration number
+- body:UserIDFK integer
+
+## S305-0004  PUT /ScheduleSeries/EditLeave
+summary: Edit Leave Booking
+- body:EndDate string
+- body:HoursPerDay number
+- body:LeaveTypeIDFK integer
+- body:Notes string
+- body:ScheduleSeriesID integer
+- body:StartDate string
+- body:UserIDFK integer
+
+## S305-0005  POST /api/Bill
+summary: Create a new draft Bill
+- body:BillNumber string
+- body:BillTemplateIDFK integer
+- body:CompanyIDFK integer
+- body:CompanyName string
+- body:CurrencyCode string
+- body:DateIssued string
+- body:DueDate string
+- body:Email string
+- body:ExchangeRate number
+- body:Firstname string
+- body:Lastname string
+- body:LineItems array<object>
+- body:LineItems[].Description string
+- body:LineItems[].Discount number
+- body:LineItems[].InventoryItemIDFK integer
+- body:LineItems[].InventoryItemName string
+- body:LineItems[].ProjectIDFK integer
+- body:LineItems[].Quantity number
+- body:LineItems[].TaxIDFK integer
+- body:LineItems[].TaxName string
+- body:LineItems[].TaxPercent number
+- body:LineItems[].UnitPrice number
+- body:Notes string
+- body:PaymentTerms integer
+- body:Subject string
+- body:SupplierPONumber string
+- body:TransactionPrefix string
+- body:TransactionTaxConfigCode string
+
+## S305-0006  POST /api/BillPayment
+summary: Create new Bill Payment and optionally assign payment allocations to Bills
+- body:Amount number
+- body:CompanyIDFK integer
+- body:CurrencyCode string
+- body:DateIssued string
+- body:ExchangeRate number
+- body:Notes string
+- body:PaymentAllocations array<object>
+- body:PaymentAllocations[].AllocationAmount number
+- body:PaymentAllocations[].AllocationDate string
+- body:PaymentAllocations[].BillTransactionIDFK integer
+- body:PaymentNumber string
+- body:PaymentProviderCode string
+- body:TransactionPrefix string
+- body:TransactionReference string
+
+## S305-0007  POST /api/Company
+summary: Create a Company
+- body:BillingAddress string
+- body:BillingAddressCity string
+- body:BillingAddressLine string
+- body:BillingAddressPostCode string
+- body:BillingAddressState string
+- body:BillingCountryCode string
+- body:Comments string
+- body:CompanyName string
+- body:CurrencyCode string
+- body:Fax string
+- body:Phone string
+- body:TaxNumber string
+- body:website string
+
+## S305-0008  PUT /api/Company
+summary: Update a Company record.
+desc: Requires CompanyID and a list of field names to update. The FieldsToUpdate field accepts a string array containing field names that should be updated.
+- body:BillingAddress string
+- body:BillingAddressCity string
+- body:BillingAddressLine string
+- body:BillingAddressPostCode string
+- body:BillingAddressState string
+- body:BillingCountryCode string
+- body:Comments string
+- body:CompanyID integer
+- body:CompanyName string
+- body:Fax string
+- body:FieldsToUpdate array<string>
+- body:Phone string
+- body:TaxNumber string
+- body:website string
+
+## S305-0009  POST /api/Contact
+summary: Create a Contact
+- body:CompanyBillingAddress string
+- body:CompanyBillingAddressCity string
+- body:CompanyBillingAddressCountryCode string
+- body:CompanyBillingAddressLine string
+- body:CompanyBillingAddressPostCode string
+- body:CompanyBillingAddressState string
+- body:CompanyIDFK integer
+- body:CompanyName string
+- body:ContactEmail string
+- body:CurrencyCode string
+- body:Firstname string
+- body:Lastname string
+- body:Mobile string
+- body:Phone string
+- body:PositionTitle string
+- body:UpdateExisting boolean
+
+## S305-0010  POST /api/Estimate
+summary: Create a new draft Estimate
+- body:CompanyIDFK integer
+- body:CompanyName string
+- body:CurrencyCode string
+- body:CustomerPONumber string
+- body:DateIssued string
+- body:DueDate string
+- body:Email string
+- body:EstimateNumber string
+- body:EstimatePrefix string
+- body:EstimateTaxConfigCode string
+- body:ExchangeRate number
+- body:Firstname string
+- body:InvoiceTemplateIDFK integer
+- body:Lastname string
+- body:LineItems array<object>
+- body:LineItems[].Description string
+- body:LineItems[].Discount number
+- body:LineItems[].InventoryItemIDFK integer
+- body:LineItems[].InventoryItemName string
+- body:LineItems[].Quantity number
+- body:LineItems[].TaxIDFK integer
+- body:LineItems[].TaxName string
+- body:LineItems[].TaxPercent number
+- body:LineItems[].UnitPrice number
+- body:Notes string
+- body:Subject string
+
+## S305-0011  DELETE /api/Expense
+summary: Delete a Timesheet Entry
+- body:(body) integer
+
+## S305-0012  POST /api/Expense
+summary: Create an Expense
+desc: Create an Expense
+- body:Amount number
+- body:CurrencyCode string
+- body:CustomerIDFK integer
+- body:CustomerName string
+- body:ExchangeRate number
+- body:ExpenseCategoryIDFK integer
+- body:ExpenseCategoryName string
+- body:ExpenseDate string
+- body:ExpensePaymentMethodIDFK integer
+- body:FileAttachmentIDs array<integer>
+- body:GroupTripName string
+- body:Merchant string
+- body:MerchantTaxNumber string
+- body:Notes string
+- body:ProjectIDFK integer
+- body:ProjectName string
+- body:Quantity number
+- body:TaskIDFK integer
+- body:TaxIDFK integer
+- body:TaxName string
+- body:TransactionTaxConfigCode string
+- body:UserEmail string
+- body:UserIDFK integer
+- body:VerifyAndSave boolean
+- body:isChargeable boolean
+- body:isReimbursable boolean
+
+## S305-0013  PUT /api/Expense
+summary: Update an Expense
+desc: Update an Expense
+- body:Amount number
+- body:CurrencyCode string
+- body:CustomerIDFK integer
+- body:ExchangeRate number
+- body:ExpenseCategoryIDFK integer
+- body:ExpenseDate string
+- body:ExpenseID integer
+- body:ExpensePaymentMethodIDFK integer
+- body:FieldsToUpdate array<string>
+- body:FileAttachmentIDs array<integer>
+- body:GroupTripName string
+- body:Merchant string
+- body:MerchantTaxNumber string
+- body:Notes string
+- body:ProjectIDFK integer
+- body:Quantity number
+- body:TaskIDFK integer
+- body:TaxIDFK integer
+- body:TransactionTaxConfigCode string
+- body:VerifyAndSave boolean
+- body:isChargeable boolean
+- body:isReimbursable boolean
+
+## S305-0014  POST /api/Expense/Attachment
+- body:File file
+
+## S305-0015  POST /api/ExpenseApproval/Submit
+summary: Submit Expenses for Approval.
+- query:UserID integer
+- query:SendNotifications boolean
+- body:(body) integer
+
+## S305-0016  POST /api/Invoice
+summary: Create a new draft invoice
+- body:CompanyIDFK integer
+- body:CompanyName string
+- body:CurrencyCode string
+- body:CustomerPONumber string
+- body:DateIssued string
+- body:DueDate string
+- body:Email string
+- body:ExchangeRate number
+- body:Firstname string
+- body:InvoiceNumber string
+- body:InvoiceTemplateIDFK integer
+- body:Lastname string
+- body:LineItems array<object>
+- body:LineItems[].Description string
+- body:LineItems[].Discount number
+- body:LineItems[].InventoryItemIDFK integer
+- body:LineItems[].InventoryItemName string
+- body:LineItems[].ProjectIDFK integer
+- body:LineItems[].Quantity number
+- body:LineItems[].TaxIDFK integer
+- body:LineItems[].TaxName string
+- body:LineItems[].TaxPercent number
+- body:LineItems[].UnitPrice number
+- body:Notes string
+- body:PaymentTerms integer
+- body:Subject string
+- body:TransactionPrefix string
+- body:TransactionTaxConfigCode string
+
+## S305-0017  POST /api/Payment
+summary: Create new Payment and optionally assign payment allocations to Invoices
+- body:Amount number
+- body:CustomerIDFK integer
+- body:DateIssued string
+- body:ExchangeRate number
+- body:Notes string
+- body:PaymentAllocations array<object>
+- body:PaymentAllocations[].AllocationAmount number
+- body:PaymentAllocations[].AllocationDate string
+- body:PaymentAllocations[].InvoiceTransactionIDFK integer
+- body:PaymentNumber string
+- body:PaymentProviderCode string
+- body:TransactionPrefix string
+- body:TransactionReference string
+
+## S305-0018  POST /api/Project
+summary: Create a Project
+- body:BudgetAmount number
+- body:BudgetHours number
+- body:CompanyIDFK integer
+- body:CompanyName string
+- body:CurrencyCode string
+- body:EndDate string
+- body:PopulateDefaultProjectMembers boolean
+- body:ProjectCategoryIDFK integer
+- body:ProjectCode string
+- body:ProjectNotes string
+- body:ProjectStatusCode string
+- body:ProjectTitle string
+- body:StartDate string
+- body:TimesheetApprovalRequiredbyDefault boolean
+- body:isTaskRequiredOnTimesheet boolean
+
+## S305-0019  PUT /api/Project
+summary: Update an Project
+desc: Update a Project
+- body:BudgetAmount number
+- body:BudgetHours number
+- body:EndDate string
+- body:FieldsToUpdate array<string>
+- body:ProjectBillableTypeCode string
+- body:ProjectBudgetTypeCode string
+- body:ProjectCategoryIDFK integer
+- body:ProjectID integer
+- body:ProjectNotes string
+- body:ProjectStatusCode string
+- body:ProjectTitle string
+- body:StartDate string
+- body:TimesheetApprovalRequiredbyDefault boolean
+- body:isTaskRequiredOnTimesheet boolean
+
+## S305-0020  POST /api/ProjectMember
+summary: Assign a user as a Member of a Project
+desc: the Amount columns for Cost, Budget, Rates should be specified as a decimal. Financial amounts assume the currency of the Customer company. Budget units depend on the Budget method set on the Project.
+- body:BudgetAmount number
+- body:CostAmount number
+- body:ProjectIDFK integer
+- body:RateAmount number
+- body:UserIDFK integer
+- body:canCommentOnTasks boolean
+- body:canCreateTasks boolean
+- body:canDeleteTasks boolean
+- body:canUpdateTasks boolean
+- body:isProjectManager boolean
+- body:isTimesheetAllowed boolean
+- body:isTimesheetApprovalRequired boolean
+- body:isTimesheetApprover boolean
+
+## S305-0021  PUT /api/ProjectMember
+summary: Update a Member of a Project
+desc: Fields are only updated if their field name is in the FieldsToUpdate string collection. The Amount columns for Cost, Budget, Rates if specified should be a decimal. Financial amounts assume the currency of the parent Company. Budget units depend on the Budget method set on the Project.
+- body:BudgetAmount number
+- body:CostAmount number
+- body:FieldsToUpdate array<string>
+- body:ProjectIDFK integer
+- body:RateAmount number
+- body:UserIDFK integer
+- body:canCommentOnTasks boolean
+- body:canCreateTasks boolean
+- body:canDeleteTasks boolean
+- body:canUpdateTasks boolean
+- body:isProjectManager boolean
+- body:isTimesheetAllowed boolean
+- body:isTimesheetApprovalRequired boolean
+- body:isTimesheetApprover boolean
+
+## S305-0022  POST /api/ProjectTimesheetCategory
+summary: Assign a TimeSheetCategory to a Project.
+- body:BudgetHours number
+- body:CostAmount number
+- body:ProjectIDFK integer
+- body:RateAmount number
+- body:TimesheetCategoryIDFK integer
+- body:isBillable boolean
+- body:isPayable boolean
+
+## S305-0023  DELETE /api/Section
+summary: Delete a Section
+- query:SectionID integer
+
+## S305-0024  POST /api/Section
+summary: Create a Section
+- body:EndDateUTC string
+- body:ProjectIDFK integer
+- body:StartDateUTC string
+- body:Title string
+
+## S305-0025  DELETE /api/Task
+summary: Delete a Task
+- query:TaskID integer
+
+## S305-0026  POST /api/Task
+summary: Create a Task
+- body:AccountTaskTypeIDFK integer
+- body:AssignedToUserIDFKs array<integer>
+- body:DateDue string
+- body:DateStart string
+- body:Description string
+- body:EstimatedEffort number
+- body:ProjectIDFK integer
+- body:SectionIDFK integer
+- body:Tags array<object>
+- body:Tags[].Color string
+- body:Tags[].Name string
+- body:TaskPriorityCode string
+- body:Title string
+
+## S305-0027  PUT /api/Task
+summary: Update a Task.
+desc: Requires TaskID and a list of field names to update. The FieldsToUpdate field accepts a string array containing field names that should be updated.
+- body:AssignedToUserIDFK array<integer>
+- body:DateDue string
+- body:DateStart string
+- body:Description string
+- body:EstimatedEffort number
+- body:FieldsToUpdate array<string>
+- body:PercentComplete integer
+- body:SectionIDFK integer
+- body:Tags array<object>
+- body:Tags[].Color string
+- body:Tags[].Name string
+- body:TaskID integer
+- body:TaskPriorityCode string
+- body:TaskStatusCode string
+- body:Title string
+
+## S305-0028  POST /api/Timesheet
+summary: Create a new Timesheet Entry
+- body:CustomMetadata string
+- body:Duration number
+- body:EntryDate string
+- body:Notes string
+- body:ProjectIDFK integer
+- body:TaskIDFK integer
+- body:TimesheetCategoryIDFK integer
+- body:UserIDFK integer
+- body:hasStartEndTime boolean
+- body:isInvoiced boolean
+
+## S305-0029  PUT /api/Timesheet
+summary: Update a Timesheet
+desc: The FieldsToUpdate field expects a string array collection of the field names you would like updated. Valid fields to update inlcude "ProjectIDFK", "TimeSheetCategoryIDFK", "TaskIDFK", "Duration", "EntryDate", "Notes", "hasStartEndTime", "CustomMetadata". If you intend to provide start/end times on timesheets, this is achieved by including the start time in the EntryDate field (Iso date format), a
+- body:CustomMetadata string
+- body:Duration number
+- body:EntryDate string
+- body:FieldsToUpdate array<string>
+- body:Notes string
+- body:ProjectIDFK integer
+- body:TaskIDFK integer
+- body:TimeSheetEntryID integer
+- body:TimesheetCategoryIDFK integer
+- body:hasStartEndTime boolean
+
+## S305-0030  DELETE /api/Timesheet/{id}
+summary: Delete a Timesheet Entry
+- path:id integer
+
+## S305-0031  POST /api/TimesheetSubmission
+summary: Submit Timesheets for Approval.
+desc: Either provide a a specific Day (WholeDayOf) or any day in a Week (WholeWeekOf) to submit all draft timesheets in that day or week
+- query:SendNotifications boolean
+- query:WholeWeekOf string
+- query:WholeDayOf string
+- query:UserID integer
+
+## S305-0032  DELETE /api/TimesheetTimer/{id}
+summary: Stop the timer running on an existing Timesheet Entry
+- path:id integer
+- query:UserID integer
+
+## S305-0033  POST /api/TimesheetTimer/{id}
+summary: Starts a Timer running on an existing Timesheet Entry
+- path:id integer
+- query:UserID integer
+
+## S305-0034  DELETE /api/Webhook
+summary: Delete webhook subscription by URL
+- query:target_url string
+
+## S305-0035  POST /api/Webhook
+summary: Subscribe to Webhook. On success, returns ID of webhook subscription.
+desc: When you receive a webhook, you should respond with Http 200 OK Status Code, otherwise we will retry. To create a webhook, you need both the webhook_notifications scope, as well as the scope for the required entity being monitored. Event values are: "company_created", "company_deleted", "company_updated", "contact_created", "contact_deleted", "contact_updated", "invoice_created", "invoice_sent","i
+- body:event string
+- body:secret string
+- body:target_url string
+
+## S305-0036  DELETE /api/Webhook/{id}
+summary: Delete Webhook Subscription by ID
+- path:id integer
+
+## S306-0001  POST /user/active/terminate
+summary: &nbsp; <i class="fa fa-lg fa-unlock-alt"></i>
+- body:(body) any
+
+## S306-0002  PATCH /user/password
+summary: Update user name&nbsp; <i class="fa fa-lg fa-unlock-alt"></i>
+- body:(body) any
+
+## S306-0003  POST /user/password
+summary: Update user name&nbsp; <i class="fa fa-lg fa-unlock-alt"></i>
+- body:(body) any
+
+## S306-0004  PUT /user/password
+summary: Update user name&nbsp; <i class="fa fa-lg fa-unlock-alt"></i>
+- body:(body) any
+
+## S306-0005  POST /user/register
+summary: Registration&nbsp; <i class="fa fa-lg fa-unlock-alt"></i>
+- body:(body) any
+
+## S307-0001  POST /bulk/md5
+desc: Bulk search of MD5 hashes in a JSON array with the key 'hashes'.
+
+## S307-0002  POST /bulk/sha1
+desc: Bulk search of SHA1 hashes in a JSON array with the 'hashes'.
+
+## S308-0001  POST /project/{username}/{project}
+desc: Triggers a new build, returns a summary of the build.
+- path:username string
+- path:project string
+- body:build_parameters object
+- body:parallel string
+- body:revision string
+- body:tag string
+
+## S308-0002  DELETE /project/{username}/{project}/build-cache
+desc: Clears the cache for a project.
+- path:username string
+- path:project string
+
+## S308-0003  POST /project/{username}/{project}/checkout-key
+desc: Creates a new checkout key. Only usable with a user API token.
+- path:username string
+- path:project string
+- body:(body) string enum[deploy-key|github-user-key]
+
+## S308-0004  DELETE /project/{username}/{project}/checkout-key/{fingerprint}
+desc: Delete a checkout key.
+- path:username string
+- path:project string
+- path:fingerprint string
+
+## S308-0005  POST /project/{username}/{project}/envvar
+desc: Creates a new environment variable
+- path:username string
+- path:project string
+
+## S308-0006  DELETE /project/{username}/{project}/envvar/{name}
+desc: Deletes the environment variable named ':name'
+- path:username string
+- path:project string
+- path:name string
+
+## S308-0007  POST /project/{username}/{project}/ssh-key
+desc: Create an ssh key used to access external systems that require SSH key-based authentication
+- path:username string
+- path:project string
+- body:hostname string
+- body:private_key string
+
+## S308-0008  POST /project/{username}/{project}/tree/{branch}
+desc: Triggers a new build, returns a summary of the build. Optional build parameters can be set using an experimental API. Note: For more about build parameters, read about [using parameterized builds](https://circleci.com/docs/parameterized-builds/)
+- path:username string
+- path:project string
+- path:branch string
+- body:build_parameters object
+- body:parallel string
+- body:revision string
+
+## S308-0009  POST /project/{username}/{project}/{build_num}/cancel
+desc: Cancels the build, returns a summary of the build.
+- path:username string
+- path:project string
+- path:build_num integer
+
+## S308-0010  POST /project/{username}/{project}/{build_num}/retry
+desc: Retries the build, returns a summary of the new build.
+- path:username string
+- path:project string
+- path:build_num integer
+
+## S308-0011  POST /user/heroku-key
+desc: Adds your Heroku API key to CircleCI, takes apikey as form param name.
+
+## S310-0001  POST /job
+summary: Queues a job
+desc: Creates a new job
+- body:analysisMode string
+- body:commitOverride string
+- body:emailReportTo string
+- body:projectBranch string
+- body:projectKey string
+- body:version string
+
+## S313-0001  POST /authn-azure/{service_id}/{account}/{login}/authenticate
+summary: Gets a short-lived access token for applications running in Azure.
+desc: The access token is used to communicate to the REST API that the bearer of the token has been authorized to access the API and perform specific actions specified by the scope that was granted during authorization. For API usage, the base64-encoded access token is ordinarily passed as an HTTP Authorization header as `Authorization: Token token=<base64-encoded token>`. The `login` must be URL encode
+- path:service_id string
+- path:account string
+- path:login any
+- body:jwt string
+
+## S313-0002  POST /authn-gcp/{account}/authenticate
+summary: Gets a short-lived access token for applications running in Google Cloud Platform.
+desc: Use the GCP Authenticator API to send an authentication request from a Google Cloud service to Conjur. For more information, see [the documentation](https://docs.conjur.org/Latest/en/Content/Operations/Services/cjr-gcp-authn.htm).
+- path:account string
+- body:jwt string
+
+## S313-0003  POST /authn-iam/{service_id}/{account}/{login}/authenticate
+summary: Get a short-lived access token for applications running in AWS.
+desc: The access token is used to communicate to the REST API that the bearer of the token has been authorized to access the API and perform specific actions specified by the scope that was granted during authorization. For API usage, the base64-encoded access token is ordinarily passed as an HTTP Authorization header as `Authorization: Token token=<base64-encoded token>`. The `login` must be URL encode
+- path:service_id string
+- path:account string
+- path:login any
+- body:(body) string
+
+## S313-0004  POST /authn-jwt/{service_id}/{account}/authenticate
+summary: Gets a short-lived access token for applications using JSON Web Token (JWT) to access the Conjur API.
+desc: Use the JWT Authenticator to leverage the identity layer provided by JWT to authenticate with Conjur.
+- path:account string
+- path:service_id string
+- body:jwt string
+
+## S313-0005  POST /authn-jwt/{service_id}/{account}/{id}/authenticate
+summary: Gets a short-lived access token for applications using JSON Web Token (JWT) to access the Conjur API. Covers the case of use of optional URL parameter "ID"
+desc: Use the JWT Authenticator to leverage the identity layer provided by JWT to authenticate with Conjur.
+- path:account string
+- path:id string
+- path:service_id string
+- body:(body) any
+
+## S313-0006  POST /authn-k8s/{service_id}/inject_client_cert
+summary: For applications running in Kubernetes; sends Conjur a certificate signing request (CSR) and requests a client certificate injected into the application's Kubernetes pod.
+desc: This request sends a Certificate Signing Request to Conjur, which uses the Kubernetes API to inject a client certificate into the application pod. This endpoint requires a properly configured Conjur Certificate Authority service alongside a properly configured and enabled Kubernetes authenticator. For detailed instructions, see [the documentation](https://docs.conjur.org/Latest/en/Content/Integrat
+- path:service_id string
+- body:(body) string
+
+## S313-0007  POST /authn-k8s/{service_id}/{account}/{login}/authenticate
+summary: Gets a short-lived access token for applications running in Kubernetes.
+desc: The access token is used to communicate to the REST API that the bearer of the token has been authorized to access the API and perform specific actions specified by the scope that was granted during authorization. For API usage, the base64-encoded access token is ordinarily passed as an HTTP Authorization header as `Authorization: Token token=<base64-encoded token>`. The `login` must be URL encode
+- path:service_id string
+- path:account string
+- path:login any
+
+## S313-0008  POST /authn-ldap/{service_id}/{account}/{login}/authenticate
+summary: Gets a short-lived access token for users and hosts using their LDAP identity to access the Conjur API.
+desc: The access token is used to communicate to the REST API that the bearer of the token has been authorized to access the API and perform specific actions specified by the scope that was granted during authorization. For API usage, the base64-encoded access token is ordinarily passed as an HTTP Authorization header as `Authorization: Token token=<base64-encoded token>`. The `login` must be URL encode
+- path:service_id string
+- path:account string
+- path:login any
+- body:(body) any
+
+## S313-0009  POST /authn-oidc/{service_id}/{account}/authenticate
+summary: Gets a short-lived access token for applications using OpenID Connect (OIDC) to access the Conjur API.
+desc: Use the OIDC Authenticator to leverage the identity layer provided by OIDC to authenticate with Conjur. For more information see [the documentation](https://docs.conjur.org/Latest/en/Content/OIDC/OIDC.htm).
+- path:service_id string
+- path:account string
+- body:id_token string
+
+## S313-0010  PUT /authn/{account}/api_key
+summary: Rotates a role's API key.
+desc: Any role can rotate its own API key. The name and password (for users) or current API key (for hosts and users) of the role must be provided via HTTP Basic Authorization. To rotate another role's API key, you may provide your name and password (for users) or current API key (for hosts and users) via HTTP Basic Authorization with the request. Alternatively, you may provide your Conjur access token 
+- path:account string
+- query:role string
+
+## S313-0011  PUT /authn/{account}/password
+summary: Changes a user’s password.
+desc: You must provide the login name and current password or API key of the user whose password is to be updated in an HTTP Basic Authentication header. Also replaces the user’s API key with a new securely generated random value. You can fetch the new API key using the Login method. The Basic authentication-compliant header is formed by: 1. Concatenating the role's name, a literal colon character ':', 
+- path:account string
+- body:(body) string
+
+## S313-0012  POST /authn/{account}/{login}/authenticate
+summary: Gets a short-lived access token, which is required in the header of most subsequent API requests.
+desc: A client can obtain an access token by presenting a valid login name and API key. The access token is used to communicate to the REST API that the bearer of the token has been authorized to access the API and perform specific actions specified by the scope that was granted during authorization. The `login` must be URL encoded. For example, `alice@devops` must be encoded as `alice%40devops`. The `s
+- path:account string
+- path:login string
+- body:(body) any
+
+## S313-0013  POST /ca/{account}/{service_id}/sign
+summary: Gets a signed certificate from the configured Certificate Authority service.
+desc: Gets a signed certificate from the configured Certificate Authority service. The request must include a valid Certificate Signing Request, and a desired TTL in ISO 8601 format. *** IMPORTANT *** This endpoint is part of an early implementation of support for using Conjur as a certificate authority, and is currently available at the Community (or early alpha) level. This endpoint is still subject t
+- path:account string
+- path:service_id string
+- body:csr string
+- body:ttl string
+
+## S313-0014  POST /host_factories/hosts
+summary: Creates a Host using the Host Factory.
+desc: Creates a Host using the Host Factory and returns a JSON description of it. Requires a host factory token, which can be created using the create tokens API. In practice, this token is usually provided automatically as part of Conjur integration with your host provisioning infrastructure. Note: If the token was created with a CIDR restriction, you must make this API request from a whitelisted addre
+- body:annotations object
+- body:id string
+
+## S313-0015  POST /host_factory_tokens
+summary: Creates one or more host identity tokens.
+desc: Creates one or more tokens which can be used to bootstrap host identity. Responds with a JSON document containing the tokens and their restrictions. If the tokens are created with a CIDR restriction, Conjur will only accept them from the whitelisted IP ranges. ##### Permissions required # `execute` privilege on the Host Factory."
+- body:cidr array<string>
+- body:count integer
+- body:expiration string
+- body:host_factory string
+
+## S313-0016  DELETE /host_factory_tokens/{token}
+summary: Revokes a token, immediately disabling it.
+desc: Revokes a token, immediately disabling it. ##### Permissions required `update` privilege on the host factory."
+- path:token string
+
+## S313-0017  PATCH /policies/{account}/policy/{identifier}
+summary: Modifies an existing Conjur policy.
+desc: Modifies an existing Conjur policy. Data may be explicitly deleted using the `!delete`, `!revoke`, and `!deny` statements. Unlike `replace` mode, no data is ever implicitly deleted. ##### Permissions required
+- path:account string
+- path:identifier string
+- body:(body) any
+
+## S313-0018  POST /policies/{account}/policy/{identifier}
+summary: Adds data to the existing Conjur policy.
+desc: Adds data to the existing Conjur policy. Deletions are not allowed. Any policy objects that exist on the server but are omitted from the policy file will not be deleted and any explicit deletions in the policy file will result in an error. ##### Permissions required `create` privilege on the policy."
+- path:account string
+- path:identifier string
+- body:(body) any
+
+## S313-0019  PUT /policies/{account}/policy/{identifier}
+summary: Loads or replaces a Conjur policy document.
+desc: Loads or replaces a Conjur policy document. **Any policy data which already exists on the server but is not explicitly specified in the new policy file will be deleted!**.
+- path:account string
+- path:identifier string
+- body:(body) any
+
+## S313-0020  DELETE /roles/{account}/{kind}/{identifier}
+summary: Deletes an existing role membership
+desc: Deletes an existing role membership. If a role A is granted to a role B, then role A is said to have role B as a member. These relationships are described in the “members” portion of the returned JSON. When the `members` query parameter is provided, you will get the members of a role. When the `members` and `member` query parameters are provided, the role specfified by `member` will be removed as 
+- path:account string
+- path:kind string
+- path:identifier string
+- query:members string
+- query:member string
+
+## S313-0021  POST /roles/{account}/{kind}/{identifier}
+summary: Update or modify an existing role membership
+desc: Updates or modifies an existing role membership. If a role A is granted to a role B, then role A is said to have role B as a member. These relationships are described in the “members” portion of the returned JSON. When the `members` query parameter is provided, you will get the members of a role. When the `members` and `member` query parameters are provided, the role specfified by `member` will be
+- path:account string
+- path:kind string
+- path:identifier string
+- query:members string
+- query:member string
+
+## S313-0022  POST /secrets/{account}/{kind}/{identifier}
+summary: Creates a secret value within the specified variable.
+desc: Creates a secret value within the specified Secret. Note: Conjur will allow you to add a secret to any resource, but the best practice is to store and retrieve secret data only using Secret resources.
+- path:account string
+- path:kind string
+- path:identifier string
+- query:expirations string
+- body:(body) string
+
+## S313-0023  PATCH /{authenticator}/{account}
+summary: Enables or disables authenticator defined without service_id.
+desc: Allows you to either enable or disable a given authenticator that does not have service_id (For example: authn-gcp). When you enable or disable an authenticator via this endpoint, the status of the authenticator is stored in the Conjur database. The enablement status of the authenticator service may be overridden by setting the `CONJUR_AUTHENTICATORS` environment variable on the Conjur server; in 
+- path:authenticator string enum[authn-iam|authn-oidc|authn-ldap|authn-k8s|authn-gcp|authn-azure|authn-jwt]
+- path:account string
+- body:enabled boolean
+
+## S313-0024  PATCH /{authenticator}/{service_id}/{account}
+summary: Enables or disables authenticator service instances.
+desc: Allows you to either enable or disable a given authenticator service instance. When you enable or disable an authenticator service instance via this endpoint, the status of the authenticator service instance is stored in the Conjur database. The enablement status of the authenticator service instance may be overridden by setting the `CONJUR_AUTHENTICATORS` environment variable on the Conjur server
+- path:authenticator any
+- path:service_id string
+- path:account string
+- body:(body) any

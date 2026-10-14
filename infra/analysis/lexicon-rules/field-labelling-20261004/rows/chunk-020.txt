@@ -1,0 +1,913 @@
+## S343-0001  POST /account/{accountNo}/transactions
+desc: Return transactions between 2 specific dates
+- path:accountNo string
+- body:endDate string
+- body:startDate string
+
+## S343-0002  POST /admin/addUser
+desc: Add new user
+- body:firstname string
+- body:lastname string
+- body:password1 string
+- body:password2 string
+- body:username string
+
+## S343-0003  POST /admin/changePassword
+desc: Change user password
+- body:password1 string
+- body:password2 string
+- body:username string
+
+## S343-0004  POST /feedback/submit
+desc: Submit feedback for the bank
+- body:email string
+- body:message string
+- body:name string
+- body:subject string
+
+## S343-0005  POST /login
+summary: Login method
+desc: After a successful login a token is returned. This is a Bearer token. To authenticate with it use the Authorization header and set value to Bearer empty space and the token value.
+- body:password string
+- body:username string
+
+## S343-0006  POST /transfer
+desc: Transfer money between two accounts
+- body:fromAccount string
+- body:toAccount string
+- body:transferAmount string
+
+## S344-0001  POST /v1/shorten
+summary: Create short link
+- body:url string
+
+## S345-0001  POST /tyk/apis/
+desc: Create an *API Definition* object
+- body:api_id string
+- body:auth object
+- body:auth.auth_header_name string
+- body:auth.use_cookie boolean
+- body:auth.use_param boolean
+- body:definition object
+- body:definition.key string
+- body:definition.location string
+- body:enable_jwt boolean
+- body:enable_signature_checking boolean
+- body:hmac_allowed_clock_skew number
+- body:id string
+- body:jwt_identity_base_field string
+- body:jwt_policy_field_name string
+- body:jwt_signing_method string
+- body:jwt_source string
+- body:name string
+- body:notifications object
+- body:notifications.oauth_on_keychange_url string
+- body:notifications.shared_secret string
+- body:oauth_meta object
+- body:oauth_meta.allowed_access_types array<string>
+- body:oauth_meta.allowed_authorize_types array<string>
+- body:oauth_meta.auth_login_redirect string
+- body:org_id string
+- body:slug string
+- body:uptime_tests object
+- body:uptime_tests.CORS object
+- body:uptime_tests.CORS.allow_credentials boolean
+- body:uptime_tests.CORS.allowed_headers array<string>
+- body:uptime_tests.CORS.allowed_methods array<string>
+- body:uptime_tests.CORS.allowed_origins array<string>
+- body:uptime_tests.CORS.debug boolean
+- body:uptime_tests.CORS.enable boolean
+- body:uptime_tests.CORS.exposed_headers array<string>
+- body:uptime_tests.CORS.max_age number
+- body:uptime_tests.CORS.options_passthrough boolean
+- body:uptime_tests.active boolean
+- body:uptime_tests.allowed_ips array<string>
+- body:uptime_tests.cache_options object
+- body:uptime_tests.cache_options.cache_all_safe_requests boolean
+- body:uptime_tests.cache_options.cache_timeout number
+- body:uptime_tests.cache_options.enable_cache boolean
+- body:uptime_tests.cache_options.enable_upstream_cache_control boolean
+- body:uptime_tests.check_list array<object>
+- body:uptime_tests.check_list[].body string
+- body:uptime_tests.check_list[].headers array<object>
+- body:uptime_tests.check_list[].method string
+- body:uptime_tests.check_list[].url string
+- body:uptime_tests.config object
+- body:uptime_tests.config.expire_utime_after number
+- body:uptime_tests.config.recheck_wait number
+- body:uptime_tests.config.service_discovery object
+- body:uptime_tests.custom_middleware object
+- body:uptime_tests.custom_middleware.post array<object>
+- body:uptime_tests.custom_middleware.pre array<object>
+- body:uptime_tests.custom_middleware.response array<object>
+- body:uptime_tests.do_not_track string
+- body:uptime_tests.domain string
+- body:uptime_tests.dont_set_quota_on_create boolean
+- body:uptime_tests.enable_batch_request_support boolean
+- body:uptime_tests.enable_ip_whitelisting boolean
+- body:uptime_tests.event_handlers object
+- body:uptime_tests.expire_analytics_after number
+- body:uptime_tests.proxy object
+- body:uptime_tests.proxy.check_host_against_uptime_tests boolean
+- body:uptime_tests.proxy.enable_load_balancing boolean
+- body:uptime_tests.proxy.listen_path string
+- body:uptime_tests.proxy.preserve_host_header boolean
+- body:uptime_tests.proxy.service_discovery object
+- body:uptime_tests.proxy.strip_listen_path boolean
+- body:uptime_tests.proxy.target_list array<string>
+- body:uptime_tests.proxy.target_url string
+- body:uptime_tests.response_processors array<object>
+- body:uptime_tests.response_processors[].name string
+- body:uptime_tests.response_processors[].options object
+- body:uptime_tests.session_lifetime number
+- body:uptime_tests.tags array<string>
+- body:use_basic_auth boolean
+- body:use_keyless boolean
+- (4 truong bi cat)
+
+## S345-0002  DELETE /tyk/apis/{apiID}
+desc: Deletes an *API Definition* object, if it exists
+- path:apiID string
+
+## S345-0003  PUT /tyk/apis/{apiID}
+desc: Updates an *API Definition* object, if it exists
+- path:apiID string
+- body:api_id string
+- body:auth object
+- body:auth.auth_header_name string
+- body:auth.use_cookie boolean
+- body:auth.use_param boolean
+- body:definition object
+- body:definition.key string
+- body:definition.location string
+- body:enable_jwt boolean
+- body:enable_signature_checking boolean
+- body:hmac_allowed_clock_skew number
+- body:id string
+- body:jwt_identity_base_field string
+- body:jwt_policy_field_name string
+- body:jwt_signing_method string
+- body:jwt_source string
+- body:name string
+- body:notifications object
+- body:notifications.oauth_on_keychange_url string
+- body:notifications.shared_secret string
+- body:oauth_meta object
+- body:oauth_meta.allowed_access_types array<string>
+- body:oauth_meta.allowed_authorize_types array<string>
+- body:oauth_meta.auth_login_redirect string
+- body:org_id string
+- body:slug string
+- body:uptime_tests object
+- body:uptime_tests.CORS object
+- body:uptime_tests.CORS.allow_credentials boolean
+- body:uptime_tests.CORS.allowed_headers array<string>
+- body:uptime_tests.CORS.allowed_methods array<string>
+- body:uptime_tests.CORS.allowed_origins array<string>
+- body:uptime_tests.CORS.debug boolean
+- body:uptime_tests.CORS.enable boolean
+- body:uptime_tests.CORS.exposed_headers array<string>
+- body:uptime_tests.CORS.max_age number
+- body:uptime_tests.CORS.options_passthrough boolean
+- body:uptime_tests.active boolean
+- body:uptime_tests.allowed_ips array<string>
+- body:uptime_tests.cache_options object
+- body:uptime_tests.cache_options.cache_all_safe_requests boolean
+- body:uptime_tests.cache_options.cache_timeout number
+- body:uptime_tests.cache_options.enable_cache boolean
+- body:uptime_tests.cache_options.enable_upstream_cache_control boolean
+- body:uptime_tests.check_list array<object>
+- body:uptime_tests.check_list[].body string
+- body:uptime_tests.check_list[].headers array<object>
+- body:uptime_tests.check_list[].method string
+- body:uptime_tests.check_list[].url string
+- body:uptime_tests.config object
+- body:uptime_tests.config.expire_utime_after number
+- body:uptime_tests.config.recheck_wait number
+- body:uptime_tests.config.service_discovery object
+- body:uptime_tests.custom_middleware object
+- body:uptime_tests.custom_middleware.post array<object>
+- body:uptime_tests.custom_middleware.pre array<object>
+- body:uptime_tests.custom_middleware.response array<object>
+- body:uptime_tests.do_not_track string
+- body:uptime_tests.domain string
+- body:uptime_tests.dont_set_quota_on_create boolean
+- body:uptime_tests.enable_batch_request_support boolean
+- body:uptime_tests.enable_ip_whitelisting boolean
+- body:uptime_tests.event_handlers object
+- body:uptime_tests.expire_analytics_after number
+- body:uptime_tests.proxy object
+- body:uptime_tests.proxy.check_host_against_uptime_tests boolean
+- body:uptime_tests.proxy.enable_load_balancing boolean
+- body:uptime_tests.proxy.listen_path string
+- body:uptime_tests.proxy.preserve_host_header boolean
+- body:uptime_tests.proxy.service_discovery object
+- body:uptime_tests.proxy.strip_listen_path boolean
+- body:uptime_tests.proxy.target_list array<string>
+- body:uptime_tests.proxy.target_url string
+- body:uptime_tests.response_processors array<object>
+- body:uptime_tests.response_processors[].name string
+- body:uptime_tests.response_processors[].options object
+- body:uptime_tests.session_lifetime number
+- body:uptime_tests.tags array<string>
+- body:use_basic_auth boolean
+- (5 truong bi cat)
+
+## S345-0004  POST /tyk/keys/create
+desc: Create a new *API token* with the *session object* defined in the body
+- query:suppress_reset number
+- body:access_rights object
+- body:allowance number
+- body:apply_policy_id string
+- body:basic_auth_data object
+- body:basic_auth_data.hash_type string enum[|bcrypt]
+- body:basic_auth_data.password string
+- body:expires number
+- body:hmac_enabled boolean
+- body:hmac_string string
+- body:is_inactive boolean
+- body:jwt_data object
+- body:jwt_data.secret string
+- body:meta_data object
+- body:monitor object
+- body:monitor.trigger_limits array<string>
+- body:oauth_client_id string
+- body:org_id string
+- body:per number
+- body:quota_max number
+- body:quota_remaining number
+- body:quota_renewal_rate string
+- body:quota_renews number
+- body:rate number
+- body:tags array<string>
+
+## S345-0005  DELETE /tyk/keys/{keyId}
+desc: Remove this *API token* from the gateway, this will completely destroy the token and metadata associated with the token and instantly stop access from being granted
+- path:keyId string
+- query:api_id string
+
+## S345-0006  POST /tyk/keys/{keyId}
+desc: Add a pre-specified *API token* with the *session object* defined in the body, this operatin creates a custom token that dsoes not use the gateway naming convention for tokens
+- path:keyId string
+- body:access_rights object
+- body:allowance number
+- body:apply_policy_id string
+- body:basic_auth_data object
+- body:basic_auth_data.hash_type string enum[|bcrypt]
+- body:basic_auth_data.password string
+- body:expires number
+- body:hmac_enabled boolean
+- body:hmac_string string
+- body:is_inactive boolean
+- body:jwt_data object
+- body:jwt_data.secret string
+- body:meta_data object
+- body:monitor object
+- body:monitor.trigger_limits array<string>
+- body:oauth_client_id string
+- body:org_id string
+- body:per number
+- body:quota_max number
+- body:quota_remaining number
+- body:quota_renewal_rate string
+- body:quota_renews number
+- body:rate number
+- body:tags array<string>
+
+## S345-0007  PUT /tyk/keys/{keyId}
+desc: Update an *API token* with the *session object* defined in the body, this operatin overwrites the existing object
+- path:keyId string
+- query:suppress_reset number
+- query:api_id string
+- body:access_rights object
+- body:allowance number
+- body:apply_policy_id string
+- body:basic_auth_data object
+- body:basic_auth_data.hash_type string enum[|bcrypt]
+- body:basic_auth_data.password string
+- body:expires number
+- body:hmac_enabled boolean
+- body:hmac_string string
+- body:is_inactive boolean
+- body:jwt_data object
+- body:jwt_data.secret string
+- body:meta_data object
+- body:monitor object
+- body:monitor.trigger_limits array<string>
+- body:oauth_client_id string
+- body:org_id string
+- body:per number
+- body:quota_max number
+- body:quota_remaining number
+- body:quota_renewal_rate string
+- body:quota_renews number
+- body:rate number
+- body:tags array<string>
+
+## S345-0008  POST /tyk/oauth/authorize-client/
+desc: The final request from an authorising party for a redirect URI during the Tyk OAuth flow
+- body:response_type string
+- body:client_id string
+- body:redirect_uri string
+- body:key_rules string
+
+## S345-0009  POST /tyk/oauth/clients/create
+desc: Create a new OAuth client
+- body:api_id string
+- body:redirect_uri string
+
+## S345-0010  DELETE /tyk/oauth/clients/{apiId}/{clientId}
+desc: Delete the OAuth client
+- path:apiId string
+- path:clientId string
+
+## S345-0011  DELETE /tyk/oauth/refresh/{keyId}
+desc: Invalidate a refresh token
+- path:keyId string
+- query:apiID string
+
+## S346-0001  POST /v1/render/sync
+summary: Render a URL as an image or video
+- body:block_ads boolean
+- body:click_accept boolean
+- body:delay string
+- body:format string enum[png|jpg|pdf|svg|mp4|webp|webm|html]
+- body:full_page boolean
+- body:gpu boolean
+- body:height integer
+- body:hide_cookie_banners boolean
+- body:html string
+- body:metadata boolean
+- body:retina boolean
+- body:selector string
+- body:thumb_height integer
+- body:thumb_width integer
+- body:url string
+- body:wait_for string
+- body:wait_to_leave string
+- body:wait_until string enum[requestsfinished|mostrequestsfinished|loaded|domloaded]
+- body:width integer
+
+## S347-0001  DELETE /data-sources/arista-switches/{id}
+summary: Delete an arista switch data source
+desc: Delete an arista switch data source
+- path:id string
+
+## S347-0002  PUT /data-sources/arista-switches/{id}
+summary: Update an arista switch data source
+desc: Update an switch data source
+- path:id string
+- body:enabled boolean
+- body:entity_id string
+- body:entity_type string enum[CiscoSwitchDataSource|DellSwitchDataSource|AristaSwitchDataSource|BrocadeSwitchDataSource|JuniperSwitchDataSource|VCenterDataSource|NSXVManagerDataSource|UCSManagerDataSource|HPVCManagerDataSource|HPOneViewDataSource|PanFirewallDataSource|CheckpointFirewallDataSource]
+- body:fqdn string
+- body:ip string
+- body:nickname string
+- body:notes string
+- body:proxy_id string
+- body:credentials object
+- body:credentials.password string
+- body:credentials.username string
+
+## S347-0003  PUT /data-sources/arista-switches/{id}/snmp-config
+summary: Update snmp config for arista switch data source
+desc: Update snmp config for arista switch data source
+- path:id string
+- body:config_snmp_2c object
+- body:config_snmp_2c.community_string string
+- body:config_snmp_3 object
+- body:config_snmp_3.authentication_password string
+- body:config_snmp_3.authentication_type string enum[NO_AUTH|MD5|SHA]
+- body:config_snmp_3.context_name string
+- body:config_snmp_3.privacy_password string
+- body:config_snmp_3.privacy_type string enum[AES|DES|AES128|AES192|AES256|3DES|NO_PRIV]
+- body:config_snmp_3.username string
+- body:snmp_enabled boolean
+- body:snmp_version string enum[v2c|v3]
+
+## S347-0004  PUT /data-sources/brocade-switches/{id}
+summary: Update a brocade switch data source
+desc: Update a brocade switch data source. Only credentials, nickname and notes can be updated.
+- path:id string
+- body:enabled boolean
+- body:entity_id string
+- body:entity_type string enum[CiscoSwitchDataSource|DellSwitchDataSource|AristaSwitchDataSource|BrocadeSwitchDataSource|JuniperSwitchDataSource|VCenterDataSource|NSXVManagerDataSource|UCSManagerDataSource|HPVCManagerDataSource|HPOneViewDataSource|PanFirewallDataSource|CheckpointFirewallDataSource]
+- body:fqdn string
+- body:ip string
+- body:nickname string
+- body:notes string
+- body:proxy_id string
+- body:credentials object
+- body:credentials.password string
+- body:credentials.username string
+
+## S347-0005  POST /data-sources/brocade-switches/{id}/disable
+summary: Disable a brocade switch data source
+- path:id string
+
+## S347-0006  POST /data-sources/brocade-switches/{id}/enable
+summary: Enable a brocade switch data source
+- path:id string
+
+## S347-0007  PUT /data-sources/brocade-switches/{id}/snmp-config
+summary: Update snmp config for brocade switch data source
+desc: Update snmp config for brocade switch data source
+- path:id string
+- body:config_snmp_2c object
+- body:config_snmp_2c.community_string string
+- body:config_snmp_3 object
+- body:config_snmp_3.authentication_password string
+- body:config_snmp_3.authentication_type string enum[NO_AUTH|MD5|SHA]
+- body:config_snmp_3.context_name string
+- body:config_snmp_3.privacy_password string
+- body:config_snmp_3.privacy_type string enum[AES|DES|AES128|AES192|AES256|3DES|NO_PRIV]
+- body:config_snmp_3.username string
+- body:snmp_enabled boolean
+- body:snmp_version string enum[v2c|v3]
+
+## S347-0008  POST /data-sources/checkpoint-firewalls
+summary: Create a checkpoint firewall
+desc: Add checkpoint firewall as data source
+- body:enabled boolean
+- body:fqdn string
+- body:ip string
+- body:nickname string
+- body:notes string
+- body:proxy_id string
+- body:credentials object
+- body:credentials.password string
+- body:credentials.username string
+
+## S347-0009  POST /data-sources/checkpoint-firewalls/{id}/disable
+summary: Disable a checkpoint firewall data source
+desc: Disable a checkpoint firewall data source
+- path:id string
+
+## S347-0010  POST /data-sources/checkpoint-firewalls/{id}/enable
+summary: Enable a checkpoint firewall data source
+desc: Enable a checkpoint firewall data source
+- path:id string
+
+## S347-0011  POST /data-sources/cisco-switches
+summary: Create a cisco switch data source
+desc: Add cisco switch as data source. User must provide one of ip or fqdn field in the request body. Appropriate proxy id is retrieved from infra/nodes URL to select the proxy node.
+- body:enabled boolean
+- body:fqdn string
+- body:ip string
+- body:nickname string
+- body:notes string
+- body:proxy_id string
+- body:credentials object
+- body:credentials.password string
+- body:credentials.username string
+- body:switch_type string enum[CATALYST_3000|CATALYST_4500|CATALYST_6500|NEXUS_5K|NEXUS_7K|NEXUS_9K]
+
+## S347-0012  PUT /data-sources/cisco-switches/{id}
+summary: Update a cisco switch data source
+desc: Update a cisco switch data source. Only credentials, nickname and notes can be updated.
+- path:id string
+- body:enabled boolean
+- body:entity_id string
+- body:entity_type string enum[CiscoSwitchDataSource|DellSwitchDataSource|AristaSwitchDataSource|BrocadeSwitchDataSource|JuniperSwitchDataSource|VCenterDataSource|NSXVManagerDataSource|UCSManagerDataSource|HPVCManagerDataSource|HPOneViewDataSource|PanFirewallDataSource|CheckpointFirewallDataSource]
+- body:fqdn string
+- body:ip string
+- body:nickname string
+- body:notes string
+- body:proxy_id string
+- body:credentials object
+- body:credentials.password string
+- body:credentials.username string
+- body:switch_type string enum[CATALYST_3000|CATALYST_4500|CATALYST_6500|NEXUS_5K|NEXUS_7K|NEXUS_9K]
+
+## S347-0013  POST /data-sources/cisco-switches/{id}/disable
+summary: Disable a cisco switch data source
+desc: Disable a cisco switch data source
+- path:id string
+
+## S347-0014  POST /data-sources/cisco-switches/{id}/enable
+summary: Enable a cisco switch data source
+desc: Enable a cisco switch data source
+- path:id string
+
+## S347-0015  PUT /data-sources/cisco-switches/{id}/snmp-config
+summary: Update snmp config for cisco switch data source
+desc: Update snmp config for cisco switch data source
+- path:id string
+- body:config_snmp_2c object
+- body:config_snmp_2c.community_string string
+- body:config_snmp_3 object
+- body:config_snmp_3.authentication_password string
+- body:config_snmp_3.authentication_type string enum[NO_AUTH|MD5|SHA]
+- body:config_snmp_3.context_name string
+- body:config_snmp_3.privacy_password string
+- body:config_snmp_3.privacy_type string enum[AES|DES|AES128|AES192|AES256|3DES|NO_PRIV]
+- body:config_snmp_3.username string
+- body:snmp_enabled boolean
+- body:snmp_version string enum[v2c|v3]
+
+## S347-0016  POST /data-sources/dell-switches/{id}/enable
+summary: Enable a dell switch data source
+desc: Enable a dell switch data source
+- path:id string
+
+## S347-0017  POST /data-sources/hpov-managers/{id}/disable
+summary: Disable a hp oneview data source
+desc: Disable a hp oneview data source
+- path:id string
+
+## S347-0018  POST /data-sources/hpov-managers/{id}/enable
+summary: Enable a hp oneview data source
+desc: Enable a hp oneview data source
+- path:id string
+
+## S347-0019  POST /data-sources/hpvc-managers/{id}/enable
+summary: Enable a hpvc manager data source
+desc: Enable a hpvc manager data source
+- path:id string
+
+## S347-0020  POST /data-sources/juniper-switches
+summary: Add a juniper switch as data source
+desc: Add switch Datasource
+- body:enabled boolean
+- body:fqdn string
+- body:ip string
+- body:nickname string
+- body:notes string
+- body:proxy_id string
+- body:credentials object
+- body:credentials.password string
+- body:credentials.username string
+
+## S347-0021  PUT /data-sources/juniper-switches/{id}
+summary: Update a juniper switch data source
+desc: Update a juniper switch data source
+- path:id string
+- body:enabled boolean
+- body:entity_id string
+- body:entity_type string enum[CiscoSwitchDataSource|DellSwitchDataSource|AristaSwitchDataSource|BrocadeSwitchDataSource|JuniperSwitchDataSource|VCenterDataSource|NSXVManagerDataSource|UCSManagerDataSource|HPVCManagerDataSource|HPOneViewDataSource|PanFirewallDataSource|CheckpointFirewallDataSource]
+- body:fqdn string
+- body:ip string
+- body:nickname string
+- body:notes string
+- body:proxy_id string
+- body:credentials object
+- body:credentials.password string
+- body:credentials.username string
+
+## S347-0022  DELETE /data-sources/nsxv-managers/{id}
+summary: Delete a nsx-v manager data source
+desc: Delete a nsx-v manager data source
+- path:id string
+
+## S347-0023  PUT /data-sources/nsxv-managers/{id}
+summary: Update a nsx-v manager data source
+desc: Update a nsx-v manager data source
+- path:id string
+- body:enabled boolean
+- body:entity_id string
+- body:entity_type string enum[CiscoSwitchDataSource|DellSwitchDataSource|AristaSwitchDataSource|BrocadeSwitchDataSource|JuniperSwitchDataSource|VCenterDataSource|NSXVManagerDataSource|UCSManagerDataSource|HPVCManagerDataSource|HPOneViewDataSource|PanFirewallDataSource|CheckpointFirewallDataSource]
+- body:fqdn string
+- body:ip string
+- body:nickname string
+- body:notes string
+- body:proxy_id string
+- body:central_cli_enabled boolean
+- body:credentials object
+- body:credentials.password string
+- body:credentials.username string
+- body:ipfix_enabled boolean
+- body:vcenter_id string
+
+## S347-0024  PUT /data-sources/nsxv-managers/{id}/controller-cluster
+summary: Update nsx controller-cluster details
+desc: Update nsx controller-cluster details
+- path:id string
+- body:controller_password string
+- body:enabled boolean
+
+## S347-0025  POST /data-sources/nsxv-managers/{id}/disable
+summary: Disable a nsx-v manager data source
+desc: Disable a nsx-v manager data source
+- path:id string
+
+## S347-0026  POST /data-sources/panorama-firewalls
+summary: Create panorama firewall data source
+desc: Add panorama firewall as data source
+- body:enabled boolean
+- body:fqdn string
+- body:ip string
+- body:nickname string
+- body:notes string
+- body:proxy_id string
+- body:credentials object
+- body:credentials.password string
+- body:credentials.username string
+
+## S347-0027  DELETE /data-sources/panorama-firewalls/{id}
+summary: Delete a panorama firewall data source
+desc: Delete a panorama firewall data source
+- path:id string
+
+## S347-0028  PUT /data-sources/panorama-firewalls/{id}
+summary: Update a panorama firewall data source
+desc: Update a panorama firewall data source
+- path:id string
+- body:enabled boolean
+- body:entity_id string
+- body:entity_type string enum[CiscoSwitchDataSource|DellSwitchDataSource|AristaSwitchDataSource|BrocadeSwitchDataSource|JuniperSwitchDataSource|VCenterDataSource|NSXVManagerDataSource|UCSManagerDataSource|HPVCManagerDataSource|HPOneViewDataSource|PanFirewallDataSource|CheckpointFirewallDataSource]
+- body:fqdn string
+- body:ip string
+- body:nickname string
+- body:notes string
+- body:proxy_id string
+- body:credentials object
+- body:credentials.password string
+- body:credentials.username string
+
+## S347-0029  POST /data-sources/panorama-firewalls/{id}/disable
+summary: Disable a panorama firewall data source
+desc: Disable a panorama firewall data source
+- path:id string
+
+## S347-0030  POST /data-sources/panorama-firewalls/{id}/enable
+summary: Enable a panorama firewall data source
+desc: Enable a panorama firewall data source
+- path:id string
+
+## S347-0031  POST /data-sources/ucs-managers
+summary: Create an ucs manager data source
+desc: Add an ucs manager as data source
+- body:enabled boolean
+- body:entity_id string
+- body:entity_type string enum[CiscoSwitchDataSource|DellSwitchDataSource|AristaSwitchDataSource|BrocadeSwitchDataSource|JuniperSwitchDataSource|VCenterDataSource|NSXVManagerDataSource|UCSManagerDataSource|HPVCManagerDataSource|HPOneViewDataSource|PanFirewallDataSource|CheckpointFirewallDataSource]
+- body:fqdn string
+- body:ip string
+- body:nickname string
+- body:notes string
+- body:proxy_id string
+- body:credentials object
+- body:credentials.password string
+- body:credentials.username string
+
+## S347-0032  DELETE /data-sources/vcenters/{id}
+summary: Delete a vCenter data source
+desc: Delete a data source
+- path:id string
+
+## S347-0033  PUT /data-sources/vcenters/{id}
+summary: Update a vCenter data source.
+desc: Update a vcenter data source. Only nickname, notes and credentials can be updated.
+- path:id string
+- body:enabled boolean
+- body:entity_id string
+- body:entity_type string enum[CiscoSwitchDataSource|DellSwitchDataSource|AristaSwitchDataSource|BrocadeSwitchDataSource|JuniperSwitchDataSource|VCenterDataSource|NSXVManagerDataSource|UCSManagerDataSource|HPVCManagerDataSource|HPOneViewDataSource|PanFirewallDataSource|CheckpointFirewallDataSource]
+- body:fqdn string
+- body:ip string
+- body:nickname string
+- body:notes string
+- body:proxy_id string
+- body:credentials object
+- body:credentials.password string
+- body:credentials.username string
+
+## S347-0034  POST /entities/names
+summary: Get names for entities
+desc: Get names for entities.Limit of 1000 entities in a single request.
+- body:entities array<object>
+- body:entities[].entity_id string
+- body:entities[].time integer
+
+## S347-0035  POST /groups/applications
+summary: Create an application
+desc: Application is a group of tiers. A tier is a group of virtual machines based on membership criteria. Tiers are bound to single application. An application name is unique and should not conflict with another application name.
+- body:name string
+
+## S347-0036  POST /micro-seg/recommended-rules
+summary: Get logical recommended rules
+desc: Get recommended firewall rules based on the flow data gathered by vRealize Network Insight. This API provides service to retrieve recommended rules based on flow traffic that is observed between two groups OR for a single group based on all the inbound and outboud traffic for that group. In case two groups are provided, both the groups should be of same type. Currently supported groups are Applica
+- body:group_1 object
+- body:group_1.entity object
+- body:group_1.entity.entity_id string
+- body:group_1.entity.entity_type string enum[VirtualMachine|EC2Instance|Host|Vnic|Vmknic|VxlanLayer2Network|VlanL2Network|Cluster|SecurityTag|ResourcePool|NSXIPSet|EC2IPSet]
+- body:group_2 object
+- body:group_2.entity object
+- body:group_2.entity.entity_id string
+- body:group_2.entity.entity_type string enum[VirtualMachine|EC2Instance|Host|Vnic|Vmknic|VxlanLayer2Network|VlanL2Network|Cluster|SecurityTag|ResourcePool|NSXIPSet|EC2IPSet]
+- body:time_range object
+- body:time_range.end_time integer
+- body:time_range.start_time integer
+
+## S349-0001  POST /jsontoxml
+- body:(body) string
+
+## S349-0002  POST /xmltojson
+- body:(body) string
+
+## S350-0001  POST /auth/api-key
+summary: Authenticate
+desc: To get started, submit your API key in the body of your request. api.video returns an access token that is valid for one hour (3600 seconds). A refresh token is also returned. View a [tutorial](https://api.video/blog/tutorials/authentication-tutorial) on authentication. All tutorials using the [authentication endpoint](https://api.video/blog/endpoints/authenticate)
+- body:apiKey string
+
+## S350-0002  POST /auth/refresh
+summary: Refresh token
+desc: Use the refresh endpoint with the refresh token you received when you first authenticated using the api-key endpoint. Send the refresh token in the body of your request. The api.video API returns a new access token that is valid for one hour (3600 seconds) and a new refresh token.
+- body:refreshToken string
+
+## S350-0003  POST /live-streams
+summary: Create live stream
+desc: A live stream will give you the 'connection point' to RTMP your video stream to api.video. It will also give you the details for viewers to watch the same livestream. The public=false 'private livestream' is available as a BETA feature, and should be limited to livestreams of 3,000 viewers or fewer. See our [Live Stream Tutorial](https://api.video/blog/tutorials/live-stream-tutorial) for a walkthr
+- body:name string
+- body:playerId string
+- body:public boolean
+- body:record boolean
+
+## S350-0004  DELETE /live-streams/{liveStreamId}
+summary: Delete a live stream
+- path:liveStreamId string
+
+## S350-0005  PATCH /live-streams/{liveStreamId}
+summary: Update a live stream
+desc: Use this endpoint to update the player, or to turn recording on/off (saving a copy of the livestream). NOTE: If the livestream is actively streaming, changing the recording status will only affect the NEXT stream. The public=false 'private livestream' is available as a BETA feature, and should be limited to livestreams of 3,000 viewers or fewer.
+- path:liveStreamId string
+- body:name string
+- body:playerId string
+- body:public boolean
+- body:record boolean
+
+## S350-0006  DELETE /live-streams/{liveStreamId}/thumbnail
+summary: Delete a thumbnail
+desc: Send the unique identifier for a live stream to delete it from the system.
+- path:liveStreamId string
+
+## S350-0007  POST /live-streams/{liveStreamId}/thumbnail
+summary: Upload a thumbnail
+desc: Upload an image to use as a backdrop for your livestream. Tutorials that [update live stream thumbnails](https://api.video/blog/endpoints/live-upload-a-thumbnail).
+- path:liveStreamId string
+- body:file string
+
+## S350-0008  POST /players
+summary: Create a player
+desc: Create a player for your video, and customise it.
+- body:backgroundBottom string
+- body:backgroundText string
+- body:backgroundTop string
+- body:enableApi boolean
+- body:enableControls boolean
+- body:forceAutoplay boolean
+- body:forceLoop boolean
+- body:hideTitle boolean
+- body:link string
+- body:linkHover string
+- body:text string
+- body:trackBackground string
+- body:trackPlayed string
+- body:trackUnplayed string
+
+## S350-0009  DELETE /players/{playerId}
+summary: Delete a player
+desc: Delete a player if you no longer need it. You can delete any player that you have the player ID for.
+- path:playerId string
+
+## S350-0010  PATCH /players/{playerId}
+summary: Update a player
+desc: Use a player ID to update specific details for a player. NOTE: It may take up to 10 min before the new player configuration is available from our CDN.
+- path:playerId string
+- body:backgroundBottom string
+- body:backgroundText string
+- body:backgroundTop string
+- body:enableApi boolean
+- body:enableControls boolean
+- body:forceAutoplay boolean
+- body:forceLoop boolean
+- body:hideTitle boolean
+- body:link string
+- body:linkHover string
+- body:text string
+- body:trackBackground string
+- body:trackPlayed string
+- body:trackUnplayed string
+
+## S350-0011  DELETE /players/{playerId}/logo
+summary: Delete logo
+- path:playerId string
+
+## S350-0012  POST /players/{playerId}/logo
+summary: Upload a logo
+desc: The uploaded image maximum size should be 200x100 and its weight should be 200KB. It will be scaled down to 30px height and converted to PNG to be displayed in the player.
+- path:playerId string
+- body:file string
+- body:link string
+
+## S350-0013  POST /upload
+summary: Upload with an upload token
+desc: When given a token, anyone can upload a file to the URI `https://ws.api.video/upload?token=<tokenId>`. Example with cURL: ```curl $ curl --request POST --url 'https://ws.api.video/upload?token=toXXX' --header 'content-type: multipart/form-data' -F file=@video.mp4 ``` Or in an HTML form, with a little JavaScript to convert the form into JSON: ```html <!--form for user interaction--> <form name="vid
+- query:token string
+- body:file string
+- body:videoId string
+
+## S350-0014  POST /upload-tokens
+summary: Generate an upload token
+desc: Use this endpoint to generate an upload token. You can use this token to authenticate video uploads while keeping your API key safe. Tutorials using [delegated upload](https://api.video/blog/endpoints/delegated-upload).
+- body:ttl integer
+
+## S350-0015  DELETE /upload-tokens/{uploadToken}
+summary: Delete an upload token
+desc: Delete an existing upload token. This is especially useful for tokens you may have created that do not expire.
+- path:uploadToken string
+
+## S350-0016  POST /videos
+summary: Create a video
+desc: To create a video, you create its container&parameters first, before adding the video file (exception - when using an existing HTTP source). * Videos are public by default. [Learn about Private videos](https://api.video/blog/tutorials/tutorial-private-videos) * Up to 6 responsive video streams will be created (from 240p to 4k) * Mp4 encoded versions are created at the highest quality (max 1080p) b
+- body:description string
+- body:metadata array<object>
+- body:metadata[].key string
+- body:metadata[].value string
+- body:mp4Support boolean
+- body:panoramic boolean
+- body:playerId string
+- body:public boolean
+- body:publishedAt string
+- body:source string
+- body:tags array<string>
+- body:title string
+
+## S350-0017  DELETE /videos/{videoId}
+summary: Delete a video
+desc: If you do not need a video any longer, you can send a request to delete it. All you need is the videoId. Tutorials using [video deletion](https://api.video/blog/endpoints/video-delete).
+- path:videoId string
+
+## S350-0018  PATCH /videos/{videoId}
+summary: Update a video
+desc: Use this endpoint to update the parameters associated with your video. The video you are updating is determined by the video ID you provide in the path. For each parameter you want to update, include the update in the request body. NOTE: If you are updating an array, you must provide the entire array as what you provide here overwrites what is in the system rather than appending to it. Tutorials u
+- path:videoId string
+- body:description string
+- body:metadata array<object>
+- body:metadata[].key string
+- body:metadata[].value string
+- body:mp4Support boolean
+- body:panoramic boolean
+- body:playerId string
+- body:public boolean
+- body:tags array<string>
+- body:title string
+
+## S350-0019  DELETE /videos/{videoId}/captions/{language}
+summary: Delete a caption
+desc: Delete a caption in a specific language by providing the video ID for the video you want to delete the caption from and the language the caption is in.
+- path:videoId string
+- path:language string
+
+## S350-0020  PATCH /videos/{videoId}/captions/{language}
+summary: Update caption
+desc: To have the captions on automatically, use this PATCH to set default: true.
+- path:videoId string
+- path:language string
+- body:default boolean
+
+## S350-0021  POST /videos/{videoId}/captions/{language}
+summary: Upload a caption
+desc: Upload a VTT file to add captions to your video. Read our [captioning tutorial](https://api.video/blog/tutorials/adding-captions) for more details.
+- path:videoId string
+- path:language string
+- body:file string
+
+## S350-0022  DELETE /videos/{videoId}/chapters/{language}
+summary: Delete a chapter
+- path:videoId string
+- path:language string
+
+## S350-0023  POST /videos/{videoId}/chapters/{language}
+summary: Upload a chapter
+desc: Chapters help break the video into sections. Read our [tutorial](https://api.video/blog/tutorials/adding-chapters-to-your-videos) for more details.
+- path:videoId string
+- path:language string
+- body:file string
+
+## S350-0024  POST /videos/{videoId}/source
+summary: Upload a video
+desc: To upload a video to the videoId you created. Replace {videoId} with the id you'd like to use, {access_token} with your token, and /path/to/video.mp4 with the path to the video you'd like to upload. You can only upload your video to the videoId once. ```bash curl https://ws.api.video/videos/{videoId}/source \ -H 'Authorization: Bearer {access_token}' \ -F file=@/path/to/video.mp4 ``` Tutorials usi
+- path:videoId string
+- body:file string
+
+## S350-0025  PATCH /videos/{videoId}/thumbnail
+summary: Pick a thumbnail
+desc: Pick a thumbnail from the given time code. If you'd like to upload an image for your thumbnail, use the [Upload a Thumbnail](https://docs.api.video/reference#post_videos-videoid-thumbnail) endpoint. There may be a short delay for the thumbnail to update. Tutorials using [Thumbnail picking](https://api.video/blog/endpoints/video-pick-a-thumbnail).
+- path:videoId string
+- body:timecode string
+
+## S350-0026  POST /videos/{videoId}/thumbnail
+summary: Upload a thumbnail
+desc: The thumbnail is the poster that appears in the player window before video playback begins. This endpoint allows you to upload an image for the thumbnail. To select a still frame from the video using a time stamp, use [Pick a Thumbnail](https://docs.api.video/reference#patch_videos-videoid-thumbnail) to pick a time in the video. Note: There may be a short delay before the new thumbnail is delivere
+- path:videoId string
+- body:file string
+
+## S350-0027  POST /webhooks
+summary: Create Webhook
+desc: Webhooks can push notifications to your server, rather than polling api.video for changes. We currently offer four events: * ```video.encoding.quality.completed``` When a new video is uploaded into your account, it will be encoded into several different HLS sizes/bitrates. When each version is encoded, your webhook will get a notification. It will look like ```{ \"type\": \"video.encoding.quality.
+- body:events array<string>
+- body:url string
+
+## S350-0028  DELETE /webhooks/{webhookId}
+summary: Delete a Webhook
+desc: This endpoint will delete the indicated webhook.
+- path:webhookId string

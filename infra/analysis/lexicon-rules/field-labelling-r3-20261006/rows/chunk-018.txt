@@ -1,0 +1,627 @@
+## S333-0009  POST /consumer/v1/customers
+desc: Create Customer | <p>Use this endpoint to <b>Create</b> a new Customer. A customer object is automatically created with the first appointment booking if it doesn't already exist. If not specified, the business location id defaults to the primary business location.</p> <p>Required Fields: <b>Email</b> and <b>Name</b> or <b>First and Lastname</b> depending on customer type. Type 0 = Person, Type 1 =
+schema: CustomerInputModel
+- body:address object
+- body:address.addressLine1 string
+- body:address.addressLine2 string
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.state string
+- body:contact object
+- body:contact.businessPhone string
+- body:contact.businessPhoneExt string
+- body:contact.conferenceInfo string
+- body:contact.homePhone string
+- body:contact.mobilePhone string
+- body:contact.preferredPhoneType string
+- body:contact.skypeUsername string
+- body:customFields object
+- body:customFields.field1 string
+- body:customFields.field10 string
+- body:customFields.field2 string
+- body:customFields.field3 string
+- body:customFields.field4 string
+- body:customFields.field5 string
+- body:customFields.field6 string
+- body:customFields.field7 string
+- body:customFields.field8 string
+- body:customFields.field9 string
+- body:email string
+- body:firstname string
+- body:lastname string
+- body:locationId string
+- body:name string
+- body:notificationType string
+- body:sendLeadNotification boolean
+- body:stripeCustomerId string
+- body:type integer
+
+## S333-0010  DELETE /consumer/v1/customers/{id}
+desc: Delete Customer | <p>Use this endpoint to permanently <b>Delete</b> a Customer object. A valid <b>customer id</b> is required.</p>
+- path:id string
+
+## S333-0011  PUT /consumer/v1/customers/{id}
+desc: Update Customer | <p>Use this endpoint to <b>Update</b> a Customer object. A valid <b>customer id</b> is required. Note: Blank fields are not changed.</p>
+schema: CustomerUpdateModel
+- path:id string
+- body:address object
+- body:address.addressLine1 string
+- body:address.addressLine2 string
+- body:address.city string
+- body:address.country string
+- body:address.postalCode string
+- body:address.state string
+- body:contact object
+- body:contact.businessPhone string
+- body:contact.businessPhoneExt string
+- body:contact.conferenceInfo string
+- body:contact.homePhone string
+- body:contact.mobilePhone string
+- body:contact.preferredPhoneType string
+- body:contact.skypeUsername string
+- body:customFields object
+- body:customFields.field1 string
+- body:customFields.field10 string
+- body:customFields.field2 string
+- body:customFields.field3 string
+- body:customFields.field4 string
+- body:customFields.field5 string
+- body:customFields.field6 string
+- body:customFields.field7 string
+- body:customFields.field8 string
+- body:customFields.field9 string
+- body:email string
+- body:firstname string
+- body:lastname string
+- body:locationId string
+- body:name string
+- body:notificationType string
+- body:stripeCustomerId string
+- body:type integer
+
+## S334-0001  POST /api/gen/clients/{language}
+desc: Generates a client library | Accepts a `GeneratorInput` options map for spec location and generation options
+schema: GeneratorInput
+- path:language string
+- body:authorizationValue object
+- body:authorizationValue.keyName string
+- body:authorizationValue.type string
+- body:authorizationValue.urlMatcher object
+- body:authorizationValue.value string
+- body:openAPIUrl string
+- body:options object
+- body:spec object
+
+## S334-0002  POST /api/gen/servers/{framework}
+desc: Generates a server library | Accepts a `GeneratorInput` options map for spec location and generation options.
+schema: GeneratorInput
+- path:framework string
+- body:authorizationValue object
+- body:authorizationValue.keyName string
+- body:authorizationValue.type string
+- body:authorizationValue.urlMatcher object
+- body:authorizationValue.value string
+- body:openAPIUrl string
+- body:options object
+- body:spec object
+
+## S335-0001  POST /startscan
+desc: Start a new scan | Start a new scan.
+schema: ScanDefinition
+- body:assets array<object>
+- body:assets[].criticity string enum[low|medium|high]
+- body:assets[].datatype string enum[ip|ip-range|ip-subnet|fqdn|domain|url|keyword|person|organisation|path|application]
+- body:assets[].id string
+- body:assets[].value string
+- body:options object
+- body:scan_id integer
+
+## S336-0001  POST /api-specification
+desc: Upload an API specification to ReadMe. Or, to use a newer solution see https://docs.readme.com/guides/docs/automatically-sync-api-specification-with-github
+- body:spec string
+
+## S336-0002  DELETE /api-specification/{id}
+desc: Delete an API specification in ReadMe
+- path:id string
+
+## S336-0003  PUT /api-specification/{id}
+desc: Update an API specification in ReadMe
+- path:id string
+- body:spec string
+
+## S336-0004  POST /changelogs
+desc: Create changelog | Create a new changelog inside of this project
+schema: Changelog
+- body:body string
+- body:hidden boolean
+- body:title string
+- body:type string enum[|added|fixed|improved|deprecated|removed]
+
+## S336-0005  DELETE /changelogs/{slug}
+desc: Delete changelog | Delete the changelog with this slug
+- path:slug string
+
+## S336-0006  PUT /changelogs/{slug}
+desc: Update changelog | Update a changelog with this slug
+schema: Changelog
+- path:slug string
+- body:body string
+- body:hidden boolean
+- body:title string
+- body:type string enum[|added|fixed|improved|deprecated|removed]
+
+## S336-0007  POST /custompages
+desc: Create custom page | Create a new custom page inside of this project
+schema: CustomPage
+- body:body string
+- body:hidden boolean
+- body:html string
+- body:htmlmode boolean
+- body:title string
+
+## S336-0008  DELETE /custompages/{slug}
+desc: Delete custom page | Delete the custom page with this slug
+- path:slug string
+
+## S336-0009  PUT /custompages/{slug}
+desc: Update custom page | Update a custom page with this slug
+schema: CustomPage
+- path:slug string
+- body:body string
+- body:hidden boolean
+- body:html string
+- body:htmlmode boolean
+- body:title string
+
+## S336-0010  POST /docs
+desc: Create doc | Create a new doc inside of this project
+schema: Doc
+- body:body string
+- body:category string
+- body:hidden boolean
+- body:parentDoc string
+- body:title string
+- body:type string enum[basic|error|link]
+
+## S336-0011  POST /docs/search
+desc: Search docs | Returns all docs that match the search
+- query:search string
+
+## S336-0012  DELETE /docs/{slug}
+desc: Delete doc | Delete the doc with this slug
+- path:slug string
+
+## S336-0013  PUT /docs/{slug}
+desc: Update doc | Update a doc with this slug
+schema: Doc
+- path:slug string
+- body:body string
+- body:category string
+- body:hidden boolean
+- body:parentDoc string
+- body:title string
+- body:type string enum[basic|error|link]
+
+## S336-0014  POST /swagger
+desc: DEPRECATED. Instead use https://docs.readme.com/developers/reference/api-specification#uploadapispecification to upload a Swagger file to ReadMe
+- body:swagger string
+
+## S336-0015  DELETE /swagger/{id}
+desc: DEPRECATED. Instead, use https://docs.readme.com/developers/reference/api-specification#deleteapispecification to delete a Swagger file in ReadMe
+- path:id string
+
+## S336-0016  PUT /swagger/{id}
+desc: DEPRECATED. Instead, use https://docs.readme.com/developers/reference/api-specification#updateapispecification to update a Swagger file.
+- path:id string
+- body:swagger string
+
+## S336-0017  POST /version
+desc: Create version | Create a new version
+schema: Version
+- body:codename string
+- body:from string
+- body:is_beta boolean
+- body:is_deprecated boolean
+- body:is_hidden boolean
+- body:is_stable boolean
+- body:version string
+
+## S336-0018  DELETE /version/{versionId}
+desc: Delete version | Delete a version
+- path:versionId string
+
+## S336-0019  PUT /version/{versionId}
+desc: Update version | Update an existing version
+schema: Version
+- path:versionId string
+- body:codename string
+- body:from string
+- body:is_beta boolean
+- body:is_deprecated boolean
+- body:is_hidden boolean
+- body:is_stable boolean
+- body:version string
+
+## S337-0001  POST /apply-yara-rules
+desc: apply given YARA rules to the given executable. (upto 10 rules)
+- body:file string
+- body:is_unpacking_required string enum[true|false]
+- body:rules array<string>
+
+## S337-0002  POST /emulation-output
+desc: try to get the emulation output after unpacking the file
+- body:file string
+
+## S337-0003  POST /generate-partial-yara-rules
+desc: generate partial YARA rules for give executable. (Rule without the condition section)
+- body:file string
+- body:is_unpacking_required string enum[true|false]
+- body:minimum_string_length string
+- body:strings_to_ignore array<string>
+
+## S337-0004  POST /unpack
+desc: try to unpack the given file
+- body:file string
+
+## S338-0001  POST /branding
+desc: Update web interface customization | change color, logo, label etc.
+schema: branding-conf
+- body:barColor object
+- body:barColor.alpha number
+- body:barColor.blue number
+- body:barColor.green number
+- body:barColor.red number
+- body:displayBar boolean
+- body:displayBarLogin boolean
+- body:displayLabel boolean
+- body:displayMotd boolean
+- body:labelColor object
+- body:labelColor.alpha number
+- body:labelColor.blue number
+- body:labelColor.green number
+- body:labelColor.red number
+- body:labelText string
+- body:motd string
+- body:smallLogo object
+- body:smallLogo.enable boolean
+- body:wideLogo object
+- body:wideLogo.enable boolean
+
+## S338-0002  DELETE /changeRequests/{changeRequestId}
+desc: Decline a request details | Refuse a change request
+- path:changeRequestId integer
+
+## S338-0003  POST /changeRequests/{changeRequestId}/accept
+desc: Accept a request details | Accept a change request
+- path:changeRequestId integer
+- body:status string enum[pending deployment|deployed]
+
+## S338-0004  POST /cve/list
+desc: Get a list of CVE details | Get CVE details, from a list passed as parameter
+- body:cveIds array<string>
+
+## S338-0005  POST /cve/update/
+desc: Update CVE database from remote source | Update CVE database from remote source
+- body:url string
+- body:years array<string>
+
+## S338-0006  POST /datasources/reload
+desc: Update properties from data sources | Update properties from all data source on all nodes. The call is asynchronous.
+
+## S338-0007  PUT /directives
+desc: Create a directive | Create a new directive from provided parameters. You can specify a source directive to clone it.
+schema: directive-new
+- body:displayName string
+- body:enabled boolean
+- body:id string
+- body:longDescription string
+- body:parameters object
+- body:priority integer
+- body:shortDescription string
+- body:source string
+- body:system boolean
+- body:tags array<object>
+- body:tags[].name string
+- body:techniqueName string
+- body:techniqueVersion string
+
+## S338-0008  DELETE /directives/{directiveId}
+desc: Delete a directive | Delete a directive
+- path:directiveId string
+
+## S338-0009  PUT /groups/categories
+desc: Create a group category | Create a new group category
+schema: group-category
+- body:description string
+- body:id string
+- body:name string
+- body:parent string
+
+## S338-0010  DELETE /groups/categories/{groupCategoryId}
+desc: Delete group category | Delete a group category. It must have no child groups and no children categories.
+- path:groupCategoryId string
+
+## S338-0011  POST /groups/categories/{groupCategoryId}
+desc: Update group category details | Update detailed information about a group category
+schema: group-category-update
+- path:groupCategoryId string
+- body:description string
+- body:name string
+- body:parent string
+
+## S338-0012  DELETE /groups/{groupId}
+desc: Delete a group | Update detailed information about a group
+- path:groupId string
+
+## S338-0013  POST /groups/{groupId}
+desc: Update group details | Update detailed information about a group
+schema: group-update
+- path:groupId string
+- body:category string
+- body:description string
+- body:displayName string
+- body:dynamic boolean
+- body:enabled boolean
+- body:query object
+- body:query.composition string enum[and|or]
+- body:query.select string
+- body:query.where array<object>
+- body:query.where[].attribute string
+- body:query.where[].comparator string
+- body:query.where[].objectType string
+- body:query.where[].value string
+
+## S338-0014  POST /groups/{groupId}/reload
+desc: Reload a group | Recompute the content of a group
+- path:groupId string
+
+## S338-0015  POST /inventories/watcher/start
+desc: Start inventory watcher | Start the inventory watcher if necessary
+
+## S338-0016  PUT /nodes
+desc: Create one or several new nodes | Use the provided array of node information to create new nodes
+schema: node-add
+- body:agentKey object
+- body:agentKey.status string enum[certified|undefined]
+- body:agentKey.value string
+- body:hostname string
+- body:id string
+- body:ipAddresses array<string>
+- body:machineType string enum[vmware|physical|vm|solariszone|qemu|xen|aixlpar|hyperv|bsdjail]
+- body:os object
+- body:os.fullName string
+- body:os.name string enum[debian|kali|ubuntu|redhat|centos|fedora|suse|oracle|scientific|slackware|xp|vista]
+- body:os.servicePack string
+- body:os.type string enum[linux|windows|solaris|aix|freebsd|unknown]
+- body:os.version string
+- body:policyMode string enum[enforce|audit]
+- body:policyServerId string
+- body:properties array<object>
+- body:properties[].name string
+- body:properties[].value any
+- body:state string enum[enabled|ignored|empty-policies|initializing|preparing-eol]
+- body:status string enum[accepted|pending]
+- body:timezone object
+- body:timezone.name string
+- body:timezone.offset string
+
+## S338-0017  POST /nodes/applyPolicy
+desc: Trigger an agent run on all nodes | This API allows to trigger an agent run on all nodes. Response contains a json stating if agent could be started on each node, but not if the run went fine and do not display any output from it. You can see the result of the run in Rudder web interface or in the each agent logs.
+
+## S338-0018  POST /nodes/{nodeId}/fetchData
+desc: Update properties for one node from all data sources | Update properties from all data sources on one nodes. The call is asynchronous.
+- path:nodeId string
+
+## S338-0019  POST /parameters/{parameterId}
+desc: Update a parameter's value | Update the properties of a parameter
+- path:parameterId string
+
+## S338-0020  PUT /rules
+desc: Create a rule | Create a new rule. You can specify a source rule to clone it.
+schema: rule-new
+- body:category string
+- body:directives array<string>
+- body:displayName string
+- body:enabled boolean
+- body:id string
+- body:longDescription string
+- body:shortDescription string
+- body:source string
+- body:system boolean
+- body:tags array<object>
+- body:tags[].name string
+- body:targets array<object>
+- body:targets[].exclude object
+- body:targets[].exclude.or array<string> enum[special:all|special:all_exceptPolicyServers|special:all_policyServers|policyServer:${policyServerId}|group:${nodeGroupId}]
+- body:targets[].include object
+- body:targets[].include.or array<string> enum[special:all|special:all_exceptPolicyServers|special:all_policyServers|policyServer:${policyServerId}|group:${nodeGroupId}]
+
+## S338-0021  POST /rules/categories/{ruleCategoryId}
+desc: Update rule category details | Update detailed information about a rule category
+schema: rule-category-update
+- path:ruleCategoryId string
+- body:description string
+- body:name string
+- body:parent string
+
+## S338-0022  DELETE /rules/{ruleId}
+desc: Delete a rule | Delete a rule.
+- path:ruleId string
+
+## S338-0023  POST /rules/{ruleId}
+desc: Update a rule details | Update the details of a rule
+schema: rule-with-category
+- path:ruleId string
+- body:category string
+- body:directives array<string>
+- body:displayName string
+- body:enabled boolean
+- body:id string
+- body:longDescription string
+- body:shortDescription string
+- body:system boolean
+- body:tags array<object>
+- body:tags[].name string
+- body:targets array<object>
+- body:targets[].exclude object
+- body:targets[].exclude.or array<string> enum[special:all|special:all_exceptPolicyServers|special:all_policyServers|policyServer:${policyServerId}|group:${nodeGroupId}]
+- body:targets[].include object
+- body:targets[].include.or array<string> enum[special:all|special:all_exceptPolicyServers|special:all_policyServers|policyServer:${policyServerId}|group:${nodeGroupId}]
+
+## S338-0024  POST /scaleoutrelay/promote/{nodeId}
+desc: Promote a node to relay | Promote a node to relay
+- path:nodeId string
+
+## S338-0025  POST /settings/allowed_networks/{nodeId}/diff
+desc: Modify allowed networks for a policy server | Add or delete allowed networks for a policy server
+- path:nodeId string
+- body:allowed_networks object
+- body:allowed_networks.add array<any>
+- body:allowed_networks.delete array<any>
+
+## S338-0026  POST /system/archives/{archiveKind}
+desc: Create an archive | Create new archive of the given kind
+- path:archiveKind string enum[full|groups|rules|directives|parameters]
+
+## S338-0027  POST /system/maintenance/purgeSoftware
+desc: Trigger batch for cleaning unreferenced software | Start the software cleaning batch asynchronously.
+
+## S338-0028  POST /system/reload
+desc: Reload both techniques and dynamic groups | Reload both techniques and dynamic groups
+
+## S338-0029  POST /system/reload/groups
+desc: Reload dynamic groups | Reload dynamic groups
+
+## S338-0030  POST /system/reload/techniques
+desc: Reload techniques | Reload techniques from local technique library
+
+## S338-0031  POST /system/update/policies
+desc: Trigger update of policies | Update configuration policies if needed
+
+## S338-0032  PUT /techniques
+desc: Create technique | Create a new technique in Rudder from a technique in the technique editor
+schema: techniques
+- body:calls array<object>
+- body:calls[].component string
+- body:calls[].condition string
+- body:calls[].disableReporting boolean
+- body:calls[].id string
+- body:calls[].method string
+- body:calls[].parameters array<object>
+- body:calls[].parameters[].name string
+- body:calls[].parameters[].value string
+- body:calls[].calls array<object>
+- body:calls[].calls[].component string
+- body:calls[].calls[].condition string
+- body:calls[].calls[].disableReporting boolean
+- body:calls[].calls[].id string
+- body:calls[].calls[].method string
+- body:calls[].calls[].parameters array<object>
+- body:calls[].calls[].calls array<object>
+- body:calls[].calls[].reportingLogic object
+- body:calls[].reportingLogic object
+- body:calls[].reportingLogic.type string
+- body:calls[].reportingLogic.value string
+- body:category string
+- body:description string
+- body:id string
+- body:name string
+- body:parameters array<object>
+- body:parameters[].description string
+- body:parameters[].id string
+- body:parameters[].mayBeEmpty boolean
+- body:parameters[].name string
+- body:resources array<object>
+- body:resources[].name string
+- body:resources[].state string
+- body:source string
+- body:version string
+
+## S338-0033  DELETE /techniques/{techniqueId}/{techniqueVersion}
+desc: Delete technique | Delete a technique from technique editor
+- path:techniqueId string
+- path:techniqueVersion string
+
+## S338-0034  POST /usermanagement
+desc: Add user | Add a new user
+schema: users
+- body:isPreHahed boolean enum[False|True]
+- body:password string
+- body:role array<string>
+- body:username string
+
+## S338-0035  POST /validatedUsers
+desc: Update validated user list | Add and remove user from validated users
+- body:validatedUsers array<string>
+
+## S338-0036  DELETE /validatedUsers/{username}
+desc: Remove an user from validated user list | The user is again subject to workflow validation
+- path:username string
+
+## S339-0001  POST /comments/{id}/delete
+desc: Deletes a comment. Use an access_token with write_access to delete a comment. In practice, this method will never return an object.
+- path:id integer
+- query:filter string
+- query:callback string
+- query:site string
+- query:preview boolean
+
+## S339-0002  POST /comments/{id}/edit
+desc: Edit an existing comment. Use an access_token with write_access to edit an existing comment. This method return the created comment.
+- path:id integer
+- query:filter string
+- query:callback string
+- query:site string
+- query:body string
+- query:preview boolean
+
+## S339-0003  POST /posts/{id}/comments/add
+desc: Create a new comment. Use an access_token with write_access to create a new comment on a post. This method returns the created comment.
+- path:id integer
+- query:filter string
+- query:callback string
+- query:site string
+- query:body string
+- query:preview boolean
+
+## S340-0001  DELETE /annotation_layer/
+desc: Deletes multiple annotation layers in a bulk operation.
+- query:q any
+
+## S340-0002  POST /annotation_layer/
+desc: Create an Annotation layer
+schema: AnnotationLayerRestApi.post
+- body:descr string
+- body:name string
+
+## S340-0003  DELETE /annotation_layer/{pk}
+desc: Delete Annotation layer
+- path:pk integer
+
+## S340-0004  PUT /annotation_layer/{pk}
+desc: Update an Annotation layer
+schema: AnnotationLayerRestApi.put
+- path:pk integer
+- body:descr string
+- body:name string
+
+## S340-0005  DELETE /annotation_layer/{pk}/annotation/
+desc: Deletes multiple annotation in a bulk operation.
+- path:pk integer
+- query:q any
+
+## S340-0006  POST /annotation_layer/{pk}/annotation/
+desc: Create an Annotation layer
+schema: AnnotationRestApi.post
+- path:pk integer
+- body:end_dttm string
+- body:json_metadata string
+- body:long_descr string
+- body:short_descr string
+- body:start_dttm string
+
+## S340-0007  DELETE /annotation_layer/{pk}/annotation/{annotation_id}
+desc: Delete Annotation layer
+- path:pk integer
+- path:annotation_id integer

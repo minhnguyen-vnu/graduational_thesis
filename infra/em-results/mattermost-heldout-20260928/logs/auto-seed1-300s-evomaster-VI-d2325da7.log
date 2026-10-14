@@ -1,0 +1,1754 @@
+* [34m
+ _____          ___  ___          _
+|  ___|         |  \/  |         | |
+| |____   _____ | .  . | __ _ ___| |_ ___ _ __
+|  __\ \ / / _ \| |\/| |/ _` / __| __/ _ \ '__|
+| |___\ V / (_) | |  | | (_| \__ \ ||  __/ |
+\____/ \_/ \___/\_|  |_/\__,_|___/\__\___|_|
+
+                    [0m
+* EvoMaster version: 6.1.1
+* Loading configuration file from: /Users/minhnguyen/IdeaProjects/graduational-thesis/infra/em-config/mattermost-auth.yaml
+* [31mWARNING: You are doing Black-Box testing, but you did not specify the 'problemType'. The system will default to RESTful API testing.[0m
+* [31mWARNING: [33mYou are modifying the value of some experimental settings. This is not recommended, as those settings might be just for work in progress features, not fully completed. Involved features: [statefulAuthzTwoCredentialJudgment].[0m[33m For more information, see the documentation at:[0m[34m https://github.com/WebFuzzing/EvoMaster/blob/master/docs/options.md[0m[0m
+* [31mWARNING: [33mYou are modifying the value of some internal settings. In general, this is not recommended, especially if it is first time you use EvoMaster, unless you are an experienced user. Involved features: [bbSwaggerUrl, bbTargetUrl, extraPhaseBudgetPercentage, seed, useExperimentalOracles]. Especially for beginners, you should only modify the 'important' settings:[0m[34m [base, blackBox, configPath, dtoForRequestPayload, endpointExclude, endpointFocus, endpointPrefix, endpointTagFilter, fieldsToSkipInAssertions, header0, header1, header2, maxTestsPerTestSuite, maxTime, outputFilePrefix, outputFileSuffix, outputFolder, outputFormat, overlay, overlayFileSuffixes, overlayLenient, overrideOpenAPIUrl, prematureStop, ratePerMinute, schema, sutControllerHost, sutControllerPort, testTimeout].[0m[33m For more information, see the documentation at:[0m[34m https://github.com/WebFuzzing/EvoMaster/blob/master/docs/options.md[0m[0m
+* Initializing...
+* [31mThere are 8 validation errors and warnings when parsing the schema. It is strongly recommended to fix these issues to enable EvoMaster to achieve better results. Errors/warnings:[0m
+* [33m0: attribute components.schemas.KnownUsers.items is missing[0m
+* [33m1: attribute components.schemas.ClusterInfo.items is missing[0m
+* [33m2: attribute paths.'/api/v4/users/known'(get).responses.200.content.'application/json'.schema.items is missing[0m
+* [33m3: attribute paths.'/api/v4/posts/schedule'(post).requestBody.content.'application/json'.schema.items is missing[0m
+* [33m4: paths.'/api/v4/users/{user_id}/reset_failed_attempts'. Declared path parameter user_id needs to be defined as a path parameter in path or operation level[0m
+* [33m5: paths.'/api/v4/remotecluster/{remote_id}/generate_invite'. Declared path parameter remote_id needs to be defined as a path parameter in path or operation level[0m
+* [33m6: paths.'/api/v4/posts/scheduled/team/{team_id}'. Declared path parameter team_id needs to be defined as a path parameter in path or operation level[0m
+* [33m7: attribute paths.'/api/v4/files/search'(post).operationId is repeated[0m
+16:28:57.268 [main] WARN  o.e.c.p.r.b.RestActionBuilderV3 - Invalid 'array' definition for 'file_ids'
+16:28:57.308 [main] WARN  o.e.c.p.r.b.RestActionBuilderV3 - No type/format information provided for 'value'. Defaulting to 'string'
+* There are 623 usable RESTful API endpoints defined in the schema configuration
+* There is 1 endpoint which have errors and will not be handled in the test generation
+* [31mThere are 174 detected issues when analyzing the schema. These are not necessarily problems in the schema, but possible (temporary) limitations of EvoMaster itself.[0m
+* [33m0: No fields for object definition: props[0m
+* [33m1: Not supported content types for body payload in POST:/api/v4/users/{user_id}/image : multipart/form-data. It will be treated as TEXT.[0m
+* [33m2: No path parameter for variable 'user_id' in /api/v4/users/{user_id}/reset_failed_attempts[0m
+* [33m3: Issue in /api/v4/users/{user_id}/status/custom/recent: in OpenAPI, body payloads are not allowed for DELETE, although they are technically valid for HTTP (RFC 9110).[0m
+* [33m4: Not supported content types for body payload in POST:/api/v4/teams/{team_id}/image : multipart/form-data. It will be treated as TEXT.[0m
+* [33m5: No fields for object definition: props[0m
+* [33m6: Not supported content types for body payload in POST:/api/v4/files : multipart/form-data. It will be treated as TEXT.[0m
+* [33m7: Not supported content types for body payload in POST:/api/v4/teams/{team_id}/files/search : multipart/form-data. It will be treated as TEXT.[0m
+* [33m8: Not supported content types for body payload in POST:/api/v4/files/search : multipart/form-data. It will be treated as TEXT.[0m
+* [33m9: Not supported content types for body payload in POST:/api/v4/uploads/{upload_id} : application/octet-stream, multipart/form-data. It will be treated as TEXT.[0m
+* [33m10: No fields for object definition: data[0m
+* [33m11: Not supported content types for body payload in POST:/api/v4/license/preview : multipart/form-data. It will be treated as TEXT.[0m
+* [33m12: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 2024-01-15 14:30:45.123 -05:00[0m
+* [33m13: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 2024-01-15 14:30:45.123 -05:00[0m
+* [33m14: Not supported content types for body payload in POST:/api/v4/emoji : multipart/form-data. It will be treated as TEXT.[0m
+* [33m15: Not supported content types for body payload in POST:/api/v4/saml/certificate/idp : multipart/form-data. It will be treated as TEXT.[0m
+* [33m16: Not supported content types for body payload in POST:/api/v4/saml/certificate/public : multipart/form-data. It will be treated as TEXT.[0m
+* [33m17: Not supported content types for body payload in POST:/api/v4/saml/certificate/private : multipart/form-data. It will be treated as TEXT.[0m
+* [33m18: Not supported content types for body payload in POST:/api/v4/ldap/certificate/public : multipart/form-data. It will be treated as TEXT.[0m
+* [33m19: Not supported content types for body payload in POST:/api/v4/ldap/certificate/private : multipart/form-data. It will be treated as TEXT.[0m
+* [33m20: Issue in /api/v4/groups/{group_id}/members: in OpenAPI, body payloads are not allowed for DELETE, although they are technically valid for HTTP (RFC 9110).[0m
+* [33m21: Not supported content types for body payload in POST:/api/v4/brand/image : multipart/form-data. It will be treated as TEXT.[0m
+* [33m22: Unhandled format 'uri' for 'client_uri'[0m
+* [33m23: Issue in /api/v4/data_retention/policies/{policy_id}/teams: in OpenAPI, body payloads are not allowed for DELETE, although they are technically valid for HTTP (RFC 9110).[0m
+* [33m24: Issue in /api/v4/data_retention/policies/{policy_id}/channels: in OpenAPI, body payloads are not allowed for DELETE, although they are technically valid for HTTP (RFC 9110).[0m
+* [33m25: Not supported content types for body payload in POST:/api/v4/plugins : multipart/form-data. It will be treated as TEXT.[0m
+* [33m26: No fields for object definition: settings_schema[0m
+* [33m27: No path parameter for variable 'remote_id' in /api/v4/remotecluster/{remote_id}/generate_invite[0m
+* [33m28: Not supported content types for body payload in POST:/api/v4/remotecluster/upload/{upload_id} : application/octet-stream, multipart/form-data. It will be treated as TEXT.[0m
+* [33m29: Not supported content types for body payload in POST:/api/v4/remotecluster/{user_id}/image : multipart/form-data. It will be treated as TEXT.[0m
+* [33m30: No fields for object definition: elements_item[0m
+* [33m31: No fields for object definition: submission[0m
+* [33m32: No fields for object definition: submission[0m
+* [33m33: No fields for object definition: context[0m
+* [33m34: No fields for object definition: props[0m
+* [33m35: Fail to handle endpoint POST/api/v4/posts/schedule due to Cannot handle combination array/null[0m
+* [33m36: No path parameter for variable 'team_id' in /api/v4/posts/scheduled/team/{team_id}[0m
+* [33m37: Not supported content types for body payload in POST:/api/v4/audit_logs/certificate : multipart/form-data. It will be treated as TEXT.[0m
+* [33m38: Issue in /api/v4/access_control_policies/{policy_id}/unassign: in OpenAPI, body payloads are not allowed for DELETE, although they are technically valid for HTTP (RFC 9110).[0m
+* [33m39: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. If you are wrongly passing to it an array of values, the parser would read it as an array string or simply ignore it. Read value: ["onymzj7qcjnz7dcnhtjp1noc3w"][0m
+* [33m40: Unable to handle 'examples': (["onymzj7qcjnz7dcnhtjp1noc3w"], null)[0m
+* [33m41: No fields for object definition: attrs[0m
+* [33m42: No fields for object definition: attrs[0m
+* [33m43: Unable to handle 'default': ["InProgress"][0m
+* [33m44: Unable to handle 'examples': (InProgress, null)[0m
+* [33m45: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Server down in EU cluster[0m
+* [33m46: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: There is one server in the EU cluster that is not responding since April 12.[0m
+* [33m47: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: bqnbdf8uc0a8yz4i39qrpgkvtg[0m
+* [33m48: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 61ji2mpflefup3cnuif80r5rde[0m
+* [33m49: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: b2ntfcrl4ujivl456ab4b3aago[0m
+* [33m50: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 0y4a0ntte97cxvfont8y84wa7x[0m
+* [33m51: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: dialog_submission[0m
+* [33m52: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: ahz0s61gh275i7z2ag4g1ntvjm[0m
+* [33m53: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Server down in EU cluster.[0m
+* [33m54: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: There is one server in the EU cluster that is not responding since April 12.[0m
+* [33m55: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: hwrmiyzj3kadcilh3ukfcnsbt6[0m
+* [33m56: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: mx3xyzdojfgyfdx8sc8of1gdme[0m
+* [33m57: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: mx3xyzdojfgyfdx8sc8of1gdme[0m
+* [33m58: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Updated Server Down Incident[0m
+* [33m59: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: ## Incident Summary
+
+Resolved the server outage.[0m
+* [33m60: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: mx3xyzdojfgyfdx8sc8of1gdme[0m
+* [33m61: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1igmynxs77ywmcbwbsujzktter[0m
+* [33m62: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1igmynxs77ywmcbwbsujzktter[0m
+* [33m63: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1igmynxs77ywmcbwbsujzktter[0m
+* [33m64: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1igmynxs77ywmcbwbsujzktter[0m
+* [33m65: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Starting to investigate.[0m
+* [33m66: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 600[0m
+* [33m67: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1igmynxs77ywmcbwbsujzktter[0m
+* [33m68: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1igmynxs77ywmcbwbsujzktter[0m
+* [33m69: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: hx7fqtqxp7nn8129t7e505ls6s[0m
+* [33m70: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 3[0m
+* [33m71: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Gather information from customer.[0m
+* [33m72: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1607774621321[0m
+* [33m73: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: pisdatkjtdlkdhht2v4inxuzx1[0m
+* [33m74: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1608897821125[0m
+* [33m75: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: /opsgenie on-call[0m
+* [33m76: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1608552221019[0m
+* [33m77: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Ask the customer for more information in [Zendesk](https://www.zendesk.com/).[0m
+* [33m78: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 2[0m
+* [33m79: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 2[0m
+* [33m80: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Gather information from server's logs.[0m
+* [33m81: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: /jira update ticket[0m
+* [33m82: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Ask the customer for more information in [Zendesk](https://www.zendesk.com/).[0m
+* [33m83: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: ruu86intseidqdxjojia41u7l1[0m
+* [33m84: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Cloud PlaybookRuns[0m
+* [33m85: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: A playbook to follow when there is a playbook run regarding the availability of the cloud service.[0m
+* [33m86: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: p03rbi6viyztysbqnkvcqyel2i[0m
+* [33m87: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Triage issue[0m
+* [33m88: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Gather information from customer.[0m
+* [33m89: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: /opsgenie on-call[0m
+* [33m90: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Ask the customer for more information in [Zendesk](https://www.zendesk.com/).[0m
+* [33m91: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: ilh6s1j4yefbdhxhtlzt179i6m[0m
+* [33m92: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 2zh7rpashwfwapwaqyslmhwbax[0m
+* [33m93: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 01kidjn9iozv7bist427w4gkjo[0m
+* [33m94: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 9dtruav6d9ce3oqnc5pwhtqtfq[0m
+* [33m95: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: true[0m
+* [33m96: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 8iofau5swv32l6qtk3vlxgobta[0m
+* [33m97: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: https://httpbin.org/post[0m
+* [33m98: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: https://httpbin.org/post[0m
+* [33m99: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m100: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m101: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m102: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Cloud PlaybookRuns[0m
+* [33m103: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: A playbook to follow when there is a playbook run regarding the availability of the cloud service.[0m
+* [33m104: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: p03rbi6viyztysbqnkvcqyel2i[0m
+* [33m105: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1602235338837[0m
+* [33m106: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 0[0m
+* [33m107: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 3[0m
+* [33m108: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 18[0m
+* [33m109: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 6f6nsgxzoq84fqh1dnlyivgafd[0m
+* [33m110: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Triage issue[0m
+* [33m111: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 6f6nsgxzoq84fqh1dnlyivgafd[0m
+* [33m112: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Gather information from customer.[0m
+* [33m113: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1607774621321[0m
+* [33m114: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: pisdatkjtdlkdhht2v4inxuzx1[0m
+* [33m115: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1608897821125[0m
+* [33m116: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: /opsgenie on-call[0m
+* [33m117: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1608552221019[0m
+* [33m118: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Ask the customer for more information in [Zendesk](https://www.zendesk.com/).[0m
+* [33m119: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1607774621321[0m
+* [33m120: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1607774621321[0m
+* [33m121: No fields for object definition: trigger[0m
+* [33m122: No fields for object definition: actions_item[0m
+* [33m123: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: req1abcxyz[0m
+* [33m124: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Ticket URL[0m
+* [33m125: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: https://jira.example.com/browse/ABC-123[0m
+* [33m126: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1607774621321[0m
+* [33m127: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 6f6nsgxzoq84fqh1dnlyivgafd[0m
+* [33m128: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Severity is Critical AND Status is not Closed[0m
+* [33m129: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: ilh6s1j4yefbdhxhtlzt179i6m[0m
+* [33m130: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Incident - {SEQ}[0m
+* [33m131: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m132: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m133: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1602235338837[0m
+* [33m134: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m135: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: Priority[0m
+* [33m136: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1[0m
+* [33m137: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: opt1[0m
+* [33m138: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: High[0m
+* [33m139: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: #ff0000[0m
+* [33m140: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: parent_field_id[0m
+* [33m141: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m142: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: p7fj3k2l5m8n9q1r4s6t8v0w2x[0m
+* [33m143: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m144: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: p7fj3k2l5m8n9q1r4s6t8v0w2x[0m
+* [33m145: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m146: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: p7fj3k2l5m8n9q1r4s6t8v0w2x[0m
+* [33m147: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 3[0m
+* [33m148: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: mx3xyzdojfgyfdx8sc8of1gdme[0m
+* [33m149: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1602235338837[0m
+* [33m150: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: mx3xyzdojfgyfdx8sc8of1gdme[0m
+* [33m151: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1602235338837[0m
+* [33m152: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: mx3xyzdojfgyfdx8sc8of1gdme[0m
+* [33m153: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: p7fj3k2l5m8n9q1r4s6t8v0w2x[0m
+* [33m154: Unhandled format 'json' for 'value'[0m
+* [33m155: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: High Priority Issue[0m
+* [33m156: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m157: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m158: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m159: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: abc123def456ghi789[0m
+* [33m160: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: status[0m
+* [33m161: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: active[0m
+* [33m162: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: status[0m
+* [33m163: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: active[0m
+* [33m164: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1[0m
+* [33m165: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m166: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: mx3xyzdojfgyfdx8sc8of1gdme[0m
+* [33m167: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1606807976289[0m
+* [33m168: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: 1606807976289[0m
+* [33m169: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m170: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: abc123def456ghi789[0m
+* [33m171: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: iz0g457ikesz55dhxcfa0fk9yy[0m
+* [33m172: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: abc123def456ghi789[0m
+* [33m173: The use of 'example' inside a Schema Object is deprecated in OpenAPI. Rather use 'examples'. Read value: mx3xyzdojfgyfdx8sc8of1gdme[0m
+16:28:57.353 [main] WARN  o.e.c.s.gene.collection.ArrayGene - cannot bind ArrayGene with the template (StringGene) with StringGene
+16:28:57.354 [main] WARN  o.e.c.s.gene.collection.ArrayGene - cannot bind ArrayGene with the template (StringGene) with BooleanGene
+16:28:57.881 [main] ERROR o.e.c.p.rest.oracle.RestSchemaOracle - Failed to parse OpenAPI schema for response validation. This could be an error in the schema. However, the current library we use for validation has few limitations. The problem could hence be in the library and not the schema. Error message: Unable to load API spec from provided URL or payload:
+	- attribute components.schemas.KnownUsers.items is missing
+	- attribute components.schemas.ClusterInfo.items is missing
+	- attribute paths.'/api/v4/users/known'(get).responses.200.content.'application/json'.schema.items is missing
+	- attribute paths.'/api/v4/posts/schedule'(post).requestBody.content.'application/json'.schema.items is missing
+	- paths.'/api/v4/users/{user_id}/reset_failed_attempts'. Declared path parameter user_id needs to be defined as a path parameter in path or operation level
+	- paths.'/api/v4/remotecluster/{remote_id}/generate_invite'. Declared path parameter remote_id needs to be defined as a path parameter in path or operation level
+	- paths.'/api/v4/posts/scheduled/team/{team_id}'. Declared path parameter team_id needs to be defined as a path parameter in path or operation level
+	- attribute paths.'/api/v4/files/search'(post).operationId is repeated
+16:28:57.981 [main] ERROR o.e.c.p.rest.oracle.RestSchemaOracle - Failed to parse OpenAPI schema for response validation. This could be an error in the schema. However, the current library we use for validation has few limitations. The problem could hence be in the library and not the schema. Error message: Unable to load API spec from provided URL or payload:
+	- attribute components.schemas.KnownUsers.items is missing
+	- attribute components.schemas.ClusterInfo.items is missing
+	- attribute paths.'/api/v4/users/known'(get).responses.200.content.'application/json'.schema.items is missing
+	- attribute paths.'/api/v4/posts/schedule'(post).requestBody.content.'application/json'.schema.items is missing
+	- paths.'/api/v4/users/{user_id}/reset_failed_attempts'. Declared path parameter user_id needs to be defined as a path parameter in path or operation level
+	- paths.'/api/v4/remotecluster/{remote_id}/generate_invite'. Declared path parameter remote_id needs to be defined as a path parameter in path or operation level
+	- paths.'/api/v4/posts/scheduled/team/{team_id}'. Declared path parameter team_id needs to be defined as a path parameter in path or operation level
+	- attribute paths.'/api/v4/files/search'(post).operationId is repeated
+16:28:58.026 [main] ERROR o.e.c.p.rest.oracle.RestSchemaOracle - Failed to parse OpenAPI schema for response validation. This could be an error in the schema. However, the current library we use for validation has few limitations. The problem could hence be in the library and not the schema. Error message: Unable to load API spec from provided URL or payload:
+	- attribute components.schemas.KnownUsers.items is missing
+	- attribute components.schemas.ClusterInfo.items is missing
+	- attribute paths.'/api/v4/users/known'(get).responses.200.content.'application/json'.schema.items is missing
+	- attribute paths.'/api/v4/posts/schedule'(post).requestBody.content.'application/json'.schema.items is missing
+	- paths.'/api/v4/users/{user_id}/reset_failed_attempts'. Declared path parameter user_id needs to be defined as a path parameter in path or operation level
+	- paths.'/api/v4/remotecluster/{remote_id}/generate_invite'. Declared path parameter remote_id needs to be defined as a path parameter in path or operation level
+	- paths.'/api/v4/posts/scheduled/team/{team_id}'. Declared path parameter team_id needs to be defined as a path parameter in path or operation level
+	- attribute paths.'/api/v4/files/search'(post).operationId is repeated
+16:28:58.073 [main] ERROR o.e.c.p.rest.oracle.RestSchemaOracle - Failed to parse OpenAPI schema for response validation. This could be an error in the schema. However, the current library we use for validation has few limitations. The problem could hence be in the library and not the schema. Error message: Unable to load API spec from provided URL or payload:
+	- attribute components.schemas.KnownUsers.items is missing
+	- attribute components.schemas.ClusterInfo.items is missing
+	- attribute paths.'/api/v4/users/known'(get).responses.200.content.'application/json'.schema.items is missing
+	- attribute paths.'/api/v4/posts/schedule'(post).requestBody.content.'application/json'.schema.items is missing
+	- paths.'/api/v4/users/{user_id}/reset_failed_attempts'. Declared path parameter user_id needs to be defined as a path parameter in path or operation level
+	- paths.'/api/v4/remotecluster/{remote_id}/generate_invite'. Declared path parameter remote_id needs to be defined as a path parameter in path or operation level
+	- paths.'/api/v4/posts/scheduled/team/{team_id}'. Declared path parameter team_id needs to be defined as a path parameter in path or operation level
+	- attribute paths.'/api/v4/files/search'(post).operationId is repeated
+* [33m[WARNING] [0m[33mSome experimental settings have been activated. Those might not work as expected, or simply straight out crash. Furthermore, they might simply be incomplete features still under development. Activated experimental settings: [enableStaticFlakyInference][0m
+* Starting phase SEARCH
+* Starting to generate test cases
+[2K* Consumed search budget: 0.222%
+[2K* Covered targets: 0
+[2K* Time per test: 665.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 0.528%
+[2K* Covered targets: 0
+[2K* Time per test: 527.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 0.832%
+[2K* Covered targets: 0
+[2K* Time per test: 498.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 1.137%
+[2K* Covered targets: 24
+[2K* Time per test: 486.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 1.441%
+[2K* Covered targets: 24
+[2K* Time per test: 479.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 1.747%
+[2K* Covered targets: 24
+[2K* Time per test: 475.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 2.053%
+[2K* Covered targets: 48
+[2K* Time per test: 473.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 2.363%
+[2K* Covered targets: 48
+[2K* Time per test: 472.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 2.668%
+[2K* Covered targets: 48
+[2K* Time per test: 470.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 2.972%
+[2K* Covered targets: 48
+[2K* Time per test: 468.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:29:07 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+[2K* Consumed search budget: 3.277%
+[2K* Covered targets: 83
+[2K* Time per test: 467.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 3.586%
+[2K* Covered targets: 83
+[2K* Time per test: 467.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 3.889%
+[2K* Covered targets: 83
+[2K* Time per test: 466.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 4.192%
+[2K* Covered targets: 114
+[2K* Time per test: 465.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 4.496%
+[2K* Covered targets: 114
+[2K* Time per test: 464.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:29:12 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+[2K* Consumed search budget: 4.798%
+[2K* Covered targets: 114
+[2K* Time per test: 463.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:29:12 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:29:13 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+[2K* Consumed search budget: 5.103%
+[2K* Covered targets: 133
+[2K* Time per test: 463.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 5.406%
+[2K* Covered targets: 133
+[2K* Time per test: 462.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 5.711%
+[2K* Covered targets: 133
+[2K* Time per test: 462.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 6.014%
+[2K* Covered targets: 150
+[2K* Time per test: 462.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 6.317%
+[2K* Covered targets: 150
+[2K* Time per test: 461.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 6.620%
+[2K* Covered targets: 150
+[2K* Time per test: 461.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 6.924%
+[2K* Covered targets: 150
+[2K* Time per test: 461.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 7.227%
+[2K* Covered targets: 208
+[2K* Time per test: 460.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 7.531%
+[2K* Covered targets: 208
+[2K* Time per test: 460.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 7.834%
+[2K* Covered targets: 208
+[2K* Time per test: 460.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 8.137%
+[2K* Covered targets: 231
+[2K* Time per test: 460.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 8.442%
+[2K* Covered targets: 231
+[2K* Time per test: 460.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 8.745%
+[2K* Covered targets: 231
+[2K* Time per test: 459.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 9.052%
+[2K* Covered targets: 259
+[2K* Time per test: 459.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 9.358%
+[2K* Covered targets: 259
+[2K* Time per test: 459.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 9.662%
+[2K* Covered targets: 259
+[2K* Time per test: 459.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 9.967%
+[2K* Covered targets: 259
+[2K* Time per test: 459.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 10.269%
+[2K* Covered targets: 289
+[2K* Time per test: 459.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 10.571%
+[2K* Covered targets: 289
+[2K* Time per test: 459.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 10.874%
+[2K* Covered targets: 289
+[2K* Time per test: 459.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:29:31 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:29:31 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+[2K* Consumed search budget: 11.177%
+[2K* Covered targets: 310
+[2K* Time per test: 458.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 11.482%
+[2K* Covered targets: 310
+[2K* Time per test: 458.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 11.784%
+[2K* Covered targets: 310
+[2K* Time per test: 458.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 12.086%
+[2K* Covered targets: 329
+[2K* Time per test: 458.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 12.396%
+[2K* Covered targets: 329
+[2K* Time per test: 458.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 12.698%
+[2K* Covered targets: 329
+[2K* Time per test: 458.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 13.001%
+[2K* Covered targets: 347
+[2K* Time per test: 458.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:29:37 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must be null for http method DELETE.
+[2K* Consumed search budget: 13.304%
+[2K* Covered targets: 347
+[2K* Time per test: 458.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 13.605%
+[2K* Covered targets: 347
+[2K* Time per test: 458.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 13.907%
+[2K* Covered targets: 347
+[2K* Time per test: 458.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 14.209%
+[2K* Covered targets: 376
+[2K* Time per test: 457.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 14.511%
+[2K* Covered targets: 376
+[2K* Time per test: 457.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 14.826%
+[2K* Covered targets: 376
+[2K* Time per test: 458.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 15.141%
+[2K* Covered targets: 397
+[2K* Time per test: 458.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 15.449%
+[2K* Covered targets: 397
+[2K* Time per test: 456.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A16:29:44.919 [main] WARN  o.e.c.p.r.s.f.AbstractRestFitness - Cannot handle body type: multipart/form-data. It will be treated as TEXT.
+[2K* Consumed search budget: 15.763%
+[2K* Covered targets: 397
+[2K* Time per test: 456.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 16.065%
+[2K* Covered targets: 415
+[2K* Time per test: 456.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 16.367%
+[2K* Covered targets: 415
+[2K* Time per test: 456.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 16.671%
+[2K* Covered targets: 415
+[2K* Time per test: 456.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 16.972%
+[2K* Covered targets: 415
+[2K* Time per test: 456.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 17.275%
+[2K* Covered targets: 439
+[2K* Time per test: 456.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 17.578%
+[2K* Covered targets: 439
+[2K* Time per test: 456.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 17.880%
+[2K* Covered targets: 439
+[2K* Time per test: 455.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 18.183%
+[2K* Covered targets: 466
+[2K* Time per test: 455.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 18.487%
+[2K* Covered targets: 466
+[2K* Time per test: 455.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 18.790%
+[2K* Covered targets: 466
+[2K* Time per test: 455.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 19.094%
+[2K* Covered targets: 490
+[2K* Time per test: 455.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 19.394%
+[2K* Covered targets: 490
+[2K* Time per test: 455.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 19.696%
+[2K* Covered targets: 490
+[2K* Time per test: 455.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 19.997%
+[2K* Covered targets: 490
+[2K* Time per test: 455.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 20.304%
+[2K* Covered targets: 538
+[2K* Time per test: 455.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 20.606%
+[2K* Covered targets: 538
+[2K* Time per test: 455.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 20.907%
+[2K* Covered targets: 538
+[2K* Time per test: 455.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 21.207%
+[2K* Covered targets: 562
+[2K* Time per test: 455.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 21.508%
+[2K* Covered targets: 562
+[2K* Time per test: 455.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 21.811%
+[2K* Covered targets: 562
+[2K* Time per test: 455.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 22.113%
+[2K* Covered targets: 580
+[2K* Time per test: 455.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 22.416%
+[2K* Covered targets: 580
+[2K* Time per test: 455.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 22.719%
+[2K* Covered targets: 580
+[2K* Time per test: 455.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 23.022%
+[2K* Covered targets: 600
+[2K* Time per test: 455.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 23.324%
+[2K* Covered targets: 600
+[2K* Time per test: 455.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A16:30:08.549 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Got 401 although having auth for 'viewer' on endpoint: /api/v4/cloud/webhook
+[2K* Consumed search budget: 23.635%
+[2K* Covered targets: 600
+[2K* Time per test: 455.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 23.937%
+[2K* Covered targets: 600
+[2K* Time per test: 455.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 24.244%
+[2K* Covered targets: 623
+[2K* Time per test: 455.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 24.559%
+[2K* Covered targets: 623
+[2K* Time per test: 455.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 24.864%
+[2K* Covered targets: 623
+[2K* Time per test: 455.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 25.168%
+[2K* Covered targets: 638
+[2K* Time per test: 455.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 25.468%
+[2K* Covered targets: 638
+[2K* Time per test: 455.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 25.771%
+[2K* Covered targets: 638
+[2K* Time per test: 455.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 26.073%
+[2K* Covered targets: 652
+[2K* Time per test: 455.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 26.374%
+[2K* Covered targets: 652
+[2K* Time per test: 455.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 26.679%
+[2K* Covered targets: 652
+[2K* Time per test: 455.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 26.988%
+[2K* Covered targets: 652
+[2K* Time per test: 455.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 27.297%
+[2K* Covered targets: 681
+[2K* Time per test: 455.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 27.602%
+[2K* Covered targets: 681
+[2K* Time per test: 455.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 27.902%
+[2K* Covered targets: 681
+[2K* Time per test: 455.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 28.204%
+[2K* Covered targets: 695
+[2K* Time per test: 455.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 28.511%
+[2K* Covered targets: 695
+[2K* Time per test: 455.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 28.812%
+[2K* Covered targets: 695
+[2K* Time per test: 455.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A16:30:25.012 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Got 401 although having auth for 'viewer' on endpoint: /api/v4/remotecluster/{user_id}/image
+16:30:25.486 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Got 401 although having auth for 'viewer' on endpoint: /api/v4/remotecluster/upload/{upload_id}
+[2K* Consumed search budget: 29.130%
+[2K* Covered targets: 726
+[2K* Time per test: 456.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A16:30:25.938 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Got 401 although having auth for 'viewer' on endpoint: /api/v4/remotecluster/confirm_invite
+16:30:26.392 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Got 401 although having auth for 'viewer' on endpoint: /api/v4/remotecluster/msg
+[2K* Consumed search budget: 29.432%
+[2K* Covered targets: 726
+[2K* Time per test: 456.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A16:30:26.844 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Got 401 although having auth for 'viewer' on endpoint: /api/v4/remotecluster/ping
+[2K* Consumed search budget: 29.741%
+[2K* Covered targets: 726
+[2K* Time per test: 456.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 30.053%
+[2K* Covered targets: 754
+[2K* Time per test: 456.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 30.366%
+[2K* Covered targets: 754
+[2K* Time per test: 456.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 30.667%
+[2K* Covered targets: 754
+[2K* Time per test: 456.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 30.970%
+[2K* Covered targets: 754
+[2K* Time per test: 455.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 31.276%
+[2K* Covered targets: 791
+[2K* Time per test: 455.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 31.580%
+[2K* Covered targets: 791
+[2K* Time per test: 455.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 31.883%
+[2K* Covered targets: 791
+[2K* Time per test: 455.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 32.186%
+[2K* Covered targets: 815
+[2K* Time per test: 456.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 32.494%
+[2K* Covered targets: 815
+[2K* Time per test: 456.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 32.803%
+[2K* Covered targets: 815
+[2K* Time per test: 456.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 33.111%
+[2K* Covered targets: 830
+[2K* Time per test: 456.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 33.422%
+[2K* Covered targets: 830
+[2K* Time per test: 456.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 33.733%
+[2K* Covered targets: 830
+[2K* Time per test: 456.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 34.043%
+[2K* Covered targets: 855
+[2K* Time per test: 457.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 34.349%
+[2K* Covered targets: 855
+[2K* Time per test: 457.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 34.654%
+[2K* Covered targets: 855
+[2K* Time per test: 457.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 34.960%
+[2K* Covered targets: 855
+[2K* Time per test: 457.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:30:43 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must be null for http method DELETE.
+[2K* Consumed search budget: 35.267%
+[2K* Covered targets: 884
+[2K* Time per test: 457.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 35.575%
+[2K* Covered targets: 884
+[2K* Time per test: 457.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 35.746%
+[2K* Covered targets: 884
+[2K* Time per test: 458.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:30:45 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must be null for http method DELETE.
+[2K* Consumed search budget: 36.057%
+[2K* Covered targets: 907
+[2K* Time per test: 458.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 36.365%
+[2K* Covered targets: 907
+[2K* Time per test: 458.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 36.674%
+[2K* Covered targets: 907
+[2K* Time per test: 459.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 36.978%
+[2K* Covered targets: 907
+[2K* Time per test: 459.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 37.279%
+[2K* Covered targets: 940
+[2K* Time per test: 459.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 37.579%
+[2K* Covered targets: 940
+[2K* Time per test: 459.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 37.880%
+[2K* Covered targets: 940
+[2K* Time per test: 458.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 38.183%
+[2K* Covered targets: 962
+[2K* Time per test: 458.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 38.487%
+[2K* Covered targets: 962
+[2K* Time per test: 459.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 38.788%
+[2K* Covered targets: 962
+[2K* Time per test: 458.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 39.093%
+[2K* Covered targets: 977
+[2K* Time per test: 458.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:30:56 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+[2K* Consumed search budget: 39.401%
+[2K* Covered targets: 977
+[2K* Time per test: 458.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 39.702%
+[2K* Covered targets: 977
+[2K* Time per test: 458.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 40.017%
+[2K* Covered targets: 996
+[2K* Time per test: 458.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 40.325%
+[2K* Covered targets: 996
+[2K* Time per test: 458.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 40.627%
+[2K* Covered targets: 996
+[2K* Time per test: 458.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 40.928%
+[2K* Covered targets: 996
+[2K* Time per test: 458.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 41.242%
+[2K* Covered targets: 1020
+[2K* Time per test: 459.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 41.552%
+[2K* Covered targets: 1020
+[2K* Time per test: 459.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 41.853%
+[2K* Covered targets: 1020
+[2K* Time per test: 459.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 42.162%
+[2K* Covered targets: 1070
+[2K* Time per test: 459.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:31:05 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must be null for http method DELETE.
+[2K* Consumed search budget: 42.480%
+[2K* Covered targets: 1070
+[2K* Time per test: 459.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 42.799%
+[2K* Covered targets: 1070
+[2K* Time per test: 460.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 43.107%
+[2K* Covered targets: 1094
+[2K* Time per test: 460.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 43.425%
+[2K* Covered targets: 1094
+[2K* Time per test: 460.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 43.726%
+[2K* Covered targets: 1094
+[2K* Time per test: 460.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 44.026%
+[2K* Covered targets: 1110
+[2K* Time per test: 460.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 44.342%
+[2K* Covered targets: 1110
+[2K* Time per test: 460.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 44.658%
+[2K* Covered targets: 1110
+[2K* Time per test: 460.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 44.966%
+[2K* Covered targets: 1110
+[2K* Time per test: 461.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 45.274%
+[2K* Covered targets: 1146
+[2K* Time per test: 460.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 45.575%
+[2K* Covered targets: 1146
+[2K* Time per test: 460.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 45.886%
+[2K* Covered targets: 1146
+[2K* Time per test: 460.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 46.193%
+[2K* Covered targets: 1167
+[2K* Time per test: 460.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 46.494%
+[2K* Covered targets: 1167
+[2K* Time per test: 460.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 46.795%
+[2K* Covered targets: 1167
+[2K* Time per test: 460.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 47.095%
+[2K* Covered targets: 1193
+[2K* Time per test: 460.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 47.397%
+[2K* Covered targets: 1193
+[2K* Time per test: 460.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 47.698%
+[2K* Covered targets: 1193
+[2K* Time per test: 460.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 48.006%
+[2K* Covered targets: 1210
+[2K* Time per test: 460.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 48.318%
+[2K* Covered targets: 1210
+[2K* Time per test: 460.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 48.620%
+[2K* Covered targets: 1210
+[2K* Time per test: 460.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 48.922%
+[2K* Covered targets: 1210
+[2K* Time per test: 459.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 49.225%
+[2K* Covered targets: 1238
+[2K* Time per test: 459.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 49.525%
+[2K* Covered targets: 1238
+[2K* Time per test: 459.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 49.827%
+[2K* Covered targets: 1238
+[2K* Time per test: 459.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 50.128%
+[2K* Covered targets: 1258
+[2K* Time per test: 459.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 50.429%
+[2K* Covered targets: 1258
+[2K* Time per test: 458.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 50.733%
+[2K* Covered targets: 1258
+[2K* Time per test: 458.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 51.034%
+[2K* Covered targets: 1283
+[2K* Time per test: 458.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 51.337%
+[2K* Covered targets: 1283
+[2K* Time per test: 457.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 51.643%
+[2K* Covered targets: 1283
+[2K* Time per test: 457.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 51.944%
+[2K* Covered targets: 1283
+[2K* Time per test: 457.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 52.245%
+[2K* Covered targets: 1318
+[2K* Time per test: 457.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 52.550%
+[2K* Covered targets: 1318
+[2K* Time per test: 457.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 52.852%
+[2K* Covered targets: 1318
+[2K* Time per test: 457.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 53.159%
+[2K* Covered targets: 1336
+[2K* Time per test: 457.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 53.461%
+[2K* Covered targets: 1336
+[2K* Time per test: 457.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 53.761%
+[2K* Covered targets: 1336
+[2K* Time per test: 457.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 54.062%
+[2K* Covered targets: 1357
+[2K* Time per test: 457.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 54.363%
+[2K* Covered targets: 1357
+[2K* Time per test: 457.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 54.664%
+[2K* Covered targets: 1357
+[2K* Time per test: 457.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 54.967%
+[2K* Covered targets: 1357
+[2K* Time per test: 457.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 55.268%
+[2K* Covered targets: 1395
+[2K* Time per test: 457.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 55.569%
+[2K* Covered targets: 1395
+[2K* Time per test: 456.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 55.875%
+[2K* Covered targets: 1395
+[2K* Time per test: 456.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 56.181%
+[2K* Covered targets: 1417
+[2K* Time per test: 457.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 56.484%
+[2K* Covered targets: 1417
+[2K* Time per test: 456.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 56.792%
+[2K* Covered targets: 1417
+[2K* Time per test: 456.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 57.093%
+[2K* Covered targets: 1441
+[2K* Time per test: 456.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 57.393%
+[2K* Covered targets: 1441
+[2K* Time per test: 456.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 57.695%
+[2K* Covered targets: 1441
+[2K* Time per test: 455.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 57.997%
+[2K* Covered targets: 1441
+[2K* Time per test: 455.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 58.305%
+[2K* Covered targets: 1481
+[2K* Time per test: 455.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 58.611%
+[2K* Covered targets: 1481
+[2K* Time per test: 455.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 58.912%
+[2K* Covered targets: 1481
+[2K* Time per test: 455.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 59.217%
+[2K* Covered targets: 1515
+[2K* Time per test: 455.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 59.519%
+[2K* Covered targets: 1515
+[2K* Time per test: 454.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 59.820%
+[2K* Covered targets: 1515
+[2K* Time per test: 454.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 60.121%
+[2K* Covered targets: 1534
+[2K* Time per test: 454.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 60.424%
+[2K* Covered targets: 1534
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 60.723%
+[2K* Covered targets: 1534
+[2K* Time per test: 453.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 61.024%
+[2K* Covered targets: 1552
+[2K* Time per test: 453.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 61.326%
+[2K* Covered targets: 1552
+[2K* Time per test: 453.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 61.629%
+[2K* Covered targets: 1552
+[2K* Time per test: 453.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 61.930%
+[2K* Covered targets: 1552
+[2K* Time per test: 453.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 62.231%
+[2K* Covered targets: 1583
+[2K* Time per test: 453.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 62.535%
+[2K* Covered targets: 1583
+[2K* Time per test: 453.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 62.835%
+[2K* Covered targets: 1583
+[2K* Time per test: 453.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 63.137%
+[2K* Covered targets: 1595
+[2K* Time per test: 453.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 63.442%
+[2K* Covered targets: 1595
+[2K* Time per test: 453.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 63.741%
+[2K* Covered targets: 1595
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 64.042%
+[2K* Covered targets: 1612
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 64.343%
+[2K* Covered targets: 1612
+[2K* Time per test: 453.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 64.645%
+[2K* Covered targets: 1612
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 64.947%
+[2K* Covered targets: 1612
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 65.247%
+[2K* Covered targets: 1631
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 65.550%
+[2K* Covered targets: 1631
+[2K* Time per test: 453.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 65.855%
+[2K* Covered targets: 1631
+[2K* Time per test: 453.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 66.156%
+[2K* Covered targets: 1646
+[2K* Time per test: 453.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 66.457%
+[2K* Covered targets: 1646
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 66.758%
+[2K* Covered targets: 1646
+[2K* Time per test: 453.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 67.061%
+[2K* Covered targets: 1688
+[2K* Time per test: 453.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 67.362%
+[2K* Covered targets: 1688
+[2K* Time per test: 453.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 67.663%
+[2K* Covered targets: 1688
+[2K* Time per test: 452.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 67.969%
+[2K* Covered targets: 1688
+[2K* Time per test: 453.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 68.275%
+[2K* Covered targets: 1728
+[2K* Time per test: 452.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 68.578%
+[2K* Covered targets: 1728
+[2K* Time per test: 453.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 68.880%
+[2K* Covered targets: 1728
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 69.181%
+[2K* Covered targets: 1747
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 69.482%
+[2K* Covered targets: 1747
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 69.784%
+[2K* Covered targets: 1747
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 70.087%
+[2K* Covered targets: 1764
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 70.388%
+[2K* Covered targets: 1764
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 70.689%
+[2K* Covered targets: 1764
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 70.992%
+[2K* Covered targets: 1764
+[2K* Time per test: 453.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:32:31 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+[2K* Consumed search budget: 71.294%
+[2K* Covered targets: 1795
+[2K* Time per test: 452.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 71.598%
+[2K* Covered targets: 1795
+[2K* Time per test: 452.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 71.898%
+[2K* Covered targets: 1795
+[2K* Time per test: 452.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 72.199%
+[2K* Covered targets: 1814
+[2K* Time per test: 452.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 72.504%
+[2K* Covered targets: 1814
+[2K* Time per test: 452.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 72.806%
+[2K* Covered targets: 1814
+[2K* Time per test: 452.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 73.107%
+[2K* Covered targets: 1832
+[2K* Time per test: 452.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 73.414%
+[2K* Covered targets: 1832
+[2K* Time per test: 452.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 73.716%
+[2K* Covered targets: 1832
+[2K* Time per test: 452.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 74.018%
+[2K* Covered targets: 1853
+[2K* Time per test: 452.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 74.320%
+[2K* Covered targets: 1853
+[2K* Time per test: 452.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 74.620%
+[2K* Covered targets: 1853
+[2K* Time per test: 452.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 74.925%
+[2K* Covered targets: 1853
+[2K* Time per test: 452.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 75.228%
+[2K* Covered targets: 1879
+[2K* Time per test: 452.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 75.529%
+[2K* Covered targets: 1879
+[2K* Time per test: 452.7ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 75.835%
+[2K* Covered targets: 1879
+[2K* Time per test: 452.8ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 76.137%
+[2K* Covered targets: 1895
+[2K* Time per test: 452.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 76.441%
+[2K* Covered targets: 1895
+[2K* Time per test: 453.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 76.745%
+[2K* Covered targets: 1895
+[2K* Time per test: 453.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 77.048%
+[2K* Covered targets: 1915
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 77.350%
+[2K* Covered targets: 1915
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 77.657%
+[2K* Covered targets: 1915
+[2K* Time per test: 453.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 77.960%
+[2K* Covered targets: 1915
+[2K* Time per test: 453.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 78.263%
+[2K* Covered targets: 1958
+[2K* Time per test: 453.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 78.564%
+[2K* Covered targets: 1958
+[2K* Time per test: 453.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 78.866%
+[2K* Covered targets: 1958
+[2K* Time per test: 453.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 79.170%
+[2K* Covered targets: 1978
+[2K* Time per test: 453.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 79.481%
+[2K* Covered targets: 1978
+[2K* Time per test: 453.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 79.784%
+[2K* Covered targets: 1978
+[2K* Time per test: 453.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 80.100%
+[2K* Covered targets: 1991
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 80.402%
+[2K* Covered targets: 1991
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 80.702%
+[2K* Covered targets: 1991
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 81.004%
+[2K* Covered targets: 2008
+[2K* Time per test: 453.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 81.307%
+[2K* Covered targets: 2008
+[2K* Time per test: 453.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 81.612%
+[2K* Covered targets: 2008
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 81.913%
+[2K* Covered targets: 2008
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 82.215%
+[2K* Covered targets: 2034
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 82.519%
+[2K* Covered targets: 2034
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 82.821%
+[2K* Covered targets: 2034
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 83.124%
+[2K* Covered targets: 2064
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:33:07 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must be null for http method DELETE.
+[2K* Consumed search budget: 83.431%
+[2K* Covered targets: 2064
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 83.733%
+[2K* Covered targets: 2064
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 84.035%
+[2K* Covered targets: 2081
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 84.336%
+[2K* Covered targets: 2081
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 84.637%
+[2K* Covered targets: 2081
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 84.942%
+[2K* Covered targets: 2081
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 85.245%
+[2K* Covered targets: 2111
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 85.546%
+[2K* Covered targets: 2111
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:33:15 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+[2K* Consumed search budget: 85.850%
+[2K* Covered targets: 2111
+[2K* Time per test: 454.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:33:16 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:33:16 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+[2K* Consumed search budget: 86.151%
+[2K* Covered targets: 2125
+[2K* Time per test: 454.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:33:16 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+[2K* Consumed search budget: 86.453%
+[2K* Covered targets: 2125
+[2K* Time per test: 454.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 86.755%
+[2K* Covered targets: 2125
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 87.056%
+[2K* Covered targets: 2153
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 87.363%
+[2K* Covered targets: 2153
+[2K* Time per test: 454.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 87.665%
+[2K* Covered targets: 2153
+[2K* Time per test: 454.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 87.966%
+[2K* Covered targets: 2153
+[2K* Time per test: 454.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 88.270%
+[2K* Covered targets: 2179
+[2K* Time per test: 454.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 88.576%
+[2K* Covered targets: 2179
+[2K* Time per test: 454.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 88.879%
+[2K* Covered targets: 2179
+[2K* Time per test: 454.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 89.182%
+[2K* Covered targets: 2202
+[2K* Time per test: 454.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 89.484%
+[2K* Covered targets: 2202
+[2K* Time per test: 454.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 89.785%
+[2K* Covered targets: 2202
+[2K* Time per test: 454.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 90.086%
+[2K* Covered targets: 2221
+[2K* Time per test: 454.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 90.387%
+[2K* Covered targets: 2221
+[2K* Time per test: 454.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 90.688%
+[2K* Covered targets: 2221
+[2K* Time per test: 454.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 90.988%
+[2K* Covered targets: 2221
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 91.290%
+[2K* Covered targets: 2241
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 91.599%
+[2K* Covered targets: 2241
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 91.901%
+[2K* Covered targets: 2241
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 92.202%
+[2K* Covered targets: 2256
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 92.506%
+[2K* Covered targets: 2256
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 92.809%
+[2K* Covered targets: 2256
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 93.113%
+[2K* Covered targets: 2292
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 93.415%
+[2K* Covered targets: 2292
+[2K* Time per test: 453.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 93.721%
+[2K* Covered targets: 2292
+[2K* Time per test: 454.1ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 94.025%
+[2K* Covered targets: 2338
+[2K* Time per test: 454.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 94.328%
+[2K* Covered targets: 2338
+[2K* Time per test: 454.2ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A16:33:41.534 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Got 401 although having auth for 'viewer' on endpoint: /api/v4/users/login/cws
+16:33:41.987 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Got 401 although having auth for 'viewer' on endpoint: /api/v4/users/login/desktop_token
+[2K* Consumed search budget: 94.631%
+[2K* Covered targets: 2338
+[2K* Time per test: 453.9ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 94.935%
+[2K* Covered targets: 2338
+[2K* Time per test: 454.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 95.235%
+[2K* Covered targets: 2364
+[2K* Time per test: 453.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 95.538%
+[2K* Covered targets: 2364
+[2K* Time per test: 453.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 95.842%
+[2K* Covered targets: 2364
+[2K* Time per test: 453.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 96.144%
+[2K* Covered targets: 2372
+[2K* Time per test: 453.6ms (1.0 actions)
+[2K* Time since last improvement: 1s
+[1A[1A[1A[1A[2K* Consumed search budget: 96.446%
+[2K* Covered targets: 2372
+[2K* Time per test: 453.5ms (1.0 actions)
+[2K* Time since last improvement: 2s
+[1A[1A[1A[1A[2K* Consumed search budget: 96.750%
+[2K* Covered targets: 2372
+[2K* Time per test: 453.5ms (1.0 actions)
+[2K* Time since last improvement: 3s
+[1A[1A[1A[1A[2K* Consumed search budget: 97.052%
+[2K* Covered targets: 2373
+[2K* Time per test: 453.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 97.356%
+[2K* Covered targets: 2373
+[2K* Time per test: 453.6ms (1.0 actions)
+[2K* Time since last improvement: 1s
+[1A[1A[1A[1A[2K* Consumed search budget: 97.658%
+[2K* Covered targets: 2373
+[2K* Time per test: 453.5ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1ASep 28, 2026 4:33:51 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+[2K* Consumed search budget: 97.961%
+[2K* Covered targets: 2373
+[2K* Time per test: 453.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 98.264%
+[2K* Covered targets: 2387
+[2K* Time per test: 453.6ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 98.567%
+[2K* Covered targets: 2387
+[2K* Time per test: 453.4ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 98.868%
+[2K* Covered targets: 2387
+[2K* Time per test: 453.4ms (1.0 actions)
+[2K* Time since last improvement: 1s
+[1A[1A[1A[1A[2K* Consumed search budget: 99.172%
+[2K* Covered targets: 2390
+[2K* Time per test: 453.5ms (1.0 actions)
+[2K* Time since last improvement: 2s
+[1A[1A[1A[1ASep 28, 2026 4:33:56 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+[2K* Consumed search budget: 99.473%
+[2K* Covered targets: 2390
+[2K* Time per test: 453.5ms (1.0 actions)
+[2K* Time since last improvement: 3s
+[1A[1A[1A[1ASep 28, 2026 4:33:56 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:33:57 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+[2K* Consumed search budget: 99.775%
+[2K* Covered targets: 2390
+[2K* Time per test: 453.5ms (1.0 actions)
+[2K* Time since last improvement: 4s
+[1A[1A[1A[1A[2K* Consumed search budget: 100.075%
+[2K* Covered targets: 2392
+[2K* Time per test: 453.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 100.075%
+[2K* Covered targets: 2392
+[2K* Time per test: 453.3ms (1.0 actions)
+[2K* Time since last improvement: 0s
+* Evaluated tests: 658
+* Evaluated actions: 658
+* Needed budget: 99%
+* Passed time (seconds): 300
+* Execution time per test (ms): Avg=455.75 , min=447.00 , max=665.00
+* Execution time per action (ms): Avg=455.75 , min=447.00 , max=665.00
+* Computation overhead between tests (ms): Avg=0.51 , min=0.00 , max=6.00
+* Phase SEARCH lasted: 0h 5m 0s
+* Starting phase MINIMIZATION
+* Recomputing full coverage for 629 tests
+Sep 28, 2026 4:34:08 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:34:13 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:34:14 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:34:14 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:34:32 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:34:32 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:34:38 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must be null for http method DELETE.
+Sep 28, 2026 4:35:44 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must be null for http method DELETE.
+Sep 28, 2026 4:35:46 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must be null for http method DELETE.
+Sep 28, 2026 4:35:56 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:36:05 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must be null for http method DELETE.
+Sep 28, 2026 4:37:33 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:38:09 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must be null for http method DELETE.
+Sep 28, 2026 4:38:16 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:38:17 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:38:18 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+Sep 28, 2026 4:38:18 PM org.glassfish.jersey.client.JerseyInvocation validateHttpMethodAndEntity
+WARNING: Entity must not be null for http method PUT.
+* No test to minimize
+* Phase MINIMIZATION lasted: 0h 4m 47s
+* Starting phase SECURITY
+16:38:45.863 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization transition candidate PUT:/api/v4/roles/{role_id}/patch score 0.5455 userParam true reducedRoleValues 5
+16:38:45.864 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization transition candidate POST:/api/v4/permissions/ancillary score 0.5455 userParam true reducedRoleValues 0
+16:38:45.864 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization transition candidate POST:/api/v4/properties/groups/{group_name}/{object_type}/fields score 0.5455 userParam true reducedRoleValues 12
+16:38:45.865 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization transition candidate PATCH:/api/v4/data_retention/policies/{policy_id} score 0.3333 userParam true reducedRoleValues 0
+16:38:45.865 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization transition candidate POST:/api/v4/teams/search score 0.3333 userParam true reducedRoleValues 0
+16:38:45.865 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization transition candidate POST:/api/v4/channels/search score 0.3333 userParam true reducedRoleValues 0
+16:38:45.865 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization transition candidate POST:/api/v4/data_retention/policies/{policy_id}/teams score 0.3333 userParam true reducedRoleValues 0
+16:38:45.865 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization transition candidate POST:/api/v4/data_retention/policies/{policy_id}/teams/search score 0.3333 userParam true reducedRoleValues 0
+16:38:45.865 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization transition chosen: PUT:/api/v4/roles/{role_id}/patch
+16:38:45.865 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization reduced role values: [user, viewer, guest, member, basic]
+16:38:45.911 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization guarded source candidates: 62 [POST:/api/v4/users/trigger-notify-admin-posts, POST:/api/v4/users/tokens/revoke, POST:/api/v4/users/tokens/non_compliant/revoke, POST:/api/v4/users/tokens/disable, POST:/api/v4/users/tokens/enable, POST:/api/v4/users/tokens/rotate, POST:/api/v4/users/tokens/search, POST:/api/v4/drafts, POST:/api/v4/channels/members/{user_id}/mark_read, POST:/api/v4/posts, POST:/api/v4/posts/ephemeral, POST:/api/v4/uploads, POST:/api/v4/system/onboarding/complete, POST:/api/v4/site_url/test, POST:/api/v4/file/test, POST:/api/v4/file/s3_test, POST:/api/v4/license/preview, POST:/api/v4/trial-license, POST:/api/v4/caches/invalidate, POST:/api/v4/logs/query, POST:/api/v4/server_busy, POST:/api/v4/upgrade_to_enterprise, POST:/api/v4/hooks/outgoing, POST:/api/v4/saml/metadatafromidp, POST:/api/v4/saml/certificate/idp, POST:/api/v4/saml/certificate/public, POST:/api/v4/saml/certificate/private, POST:/api/v4/ldap/groups/{remote_id}/link, POST:/api/v4/ldap/migrateid, POST:/api/v4/ldap/certificate/public, POST:/api/v4/ldap/certificate/private, POST:/api/v4/ldap/users/{user_id}/group_sync_memberships, POST:/api/v4/commands, POST:/api/v4/oauth/apps, POST:/api/v4/elasticsearch/test, POST:/api/v4/elasticsearch/purge_indexes, POST:/api/v4/data_retention/policies, POST:/api/v4/data_retention/policies/{policy_id}/teams, POST:/api/v4/data_retention/policies/{policy_id}/teams/search, POST:/api/v4/data_retention/policies/{policy_id}/channels, POST:/api/v4/data_retention/policies/{policy_id}/channels/search, POST:/api/v4/plugins, POST:/api/v4/plugins/install_from_url, POST:/api/v4/plugins/{plugin_id}/enable, POST:/api/v4/plugins/{plugin_id}/disable, POST:/api/v4/plugins/marketplace, POST:/api/v4/plugins/marketplace/first_admin_visit, POST:/api/v4/terms_of_service, POST:/api/v4/remotecluster, POST:/api/v4/remotecluster/{remote_id}/generate_invite, POST:/api/v4/remotecluster/accept_invite, POST:/api/v4/bots, POST:/api/v4/reports/users/export, POST:/api/v4/reports/posts, POST:/api/v4/oauth/outgoing_connections, POST:/api/v4/oauth/outgoing_connections/validate, POST:/api/v4/custom_profile_attributes/fields, POST:/api/v4/audit_logs/certificate, POST:/api/v4/access_control_policies/cel/check, POST:/api/v4/access_control_policies/cel/validate_requester, POST:/api/v4/access_control_policies/cel/test, POST:/api/v4/access_control_policies/search]
+16:38:45.911 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/users/trigger-notify-admin-posts victims []
+16:38:45.912 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/users/tokens/revoke victims []
+16:38:45.912 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/users/tokens/non_compliant/revoke victims []
+16:38:45.912 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/users/tokens/disable victims []
+16:38:45.912 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/users/tokens/enable victims []
+16:38:45.912 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/users/tokens/rotate victims []
+16:38:45.912 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/users/tokens/search victims []
+16:38:45.913 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/drafts victims []
+16:38:45.913 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/channels/members/{user_id}/mark_read victims []
+16:38:45.913 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/posts victims []
+16:38:45.913 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/posts/ephemeral victims []
+16:38:45.913 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/uploads victims []
+16:38:45.913 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/system/onboarding/complete victims []
+16:38:45.914 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/site_url/test victims []
+16:38:45.914 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/file/test victims []
+16:38:45.914 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/file/s3_test victims []
+16:38:45.914 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/license/preview victims []
+16:38:45.914 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/trial-license victims []
+16:38:45.914 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/caches/invalidate victims []
+16:38:45.915 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/logs/query victims []
+16:38:45.915 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/server_busy victims []
+16:38:45.915 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/upgrade_to_enterprise victims []
+16:38:45.915 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/hooks/outgoing victims []
+16:38:45.915 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/saml/metadatafromidp victims []
+16:38:45.916 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/saml/certificate/idp victims []
+16:38:45.916 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/saml/certificate/public victims []
+16:38:45.916 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/saml/certificate/private victims []
+16:38:45.916 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/ldap/groups/{remote_id}/link victims []
+16:38:45.916 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/ldap/migrateid victims []
+16:38:45.916 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/ldap/certificate/public victims []
+16:38:45.917 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/ldap/certificate/private victims []
+16:38:45.917 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/ldap/users/{user_id}/group_sync_memberships victims []
+16:38:45.917 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/commands victims []
+16:38:45.917 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/oauth/apps victims []
+16:38:45.917 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/elasticsearch/test victims []
+16:38:45.917 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/elasticsearch/purge_indexes victims []
+16:38:45.917 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/data_retention/policies victims []
+16:38:45.918 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/data_retention/policies/{policy_id}/teams victims []
+16:38:45.918 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/data_retention/policies/{policy_id}/teams/search victims []
+16:38:45.918 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/data_retention/policies/{policy_id}/channels victims []
+16:38:45.918 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/data_retention/policies/{policy_id}/channels/search victims []
+16:38:45.918 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/plugins victims []
+16:38:45.918 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/plugins/install_from_url victims []
+16:38:45.919 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/plugins/{plugin_id}/enable victims []
+16:38:45.919 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/plugins/{plugin_id}/disable victims []
+16:38:45.919 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/plugins/marketplace victims []
+16:38:45.919 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/plugins/marketplace/first_admin_visit victims []
+16:38:45.919 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/terms_of_service victims []
+16:38:45.919 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/remotecluster victims []
+16:38:45.919 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/remotecluster/{remote_id}/generate_invite victims []
+16:38:45.920 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/remotecluster/accept_invite victims []
+16:38:45.920 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/bots victims []
+16:38:45.920 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/reports/users/export victims []
+16:38:45.920 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/reports/posts victims []
+16:38:45.920 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/oauth/outgoing_connections victims []
+16:38:45.920 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/oauth/outgoing_connections/validate victims []
+16:38:45.920 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/custom_profile_attributes/fields victims []
+16:38:45.921 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/audit_logs/certificate victims []
+16:38:45.921 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/access_control_policies/cel/check victims []
+16:38:45.921 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/access_control_policies/cel/validate_requester victims []
+16:38:45.921 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/access_control_policies/cel/test victims []
+16:38:45.921 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source POST:/api/v4/access_control_policies/search victims []
+16:38:45.921 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization: sources exhausted after 0 triple attempts
+* Phase 'SECURITY' has timed out after 180 seconds. If you can run the fuzzing for longer, next time you might want to either increase 'maxTime' (300s) or 'extraPhaseBudgetPercentage' (0.6)
+* Phase SECURITY lasted: 0h 3m 4s
+* Starting phase WRITE_OUTPUT
+* Going to save 629 tests to /Users/minhnguyen/IdeaProjects/graduational-thesis/infra/em-results/mattermost-heldout-20260928/tests/auto-seed1-300s-evomaster-VI-d2325da7
+16:41:49.946 [main] WARN  o.e.c.o.service.HttpWsTestCaseWriter - Currently no assertions are generated for response type: text/html
+16:41:49.982 [main] WARN  o.e.c.o.service.HttpWsTestCaseWriter - Unhandled type for body payload: multipart/form-data. It will be handled as TEXT
+* Potential faults: 2
+* Successfully executed (HTTP code 2xx) 37 endpoints out of 623 (6%)
+* Phase WRITE_OUTPUT lasted: 0h 0m 0s
+* Fuzzing session has finished
+* EvoMaster process has completed successfully
+* Use [32m--help[0m and visit [34mhttps://www.evomaster.org[0m to learn more about available options

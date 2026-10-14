@@ -1,0 +1,528 @@
+## S211-0001  POST /account/password
+summary: Request password reset
+desc: Requesting a reset for a new password.
+- body:username string
+
+## S211-0002  PUT /account/password
+summary: Verify password reset
+desc: Setting a new password and verifying the request to set the password.
+- body:password string
+- body:token string
+
+## S211-0003  POST /account/registration
+summary: Register user
+desc: Registering a new user.
+- body:email string
+- body:password string
+- body:username string
+
+## S211-0005  POST /account/verification
+summary: Verify registration
+desc: Verifies a new user registration.
+- body:token string
+
+## S211-0008  PUT /api/v1/apikeys/{key}
+summary: Update API keys
+desc: API keys can be updated with new labels, and be activated and deactivated. The secret or UUID cannot be changed.
+- path:key string
+- body:active boolean
+- body:newLabel string
+
+## S211-0009  DELETE /api/v1/apikeys/{key}/privileges
+summary: Remove privilege
+- path:key string
+- body:privilege string
+
+## S211-0010  POST /api/v1/apikeys/{key}/privileges
+summary: Add privilege
+- path:key string
+- body:privilege string
+
+## S211-0011  DELETE /api/v1/apikeys/{key}/privileges/{privilege}/id4ns
+summary: Remove id4ns of a privilege
+- path:key string
+- path:privilege string
+- body:id4ns array<string>
+
+## S211-0012  POST /api/v1/apikeys/{key}/privileges/{privilege}/id4ns
+summary: Add ID4ns of a privilege
+- path:key string
+- path:privilege string
+- body:id4ns array<string>
+
+## S211-0013  POST /api/v1/collections
+summary: Create collection
+- body:label string
+- body:length integer
+- body:organizationId string
+- body:type string enum[ROUTING_COLLECTION|LOGISTIC_COLLECTION|LABELLED_COLLECTION]
+
+## S211-0014  DELETE /api/v1/collections/{id4n}
+summary: Delete collection
+- path:id4n string
+
+## S211-0015  PATCH /api/v1/collections/{id4n}
+summary: Update collection
+desc: Update collection changing only the given values
+- path:id4n string
+- body:createdTimestamp integer
+- body:holderOrganizationId string
+- body:id4n string
+- body:label string
+- body:ownerOrganizationId string
+- body:physicalState string enum[UNATTACHED|ATTACHED|DETACHED]
+- body:type string enum[ROUTING_COLLECTION|LOGISTIC_COLLECTION|LABELLED_COLLECTION]
+
+## S211-0017  POST /api/v1/collections/{id4n}/elements
+summary: Add elements to collection
+- path:id4n string
+- body:id4ns array<string>
+
+## S211-0018  POST /api/v1/documents/{id4n}/{organizationId}
+summary: Create an document for an id4n
+desc: The documents' mime type is suggested on octet-stream data. Otherwise the specified content mime type is used.
+- path:organizationId string
+- path:id4n string
+- body:content string
+
+## S211-0019  PUT /api/v1/documents/{id4n}/{organizationId}
+summary: Put an document for an id4n
+desc: Creating or overwriting an existing document
+- path:organizationId string
+- path:id4n string
+- body:content string
+
+## S211-0020  DELETE /api/v1/documents/{id4n}/{organizationId}/{fileName}
+summary: Delete a document
+- path:organizationId string
+- path:id4n string
+- path:fileName string
+
+## S211-0021  PATCH /api/v1/documents/{id4n}/{organizationId}/{fileName}/metadata
+summary: Update a document
+- path:organizationId string
+- path:id4n string
+- path:fileName string
+- body:filename string
+- body:mimeType string
+- body:visibility object
+- body:visibility.public boolean
+- body:visibility.sharedWithOrganizationIds array<string>
+
+## S211-0022  POST /api/v1/guids
+summary: Create GUID(s)
+desc: Creating one or more GUIDs with a specified length.
+- body:count integer
+- body:length integer
+- body:organizationId string
+
+## S211-0024  POST /api/v1/history/{id4n}
+summary: Add history item
+desc: Add a new history item
+- path:id4n string
+- body:additionalProperties object
+- body:organizationId string
+- body:ownerOrganizationId string
+- body:sequenceId integer
+- body:timestamp integer
+- body:type string enum[CREATED|DESTROYED|RECYCLED|SHIPMENT_PREPARED|STORED|RETRIEVED_FROM_STORAGE|PACKAGED|DISPATCHED|RECEIVED|DELIVERY_REFUSED|REPROCESSING_STARTED|REPROCESSING_STEP_STARTED]
+- body:visibility object
+- body:visibility.public boolean
+- body:visibility.sharedOrganizationIds array<string>
+
+## S211-0026  PUT /api/v1/history/{id4n}/{organizationId}/{sequenceId}/visibility
+summary: Set history item visibility
+- path:id4n string
+- path:organizationId string
+- path:sequenceId integer
+- body:public boolean
+- body:sharedOrganizationIds array<string>
+
+## S211-0027  DELETE /api/v1/id4ns/{id4n}/alias/{aliasType}
+summary: Remove aliases from GUID or Collection
+desc: Remove the alias of the given type
+- path:id4n string
+- path:aliasType string enum[gtin|article|mapp|item|rfid|tracking|eclass|unspsc|product|material|reference]
+
+## S211-0030  PATCH /api/v1/id4ns/{id4n}/properties
+summary: Patch ID4n properties
+desc: Partial updating of id4n properties. If a property contains a null value the property will be deleted other values will be saved and overwritten if they already exist.
+- path:id4n string
+- query:organizationId string
+- body:(body) object
+
+## S211-0031  POST /api/v1/import/gs1
+summary: Import GS1/MAPP codes
+desc: Importing GS1/MAPP codes that contain unique components.
+- body:listOfGS1s object
+- body:listOfGS1s.codes array<string>
+- body:organizationId string
+
+## S211-0032  PUT /api/v1/microstorage/{id4n}/{organization}
+summary: Write data to microstorage
+- path:organization string
+- path:id4n string
+- body:(body) string
+
+## S211-0034  DELETE /api/v1/organizations/{organizationId}
+summary: Delete organization
+- path:organizationId string
+
+## S211-0036  DELETE /api/v1/organizations/{organizationId}/addresses/billing
+summary: Remove billing address
+- path:organizationId string
+
+## S211-0037  PUT /api/v1/organizations/{organizationId}/addresses/billing
+summary: Store billing address
+- path:organizationId string
+- body:city string
+- body:companyName string
+- body:countryCode string
+- body:countryName string
+- body:firstname string
+- body:lastname string
+- body:postCode string
+- body:street string
+- body:telephone string
+
+## S211-0039  DELETE /api/v1/organizations/{organizationId}/logo
+summary: Delete organization logo
+- path:organizationId string
+
+## S211-0042  POST /api/v1/organizations/{organizationId}/messaging/enqueueCustomMessage
+summary: Enqueue a custom message
+desc: Enqueue a custom organisation message with custom data.
+- path:organizationId string
+- body:data object
+- body:name string
+
+## S211-0044  PUT /api/v1/organizations/{organizationId}/partner
+summary: Add partner
+desc: Adding a partner organization. If the given organization is already a partner the result will be state 200 too.
+- path:organizationId string
+- body:organizationId string
+
+## S211-0045  POST /api/v1/organizations/{organizationId}/users/invite
+summary: Invite Users
+- path:organizationId string
+- body:invitations array<object>
+- body:invitations[].email string
+- body:invitations[].roles array<string>
+- body:invitations[].userName string
+
+## S211-0047  POST /api/v1/organizations/{organizationId}/users/{username}/roles
+summary: Add role(s) to user
+- path:organizationId string
+- path:username string
+- body:roles array<string>
+
+## S211-0048  PUT /api/v1/routingfiles/{id4n}
+summary: Store routing file
+- path:id4n string
+- body:organizationId string
+- body:routing object
+- body:routing.options object
+- body:routing.options.deleteOutdatedRoutes boolean
+- body:routing.routes array<object>
+- body:routing.routes[].params object
+- body:routing.routes[].priority integer
+- body:routing.routes[].public boolean
+- body:routing.routes[].type string
+- body:routing.routes[].validUntil integer
+
+## S211-0049  PUT /api/v1/transfers/{id4n}/receiveInfo
+summary: Transfer a GUID or collection, obtaining it (i.e. becoming the holder) and if allowed also taking ownership
+desc: Taking ownership can be forbidden by a previous owner. See methods prepare and getInfo
+- path:id4n string
+- body:organizationId string
+
+## S211-0050  PUT /api/v1/transfers/{id4n}/sendInfo
+summary: Prepare an object for transfer
+- path:id4n string
+- body:holderOrganizationId string
+- body:keepOwnership boolean
+- body:openForClaims boolean
+- body:ownerOrganizationId string
+- body:recipientOrganizationIds array<string>
+
+## S211-0051  POST /login
+desc: ID4i API Login
+- body:login string
+- body:password string
+
+## S212-0001  DELETE /aliases
+summary: Delete alias
+desc: Deletes a single alias by providing alias and domain. If no domain is provided the API will search for the matching alias within the Short.fyi domain
+- query:domainName string
+- query:aliasName string
+
+## S212-0002  POST /aliases
+summary: Create alias
+desc: This POST method creates a new alias under a specified domain. If no domain is specified in the request the alias will be attached to the default domain Short.fyi **NOTE:** You can override the domain level Meta Tags and Tracking Snippets by specifying them for each URL. Any variables you add to a specific URL will always override domain level settings.
+- query:domainName string
+- query:aliasName string
+- body:destinations array<object>
+- body:destinations[].country string
+- body:destinations[].os string
+- body:destinations[].url string
+- body:metatags array<object>
+- body:metatags[].content string
+- body:metatags[].name string
+- body:snippets array<object>
+- body:snippets[].id string
+- body:snippets[].parameters object
+
+## S212-0003  PUT /aliases
+summary: Update alias
+desc: Update a single short URL by providing its alias and domain as a parameter, and the data you wish to update in the body of the request. If no domain is provided you will receive the alias found attached to the Short.fyi domain (if it exists and is linked to your account!) ### NOTE: ( * )If you add a metatag or a snippet with a same name to an alias and the domain it's related to, the value will be
+- query:domainName string
+- query:aliasName string
+- body:destinations array<object>
+- body:destinations[].country string
+- body:destinations[].os string
+- body:destinations[].url string
+- body:metatags array<object>
+- body:metatags[].content string
+- body:metatags[].name string
+- body:snippets array<object>
+- body:snippets[].id string
+- body:snippets[].parameters object
+
+## S212-0004  POST /clicks/pg
+summary: Get clicks statistics
+desc: Retrieve the raw click statistics for your account. Clicks are retrieved by creation date in descending order.
+- body:aliasId string
+- body:dateFrom string
+- body:dateTo string
+- body:domain string
+- body:lastId integer
+
+## S213-0001  POST /admin.apps.approve
+desc: Approve an app for installation on a workspace.
+- body:app_id string
+- body:request_id string
+- body:team_id string
+
+## S213-0002  POST /admin.apps.restrict
+desc: Restrict an app for installation on a workspace.
+- body:app_id string
+- body:request_id string
+- body:team_id string
+
+## S213-0004  POST /admin.conversations.convertToPrivate
+desc: Convert a public channel to a private channel.
+- body:channel_id string
+
+## S213-0013  POST /admin.conversations.setTeams
+desc: Set the workspaces in an Enterprise grid org that connect to a public or private channel.
+- body:channel_id string
+- body:org_channel boolean
+- body:target_team_ids string
+- body:team_id string
+
+## S213-0017  POST /admin.emoji.remove
+desc: Remove an emoji across an Enterprise Grid organization
+- body:name string
+- body:token string
+
+## S213-0019  POST /admin.inviteRequests.approve
+desc: Approve a workspace invite request.
+- body:invite_request_id string
+- body:team_id string
+
+## S213-0021  POST /admin.teams.create
+desc: Create an Enterprise team.
+- body:team_description string
+- body:team_discoverability string
+- body:team_domain string
+- body:team_name string
+
+## S213-0025  POST /admin.teams.settings.setIcon
+desc: Sets the icon of a workspace.
+- body:image_url string
+- body:team_id string
+- body:token string
+
+## S213-0026  POST /admin.teams.settings.setName
+desc: Set the name of a given workspace.
+- body:name string
+- body:team_id string
+
+## S213-0031  POST /admin.users.invite
+desc: Invite a user to a workspace.
+- body:channel_ids string
+- body:custom_message string
+- body:email string
+- body:guest_expiration_ts string
+- body:is_restricted boolean
+- body:is_ultra_restricted boolean
+- body:real_name string
+- body:resend boolean
+- body:team_id string
+
+## S213-0033  POST /admin.users.session.invalidate
+desc: Invalidate a single session for a user by session_id
+- body:session_id integer
+- body:team_id string
+
+## S213-0035  POST /admin.users.setAdmin
+desc: Set an existing guest, regular user, or owner to be an admin user.
+- body:team_id string
+- body:user_id string
+
+## S213-0039  POST /calls.add
+desc: Registers a new Call.
+- body:created_by string
+- body:date_start integer
+- body:desktop_app_join_url string
+- body:external_display_id string
+- body:external_unique_id string
+- body:join_url string
+- body:title string
+- body:users string
+
+## S213-0044  POST /chat.delete
+desc: Deletes a message.
+- body:as_user boolean
+- body:channel string
+- body:ts number
+
+## S213-0049  POST /chat.scheduleMessage
+desc: Schedules a message to be sent to a channel.
+- body:as_user boolean
+- body:attachments string
+- body:blocks string
+- body:channel string
+- body:link_names boolean
+- body:parse string
+- body:post_at string
+- body:reply_broadcast boolean
+- body:text string
+- body:thread_ts number
+- body:unfurl_links boolean
+- body:unfurl_media boolean
+
+## S213-0051  POST /chat.update
+desc: Updates a message.
+- body:as_user string
+- body:attachments string
+- body:blocks string
+- body:channel string
+- body:link_names string
+- body:parse string
+- body:text string
+- body:ts string
+
+## S213-0055  POST /conversations.invite
+desc: Invites users to a channel.
+- body:channel string
+- body:users string
+
+## S213-0057  POST /conversations.kick
+desc: Removes a user from a conversation.
+- body:channel string
+- body:user string
+
+## S213-0059  POST /conversations.mark
+desc: Sets the read cursor in a channel.
+- body:channel string
+- body:ts number
+
+## S213-0061  POST /conversations.rename
+desc: Renames a conversation.
+- body:channel string
+- body:name string
+
+## S213-0064  POST /conversations.unarchive
+desc: Reverses conversation archival.
+- body:channel string
+
+## S213-0065  POST /dnd.endDnd
+desc: Ends the current user's Do Not Disturb session immediately.
+
+## S213-0068  POST /files.comments.delete
+desc: Deletes an existing comment on a file.
+- body:file string
+- body:id string
+
+## S213-0072  POST /files.remote.update
+desc: Updates an existing remote file.
+- body:external_id string
+- body:external_url string
+- body:file string
+- body:filetype string
+- body:indexable_file_contents string
+- body:preview_image string
+- body:title string
+- body:token string
+
+## S213-0075  POST /files.upload
+desc: Uploads or creates a file.
+- body:channels string
+- body:content string
+- body:file string
+- body:filename string
+- body:filetype string
+- body:initial_comment string
+- body:thread_ts number
+- body:title string
+- body:token string
+
+## S213-0076  POST /pins.add
+desc: Pins an item to a channel.
+- body:channel string
+- body:timestamp string
+
+## S213-0077  POST /pins.remove
+desc: Un-pins an item from a channel.
+- body:channel string
+- body:timestamp string
+
+## S213-0079  POST /reactions.remove
+desc: Removes a reaction from an item.
+- body:channel string
+- body:file string
+- body:file_comment string
+- body:name string
+- body:timestamp string
+
+## S213-0080  POST /reminders.add
+desc: Creates a reminder.
+- body:text string
+- body:time string
+- body:user string
+
+## S213-0081  POST /reminders.complete
+desc: Marks a reminder as complete.
+- body:reminder string
+
+## S213-0082  POST /reminders.delete
+desc: Deletes a reminder.
+- body:reminder string
+
+## S213-0083  POST /stars.add
+desc: Adds a star to an item.
+- body:channel string
+- body:file string
+- body:file_comment string
+- body:timestamp string
+
+## S213-0085  POST /usergroups.create
+desc: Create a User Group
+- body:channels string
+- body:description string
+- body:handle string
+- body:include_count boolean
+- body:name string
+
+## S213-0086  POST /usergroups.disable
+desc: Disable an existing User Group
+- body:include_count boolean
+- body:usergroup string
+
+## S213-0092  POST /users.setActive
+desc: Marked a user as active. Deprecated and non-functional.
+
+## S213-0094  POST /users.setPresence
+desc: Manually sets user presence.
+- body:presence string

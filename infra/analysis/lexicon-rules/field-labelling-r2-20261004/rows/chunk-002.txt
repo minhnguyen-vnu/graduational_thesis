@@ -1,0 +1,655 @@
+## S504-0001  POST /batch
+desc: Create batch. Batch is then being processed until all provided items have been completed. At any time it can be `get` to provide current status with results optionally.
+- body:domains array<string>
+- body:operation string enum[whois|check]
+- body:options object
+- body:options.format string enum[raw|formatted|json]
+
+## S504-0002  DELETE /batch/{id}
+desc: Delete batch
+- path:id string
+
+## S505-0001  DELETE /account
+summary: Delete Account
+desc: Delete a currently logged in user account. Behind the scene, the user record is not deleted but permanently blocked from any access. This is done to avoid deleted accounts being overtaken by new users with the same email address. Any user-related resources like documents or storage files should be deleted separately.
+
+## S505-0002  POST /account
+summary: Create Account
+desc: Use this endpoint to allow a new user to register a new account in your project. After the user registration completes successfully, you can use the [/account/verfication](/docs/client/account#accountCreateVerification) route to start verifying the user email address. To allow the new user to login to their new account, you need to create a new [account session](/docs/client/account#accountCreateS
+- body:email string
+- body:name string
+- body:password string
+
+## S505-0003  PATCH /account/email
+summary: Update Account Email
+desc: Update currently logged in user account email address. After changing user address, user confirmation status is being reset and a new confirmation mail is sent. For security measures, user password is required to complete this request. This endpoint can also be used to convert an anonymous account to a normal one, by passing an email address and a new password.
+- body:email string
+- body:password string
+
+## S505-0004  POST /account/jwt
+summary: Create Account JWT
+desc: Use this endpoint to create a JSON Web Token. You can use the resulting JWT to authenticate on behalf of the current user when working with the Appwrite server-side API and SDKs. The JWT secret is valid for 15 minutes from its creation and will be invalid if the user will logout in that time frame.
+
+## S505-0005  PATCH /account/name
+summary: Update Account Name
+desc: Update currently logged in user account name.
+- body:name string
+
+## S505-0006  PATCH /account/password
+summary: Update Account Password
+desc: Update currently logged in user password. For validation, user is required to pass in the new password, and the old password. For users created with OAuth and Team Invites, oldPassword is optional.
+- body:oldPassword string
+- body:password string
+
+## S505-0007  PATCH /account/prefs
+summary: Update Account Preferences
+desc: Update currently logged in user account preferences. You can pass only the specific settings you wish to update.
+- body:prefs object
+
+## S505-0008  POST /account/recovery
+summary: Create Password Recovery
+desc: Sends the user an email with a temporary secret key for password reset. When the user clicks the confirmation link he is redirected back to your app password reset URL with the secret key and email address values attached to the URL query string. Use the query string params to submit a request to the [PUT /account/recovery](/docs/client/account#accountUpdateRecovery) endpoint to complete the proce
+- body:email string
+- body:url string
+
+## S505-0009  PUT /account/recovery
+summary: Complete Password Recovery
+desc: Use this endpoint to complete the user account password reset. Both the **userId** and **secret** arguments will be passed as query parameters to the redirect URL you have provided when sending your request to the [POST /account/recovery](/docs/client/account#accountCreateRecovery) endpoint. Please note that in order to avoid a [Redirect Attack](https://github.com/OWASP/CheatSheetSeries/blob/maste
+- body:password string
+- body:passwordAgain string
+- body:secret string
+- body:userId string
+
+## S505-0010  DELETE /account/sessions
+summary: Delete All Account Sessions
+desc: Delete all sessions from the user account and remove any sessions cookies from the end client.
+
+## S505-0011  POST /account/sessions
+summary: Create Account Session
+desc: Allow the user to login into their account by providing a valid email and password combination. This route will create a new session for the user.
+- body:email string
+- body:password string
+
+## S505-0012  POST /account/sessions/anonymous
+summary: Create Anonymous Session
+desc: Use this endpoint to allow a new user to register an anonymous account in your project. This route will also create a new session for the user. To allow the new user to convert an anonymous account to a normal account, you need to update its [email and password](/docs/client/account#accountUpdateEmail) or create an [OAuth2 session](/docs/client/account#accountCreateOAuth2Session).
+
+## S505-0013  DELETE /account/sessions/{sessionId}
+summary: Delete Account Session
+desc: Use this endpoint to log out the currently logged in user from all their account sessions across all of their different devices. When using the option id argument, only the session unique ID provider will be deleted.
+- path:sessionId string
+
+## S505-0014  POST /account/verification
+summary: Create Email Verification
+desc: Use this endpoint to send a verification message to your user email address to confirm they are the valid owners of that address. Both the **userId** and **secret** arguments will be passed as query parameters to the URL you have provided to be attached to the verification email. The provided URL should redirect the user back to your app and allow you to complete the verification process by verify
+- body:url string
+
+## S505-0015  PUT /account/verification
+summary: Complete Email Verification
+desc: Use this endpoint to complete the user email verification process. Use both the **userId** and **secret** parameters that were attached to your app URL to verify the user email ownership. If confirmed this route will return a 200 status code.
+- body:secret string
+- body:userId string
+
+## S505-0016  POST /database/collections/{collectionId}/documents
+summary: Create Document
+desc: Create a new Document. Before using this route, you should create a new collection resource using either a [server integration](/docs/server/database#databaseCreateCollection) API or directly from your database console.
+- path:collectionId string
+- body:data object
+- body:parentDocument string
+- body:parentProperty string
+- body:parentPropertyType string
+- body:read array<string>
+- body:write array<string>
+
+## S505-0017  DELETE /database/collections/{collectionId}/documents/{documentId}
+summary: Delete Document
+desc: Delete a document by its unique ID. This endpoint deletes only the parent documents, its attributes and relations to other documents. Child documents **will not** be deleted.
+- path:collectionId string
+- path:documentId string
+
+## S505-0018  PATCH /database/collections/{collectionId}/documents/{documentId}
+summary: Update Document
+desc: Update a document by its unique ID. Using the patch method you can pass only specific fields that will get updated.
+- path:collectionId string
+- path:documentId string
+- body:data object
+- body:read array<string>
+- body:write array<string>
+
+## S505-0019  POST /functions/{functionId}/executions
+summary: Create Execution
+desc: Trigger a function execution. The returned object will return you the current execution status. You can ping the `Get Execution` endpoint to get updates on the current execution status. Once this endpoint is called, your function execution process will start asynchronously.
+- path:functionId string
+- body:data string
+
+## S505-0020  POST /storage/files
+summary: Create File
+desc: Create a new file. The user who creates the file will automatically be assigned to read and write access unless he has passed custom values for read and write arguments.
+- body:file string
+- body:read array<string>
+- body:write array<string>
+
+## S505-0021  DELETE /storage/files/{fileId}
+summary: Delete File
+desc: Delete a file by its unique ID. Only users with write permissions have access to delete this resource.
+- path:fileId string
+
+## S505-0022  PUT /storage/files/{fileId}
+summary: Update File
+desc: Update a file by its unique ID. Only users with write permissions have access to update this resource.
+- path:fileId string
+- body:read array<string>
+- body:write array<string>
+
+## S505-0023  POST /teams
+summary: Create Team
+desc: Create a new team. The user who creates the team will automatically be assigned as the owner of the team. The team owner can invite new members, who will be able add new owners and update or delete the team from your project.
+- body:name string
+- body:roles array<string>
+
+## S505-0024  DELETE /teams/{teamId}
+summary: Delete Team
+desc: Delete a team by its unique ID. Only team owners have write access for this resource.
+- path:teamId string
+
+## S505-0025  PUT /teams/{teamId}
+summary: Update Team
+desc: Update a team by its unique ID. Only team owners have write access for this resource.
+- path:teamId string
+- body:name string
+
+## S505-0026  POST /teams/{teamId}/memberships
+summary: Create Team Membership
+desc: Use this endpoint to invite a new member to join your team. If initiated from Client SDK, an email with a link to join the team will be sent to the new member's email address if the member doesn't exist in the project it will be created automatically. If initiated from server side SDKs, new member will automatically be added to the team. Use the 'URL' parameter to redirect the user from the invita
+- path:teamId string
+- body:email string
+- body:name string
+- body:roles array<string>
+- body:url string
+
+## S505-0027  DELETE /teams/{teamId}/memberships/{membershipId}
+summary: Delete Team Membership
+desc: This endpoint allows a user to leave a team or for a team owner to delete the membership of any other team member. You can also use this endpoint to delete a user membership even if it is not accepted.
+- path:teamId string
+- path:membershipId string
+
+## S505-0028  PATCH /teams/{teamId}/memberships/{membershipId}
+summary: Update Membership Roles
+- path:teamId string
+- path:membershipId string
+- body:roles array<string>
+
+## S505-0029  PATCH /teams/{teamId}/memberships/{membershipId}/status
+summary: Update Team Membership Status
+desc: Use this endpoint to allow a user to accept an invitation to join a team after being redirected back to your app from the invitation email recieved by the user.
+- path:teamId string
+- path:membershipId string
+- body:secret string
+- body:userId string
+
+## S506-0001  POST /rest/api/3/comment/list
+summary: Get comments by IDs
+desc: Returns a [paginated](#pagination) list of comments specified by a list of comment IDs. This operation can be accessed anonymously. **[Permissions](#permissions) required:** Comments are returned where the user: * has *Browse projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project containing the comment. * If [issue-level security](https://confluence.atlassian.com
+- query:expand string
+- body:ids array<integer>
+
+## S506-0002  DELETE /rest/api/3/comment/{commentId}/properties/{propertyKey}
+summary: Delete comment property
+desc: Deletes a comment property. **[Permissions](#permissions) required:** either of: * *Edit All Comments* [project permission](https://confluence.atlassian.com/x/yodKLg) to delete a property from any comment. * *Edit Own Comments* [project permission](https://confluence.atlassian.com/x/yodKLg) to delete a property from a comment created by the user. Also, when the visibility of a comment is restricte
+- path:commentId string
+- path:propertyKey string
+
+## S506-0003  PUT /rest/api/3/dashboard/{id}
+summary: Update dashboard
+desc: Updates a dashboard, replacing all the dashboard details with those provided. **[Permissions](#permissions) required:** None The dashboard to be updated must be owned by the user.
+- path:id string
+- body:description string
+- body:editPermissions array<object>
+- body:editPermissions[].group object
+- body:editPermissions[].group.groupId string
+- body:editPermissions[].group.name string
+- body:editPermissions[].group.self string
+- body:editPermissions[].id integer
+- body:editPermissions[].project object
+- body:editPermissions[].project.archived boolean
+- body:editPermissions[].project.archivedBy object
+- body:editPermissions[].project.archivedDate string
+- body:editPermissions[].project.assigneeType string enum[PROJECT_LEAD|UNASSIGNED]
+- body:editPermissions[].project.avatarUrls object
+- body:editPermissions[].project.components array<object>
+- body:editPermissions[].project.deleted boolean
+- body:editPermissions[].project.deletedBy object
+- body:editPermissions[].project.deletedDate string
+- body:editPermissions[].project.description string
+- body:editPermissions[].project.email string
+- body:editPermissions[].project.expand string
+- body:editPermissions[].project.favourite boolean
+- body:editPermissions[].project.id string
+- body:editPermissions[].project.insight object
+- body:editPermissions[].project.isPrivate boolean
+- body:editPermissions[].project.issueTypeHierarchy object
+- body:editPermissions[].project.issueTypes array<object>
+- body:editPermissions[].project.key string
+- body:editPermissions[].project.landingPageInfo object
+- body:editPermissions[].project.lead object
+- body:editPermissions[].project.name string
+- body:editPermissions[].project.permissions object
+- body:editPermissions[].project.projectCategory object
+- body:editPermissions[].project.projectTypeKey string enum[software|service_desk|business]
+- body:editPermissions[].project.properties object
+- body:editPermissions[].project.retentionTillDate string
+- body:editPermissions[].project.roles object
+- body:editPermissions[].project.self string
+- body:editPermissions[].project.simplified boolean
+- body:editPermissions[].project.style string enum[classic|next-gen]
+- body:editPermissions[].project.url string
+- body:editPermissions[].project.uuid string
+- body:editPermissions[].project.versions array<object>
+- body:editPermissions[].role object
+- body:editPermissions[].role.actors array<object>
+- body:editPermissions[].role.admin boolean
+- body:editPermissions[].role.currentUserRole boolean
+- body:editPermissions[].role.default boolean
+- body:editPermissions[].role.description string
+- body:editPermissions[].role.id integer
+- body:editPermissions[].role.name string
+- body:editPermissions[].role.roleConfigurable boolean
+- body:editPermissions[].role.scope object
+- body:editPermissions[].role.self string
+- body:editPermissions[].role.translatedName string
+- body:editPermissions[].type string enum[user|group|project|projectRole|global|loggedin|authenticated|project-unknown]
+- body:editPermissions[].user object
+- body:editPermissions[].user.accountId string
+- body:editPermissions[].user.active boolean
+- body:editPermissions[].user.avatarUrls object
+- body:editPermissions[].user.displayName string
+- body:editPermissions[].user.key string
+- body:editPermissions[].user.name string
+- body:editPermissions[].user.self string
+- body:name string
+- body:sharePermissions array<object>
+- body:sharePermissions[].group object
+- body:sharePermissions[].group.groupId string
+- body:sharePermissions[].group.name string
+- body:sharePermissions[].group.self string
+- body:sharePermissions[].id integer
+- body:sharePermissions[].project object
+- body:sharePermissions[].project.archived boolean
+- body:sharePermissions[].project.archivedBy object
+- body:sharePermissions[].project.archivedDate string
+- body:sharePermissions[].project.assigneeType string enum[PROJECT_LEAD|UNASSIGNED]
+- body:sharePermissions[].project.avatarUrls object
+- body:sharePermissions[].project.components array<object>
+- body:sharePermissions[].project.deleted boolean
+- body:sharePermissions[].project.deletedBy object
+- (47 truong bi cat)
+
+## S506-0004  POST /rest/api/3/expression/analyse
+summary: Analyse Jira expression
+desc: Analyses and validates Jira expressions. As an experimental feature, this operation can also attempt to type-check the expressions. Learn more about Jira expressions in the [documentation](https://developer.atlassian.com/cloud/jira/platform/jira-expressions/). **[Permissions](#permissions) required**: None.
+- query:check string enum[syntax|type|complexity]
+- body:contextVariables object
+- body:expressions array<string>
+
+## S506-0005  POST /rest/api/3/field/{fieldId}/context/mapping
+summary: Get custom field contexts for projects and issue types
+desc: Returns a [paginated](#pagination) list of project and issue type mappings and, for each mapping, the ID of a [custom field context](https://confluence.atlassian.com/x/k44fOw) that applies to the project and issue type. If there is no custom field context assigned to the project then, if present, the custom field context that applies to all projects is returned if it also applies to the issue type
+- path:fieldId string
+- query:startAt integer
+- query:maxResults integer
+- body:mappings array<object>
+- body:mappings[].issueTypeId string
+- body:mappings[].projectId string
+
+## S506-0006  PUT /rest/api/3/field/{fieldId}/context/{contextId}
+summary: Update custom field context
+desc: Updates a [ custom field context](https://confluence.atlassian.com/adminjiracloud/what-are-custom-field-contexts-991923859.html). **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:fieldId string
+- path:contextId integer
+- body:description string
+- body:name string
+
+## S506-0007  PUT /rest/api/3/field/{fieldId}/context/{contextId}/option
+summary: Update custom field options (context)
+desc: Updates the options of a custom field. If any of the options are not found, no options are updated. Options where the values in the request match the current values aren't updated and aren't reported in the response. Note that this operation **only works for issue field select list options created in Jira or using operations from the [Issue custom field options](#api-group-Issue-custom-field-optio
+- path:fieldId string
+- path:contextId integer
+- body:options array<object>
+- body:options[].disabled boolean
+- body:options[].id string
+- body:options[].value string
+
+## S506-0008  POST /rest/api/3/field/{id}/trash
+summary: Move custom field to trash
+desc: Moves a custom field to trash. See [Edit or delete a custom field](https://confluence.atlassian.com/x/Z44fOw) for more information on trashing and deleting custom fields. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id string
+
+## S506-0009  POST /rest/api/3/fieldconfiguration
+summary: Create field configuration
+desc: Creates a field configuration. The field configuration is created with the same field properties as the default configuration, with all the fields being optional. This operation can only create configurations for use in company-managed (classic) projects. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- body:description string
+- body:name string
+
+## S506-0010  PUT /rest/api/3/fieldconfigurationscheme/project
+summary: Assign field configuration scheme to project
+desc: Assigns a field configuration scheme to a project. If the field configuration scheme ID is `null`, the operation assigns the default field configuration scheme. Field configuration schemes can only be assigned to classic projects. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- body:fieldConfigurationSchemeId string
+- body:projectId string
+
+## S506-0011  DELETE /rest/api/3/filter/{id}/columns
+summary: Reset columns
+desc: Reset the user's column configuration for the filter to the default. **[Permissions](#permissions) required:** Permission to access Jira, however, columns are only reset for: * filters owned by the user. * filters shared with a group that the user is a member of. * filters shared with a private project that the user has *Browse projects* [project permission](https://confluence.atlassian.com/x/yodK
+- path:id integer
+
+## S506-0012  PUT /rest/api/3/filter/{id}/favourite
+summary: Add filter as favorite
+desc: Add a filter as a favorite for the user. **[Permissions](#permissions) required:** Permission to access Jira, however, the user can only favorite: * filters owned by the user. * filters shared with a group that the user is a member of. * filters shared with a private project that the user has *Browse projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for. * filters shared wi
+- path:id integer
+- query:expand string
+
+## S506-0013  DELETE /rest/api/3/issue/{issueIdOrKey}
+summary: Delete issue
+desc: Deletes an issue. An issue cannot be deleted if it has one or more subtasks. To delete an issue with subtasks, set `deleteSubtasks`. This causes the issue's subtasks to be deleted with the issue. This operation can be accessed anonymously. **[Permissions](#permissions) required:** * *Browse projects* and *Delete issues* [project permission](https://confluence.atlassian.com/x/yodKLg) for the projec
+- path:issueIdOrKey string
+- query:deleteSubtasks string enum[true|false]
+
+## S506-0014  PUT /rest/api/3/issue/{issueIdOrKey}/assignee
+summary: Assign issue
+desc: Assigns an issue to a user. Use this operation when the calling user does not have the *Edit Issues* permission but has the *Assign issue* permission for the project that the issue is in. If `name` or `accountId` is set to: * `"-1"`, the issue is assigned to the default assignee for the project. * `null`, the issue is set to unassigned. This operation can be accessed anonymously. **[Permissions](#
+- path:issueIdOrKey string
+- body:accountId string
+- body:accountType string enum[atlassian|app|customer|unknown]
+- body:active boolean
+- body:applicationRoles object
+- body:applicationRoles.callback object
+- body:applicationRoles.items array<object>
+- body:applicationRoles.items[].defaultGroups array<string>
+- body:applicationRoles.items[].defaultGroupsDetails array<object>
+- body:applicationRoles.items[].defined boolean
+- body:applicationRoles.items[].groupDetails array<object>
+- body:applicationRoles.items[].groups array<string>
+- body:applicationRoles.items[].hasUnlimitedSeats boolean
+- body:applicationRoles.items[].key string
+- body:applicationRoles.items[].name string
+- body:applicationRoles.items[].numberOfSeats integer
+- body:applicationRoles.items[].platform boolean
+- body:applicationRoles.items[].remainingSeats integer
+- body:applicationRoles.items[].selectedByDefault boolean
+- body:applicationRoles.items[].userCount integer
+- body:applicationRoles.items[].userCountDescription string
+- body:applicationRoles.max-results integer
+- body:applicationRoles.pagingCallback object
+- body:applicationRoles.size integer
+- body:avatarUrls object
+- body:avatarUrls.16x16 string
+- body:avatarUrls.24x24 string
+- body:avatarUrls.32x32 string
+- body:avatarUrls.48x48 string
+- body:displayName string
+- body:emailAddress string
+- body:expand string
+- body:groups object
+- body:groups.callback object
+- body:groups.items array<object>
+- body:groups.items[].groupId string
+- body:groups.items[].name string
+- body:groups.items[].self string
+- body:groups.max-results integer
+- body:groups.pagingCallback object
+- body:groups.size integer
+- body:key string
+- body:locale string
+- body:name string
+- body:self string
+- body:timeZone string
+
+## S506-0015  POST /rest/api/3/issue/{issueIdOrKey}/comment
+summary: Add comment
+desc: Adds a comment to an issue. This operation can be accessed anonymously. **[Permissions](#permissions) required:** * *Browse projects* and *Add comments* [ project permission](https://confluence.atlassian.com/x/yodKLg) for the project that the issue containing the comment is in. * If [issue-level security](https://confluence.atlassian.com/x/J4lKLg) is configured, issue-level security permission to 
+- path:issueIdOrKey string
+- query:expand string
+- body:author object
+- body:author.accountId string
+- body:author.accountType string
+- body:author.active boolean
+- body:author.avatarUrls object
+- body:author.avatarUrls.16x16 string
+- body:author.avatarUrls.24x24 string
+- body:author.avatarUrls.32x32 string
+- body:author.avatarUrls.48x48 string
+- body:author.displayName string
+- body:author.emailAddress string
+- body:author.key string
+- body:author.name string
+- body:author.self string
+- body:author.timeZone string
+- body:body any
+- body:created string
+- body:id string
+- body:jsdAuthorCanSeeRequest boolean
+- body:jsdPublic boolean
+- body:properties array<object>
+- body:properties[].key string
+- body:properties[].value any
+- body:renderedBody string
+- body:self string
+- body:updateAuthor object
+- body:updateAuthor.accountId string
+- body:updateAuthor.accountType string
+- body:updateAuthor.active boolean
+- body:updateAuthor.avatarUrls object
+- body:updateAuthor.avatarUrls.16x16 string
+- body:updateAuthor.avatarUrls.24x24 string
+- body:updateAuthor.avatarUrls.32x32 string
+- body:updateAuthor.avatarUrls.48x48 string
+- body:updateAuthor.displayName string
+- body:updateAuthor.emailAddress string
+- body:updateAuthor.key string
+- body:updateAuthor.name string
+- body:updateAuthor.self string
+- body:updateAuthor.timeZone string
+- body:updated string
+- body:visibility object
+- body:visibility.identifier string
+- body:visibility.type string enum[group|role]
+- body:visibility.value string
+
+## S506-0016  DELETE /rest/api/3/issue/{issueIdOrKey}/remotelink/{linkId}
+summary: Delete remote issue link by ID
+desc: Deletes a remote issue link from an issue. This operation requires [issue linking to be active](https://confluence.atlassian.com/x/yoXKM). This operation can be accessed anonymously. **[Permissions](#permissions) required:** * *Browse projects*, *Edit issues*, and *Link issues* [project permission](https://confluence.atlassian.com/x/yodKLg) for the project that the issue is in. * If [issue-level s
+- path:issueIdOrKey string
+- path:linkId string
+
+## S506-0017  DELETE /rest/api/3/issueLinkType/{issueLinkTypeId}
+summary: Delete issue link type
+desc: Deletes an issue link type. To use this operation, the site must have [issue linking](https://confluence.atlassian.com/x/yoXKM) enabled. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:issueLinkTypeId string
+
+## S506-0018  PUT /rest/api/3/issuetypescheme/{issueTypeSchemeId}/issuetype
+summary: Add issue types to issue type scheme
+desc: Adds issue types to an issue type scheme. The added issue types are appended to the issue types list. If any of the issue types exist in the issue type scheme, the operation fails and no issue types are added. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:issueTypeSchemeId integer
+- body:issueTypeIds array<string>
+
+## S506-0019  POST /rest/api/3/jql/parse
+summary: Parse JQL query
+desc: Parses and validates JQL queries. Validation is performed in context of the current user. This operation can be accessed anonymously. **[Permissions](#permissions) required:** None.
+- query:validation string enum[strict|warn|none]
+- body:queries array<string>
+
+## S506-0020  DELETE /rest/api/3/mypreferences
+summary: Delete preference
+desc: Deletes a preference of the user, which restores the default value of system defined settings. Note that these keys are deprecated: * *jira.user.locale* The locale of the user. By default, not set. The user takes the instance locale. * *jira.user.timezone* The time zone of the user. By default, not set. The user takes the instance timezone. Use [ Update a user profile](https://developer.atlassian.
+- query:key string
+
+## S506-0021  PUT /rest/api/3/notificationscheme/{id}
+summary: Update notification scheme
+desc: Updates a notification scheme. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:id string
+- body:description string
+- body:name string
+
+## S506-0022  POST /rest/api/3/project
+summary: Create project
+desc: Creates a project based on a project type template, as shown in the following table: | Project Type Key | Project Template Key | |--|--| | `business` | `com.atlassian.jira-core-project-templates:jira-core-simplified-content-management`, `com.atlassian.jira-core-project-templates:jira-core-simplified-document-approval`, `com.atlassian.jira-core-project-templates:jira-core-simplified-lead-tracking`,
+- body:assigneeType string enum[PROJECT_LEAD|UNASSIGNED]
+- body:avatarId integer
+- body:categoryId integer
+- body:description string
+- body:fieldConfigurationScheme integer
+- body:issueSecurityScheme integer
+- body:issueTypeScheme integer
+- body:issueTypeScreenScheme integer
+- body:key string
+- body:lead string
+- body:leadAccountId string
+- body:name string
+- body:notificationScheme integer
+- body:permissionScheme integer
+- body:projectTemplateKey string enum[com.pyxis.greenhopper.jira:gh-simplified-agility-kanban|com.pyxis.greenhopper.jira:gh-simplified-agility-scrum|com.pyxis.greenhopper.jira:gh-simplified-basic|com.pyxis.greenhopper.jira:gh-simplified-kanban-classic|com.pyxis.greenhopper.jira:gh-simplified-scrum-classic|com.atlassian.servicedesk:simplified-it-service-management|com.atlassian.servicedesk:simplified-general-service-desk|com.atlassian.servicedesk:simplified-general-service-desk-it|com.atlassian.servicedesk:simplified-general-service-desk-business|com.atlassian.servicedesk:simplified-internal-service-desk|com.atlassian.servicedesk:simplified-external-service-desk|com.atlassian.servicedesk:simplified-hr-service-desk]
+- body:projectTypeKey string enum[software|service_desk|business]
+- body:url string
+- body:workflowScheme integer
+
+## S506-0023  PUT /rest/api/3/project/{projectIdOrKey}/features/{featureKey}
+summary: Set project feature state
+desc: Sets the state of a project feature.
+- path:projectIdOrKey string
+- path:featureKey string
+- body:state string enum[ENABLED|DISABLED|COMING_SOON]
+
+## S506-0024  PUT /rest/api/3/project/{projectKeyOrId}/permissionscheme
+summary: Assign permission scheme
+desc: Assigns a permission scheme with a project. See [Managing project permissions](https://confluence.atlassian.com/x/yodKLg) for more information about permission schemes. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg)
+- path:projectKeyOrId string
+- query:expand string
+- body:id integer
+
+## S506-0025  DELETE /rest/api/3/screens/{screenId}
+summary: Delete screen
+desc: Deletes a screen. A screen cannot be deleted if it is used in a screen scheme, workflow, or workflow draft. Only screens used in classic projects can be deleted.
+- path:screenId integer
+
+## S506-0026  PUT /rest/api/3/screens/{screenId}/tabs/{tabId}
+summary: Update screen tab
+desc: Updates the name of a screen tab. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:screenId integer
+- path:tabId integer
+- body:id integer
+- body:name string
+
+## S506-0027  PUT /rest/api/3/screenscheme/{screenSchemeId}
+summary: Update screen scheme
+desc: Updates a screen scheme. Only screen schemes used in classic projects can be updated. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg).
+- path:screenSchemeId string
+- body:description string
+- body:name string
+- body:screens object
+- body:screens.create string
+- body:screens.default string
+- body:screens.edit string
+- body:screens.view string
+
+## S506-0028  DELETE /rest/api/3/statuses
+summary: Bulk delete Statuses
+desc: Deletes statuses by ID. **[Permissions](#permissions) required:** * *Administer projects* [project permission.](https://confluence.atlassian.com/x/yodKLg) * *Administer Jira* [project permission.](https://confluence.atlassian.com/x/yodKLg)
+- query:id array<string>
+
+## S506-0029  POST /rest/api/3/universal_avatar/type/{type}/owner/{entityId}
+summary: Load avatar
+desc: Loads a custom avatar for a project or issue type. Specify the avatar's local file location in the body of the request. Also, include the following headers: * `X-Atlassian-Token: no-check` To prevent XSRF protection blocking the request, for more information see [Special Headers](#special-request-headers). * `Content-Type: image/image type` Valid image types are JPEG, GIF, or PNG. For example: `cu
+- path:type string enum[project|issuetype]
+- path:entityId string
+- query:x integer
+- query:y integer
+- query:size integer
+
+## S506-0030  DELETE /rest/api/3/webhook
+summary: Delete webhooks by ID
+desc: Removes webhooks by ID. Only webhooks registered by the calling app are removed. If webhooks created by other apps are specified, they are ignored. **[Permissions](#permissions) required:** Only [Connect](https://developer.atlassian.com/cloud/jira/platform/#connect-apps) and [OAuth 2.0](https://developer.atlassian.com/cloud/jira/platform/oauth-2-3lo-apps) apps can use this operation.
+- body:webhookIds array<integer>
+
+## S506-0031  POST /rest/api/3/webhook
+summary: Register dynamic webhooks
+desc: Registers webhooks. **NOTE:** for non-public OAuth apps, webhooks are delivered only if there is a match between the app owner and the user who registered a dynamic webhook. **[Permissions](#permissions) required:** Only [Connect](https://developer.atlassian.com/cloud/jira/platform/#connect-apps) and [OAuth 2.0](https://developer.atlassian.com/cloud/jira/platform/oauth-2-3lo-apps) apps can use thi
+- body:url string
+- body:webhooks array<object>
+- body:webhooks[].events array<string> enum[jira:issue_created|jira:issue_updated|jira:issue_deleted|comment_created|comment_updated|comment_deleted|issue_property_set|issue_property_deleted]
+- body:webhooks[].fieldIdsFilter array<string>
+- body:webhooks[].issuePropertyKeysFilter array<string>
+- body:webhooks[].jqlFilter string
+
+## S506-0032  PUT /rest/api/3/webhook/refresh
+summary: Extend webhook life
+desc: Extends the life of webhook. Webhooks registered through the REST API expire after 30 days. Call this operation to keep them alive. Unrecognized webhook IDs (those that are not found or belong to other apps) are ignored. **[Permissions](#permissions) required:** Only [Connect](https://developer.atlassian.com/cloud/jira/platform/#connect-apps) and [OAuth 2.0](https://developer.atlassian.com/cloud/j
+- body:webhookIds array<integer>
+
+## S506-0033  PUT /rest/api/3/workflowscheme/{id}
+summary: Update workflow scheme
+desc: Updates a workflow scheme, including the name, default workflow, issue type to project mappings, and more. If the workflow scheme is active (that is, being used by at least one project), then a draft workflow scheme is created or updated instead, provided that `updateDraftIfNeeded` is set to `true`. **[Permissions](#permissions) required:** *Administer Jira* [global permission](https://confluence.
+- path:id integer
+- body:defaultWorkflow string
+- body:description string
+- body:draft boolean
+- body:id integer
+- body:issueTypeMappings object
+- body:issueTypes object
+- body:lastModified string
+- body:lastModifiedUser object
+- body:lastModifiedUser.accountId string
+- body:lastModifiedUser.accountType string enum[atlassian|app|customer|unknown]
+- body:lastModifiedUser.active boolean
+- body:lastModifiedUser.applicationRoles object
+- body:lastModifiedUser.applicationRoles.callback object
+- body:lastModifiedUser.applicationRoles.items array<object>
+- body:lastModifiedUser.applicationRoles.max-results integer
+- body:lastModifiedUser.applicationRoles.pagingCallback object
+- body:lastModifiedUser.applicationRoles.size integer
+- body:lastModifiedUser.avatarUrls object
+- body:lastModifiedUser.avatarUrls.16x16 string
+- body:lastModifiedUser.avatarUrls.24x24 string
+- body:lastModifiedUser.avatarUrls.32x32 string
+- body:lastModifiedUser.avatarUrls.48x48 string
+- body:lastModifiedUser.displayName string
+- body:lastModifiedUser.emailAddress string
+- body:lastModifiedUser.expand string
+- body:lastModifiedUser.groups object
+- body:lastModifiedUser.groups.callback object
+- body:lastModifiedUser.groups.items array<object>
+- body:lastModifiedUser.groups.max-results integer
+- body:lastModifiedUser.groups.pagingCallback object
+- body:lastModifiedUser.groups.size integer
+- body:lastModifiedUser.key string
+- body:lastModifiedUser.locale string
+- body:lastModifiedUser.name string
+- body:lastModifiedUser.self string
+- body:lastModifiedUser.timeZone string
+- body:name string
+- body:originalDefaultWorkflow string
+- body:originalIssueTypeMappings object
+- body:self string
+- body:updateDraftIfNeeded boolean
+
+## S506-0034  POST /rest/api/3/workflowscheme/{id}/draft/publish
+summary: Publish draft workflow scheme
+desc: Publishes a draft workflow scheme. Where the draft workflow includes new workflow statuses for an issue type, mappings are provided to update issues with the original workflow status to the new workflow status. This operation is [asynchronous](#async). Follow the `location` link in the response to determine the status of the task and use [Get task](#api-rest-api-3-task-taskId-get) to obtain update
+- path:id integer
+- query:validateOnly boolean
+- body:statusMappings array<object>
+- body:statusMappings[].issueTypeId string
+- body:statusMappings[].newStatusId string
+- body:statusMappings[].statusId string
+
+## S506-0035  DELETE /rest/api/3/workflowscheme/{id}/workflow
+summary: Delete issue types for workflow in workflow scheme
+desc: Deletes the workflow-issue type mapping for a workflow in a workflow scheme. Note that active workflow schemes cannot be edited. If the workflow scheme is active, set `updateDraftIfNeeded` to `true` and a draft workflow scheme is created or updated with the workflow-issue type mapping deleted. The draft workflow scheme can be published in Jira. **[Permissions](#permissions) required:** *Administer
+- path:id integer
+- query:workflowName string
+- query:updateDraftIfNeeded boolean
+
+## S506-0036  POST /rest/atlassian-connect/1/migration/workflow/rule/search
+summary: Get workflow transition rule configurations
+desc: Returns configurations for workflow transition rules migrated from server to cloud and owned by the calling Connect app.
+- body:expand string
+- body:ruleIds array<string>
+- body:workflowEntityId string

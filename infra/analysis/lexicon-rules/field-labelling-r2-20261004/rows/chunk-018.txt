@@ -1,0 +1,645 @@
+## S600-0001  POST /s1/correction
+summary: Performs text correction (diacritization) on the given document
+desc: <strong>Notes:</strong><br/>Valid JSON cannot contain newline characters. These have to be escaped. (See also <a href="https://geneea.atlassian.net/wiki/display/IPD/The+Interpretor+API+Public+Documentation#TheInterpretorAPIPublicDocumentation-Interactiveonlinedocumentation" target="_blank">Interpretor documentation</a>)<br/>Fields <code>text</code> and <code>url</code> are mutually exclusive.<br/>
+- body:extractor string enum[default|article|keep-everything]
+- body:id string
+- body:language string
+- body:options object
+- body:returnTextInfo boolean
+- body:text string
+- body:url string
+
+## S600-0002  POST /s1/entities
+summary: Performs named-entity recognition on the given document
+desc: <strong>Notes:</strong><br/>Valid JSON cannot contain newline characters. These have to be escaped. (See also <a href="https://geneea.atlassian.net/wiki/display/IPD/The+Interpretor+API+Public+Documentation#TheInterpretorAPIPublicDocumentation-Interactiveonlinedocumentation" target="_blank">Interpretor documentation</a>)<br/>Fields <code>text</code> and <code>url</code> are mutually exclusive.<br/>
+- body:extractor string enum[default|article|keep-everything]
+- body:id string
+- body:language string
+- body:options object
+- body:returnTextInfo boolean
+- body:text string
+- body:url string
+
+## S600-0003  POST /s1/lemmatize
+summary: Performs lemmatization on the given document
+desc: <strong>Notes:</strong><br/>Valid JSON cannot contain newline characters. These have to be escaped. (See also <a href="https://geneea.atlassian.net/wiki/display/IPD/The+Interpretor+API+Public+Documentation#TheInterpretorAPIPublicDocumentation-Interactiveonlinedocumentation" target="_blank">Interpretor documentation</a>)<br/>Fields <code>text</code> and <code>url</code> are mutually exclusive.<br/>
+- body:extractor string enum[default|article|keep-everything]
+- body:id string
+- body:language string
+- body:options object
+- body:returnTextInfo boolean
+- body:text string
+- body:url string
+
+## S600-0004  POST /s1/sentiment
+summary: Performs sentiment analysis on the given document
+desc: <strong>Notes:</strong><br/>Valid JSON cannot contain newline characters. These have to be escaped. (See also <a href="https://geneea.atlassian.net/wiki/display/IPD/The+Interpretor+API+Public+Documentation#TheInterpretorAPIPublicDocumentation-Interactiveonlinedocumentation" target="_blank">Interpretor documentation</a>)<br/>Fields <code>text</code> and <code>url</code> are mutually exclusive.<br/>
+- body:extractor string enum[default|article|keep-everything]
+- body:id string
+- body:language string
+- body:options object
+- body:returnTextInfo boolean
+- body:text string
+- body:url string
+
+## S600-0005  POST /s1/topic
+summary: Performs topic detection on the given document
+desc: <strong>Notes:</strong><br/>Valid JSON cannot contain newline characters. These have to be escaped. (See also <a href="https://geneea.atlassian.net/wiki/display/IPD/The+Interpretor+API+Public+Documentation#TheInterpretorAPIPublicDocumentation-Interactiveonlinedocumentation" target="_blank">Interpretor documentation</a>)<br/>Fields <code>text</code> and <code>url</code> are mutually exclusive.<br/>
+- body:extractor string enum[default|article|keep-everything]
+- body:id string
+- body:language string
+- body:options object
+- body:returnTextInfo boolean
+- body:text string
+- body:url string
+
+## S601-0001  POST /episodes
+summary: Batch fetch basic meta data for episodes
+desc: Batch fetch basic meta data for up to 10 episodes. This endpoint could be used to implement custom playlists for individual episodes. For detailed meta data of an individual episode, you need to use `GET /episodes/{id}`. This endpoint is available only in the PRO/ENTERPRISE plan.
+- body:ids string
+
+## S601-0002  POST /podcasts
+summary: Batch fetch basic meta data for podcasts
+desc: Batch fetch basic meta data for up to 10 podcasts. This endpoint could be used to build something like OPML import, allowing users to import a bunch of podcasts via rss urls. For detailed meta data (including episodes) of an individual podcast, you need to use `GET /podcasts/{id}`. This endpoint is available only in the PRO/ENTERPRISE plan.
+- body:ids string
+- body:itunes_ids string
+- body:next_episode_pub_date integer
+- body:rsses string
+- body:show_latest_episodes integer enum[0|1]
+- body:spotify_ids string
+
+## S601-0003  POST /podcasts/submit
+summary: Submit a podcast to Listen Notes database
+desc: Podcast hosting services can use this endpoint to help your users directly submit a new podcast to Listen Notes database. If the podcast doesn't exist in the database, "status" in the response will be "in review", and we'll review it within 12 hours. If the podcast exists, "status" in the response will be "found". If this submission is rejected, "status" in the response will be "rejected". You can
+- body:email string
+- body:rss string
+
+## S601-0004  DELETE /podcasts/{id}
+summary: Request to delete a podcast
+desc: Podcast hosting services can use this endpoint to streamline the process of podcast deletion on behave of their users (podcasters). We will review the deletion request within 12 hours. If the podcast is already deleted, the "status" field in the response will be "deleted". Otherwise, the status field will be "in review". If you want to get a notification once the podcast is deleted, you can config
+- path:id string
+- query:reason string
+
+## S602-0001  POST /api/v1/company/deepsearch/isin
+summary: Retrieves a list of stock exchange listings
+desc: Lookup stock exchange listings identified by an ISIN (International Securities Identification Number) number. Search is forwarded to a provider.
+- body:isin string
+
+## S602-0002  POST /api/v1/company/monitoring/register/{id}
+summary: Register a Company for monitoring
+desc: Add a company to your perpetual monitoring list and register a callback URL to get monitoring alerts.
+- path:id string
+- body:callbackUrl string
+- body:changeType string
+
+## S602-0003  POST /api/v1/company/monitoring/unregister/{id}
+summary: Deactivates an active notification
+desc: Deactivate a previously registered company monitor identified by the notifier id
+- path:id string
+
+## S602-0004  POST /api/v1/company/notification/register/{id}
+summary: Creates a new notification
+desc: Register a new callback URL to get notifications about companies.
+- path:id string
+- body:callbackUrl string
+
+## S602-0005  POST /api/v1/company/notification/unregister/{id}
+summary: Unregister a company from Monitoring
+desc: Deactivate a previously registered company monitor identified by the notifier id
+- path:id string
+
+## S602-0006  POST /api/v1/company/search/{country}
+summary: Retrieves a list of companies from the KYC API company index
+desc: KYC API company index lookup by country and mixed parameters. This function requires a country code then a mixture of name
+- path:country string
+- body:address string
+- body:name string
+- body:number string
+- body:phone string
+- body:url string
+- body:vat string
+
+## S602-0007  POST /api/v1/iban-verification/check-iban
+summary: Checks validity of an IBAN number
+desc: Basic verification of an IBAN number validating its structure
+- body:ibanNumber string
+
+## S602-0008  POST /api/v1/iban-verification/comprehensive-check-iban
+summary: Checks validity of an IBAN number
+desc: Comprehensive verification of IBAN number using a service provider for verification
+- body:ibanNumber string
+
+## S602-0009  POST /api/v1/nif-verification/basic-check/{country}
+summary: Verifies a NIF number
+desc: Performs a basic verification check of a given NIF tax number against NIF.com. Optional parameters may be added to improve calculation of confidence score.
+- path:country string
+- body:companyAddress string
+- body:companyName string
+- body:nifNumber string
+
+## S602-0010  POST /api/v1/nif-verification/comprehensive-check/{country}
+summary: Verifies a NIF number and retrieves company data
+desc: Comprehensive verification of given portuguese NIF number against NIF.com. Optional parameters may help to build a better confidence score. Additional company data will be provided.
+- path:country string
+- body:companyAddress string
+- body:companyName string
+- body:nifNumber string
+
+## S602-0011  POST /api/v1/pepsanction/monitor/unregister/{id}
+summary: Deactive a pep sanction monitor
+desc: Unregister a previously created Pep Sanction Report Monitor
+- path:id string
+
+## S602-0012  POST /api/v1/pepsanction/monitor/update/{id}
+summary: Update details of active Pep Sanction monitor
+desc: Update the webhook URL of an active Pep Sanction Report Monitor
+- path:id string
+- body:Webhook string
+
+## S602-0013  POST /api/v1/pepsanction/order/{type}/{search}
+summary: Orders a new Pep Sanction Check Report
+desc: Order a new Pep Sanction Check by providing either a business or person name with some additional optional parameters.
+- path:type string enum[|B|P]
+- path:search string
+- body:Aliases string
+- body:Country string
+- body:DOB string
+- body:FamilyName string
+- body:Filters string
+- body:GivenName string
+- body:LEI string
+- body:Locale string
+- body:Medialists string
+- body:MiddleName string
+- body:Monitoring boolean
+- body:Peplists string
+- body:Region string
+- body:SmartMatch boolean
+- body:Watchlists string
+- body:Webhook string
+
+## S602-0014  POST /api/v1/product/notifier/{orderId}/{type}/{uri}
+summary: Creates a notifier for an order
+desc: Create a notifier for a particular order. Parameters can be supplied in the path
+- path:orderId string
+- path:type string
+- path:uri string
+
+## S602-0015  POST /api/v1/product/order/concierge
+summary: Places a concierge order
+desc: Place an order for a concierge product
+- body:companyName string
+- body:contactEmail string
+- body:contactPhone string
+- body:costConfirmation boolean
+- body:country string
+- body:financialData boolean
+- body:historicInformation boolean
+- body:informationRequirements string
+- body:locationInvestigation boolean
+- body:priority string
+- body:registerData boolean
+- body:registerNumber string
+- body:subjectId string
+
+## S602-0016  POST /api/v1/product/order/ubo
+summary: Places a UBO order
+desc: Place an order for a UBO (ultimate beneficial owner) discovery report
+- body:callbackUrl string
+- body:credits number
+- body:includeDocs boolean
+- body:levels string
+- body:strategy string
+- body:subjectId string
+
+## S602-0017  POST /api/v1/product/order/{sku}/{option}/{subjectId}
+summary: Places a product order
+desc: Place an order for a particular product identified by its SKU with a particular option for a particular company identified by its id
+- path:sku string
+- path:option string
+- path:subjectId string
+
+## S602-0018  POST /api/v1/product/order/{sku}/{subjectId}
+summary: Places a product order
+desc: Place an order for a particular product identified by its SKU for a particular company identified by its id
+- path:sku string
+- path:subjectId string
+
+## S602-0019  POST /api/v1/product/update/{action}/{orderId}
+summary: Updates metadata of an order
+desc: Update an existing order identified by its order id
+- path:action string
+- path:orderId string
+- body:credits number
+
+## S602-0020  POST /api/v1/vat-verification/basic-check/{country}
+summary: Returns a verification result
+desc: Basic verification of given VAT number against VIES. Optional parameters may help to build a better confidence score.
+- path:country string
+- body:companyAddress string
+- body:companyName string
+- body:companyNumber string
+- body:vatNumber string
+
+## S602-0021  POST /api/v1/vat-verification/comprehensive-check/{country}
+summary: Returns a verification result and company data
+desc: Extended verification of given VAT number against VIES. Optional parameters may help to build a better confidence score.
+- path:country string
+- body:companyAddress string
+- body:companyName string
+- body:companyNumber string
+- body:vatNumber string
+
+## S602-0022  POST /api/v1/vat-verification/leveltwo-check/{country}
+summary: Returns a level two verification result
+desc: Second Level Verification of VAT number against BMF Austria. Optional confirmation parameter can be provided to order a Confirmation Report.
+- path:country string
+- body:confirmation boolean
+- body:vatNumber string
+
+## S602-0023  POST /api/v1/vat-verification/lookup/{country}
+summary: Returns a list of vat numbers with additional data
+desc: Reverse VAT Lookup: Search for companies and their VAT numbers by company name. Search is forwarded to a provider.
+- path:country string
+- body:address string
+- body:name string
+
+## S603-0001  POST /iatu/topups
+summary: Topup a mobile phone
+desc: Submits an IATU transaction request.
+- body:amount integer
+- body:carrier_code string
+- body:client_transaction_id string
+- body:country_code string
+- body:mobile_number string
+- body:plan string
+- body:product_code string
+- body:terminal_id string
+
+## S603-0002  POST /iatu/topups/reports
+summary: Search topups transactions
+desc: Search topups transactions, by date, with client_transaction_id or to_service_number. Use 'client_transaction_id' to search by transaction number, or 'to_service_number' to get transaction status.
+- body:client_transaction_id string
+- body:date_from string
+- body:date_to string
+- body:to_service_number string
+- body:type_of_report string
+
+## S603-0003  POST /iatu/topups/reverse
+summary: Reversal of a Topup
+desc: Occasionally, a carrier will not be able to successfully complete a topup request. In this case, we will attempt to automatically reverse the transaction for you, and return the money into your account. In the case when this is not possible, you may need to request a reverse on the transaction that has a status of 'transaction_status' 'notredeemed'.
+- body:client_transaction_id string
+- body:to_service_number string
+
+## S604-0001  POST /post-review
+summary: Posts the user's review to Stellastra
+- query:user_email string
+- query:user_name string
+- query:rating integer enum[1|2|3|4|5]
+- body:rating integer
+- body:user_email string
+- body:user_name string
+
+## S605-0001  POST /communication
+summary: Communication & Tonality
+desc: Identify the purpose and writing style of a written text. Supported Languages: [`ar`, `de`, `en`, `es`, `fr`, `it`, `nl`, `pt`, `ru`, `tr`, `zh`] Returned labels: * action-seeking * fact-oriented * information-seeking * self-revealing
+- query:all boolean
+- body:id string
+- body:language string
+- body:text string
+
+## S605-0002  POST /ekman-emotion
+summary: Emotion Analysis
+desc: Detect the emotions of the text based on Ekman. Supported Langauges: [`en`, `de`, `es`] Returned labels: * anger * disgust * fear * joy * sadness * surprise * no-emotion
+- query:all boolean
+- body:id string
+- body:language string
+- body:text string
+
+## S605-0003  POST /emotion
+summary: Emotion Analysis
+desc: Detect the emotions of the text. Supported Langauges: [`en`, `de`, `es`] Returned labels: * anger * joy * love * sadness * surprise * uncategorized
+- query:all boolean
+- body:id string
+- body:language string
+- body:text string
+
+## S605-0004  POST /language-detection
+summary: Language Detection
+desc: Identifies what language a text is written in. Only languages that our API supports can be analyzed. Returned labels: * language_code of the detected language
+- body:id string
+- body:text string
+
+## S605-0005  POST /personality
+summary: Personality Traits
+desc: Predict the personality trait of author of any written text. Supported Languages: [`ar`, `de`, `en`, `es`, `fr`, `it`, `nl`, `pt`, `ru`, `tr`, `zh`] Returned labels: * emotional * rational
+- query:all boolean
+- body:id string
+- body:language string
+- body:text string
+
+## S605-0006  POST /sentiment
+summary: Sentiment Analysis
+desc: Evaluate the overall tonality of the text. Supported Languages: [`en`, `de`, `es`] Returned labels: * positive * negative
+- query:all boolean
+- body:id string
+- body:language string
+- body:text string
+
+## S605-0007  POST /topic-sentiment
+summary: Extracts topics and sentiments and relates them.
+- query:domain string enum[Ecom|Employee|Hotel|Restaurant]
+- body:id string
+- body:language string
+- body:text string
+
+## S606-0001  POST /rest/v1.1/account/changePassword
+summary: Change password for an account using old password
+- query:email string
+- query:oldPassword string
+- query:newPassword string
+
+## S606-0002  POST /rest/v1.1/account/login
+summary: Get account information including accessKey and secretKey by email and password
+- query:email string
+- query:password string
+
+## S606-0003  POST /rest/v1.1/analysis/detection
+summary: Perform detection on a given picture or picture URL
+- query:accessKey string
+- query:secretKey string
+- query:storeAnalysisPicture boolean
+- query:storeFacePictures boolean
+- query:storeResult boolean
+- query:retentionTime integer
+- query:pictureURL string
+- query:algorithmVersion string enum[V1|V2]
+- query:autoRotate boolean
+- query:skipEXIF boolean
+- query:waitForPictureUpload boolean
+- query:filters array<string>
+- query:options string
+- body:picture string
+
+## S606-0004  POST /rest/v1.1/analysis/recognition
+summary: Perform labeled recognition on a given picture or picture URL
+- query:accessKey string
+- query:secretKey string
+- query:storeAnalysisPicture boolean
+- query:storeFacePictures boolean
+- query:storeResult boolean
+- query:retentionTime integer
+- query:collectionId string
+- query:labels array<string>
+- query:attributeFilters array<string> enum[NO_FILTER|GENDER_FILTER|AGE_GROUP_FILTER]
+- query:pictureURL string
+- query:algorithmVersion string enum[V1|V2]
+- query:autoRotate boolean
+- query:skipEXIF rotation processing boolean
+- query:waitForPictureUpload boolean
+- query:filters array<string>
+- query:options string
+- body:picture string
+
+## S606-0005  POST /rest/v1.1/analytics/counting
+summary: Count individuals in streams or collections
+- query:accessKey string
+- query:secretKey string
+- query:collectionIds array<string>
+- query:streamIds array<string>
+- query:startDateTime string
+- query:endDateTime string
+- query:visitDuration integer
+- query:maxIterations integer
+- query:maxBatchIterations integer
+- query:minNeighborsMergedPerIteration integer
+- query:mergingStep number
+- query:shuffling boolean
+
+## S606-0006  POST /rest/v1.1/analytics/presence/timeseries
+summary: Show audience (based on number of occurrences of each person) breakdown per declared attribute (age, gender).
+- query:accessKey string
+- query:secretKey string
+- query:streamIds array<string>
+- query:startDateTime string
+- query:endDateTime string
+- query:step integer
+- query:attributes array<string>
+
+## S606-0007  POST /rest/v1.1/analytics/presence/total
+summary: Show presence (based on number of occurences of each face) breakdown per declared attribute (age, gender)
+- query:accessKey string
+- query:secretKey string
+- query:streamIds array<string>
+- query:startDateTime string
+- query:endDateTime string
+- query:attributes array<string>
+
+## S606-0008  DELETE /rest/v1.1/classifier/svm
+summary: Delete existing classifier
+- query:accessKey string
+- query:secretKey string
+- query:id string
+
+## S606-0009  POST /rest/v1.1/classifier/svm
+summary: Create new SVM classifier with given name
+- query:accessKey string
+- query:secretKey string
+- query:name string
+- query:collectionIds array<string>
+- query:preprocessor string
+- query:classificationAttributeName string
+- query:considerViewPoints boolean
+- query:seed integer
+- query:trainingRatio number
+- query:probabilityParameter integer
+- query:gammaParameter number
+- query:nuParameter number
+- query:cParameter number
+- query:svmTypeParameter integer
+- query:kernelTypeParameter integer
+- query:cacheSizeParameter number
+- query:epsParameter number
+
+## S606-0010  POST /rest/v1.1/collection/
+summary: Create new empty collection with given name
+- body:accessKey string
+- body:secretKey string
+- body:name string
+- body:preload boolean
+- body:evictable boolean
+- body:purposes array<string> enum[FEATURES|LANDMARKS|ATTRIBUTES]
+
+## S606-0011  DELETE /rest/v1.1/collection/collection
+summary: Delete existing collection with associated profiles and faces.
+- query:accessKey string
+- query:secretKey string
+- query:collectionId string
+
+## S606-0012  POST /rest/v1.1/collection/collection
+summary: Create new empty collection with given name
+- query:accessKey string
+- query:secretKey string
+- query:collectionName string
+- query:preload boolean
+- query:evictable boolean
+- query:purposes array<string> enum[FEATURES|LANDMARKS|ATTRIBUTES]
+
+## S606-0013  PUT /rest/v1.1/collection/purpose
+summary: Change purpose of existing collection
+- query:accessKey string
+- query:secretKey string
+- query:collectionId string
+- query:purposes array<string> enum[FEATURES|LANDMARKS|ATTRIBUTES]
+
+## S606-0014  DELETE /rest/v1.1/collection/{id}
+summary: Delete existing collection with associated profiles and faces.
+- path:id string
+- query:accessKey string
+- query:secretKey string
+
+## S606-0015  PATCH /rest/v1.1/collection/{id}
+summary: Update an existing collection with a given id
+- path:id string
+- query:accessKey string
+- query:secretKey string
+- query:name string
+- query:purposes array<string> enum[FEATURES|LANDMARKS|ATTRIBUTES]
+
+## S606-0016  POST /rest/v1.1/collection/{id}
+summary: Update an existing collection with a given id
+- path:id string
+- query:accessKey string
+- query:secretKey string
+- query:name string
+- query:purposes array<string> enum[FEATURES|LANDMARKS|ATTRIBUTES]
+
+## S606-0017  DELETE /rest/v1.1/profile/classificationAttributes
+summary: Removes classification attributes from a profile
+- query:accessKey string
+- query:secretKey string
+- query:profileId string
+- query:collectionId string
+
+## S606-0018  PUT /rest/v1.1/profile/classificationAttributes
+summary: Maps classification attributes to a profile
+- query:accessKey string
+- query:secretKey string
+- query:profileId string
+- query:collectionId string
+- query:classificationAttributes string
+
+## S606-0019  DELETE /rest/v1.1/profile/map
+summary: Removes (unmaps) a list of faces, identified by faceHashes, from a profile, identified by profileId
+- query:accessKey string
+- query:secretKey string
+- query:faceHashes string
+- query:profileId string
+- query:collectionId string
+
+## S606-0020  POST /rest/v1.1/profile/map
+summary: Adds (maps) a list of faces, identified by faceHashes, to a profile, identified by profileId
+- query:accessKey string
+- query:secretKey string
+- query:faceHashes string
+- query:profileId string
+- query:collectionId string
+
+## S606-0021  DELETE /rest/v1.1/profile/profile
+summary: Deletes a profile and unmaps all its faces
+- query:accessKey string
+- query:secretKey string
+- query:collectionId string
+- query:profileId string
+
+## S606-0022  POST /rest/v1.1/profile/profile
+summary: Creates a new profile with no faces associated to it (empty profile)
+- query:accessKey string
+- query:secretKey string
+- query:collectionId string
+- query:externalId string
+- query:screenName string
+- query:labels array<string>
+- query:classificationAttributes string
+- query:details string
+
+## S606-0023  DELETE /rest/v1.1/profile/{id}
+summary: Deletes a profile and unmaps all its faces
+- path:id string
+- query:accessKey string
+- query:secretKey string
+- query:collectionId string
+
+## S606-0024  PATCH /rest/v1.1/profile/{id}
+summary: Update an existing profile with a given id
+- path:id string
+- query:accessKey string
+- query:secretKey string
+- query:collectionId string
+- query:externalId string
+- query:screenName string
+- query:labels array<string>
+- query:classificationAttributes string
+- query:details string
+
+## S606-0025  PATCH /rest/v1.1/stream/cleanup
+summary: Cleanup frames older than specified timeframe
+- query:accessKey string
+- query:secretKey string
+- query:streamId string
+- query:interval integer
+
+## S606-0026  PATCH /rest/v1.1/stream/start
+summary: Start existing stream
+- query:accessKey string
+- query:secretKey string
+- query:streamId string
+
+## S606-0027  PATCH /rest/v1.1/stream/stop
+summary: Stop existing stream
+- query:accessKey string
+- query:secretKey string
+- query:streamId string
+
+## S606-0028  POST /rest/v1.1/stream/stream
+summary: Create new stream with given name
+- query:accessKey string
+- query:secretKey string
+- query:name string
+- query:url string
+- query:method string enum[WEBRTC_PULL|WEBRTC_PUSH|INGESTION_ENDPOINT]
+- query:username string
+- query:password string
+- query:skipFramesWithNoFaces boolean
+- query:retentionTime integer
+- query:storeOriginalFrames boolean
+- query:storeAttendanceFaces boolean
+- query:storeAttendanceFrames boolean
+- query:isActive boolean
+- query:associatedCollections array<string>
+- query:attributes string
+
+## S606-0029  DELETE /rest/v1.1/stream/{id}
+summary: Delete existing stream
+- path:id string
+- query:accessKey string
+- query:secretKey string
+
+## S606-0030  PATCH /rest/v1.1/stream/{streamId}
+summary: Update an existing stream with a given ID
+- path:streamId string
+- query:accessKey string
+- query:secretKey string
+- query:name string
+- query:url string
+- query:method string enum[WEBRTC_PULL|WEBRTC_PUSH|INGESTION_ENDPOINT]
+- query:username string
+- query:password string
+- query:skipFramesWithNoFaces boolean
+- query:retentionTime integer
+- query:storeOriginalFrames boolean
+- query:storeAttendanceFaces boolean
+- query:storeAttendanceFrames boolean
+- query:isActive boolean
+- query:associatedCollections array<string>
+- query:attributes string

@@ -1,0 +1,721 @@
+## S308-0001  POST /project/{username}/{project}
+desc: Triggers a new build, returns a summary of the build.
+- path:username string
+- path:project string
+- body:build_parameters object
+- body:parallel string
+- body:revision string
+- body:tag string
+
+## S308-0002  DELETE /project/{username}/{project}/build-cache
+desc: Clears the cache for a project.
+- path:username string
+- path:project string
+
+## S308-0003  POST /project/{username}/{project}/checkout-key
+desc: Creates a new checkout key. Only usable with a user API token.
+- path:username string
+- path:project string
+- body:(body) string enum[deploy-key|github-user-key]
+
+## S308-0004  DELETE /project/{username}/{project}/checkout-key/{fingerprint}
+desc: Delete a checkout key.
+- path:username string
+- path:project string
+- path:fingerprint string
+
+## S308-0005  POST /project/{username}/{project}/envvar
+desc: Creates a new environment variable
+- path:username string
+- path:project string
+
+## S308-0006  DELETE /project/{username}/{project}/envvar/{name}
+desc: Deletes the environment variable named ':name'
+- path:username string
+- path:project string
+- path:name string
+
+## S308-0007  POST /project/{username}/{project}/ssh-key
+desc: Create an ssh key used to access external systems that require SSH key-based authentication
+- path:username string
+- path:project string
+- body:hostname string
+- body:private_key string
+
+## S308-0008  POST /project/{username}/{project}/tree/{branch}
+desc: Triggers a new build, returns a summary of the build. Optional build parameters can be set using an experimental API. Note: For more about build parameters, read about [using parameterized builds](https://circleci.com/docs/parameterized-builds/)
+- path:username string
+- path:project string
+- path:branch string
+- body:build_parameters object
+- body:parallel string
+- body:revision string
+
+## S308-0009  POST /project/{username}/{project}/{build_num}/cancel
+desc: Cancels the build, returns a summary of the build.
+- path:username string
+- path:project string
+- path:build_num integer
+
+## S308-0010  POST /project/{username}/{project}/{build_num}/retry
+desc: Retries the build, returns a summary of the new build.
+- path:username string
+- path:project string
+- path:build_num integer
+
+## S308-0011  POST /user/heroku-key
+desc: Adds your Heroku API key to CircleCI, takes apikey as form param name.
+
+## S310-0001  POST /job
+desc: Queues a job | Creates a new job
+schema: NewJob
+- body:analysisMode string
+- body:commitOverride string
+- body:emailReportTo string
+- body:projectBranch string
+- body:projectKey string
+- body:version string
+
+## S313-0001  POST /authn-azure/{service_id}/{account}/{login}/authenticate
+desc: Gets a short-lived access token for applications running in Azure. | The access token is used to communicate to the REST API that the bearer of the token has been authorized to access the API and perform specific actions specified by the scope that was granted during authorization. For API usage, the base64-encoded access token is ordinarily passed as an HTTP Authorization header as `Authorization
+- path:service_id string
+- path:account string
+- path:login any
+- body:jwt string
+
+## S313-0002  POST /authn-gcp/{account}/authenticate
+desc: Gets a short-lived access token for applications running in Google Cloud Platform. | Use the GCP Authenticator API to send an authentication request from a Google Cloud service to Conjur. For more information, see [the documentation](https://docs.conjur.org/Latest/en/Content/Operations/Services/cjr-gcp-authn.htm).
+- path:account string
+- body:jwt string
+
+## S313-0003  POST /authn-iam/{service_id}/{account}/{login}/authenticate
+desc: Get a short-lived access token for applications running in AWS. | The access token is used to communicate to the REST API that the bearer of the token has been authorized to access the API and perform specific actions specified by the scope that was granted during authorization. For API usage, the base64-encoded access token is ordinarily passed as an HTTP Authorization header as `Authorization: T
+- path:service_id string
+- path:account string
+- path:login any
+- body:(body) string
+
+## S313-0004  POST /authn-jwt/{service_id}/{account}/authenticate
+desc: Gets a short-lived access token for applications using JSON Web Token (JWT) to access the Conjur API. | Use the JWT Authenticator to leverage the identity layer provided by JWT to authenticate with Conjur.
+- path:account string
+- path:service_id string
+- body:jwt string
+
+## S313-0005  POST /authn-jwt/{service_id}/{account}/{id}/authenticate
+desc: Gets a short-lived access token for applications using JSON Web Token (JWT) to access the Conjur API. Covers the case of use of optional URL parameter "ID" | Use the JWT Authenticator to leverage the identity layer provided by JWT to authenticate with Conjur.
+schema: schema
+- path:account string
+- path:id string
+- path:service_id string
+- body:(body) any
+
+## S313-0006  POST /authn-k8s/{service_id}/inject_client_cert
+desc: For applications running in Kubernetes; sends Conjur a certificate signing request (CSR) and requests a client certificate injected into the application's Kubernetes pod. | This request sends a Certificate Signing Request to Conjur, which uses the Kubernetes API to inject a client certificate into the application pod. This endpoint requires a properly configured Conjur Certificate Authority servic
+- path:service_id string
+- body:(body) string
+
+## S313-0007  POST /authn-k8s/{service_id}/{account}/{login}/authenticate
+desc: Gets a short-lived access token for applications running in Kubernetes. | The access token is used to communicate to the REST API that the bearer of the token has been authorized to access the API and perform specific actions specified by the scope that was granted during authorization. For API usage, the base64-encoded access token is ordinarily passed as an HTTP Authorization header as `Authoriz
+- path:service_id string
+- path:account string
+- path:login any
+
+## S313-0008  POST /authn-ldap/{service_id}/{account}/{login}/authenticate
+desc: Gets a short-lived access token for users and hosts using their LDAP identity to access the Conjur API. | The access token is used to communicate to the REST API that the bearer of the token has been authorized to access the API and perform specific actions specified by the scope that was granted during authorization. For API usage, the base64-encoded access token is ordinarily passed as an HTTP A
+schema: schema
+- path:service_id string
+- path:account string
+- path:login any
+- body:(body) any
+
+## S313-0009  POST /authn-oidc/{service_id}/{account}/authenticate
+desc: Gets a short-lived access token for applications using OpenID Connect (OIDC) to access the Conjur API. | Use the OIDC Authenticator to leverage the identity layer provided by OIDC to authenticate with Conjur. For more information see [the documentation](https://docs.conjur.org/Latest/en/Content/OIDC/OIDC.htm).
+- path:service_id string
+- path:account string
+- body:id_token string
+
+## S313-0010  PUT /authn/{account}/api_key
+desc: Rotates a role's API key. | Any role can rotate its own API key. The name and password (for users) or current API key (for hosts and users) of the role must be provided via HTTP Basic Authorization. To rotate another role's API key, you may provide your name and password (for users) or current API key (for hosts and users) via HTTP Basic Authorization with the request. Alternatively, you may provi
+- path:account string
+- query:role string
+
+## S313-0011  PUT /authn/{account}/password
+desc: Changes a user’s password. | You must provide the login name and current password or API key of the user whose password is to be updated in an HTTP Basic Authentication header. Also replaces the user’s API key with a new securely generated random value. You can fetch the new API key using the Login method. The Basic authentication-compliant header is formed by: 1. Concatenating the role's name, a 
+- path:account string
+- body:(body) string
+
+## S313-0012  POST /authn/{account}/{login}/authenticate
+desc: Gets a short-lived access token, which is required in the header of most subsequent API requests. | A client can obtain an access token by presenting a valid login name and API key. The access token is used to communicate to the REST API that the bearer of the token has been authorized to access the API and perform specific actions specified by the scope that was granted during authorization. The 
+schema: schema
+- path:account string
+- path:login string
+- body:(body) any
+
+## S313-0013  POST /ca/{account}/{service_id}/sign
+desc: Gets a signed certificate from the configured Certificate Authority service. | Gets a signed certificate from the configured Certificate Authority service. The request must include a valid Certificate Signing Request, and a desired TTL in ISO 8601 format. *** IMPORTANT *** This endpoint is part of an early implementation of support for using Conjur as a certificate authority, and is currently avai
+- path:account string
+- path:service_id string
+- body:csr string
+- body:ttl string
+
+## S313-0014  POST /host_factories/hosts
+desc: Creates a Host using the Host Factory. | Creates a Host using the Host Factory and returns a JSON description of it. Requires a host factory token, which can be created using the create tokens API. In practice, this token is usually provided automatically as part of Conjur integration with your host provisioning infrastructure. Note: If the token was created with a CIDR restriction, you must make 
+- body:annotations object
+- body:id string
+
+## S313-0015  POST /host_factory_tokens
+desc: Creates one or more host identity tokens. | Creates one or more tokens which can be used to bootstrap host identity. Responds with a JSON document containing the tokens and their restrictions. If the tokens are created with a CIDR restriction, Conjur will only accept them from the whitelisted IP ranges. ##### Permissions required # `execute` privilege on the Host Factory."
+- body:cidr array<string>
+- body:count integer
+- body:expiration string
+- body:host_factory string
+
+## S313-0016  DELETE /host_factory_tokens/{token}
+desc: Revokes a token, immediately disabling it. | Revokes a token, immediately disabling it. ##### Permissions required `update` privilege on the host factory."
+- path:token string
+
+## S313-0017  PATCH /policies/{account}/policy/{identifier}
+desc: Modifies an existing Conjur policy. | Modifies an existing Conjur policy. Data may be explicitly deleted using the `!delete`, `!revoke`, and `!deny` statements. Unlike `replace` mode, no data is ever implicitly deleted. ##### Permissions required
+schema: schema
+- path:account string
+- path:identifier string
+- body:(body) any
+
+## S313-0018  POST /policies/{account}/policy/{identifier}
+desc: Adds data to the existing Conjur policy. | Adds data to the existing Conjur policy. Deletions are not allowed. Any policy objects that exist on the server but are omitted from the policy file will not be deleted and any explicit deletions in the policy file will result in an error. ##### Permissions required `create` privilege on the policy."
+schema: schema
+- path:account string
+- path:identifier string
+- body:(body) any
+
+## S313-0019  PUT /policies/{account}/policy/{identifier}
+desc: Loads or replaces a Conjur policy document. | Loads or replaces a Conjur policy document. **Any policy data which already exists on the server but is not explicitly specified in the new policy file will be deleted!**.
+schema: schema
+- path:account string
+- path:identifier string
+- body:(body) any
+
+## S313-0020  DELETE /roles/{account}/{kind}/{identifier}
+desc: Deletes an existing role membership | Deletes an existing role membership. If a role A is granted to a role B, then role A is said to have role B as a member. These relationships are described in the “members” portion of the returned JSON. When the `members` query parameter is provided, you will get the members of a role. When the `members` and `member` query parameters are provided, the role spec
+- path:account string
+- path:kind string
+- path:identifier string
+- query:members string
+- query:member string
+
+## S313-0021  POST /roles/{account}/{kind}/{identifier}
+desc: Update or modify an existing role membership | Updates or modifies an existing role membership. If a role A is granted to a role B, then role A is said to have role B as a member. These relationships are described in the “members” portion of the returned JSON. When the `members` query parameter is provided, you will get the members of a role. When the `members` and `member` query parameters are pr
+- path:account string
+- path:kind string
+- path:identifier string
+- query:members string
+- query:member string
+
+## S313-0022  POST /secrets/{account}/{kind}/{identifier}
+desc: Creates a secret value within the specified variable. | Creates a secret value within the specified Secret. Note: Conjur will allow you to add a secret to any resource, but the best practice is to store and retrieve secret data only using Secret resources.
+- path:account string
+- path:kind string
+- path:identifier string
+- query:expirations string
+- body:(body) string
+
+## S313-0023  PATCH /{authenticator}/{account}
+desc: Enables or disables authenticator defined without service_id. | Allows you to either enable or disable a given authenticator that does not have service_id (For example: authn-gcp). When you enable or disable an authenticator via this endpoint, the status of the authenticator is stored in the Conjur database. The enablement status of the authenticator service may be overridden by setting the `CONJU
+- path:authenticator string enum[authn-iam|authn-oidc|authn-ldap|authn-k8s|authn-gcp|authn-azure|authn-jwt]
+- path:account string
+- body:enabled boolean
+
+## S313-0024  PATCH /{authenticator}/{service_id}/{account}
+desc: Enables or disables authenticator service instances. | Allows you to either enable or disable a given authenticator service instance. When you enable or disable an authenticator service instance via this endpoint, the status of the authenticator service instance is stored in the Conjur database. The enablement status of the authenticator service instance may be overridden by setting the `CONJUR_AU
+schema: schema
+- path:authenticator any
+- path:service_id string
+- path:account string
+- body:(body) any
+
+## S315-0001  POST /convert/url/pdf
+desc: Save web page as PDF | Automate URL to PDF Conversion right in your application. Specify request parameters like URL, Proxy, and actions to render web pages to PDF using Headless Chrome. Get resulted PDF even from websites blocked in your area for some reason utilizing our worldwide pool of proxies. Simulate real-world human interaction with the page. For example, before saving a web page to PDF, 
+schema: url2pdfrequest
+- body:actions array<object>
+- body:actions[].ignoreIfNotPresent boolean
+- body:actions[].selector string
+- body:actions[].value string
+- body:actions[].skipLastIteration boolean
+- body:actions[].waitDelay string
+- body:actions[].script string
+- body:actions[].actions array<object>
+- body:actions[].actions[].ignoreIfNotPresent boolean
+- body:actions[].actions[].selector string
+- body:actions[].actions[].value string
+- body:actions[].actions[].skipLastIteration boolean
+- body:actions[].actions[].waitDelay string
+- body:actions[].actions[].script string
+- body:actions[].actions[].actions array<object>
+- body:actions[].actions[].times number
+- body:actions[].actions[].scrollByPixels number
+- body:actions[].actions[].scrollingElementSelector string
+- body:actions[].times number
+- body:actions[].scrollByPixels number
+- body:actions[].scrollingElementSelector string
+- body:ignoreHTTPStatusErrCodes boolean
+- body:initialCookies array<object>
+- body:initialCookies[].domain string
+- body:initialCookies[].expirationDate number
+- body:initialCookies[].hostOnly boolean
+- body:initialCookies[].httpOnly boolean
+- body:initialCookies[].id number
+- body:initialCookies[].name string
+- body:initialCookies[].path string
+- body:initialCookies[].sameSite string enum[unspecified|strict|lax|no_restriction]
+- body:initialCookies[].secure boolean
+- body:initialCookies[].session boolean
+- body:initialCookies[].storeID string
+- body:initialCookies[].value string
+- body:landscape boolean
+- body:marginBottom number
+- body:marginLeft number
+- body:marginRight number
+- body:marginTop number
+- body:output string enum[buffer|file]
+- body:pageRanges string
+- body:paperSize string enum[A3|A4|A5|A6|Letter|Legal|Tabloid]
+- body:printBackground boolean
+- body:printHeaderFooter boolean
+- body:proxy string
+- body:scale number
+- body:url string
+- body:waitDelay number
+
+## S315-0002  POST /convert/url/screenshot
+desc: Capture web page Screenshots. | Automate URL to Screenshot Conversion right in your application. Specify request parameters like URL, Proxy, and actions to convert web pages to screenshots using Headless Chrome. Get resulted pictures in JPG or PNG formats even from websites blocked in your area for some reason utilizing our worldwide pool of proxies. Simulate real-world human interaction with the 
+schema: url2screenshotrequest
+- body:actions array<object>
+- body:actions[].ignoreIfNotPresent boolean
+- body:actions[].selector string
+- body:actions[].value string
+- body:actions[].skipLastIteration boolean
+- body:actions[].waitDelay string
+- body:actions[].script string
+- body:actions[].actions array<object>
+- body:actions[].actions[].ignoreIfNotPresent boolean
+- body:actions[].actions[].selector string
+- body:actions[].actions[].value string
+- body:actions[].actions[].skipLastIteration boolean
+- body:actions[].actions[].waitDelay string
+- body:actions[].actions[].script string
+- body:actions[].actions[].actions array<object>
+- body:actions[].actions[].times number
+- body:actions[].actions[].scrollByPixels number
+- body:actions[].actions[].scrollingElementSelector string
+- body:actions[].times number
+- body:actions[].scrollByPixels number
+- body:actions[].scrollingElementSelector string
+- body:clipSelector string
+- body:format string enum[png|jpeg]
+- body:fullPage boolean
+- body:height integer
+- body:ignoreHTTPStatusErrCodes boolean
+- body:initialCookies array<object>
+- body:initialCookies[].domain string
+- body:initialCookies[].expirationDate number
+- body:initialCookies[].hostOnly boolean
+- body:initialCookies[].httpOnly boolean
+- body:initialCookies[].id number
+- body:initialCookies[].name string
+- body:initialCookies[].path string
+- body:initialCookies[].sameSite string enum[unspecified|strict|lax|no_restriction]
+- body:initialCookies[].secure boolean
+- body:initialCookies[].session boolean
+- body:initialCookies[].storeID string
+- body:initialCookies[].value string
+- body:offsetx integer
+- body:offsety integer
+- body:output string enum[buffer|file]
+- body:printBackground boolean
+- body:proxy string
+- body:quality integer
+- body:scale number
+- body:url string
+- body:waitDelay number
+- body:width integer
+
+## S315-0003  POST /fetch
+desc: Download web page content | Use fetch endpoint to download web pages.
+schema: fetchrequest
+- body:actions array<object>
+- body:actions[].ignoreIfNotPresent boolean
+- body:actions[].selector string
+- body:actions[].value string
+- body:actions[].skipLastIteration boolean
+- body:actions[].waitDelay string
+- body:actions[].script string
+- body:actions[].actions array<object>
+- body:actions[].actions[].ignoreIfNotPresent boolean
+- body:actions[].actions[].selector string
+- body:actions[].actions[].value string
+- body:actions[].actions[].skipLastIteration boolean
+- body:actions[].actions[].waitDelay string
+- body:actions[].actions[].script string
+- body:actions[].actions[].actions array<object>
+- body:actions[].actions[].times number
+- body:actions[].actions[].scrollByPixels number
+- body:actions[].actions[].scrollingElementSelector string
+- body:actions[].times number
+- body:actions[].scrollByPixels number
+- body:actions[].scrollingElementSelector string
+- body:ignoreHTTPStatusErrCodes boolean
+- body:initialCookies array<object>
+- body:initialCookies[].domain string
+- body:initialCookies[].expirationDate number
+- body:initialCookies[].hostOnly boolean
+- body:initialCookies[].httpOnly boolean
+- body:initialCookies[].id number
+- body:initialCookies[].name string
+- body:initialCookies[].path string
+- body:initialCookies[].sameSite string enum[unspecified|strict|lax|no_restriction]
+- body:initialCookies[].secure boolean
+- body:initialCookies[].session boolean
+- body:initialCookies[].storeID string
+- body:initialCookies[].value string
+- body:output string enum[buffer|file]
+- body:proxy string
+- body:type string enum[base|chrome]
+- body:url string
+- body:waitDelay number
+
+## S315-0004  POST /parse
+desc: Extract structured data from web pages | Dataflow kit uses CSS selectors to find HTML elements in web pages for later data extraction. Open [visual point-and-click toolkit](https://dataflowkit.com/dfk) and click desired elements on a page to specify extracting data. Then you can send generated payload to `/parse` endpoint. We crawl web pages and extract data like text, links, or images for you fol
+schema: parserequest
+- body:commonParent string
+- body:fields array<object>
+- body:fields[].attrs array<string> enum[text|href|src|alt]
+- body:fields[].details object
+- body:fields[].details.commonParent string
+- body:fields[].details.fields array<object>
+- body:fields[].details.format string enum[csv|json|jsonl|excel|xml]
+- body:fields[].details.name string
+- body:fields[].details.paginator object
+- body:fields[].details.path boolean
+- body:fields[].details.request object
+- body:fields[].filters array<object>
+- body:fields[].filters[].name string enum[trim|normal|uppercase|lowercase|capitalize|concatinate]
+- body:fields[].filters[].param string
+- body:fields[].name string
+- body:fields[].selector string
+- body:fields[].type integer enum[0|1|2]
+- body:format string enum[csv|json|jsonl|excel|xml]
+- body:name string
+- body:paginator object
+- body:paginator.nextPageSelector string
+- body:paginator.pageNum integer
+- body:path boolean
+- body:request object
+- body:request.actions array<object>
+- body:request.actions[].ignoreIfNotPresent boolean
+- body:request.actions[].selector string
+- body:request.actions[].value string
+- body:request.actions[].skipLastIteration boolean
+- body:request.actions[].waitDelay string
+- body:request.actions[].script string
+- body:request.actions[].actions array<object>
+- body:request.actions[].times number
+- body:request.actions[].scrollByPixels number
+- body:request.actions[].scrollingElementSelector string
+- body:request.ignoreHTTPStatusErrCodes boolean
+- body:request.initialCookies array<object>
+- body:request.initialCookies[].domain string
+- body:request.initialCookies[].expirationDate number
+- body:request.initialCookies[].hostOnly boolean
+- body:request.initialCookies[].httpOnly boolean
+- body:request.initialCookies[].id number
+- body:request.initialCookies[].name string
+- body:request.initialCookies[].path string
+- body:request.initialCookies[].sameSite string enum[unspecified|strict|lax|no_restriction]
+- body:request.initialCookies[].secure boolean
+- body:request.initialCookies[].session boolean
+- body:request.initialCookies[].storeID string
+- body:request.initialCookies[].value string
+- body:request.output string enum[buffer|file]
+- body:request.proxy string
+- body:request.type string enum[base|chrome]
+- body:request.url string
+- body:request.waitDelay number
+
+## S315-0005  POST /serp
+desc: Collect search results from search engines | To crawl search engine result pages, you can use `/serp` endpoint. SERP collection service extracts a list of organic results, news, images, and more. Specify configuration parameters, such as country or languages, to customize output SERP data. The following search engines are supported - google - google-image - google-news - google-shopping - bing - d
+schema: serprequest
+- body:fields array<object>
+- body:fields[].attrs array<string> enum[text|href|src|alt]
+- body:fields[].details object
+- body:fields[].details.commonParent string
+- body:fields[].details.fields array<object>
+- body:fields[].details.format string enum[csv|json|jsonl|excel|xml]
+- body:fields[].details.name string
+- body:fields[].details.paginator object
+- body:fields[].details.path boolean
+- body:fields[].details.request object
+- body:fields[].filters array<object>
+- body:fields[].filters[].name string enum[trim|normal|uppercase|lowercase|capitalize|concatinate]
+- body:fields[].filters[].param string
+- body:fields[].name string
+- body:fields[].selector string
+- body:fields[].type integer enum[0|1|2]
+- body:format string enum[csv|json|jsonl|excel|xml]
+- body:name string
+- body:pageNum integer
+- body:proxy string
+- body:type string
+- body:url string
+
+## S317-0001  POST /v2/users/2fa-login
+desc: Second factor authentication. | When a user has 2FA enabled, this is the second call to perform after `/v2/users/login` call. Creates and returns a bearer token in JWT format that you can use to authenticate with Docker Hub APIs. The returned token is used in the HTTP Authorization header like `Authorization: Bearer {TOKEN}`. Most Docker Hub APIs require this token either to consume or to get deta
+schema: Users2FALoginRequest
+- body:code string
+- body:login_2fa_token string
+
+## S317-0002  POST /v2/users/login
+desc: Create an authentication token | Creates and returns a bearer token in JWT format that you can use to authenticate with Docker Hub APIs. The returned token is used in the HTTP Authorization header like `Authorization: Bearer {TOKEN}`. Most Docker Hub APIs require this token either to consume or to get detailed information. For example, to list images in a private repository.
+schema: UsersLoginRequest
+- body:password string
+- body:username string
+
+## S318-0001  POST /authentication/customer/registration
+desc: Customer Registration
+schema: Customer
+- body:city string
+- body:companyDescription string
+- body:companyName string
+- body:country string
+- body:faceRecognitionType string
+- body:firstName string
+- body:lastName string
+- body:password string
+- body:phone string
+- body:state string
+- body:streetAddress string
+- body:username string
+- body:zip string
+
+## S318-0002  POST /authentication/customer/token
+desc: Get Token
+schema: LoginUser
+- body:password string
+- body:username string
+
+## S319-0001  DELETE /api_key
+desc: Delete current API key. (Requires current API connection to be using an API key.) | Delete current API key. (Requires current API connection to be using an API key.)
+
+## S319-0002  PATCH /api_key
+desc: Update current API key. (Requires current API connection to be using an API key.) | Update current API key. (Requires current API connection to be using an API key.)
+- body:expires_at string
+- body:name string
+- body:permission_set string enum[none|full|desktop_app|sync_app|office_integration|mobile_app]
+
+## S319-0003  DELETE /as2_partners/{id}
+desc: Delete As2 Partner | Delete As2 Partner
+- path:id integer
+
+## S319-0004  POST /as2_stations
+desc: Create As2 Station | Create As2 Station
+- body:name string
+- body:private_key string
+- body:private_key_password string
+- body:public_certificate string
+
+## S319-0005  POST /behaviors
+desc: Create Behavior | Create Behavior
+- body:attachment_file string
+- body:behavior string
+- body:description string
+- body:name string
+- body:path string
+- body:value string
+
+## S319-0006  PATCH /behaviors/{id}
+desc: Update Behavior | Update Behavior
+- path:id integer
+- body:attachment_delete boolean
+- body:attachment_file string
+- body:behavior string
+- body:description string
+- body:name string
+- body:path string
+- body:value string
+
+## S319-0007  POST /bundle_recipients
+desc: Create Bundle Recipient | Create Bundle Recipient
+- body:bundle_id integer
+- body:company string
+- body:name string
+- body:note string
+- body:recipient string
+- body:share_after_create boolean
+- body:user_id integer
+
+## S319-0008  DELETE /bundles/{id}
+desc: Delete Bundle | Delete Bundle
+- path:id integer
+
+## S319-0009  PATCH /bundles/{id}
+desc: Update Bundle | Update Bundle
+- path:id integer
+- body:clickwrap_id integer
+- body:code string
+- body:description string
+- body:dont_separate_submissions_by_folder boolean
+- body:expires_at string
+- body:form_field_set_id integer
+- body:inbox_id integer
+- body:max_uses integer
+- body:note string
+- body:password string
+- body:path_template string
+- body:paths array<string>
+- body:permissions string enum[read|write|read_write|full|none|preview_only]
+- body:preview_only boolean
+- body:require_registration boolean
+- body:require_share_recipient boolean
+- body:send_email_receipt_to_uploader boolean
+- body:skip_company boolean
+- body:skip_email boolean
+- body:skip_name boolean
+- body:watermark_attachment_delete boolean
+- body:watermark_attachment_file string
+
+## S319-0010  POST /clickwraps
+desc: Create Clickwrap | Create Clickwrap
+- body:body string
+- body:name string
+- body:use_with_bundles string enum[none|available|require]
+- body:use_with_inboxes string enum[none|available|require]
+- body:use_with_users string enum[none|require]
+
+## S319-0011  DELETE /clickwraps/{id}
+desc: Delete Clickwrap | Delete Clickwrap
+- path:id integer
+
+## S319-0012  POST /file_actions/move/{path}
+desc: Move file/folder | Move file/folder
+- path:path string
+- body:destination string
+
+## S319-0013  DELETE /file_comment_reactions/{id}
+desc: Delete File Comment Reaction | Delete File Comment Reaction
+- path:id integer
+
+## S319-0014  POST /file_comments
+desc: Create File Comment | Create File Comment
+- body:body string
+- body:path string
+
+## S319-0015  PATCH /file_comments/{id}
+desc: Update File Comment | Update File Comment
+- path:id integer
+- body:body string
+
+## S319-0016  PATCH /files/{path}
+desc: Update file/folder metadata | Update file/folder metadata
+- path:path string
+- body:priority_color string
+- body:provided_mtime string
+
+## S319-0017  POST /form_field_sets
+desc: Create Form Field Set | Create Form Field Set
+schema: postFormFieldSets
+- body:form_fields array<object>
+- body:form_fields[].default_option string
+- body:form_fields[].field_type string
+- body:form_fields[].help_text string
+- body:form_fields[].id integer
+- body:form_fields[].label string
+- body:form_fields[].options_for_select string
+- body:form_fields[].required boolean
+- body:skip_company boolean
+- body:skip_email boolean
+- body:skip_name boolean
+- body:title string
+- body:user_id integer
+
+## S319-0018  PATCH /form_field_sets/{id}
+desc: Update Form Field Set | Update Form Field Set
+schema: patchFormFieldSets
+- path:id integer
+- body:form_fields array<object>
+- body:form_fields[].default_option string
+- body:form_fields[].field_type string
+- body:form_fields[].help_text string
+- body:form_fields[].id integer
+- body:form_fields[].label string
+- body:form_fields[].options_for_select string
+- body:form_fields[].required boolean
+- body:skip_company boolean
+- body:skip_email boolean
+- body:skip_name boolean
+- body:title string
+
+## S319-0019  DELETE /group_users/{id}
+desc: Delete Group User | Delete Group User
+- path:id integer
+- query:group_id integer
+- query:user_id integer
+
+## S319-0020  PATCH /groups/{group_id}/memberships/{user_id}
+desc: Update Group User | Update Group User
+- path:group_id integer
+- path:user_id integer
+- body:admin boolean
+
+## S319-0021  POST /inbox_recipients
+desc: Create Inbox Recipient | Create Inbox Recipient
+- body:company string
+- body:inbox_id integer
+- body:name string
+- body:note string
+- body:recipient string
+- body:share_after_create boolean
+- body:user_id integer
+
+## S319-0022  DELETE /locks/{path}
+desc: Delete Lock | Delete Lock
+- path:path string
+- query:token string
+
+## S319-0023  PATCH /message_comments/{id}
+desc: Update Message Comment | Update Message Comment
+- path:id integer
+- body:body string
+
+## S319-0024  DELETE /message_reactions/{id}
+desc: Delete Message Reaction | Delete Message Reaction
+- path:id integer
+
+## S319-0025  POST /permissions
+desc: Create Permission | Create Permission
+- body:group_id integer
+- body:path string
+- body:permission string
+- body:recursive boolean
+- body:user_id integer
+- body:username string
+
+## S319-0026  DELETE /permissions/{id}
+desc: Delete Permission | Delete Permission
+- path:id integer
+
+## S319-0027  POST /projects
+desc: Create Project | Create Project
+- body:global_access string
+
+## S319-0028  PATCH /projects/{id}
+desc: Update Project | Update Project
+- path:id integer
+- body:global_access string
+
+## S319-0029  DELETE /public_keys/{id}
+desc: Delete Public Key | Delete Public Key
+- path:id integer
+
+## S319-0030  PATCH /public_keys/{id}
+desc: Update Public Key | Update Public Key
+- path:id integer
+- body:title string

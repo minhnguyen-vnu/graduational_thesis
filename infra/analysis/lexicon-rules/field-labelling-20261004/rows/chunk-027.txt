@@ -1,0 +1,1920 @@
+## S396-0001  POST /api/account/v1/feedback
+summary: Add manually verified receipt data to a given receipt for feedback and training purposes
+- body:currencyCode string
+- body:date string
+- body:masterCategory string
+- body:merchantName string
+- body:referenceId string
+- body:taxAmount number
+- body:totalAmount number
+
+## S396-0002  POST /api/account/v1/merchantname/add
+summary: Add a keyword to your account's model to predict merchant name. Changes in your account's model are updated daily.
+- body:merchantName string
+
+## S396-0003  POST /api/receipt/v1/match/file
+summary: detect and match a receipt against keywords and metadata by uploading an image file
+- body:file file
+- body:refresh boolean
+- body:incognito boolean
+- body:ipAddress string
+- body:primaryKeywords array<string>
+- body:secondaryKeywords array<string>
+- body:stopWords array<string>
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+
+## S396-0004  POST /api/receipt/v1/simple/encoded
+summary: transcribe a receipt using base64 encoded image in json payload
+- body:contentType string
+- body:extractTime boolean
+- body:filename string
+- body:ignoreMerchantName string
+- body:image string
+- body:incognito boolean
+- body:ipAddress string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:near string
+- body:referenceId string
+- body:refresh boolean
+- body:subAccountId string
+
+## S396-0005  POST /api/receipt/v1/simple/file
+summary: transcribe a receipt by uploading an image file
+- body:file file
+- body:refresh boolean
+- body:incognito boolean
+- body:ipAddress string
+- body:near string
+- body:ignoreMerchantName string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:extractTime boolean
+- body:subAccountId string
+- body:referenceId string
+
+## S396-0006  POST /api/receipt/v1/simple/storage
+summary: transcribe a receipt in storage
+- body:contentType string
+- body:extractTime boolean
+- body:ignoreMerchantName string
+- body:ipAddress string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:md5 string
+- body:near string
+- body:referenceId string
+- body:refresh boolean
+- body:subAccountId string
+
+## S396-0007  POST /api/receipt/v1/simple/url
+summary: transcribe a receipt from URL
+- body:extractTime boolean
+- body:headers object
+- body:headers.x-custom-key string
+- body:ignoreMerchantName string
+- body:incognito boolean
+- body:ipAddress string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:near string
+- body:referenceId string
+- body:refresh boolean
+- body:subAccountId string
+- body:url string
+
+## S396-0008  POST /api/receipt/v1/verbose/encoded
+summary: transcribe a receipt using base64 encoded image in json payload and return detailed result
+- body:contentType string
+- body:extractTime boolean
+- body:filename string
+- body:ignoreMerchantName string
+- body:image string
+- body:incognito boolean
+- body:ipAddress string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:near string
+- body:referenceId string
+- body:refresh boolean
+- body:subAccountId string
+
+## S396-0009  POST /api/receipt/v1/verbose/file
+summary: transcribe a receipt by uploading an image file and return detailed result
+- body:file file
+- body:refresh boolean
+- body:incognito boolean
+- body:ipAddress string
+- body:near string
+- body:ignoreMerchantName string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:extractTime boolean
+- body:subAccountId string
+- body:referenceId string
+
+## S396-0010  POST /api/receipt/v1/verbose/storage
+summary: transcribe a receipt in storage and return detailed result
+- body:contentType string
+- body:extractTime boolean
+- body:ignoreMerchantName string
+- body:ipAddress string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:md5 string
+- body:near string
+- body:referenceId string
+- body:refresh boolean
+- body:subAccountId string
+
+## S396-0011  POST /api/receipt/v1/verbose/url
+summary: transcribe a receipt from URL and return detailed result
+- body:extractTime boolean
+- body:headers object
+- body:headers.x-custom-key string
+- body:ignoreMerchantName string
+- body:incognito boolean
+- body:ipAddress string
+- body:language string enum[en|es|fr|jp|he|iw|et|lv|lt|fi|el|zh]
+- body:near string
+- body:referenceId string
+- body:refresh boolean
+- body:subAccountId string
+- body:url string
+
+## S396-0012  POST /api/validation/v1/campaign/file
+summary: validate and match a receipt against a campaign validation settings by uploading an image file
+- body:file file
+- body:incognito boolean
+- body:ipAddress string
+- body:near string
+- body:campaignId string
+- body:referenceId string
+
+## S396-0013  POST /api/validation/v1/campaign/product-validation/file
+summary: validate if user-submitted info like serial number are detected an image file
+- body:file file
+- body:productVerificationNumber string
+- body:incognito boolean
+- body:subAccountId string
+- body:referenceId string
+
+## S397-0001  POST /addStickerToSet
+desc: Use this method to add a new sticker to a set created by the bot. You **must** use exactly one of the fields *png\_sticker* or *tgs\_sticker*. Animated stickers can be added to animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns *True* on success.
+- body:emojis string
+- body:mask_position object
+- body:mask_position.point string enum[forehead|eyes|mouth|chin]
+- body:mask_position.scale number
+- body:mask_position.x_shift number
+- body:mask_position.y_shift number
+- body:name string
+- body:png_sticker string
+- body:tgs_sticker any
+- body:user_id integer
+
+## S397-0002  POST /answerPreCheckoutQuery
+desc: Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an [Update](https://core.telegram.org/bots/api/#update) with the field *pre\_checkout\_query*. Use this method to respond to such pre-checkout queries. On success, True is returned. **Note:** The Bot API must receive an answer within 10 seconds after the pre-checkout query was se
+- body:error_message string
+- body:ok boolean
+- body:pre_checkout_query_id string
+
+## S397-0003  POST /copyMessage
+desc: Use this method to copy messages of any kind. The method is analogous to the method [forwardMessages](https://core.telegram.org/bots/api/#forwardmessages), but the copied message doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.org/bots/api/#messageid) of the sent message on success.
+- body:allow_sending_without_reply boolean
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:disable_notification boolean
+- body:from_chat_id integer
+- body:message_id integer
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+
+## S397-0004  POST /deleteChatPhoto
+desc: Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns *True* on success.
+- body:chat_id integer
+
+## S397-0005  POST /deleteMessage
+desc: Use this method to delete a message, including service messages, with the following limitations: \- A message can only be deleted if it was sent less than 48 hours ago. \- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago. \- Bots can delete outgoing messages in private chats, groups, and supergroups. \- Bots can delete incoming messages in private chats. \
+- body:chat_id integer
+- body:message_id integer
+
+## S397-0006  POST /deleteWebhook
+desc: Use this method to remove webhook integration if you decide to switch back to [getUpdates](https://core.telegram.org/bots/api/#getupdates). Returns *True* on success.
+- body:drop_pending_updates boolean
+
+## S397-0007  POST /editMessageLiveLocation
+desc: Use this method to edit live location messages. A location can be edited until its *live\_period* expires or editing is explicitly disabled by a call to [stopMessageLiveLocation](https://core.telegram.org/bots/api/#stopmessagelivelocation). On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is 
+- body:chat_id integer
+- body:heading integer
+- body:horizontal_accuracy number
+- body:inline_message_id string
+- body:latitude number
+- body:longitude number
+- body:message_id integer
+- body:proximity_alert_radius integer
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+
+## S397-0008  POST /editMessageMedia
+desc: Use this method to edit animation, audio, document, photo, or video messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo or a video otherwise. When an inline message is edited, a new file can't be uploaded. Use a previously uploaded file via its file\_id or specify a URL. On success, if the
+- body:chat_id integer
+- body:inline_message_id string
+- body:media object
+- body:media.caption string
+- body:media.caption_entities array<object>
+- body:media.caption_entities[].language string
+- body:media.caption_entities[].length integer
+- body:media.caption_entities[].offset integer
+- body:media.caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:media.caption_entities[].url string
+- body:media.caption_entities[].user object
+- body:media.duration integer
+- body:media.height integer
+- body:media.media string
+- body:media.parse_mode string
+- body:media.thumb string
+- body:media.type string
+- body:media.width integer
+- body:media.disable_content_type_detection boolean
+- body:media.performer string
+- body:media.title string
+- body:media.supports_streaming boolean
+- body:message_id integer
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+
+## S397-0009  POST /editMessageText
+desc: Use this method to edit text and [game](https://core.telegram.org/bots/api/#games) messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is returned.
+- body:chat_id integer
+- body:disable_web_page_preview boolean
+- body:entities array<object>
+- body:entities[].language string
+- body:entities[].length integer
+- body:entities[].offset integer
+- body:entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:entities[].url string
+- body:entities[].user object
+- body:entities[].user.can_join_groups boolean
+- body:entities[].user.can_read_all_group_messages boolean
+- body:entities[].user.first_name string
+- body:entities[].user.id integer
+- body:entities[].user.is_bot boolean
+- body:entities[].user.language_code string
+- body:entities[].user.last_name string
+- body:entities[].user.supports_inline_queries boolean
+- body:entities[].user.username string
+- body:inline_message_id string
+- body:message_id integer
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:text string
+
+## S397-0010  POST /exportChatInviteLink
+desc: Use this method to generate a new invite link for a chat; any previously generated link is revoked. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the new invite link as *String* on success.
+- body:chat_id integer
+
+## S397-0011  POST /forwardMessage
+desc: Use this method to forward messages of any kind. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:chat_id integer
+- body:disable_notification boolean
+- body:from_chat_id integer
+- body:message_id integer
+
+## S397-0012  POST /getChat
+desc: Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a [Chat](https://core.telegram.org/bots/api/#chat) object on success.
+- body:chat_id integer
+
+## S397-0013  POST /getChatMember
+desc: Use this method to get information about a member of a chat. Returns a [ChatMember](https://core.telegram.org/bots/api/#chatmember) object on success.
+- body:chat_id integer
+- body:user_id integer
+
+## S397-0014  POST /getMe
+desc: A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a [User](https://core.telegram.org/bots/api/#user) object.
+
+## S397-0015  POST /getStickerSet
+desc: Use this method to get a sticker set. On success, a [StickerSet](https://core.telegram.org/bots/api/#stickerset) object is returned.
+- body:name string
+
+## S397-0016  POST /getUserProfilePhotos
+desc: Use this method to get a list of profile pictures for a user. Returns a [UserProfilePhotos](https://core.telegram.org/bots/api/#userprofilephotos) object.
+- body:limit integer
+- body:offset integer
+- body:user_id integer
+
+## S397-0017  POST /getWebhookInfo
+desc: Use this method to get current webhook status. Requires no parameters. On success, returns a [WebhookInfo](https://core.telegram.org/bots/api/#webhookinfo) object. If the bot is using [getUpdates](https://core.telegram.org/bots/api/#getupdates), will return an object with the *url* field empty.
+
+## S397-0018  POST /logOut
+desc: Use this method to log out from the cloud Bot API server before launching the bot locally. You **must** log out the bot before running it locally, otherwise there is no guarantee that the bot will receive updates. After a successful call, you can immediately log in on a local server, but will not be able to log in back to the cloud Bot API server for 10 minutes. Returns *True* on success. Requires
+
+## S397-0019  POST /pinChatMessage
+desc: Use this method to add a message to the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can\_pin\_messages' admin right in a supergroup or 'can\_edit\_messages' admin right in a channel. Returns *True* on success.
+- body:chat_id integer
+- body:disable_notification boolean
+- body:message_id integer
+
+## S397-0020  POST /promoteChatMember
+desc: Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Pass *False* for all boolean parameters to demote a user. Returns *True* on success.
+- body:can_change_info boolean
+- body:can_delete_messages boolean
+- body:can_edit_messages boolean
+- body:can_invite_users boolean
+- body:can_pin_messages boolean
+- body:can_post_messages boolean
+- body:can_promote_members boolean
+- body:can_restrict_members boolean
+- body:chat_id integer
+- body:is_anonymous boolean
+- body:user_id integer
+
+## S397-0021  POST /sendAnimation
+desc: Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
+- body:allow_sending_without_reply boolean
+- body:animation string
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:disable_notification boolean
+- body:duration integer
+- body:height integer
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:thumb string
+- body:width integer
+
+## S397-0022  POST /sendContact
+desc: Use this method to send phone contacts. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:chat_id integer
+- body:disable_notification boolean
+- body:first_name string
+- body:last_name string
+- body:phone_number string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:vcard string
+
+## S397-0023  POST /sendDice
+desc: Use this method to send an animated emoji that will display a random value. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:chat_id integer
+- body:disable_notification boolean
+- body:emoji string enum[🎲|🎯|🏀|⚽|🎰]
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+
+## S397-0024  POST /sendDocument
+desc: Use this method to send general files. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
+- body:allow_sending_without_reply boolean
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:disable_content_type_detection boolean
+- body:disable_notification boolean
+- body:document string
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:thumb string
+
+## S397-0025  POST /sendPhoto
+desc: Use this method to send photos. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:disable_notification boolean
+- body:parse_mode string
+- body:photo string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+
+## S397-0026  POST /sendPoll
+desc: Use this method to send a native poll. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:allows_multiple_answers boolean
+- body:chat_id integer
+- body:close_date integer
+- body:correct_option_id integer
+- body:disable_notification boolean
+- body:explanation string
+- body:explanation_entities array<object>
+- body:explanation_entities[].language string
+- body:explanation_entities[].length integer
+- body:explanation_entities[].offset integer
+- body:explanation_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:explanation_entities[].url string
+- body:explanation_entities[].user object
+- body:explanation_entities[].user.can_join_groups boolean
+- body:explanation_entities[].user.can_read_all_group_messages boolean
+- body:explanation_entities[].user.first_name string
+- body:explanation_entities[].user.id integer
+- body:explanation_entities[].user.is_bot boolean
+- body:explanation_entities[].user.language_code string
+- body:explanation_entities[].user.last_name string
+- body:explanation_entities[].user.supports_inline_queries boolean
+- body:explanation_entities[].user.username string
+- body:explanation_parse_mode string
+- body:is_anonymous boolean
+- body:is_closed boolean
+- body:open_period integer
+- body:options array<string>
+- body:question string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:type string
+
+## S397-0027  POST /sendVideo
+desc: Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as [Document](https://core.telegram.org/bots/api/#document)). On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
+- body:allow_sending_without_reply boolean
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:disable_notification boolean
+- body:duration integer
+- body:height integer
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:supports_streaming boolean
+- body:thumb string
+- body:video string
+- body:width integer
+
+## S397-0028  POST /sendVideoNote
+desc: As of [v.4.0](https://telegram.org/blog/video-messages-and-telescope), Telegram clients support rounded square mp4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+- body:allow_sending_without_reply boolean
+- body:chat_id integer
+- body:disable_notification boolean
+- body:duration integer
+- body:length integer
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:thumb string
+- body:video_note string
+
+## S397-0029  POST /sendVoice
+desc: Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as [Audio](https://core.telegram.org/bots/api/#audio) or [Document](https://core.telegram.org/bots/api/#document)). On success, the sent [Message](https://core.telegram.org/bots/api/#mess
+- body:allow_sending_without_reply boolean
+- body:caption string
+- body:caption_entities array<object>
+- body:caption_entities[].language string
+- body:caption_entities[].length integer
+- body:caption_entities[].offset integer
+- body:caption_entities[].type string enum[mention|hashtag|cashtag|bot_command|url|email|phone_number|bold|italic|underline|strikethrough|code]
+- body:caption_entities[].url string
+- body:caption_entities[].user object
+- body:caption_entities[].user.can_join_groups boolean
+- body:caption_entities[].user.can_read_all_group_messages boolean
+- body:caption_entities[].user.first_name string
+- body:caption_entities[].user.id integer
+- body:caption_entities[].user.is_bot boolean
+- body:caption_entities[].user.language_code string
+- body:caption_entities[].user.last_name string
+- body:caption_entities[].user.supports_inline_queries boolean
+- body:caption_entities[].user.username string
+- body:chat_id integer
+- body:disable_notification boolean
+- body:duration integer
+- body:parse_mode string
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+- body:reply_markup.keyboard array<array>
+- body:reply_markup.one_time_keyboard boolean
+- body:reply_markup.resize_keyboard boolean
+- body:reply_markup.selective boolean
+- body:reply_markup.remove_keyboard boolean
+- body:reply_markup.force_reply boolean
+- body:reply_to_message_id integer
+- body:voice string
+
+## S397-0030  POST /setChatPhoto
+desc: Use this method to set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns *True* on success.
+- body:chat_id integer
+- body:photo any
+
+## S397-0031  POST /setChatStickerSet
+desc: Use this method to set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field *can\_set\_sticker\_set* optionally returned in [getChat](https://core.telegram.org/bots/api/#getchat) requests to check if the bot can use this method. Returns *True* on success.
+- body:chat_id integer
+- body:sticker_set_name string
+
+## S397-0032  POST /setPassportDataErrors
+desc: Informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns *True* on success. Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For exampl
+- body:errors array<object>
+- body:errors[].data_hash string
+- body:errors[].field_name string
+- body:errors[].message string
+- body:errors[].source string
+- body:errors[].type string enum[personal_details|passport|driver_license|identity_card|internal_passport|address]
+- body:errors[].file_hash string
+- body:errors[].file_hashes array<string>
+- body:errors[].element_hash string
+- body:user_id integer
+
+## S397-0033  POST /setStickerPositionInSet
+desc: Use this method to move a sticker in a set created by the bot to a specific position. Returns *True* on success.
+- body:position integer
+- body:sticker string
+
+## S397-0034  POST /stopMessageLiveLocation
+desc: Use this method to stop updating a live location message before *live\_period* expires. On success, if the message was sent by the bot, the sent [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is returned.
+- body:chat_id integer
+- body:inline_message_id string
+- body:message_id integer
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+
+## S397-0035  POST /stopPoll
+desc: Use this method to stop a poll which was sent by the bot. On success, the stopped [Poll](https://core.telegram.org/bots/api/#poll) with the final results is returned.
+- body:chat_id integer
+- body:message_id integer
+- body:reply_markup object
+- body:reply_markup.inline_keyboard array<array>
+
+## S397-0036  POST /unpinAllChatMessages
+desc: Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can\_pin\_messages' admin right in a supergroup or 'can\_edit\_messages' admin right in a channel. Returns *True* on success.
+- body:chat_id integer
+
+## S398-0001  POST /search/{versionNumber}/geometryFilter.{ext}
+summary: Geometry Filter
+- path:versionNumber integer enum[2]
+- path:ext string enum[json|jsonp|js|xml]
+- body:geometryList array<object>
+- body:geometryList[].position string
+- body:geometryList[].radius integer
+- body:geometryList[].type string
+- body:geometryList[].vertices array<string>
+- body:poiList array<object>
+- body:poiList[].address object
+- body:poiList[].address.freeformAddress string
+- body:poiList[].poi object
+- body:poiList[].poi.name string
+- body:poiList[].position object
+- body:poiList[].position.lat number
+- body:poiList[].position.lon number
+
+## S398-0002  POST /search/{versionNumber}/geometrySearch/{query}.{ext}
+summary: Geometry Search
+- path:versionNumber integer enum[2]
+- path:query string
+- path:ext string enum[json|jsonp|js|xml]
+- query:limit integer
+- query:language string
+- query:extendedPostalCodesFor string
+- query:idxSet string
+- body:geometryList array<object>
+- body:geometryList[].position string
+- body:geometryList[].radius integer
+- body:geometryList[].type string
+- body:geometryList[].vertices array<string>
+
+## S398-0003  POST /search/{versionNumber}/routedFilter/{position}/{heading}.{ext}
+summary: Routed Filter
+- path:versionNumber integer enum[2]
+- path:position string
+- path:heading number
+- path:ext string enum[json|jsonp|js|xml]
+- query:routingTimeout integer
+- body:poiList array<object>
+- body:poiList[].address object
+- body:poiList[].address.freeformAddress string
+- body:poiList[].poi object
+- body:poiList[].poi.name string
+- body:poiList[].position object
+- body:poiList[].position.lat number
+- body:poiList[].position.lon number
+
+## S398-0004  POST /search/{versionNumber}/searchAlongRoute/{query}.{ext}
+summary: Along Route Search
+- path:versionNumber integer enum[2]
+- path:query string
+- path:ext string enum[json|jsonp|js|xml]
+- query:maxDetourTime integer
+- query:limit integer
+- body:route object
+- body:route.points array<object>
+- body:route.points[].lat number
+- body:route.points[].lon number
+
+## S399-0001  DELETE /api/albums/comments/{commentId}
+- path:commentId integer
+
+## S399-0002  POST /api/albums/comments/{commentId}
+- path:commentId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0003  DELETE /api/albums/{id}
+- path:id integer
+- query:notes string
+
+## S399-0004  DELETE /api/artists/comments/{commentId}
+- path:commentId integer
+
+## S399-0005  POST /api/artists/comments/{commentId}
+- path:commentId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0006  DELETE /api/artists/{id}
+- path:id integer
+- query:notes string
+
+## S399-0007  DELETE /api/comments/{entryType}-comments/{commentId}
+- path:entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- path:commentId integer
+
+## S399-0008  POST /api/discussions/comments/{commentId}
+- path:commentId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0009  POST /api/discussions/folders/{folderId}/topics
+- path:folderId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:commentCount integer
+- body:comments array<object>
+- body:comments[].author object
+- body:comments[].author.active boolean
+- body:comments[].author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:comments[].author.id integer
+- body:comments[].author.knownLanguages array<object>
+- body:comments[].author.mainPicture object
+- body:comments[].author.memberSince string
+- body:comments[].author.name string
+- body:comments[].author.oldUsernames array<object>
+- body:comments[].author.verifiedArtist boolean
+- body:comments[].authorName string
+- body:comments[].created string
+- body:comments[].entry object
+- body:comments[].entry.activityDate string
+- body:comments[].entry.additionalNames string
+- body:comments[].entry.artistString string
+- body:comments[].entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:comments[].entry.createDate string
+- body:comments[].entry.defaultName string
+- body:comments[].entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:comments[].entry.description string
+- body:comments[].entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:comments[].entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:comments[].entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:comments[].entry.id integer
+- body:comments[].entry.mainPicture object
+- body:comments[].entry.name string
+- body:comments[].entry.names array<object>
+- body:comments[].entry.pvs array<object>
+- body:comments[].entry.releaseEventSeriesName string
+- body:comments[].entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:comments[].entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:comments[].entry.status string enum[Draft|Finished|Approved|Locked]
+- body:comments[].entry.tagCategoryName string
+- body:comments[].entry.tags array<object>
+- body:comments[].entry.urlSlug string
+- body:comments[].entry.version integer
+- body:comments[].entry.webLinks array<object>
+- body:comments[].id integer
+- body:comments[].message string
+- body:content string
+- body:created string
+- body:folderId integer
+- body:id integer
+- body:lastComment object
+- body:lastComment.author object
+- body:lastComment.author.active boolean
+- body:lastComment.author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:lastComment.author.id integer
+- body:lastComment.author.knownLanguages array<object>
+- body:lastComment.author.mainPicture object
+- body:lastComment.author.memberSince string
+- body:lastComment.author.name string
+- body:lastComment.author.oldUsernames array<object>
+- body:lastComment.author.verifiedArtist boolean
+- body:lastComment.authorName string
+- body:lastComment.created string
+- (30 truong bi cat)
+
+## S399-0010  POST /api/discussions/topics/{topicId}
+- path:topicId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:commentCount integer
+- body:comments array<object>
+- body:comments[].author object
+- body:comments[].author.active boolean
+- body:comments[].author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:comments[].author.id integer
+- body:comments[].author.knownLanguages array<object>
+- body:comments[].author.mainPicture object
+- body:comments[].author.memberSince string
+- body:comments[].author.name string
+- body:comments[].author.oldUsernames array<object>
+- body:comments[].author.verifiedArtist boolean
+- body:comments[].authorName string
+- body:comments[].created string
+- body:comments[].entry object
+- body:comments[].entry.activityDate string
+- body:comments[].entry.additionalNames string
+- body:comments[].entry.artistString string
+- body:comments[].entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:comments[].entry.createDate string
+- body:comments[].entry.defaultName string
+- body:comments[].entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:comments[].entry.description string
+- body:comments[].entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:comments[].entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:comments[].entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:comments[].entry.id integer
+- body:comments[].entry.mainPicture object
+- body:comments[].entry.name string
+- body:comments[].entry.names array<object>
+- body:comments[].entry.pvs array<object>
+- body:comments[].entry.releaseEventSeriesName string
+- body:comments[].entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:comments[].entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:comments[].entry.status string enum[Draft|Finished|Approved|Locked]
+- body:comments[].entry.tagCategoryName string
+- body:comments[].entry.tags array<object>
+- body:comments[].entry.urlSlug string
+- body:comments[].entry.version integer
+- body:comments[].entry.webLinks array<object>
+- body:comments[].id integer
+- body:comments[].message string
+- body:content string
+- body:created string
+- body:folderId integer
+- body:id integer
+- body:lastComment object
+- body:lastComment.author object
+- body:lastComment.author.active boolean
+- body:lastComment.author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:lastComment.author.id integer
+- body:lastComment.author.knownLanguages array<object>
+- body:lastComment.author.mainPicture object
+- body:lastComment.author.memberSince string
+- body:lastComment.author.name string
+- body:lastComment.author.oldUsernames array<object>
+- body:lastComment.author.verifiedArtist boolean
+- body:lastComment.authorName string
+- body:lastComment.created string
+- (30 truong bi cat)
+
+## S399-0011  POST /api/discussions/topics/{topicId}/comments
+- path:topicId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0012  DELETE /api/releaseEventSeries/{id}
+- path:id integer
+- query:notes string
+- query:hardDelete boolean
+
+## S399-0013  POST /api/releaseEvents/{eventId}/reports
+- path:eventId integer
+- query:reportType string enum[InvalidInfo|Duplicate|Inappropriate|Other]
+- query:notes string
+- query:versionNumber integer
+
+## S399-0014  POST /api/songLists
+- body:deleted boolean
+- body:description string
+- body:eventDate string
+- body:featuredCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:id integer
+- body:mainPicture object
+- body:mainPicture.mime string
+- body:mainPicture.name string
+- body:mainPicture.urlOriginal string
+- body:mainPicture.urlSmallThumb string
+- body:mainPicture.urlThumb string
+- body:mainPicture.urlTinyThumb string
+- body:name string
+- body:songLinks array<object>
+- body:songLinks[].notes string
+- body:songLinks[].order integer
+- body:songLinks[].song object
+- body:songLinks[].song.additionalNames string
+- body:songLinks[].song.albums array<object>
+- body:songLinks[].song.artistString string
+- body:songLinks[].song.artists array<object>
+- body:songLinks[].song.createDate string
+- body:songLinks[].song.defaultName string
+- body:songLinks[].song.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:songLinks[].song.deleted boolean
+- body:songLinks[].song.favoritedTimes integer
+- body:songLinks[].song.id integer
+- body:songLinks[].song.lengthSeconds integer
+- body:songLinks[].song.lyrics array<object>
+- body:songLinks[].song.mainPicture object
+- body:songLinks[].song.maxMilliBpm integer
+- body:songLinks[].song.mergedTo integer
+- body:songLinks[].song.minMilliBpm integer
+- body:songLinks[].song.name string
+- body:songLinks[].song.names array<object>
+- body:songLinks[].song.originalVersionId integer
+- body:songLinks[].song.publishDate string
+- body:songLinks[].song.pvServices string enum[Nothing|NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:songLinks[].song.pvs array<object>
+- body:songLinks[].song.ratingScore integer
+- body:songLinks[].song.releaseEvent object
+- body:songLinks[].song.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:songLinks[].song.status string enum[Draft|Finished|Approved|Locked]
+- body:songLinks[].song.tags array<object>
+- body:songLinks[].song.thumbUrl string
+- body:songLinks[].song.version integer
+- body:songLinks[].song.webLinks array<object>
+- body:songLinks[].songInListId integer
+- body:status string enum[Draft|Finished|Approved|Locked]
+- body:updateNotes string
+
+## S399-0015  POST /api/songLists/comments/{commentId}
+- path:commentId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0016  DELETE /api/songLists/{id}
+- path:id integer
+- query:notes string
+- query:hardDelete boolean
+
+## S399-0017  POST /api/songLists/{listId}/comments
+- path:listId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0018  POST /api/songs/comments/{commentId}
+- path:commentId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0019  DELETE /api/songs/{id}
+- path:id integer
+- query:notes string
+
+## S399-0020  POST /api/songs/{id}/comments
+- path:id integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0021  POST /api/songs/{id}/ratings
+- path:id integer
+- body:rating string enum[Nothing|Dislike|Like|Favorite]
+
+## S399-0022  POST /api/tags
+- query:name string
+
+## S399-0023  DELETE /api/tags/comments/{commentId}
+- path:commentId integer
+
+## S399-0024  DELETE /api/tags/{id}
+- path:id integer
+- query:notes string
+- query:hardDelete boolean
+
+## S399-0025  POST /api/tags/{tagId}/comments
+- path:tagId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0026  DELETE /api/users/current/followedTags/{tagId}
+- path:tagId integer
+
+## S399-0027  POST /api/users/current/followedTags/{tagId}
+- path:tagId integer
+
+## S399-0028  POST /api/users/current/refreshEntryEdit
+- query:entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- query:entryId integer
+
+## S399-0029  POST /api/users/current/songTags/{songId}
+- path:songId integer
+
+## S399-0030  DELETE /api/users/profileComments/{commentId}
+- path:commentId integer
+
+## S399-0031  POST /api/users/profileComments/{commentId}
+- path:commentId integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0032  DELETE /api/users/{id}/messages
+- path:id integer
+- query:messageId array<integer>
+
+## S399-0033  POST /api/users/{id}/profileComments
+- path:id integer
+- body:author object
+- body:author.active boolean
+- body:author.groupId string enum[Nothing|Limited|Regular|Trusted|Moderator|Admin]
+- body:author.id integer
+- body:author.knownLanguages array<object>
+- body:author.knownLanguages[].cultureCode string
+- body:author.knownLanguages[].proficiency string enum[Nothing|Basics|Intermediate|Advanced|Native]
+- body:author.mainPicture object
+- body:author.mainPicture.mime string
+- body:author.mainPicture.name string
+- body:author.mainPicture.urlOriginal string
+- body:author.mainPicture.urlSmallThumb string
+- body:author.mainPicture.urlThumb string
+- body:author.mainPicture.urlTinyThumb string
+- body:author.memberSince string
+- body:author.name string
+- body:author.oldUsernames array<object>
+- body:author.oldUsernames[].date string
+- body:author.oldUsernames[].oldName string
+- body:author.verifiedArtist boolean
+- body:authorName string
+- body:created string
+- body:entry object
+- body:entry.activityDate string
+- body:entry.additionalNames string
+- body:entry.artistString string
+- body:entry.artistType string enum[Unknown|Circle|Label|Producer|Animator|Illustrator|Lyricist|Vocaloid|UTAU|CeVIO|OtherVoiceSynthesizer|OtherVocalist]
+- body:entry.createDate string
+- body:entry.defaultName string
+- body:entry.defaultNameLanguage string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.description string
+- body:entry.discType string enum[Unknown|Album|Single|EP|SplitAlbum|Compilation|Video|Artbook|Game|Fanmade|Instrumental|Other]
+- body:entry.entryType string enum[Undefined|Album|Artist|DiscussionTopic|PV|ReleaseEvent|ReleaseEventSeries|Song|SongList|Tag|User|Venue]
+- body:entry.eventCategory string enum[Unspecified|AlbumRelease|Anniversary|Club|Concert|Contest|Convention|Other|Festival]
+- body:entry.id integer
+- body:entry.mainPicture object
+- body:entry.mainPicture.mime string
+- body:entry.mainPicture.name string
+- body:entry.mainPicture.urlOriginal string
+- body:entry.mainPicture.urlSmallThumb string
+- body:entry.mainPicture.urlThumb string
+- body:entry.mainPicture.urlTinyThumb string
+- body:entry.name string
+- body:entry.names array<object>
+- body:entry.names[].language string enum[Unspecified|Japanese|Romaji|English]
+- body:entry.names[].value string
+- body:entry.pvs array<object>
+- body:entry.pvs[].author string
+- body:entry.pvs[].createdBy integer
+- body:entry.pvs[].disabled boolean
+- body:entry.pvs[].extendedMetadata object
+- body:entry.pvs[].id integer
+- body:entry.pvs[].length integer
+- body:entry.pvs[].name string
+- body:entry.pvs[].publishDate string
+- body:entry.pvs[].pvId string
+- body:entry.pvs[].pvType string enum[Original|Reprint|Other]
+- body:entry.pvs[].service string enum[NicoNicoDouga|Youtube|SoundCloud|Vimeo|Piapro|Bilibili|File|LocalFile|Creofuga|Bandcamp]
+- body:entry.pvs[].thumbUrl string
+- body:entry.pvs[].url string
+- body:entry.releaseEventSeriesName string
+- body:entry.songListFeaturedCategory string enum[Nothing|Concerts|VocaloidRanking|Pools|Other]
+- body:entry.songType string enum[Unspecified|Original|Remaster|Remix|Cover|Arrangement|Instrumental|Mashup|MusicPV|DramaPV|Live|Illustration]
+- body:entry.status string enum[Draft|Finished|Approved|Locked]
+- body:entry.tagCategoryName string
+- body:entry.tags array<object>
+- body:entry.tags[].count integer
+- body:entry.tags[].tag object
+- body:entry.urlSlug string
+- body:entry.version integer
+- body:entry.webLinks array<object>
+- body:entry.webLinks[].category string enum[Official|Commercial|Reference|Other]
+- body:entry.webLinks[].description string
+- body:entry.webLinks[].disabled boolean
+- body:entry.webLinks[].url string
+- body:id integer
+- body:message string
+
+## S399-0034  POST /api/users/{id}/reports
+- path:id integer
+- body:reason string
+- body:reportType string enum[MaliciousIP|Spamming|RemovePermissions|Other]
+
+## S399-0035  POST /api/users/{id}/settings/{settingName}
+- path:id integer
+- path:settingName string
+- body:(body) string
+
+## S399-0036  POST /api/venues/{id}/reports
+- path:id integer
+- query:reportType string enum[InvalidInfo|Duplicate|Inappropriate|Other]
+- query:notes string
+- query:versionNumber integer

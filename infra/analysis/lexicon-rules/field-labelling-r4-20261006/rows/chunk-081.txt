@@ -1,0 +1,520 @@
+## S101-N0038  POST /v0.1/apps/{owner_name}/{app_name}/device_selection
+desc: Creates a short ID for a list of devices
+- path:owner_name string
+- path:app_name string
+- body:devices array<string>
+
+## S101-N0039  PUT /v0.1/apps/{owner_name}/{app_name}/devices/block_logs
+desc: **Warning, this operation is not reversible.** A successful call to this API will permanently stop ingesting any logs received via SDK by app_id, and cannot be restored. We advise caution when using this API, it is designed to permanently disable an app_id.
+- path:owner_name string
+- path:app_name string
+
+## S101-N0042  DELETE /v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}
+desc: Deletes a distribution group
+- path:app_name string
+- path:owner_name string
+- path:distribution_group_name string
+
+## S101-N0045  POST /v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/members/bulk_delete
+desc: Remove the users from the distribution group
+- path:owner_name string
+- path:app_name string
+- path:distribution_group_name string
+- body:user_emails array<string>
+
+## S101-N0046  DELETE /v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/releases/{release_id}
+desc: Deletes a release with id 'release_id' in a given distribution group.
+- path:owner_name string
+- path:app_name string
+- path:distribution_group_name string
+- path:release_id integer
+
+## S101-N0049  DELETE /v0.1/apps/{owner_name}/{app_name}/distribution_stores/{store_name}
+desc: delete the store based on specific store name.
+- path:store_name string
+- path:owner_name string
+- path:app_name string
+- body:(body) string
+
+## S101-N0050  PATCH /v0.1/apps/{owner_name}/{app_name}/distribution_stores/{store_name}
+desc: Update the store.
+- path:store_name string
+- path:owner_name string
+- path:app_name string
+- body:service_connection_id string
+
+## S101-N0051  DELETE /v0.1/apps/{owner_name}/{app_name}/distribution_stores/{store_name}/releases/{release_id}
+desc: delete the release with release Id
+- path:store_name string
+- path:release_id string
+- path:owner_name string
+- path:app_name string
+- body:(body) string
+
+## S101-N0052  PATCH /v0.1/apps/{owner_name}/{app_name}/errors/errorGroups/{errorGroupId}
+desc: Update error group state
+- path:errorGroupId string
+- path:owner_name string
+- path:app_name string
+- body:annotation string
+- body:state string enum[open|closed|ignored]
+
+## S101-N0053  DELETE /v0.1/apps/{owner_name}/{app_name}/errors/errorGroups/{errorGroupId}/errors/{errorId}
+desc: Delete a specific error and related attachments and blobs for an app. Searchable data will not be deleted immediately and may take up to 30 days.
+- path:errorGroupId string
+- path:errorId string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0054  POST /v0.1/apps/{owner_name}/{app_name}/export_configurations
+desc: Create new export configuration
+- path:owner_name string
+- path:app_name string
+- body:backfill boolean
+- body:export_entities array<string> enum[crashes|errors|attachments|no_logs]
+- body:resource_group string
+- body:resource_name string
+- body:type string enum[blob_storage_connection_string|application_insights_instrumentation_key|blob_storage_linked_subscription|application_insights_linked_subscription]
+
+## S101-N0057  POST /v0.1/apps/{owner_name}/{app_name}/export_configurations/{export_configuration_id}/disable
+desc: Disable export configuration.
+- path:export_configuration_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0058  POST /v0.1/apps/{owner_name}/{app_name}/export_configurations/{export_configuration_id}/enable
+desc: Enable export configuration.
+- path:export_configuration_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0059  POST /v0.1/apps/{owner_name}/{app_name}/file_asset
+desc: Create a new asset to upload a file
+- path:owner_name string
+- path:app_name string
+- body:(body) object
+
+## S101-N0060  POST /v0.1/apps/{owner_name}/{app_name}/invitations
+desc: Invites a new or existing user to an app
+- path:owner_name string
+- path:app_name string
+- body:role string enum[admin|collaborator|member]
+- body:user_email string
+
+## S101-N0061  DELETE /v0.1/apps/{owner_name}/{app_name}/invitations/{user_email}
+desc: Removes a user's invitation to an app
+- path:owner_name string
+- path:app_name string
+- path:user_email string
+
+## S101-N0062  PATCH /v0.1/apps/{owner_name}/{app_name}/invitations/{user_email}
+desc: Update pending invitation permission
+- path:owner_name string
+- path:app_name string
+- path:user_email string
+- body:permissions array<string> enum[manager|developer|viewer]
+
+## S101-N0064  POST /v0.1/apps/{owner_name}/{app_name}/owner/device_sets
+desc: Creates a device set belonging to the owner
+- path:owner_name string
+- path:app_name string
+- body:devices array<string>
+- body:name string
+
+## S101-N0065  DELETE /v0.1/apps/{owner_name}/{app_name}/owner/device_sets/{id}
+desc: Deletes a device set belonging to the owner
+- path:id string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0066  PUT /v0.1/apps/{owner_name}/{app_name}/owner/device_sets/{id}
+desc: Updates a device set belonging to the owner
+- path:id string
+- path:owner_name string
+- path:app_name string
+- body:devices array<string>
+- body:name string
+
+## S101-N0067  DELETE /v0.1/apps/{owner_name}/{app_name}/releases/{release_id}
+desc: Deletes a release.
+- path:release_id integer
+- path:owner_name string
+- path:app_name string
+
+## S101-N0068  PATCH /v0.1/apps/{owner_name}/{app_name}/releases/{release_id}
+desc: Updates a release.
+- path:release_id integer
+- path:owner_name string
+- path:app_name string
+- body:build object
+- body:build.branch_name string
+- body:build.commit_hash string
+- body:build.commit_message string
+- body:destination_id string
+- body:destination_name string
+- body:destination_type string
+- body:destinations array<object>
+- body:destinations[].id string
+- body:destinations[].name string
+- body:distribution_group_id string
+- body:distribution_group_name string
+- body:mandatory_update boolean
+- body:metadata object
+- body:metadata.dsa_signature string
+- body:metadata.ed_signature string
+- body:notify_testers boolean
+- body:release_notes string
+
+## S101-N0070  POST /v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/groups
+desc: Distributes a release to a group
+- path:release_id integer
+- path:owner_name string
+- path:app_name string
+- body:id string
+- body:mandatory_update boolean
+- body:notify_testers boolean
+
+## S101-N0071  DELETE /v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/groups/{group_id}
+desc: Delete the given distribution group from the release
+- path:release_id integer
+- path:group_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0072  PUT /v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/groups/{group_id}
+desc: Update details about the specified distribution group associated with the release
+- path:release_id integer
+- path:group_id string
+- path:owner_name string
+- path:app_name string
+- body:mandatory_update boolean
+
+## S101-N0073  POST /v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/stores
+desc: Distributes a release to a store
+- path:release_id integer
+- path:owner_name string
+- path:app_name string
+- body:id string
+
+## S101-N0074  DELETE /v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/stores/{store_id}
+desc: Delete the given distribution store from the release
+- path:release_id integer
+- path:store_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0077  PUT /v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/testers/{tester_id}
+desc: Update details about the specified tester associated with the release
+- path:release_id integer
+- path:tester_id string
+- path:owner_name string
+- path:app_name string
+- body:mandatory_update boolean
+
+## S101-N0078  DELETE /v0.1/apps/{owner_name}/{app_name}/repo_config
+desc: Removes the configuration for the repository
+- path:owner_name string
+- path:app_name string
+
+## S101-N0079  POST /v0.1/apps/{owner_name}/{app_name}/repo_config
+desc: Configures the repository for build
+- path:owner_name string
+- path:app_name string
+- body:installation_id string
+- body:external_user_id string
+- body:repo_id string
+- body:repo_url string
+- body:service_connection_id string
+
+## S101-N0080  POST /v0.1/apps/{owner_name}/{app_name}/subscriptions
+desc: Accept a free trial subscription
+- path:owner_name string
+- path:app_name string
+
+## S101-N0081  POST /v0.1/apps/{owner_name}/{app_name}/symbol_uploads
+desc: Begins the symbol upload process for a new set of symbols for the specified application
+- path:owner_name string
+- path:app_name string
+- body:build string
+- body:client_callback string
+- body:file_name string
+- body:symbol_type string enum[Apple|JavaScript|Breakpad|AndroidProguard|UWP]
+- body:version string
+
+## S101-N0082  DELETE /v0.1/apps/{owner_name}/{app_name}/symbol_uploads/{symbol_upload_id}
+desc: Deletes a symbol upload by id for the specified application
+- path:symbol_upload_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0084  POST /v0.1/apps/{owner_name}/{app_name}/symbols/{symbol_id}/ignore
+desc: Marks a symbol by id (uuid) as ignored
+- path:symbol_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0085  POST /v0.1/apps/{owner_name}/{app_name}/test_runs
+desc: Creates a new test run
+- path:owner_name string
+- path:app_name string
+
+## S101-N0086  DELETE /v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}
+desc: Logically deletes a test run
+- path:test_run_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0087  POST /v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/files
+desc: Uploads file for a test run
+- path:test_run_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0088  POST /v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/hashes
+desc: Adds file with the given hash to a test run
+- path:test_run_id string
+- path:owner_name string
+- path:app_name string
+- body:byte_range string
+- body:checksum string
+- body:file_type string enum[dsym-file|app-file|test-file]
+- body:relative_path string
+
+## S101-N0089  POST /v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/hashes/batch
+desc: Adds file with the given hash to a test run
+- path:test_run_id string
+- path:owner_name string
+- path:app_name string
+- body:checksum string
+- body:fileType string enum[dsym-file|app-file|test-file]
+- body:relativePath string
+
+## S101-N0091  PUT /v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/stop
+desc: Stop a test run execution
+- path:test_run_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0092  POST /v0.1/apps/{owner_name}/{app_name}/test_series
+desc: Creates new test series for an application
+- path:owner_name string
+- path:app_name string
+- body:name string
+
+## S101-N0093  DELETE /v0.1/apps/{owner_name}/{app_name}/test_series/{test_series_slug}
+desc: Deletes a single test series
+- path:test_series_slug string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0094  PATCH /v0.1/apps/{owner_name}/{app_name}/test_series/{test_series_slug}
+desc: Updates name and slug of a test series
+- path:test_series_slug string
+- path:owner_name string
+- path:app_name string
+- body:name string
+
+## S101-N0095  DELETE /v0.1/apps/{owner_name}/{app_name}/testers/{tester_id}
+desc: Delete the given tester from the all releases
+- path:tester_id string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0096  POST /v0.1/apps/{owner_name}/{app_name}/transfer/{destination_owner_name}
+desc: Transfers ownership of an app to a different user or organization
+- path:owner_name string
+- path:app_name string
+- path:destination_owner_name string
+- body:(body) object
+
+## S101-N0097  POST /v0.1/apps/{owner_name}/{app_name}/transfer_to_org
+desc: Transfers ownership of an app to a new organization
+- path:owner_name string
+- path:app_name string
+- body:(body) object
+
+## S101-N0098  POST /v0.1/apps/{owner_name}/{app_name}/uploads/releases
+desc: Initiate a new release upload. This API is part of multi-step upload process.
+- path:owner_name string
+- path:app_name string
+- body:build_number string
+- body:build_version string
+
+## S101-N0099  PATCH /v0.1/apps/{owner_name}/{app_name}/uploads/releases/{upload_id}
+desc: Update the current status of the release upload.
+- path:upload_id string
+- path:owner_name string
+- path:app_name string
+- query:extract boolean
+- body:upload_status string enum[uploadFinished|uploadCanceled]
+
+## S101-N0100  POST /v0.1/apps/{owner_name}/{app_name}/user/device_sets
+desc: Creates a device set belonging to the user
+- path:owner_name string
+- path:app_name string
+- body:devices array<string>
+- body:name string
+
+## S101-N0101  DELETE /v0.1/apps/{owner_name}/{app_name}/user/device_sets/{id}
+desc: Deletes a device set belonging to the user
+- path:id string
+- path:owner_name string
+- path:app_name string
+
+## S101-N0105  POST /v0.1/legacy/reportStatus/deploy
+desc: Report deploy of specified release
+- body:appVersion string
+- body:clientUniqueId string
+- body:deploymentKey string
+- body:label string
+- body:previousDeploymentKey string
+- body:previousLabelOrAppVersion string
+- body:status string
+
+## S101-N0106  POST /v0.1/legacy/reportStatus/download
+desc: Report download of specified release
+- body:appVersion string
+- body:clientUniqueId string
+- body:deploymentKey string
+- body:label string
+- body:previousDeploymentKey string
+- body:previousLabelOrAppVersion string
+- body:status string
+
+## S101-N0107  POST /v0.1/orgs
+desc: Creates a new organization and returns it to the caller
+- body:display_name string
+- body:name string
+
+## S101-N0108  DELETE /v0.1/orgs/{org_name}
+desc: Deletes a single organization
+- path:org_name string
+
+## S101-N0109  PATCH /v0.1/orgs/{org_name}
+desc: Returns a list of organizations the requesting user has access to
+- path:org_name string
+- body:display_name string
+- body:name string
+
+## S101-N0110  POST /v0.1/orgs/{org_name}/apps
+desc: Creates a new app for the organization and returns it to the caller
+- path:org_name string
+- body:description string
+- body:display_name string
+- body:name string
+- body:os string enum[Android|iOS|macOS|Tizen|tvOS|Windows|Linux|Custom]
+- body:platform string enum[Java|Objective-C-Swift|UWP|Cordova|React-Native|Xamarin|Unity|Electron|WPF|WinForms|Custom]
+- body:release_type string
+
+## S101-N0111  DELETE /v0.1/orgs/{org_name}/avatar
+desc: Deletes the uploaded organization avatar
+- path:org_name string
+
+## S101-N0114  DELETE /v0.1/orgs/{org_name}/distribution_groups/{distribution_group_name}
+desc: Deletes a single distribution group from an org with a given distribution group name
+- path:org_name string
+- path:distribution_group_name string
+
+## S101-N0115  PATCH /v0.1/orgs/{org_name}/distribution_groups/{distribution_group_name}
+desc: Update one given distribution group name in an org
+- path:org_name string
+- path:distribution_group_name string
+- body:is_public boolean
+- body:name string
+
+## S101-N0116  POST /v0.1/orgs/{org_name}/distribution_groups/{distribution_group_name}/apps
+desc: Add apps to distribution group in an org
+- path:org_name string
+- path:distribution_group_name string
+- body:apps array<object>
+- body:apps[].name string
+
+## S101-N0118  POST /v0.1/orgs/{org_name}/distribution_groups/{distribution_group_name}/members
+desc: Accepts an array of user email addresses to get added to the specified group
+- path:org_name string
+- path:distribution_group_name string
+- body:user_emails array<string>
+
+## S101-N0119  POST /v0.1/orgs/{org_name}/distribution_groups/{distribution_group_name}/members/bulk_delete
+desc: Delete testers from distribution group in an org
+- path:org_name string
+- path:distribution_group_name string
+- body:user_emails array<string>
+
+## S101-N0120  POST /v0.1/orgs/{org_name}/distribution_groups/{distribution_group_name}/resend_invite
+desc: Resend shared distribution group invite notification to previously invited testers
+- path:org_name string
+- path:distribution_group_name string
+- body:user_emails array<string>
+
+## S101-N0122  POST /v0.1/orgs/{org_name}/invitations
+desc: Invites a new or existing user to an organization
+- path:org_name string
+- body:role string enum[admin|collaborator|member]
+- body:user_email string
+
+## S101-N0123  PATCH /v0.1/orgs/{org_name}/invitations/{email}
+desc: Allows the role of an invited user to be changed
+- path:org_name string
+- path:email string
+- body:role string enum[admin|collaborator|member]
+
+## S101-N0124  POST /v0.1/orgs/{org_name}/invitations/{email}/resend
+desc: Cancels an existing organization invitation for the user and sends a new one
+- path:org_name string
+- path:email string
+- body:role string enum[admin|collaborator|member]
+
+## S101-N0126  POST /v0.1/orgs/{org_name}/teams
+desc: Creates a team and returns it
+- path:org_name string
+- body:description string
+- body:display_name string
+- body:name string
+
+## S101-N0127  DELETE /v0.1/orgs/{org_name}/teams/{team_name}
+desc: Deletes a single team
+- path:org_name string
+- path:team_name string
+
+## S101-N0128  PATCH /v0.1/orgs/{org_name}/teams/{team_name}
+desc: Updates a single team
+- path:org_name string
+- path:team_name string
+- body:display_name string
+
+## S101-N0129  POST /v0.1/orgs/{org_name}/teams/{team_name}/apps
+desc: Adds an app to a team
+- path:org_name string
+- path:team_name string
+- body:name string
+
+## S101-N0130  DELETE /v0.1/orgs/{org_name}/teams/{team_name}/apps/{app_name}
+desc: Removes an app from a team
+- path:org_name string
+- path:team_name string
+- path:app_name string
+
+## S101-N0131  PATCH /v0.1/orgs/{org_name}/teams/{team_name}/apps/{app_name}
+desc: Updates the permissions the team has to the app
+- path:org_name string
+- path:team_name string
+- path:app_name string
+- body:permissions array<string> enum[manager|developer|viewer]
+
+## S101-N0133  DELETE /v0.1/orgs/{org_name}/teams/{team_name}/users/{user_name}
+desc: Removes a user from a team that is owned by an organization
+- path:org_name string
+- path:team_name string
+- path:user_name string
+
+## S101-N0134  DELETE /v0.1/orgs/{org_name}/users/{user_name}
+desc: Removes a user from an organization.
+- path:org_name string
+- path:user_name string
+
+## S101-N0135  PATCH /v0.1/orgs/{org_name}/users/{user_name}
+desc: Updates the given organization user
+- path:org_name string
+- path:user_name string
+- body:role string enum[admin|collaborator|member]

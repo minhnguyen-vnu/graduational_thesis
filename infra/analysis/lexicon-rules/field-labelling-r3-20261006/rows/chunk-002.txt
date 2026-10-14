@@ -1,0 +1,644 @@
+## S103-0027  POST /volumes/{name}
+desc: Share a volume with another space | This endpoint provisions an existing volume that was created in one space to another space within the same organization. Single containers and container groups in each space can read and write to the shared volume. The volume remains owned by the original space it was created in, including management and billing. For example, the volume can be deleted from the o
+schema: UpdateVolume
+- path:name string
+- body:addSpaces array<string>
+- body:removeSpaces array<string>
+
+## S104-0001  POST /v1/code-references
+schema: CodeReferenceRequest
+- body:activeBranches array<string>
+- body:branch string
+- body:commitHash string
+- body:commitUrl string
+- body:configId string
+- body:flagReferences array<object>
+- body:flagReferences[].references array<object>
+- body:flagReferences[].references[].file string
+- body:flagReferences[].references[].fileUrl string
+- body:flagReferences[].references[].postLines array<object>
+- body:flagReferences[].references[].preLines array<object>
+- body:flagReferences[].references[].referenceLine object
+- body:flagReferences[].settingId integer
+- body:repository string
+- body:uploader string
+
+## S104-0002  POST /v1/code-references/delete-reports
+schema: DeleteRepositoryReportsRequest
+- body:branch string
+- body:configId string
+- body:repository string
+- body:settingId integer
+
+## S104-0004  PUT /v1/configs/{configId}
+desc: Update Config | This endpoint updates a Config identified by the `configId` parameter.
+schema: UpdateConfigRequest
+- path:configId string
+- body:description string
+- body:name string
+
+## S104-0005  POST /v1/configs/{configId}/settings
+desc: Create Flag | This endpoint creates a new Feature Flag or Setting in a specified Config identified by the `configId` parameter. **Important:** The `key` attribute must be unique within the given Config.
+schema: CreateSettingInitialValues
+- path:configId string
+- body:hint string
+- body:initialValues array<object>
+- body:initialValues[].environmentId string
+- body:initialValues[].value any
+- body:key string
+- body:name string
+- body:settingType string enum[boolean|string|int|double]
+- body:tags array<integer>
+
+## S104-0007  PUT /v1/environments/{environmentId}
+desc: Update Environment | This endpoint updates an Environment identified by the `environmentId` parameter.
+schema: UpdateEnvironmentModel
+- path:environmentId string
+- body:color string
+- body:description string
+- body:name string
+
+## S104-0008  DELETE /v1/environments/{environmentId}/settings/{settingId}/integrationLinks/{integrationLinkType}/{key}
+desc: Delete Integration link
+- path:environmentId string
+- path:settingId integer
+- path:integrationLinkType string enum[trello|jira|monday]
+- path:key string
+
+## S104-0012  POST /v1/jira/Connect
+schema: ConnectRequest
+- body:clientKey string
+- body:jiraJwtToken string
+
+## S104-0014  DELETE /v1/organizations/{organizationId}/members/{userId}
+desc: Delete Member from Organization | This endpoint removes a Member identified by the `userId` from the given Organization identified by the `organizationId` parameter.
+- path:organizationId string
+- path:userId string
+
+## S104-0015  POST /v1/organizations/{organizationId}/members/{userId}
+desc: Update Member Permissions | This endpoint adds a Member identified by the `userId` to one or more Permission Groups. This endpoint can also be used to move a Member between Permission Groups within a Product. Only a single Permission Group can be set per Product.
+schema: AddUserToGroupRequest
+- path:organizationId string
+- path:userId string
+- body:permissionGroupIds array<integer>
+
+## S104-0016  POST /v1/organizations/{organizationId}/products
+desc: Create Product | This endpoint creates a new Product in a specified Organization identified by the `organizationId` parameter, which can be obtained from the [List Organizations](#operation/get-organizations) endpoint.
+schema: CreateProductRequest
+- path:organizationId string
+- body:description string
+- body:name string
+
+## S104-0017  DELETE /v1/permissions/{permissionGroupId}
+desc: Delete Permission Group | This endpoint removes a Permission Group identified by the `permissionGroupId` parameter.
+- path:permissionGroupId integer
+
+## S104-0018  PUT /v1/permissions/{permissionGroupId}
+desc: Update Permission Group | This endpoint updates a Permission Group identified by the `permissionGroupId` parameter.
+schema: UpdatePermissionGroupRequest
+- path:permissionGroupId integer
+- body:accessType string enum[readOnly|full|custom]
+- body:canCreateOrUpdateConfig boolean
+- body:canCreateOrUpdateEnvironment boolean
+- body:canCreateOrUpdateSegments boolean
+- body:canCreateOrUpdateSetting boolean
+- body:canCreateOrUpdateTag boolean
+- body:canDeleteConfig boolean
+- body:canDeleteEnvironment boolean
+- body:canDeleteSegments boolean
+- body:canDeleteSetting boolean
+- body:canDeleteTag boolean
+- body:canManageIntegrations boolean
+- body:canManageMembers boolean
+- body:canManageProductPreferences boolean
+- body:canManageWebhook boolean
+- body:canRotateSdkKey boolean
+- body:canTagSetting boolean
+- body:canUseExportImport boolean
+- body:canViewProductAuditLog boolean
+- body:canViewProductStatistics boolean
+- body:canViewSdkKey boolean
+- body:environmentAccesses array<object>
+- body:environmentAccesses[].color string
+- body:environmentAccesses[].description string
+- body:environmentAccesses[].environmentAccessType string enum[full|readOnly|none]
+- body:environmentAccesses[].environmentId string
+- body:environmentAccesses[].name string
+- body:environmentAccesses[].order integer
+- body:environmentAccesses[].reasonRequired boolean
+- body:name string
+- body:newEnvironmentAccessType string enum[full|readOnly|none]
+
+## S104-0019  DELETE /v1/products/{productId}
+desc: Delete Product | This endpoint removes a Product identified by the `productId` parameter.
+- path:productId string
+
+## S104-0023  POST /v1/products/{productId}/members/invite
+desc: Invite Member | This endpoint invites a Member into the given Product identified by the `productId` parameter.
+schema: InviteMembersRequest
+- path:productId string
+- body:emails array<string>
+- body:permissionGroupId integer
+
+## S104-0024  DELETE /v1/products/{productId}/members/{userId}
+desc: Delete Member from Product | This endpoint removes a Member identified by the `userId` from the given Product identified by the `productId` parameter.
+- path:productId string
+- path:userId string
+
+## S104-0025  POST /v1/products/{productId}/permissions
+desc: Create Permission Group | This endpoint creates a new Permission Group in a specified Product identified by the `productId` parameter, which can be obtained from the [List Products](#operation/get-products) endpoint.
+schema: CreatePermissionGroupRequest
+- path:productId string
+- body:accessType string enum[readOnly|full|custom]
+- body:canCreateOrUpdateConfig boolean
+- body:canCreateOrUpdateEnvironment boolean
+- body:canCreateOrUpdateSegments boolean
+- body:canCreateOrUpdateSetting boolean
+- body:canCreateOrUpdateTag boolean
+- body:canDeleteConfig boolean
+- body:canDeleteEnvironment boolean
+- body:canDeleteSegments boolean
+- body:canDeleteSetting boolean
+- body:canDeleteTag boolean
+- body:canManageIntegrations boolean
+- body:canManageMembers boolean
+- body:canManageProductPreferences boolean
+- body:canManageWebhook boolean
+- body:canRotateSdkKey boolean
+- body:canTagSetting boolean
+- body:canUseExportImport boolean
+- body:canViewProductAuditLog boolean
+- body:canViewProductStatistics boolean
+- body:canViewSdkKey boolean
+- body:environmentAccesses array<object>
+- body:environmentAccesses[].color string
+- body:environmentAccesses[].description string
+- body:environmentAccesses[].environmentAccessType string enum[full|readOnly|none]
+- body:environmentAccesses[].environmentId string
+- body:environmentAccesses[].name string
+- body:environmentAccesses[].order integer
+- body:environmentAccesses[].reasonRequired boolean
+- body:name string
+- body:newEnvironmentAccessType string enum[full|readOnly|none]
+
+## S104-0027  POST /v1/products/{productId}/tags
+desc: Create Tag | This endpoint creates a new Tag in a specified Product identified by the `productId` parameter, which can be obtained from the [List Products](#operation/get-products) endpoint.
+schema: CreateTagModel
+- path:productId string
+- body:color string
+- body:name string
+
+## S104-0028  DELETE /v1/segments/{segmentId}
+desc: Delete Segment | This endpoint removes a Segment identified by the `segmentId` parameter.
+- path:segmentId string
+
+## S104-0029  PUT /v1/segments/{segmentId}
+desc: Update Segment | This endpoint updates a Segment identified by the `segmentId` parameter.
+schema: UpdateSegmentModel
+- path:segmentId string
+- body:comparator string enum[isOneOf|isNotOneOf|contains|doesNotContain|semVerIsOneOf|semVerIsNotOneOf|semVerLess|semVerLessOrEquals|semVerGreater|semVerGreaterOrEquals|numberEquals|numberDoesNotEqual]
+- body:comparisonAttribute string
+- body:comparisonValue string
+- body:description string
+- body:name string
+
+## S104-0031  PATCH /v1/settings/{settingId}
+desc: Update Flag | This endpoint updates the metadata of a Feature Flag or Setting with a collection of [JSON Patch](http://jsonpatch.com) operations in a specified Config. Only the `name`, `hint` and `tags` attributes are modifiable by this endpoint. The `tags` attribute is a simple collection of the [tag IDs](#operation/get-tags) attached to the given setting. The advantage of using JSON Patch is tha
+schema: JsonPatch
+- path:settingId integer
+- body:operations array<object>
+- body:operations[].from object
+- body:operations[].from.isUriEncoded boolean
+- body:operations[].from.kind string enum[unspecified|plain|uriEncoded]
+- body:operations[].from.segments array<object>
+- body:operations[].from.source string
+- body:operations[].op string enum[unknown|add|remove|replace|move|copy|test]
+- body:operations[].path object
+- body:operations[].path.isUriEncoded boolean
+- body:operations[].path.kind string enum[unspecified|plain|uriEncoded]
+- body:operations[].path.segments array<object>
+- body:operations[].path.source string
+- body:operations[].value object
+- body:operations[].value.options object
+- body:operations[].value.parent object
+- body:operations[].value.root object
+
+## S104-0035  PUT /v1/tags/{tagId}
+desc: Update Tag | This endpoint updates a Tag identified by the `tagId` parameter.
+schema: UpdateTagModel
+- path:tagId integer
+- body:color string
+- body:name string
+
+## S105-0001  POST /api/bank-accounts/verify
+desc: Verifies bank account details.
+schema: Credas.Api.Models.BankAccounts.AccountVerificationRequest
+- body:accountDetails object
+- body:accountDetails.accountNumber string
+- body:accountDetails.sortcode string
+- body:address object
+- body:address.addressLine1 string
+- body:address.addressLine2 string
+- body:address.addressLine3 string
+- body:address.city string
+- body:address.country string
+- body:address.county string
+- body:address.postcode string
+- body:person object
+- body:person.forename string
+- body:person.middleName string
+- body:person.surname string
+- body:regEntryId string
+
+## S105-0002  POST /api/companies
+desc: Searches for a company based on its Company Number and returns its details. | If a company appears multiple times within the structure, it will only be detailed in full (i.e. with significant ownership details) in its first instance. Subsequent instances will be marked as duplicates. Whilst duplicate instances of companies can and will be identified, it is not possible to categorically identify du
+- query:companyNumber string
+
+## S105-0003  POST /api/credit-status/perform
+desc: Check includes identifying bankruptcy, insolvency, CCJ's or Company Directorship.
+schema: Credas.Api.Models.StatusChecks.StatusCheckRequest
+- body:address object
+- body:address.addressLine1 string
+- body:address.addressLine2 string
+- body:address.addressLine3 string
+- body:address.city string
+- body:address.country string
+- body:address.county string
+- body:address.postcode string
+- body:person object
+- body:person.dateOfBirth string
+- body:person.forename string
+- body:person.middleName string
+- body:person.surname string
+- body:regEntryId string
+
+## S105-0004  POST /api/datachecks
+desc: Creates new data check against a specified registration.
+schema: Credas.Api.Models.DataCheck.AddDataCheckRequest
+- body:checkType integer enum[0|1|2|3]
+- body:currentAddress object
+- body:currentAddress.addressLine1 string
+- body:currentAddress.addressLine2 string
+- body:currentAddress.addressLine3 string
+- body:currentAddress.city string
+- body:currentAddress.country string
+- body:currentAddress.county string
+- body:currentAddress.postcode string
+- body:person object
+- body:person.dateOfBirth string
+- body:person.forename string
+- body:person.middleName string
+- body:person.surname string
+- body:regEntryId string
+
+## S105-0006  POST /api/images/liveness
+desc: Add a liveness image (UAP) to the specified registration.
+schema: Credas.Api.Models.Images.AddLivenessImageRequest
+- body:imageData string
+- body:registrationId string
+
+## S105-0007  POST /api/images/selfie
+desc: Add a selfie image to the registration.
+schema: Credas.Api.Models.Images.AddSelfieImageRequest
+- body:imageData string
+- body:registrationId string
+
+## S105-0008  POST /api/property-register
+desc: Creates new property registry check against the registration.
+schema: Credas.Api.Models.PropertyRegister.PropertyRegisterCheckRequest
+- body:address object
+- body:address.addressLine1 string
+- body:address.addressLine2 string
+- body:address.addressLine3 string
+- body:address.city string
+- body:address.country string
+- body:address.county string
+- body:address.postcode string
+- body:person object
+- body:person.forename string
+- body:person.middleName string
+- body:person.surname string
+- body:regEntryId string
+
+## S105-0009  POST /api/registrations
+desc: Creates new registration.
+schema: Credas.Api.Models.Registrations.AddRegistrationRequest
+- body:diallingCode string
+- body:duplicateAcknowledgement boolean
+- body:emailAddress string
+- body:forename string
+- body:middleName string
+- body:parameters array<object>
+- body:parameters[].key string
+- body:parameters[].value string
+- body:phoneNumber string
+- body:provideWebJourneyLink boolean
+- body:referenceId string
+- body:regTypeId string
+- body:returnUrls object
+- body:returnUrls.returnUrl string
+- body:sendEmail boolean
+- body:sendSms boolean
+- body:settings object
+- body:settings.capturePersonalDetails boolean
+- body:settings.nameMatchRoutine integer enum[1|2]
+- body:settings.requiredChecks array<integer> enum[0|1|2|3|4|5|6|7|8]
+- body:settings.skipEmailStep boolean
+- body:significantPersonId string
+- body:surname string
+
+## S105-0010  POST /api/registrations/instant
+desc: Creates new registration record, adds an ID document and optional selfie image in one go. | It's designed to provide a quick integration path for external systems which capture these details.
+schema: Credas.Api.Models.Registrations.AddInstantRegistrationRequest
+- body:document string
+- body:documentParameters array<object>
+- body:documentParameters[].key string
+- body:documentParameters[].value string
+- body:documentType integer enum[0|1|2|3|4|5|6|7|9|10|11]
+- body:forename string
+- body:middleName string
+- body:parameters array<object>
+- body:parameters[].key string
+- body:parameters[].value string
+- body:referenceId string
+- body:regTypeId string
+- body:selfie string
+- body:significantPersonId string
+- body:surname string
+
+## S105-0011  PUT /api/registrations/{id}/contact-details
+desc: Updates a registration's contact details.
+schema: Credas.Api.Models.Registrations.UpdateContactDetailsRequest
+- path:id string
+- body:deliveryMethod integer enum[0|1|2]
+- body:diallingCode string
+- body:email string
+- body:forename string
+- body:middleName string
+- body:phoneNumber string
+- body:surname string
+
+## S105-0012  PUT /api/registrations/{id}/override-check-status
+desc: Sets an override for a specific check on the registration.
+schema: Credas.Api.Models.StatusOverrides.OverrideCheckStatusRequest
+- path:id string
+- body:checkType integer enum[0|1|2|3|4|5|6|7|8]
+- body:comment string
+- body:status integer enum[0|1|2|3]
+
+## S105-0013  POST /api/registrations/{id}/resend-invitation
+desc: Resends any invitation for the specified registration.
+- path:id string
+
+## S105-0015  PUT /api/registrations/{id}/status
+desc: Updates the status of the registration to one specified in the request.
+schema: Credas.Api.Models.Registrations.UpdateRegistrationStatusRequest
+- path:id string
+- body:status integer enum[0|1|2|3|4|6]
+
+## S105-0016  POST /api/report-view/by-referenceid
+desc: Retrieves secure links to registration details pages searching by the Reference Id. | It may return none, one or many (up to 20) matching results. Each result contains a secure url; UTC date/time of when the link expires; name details of a person associated with the registration.
+schema: Credas.Api.Models.ReportView.GetReportViewByReferenceIdRequest
+- body:canChangeStatus boolean
+- body:canVerify boolean
+- body:referenceId string
+- body:user string
+
+## S105-0017  POST /api/report-view/by-registrationid
+desc: Retrieves secure link to registration details page searching by the Registration Id. | It may return none or one matching result. Each result contains a secure url; UTC date/time of when the link expires; name details of a person associated with the registration.
+schema: Credas.Api.Models.ReportView.GetReportViewByRegistrationIdRequest
+- body:canChangeStatus boolean
+- body:canVerify boolean
+- body:registrationId string
+- body:user string
+
+## S105-0018  POST /api/web-verifications/by-referenceid
+desc: Retrieves secure links to web verification pages searching by the Reference Id. | It may return none, one or many (up to 20) matching results. Each result contains a secure url; UTC date/time of when the link expires; name details of a person associated with the registration.
+schema: Credas.Api.Models.WebVerifications.GetWebVerificationsByReferenceIdRequest
+- body:referenceId string
+- body:returnUrls object
+- body:returnUrls.returnUrl string
+
+## S105-0019  POST /api/web-verifications/by-registrationid
+desc: Retrieves secure link to web verification page searching by the Registration Id. | It may return none or one matching result. Each result contains a secure url; UTC date/time of when the link expires; name details of a person associated with the registration.
+schema: Credas.Api.Models.WebVerifications.GetWebVerificationsByRegistrationIdRequest
+- body:registrationId string
+- body:returnUrls object
+- body:returnUrls.returnUrl string
+
+## S106-0001  POST /rest-service/auth-v1/login
+desc: Get the user authentication token.
+
+## S106-0002  POST /rest-service/reviews-v1
+
+## S106-0003  POST /rest-service/reviews-v1/filter
+desc: This method should no longer be used, as it uses a POST for a read-only retrieval operation and is provided for backward compatibility only.
+
+## S106-0005  DELETE /rest-service/reviews-v1/{id}
+desc: Permanently deletes the specified review. The review must have been abandoned.
+- path:id string
+
+## S106-0011  POST /rest-service/reviews-v1/{id}/comments/markAllAsRead
+desc: For the effective user, mark all comments in a review as read (except those marked as leave unread).
+- path:id string
+
+## S106-0012  DELETE /rest-service/reviews-v1/{id}/comments/{cId}
+desc: Deletes the given comment.
+- path:id string
+- path:cId string
+
+## S106-0013  POST /rest-service/reviews-v1/{id}/comments/{cId}
+desc: Updates the comment given by the perma id to the new comment posted.
+- path:id string
+- path:cId string
+
+## S106-0014  POST /rest-service/reviews-v1/{id}/comments/{cId}/markAsLeaveUnread
+desc: Marks the comment as leave unread to the current user - it will not automatically be marked as read by crucible.
+- path:id string
+- path:cId string
+
+## S106-0015  POST /rest-service/reviews-v1/{id}/comments/{cId}/markAsRead
+desc: Mark the given comment as read for the user used to make this POST.
+- path:id string
+- path:cId string
+
+## S106-0017  DELETE /rest-service/reviews-v1/{id}/comments/{cId}/replies/{rId}
+desc: Deletes the reply.
+- path:id string
+- path:rId string
+- path:cId string
+
+## S106-0018  POST /rest-service/reviews-v1/{id}/comments/{cId}/replies/{rId}
+desc: Updates a reply with the given newComment.
+- path:id string
+- path:rId string
+- path:cId string
+
+## S106-0019  POST /rest-service/reviews-v1/{id}/complete
+desc: Completes the review for the current user
+- path:id string
+- query:ignoreWarnings boolean
+
+## S106-0020  POST /rest-service/reviews-v1/{id}/patch
+desc: Add the revisions in a patch to an existing review.
+- path:id string
+
+## S106-0021  DELETE /rest-service/reviews-v1/{id}/patch/{patchId}
+desc: Removes the patch with the given id from the review. All of the revisions provided by the patch will be removed as well.
+- path:patchId integer
+- path:id string
+
+## S106-0022  POST /rest-service/reviews-v1/{id}/publish
+desc: Publishes all the draft comments of the current user.
+- path:id string
+
+## S106-0024  POST /rest-service/reviews-v1/{id}/remind
+desc: Immediately send a reminder to incomplete reviewers about the given review.
+- path:id string
+
+## S106-0025  POST /rest-service/reviews-v1/{id}/reviewers
+desc: Adds the given list of reviewers to the review.
+- path:id string
+
+## S106-0028  POST /rest-service/reviews-v1/{id}/reviewitems/details
+desc: Adds the given review item to the review. This will always create a new review item, even if there is an existing one with the same data in the review (in which case the existing item will be replaced).
+- path:id string
+
+## S106-0031  POST /rest-service/reviews-v1/{id}/reviewitems/{riId}/comments
+desc: This call includes the repsonse header that contains the URL of the newly created entity.
+- path:riId string
+- path:id string
+
+## S106-0033  DELETE /rest-service/reviews-v1/{id}/reviewitems/{riId}/revisions
+desc: Removes the revisions given from the review item in the review specified by the id. If the review item has no more revisions left, it is automatically deleted.
+- path:riId string
+- path:id string
+- query:rev string
+
+## S106-0036  POST /rest-service/reviews-v1/{id}/uncomplete
+desc: Uncompletes the review for the current user.
+- path:id string
+- query:ignoreWarnings boolean
+
+## S107-0001  POST /classes
+desc: Create a new class | Classrooms on Flat allow you to create activities with assignments and post content to a specific group. When creating a class, Flat automatically creates two groups: one for the teachers of the course, one for the students. The creator of this class is automatically added to the teachers group. If the classsroom is synchronized with another application like Google Classroom, 
+schema: ClassCreation
+- body:name string
+- body:section string
+
+## S107-0002  POST /classes/enroll/{enrollmentCode}
+desc: Join a class | Use this method to join a class using an enrollment code given one of the teacher of this class. This code is also available in the `ClassDetails` returned to the teachers when creating the class or listing / fetching a specific class. Flat will automatically add the user to the corresponding class group based on this role in the organization.
+- path:enrollmentCode string
+
+## S107-0004  POST /classes/{class}/activate
+desc: Activate the class | Mark the class as `active`. This is mainly used for classes synchronized from Clever that are initially with an `inactive` state and hidden in the UI.
+- path:class string
+
+## S107-0005  DELETE /classes/{class}/archive
+desc: Unarchive the class | Mark the class as `active`. When this course is synchronized with another app, like Google Classroom, this state will be automatically be updated.
+- path:class string
+
+## S107-0007  POST /classes/{class}/assignments
+desc: Assignment creation | Use this method as a teacher to create and post a new assignment to a class. If the class is synchronized with Google Classroom, the assignment will be automatically posted to your Classroom course.
+schema: AssignmentCreation
+- path:class string
+- body:assignedStudents array<string>
+- body:assigneeMode string enum[everyone|selected]
+- body:attachments array<object>
+- body:attachments[].googleDriveFileId string
+- body:attachments[].lockScoreTemplate boolean
+- body:attachments[].score string
+- body:attachments[].sharingMode string enum[read|write|copy|performance]
+- body:attachments[].type string enum[flat|link|googleDrive|worksheet]
+- body:attachments[].url string
+- body:attachments[].worksheet string
+- body:cover string
+- body:coverFile string
+- body:description string
+- body:dueDate string
+- body:googleClassroom object
+- body:googleClassroom.topicId string
+- body:maxPoints number
+- body:microsoftGraph object
+- body:microsoftGraph.categories array<string>
+- body:nbPlaybackAuthorized number
+- body:scheduledDate string
+- body:state string enum[draft|active]
+- body:title string
+- body:toolset string
+- body:type string enum[none|newScore|scoreTemplate|sharedWriting|worksheet|performance]
+
+## S107-0009  POST /classes/{class}/assignments/{assignment}/archive
+desc: Archive the assignment | Archive the assignment
+- path:class string
+- path:assignment string
+
+## S107-0010  POST /classes/{class}/assignments/{assignment}/copy
+desc: Copy an assignment | Copy an assignment to a specified class. If the original assignment has a due date in the past, this new assingment will be created without a due date. If the new class is synchronized with an external app (e.g. Google Classroom), the copied assignment will also be posted on the external app.
+schema: AssignmentCopy
+- path:class string
+- path:assignment string
+- body:assignment string
+- body:classroom string
+- body:scheduledDate string
+
+## S107-0013  PUT /classes/{class}/assignments/{assignment}/submissions/{submission}
+desc: Edit a submission | Use this method as a teacher to update the different submission and give feedback. Teachers can only set `return`, `draftGrade` and `grade`
+schema: AssignmentSubmissionUpdate
+- path:class string
+- path:assignment string
+- path:submission string
+- body:attachments array<object>
+- body:attachments[].googleDriveFileId string
+- body:attachments[].lockScoreTemplate boolean
+- body:attachments[].score string
+- body:attachments[].sharingMode string enum[read|write|copy|performance]
+- body:attachments[].type string enum[flat|link|googleDrive|worksheet]
+- body:attachments[].url string
+- body:attachments[].worksheet string
+- body:comments object
+- body:comments.total number
+- body:comments.unread number
+- body:draftGrade number
+- body:grade number
+- body:return boolean
+- body:submit boolean
+
+## S107-0015  DELETE /classes/{class}/assignments/{assignment}/submissions/{submission}/comments/{comment}
+desc: Delete a feedback comment to a submission
+- path:class string
+- path:assignment string
+- path:submission string
+- path:comment string
+
+## S107-0017  DELETE /classes/{class}/users/{user}
+desc: Remove a user from the class | This method can be used by a teacher to remove a user from the class, or by a student to leave the classroom. Warning: Removing a user from the class will remove the associated resources, including the submissions and feedback related to these submissions.
+- path:class string
+- path:user string
+
+## S107-0018  PUT /classes/{class}/users/{user}
+desc: Add a user to the class | This method can be used by a teacher of the class to enroll another Flat user into the class. Only users that are part of your Organization can be enrolled in a class of this same Organization. When enrolling a user in the class, Flat will automatically add this user to the corresponding Class group, based on this role in the Organization.
+- path:class string
+- path:user string
+
+## S107-0022  DELETE /collections/{collection}/scores/{score}
+desc: Delete a score from the collection | This method will delete a score from the collection. Unlike [`DELETE /scores/{score}`](#operation/deleteScore), this score will not remove the score from your account, but only from the collection. This can be used to *move* a score from one collection to another, or simply remove a score from one collection when this one is contained in multiple collections.
+- path:collection string
+- path:score string
+- query:sharingKey string
+
+## S107-0023  PUT /collections/{collection}/scores/{score}
+desc: Add a score to the collection | This operation will add a score to a collection. The default behavior will make the score available across multiple collections. You must have the capability `canAddScores` on the provided `collection` to perform the action.
+- path:collection string
+- path:score string
+- query:sharingKey string
+
+## S107-0024  POST /collections/{collection}/untrash
+desc: Untrash a collection | This method will restore the collection by removing it from the `trash` and add it back to the `root` collection.
+- path:collection string
+
+## S107-0025  POST /organizations/invitations
+desc: Create a new invitation to join the organization | This method creates and sends invitation for teachers and admins. Invitations can only be used by new Flat users or users who are not part of the organization yet. If the email of the user is already associated to a user of your organization, the API will simply update the role of the existing user and won't send an invitation. In this case, the p
+schema: OrganizationInvitationCreation
+- body:email string
+- body:organizationRole string enum[admin|billing|teacher|user]

@@ -1,0 +1,194 @@
+<meta charset="utf-8">
+<title>Báo cáo tiến độ — Oracle phân quyền theo trạng thái cho EvoMaster</title>
+<style>
+  @page { size: A4; margin: 22mm 20mm; }
+  html { font-family: "Times New Roman", Times, serif; font-size: 12pt; color: #111; }
+  body { margin: 0; line-height: 1.5; text-align: justify; }
+  h1 { font-size: 17pt; text-align: center; margin: 0 0 2pt; line-height: 1.3; }
+  .subtitle { text-align: center; font-size: 12pt; font-style: italic; color: #333; margin: 0 0 4pt; }
+  .meta { text-align: center; font-size: 10.5pt; color: #444; margin: 0 0 14pt; }
+  h2 { font-size: 13pt; margin: 18pt 0 6pt; padding-bottom: 3pt; border-bottom: 1.5px solid #333; }
+  h3 { font-size: 11.5pt; margin: 12pt 0 4pt; }
+  p { margin: 0 0 7pt; }
+  ul, ol { margin: 0 0 8pt; padding-left: 20pt; }
+  li { margin-bottom: 3pt; }
+  code, .mono { font-family: "Courier New", monospace; font-size: 10.5pt; }
+  pre.algo { font-family: "Courier New", monospace; font-size: 9.5pt; line-height: 1.35; background: #f6f8fa; border: 1px solid #ccc; border-radius: 3px; padding: 8pt 10pt; margin: 6pt 0 10pt; white-space: pre-wrap; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; margin: 8pt 0 10pt; font-size: 10.5pt; }
+  th, td { border: 1px solid #999; padding: 4pt 6pt; vertical-align: top; text-align: left; }
+  th { background: #f0f0f0; font-weight: bold; }
+  .callout { border: 1px solid #bbb; background: #f7f7f7; padding: 7pt 10pt; margin: 8pt 0; border-radius: 3px; }
+  .bug { color: #b00000; font-weight: bold; }
+  .ok { color: #0a6b0a; font-weight: bold; }
+  .small { font-size: 10pt; color: #444; }
+  .ref { font-size: 10.5pt; }
+  .ref li { margin-bottom: 5pt; }
+  .center { text-align: center; }
+  .kw { font-weight: bold; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 14pt 0; }
+  .tag { display:inline-block; font-family:"Courier New",monospace; font-size:10pt; background:#eee; border:1px solid #ccc; padding:0 4px; border-radius:3px; }
+</style>
+
+<h1>Mở rộng EvoMaster bằng bộ Oracle phân quyền theo trạng thái / thời gian</h1>
+<div class="subtitle">Phát hiện lớp lỗ hổng phân quyền có trạng thái mà các bộ fuzzer REST hộp đen hiện nay bỏ sót</div>
+<div class="meta">Báo cáo tiến độ gửi Giảng viên hướng dẫn · Nguyễn Minh Mạnh · Ngày 29/07/2026</div>
+
+<h2>1. Bối cảnh và phát biểu vấn đề</h2>
+
+<p>Lỗi <span class="kw">phân quyền</span> (authorization / “phân quyền”) là nhóm lỗ hổng API phổ biến và nguy hiểm nhất trong thực tế — đứng đầu bảng xếp hạng <span class="kw">OWASP API Security Top 10 (2023)</span> với API1 (BOLA) và API5 (BFLA) [6]. Trong nhóm này, những lỗi <span class="kw">có trạng thái (stateful)</span> là nguy hiểm nhất và khó phát hiện nhất: người dùng vẫn <span class="kw">giữ được quyền truy cập sau khi một thay đổi lẽ ra đã thu hồi quyền đó</span>.</p>
+
+<p>Các công cụ kiểm thử bảo mật API hiện nay chỉ kiểm tra phân quyền tại <span class="kw">một thời điểm đông cứng duy nhất</span> — “người này, ngay lúc này, có được phép không?”. Vì vậy toàn bộ họ lỗi có trạng thái bị bỏ lọt. Luận văn tập trung vào một dạng chuyển tiếp cụ thể, gọi là <span class="kw">MR‑A1 (quyền tồn tại dai dẳng sau khi bị hạ cấp)</span>:</p>
+
+<div class="callout">
+<p style="margin:0"><span class="kw">Kịch bản A1.</span> Một quản trị viên (ADMIN) tạo tài nguyên <span class="mono">/reports/9</span>, sau đó bị hạ quyền xuống người xem (VIEWER). Nhưng <span class="kw">chính token (JWT) cũ</span> mà họ đã có vẫn <span class="mono">DELETE /reports/9</span> thành công (đáng lẽ phải bị <span class="mono">403</span>). Nguyên nhân gốc: hệ thống tin vào “role” nằm trong JWT và không đọc lại vai trò hiện tại của người dùng, nên một token cấp trước lúc hạ quyền vẫn còn hiệu lực quản trị cho tới khi hết hạn.</p>
+</div>
+
+<p>Một cách hình dung ngắn gọn: <em>“Công trình trước kiểm tra xem có phải sai người đang cầm chìa khóa hay không ngay lúc này; luận văn này kiểm tra xem chiếc chìa khóa có còn mở được cửa hay không sau khi lẽ ra nó đã bị thu hồi.”</em></p>
+
+<h2>2. Chứng minh: vì sao EvoMaster (kể cả bản có oracle bảo mật) không phát hiện được lớp lỗi này</h2>
+
+<p><span class="kw">EvoMaster</span> [1] là fuzzer REST‑API hộp đen mã nguồn mở dẫn đầu hiện nay. Đường cơ sở (baseline) trực tiếp của chúng tôi là công trình của <span class="kw">Şahin, Zhang &amp; Arcuri (2026)</span> [2] — chính nhóm EvoMaster — bổ sung 9 oracle bảo mật, trong đó có các oracle kiểm tra phân quyền. Ngay cả với các oracle này bật đầy đủ, EvoMaster vẫn <span class="kw">mù về mặt cấu trúc</span> đối với A1. Điều này không phải do may rủi, mà xuất phát từ <span class="kw">hai giới hạn độc lập</span>:</p>
+
+<h3>2.1. Không thể PHÁN XÉT (judgment gap)</h3>
+<p>Toàn bộ 9 oracle của baseline đều nằm trên trục <span class="kw">“khác người dùng / cùng một thời điểm”</span> (differential): so sánh phản hồi giữa các người dùng khác nhau trong một ảnh chụp trạng thái duy nhất. <span class="kw">Không oracle nào mã hóa luật</span> “một hành động từng được PHÉP, sau khi quyền của nó bị thu hồi, thì phải bị TỪ CHỐI”. Do đó một phản hồi <span class="mono">2xx</span> xuất hiện <em>sau</em> khi hạ quyền bị đọc là “thành công”, không phải lỗi.</p>
+
+<h3>2.2. Không thể DỰNG (construction gap)</h3>
+<p>Để lộ được lỗi A1 cần dựng đúng một bộ ba hành động:</p>
+<p class="center mono">[ nạn nhân thực hiện hành động → người khác hạ quyền nạn nhân → nạn nhân lặp lại hành động bằng CHÍNH token cũ ]</p>
+<p>Nước đi mấu chốt là <span class="kw">phát lại token cấp trước lúc hạ quyền</span> (stale‑token replay) — đúng nước đi mà EvoMaster không bao giờ thực hiện, vì nó <span class="kw">đăng nhập lại ở mỗi test</span> nên luôn cầm một token “hiện thời”, không bao giờ là token cũ.</p>
+
+<h3>2.3. Bằng chứng thực nghiệm</h3>
+<p>Chạy EvoMaster v6.1.1 hộp đen với <span class="mono">--security</span> bật đầy đủ trên ứng dụng mục tiêu <span class="mono">reports-api</span> (bản dính lỗi), 60 test, 730 giây (thư mục <span class="mono">infra/em-results/reports-baseline</span>). Phân bố lỗi mà baseline báo cáo:</p>
+
+<table>
+<tr><th>Mã lỗi</th><th>Ý nghĩa</th><th>Số lần</th><th>Endpoint liên quan</th></tr>
+<tr><td class="mono">F101</td><td>Phản hồi không khớp schema (không phải lỗi phân quyền)</td><td>84</td><td>8 endpoint, gồm cả <span class="mono">PUT /users/{u}/role</span> và <span class="mono">DELETE/PUT /reports/{id}</span></td></tr>
+<tr><td class="mono">F100</td><td>Lỗi 500 (crash)</td><td>1</td><td><span class="mono">POST /auth/login</span></td></tr>
+<tr><td class="mono" style="background:#fde8e8"><b>F2xx</b></td><td><b>Bất kỳ lỗi bảo mật / phân quyền nào</b></td><td style="background:#fde8e8"><b>0</b></td><td style="background:#fde8e8"><b>— không có —</b></td></tr>
+</table>
+
+<p><span class="kw">Không có một lỗi bảo mật nào</span> được phát ra trên bề mặt A1. Phân tích các test đã sinh cho thấy rõ hai giới hạn ở trên: có test chạm <span class="mono">PUT /users/{u}/role</span> và có test đổi <span class="mono">/reports</span>, nhưng <span class="kw">không test nào ghép cả hai trong một chuỗi</span>; đồng thời khi chạm endpoint đổi vai trò, nó đặt về <span class="mono">superadmin→ADMIN</span> hoặc username rác, <span class="kw">không bao giờ hạ alice→VIEWER</span>, và luôn đăng nhập lại nên không bao giờ phát lại token cũ.</p>
+
+<p class="small">(Pha bảo mật của EvoMaster có tính ngẫu nhiên: một lần chạy khác có thể phát một oracle “một‑thời‑điểm” của baseline ở nơi khác — ví dụ F205 trên <span class="mono">/auth/login</span> — nhưng <span class="kw">không bao giờ trên chính lỗi A1</span>. Vì vậy khẳng định “EvoMaster mù với A1” dựa trên hai giới hạn cấu trúc ở §2.1–§2.2, chứ không chỉ dựa trên một con số 0.)</p>
+
+<h3>2.4. Ví dụ minh họa “sự thật nền” (ground truth) của lỗi</h3>
+<p>Chạy trực tiếp bộ ba <span class="mono">grant → transition → re-attempt</span> (dùng cùng một token) trên hai phiên bản của ứng dụng cho hai kết quả trái ngược, chỉ khác nhau ở một cờ bật/tắt lỗi:</p>
+<table>
+<tr><th>Bước</th><th>Hành động</th><th>:8080 (dính lỗi)</th><th>:8081 (đã vá)</th></tr>
+<tr><td>① Nguồn</td><td>alice (ADMIN) <span class="mono">DELETE /reports/1</span></td><td class="mono">204 (PHÉP)</td><td class="mono">204 (PHÉP)</td></tr>
+<tr><td>② Chuyển tiếp</td><td>superadmin <span class="mono">PUT /users/alice/role {VIEWER}</span></td><td class="mono">200</td><td class="mono">200</td></tr>
+<tr><td>③ Lặp lại</td><td>alice dùng <span class="kw">token cũ</span> <span class="mono">DELETE /reports/2</span></td><td class="mono bug">204 → LỖI</td><td class="mono ok">403 → ĐÚNG</td></tr>
+</table>
+<p>Ở bản dính lỗi, token đã bị hạ quyền vẫn xóa được tài nguyên (<span class="bug">204</span> — lỗi); ở bản đã vá, đúng ra phải bị từ chối (<span class="ok">403</span>). Đây chính là điểm mù mà oracle của luận văn nhắm tới.</p>
+
+<h2>3. Ý tưởng và thuật toán đã cài đặt</h2>
+
+<h3>3.1. Ý tưởng cốt lõi</h3>
+<p>Không thể nhìn <em>một</em> phản hồi đơn lẻ để biết đó có phải lỗi hay không — một <span class="mono">200 OK</span> trông giống hệt nhau dù người gọi <em>có</em> hay <em>không</em> được phép. Vì vậy, thay vì phán xét một phản hồi, chúng tôi phán xét <span class="kw">cách một phản hồi được phép thay đổi khi ta cố ý thay đổi đúng một thứ</span> — đây chính là tư tưởng của <span class="kw">kiểm thử biến hình (metamorphic testing)</span>. “Một thứ” ta thay đổi ở đây là: <span class="kw">thu hồi một quyền</span>. Luật (quan hệ biến hình): một hành động từng được PHÉP, sau khi quyền của nó bị thu hồi, phải trở thành TỪ CHỐI — kể cả khi dùng lại đúng token đã cấp <em>trước</em> lúc thu hồi. Nếu nó vẫn chạy được ⇒ việc thu hồi chưa từng được thực thi ⇒ lỗi.</p>
+<p>So với baseline: baseline so sánh <em>qua các người dùng, tại một thời điểm</em> (khác người, một ảnh chụp); oracle của chúng tôi so sánh <em>qua thời gian, xuyên qua một chuyển tiếp làm giảm quyền</em> (cùng người, cùng token). Quan hệ hình thức MR‑A1 là phép kiểm tra <span class="kw">“thu hồi có điều kiện” (guarded revocation)</span> — kiểm tra <span class="kw">sự thực thi (enforcement)</span> chứ không phải tính đơn điệu (monotonicity):</p>
+<div class="callout mono">
+Điều kiện canh (Guard):  hành động <i>a</i> ĐÒI HỎI quyền mà chuyển tiếp T thu hồi<br>
+Tiền điều kiện:          Obs(a, c, s)  = PHÉP     (quan sát được là được phép trước đó)<br>
+Kỳ vọng:                 Obs(a, c, s') = TỪ CHỐI  (phải bị từ chối sau chuyển tiếp)<br>
+Vi phạm (LỖI):           Obs(a, c, s') = PHÉP     (vẫn chạy → quyền chưa bao giờ được thực thi)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trong đó c là CÙNG một credential ở cả tiền điều kiện và bước lặp lại.
+</div>
+<p><span class="kw">Ba trụ cột kỹ thuật</span> của giải pháp: (1) quan hệ biến hình MR‑A1 ở trên; (2) trục <em>thời gian</em> (trước → chuyển tiếp → sau) thay cho trục <em>người dùng</em>; (3) <span class="kw">phát lại token cũ</span> — nước đi mấu chốt, may mắn là có sẵn trong EvoMaster (§3.4).</p>
+
+<h3>3.2. Kiến trúc: oracle là một pha hậu xử lý</h3>
+<p>Giải pháp gắn vào <span class="kw">pha SECURITY chạy SAU khi tìm kiếm tiến hóa (MIO) hoàn tất</span> — tức là hậu xử lý trên tập test đã sinh, <span class="kw">không đụng vào lõi thuật toán tiến hóa</span>. Đây là lý do lớn nhất khiến việc cài đặt khả thi. Pha này gồm hai nửa ăn khớp:</p>
+<ul>
+<li><span class="kw">DỰNG (construction)</span> — <span class="mono">RestSecurityBuilder.addForStatefulAccessControl</span>: lắp ráp kịch bản bộ ba <span class="mono">[nguồn → hạ quyền → lặp lại]</span> rồi chạy lại nó.</li>
+<li><span class="kw">PHÁN XÉT (judgment)</span> — <span class="mono">RestSecurityOracle.handleStatefulAuthorization</span>: soi kết quả của kịch bản, áp quan hệ MR‑A1, và phát mã lỗi <span class="mono">970</span> kèm một test tái lập được.</li>
+</ul>
+
+<h3>3.3. Thuật toán DỰNG — bộ sinh chuỗi nhận biết chuyển tiếp</h3>
+<pre class="algo">addForStatefulAccessControl():
+  nếu oracle 970 chưa bật, hoặc &lt; 2 người dùng đã xác thực → dừng
+  transition  ← findPermissionReducingTransition()     # endpoint hạ quyền
+  reducedRole ← harvestReducedRoleValue(transition)    # nhãn vai trò quyền-thấp
+  nếu thiếu transition hoặc reducedRole → dừng
+  với mỗi 'source' ∈ {PUT, PATCH} và khác đường transition:
+     nếu KHÔNG tồn tại bằng chứng 403 cho source (điều kiện canh) → bỏ qua
+     victim ← lát cắt 2xx NHỎ NHẤT của một người dùng đã xác thực trên source
+     buildStatefulAuthzTriple(victim, transition, reducedRole)
+
+buildStatefulAuthzTriple(victim, transition, reducedRole):
+  source   ← hành động 2xx cuối cùng của nạn nhân (mang credential nạn nhân)
+  operator ← một người dùng KHÁC nạn nhân
+             (ưu tiên người từng thực hiện transition với kết quả 2xx)
+  T        ← copy(transition);  auth = operator;
+             đặt tham-số-người-dùng = nạn nhân;  đặt trường-vai-trò = reducedRole
+  followUp ← copy(source);      auth = nạn nhân (CÙNG credential);
+             trỏ về CÙNG tài nguyên như source
+  individual ← [ … source , T , followUp ]
+  chạy lại individual qua hàm fitness
+  nếu phát hiện lỗi 970 → ghi log; đưa individual vào archive (xuất ra test)</pre>
+<p>Hai hàm suy luận là phần “thông minh” của bộ sinh:</p>
+<ul>
+<li><span class="mono">findPermissionReducingTransition()</span> — quét các định nghĩa endpoint, chọn cái mà đường dẫn/tên mang <span class="kw">tín hiệu hạ quyền</span> (<span class="mono">role, permission, member, subscription, plan, owner, grant…</span>) VÀ có một <span class="kw">tham số định danh người dùng</span> (<span class="mono">username, userid, account…</span>). Trên <span class="mono">reports-api</span> nó khớp <span class="mono">PUT /users/{username}/role</span>.</li>
+<li><span class="mono">harvestReducedRoleValue()</span> — thu thập từ vựng vai trò khai báo trong schema, chọn nhãn mang <span class="kw">tín hiệu quyền‑thấp</span> (<span class="mono">view, read, guest, basic…</span>) và loại nhãn <span class="kw">quyền‑cao</span> (<span class="mono">admin, owner, super…</span>) → ra giá trị <span class="mono">VIEWER</span>.</li>
+</ul>
+<p><span class="kw">Vì sao “source” bị giới hạn ở PUT/PATCH:</span> đó là các thao tác ghi <em>không tiêu thụ</em> tài nguyên và lặp lại được — nên bước ③ có thể tác động lên một tài nguyên vẫn còn tồn tại, tránh nhiễu kiểu “đã xóa rồi nên không còn gì để làm”.</p>
+
+<h3>3.4. Vì sao token cũ được phát lại — “miễn phí” nhờ mô hình auth của EvoMaster</h3>
+<p>Đây là phát hiện then chốt khiến việc cài đặt trở nên gọn nhẹ. EvoMaster <span class="kw">đăng nhập mỗi người dùng đúng một lần, ngay trước</span> vòng lặp hành động của một test, rồi dùng lại token đó cho mọi hành động của người dùng ấy trong test. Vì vậy một individual <span class="mono">[alice DELETE, superadmin hạ‑quyền‑alice, alice DELETE]</span> sẽ đăng nhập alice <em>một lần khi cô ấy vẫn còn là ADMIN</em>, và <span class="kw">tự động dùng lại chính token ADMIN đó</span> cho cả hai lần DELETE. Bộ sinh của chúng tôi không phải làm gì đặc biệt với token — chỉ cần gán đúng <span class="mono">auth</span> cho từng hành động. (“EvoMaster đăng nhập lại ở mỗi test” là tính theo <em>từng test</em>, không phải bên trong một test — đó là lý do baseline không bao giờ <em>dựng</em> được A1, chứ không phải giới hạn của mô hình auth.)</p>
+
+<h3>3.5. Thuật toán PHÁN XÉT — oracle theo thời gian (MR‑A1)</h3>
+<pre class="algo">handleStatefulAuthorization(individual):
+  nếu oracle 970 chưa bật → dừng
+  tìm trong chuỗi kết quả của individual một mẫu:
+     A  : principal P thực hiện hành động a  → 2xx (ĐƯỢC PHÉP)             [nguồn]
+     T  : một hành động với auth KHÁC        → 2xx (chuyển tiếp thành công) [hạ quyền]
+     A' : cùng P, CÙNG credential, cùng a, xảy ra SAU T → 2xx              [lặp lại]
+  nếu khớp mẫu (A trước T, A' sau T, credential không đổi):
+     addFault(SECURITY_STATEFUL_AUTHORIZATION = 970)
+  quy ước đọc:  A' = 2xx → LỖI ;  A' = 403 → PASS ;  A' = 401 → void (bỏ qua)</pre>
+<p>Bộ khung này sao chép mẫu của oracle sẵn có gần nhất trong EvoMaster (<span class="mono">handleForbiddenOperation</span> — oracle BOLA/BFLA mã F206), nên tuân đúng giao diện của công cụ và chỉ thêm mới, không viết lại lõi.</p>
+
+<h2>4. Những hạng mục đã hoàn thành</h2>
+<table>
+<tr><th>#</th><th>Hạng mục</th><th>Trạng thái</th></tr>
+<tr><td>1</td><td>Ứng dụng mục tiêu Tier‑1 <span class="mono">reports-api</span> (Spring Boot 3 / Java 17) với lỗi A1 được cấy sẵn và một cờ bật/tắt (<span class="mono">vulnerable</span> ↔ <span class="mono">fixed</span>).</td><td class="ok">Xong</td></tr>
+<tr><td>2</td><td>Tái lập đường cơ sở EvoMaster và <span class="kw">xác nhận nó mù với A1</span> (số liệu ở §2.3).</td><td class="ok">Xong</td></tr>
+<tr><td>3</td><td>PoC oracle chạy end‑to‑end, cho cặp kết quả đúng–sai (§2.4).</td><td class="ok">Xong</td></tr>
+<tr><td>4</td><td>Hình thức hóa oracle và họ quan hệ A1/A2/A3 (<span class="mono">docs/metamorphic-authz-relations.md</span>).</td><td class="ok">Xong</td></tr>
+<tr><td>5</td><td>Khảo sát mã nguồn kiến trúc oracle bảo mật của EvoMaster → chọn <span class="kw">Path 1</span> (mở rộng trực tiếp <span class="mono">core</span> Kotlin); build core từ nguồn, tái lập baseline.</td><td class="ok">Xong</td></tr>
+<tr><td>6</td><td><span class="kw">Cài đặt oracle (cả hai nửa) vào <span class="mono">core</span></span> — chỉ thêm mới, <span class="kw">+321 dòng / 3 tệp</span>: mã lỗi thử nghiệm <span class="mono">SECURITY_STATEFUL_AUTHORIZATION (970)</span>; <span class="mono">RestSecurityOracle.handleStatefulAuthorization</span> (phán xét); <span class="mono">RestSecurityBuilder.addForStatefulAccessControl</span> (dựng). Không đụng vào lõi tìm kiếm tiến hóa (MIO).</td><td class="ok">Xong</td></tr>
+<tr><td>7</td><td><span class="kw">Xác minh end‑to‑end trong công cụ</span> trên <span class="mono">reports-api</span> (§5).</td><td class="ok">Xong</td></tr>
+</table>
+
+<h2>5. Kết quả thực nghiệm trong công cụ</h2>
+<p>Chạy EvoMaster v6.1.1 <span class="kw">có gắn oracle của luận văn</span> (cờ <span class="mono">--useExperimentalOracles true</span>) trên chính <span class="mono">reports-api :8080</span> (bản dính lỗi), 64 test, 317 giây (thư mục <span class="mono">infra/em-results/reports-stateful-8080</span>). Đối chiếu với đường cơ sở:</p>
+<table>
+<tr><th>Cấu hình</th><th>Phân bố lỗi</th><th>Phát hiện A1?</th></tr>
+<tr><td>EvoMaster baseline (security bật đầy đủ)</td><td class="mono">{F100×1, F101×84}</td><td class="bug">Không</td></tr>
+<tr><td>EvoMaster + oracle của luận văn</td><td class="mono">{F100×1, F101×89, <b>F970×1</b> trên PUT /reports/{id}}</td><td class="ok">Có (mã 970)</td></tr>
+</table>
+<p>Oracle mới phát ra <span class="kw">14 phương thức test</span> gắn nhãn <span class="tag">showsFaults_101_970</span>, mỗi test chứa trọn bộ ba <span class="mono">[tạo → PUT nguồn → hạ quyền → PUT lặp lại bằng token cũ]</span> có thể chạy lại để tái hiện lỗi. Ngược lại, chạy trên bản đã vá (<span class="mono">:8081</span>) <span class="kw">không phát mã 970</span> (đúng âm — true negative). Cùng một oracle, hai verdict trái ngược chỉ do cờ bật/tắt lỗi ⇒ vừa đúng dương vừa đúng âm.</p>
+
+<h2>6. Vị trí học thuật (khoảng trống còn mở)</h2>
+<p>Không có công trình nào đã công bố (học thuật hay thương mại) chiếm đúng ngách này: <em>một oracle phân quyền theo hướng biến hình, theo thời gian, phát hiện truy cập còn tồn tại SAU một chuyển tiếp làm giảm quyền trong cùng một phiên của một người dùng, bên trong một fuzzer REST‑API</em>. Các láng giềng gần nhất, mỗi cái thiếu trên một trục có thể nêu tên:</p>
+<ul>
+<li><span class="kw">Şahin, Zhang &amp; Arcuri (2026)</span> [2] — đường cơ sở trực tiếp; cả 9 oracle đều thuộc trục <em>khác‑người / một‑thời‑điểm</em>, không oracle nào mô hình hóa một chuyển tiếp làm giảm quyền theo thời gian. Hướng nghiên cứu tương lai của họ chỉ nêu chung chung (“các oracle cho những loại lỗi bảo mật khác”), không gọi tên phân quyền có trạng thái; hơn nữa (Mục 5.4) họ coi các endpoint đổi quyền chỉ là trở ngại kỹ thuật chứ không phải phép thử — đúng chỗ khóa luận này lấp.</li>
+<li><span class="kw">BACScan</span> (Liu et al., CCS 2025) [4] — đối thủ kiểm soát truy cập mạnh nhất, nhưng <em>khác‑người / một‑thời‑điểm</em> và nhắm vào ứng dụng web (không dựa trên REST/OpenAPI).</li>
+<li><span class="kw">ARMeta</span> (arXiv:2605.28321) [5] — gần nhất về <em>phương pháp</em> (metamorphic + REST), nhưng mọi quan hệ biến hình của họ đều thuần <em>chức năng</em>; họ có dùng một microservice RBAC làm đối tượng thử nhưng <span class="kw">không định nghĩa quan hệ biến hình nào về phân quyền</span> — đúng con đường chúng tôi đi.</li>
+</ul>
+
+<h2>7. Hạn chế trung thực và bước tiếp theo</h2>
+<ul>
+<li><span class="kw">Hạn chế (black-box):</span> ở chế độ hộp đen thuần túy không có reset cho từng bộ ba, nên các bộ ba dựng ra chia sẻ trạng thái máy chủ. Một bộ ba trước có thể vô tình hạ quyền một người dùng về sau được dùng làm <em>người thực hiện chuyển tiếp</em> → bỏ sót một bộ ba (âm tính giả), <span class="kw">không bao giờ dương tính giả</span>. Đối chiếu vi phân trên Tier‑1 (bản lỗi phát / bản vá không phát) vẫn vững vàng.</li>
+<li><span class="kw">Bước tiếp theo (tuần 8–9):</span> gieo benchmark lỗi và chạy <span class="kw">đối đầu trực tiếp với đường cơ sở Şahin</span> trên Tier‑2 (VAmPI, crAPI); đo tỷ lệ phát hiện và tỷ lệ dương tính giả (precision).</li>
+</ul>
+
+<hr>
+<h2 style="border:none">Tài liệu tham khảo</h2>
+<ol class="ref">
+<li>A. Arcuri và cộng sự (2024). <em>Tool report: EvoMaster—black and white box search-based fuzzing for REST, GraphQL and RPC APIs.</em> Automated Software Engineering, doi:10.1007/s10515-024-00478-1. Kho mã: <span class="mono">github.com/WebFuzzing/EvoMaster</span>.</li>
+<li>Ö. Şahin, M. Zhang, A. Arcuri (2026). <em>Enhancing REST API Fuzzing with Access Policy Violation Checks and Injection Attacks.</em> arXiv:2604.00702. <span class="small">(Đường cơ sở trực tiếp — đã kiểm chứng bản gốc.)</span></li>
+<li>M. Kim, Q. Xin, S. Sinha, A. Orso (2022). <em>Automated Test Generation for REST APIs: No Time to Rest Yet.</em> ISSTA 2022, doi:10.1145/3533767.3534401.</li>
+<li>F. Liu và cộng sự (2025). <em>BACScan: Automatic Black-Box Detection of Broken-Access-Control Vulnerabilities in Web Applications.</em> ACM CCS 2025, doi:10.1145/3719027.3744825.</li>
+<li>S. Khan và cộng sự. <em>Multi-Agent LLM-based Metamorphic Testing for REST APIs</em> (công cụ ARMeta). arXiv:2605.28321 (2026).</li>
+<li>OWASP API Security Top 10 (2023): API1 BOLA, API5 BFLA.</li>
+</ol>
+<p class="small" style="margin-top:12pt">Chú thích: số liệu thực nghiệm trích trực tiếp từ báo cáo của EvoMaster tại <span class="mono">infra/em-results/reports-baseline</span> (đường cơ sở) và <span class="mono">infra/em-results/reports-stateful-8080</span> (công cụ có oracle của luận văn). Đặc tả oracle: <span class="mono">docs/metamorphic-authz-relations.md</span>. Mã nguồn mở rộng (bản vá khả chuyển): <span class="mono">infra/evomaster-ext/</span>.</p>

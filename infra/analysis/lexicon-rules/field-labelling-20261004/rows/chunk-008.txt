@@ -1,0 +1,1129 @@
+## S137-0001  POST /api/Accounts
+desc: Description: The operation creates an Account.<br /> Purpose: Allows for creation of Accounts on a Fact Finder.
+- body:accountType integer
+- body:description string
+- body:externalDestinationId string
+- body:externalSourceId string
+- body:externalSourceName string
+- body:factFinderId integer
+- body:lastUpdated string
+- body:marketValue number
+- body:owner string enum[Client|CoClient|Joint|Dependent|Other]
+- body:ownerDependentId integer
+
+## S137-0005  PUT /api/Accounts/{accountId}/Holdings/{id}
+desc: Updates a holding associated with an account
+- path:accountId integer
+- path:id integer
+- body:costBasis number
+- body:cusip string
+- body:description string
+- body:externalDestinationId string
+- body:marketValue number
+- body:symbol string
+- body:valuationDate string
+
+## S137-0011  PUT /api/Accounts/{id}
+desc: Description: The operation updates an Account, deletes associated saving strategies if the account type changes.<br /> Purpose: Allows for complete replacement of an Account on a Fact Finder.
+- path:id integer
+- body:accountType integer
+- body:description string
+- body:externalDestinationId string
+- body:externalSourceId string
+- body:externalSourceName string
+- body:factFinderId integer
+- body:lastUpdated string
+- body:marketValue number
+- body:owner string enum[Client|CoClient|Joint|Dependent|Other]
+- body:ownerDependentId integer
+
+## S137-0014  DELETE /api/CriticalIllnessInsurancePolicies/{id}
+desc: Description: The operation removes a Critical Illness Insurance Policy tied to a Fact Finder.<br /> Purpose: Allows for removal of a Critical Illness Insurance Policy from a Fact Finder.
+- path:id integer
+
+## S137-0018  PUT /api/DefinedBenefitPensions/{id}
+desc: Description: The operation updates a Defined Benefit Pension.<br /> Purpose: Allows for complete replacement of a Defined Benefit Pension on a Fact Finder.
+- path:id integer
+- body:description string
+- body:estimatedAmount number
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:member string enum[Client|CoClient]
+- body:startDate string
+
+## S137-0023  PUT /api/Demographics/{id}
+desc: Description: The operation updates Demographic information.<br /> Purpose: Allows for complete replacement of Demographic information on a Fact Finder.
+- path:id integer
+- body:city string
+- body:externalDestinationId string
+- body:externalSourceId string
+- body:factFinderId integer
+- body:head1 object
+- body:head1.alreadyRetired boolean
+- body:head1.birthDate string
+- body:head1.externalDestinationId string
+- body:head1.firstName string
+- body:head1.gender string enum[Male|Female|None]
+- body:head1.lastName string
+- body:head1.taxFilingStatus integer
+- body:head2 object
+- body:head2.alreadyRetired boolean
+- body:head2.birthDate string
+- body:head2.externalDestinationId string
+- body:head2.firstName string
+- body:head2.gender string enum[Male|Female|None]
+- body:head2.lastName string
+- body:head2.taxFilingStatus integer
+- body:jointAnalysis boolean
+- body:state integer
+
+## S137-0024  POST /api/DisabilityInsurancePolicies
+desc: Description: The operation creates a Disability Insurance Policy.<br /> Purpose: Allows for creation of Disability Insurance Policies on a Fact Finder.
+- body:benefit number
+- body:benefitFrequency integer
+- body:benefitType string enum[Dollar|Percent]
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:insured string enum[Client|CoClient]
+- body:policyType integer
+- body:premium number
+- body:premiumFrequency integer
+
+## S137-0027  POST /api/EducationGoals
+desc: Description: The operation creates an Education Goal.<br /> Purpose: Allows for creation of Education Goals on a Fact Finder.
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:projectedCost number
+
+## S137-0028  POST /api/EducationGoals/{educationGoalId}/Expenses
+desc: Description: The operation creates an Education Goal Expense.<br /> Purpose: Allows for creation of Education Goal Expenses on a Fact Finder.
+- path:educationGoalId integer
+- body:annualCost number
+- body:externalDestinationId string
+- body:member string enum[Client|CoClient|Dependent]
+- body:memberDependentId integer
+- body:startYear string
+- body:years integer
+
+## S137-0038  PUT /api/FactFinders/{factFinderId}/Modules/{id}
+desc: Description: The operation updates a Fact Finder Module.<br /> Purpose: Allows for complete replacement of a Fact Finder Module on a Fact Finder.
+- path:factFinderId integer
+- path:id integer
+- body:available boolean
+- body:moduleName string enum[Demographics|Assets|Liabilities|Incomes|Expenses|Insurance|Retirement|Education|MajorPurchase]
+- body:visited boolean
+
+## S137-0045  PUT /api/Incomes/{id}
+desc: Description: The operation updates an Income.<br /> Purpose: Allows for complete replacement of an Income on a Fact Finder.
+- path:id integer
+- body:annualAmount number
+- body:description string
+- body:endDate string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:incomeTypeId integer
+- body:owner string enum[Client|CoClient]
+- body:startDate string
+
+## S137-0046  POST /api/Liabilities
+desc: Description: The operation creates a Liability.<br /> Purpose: Allows for creation of Liabilities on a Fact Finder.
+- body:balance number
+- body:balanceAsOfDate string
+- body:description string
+- body:externalDestinationId string
+- body:externalSourceId string
+- body:externalSourceName string
+- body:factFinderId integer
+- body:frequency integer
+- body:interestRate number
+- body:lastUpdated string
+- body:liabilityType integer
+- body:loanDate string
+- body:originalPrincipal number
+- body:owner string enum[Client|CoClient|Joint]
+- body:payment number
+- body:paymentType string enum[InterestOnly|PrincipalAndInterest|SetPrincipal|LastPeriod]
+
+## S137-0048  PUT /api/Liabilities/{id}
+desc: Description: The operation updates a Liability.<br /> Purpose: Allows for complete replacement of a Liability on a Fact Finder.
+- path:id integer
+- body:balance number
+- body:balanceAsOfDate string
+- body:description string
+- body:externalDestinationId string
+- body:externalSourceId string
+- body:externalSourceName string
+- body:factFinderId integer
+- body:frequency integer
+- body:interestRate number
+- body:lastUpdated string
+- body:liabilityType integer
+- body:loanDate string
+- body:originalPrincipal number
+- body:owner string enum[Client|CoClient|Joint]
+- body:payment number
+- body:paymentType string enum[InterestOnly|PrincipalAndInterest|SetPrincipal|LastPeriod]
+
+## S137-0050  DELETE /api/LifeInsurancePolicies/{id}
+desc: Description: The operation removes a Life Insurance Policy tied to a Fact Finder.<br /> Purpose: Allows for removal of a Life Insurance Policy and associated subaccounts from a Fact Finder.
+- path:id integer
+
+## S137-0051  PUT /api/LifeInsurancePolicies/{id}
+desc: Description: The operation updates a Life Insurance Policy, deletes associated sub-accounts if the policy type changes.<br /> Purpose: Allows for complete replacement of a Life Insurance Policy on a Fact Finder.
+- path:id integer
+- body:beneficiary string enum[Client|CoClient|Dependent|Other]
+- body:beneficiaryDependentId integer
+- body:benefit number
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:frequency integer
+- body:generalAccountMarketValue number
+- body:insured string enum[Client|CoClient|FirstToDie|SecondToDie|Other]
+- body:payer string enum[Client|CoClient|Joint|Other]
+- body:policyType integer
+- body:premium number
+
+## S137-0053  DELETE /api/LifeInsurancePolicies/{lifeInsurancePolicyId}/Subaccounts/{id}
+desc: Description: Deletes an existing Life Insurance Policy Subaccount for an existing Life Insurance Policy.<br /> Purpose: Allows for removal of a subaccount from a Life Insurance Policy.
+- path:lifeInsurancePolicyId integer
+- path:id integer
+
+## S137-0057  PUT /api/LifestyleAssets/{id}
+desc: Description: The operation updates a Lifestyle Asset.<br /> Purpose: Allows for complete replacement of a Lifestyle Asset on a Fact Finder.
+- path:id integer
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:marketValue number
+- body:owner string enum[Client|CoClient|Joint]
+- body:purchaseAmount number
+- body:purchaseDate string
+- body:type integer
+
+## S137-0058  POST /api/LongTermCareInsurancePolicies
+desc: Description: The operation creates a Long Term Care Insurance Policy.<br /> Purpose: Allows for creation of Long Term Care Insurance Policies on a Fact Finder.
+- body:benefit number
+- body:benefitFrequency integer
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:insured string enum[Client|CoClient]
+- body:premium number
+- body:premiumFrequency integer
+
+## S137-0063  PUT /api/MajorPurchaseGoals/{id}
+desc: Description: The operation updates a Major Purchase.<br /> Purpose: Allows for complete replacement of a Major Purchase on a Fact Finder.
+- path:id integer
+- body:amount number
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:majorPurchaseGoalTypeId integer
+- body:member string enum[Client|CoClient|Joint]
+- body:targetDate string
+
+## S137-0064  POST /api/RealEstateAssets
+desc: Description: The operation creates a Real Estate Asset.<br /> Purpose: Allows for creation of Real Estate Assets on a Fact Finder.
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:frequency integer
+- body:marketValue number
+- body:owner string enum[Client|CoClient|Joint]
+- body:purchaseAmount number
+- body:purchaseDate string
+- body:rentalIncome number
+
+## S137-0065  DELETE /api/RealEstateAssets/{id}
+desc: Description: The operation removes a Real Estate Asset tied to a Fact Finder.<br /> Purpose: Allows for removal of a Real Estate Asset from a Fact Finder.
+- path:id integer
+
+## S137-0066  PUT /api/RealEstateAssets/{id}
+desc: Description: The operation updates a Real Estate Asset.<br /> Purpose: Allows for complete replacement of a Real Estate Asset on a Fact Finder.
+- path:id integer
+- body:description string
+- body:externalDestinationId string
+- body:factFinderId integer
+- body:frequency integer
+- body:marketValue number
+- body:owner string enum[Client|CoClient|Joint]
+- body:purchaseAmount number
+- body:purchaseDate string
+- body:rentalIncome number
+
+## S137-0070  POST /api/RetirementGoals/{retirementGoalId}/Expenses
+desc: Description: The operation creates a Retirement Goal Expense.<br /> Purpose: Allows for creation of Retirement Goal Expenses on a Fact Finder.
+- path:retirementGoalId integer
+- body:amount number
+- body:annualPeriod integer
+- body:description string
+- body:endDate string
+- body:externalDestinationId string
+- body:frequency integer
+- body:member string enum[Client|CoClient|Joint]
+- body:startDate string
+
+## S200-0001  POST /api/oauth/v1/token
+summary: Get authentication token
+desc: This endpoint allows you to get an authentication token. No need to be authenticated to use this endpoint.
+- body:grant_type string
+- body:password string
+- body:username string
+
+## S200-0002  PATCH /api/rest/v1/asset-categories
+summary: Update/create several PAM asset categories
+desc: This endpoint allows you to update several PAM asset categories at once.
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:parent string
+
+## S200-0005  PATCH /api/rest/v1/asset-families/{asset_family_code}/assets
+summary: Update/create several assets
+desc: This endpoint allows you to update and/or create several assets of one given asset family at once. Learn more about the <a href="/documentation/update.html#patch-asset-attribute-values">Update behavior</a>. Note that if the asset does not already exist for the given asset family, it creates it. This endpoint is case sensitive on the asset family code.
+- path:asset_family_code string
+- body:code string
+- body:created string
+- body:updated string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].channel string
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].locale string
+
+## S200-0006  DELETE /api/rest/v1/asset-families/{asset_family_code}/assets/{code}
+summary: Delete an asset
+desc: This endpoint allows you to delete a given asset. This endpoint is case sensitive on the asset family code.
+- path:asset_family_code string
+- path:code string
+
+## S200-0008  PATCH /api/rest/v1/asset-families/{asset_family_code}/attributes/{attribute_code}/options/{code}
+summary: Update/create an asset attribute option for a given asset family
+desc: This endpoint allows you to update a given option for a given attribute and a given asset family. Learn more about the <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if the option does not already exist for the given attribute of the given asset family, it creates it.
+- path:asset_family_code string
+- path:attribute_code string
+- path:code string
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+
+## S200-0010  PATCH /api/rest/v1/asset-families/{code}
+summary: Update/create an asset family
+desc: This endpoint allows you to update a given asset family. Note that if the asset family does not already exist, it creates it.
+- path:code string
+- body:attribute_as_main_media string
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:naming_convention object
+- body:naming_convention.abort_asset_creation_on_error boolean
+- body:naming_convention.pattern string
+- body:naming_convention.source object
+- body:product_link_rules array<object>
+- body:product_link_rules[].assign_assets_to array<object>
+- body:product_link_rules[].assign_assets_to[].attribute string
+- body:product_link_rules[].assign_assets_to[].channel string
+- body:product_link_rules[].assign_assets_to[].locale string
+- body:product_link_rules[].assign_assets_to[].mode string
+- body:product_link_rules[].product_selections array<object>
+- body:product_link_rules[].product_selections[].channel string
+- body:product_link_rules[].product_selections[].field string
+- body:product_link_rules[].product_selections[].locale string
+- body:product_link_rules[].product_selections[].operator string
+- body:product_link_rules[].product_selections[].value string
+- body:transformations array<object>
+- body:transformations[].filename_prefix string
+- body:transformations[].filename_suffix string
+- body:transformations[].label string
+- body:transformations[].operations object
+- body:transformations[].operations.parameters object
+- body:transformations[].operations.type string
+- body:transformations[].source object
+- body:transformations[].source.attribute string
+- body:transformations[].source.channel string
+- body:transformations[].source.locale string
+- body:transformations[].target object
+- body:transformations[].target.attribute string
+- body:transformations[].target.channel string
+- body:transformations[].target.locale string
+
+## S200-0011  POST /api/rest/v1/asset-media-files
+summary: Create a new media file for an asset
+desc: This endpoint allows you to create a new media file and associate it to a media file attribute value of an asset.
+- body:file string
+
+## S200-0012  PATCH /api/rest/v1/asset-tags/{code}
+summary: Update/create a PAM asset tag
+desc: This endpoint allows you to update a given PAM asset tag. Know more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no tag exists for the given code, it creates it.
+- path:code string
+- body:code string
+
+## S200-0014  POST /api/rest/v1/assets
+summary: Create a new PAM asset
+desc: This endpoint allows you to create a new PAM asset.
+- body:categories array<string>
+- body:code string
+- body:description string
+- body:end_of_use string
+- body:localizable boolean
+- body:reference_files array<object>
+- body:reference_files[]._link object
+- body:reference_files[]._link.download object
+- body:reference_files[]._link.self object
+- body:reference_files[].code string
+- body:reference_files[].locale string
+- body:tags array<string>
+- body:variation_files array<object>
+- body:variation_files[]._link object
+- body:variation_files[]._link.download object
+- body:variation_files[]._link.self object
+- body:variation_files[].code string
+- body:variation_files[].locale string
+- body:variation_files[].scope string
+
+## S200-0015  POST /api/rest/v1/assets/{asset_code}/reference-files/{locale_code}
+summary: Upload a new reference file
+desc: This endpoint allows you to upload a new reference file for a given PAM asset and locale. It will also automatically generate all the variation files corresponding to this reference file.
+- path:asset_code string
+- path:locale_code string
+- body:file string
+
+## S200-0016  POST /api/rest/v1/assets/{asset_code}/variation-files/{channel_code}/{locale_code}
+summary: Upload a new variation file
+desc: This endpoint allows you to upload a new variation file for a given PAM asset, channel and locale.
+- path:asset_code string
+- path:channel_code string
+- path:locale_code string
+- body:file string
+
+## S200-0021  PATCH /api/rest/v1/attribute-groups
+summary: Update/create several attribute groups
+desc: This endpoint allows you to update and/or create several attribute groups at once.
+- body:attributes array<string>
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:sort_order integer
+
+## S200-0022  POST /api/rest/v1/attribute-groups
+summary: Create a new attribute group
+desc: This endpoint allows you to create a new attribute group.
+- body:attributes array<string>
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:sort_order integer
+
+## S200-0023  PATCH /api/rest/v1/attribute-groups/{code}
+summary: Update/create an attribute group
+desc: This endpoint allows you to update a given attribute group. Know more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no attribute group exists for the given code, it creates it.
+- path:code string
+- body:attributes array<string>
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:sort_order integer
+
+## S200-0024  PATCH /api/rest/v1/attributes
+summary: Update/create several attributes
+desc: This endpoint allows you to update and/or create several attributes at once.
+- body:allowed_extensions array<string>
+- body:available_locales array<string>
+- body:code string
+- body:date_max string
+- body:date_min string
+- body:decimals_allowed boolean
+- body:default_metric_unit string
+- body:default_value boolean
+- body:group string
+- body:group_labels object
+- body:group_labels.localeCode string
+- body:labels object
+- body:labels.localeCode string
+- body:localizable boolean
+- body:max_characters integer
+- body:max_file_size string
+- body:metric_family string
+- body:negative_allowed boolean
+- body:number_max string
+- body:number_min string
+- body:reference_data_name string
+- body:scopable boolean
+- body:sort_order integer
+- body:table_configuration array<object>
+- body:table_configuration[].code string
+- body:table_configuration[].data_type string enum[select|text|number|boolean]
+- body:table_configuration[].is_required_for_completeness boolean
+- body:table_configuration[].labels object
+- body:table_configuration[].labels.localeCode string
+- body:table_configuration[].validations object
+- body:table_configuration[].validations.decimals_allowed boolean
+- body:table_configuration[].validations.max number
+- body:table_configuration[].validations.max_length number
+- body:table_configuration[].validations.min number
+- body:type string enum[pim_catalog_identifier|pim_catalog_metric|pim_catalog_number|pim_catalog_reference_data_multi_select|pim_catalog_reference_data_simple_select|pim_catalog_simpleselect|pim_catalog_multiselect|pim_catalog_date|pim_catalog_textarea|pim_catalog_text|pim_catalog_file|pim_catalog_image]
+- body:unique boolean
+- body:useable_as_grid_filter boolean
+- body:validation_regexp string
+- body:validation_rule string
+- body:wysiwyg_enabled boolean
+
+## S200-0026  PATCH /api/rest/v1/attributes/{attribute_code}/options
+summary: Update/create several attribute options
+desc: This endpoint allows you to update several attribute options at once.
+- path:attribute_code string
+- body:attribute string
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:sort_order integer
+
+## S200-0027  POST /api/rest/v1/attributes/{attribute_code}/options
+summary: Create a new attribute option
+desc: This endpoint allows you to create a new attribute option.
+- path:attribute_code string
+- body:attribute string
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:sort_order integer
+
+## S200-0028  PATCH /api/rest/v1/attributes/{attribute_code}/options/{code}
+summary: Update/create an attribute option
+desc: This endpoint allows you to update a given attribute option. Know more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no attribute option exists for the given code, it creates it.
+- path:attribute_code string
+- path:code string
+- body:attribute string
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:sort_order integer
+
+## S200-0031  DELETE /api/rest/v1/catalogs/{id}
+summary: Delete a catalog
+desc: This endpoint allows you to delete a catalog.
+- path:id string
+
+## S200-0034  POST /api/rest/v1/categories
+summary: Create a new category
+desc: This endpoint allows you to create a new category.
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:parent string
+- body:position integer
+- body:updated string
+- body:values object
+- body:values.attributeCode|attributeUuid|channelCode|localeCode array<object>
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].attribute_code string
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].channel string
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].data object
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].locale string
+- body:values.attributeCode|attributeUuid|channelCode|localeCode[].type string
+
+## S200-0036  PATCH /api/rest/v1/channels
+summary: Update/create several channels
+desc: This endpoint allows you to update and/or create several channels at once.
+- body:category_tree string
+- body:code string
+- body:conversion_units object
+- body:conversion_units.attributeCode string
+- body:currencies array<string>
+- body:labels object
+- body:labels.localeCode string
+- body:locales array<string>
+
+## S200-0039  PATCH /api/rest/v1/families
+summary: Update/create several families
+desc: This endpoint allows you to update and/or create several families at once.
+- body:attribute_as_image string
+- body:attribute_as_label string
+- body:attribute_requirements object
+- body:attribute_requirements.channelCode array<string>
+- body:attributes array<string>
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+
+## S200-0043  POST /api/rest/v1/families/{family_code}/variants
+summary: Create a new family variant
+desc: This endpoint allows you to create a family variant.
+- path:family_code string
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:variant_attribute_sets array<object>
+- body:variant_attribute_sets[].attributes array<string>
+- body:variant_attribute_sets[].axes array<string>
+- body:variant_attribute_sets[].level integer
+
+## S200-0045  PATCH /api/rest/v1/measurement-families
+summary: Update/create several measurement families
+desc: This endpoint allows you to update and/or create several measurement families at once.
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+- body:standard_unit_code string
+- body:units object
+- body:units.unitCode object
+- body:units.unitCode.code string
+- body:units.unitCode.convert_from_standard array<object>
+- body:units.unitCode.labels object
+- body:units.unitCode.symbol string
+
+## S200-0050  PATCH /api/rest/v1/product-models/{code}
+summary: Update/create a product model
+desc: This endpoint allows you to update a given product model. Learn more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no product model exists for the given code, it creates it. In the Enterprise Edition PIM since the 2.3, permissions based on your user groups are applied to the product model you try to update. It may result in the creation of a draft if 
+- path:code string
+- body:associations object
+- body:associations.associationTypeCode object
+- body:associations.associationTypeCode.groups array<string>
+- body:associations.associationTypeCode.product_models array<string>
+- body:associations.associationTypeCode.products array<string>
+- body:categories array<string>
+- body:code string
+- body:created string
+- body:family string
+- body:family_variant string
+- body:metadata object
+- body:metadata.workflow_status string enum[read_only|draft_in_progress|proposal_waiting_for_approval|working_copy]
+- body:parent string
+- body:quality_scores object
+- body:quantified_associations object
+- body:quantified_associations.quantifiedAssociationTypeCode object
+- body:quantified_associations.quantifiedAssociationTypeCode.product_models array<object>
+- body:quantified_associations.quantifiedAssociationTypeCode.products array<object>
+- body:updated string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].locale string
+- body:values.attributeCode[].scope string
+
+## S200-0051  POST /api/rest/v1/product-models/{code}/proposal
+summary: Submit a draft for approval
+desc: This endpoint allows you to submit a product model draft for approval.
+- path:code string
+
+## S200-0053  POST /api/rest/v1/products
+summary: Create a new product
+desc: This endpoint allows you to create a new product. In the Enterprise Edition, since the v2.0, permissions based on your user groups are applied to the product you try to create.
+- body:associations object
+- body:associations.associationTypeCode object
+- body:associations.associationTypeCode.groups array<string>
+- body:associations.associationTypeCode.product_models array<string>
+- body:associations.associationTypeCode.products array<string>
+- body:categories array<string>
+- body:completenesses array<object>
+- body:completenesses[].data integer
+- body:completenesses[].locale string
+- body:completenesses[].scope string
+- body:created string
+- body:enabled boolean
+- body:family string
+- body:groups array<string>
+- body:identifier string
+- body:metadata object
+- body:metadata.workflow_status string enum[read_only|draft_in_progress|proposal_waiting_for_approval|working_copy]
+- body:parent string
+- body:quality_scores object
+- body:quantified_associations object
+- body:quantified_associations.quantifiedAssociationTypeCode object
+- body:quantified_associations.quantifiedAssociationTypeCode.product_models array<object>
+- body:quantified_associations.quantifiedAssociationTypeCode.products array<object>
+- body:updated string
+- body:uuid string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].linked_data object
+- body:values.attributeCode[].locale string
+- body:values.attributeCode[].scope string
+
+## S200-0054  PATCH /api/rest/v1/products-uuid
+summary: Update/create several products
+desc: This endpoint allows you to update and/or create several products at once. Learn more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no product exists for the given uuid, it creates it. In the Enterprise Edition, permissions based on your user groups are applied to the products you try to update. It may result in the creation of drafts if you only have
+- body:associations object
+- body:associations.associationTypeCode object
+- body:associations.associationTypeCode.groups array<string>
+- body:associations.associationTypeCode.product_models array<string>
+- body:associations.associationTypeCode.products array<string>
+- body:categories array<string>
+- body:completenesses array<object>
+- body:completenesses[].data integer
+- body:completenesses[].locale string
+- body:completenesses[].scope string
+- body:created string
+- body:enabled boolean
+- body:family string
+- body:groups array<string>
+- body:metadata object
+- body:metadata.workflow_status string enum[read_only|draft_in_progress|proposal_waiting_for_approval|working_copy]
+- body:parent string
+- body:quality_scores object
+- body:quantified_associations object
+- body:quantified_associations.quantifiedAssociationTypeCode object
+- body:quantified_associations.quantifiedAssociationTypeCode.product_models array<object>
+- body:quantified_associations.quantifiedAssociationTypeCode.products array<object>
+- body:updated string
+- body:uuid string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].linked_data object
+- body:values.attributeCode[].locale string
+- body:values.attributeCode[].scope string
+
+## S200-0056  DELETE /api/rest/v1/products-uuid/{uuid}
+summary: Delete a product
+desc: This endpoint allows you to delete a given product. In the Enterprise Edition, permissions based on your user groups are applied to the product you try to delete.
+- path:uuid string
+
+## S200-0057  PATCH /api/rest/v1/products-uuid/{uuid}
+summary: Update/create a product
+desc: This endpoint allows you to update a given product. Learn more about <a href="/documentation/update.html#update-behavior">Update behavior</a>. Note that if no product exists for the given uuid, it creates it. In the Entreprise Edition, permissions based on your user groups are applied to the product you try to update. It may result in the creation of a draft if you only have edit rights through th
+- path:uuid string
+- body:associations object
+- body:associations.associationTypeCode object
+- body:associations.associationTypeCode.groups array<string>
+- body:associations.associationTypeCode.product_models array<string>
+- body:associations.associationTypeCode.products array<string>
+- body:categories array<string>
+- body:completenesses array<object>
+- body:completenesses[].data integer
+- body:completenesses[].locale string
+- body:completenesses[].scope string
+- body:created string
+- body:enabled boolean
+- body:family string
+- body:groups array<string>
+- body:metadata object
+- body:metadata.workflow_status string enum[read_only|draft_in_progress|proposal_waiting_for_approval|working_copy]
+- body:parent string
+- body:quality_scores object
+- body:quantified_associations object
+- body:quantified_associations.quantifiedAssociationTypeCode object
+- body:quantified_associations.quantifiedAssociationTypeCode.product_models array<object>
+- body:quantified_associations.quantifiedAssociationTypeCode.products array<object>
+- body:updated string
+- body:uuid string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].linked_data object
+- body:values.attributeCode[].locale string
+- body:values.attributeCode[].scope string
+
+## S200-0058  POST /api/rest/v1/products-uuid/{uuid}/proposal
+summary: Submit a draft for approval
+desc: This endpoint allows you to submit a draft for approval.
+- path:uuid string
+
+## S200-0059  DELETE /api/rest/v1/products/{code}
+summary: Delete a product
+desc: This endpoint allows you to delete a given product. In the Enterprise Edition, since the 2.0, permissions based on your user groups are applied to the product you try to delete.
+- path:code string
+
+## S200-0061  POST /api/rest/v1/products/{code}/proposal
+summary: Submit a draft for approval
+desc: This endpoint allows you to submit a draft for approval.
+- path:code string
+
+## S200-0062  POST /api/rest/v1/reference-entities-media-files
+summary: Create a new media file for a reference entity or a record
+desc: This endpoint allows you to create a new media file and associate it to the image of a reference entity, or to the main image or to an attribute value of a record.
+- body:file string
+
+## S200-0064  PATCH /api/rest/v1/reference-entities/{reference_entity_code}/attributes/{attribute_code}/options/{code}
+summary: Update/create a reference entity attribute option
+desc: This endpoint allows you to update a given option for a given attribute and a given reference entity. Learn more about <a href="/documentation/update.html#patch-reference-entity-record-values">Update behavior</a>. Note that if the option does not already exist for the given attribute of the given reference entity, it creates it.
+- path:reference_entity_code string
+- path:attribute_code string
+- path:code string
+- body:code string
+- body:labels object
+- body:labels.localeCode string
+
+## S200-0067  PATCH /api/rest/v1/reference-entities/{reference_entity_code}/records/{code}
+summary: Update/create a record of a given reference entity
+desc: This endpoint allows you to update a given record of a given renference entity. Learn more about <a href="/documentation/update.html#patch-reference-entity-record-values">Update behavior</a>. Note that if the record does not already exist for the given reference entity, it creates it.
+- path:reference_entity_code string
+- path:code string
+- body:code string
+- body:created string
+- body:updated string
+- body:values object
+- body:values.attributeCode array<object>
+- body:values.attributeCode[].channel string
+- body:values.attributeCode[].data object
+- body:values.attributeCode[].locale string
+
+## S201-0002  DELETE /accounts/{accountname}
+summary: Delete the specified account, only allowed if the account is in the disabled state. All users will be deleted along with the account and all resources will be garbage collected
+- path:accountname string
+
+## S201-0003  PUT /accounts/{accountname}/state
+summary: Update the state of an account to either enabled or disabled. For deletion use the DELETE route
+- path:accountname string
+- body:state string enum[enabled|disabled]
+
+## S201-0004  POST /accounts/{accountname}/users
+summary: Create a new user
+- path:accountname string
+- body:password string
+- body:username string
+
+## S201-0005  DELETE /accounts/{accountname}/users/{username}
+summary: Delete a specific user credential by username of the credential. Cannot be the credential used to authenticate the request.
+- path:accountname string
+- path:username string
+
+## S201-0007  POST /accounts/{accountname}/users/{username}/credentials
+summary: add/replace credential
+- path:accountname string
+- path:username string
+- body:created_at string
+- body:type string enum[password]
+- body:value string
+
+## S201-0008  POST /archives/images
+- body:(body) string
+
+## S201-0009  DELETE /archives/images/{imageDigest}
+desc: Performs a synchronous archive deletion
+- path:imageDigest string
+- query:force boolean
+
+## S201-0010  POST /archives/rules
+- body:analysis_age_days integer
+- body:created_at string
+- body:exclude object
+- body:exclude.expiration_days integer
+- body:exclude.selector object
+- body:exclude.selector.registry string
+- body:exclude.selector.repository string
+- body:exclude.selector.tag string
+- body:last_updated string
+- body:max_images_per_account integer
+- body:rule_id string
+- body:selector object
+- body:selector.registry string
+- body:selector.repository string
+- body:selector.tag string
+- body:system_global boolean
+- body:tag_versions_newer integer
+- body:transition string enum[archive|delete]
+
+## S201-0011  DELETE /archives/rules/{ruleId}
+- path:ruleId string
+
+## S201-0012  DELETE /events
+summary: Delete Events
+desc: Delete all or a subset of events filtered using the optional query parameters
+- query:before string
+- query:since string
+- query:level string
+
+## S201-0013  DELETE /events/{eventId}
+summary: Delete Event
+desc: Delete an event by its event ID
+- path:eventId string
+
+## S201-0015  POST /images
+summary: Submit a new image for analysis by the engine
+desc: Creates a new analysis task that is executed asynchronously
+- query:force boolean
+- query:autosubscribe boolean
+- body:annotations object
+- body:created_at string
+- body:digest string
+- body:dockerfile string
+- body:image_type string
+- body:source object
+- body:source.archive object
+- body:source.archive.digest string
+- body:source.digest object
+- body:source.digest.creation_timestamp_override string
+- body:source.digest.dockerfile string
+- body:source.digest.pullstring string
+- body:source.digest.tag string
+- body:source.import object
+- body:source.import.contents object
+- body:source.import.digest string
+- body:source.import.local_image_id string
+- body:source.import.operation_uuid string
+- body:source.import.parent_digest string
+- body:source.import.tags array<string>
+- body:source.tag object
+- body:source.tag.dockerfile string
+- body:source.tag.pullstring string
+- body:tag string
+
+## S201-0016  DELETE /images/by_id/{imageId}
+summary: Delete image by docker imageId
+- path:imageId string
+- query:force boolean
+
+## S201-0017  DELETE /images/{imageDigest}
+summary: Delete an image analysis
+- path:imageDigest string
+- query:force boolean
+
+## S201-0018  POST /import/images
+summary: Import an anchore image tar.gz archive file. This is a deprecated API replaced by the "/imports/images" route
+- body:archive_file string
+
+## S201-0020  DELETE /imports/images/{operation_id}
+summary: Invalidate operation ID so it can be garbage collected
+- path:operation_id string
+
+## S201-0021  POST /imports/images/{operation_id}/dockerfile
+summary: Begin the import of an image analyzed by Syft into the system
+- path:operation_id string
+- body:(body) string
+
+## S201-0023  POST /imports/images/{operation_id}/manifest
+summary: Import a docker or OCI distribution manifest to associate with the image
+- path:operation_id string
+- body:(body) object
+
+## S201-0024  POST /imports/images/{operation_id}/packages
+summary: Begin the import of an image analyzed by Syft into the system
+- path:operation_id string
+- body:artifactRelationships array<object>
+- body:artifactRelationships[].child string
+- body:artifactRelationships[].metadata object
+- body:artifactRelationships[].parent string
+- body:artifactRelationships[].type string
+- body:artifacts array<object>
+- body:artifacts[].cpes array<string>
+- body:artifacts[].foundBy string
+- body:artifacts[].id string
+- body:artifacts[].language string
+- body:artifacts[].licenses array<string>
+- body:artifacts[].locations array<object>
+- body:artifacts[].locations[].layerID string
+- body:artifacts[].locations[].path string
+- body:artifacts[].metadata object
+- body:artifacts[].metadataType string
+- body:artifacts[].name string
+- body:artifacts[].purl string
+- body:artifacts[].type string
+- body:artifacts[].version string
+- body:descriptor object
+- body:descriptor.name string
+- body:descriptor.version string
+- body:distro object
+- body:distro.idLike string
+- body:distro.name string
+- body:distro.version string
+- body:schema object
+- body:schema.url string
+- body:schema.version string
+- body:source object
+- body:source.target any
+- body:source.type string
+
+## S201-0025  POST /imports/images/{operation_id}/parent_manifest
+summary: Import a docker or OCI distribution manifest list to associate with the image
+- path:operation_id string
+- body:(body) object
+
+## S201-0026  POST /oauth/token
+desc: Request a jwt token for subsequent operations, this request is authenticated with normal HTTP auth
+- body:client_id string
+- body:grant_type string
+- body:password string
+- body:username string
+
+## S201-0027  POST /policies
+summary: Add a new policy
+desc: Adds a new policy bundle to the system
+- body:blacklisted_images array<object>
+- body:blacklisted_images[].id string
+- body:blacklisted_images[].image object
+- body:blacklisted_images[].image.type string enum[tag|digest|id]
+- body:blacklisted_images[].image.value string
+- body:blacklisted_images[].name string
+- body:blacklisted_images[].registry string
+- body:blacklisted_images[].repository string
+- body:comment string
+- body:id string
+- body:mappings array<object>
+- body:mappings[].id string
+- body:mappings[].image object
+- body:mappings[].image.type string enum[tag|digest|id]
+- body:mappings[].image.value string
+- body:mappings[].name string
+- body:mappings[].policy_id string
+- body:mappings[].policy_ids array<string>
+- body:mappings[].registry string
+- body:mappings[].repository string
+- body:mappings[].whitelist_ids array<string>
+- body:name string
+- body:policies array<object>
+- body:policies[].comment string
+- body:policies[].id string
+- body:policies[].name string
+- body:policies[].rules array<object>
+- body:policies[].rules[].action string enum[GO|STOP|WARN]
+- body:policies[].rules[].gate string
+- body:policies[].rules[].id string
+- body:policies[].rules[].params array<object>
+- body:policies[].rules[].trigger string
+- body:policies[].version string
+- body:version string
+- body:whitelisted_images array<object>
+- body:whitelisted_images[].id string
+- body:whitelisted_images[].image object
+- body:whitelisted_images[].image.type string enum[tag|digest|id]
+- body:whitelisted_images[].image.value string
+- body:whitelisted_images[].name string
+- body:whitelisted_images[].registry string
+- body:whitelisted_images[].repository string
+- body:whitelists array<object>
+- body:whitelists[].comment string
+- body:whitelists[].id string
+- body:whitelists[].items array<object>
+- body:whitelists[].items[].expires_on string
+- body:whitelists[].items[].gate string
+- body:whitelists[].items[].id string
+- body:whitelists[].items[].trigger_id string
+- body:whitelists[].name string
+- body:whitelists[].version string
+
+## S201-0028  DELETE /policies/{policyId}
+summary: Delete policy
+desc: Delete the specified policy
+- path:policyId string
+
+## S201-0029  PUT /policies/{policyId}
+summary: Update policy
+desc: Update/replace and existing policy
+- path:policyId string
+- query:active boolean
+- body:active boolean
+- body:created_at string
+- body:last_updated string
+- body:policyId string
+- body:policy_source string
+- body:policybundle object
+- body:policybundle.blacklisted_images array<object>
+- body:policybundle.blacklisted_images[].id string
+- body:policybundle.blacklisted_images[].image object
+- body:policybundle.blacklisted_images[].name string
+- body:policybundle.blacklisted_images[].registry string
+- body:policybundle.blacklisted_images[].repository string
+- body:policybundle.comment string
+- body:policybundle.id string
+- body:policybundle.mappings array<object>
+- body:policybundle.mappings[].id string
+- body:policybundle.mappings[].image object
+- body:policybundle.mappings[].name string
+- body:policybundle.mappings[].policy_id string
+- body:policybundle.mappings[].policy_ids array<string>
+- body:policybundle.mappings[].registry string
+- body:policybundle.mappings[].repository string
+- body:policybundle.mappings[].whitelist_ids array<string>
+- body:policybundle.name string
+- body:policybundle.policies array<object>
+- body:policybundle.policies[].comment string
+- body:policybundle.policies[].id string
+- body:policybundle.policies[].name string
+- body:policybundle.policies[].rules array<object>
+- body:policybundle.policies[].version string
+- body:policybundle.version string
+- body:policybundle.whitelisted_images array<object>
+- body:policybundle.whitelisted_images[].id string
+- body:policybundle.whitelisted_images[].image object
+- body:policybundle.whitelisted_images[].name string
+- body:policybundle.whitelisted_images[].registry string
+- body:policybundle.whitelisted_images[].repository string
+- body:policybundle.whitelists array<object>
+- body:policybundle.whitelists[].comment string
+- body:policybundle.whitelists[].id string
+- body:policybundle.whitelists[].items array<object>
+- body:policybundle.whitelists[].name string
+- body:policybundle.whitelists[].version string
+- body:userId string
+
+## S201-0030  POST /registries
+summary: Add a new registry
+desc: Adds a new registry to the system
+- query:validate boolean
+- body:registry string
+- body:registry_name string
+- body:registry_pass string
+- body:registry_type string
+- body:registry_user string
+- body:registry_verify boolean
+
+## S201-0032  PUT /registries/{registry}
+summary: Update/replace a registry configuration
+desc: Replaces an existing registry record with the given record
+- path:registry string
+- query:validate boolean
+- body:registry string
+- body:registry_name string
+- body:registry_pass string
+- body:registry_type string
+- body:registry_user string
+- body:registry_verify boolean
+
+## S201-0033  POST /repositories
+summary: Add repository to watch
+- query:repository string
+- query:autosubscribe boolean
+- query:dryrun boolean
+
+## S201-0034  POST /subscriptions
+summary: Add a subscription of a specific type
+desc: Create a new subscription to watch a tag and get notifications of changes
+- body:subscription_key string
+- body:subscription_type string
+- body:subscription_value string
+
+## S201-0035  DELETE /subscriptions/{subscriptionId}
+summary: Delete subscriptions of a specific type
+- path:subscriptionId string
+
+## S201-0037  POST /system/feeds
+summary: trigger feeds operations
+desc: Execute a synchronous feed sync operation. The response will block until complete, then return the result summary.
+- query:flush boolean
+- query:sync boolean
+
+## S201-0038  DELETE /system/feeds/{feed}
+desc: Delete the groups and data for the feed and disable the feed itself
+- path:feed string
+
+## S201-0040  DELETE /system/feeds/{feed}/{group}
+desc: Delete the group data and disable the group itself
+- path:feed string
+- path:group string
+
+## S201-0041  PUT /system/feeds/{feed}/{group}
+desc: Disable a specific group within a feed to not sync
+- path:feed string
+- path:group string
+- query:enabled boolean
+
+## S201-0042  DELETE /system/services/{servicename}/{hostid}
+summary: Delete the service config
+- path:servicename string
+- path:hostid string
+
+## S201-0043  POST /system/webhooks/{webhook_type}/test
+summary: Adds the capabilities to test a webhook delivery for the given notification type
+desc: Loads the Webhook configuration for webhook_type, and sends the notification out as a test
+- path:webhook_type string
+- query:notification_type string enum[tag_update|analysis_update|vuln_update|policy_eval]
+
+## S201-0044  POST /user/credentials
+summary: add/replace credential
+- body:created_at string
+- body:type string enum[password]
+- body:value string

@@ -1,0 +1,994 @@
+## S132-N0169  PUT /sessions/{idSession}/status
+desc: updateSessionsStatusByIdSession()
+schema: sessions_status
+- path:idSession string
+- query:key string
+- query:token string
+- body:value string
+
+## S132-N0170  DELETE /tokens/{token}
+desc: deleteTokensByToken()
+- path:token string
+- query:key string
+- query:token string
+
+## S132-N0171  POST /tokens/{token}/webhooks
+desc: addTokensWebhooksByToken()
+schema: tokens_webhooks
+- path:token string
+- query:key string
+- query:token string
+- body:callbackURL string
+- body:description string
+- body:idModel string
+
+## S132-N0172  PUT /tokens/{token}/webhooks
+desc: updateTokensWebhooksByToken()
+schema: tokens_webhooks
+- path:token string
+- query:key string
+- query:token string
+- body:callbackURL string
+- body:description string
+- body:idModel string
+
+## S132-N0173  DELETE /tokens/{token}/webhooks/{idWebhook}
+desc: deleteTokensWebhooksByTokenByIdWebhook()
+- path:token string
+- path:idWebhook string
+- query:key string
+- query:token string
+
+## S132-N0174  POST /webhooks
+desc: addWebhooks()
+schema: webhooks
+- query:key string
+- query:token string
+- body:active string
+- body:callbackURL string
+- body:description string
+- body:idModel string
+
+## S132-N0175  PUT /webhooks/
+desc: updateWebhooks()
+schema: webhooks
+- query:key string
+- query:token string
+- body:active string
+- body:callbackURL string
+- body:description string
+- body:idModel string
+
+## S132-N0177  PUT /webhooks/{idWebhook}
+desc: updateWebhooksByIdWebhook()
+schema: webhooks
+- path:idWebhook string
+- query:key string
+- query:token string
+- body:active string
+- body:callbackURL string
+- body:description string
+- body:idModel string
+
+## S132-N0178  PUT /webhooks/{idWebhook}/active
+desc: updateWebhooksActiveByIdWebhook()
+schema: webhooks_active
+- path:idWebhook string
+- query:key string
+- query:token string
+- body:value string
+
+## S132-N0179  PUT /webhooks/{idWebhook}/callbackURL
+desc: updateWebhooksCallbackURLByIdWebhook()
+schema: webhooks_callbackURL
+- path:idWebhook string
+- query:key string
+- query:token string
+- body:value string
+
+## S132-N0180  PUT /webhooks/{idWebhook}/description
+desc: updateWebhooksDescriptionByIdWebhook()
+schema: webhooks_description
+- path:idWebhook string
+- query:key string
+- query:token string
+- body:value string
+
+## S132-N0181  PUT /webhooks/{idWebhook}/idModel
+desc: updateWebhooksIdModelByIdWebhook()
+schema: webhooks_idModel
+- path:idWebhook string
+- query:key string
+- query:token string
+- body:value string
+
+## S531-N0001  POST /anonymization/anonymize
+desc: anonymize the images corresponding to the supplied list of image IDs (each paired with a list of DICOM tag translation). This route corresponds to repeated use of the route /images/{id}/anonymize.
+schema: imageTagValues
+- body:imageId integer
+- body:tagValues array<object>
+- body:tagValues[].tagPath object
+- body:tagValues[].tagPath.previous object
+- body:tagValues[].tagPath.tag integer
+- body:tagValues[].value string
+
+## S531-N0003  DELETE /anonymization/keys/{id}
+desc: delete an anonymization key that is no longer of interest
+- path:id integer
+
+## S531-N0004  POST /boxes/connect
+desc: connect to another box using a received URL. Used to connect to a public box.
+schema: remoteBox
+- body:baseUrl string
+- body:defaultProfile object
+- body:defaultProfile.options array<object>
+- body:defaultProfile.options[].description string
+- body:defaultProfile.options[].name string
+- body:defaultProfile.options[].rank integer
+- body:defaultProfile.options[].title string
+- body:name string
+
+## S531-N0005  POST /boxes/createconnection
+desc: create a new box connection where the supplied entity holds the remote box name. Used by publicly available boxes.
+schema: remoteBoxConnectionData
+- body:defaultProfile object
+- body:defaultProfile.options array<object>
+- body:defaultProfile.options[].description string
+- body:defaultProfile.options[].name string
+- body:defaultProfile.options[].rank integer
+- body:defaultProfile.options[].title string
+- body:name string
+
+## S531-N0006  DELETE /boxes/incoming/{id}
+desc: delete an incoming transaction. If a currently active transaction is deleted, a new transaction with the remainder of the images is created when receiving the next incoming image.
+- path:id integer
+
+## S531-N0008  DELETE /boxes/{id}
+desc: Delete the remote box with the supplied ID
+- path:id integer
+
+## S531-N0009  POST /boxes/{id}/send
+desc: send images corresponding to the supplied image ids to the remote box with the supplied ID
+schema: bulkAnonymizationData
+- path:id integer
+- body:imageTagValuesSet array<object>
+- body:imageTagValuesSet[].imageId integer
+- body:imageTagValuesSet[].tagValues array<object>
+- body:imageTagValuesSet[].tagValues[].tagPath object
+- body:imageTagValuesSet[].tagValues[].value string
+- body:profile object
+- body:profile.options array<object>
+- body:profile.options[].description string
+- body:profile.options[].name string
+- body:profile.options[].rank integer
+- body:profile.options[].title string
+
+## S531-N0010  POST /directorywatches
+desc: add a new directory to watch for incoming DICOM files
+schema: watchedDirectory
+- body:id integer
+- body:path string
+
+## S531-N0011  DELETE /directorywatches/{id}
+desc: stop watching and remove the directory corresponding to the supplied ID
+- path:id integer
+
+## S531-N0018  DELETE /forwarding/rule/{id}
+desc: remove the forwarding rule corresponding to the supplied ID
+- path:id integer
+
+## S531-N0019  POST /forwarding/rules
+desc: add a new forwarding rule
+schema: forwardingrule
+- body:destination object
+- body:destination.destinationId integer
+- body:destination.destinationName string
+- body:destination.destinationType string
+- body:id integer
+- body:keepImages boolean
+- body:source object
+- body:source.sourceId integer
+- body:source.sourceName string
+- body:source.sourceType string
+
+## S531-N0021  POST /images/delete
+desc: bulk delete a sequence of images according to the supplied image IDs. This is the same as a sequence of DELETE requests to /images/{id}
+- body:(body) integer
+
+## S531-N0023  POST /images/jpeg
+desc: add a JPEG image to slicebox. The image data will be wrapped in a DICOM file and added as a new series belonging to the study with the supplied ID
+- query:studyid integer
+- query:description string
+
+## S531-N0028  POST /import/sessions
+desc: create a new import sessions
+schema: importSession
+- body:created integer
+- body:filesAdded integer
+- body:filesImported integer
+- body:filesRejected integer
+- body:id integer
+- body:lastUpdated integer
+- body:name string
+- body:user string
+- body:userId integer
+
+## S531-N0029  DELETE /import/sessions/{id}
+desc: deletes the import session with the supplied ID
+- path:id integer
+
+## S531-N0031  DELETE /log
+desc: delete all log messages
+
+## S531-N0036  POST /metadata/series/query
+desc: submit a query for series
+schema: query
+- body:count integer
+- body:filters object
+- body:filters.seriesTagIds array<integer>
+- body:filters.seriesTypeIds array<integer>
+- body:filters.sourceRefs array<object>
+- body:filters.sourceRefs[].sourceId integer
+- body:filters.sourceRefs[].sourceType string
+- body:order object
+- body:order.orderAscending boolean
+- body:order.orderBy string
+- body:queryProperties array<object>
+- body:queryProperties[].operator string
+- body:queryProperties[].propertyName string
+- body:queryProperties[].propertyValue string
+- body:startIndex integer
+
+## S531-N0039  DELETE /metadata/series/{seriesId}/seriestags/{seriesTagId}
+desc: Delete the series tag with the supplied series tag ID from the series with the supplied series ID
+- path:seriesId integer
+- path:seriesTagId integer
+
+## S531-N0041  PUT /metadata/series/{seriesId}/seriestypes/{seriesTypeId}
+desc: Add the series type with the supplied series type ID to the series with the supplied series ID
+- path:seriesId integer
+- path:seriesTypeId integer
+
+## S531-N0045  POST /scus
+desc: add a new SCU for sending DICOM images
+schema: scu
+- body:aeTitle string
+- body:host string
+- body:id integer
+- body:name string
+- body:port integer
+
+## S531-N0046  DELETE /scus/{id}
+desc: remove the SCU corresponding to the supplied ID
+- path:id integer
+
+## S531-N0047  POST /scus/{id}/send
+desc: send the images with the supplied image IDs to a DICOM SCP using the the SCU with the supplied scu ID
+- path:id integer
+- body:(body) integer
+
+## S531-N0051  POST /seriestypes/rules/{id}/attributes
+desc: add a new series type rule attribute
+schema: seriestyperuleattribute
+- path:id integer
+- body:element integer
+- body:group integer
+- body:id integer
+- body:path string
+- body:seriesTypeRuleId integer
+- body:value string
+
+## S531-N0052  DELETE /seriestypes/rules/{ruleId}/attributes/{attributeId}
+desc: remove the series type rule attribute corresponding to the supplied series type and attribute IDs
+- path:ruleId integer
+- path:attributeId integer
+
+## S531-N0054  DELETE /seriestypes/{id}
+desc: remove the series type corresponding to the supplied ID
+- path:id integer
+
+## S531-N0056  POST /system/stop
+desc: stop and shut down slicebox
+
+## S531-N0062  POST /users/login
+desc: Obtain a session cookie that can be used to authenticate future API calls from the present IP address and with the present user agent.
+schema: userPass
+- body:pass string
+- body:user string
+
+## S531-N0063  POST /users/logout
+desc: Logout the current user by responding with a delete cookie header removing the session cookie for this user.
+
+## S393-N0001  PUT /v1/addresses/recognize
+desc: Parse an address | The address-recognition API makes it easy for you to extract address data from unstructured text, including the recipient name, line 1, line 2, city, postal code, and more. Data often enters your system as unstructured text (for example: emails, SMS messages, support tickets, or other documents). ShipEngine's address-recognition API helps you extract meaningful, structured data 
+schema: parse_address_request_body
+- body:address object
+- body:address.address_line1 string
+- body:address.address_line2 string
+- body:address.address_line3 string
+- body:address.address_residential_indicator string enum[unknown|yes|no]
+- body:address.city_locality string
+- body:address.company_name string
+- body:address.country_code string
+- body:address.email string
+- body:address.name string
+- body:address.phone string
+- body:address.postal_code string
+- body:address.state_province string
+- body:text string
+
+## S393-N0005  PUT /v1/batches/{batch_id}
+desc: Update Batch By Id | Update Batch By Id
+- path:batch_id string
+
+## S393-N0006  POST /v1/batches/{batch_id}/add
+desc: Add to a Batch | Add a Shipment or Rate to a Batch
+schema: add_to_batch_request_body
+- path:batch_id string
+- body:rate_ids array<string>
+- body:shipment_ids array<string>
+
+## S393-N0008  POST /v1/batches/{batch_id}/remove
+desc: Remove From Batch | Remove a shipment or rate from a batch
+schema: remove_from_batch_request_body
+- path:batch_id string
+- body:rate_ids array<string>
+- body:shipment_ids array<string>
+
+## S393-N0009  PUT /v1/carriers/{carrier_id}/add_funds
+desc: Add Funds To Carrier | Add Funds To A Carrier
+schema: add_funds_to_carrier_request_body
+- path:carrier_id string
+- body:amount number
+- body:currency string
+
+## S393-N0016  DELETE /v1/environment/webhooks/{webhook_id}
+desc: Delete Webhook By ID | Delete a webhook
+- path:webhook_id string
+
+## S393-N0017  PUT /v1/environment/webhooks/{webhook_id}
+desc: Update a Webhook | Update the webhook url property
+schema: update_webhook_request_body
+- path:webhook_id string
+- body:url string
+
+## S393-N0020  POST /v1/labels/rates/{rate_id}
+desc: Purchase Label with Rate ID | When retrieving rates for shipments using the `/rates` endpoint, the returned information contains a `rate_id` property that can be used to generate a label without having to refill in the shipment information repeatedly.
+schema: create_label_from_rate_request_body
+- path:rate_id string
+- body:display_scheme string enum[label|qr_code|label_and_qr_code]
+- body:label_download_type string enum[url|inline]
+- body:label_format string enum[pdf|png|zpl]
+- body:label_layout string enum[4x6|letter]
+- body:validate_address string enum[no_validation|validate_only|validate_and_clean]
+
+## S393-N0025  POST /v1/packages
+desc: Create Custom Package Type | Create a custom package type to better assist in getting accurate rate estimates
+schema: create_package_type_request_body
+- body:description string
+- body:dimensions object
+- body:dimensions.height number
+- body:dimensions.length number
+- body:dimensions.unit string enum[inch|centimeter]
+- body:dimensions.width number
+- body:name string
+- body:package_code string
+- body:package_id string
+
+## S393-N0026  DELETE /v1/packages/{package_id}
+desc: Delete A Custom Package By ID | Delete a custom package using the ID
+- path:package_id string
+
+## S393-N0031  POST /v1/rates/bulk
+desc: Get Bulk Rates | Get Bulk Shipment Rates
+schema: compare_bulk_rates_request_body
+- body:rate_options object
+- body:rate_options.calculate_tax_amount boolean
+- body:rate_options.carrier_ids array<string>
+- body:rate_options.is_return boolean
+- body:rate_options.package_types array<string>
+- body:rate_options.preferred_currency string
+- body:rate_options.service_codes array<string>
+- body:shipment_ids array<string>
+- body:shipments array<object>
+- body:shipments[].validate_address string enum[no_validation|validate_only|validate_and_clean]
+- body:shipments[].advanced_options object
+- body:shipments[].advanced_options.bill_to_account string
+- body:shipments[].advanced_options.bill_to_country_code string
+- body:shipments[].advanced_options.bill_to_party string enum[recipient|third_party]
+- body:shipments[].advanced_options.bill_to_postal_code string
+- body:shipments[].advanced_options.collect_on_delivery object
+- body:shipments[].advanced_options.contains_alcohol boolean
+- body:shipments[].advanced_options.custom_field1 string
+- body:shipments[].advanced_options.custom_field2 string
+- body:shipments[].advanced_options.custom_field3 string
+- body:shipments[].advanced_options.delivered_duty_paid boolean
+- body:shipments[].advanced_options.dry_ice boolean
+- body:shipments[].advanced_options.dry_ice_weight object
+- body:shipments[].advanced_options.fedex_freight object
+- body:shipments[].advanced_options.freight_class string
+- body:shipments[].advanced_options.non_machinable boolean
+- body:shipments[].advanced_options.origin_type string enum[pickup|drop_off]
+- body:shipments[].advanced_options.saturday_delivery boolean
+- body:shipments[].advanced_options.shipper_release boolean
+- body:shipments[].advanced_options.third_party_consignee boolean
+- body:shipments[].advanced_options.use_ups_ground_freight_pricing boolean
+- body:shipments[].carrier_id string
+- body:shipments[].confirmation string enum[none|delivery|signature|adult_signature|direct_signature|delivery_mailed|verbal_confirmation]
+- body:shipments[].created_at string
+- body:shipments[].customs object
+- body:shipments[].customs.contents string enum[merchandise|documents|gift|returned_goods|sample]
+- body:shipments[].customs.customs_items array<object>
+- body:shipments[].customs.non_delivery string enum[return_to_sender|treat_as_abandoned]
+- body:shipments[].external_order_id string
+- body:shipments[].external_shipment_id string
+- body:shipments[].insurance_provider string enum[none|shipsurance|carrier|third_party]
+- body:shipments[].items array<object>
+- body:shipments[].items[].asin string
+- body:shipments[].items[].external_order_id string
+- body:shipments[].items[].external_order_item_id string
+- body:shipments[].items[].name string
+- body:shipments[].items[].order_source_code string enum[amazon_ca|amazon_us|brightpearl|channel_advisor|cratejoy|ebay|etsy|jane|groupon_goods|magento|paypal|seller_active]
+- body:shipments[].items[].quantity integer
+- body:shipments[].items[].sales_order_id string
+- body:shipments[].items[].sales_order_item_id string
+- body:shipments[].items[].sku string
+- body:shipments[].modified_at string
+- body:shipments[].order_source_code string enum[amazon_ca|amazon_us|brightpearl|channel_advisor|cratejoy|ebay|etsy|jane|groupon_goods|magento|paypal|seller_active]
+- body:shipments[].origin_type string enum[pickup|drop_off]
+- body:shipments[].packages array<object>
+- body:shipments[].packages[].content_description string
+- body:shipments[].packages[].dimensions object
+- body:shipments[].packages[].external_package_id string
+- body:shipments[].packages[].form_download object
+- body:shipments[].packages[].insured_value object
+- body:shipments[].packages[].label_download object
+- body:shipments[].packages[].label_messages object
+- body:shipments[].packages[].package_code string
+- body:shipments[].packages[].package_id string
+- body:shipments[].packages[].sequence integer
+- body:shipments[].packages[].tracking_number string
+- body:shipments[].packages[].weight object
+- body:shipments[].return_to object
+- body:shipments[].return_to.address_line1 string
+- body:shipments[].return_to.address_line2 string
+- body:shipments[].return_to.address_line3 string
+- body:shipments[].return_to.address_residential_indicator string enum[unknown|yes|no]
+- body:shipments[].return_to.city_locality string
+- body:shipments[].return_to.company_name string
+- body:shipments[].return_to.country_code string
+- body:shipments[].return_to.email string
+- body:shipments[].return_to.name string
+- body:shipments[].return_to.phone string
+- body:shipments[].return_to.postal_code string
+- body:shipments[].return_to.state_province string
+(+45 fields cut)
+
+## S393-N0034  POST /v1/shipments
+desc: Create Shipments | Create one or multiple shipments.
+schema: create_shipments_request_body
+- body:shipments array<object>
+- body:shipments[].validate_address string enum[no_validation|validate_only|validate_and_clean]
+- body:shipments[].advanced_options object
+- body:shipments[].advanced_options.bill_to_account string
+- body:shipments[].advanced_options.bill_to_country_code string
+- body:shipments[].advanced_options.bill_to_party string enum[recipient|third_party]
+- body:shipments[].advanced_options.bill_to_postal_code string
+- body:shipments[].advanced_options.collect_on_delivery object
+- body:shipments[].advanced_options.contains_alcohol boolean
+- body:shipments[].advanced_options.custom_field1 string
+- body:shipments[].advanced_options.custom_field2 string
+- body:shipments[].advanced_options.custom_field3 string
+- body:shipments[].advanced_options.delivered_duty_paid boolean
+- body:shipments[].advanced_options.dry_ice boolean
+- body:shipments[].advanced_options.dry_ice_weight object
+- body:shipments[].advanced_options.fedex_freight object
+- body:shipments[].advanced_options.freight_class string
+- body:shipments[].advanced_options.non_machinable boolean
+- body:shipments[].advanced_options.origin_type string enum[pickup|drop_off]
+- body:shipments[].advanced_options.saturday_delivery boolean
+- body:shipments[].advanced_options.shipper_release boolean
+- body:shipments[].advanced_options.third_party_consignee boolean
+- body:shipments[].advanced_options.use_ups_ground_freight_pricing boolean
+- body:shipments[].carrier_id string
+- body:shipments[].confirmation string enum[none|delivery|signature|adult_signature|direct_signature|delivery_mailed|verbal_confirmation]
+- body:shipments[].created_at string
+- body:shipments[].customs object
+- body:shipments[].customs.contents string enum[merchandise|documents|gift|returned_goods|sample]
+- body:shipments[].customs.customs_items array<object>
+- body:shipments[].customs.non_delivery string enum[return_to_sender|treat_as_abandoned]
+- body:shipments[].external_order_id string
+- body:shipments[].external_shipment_id string
+- body:shipments[].insurance_provider string enum[none|shipsurance|carrier|third_party]
+- body:shipments[].items array<object>
+- body:shipments[].items[].asin string
+- body:shipments[].items[].external_order_id string
+- body:shipments[].items[].external_order_item_id string
+- body:shipments[].items[].name string
+- body:shipments[].items[].order_source_code string enum[amazon_ca|amazon_us|brightpearl|channel_advisor|cratejoy|ebay|etsy|jane|groupon_goods|magento|paypal|seller_active]
+- body:shipments[].items[].quantity integer
+- body:shipments[].items[].sales_order_id string
+- body:shipments[].items[].sales_order_item_id string
+- body:shipments[].items[].sku string
+- body:shipments[].modified_at string
+- body:shipments[].order_source_code string enum[amazon_ca|amazon_us|brightpearl|channel_advisor|cratejoy|ebay|etsy|jane|groupon_goods|magento|paypal|seller_active]
+- body:shipments[].origin_type string enum[pickup|drop_off]
+- body:shipments[].packages array<object>
+- body:shipments[].packages[].content_description string
+- body:shipments[].packages[].dimensions object
+- body:shipments[].packages[].external_package_id string
+- body:shipments[].packages[].form_download object
+- body:shipments[].packages[].insured_value object
+- body:shipments[].packages[].label_download object
+- body:shipments[].packages[].label_messages object
+- body:shipments[].packages[].package_code string
+- body:shipments[].packages[].package_id string
+- body:shipments[].packages[].sequence integer
+- body:shipments[].packages[].tracking_number string
+- body:shipments[].packages[].weight object
+- body:shipments[].return_to object
+- body:shipments[].return_to.address_line1 string
+- body:shipments[].return_to.address_line2 string
+- body:shipments[].return_to.address_line3 string
+- body:shipments[].return_to.address_residential_indicator string enum[unknown|yes|no]
+- body:shipments[].return_to.city_locality string
+- body:shipments[].return_to.company_name string
+- body:shipments[].return_to.country_code string
+- body:shipments[].return_to.email string
+- body:shipments[].return_to.name string
+- body:shipments[].return_to.phone string
+- body:shipments[].return_to.postal_code string
+- body:shipments[].return_to.state_province string
+- body:shipments[].return_to.instructions string
+- body:shipments[].service_code string
+- body:shipments[].ship_date string
+- body:shipments[].ship_from object
+- body:shipments[].ship_from.address_line1 string
+- body:shipments[].ship_from.address_line2 string
+- body:shipments[].ship_from.address_line3 string
+- body:shipments[].ship_from.address_residential_indicator string enum[unknown|yes|no]
+(+37 fields cut)
+
+## S393-N0049  PUT /v1/warehouses/{warehouse_id}/settings
+desc: Update Warehouse Settings | Update Warehouse settings object information
+schema: update_warehouse_settings_request_body
+- path:warehouse_id string
+- body:is_default boolean
+
+## S517-N0001  DELETE /circuits/circuit-terminations/
+
+## S517-N0002  PATCH /circuits/circuit-terminations/
+schema: WritableCircuitTermination
+- body:_occupied boolean
+- body:cable object
+- body:cable.display string
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:cable_end string
+- body:circuit integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:link_peers array<string>
+- body:link_peers_type string
+- body:mark_connected boolean
+- body:port_speed integer
+- body:pp_info string
+- body:provider_network integer
+- body:site integer
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:term_side string enum[A|Z]
+- body:upstream_speed integer
+- body:url string
+- body:xconnect_id string
+
+## S517-N0003  POST /circuits/circuit-terminations/
+schema: WritableCircuitTermination
+- body:_occupied boolean
+- body:cable object
+- body:cable.display string
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:cable_end string
+- body:circuit integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:link_peers array<string>
+- body:link_peers_type string
+- body:mark_connected boolean
+- body:port_speed integer
+- body:pp_info string
+- body:provider_network integer
+- body:site integer
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:term_side string enum[A|Z]
+- body:upstream_speed integer
+- body:url string
+- body:xconnect_id string
+
+## S517-N0004  PUT /circuits/circuit-terminations/
+schema: WritableCircuitTermination
+- body:_occupied boolean
+- body:cable object
+- body:cable.display string
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:cable_end string
+- body:circuit integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:link_peers array<string>
+- body:link_peers_type string
+- body:mark_connected boolean
+- body:port_speed integer
+- body:pp_info string
+- body:provider_network integer
+- body:site integer
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:term_side string enum[A|Z]
+- body:upstream_speed integer
+- body:url string
+- body:xconnect_id string
+
+## S517-N0005  DELETE /circuits/circuit-terminations/{id}/
+- path:id integer
+
+## S517-N0006  PATCH /circuits/circuit-terminations/{id}/
+schema: WritableCircuitTermination
+- path:id integer
+- body:_occupied boolean
+- body:cable object
+- body:cable.display string
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:cable_end string
+- body:circuit integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:link_peers array<string>
+- body:link_peers_type string
+- body:mark_connected boolean
+- body:port_speed integer
+- body:pp_info string
+- body:provider_network integer
+- body:site integer
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:term_side string enum[A|Z]
+- body:upstream_speed integer
+- body:url string
+- body:xconnect_id string
+
+## S517-N0007  PUT /circuits/circuit-terminations/{id}/
+schema: WritableCircuitTermination
+- path:id integer
+- body:_occupied boolean
+- body:cable object
+- body:cable.display string
+- body:cable.id integer
+- body:cable.label string
+- body:cable.url string
+- body:cable_end string
+- body:circuit integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:link_peers array<string>
+- body:link_peers_type string
+- body:mark_connected boolean
+- body:port_speed integer
+- body:pp_info string
+- body:provider_network integer
+- body:site integer
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:term_side string enum[A|Z]
+- body:upstream_speed integer
+- body:url string
+- body:xconnect_id string
+
+## S517-N0008  DELETE /circuits/circuit-types/
+
+## S517-N0009  PATCH /circuits/circuit-types/
+schema: CircuitType
+- body:circuit_count integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:slug string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-N0010  POST /circuits/circuit-types/
+schema: CircuitType
+- body:circuit_count integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:slug string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-N0011  PUT /circuits/circuit-types/
+schema: CircuitType
+- body:circuit_count integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:slug string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-N0012  DELETE /circuits/circuit-types/{id}/
+- path:id integer
+
+## S517-N0013  PATCH /circuits/circuit-types/{id}/
+schema: CircuitType
+- path:id integer
+- body:circuit_count integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:slug string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-N0014  PUT /circuits/circuit-types/{id}/
+schema: CircuitType
+- path:id integer
+- body:circuit_count integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:last_updated string
+- body:name string
+- body:slug string
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:url string
+
+## S517-N0015  DELETE /circuits/circuits/
+
+## S517-N0016  PATCH /circuits/circuits/
+schema: WritableCircuit
+- body:cid string
+- body:comments string
+- body:commit_rate integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:install_date string
+- body:last_updated string
+- body:provider integer
+- body:status string enum[planned|provisioning|active|offline|deprovisioning|decommissioned]
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:tenant integer
+- body:termination_a integer
+- body:termination_date string
+- body:termination_z integer
+- body:type integer
+- body:url string
+
+## S517-N0017  POST /circuits/circuits/
+schema: WritableCircuit
+- body:cid string
+- body:comments string
+- body:commit_rate integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:install_date string
+- body:last_updated string
+- body:provider integer
+- body:status string enum[planned|provisioning|active|offline|deprovisioning|decommissioned]
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:tenant integer
+- body:termination_a integer
+- body:termination_date string
+- body:termination_z integer
+- body:type integer
+- body:url string
+
+## S517-N0018  PUT /circuits/circuits/
+schema: WritableCircuit
+- body:cid string
+- body:comments string
+- body:commit_rate integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:install_date string
+- body:last_updated string
+- body:provider integer
+- body:status string enum[planned|provisioning|active|offline|deprovisioning|decommissioned]
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:tenant integer
+- body:termination_a integer
+- body:termination_date string
+- body:termination_z integer
+- body:type integer
+- body:url string
+
+## S517-N0019  DELETE /circuits/circuits/{id}/
+- path:id integer
+
+## S517-N0020  PATCH /circuits/circuits/{id}/
+schema: WritableCircuit
+- path:id integer
+- body:cid string
+- body:comments string
+- body:commit_rate integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:install_date string
+- body:last_updated string
+- body:provider integer
+- body:status string enum[planned|provisioning|active|offline|deprovisioning|decommissioned]
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:tenant integer
+- body:termination_a integer
+- body:termination_date string
+- body:termination_z integer
+- body:type integer
+- body:url string
+
+## S517-N0021  PUT /circuits/circuits/{id}/
+schema: WritableCircuit
+- path:id integer
+- body:cid string
+- body:comments string
+- body:commit_rate integer
+- body:created string
+- body:custom_fields object
+- body:description string
+- body:display string
+- body:id integer
+- body:install_date string
+- body:last_updated string
+- body:provider integer
+- body:status string enum[planned|provisioning|active|offline|deprovisioning|decommissioned]
+- body:tags array<object>
+- body:tags[].color string
+- body:tags[].display string
+- body:tags[].id integer
+- body:tags[].name string
+- body:tags[].slug string
+- body:tags[].url string
+- body:tenant integer
+- body:termination_a integer
+- body:termination_date string
+- body:termination_z integer
+- body:type integer
+- body:url string
+
+## S517-N0022  DELETE /circuits/provider-networks/

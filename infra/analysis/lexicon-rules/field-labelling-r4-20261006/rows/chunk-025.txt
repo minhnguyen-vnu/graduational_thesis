@@ -1,0 +1,532 @@
+## S627-N0015  DELETE /v1/log-drains/{id}
+desc: Deletes a Configurable Log Drain | Deletes a Configurable Log Drain. This endpoint must be called with a team AccessToken (integration OAuth2 clients are not allowed). Only log drains owned by the authenticated team can be deleted.
+- path:id string
+- query:teamId string
+
+## S627-N0017  DELETE /v1/teams/{teamId}
+desc: Delete a Team | Delete a team under your account. You need to send a `DELETE` request with the desired team `id`. An optional array of reasons for deletion may also be sent.
+- path:teamId string
+- body:reasons array<object>
+- body:reasons[].description string
+- body:reasons[].slug string
+
+## S627-N0018  DELETE /v1/teams/{teamId}/invites/{inviteId}
+desc: Delete a Team invite code | Delete an active Team invite code.
+- path:inviteId string
+- path:teamId string
+
+## S627-N0020  POST /v1/teams/{teamId}/members/teams/join
+desc: Join a team | Join a team with a provided invite code or team ID.
+- path:teamId string
+- body:inviteCode string
+- body:teamId string
+
+## S627-N0021  DELETE /v1/teams/{teamId}/members/{uid}
+desc: Remove a Team Member | Remove a Team Member from the Team, or dismiss a user that requested access, or leave a team.
+- path:uid string
+- path:teamId string
+
+## S627-N0026  DELETE /v1/webhooks/{id}
+desc: Deletes a webhook | Deletes a webhook
+- path:id string
+- query:teamId string
+
+## S627-N0027  POST /v10/projects/{idOrName}/env
+desc: Create one or more environment variables | Create one ore more environment variables for a project by passing its `key`, `value`, `type` and `target` and by specifying the project by either passing the project `id` or `name` in the URL.
+- path:idOrName string
+- query:teamId string
+- body:gitBranch string
+- body:key string
+- body:target array<string> enum[mport("/vercel/path0/utils/env-variable-util/types").EnvTarget.Productio|mport("/vercel/path0/utils/env-variable-util/types").EnvTarget.Previe|mport("/vercel/path0/utils/env-variable-util/types").EnvTarget.Developmen]
+- body:type string enum[system|secret|encrypted|plain|sensitive]
+- body:value string
+
+## S627-N0032  POST /v2/deployments/{id}/aliases
+desc: Assign an Alias | Creates a new alias for the deployment with the given deployment ID. The authenticated user must own this deployment. If the desired alias is already assigned to another deployment, then it will be removed from the old deployment and assigned to the new one.
+- path:id string
+- query:teamId string
+- body:alias string
+- body:redirect string
+
+## S627-N0033  POST /v2/domains/{domain}/records
+desc: Create a DNS record | Creates a DNS record for a domain.
+- path:domain string
+- query:teamId string
+- body:type string enum[A|AAAA|ALIAS|CAA|CNAME|MX|SRV|TXT|NS]
+- body:name string
+- body:ttl number
+- body:value string
+- body:mxPriority number
+- body:srv object
+- body:srv.port number
+- body:srv.priority number
+- body:srv.target string
+- body:srv.weight number
+
+## S627-N0034  DELETE /v2/domains/{domain}/records/{recordId}
+desc: Delete a DNS record | Removes an existing DNS record from a domain name.
+- path:domain string
+- path:recordId string
+- query:teamId string
+
+## S627-N0038  PATCH /v2/secrets/{name}
+desc: Change secret name | Enables to edit the name of a user's secret. The name has to be unique to that user's secrets.
+- path:name string
+- query:teamId string
+- body:name string
+
+## S627-N0041  POST /v3/user/tokens
+desc: Create an Auth Token | Creates and returns a new authentication token for the currently authenticated User. The `bearerToken` property is only provided once, in the response body, so be sure to save it on the client for use with API requests.
+- query:teamId string
+- body:expiresAt number
+- body:name string
+- body:clientId string
+- body:installationId string
+- body:type string enum[oauth2-token]
+
+## S627-N0050  POST /v8/artifacts/events
+desc: Record an artifacts cache usage event | Records an artifacts cache usage event. The body of this request is an array of cache usage events. The supported event types are `HIT` and `MISS`. The source is either `LOCAL` the cache event was on the users filesystem cache or `REMOTE` if the cache event is for a remote cache. When the event is a `HIT` the request also accepts a number `duration` which is
+- query:teamId string
+- body:duration number
+- body:event string enum[HIT|MISS]
+- body:hash string
+- body:sessionId string
+- body:source string enum[LOCAL|REMOTE]
+
+## S627-N0051  PUT /v8/artifacts/{hash}
+desc: Upload a cache artifact | Uploads a cache artifact identified by the `hash` specified on the path. The cache artifact can then be downloaded with the provided `hash`.
+- path:hash string
+- query:teamId string
+
+## S627-N0054  PATCH /v9/projects/{idOrName}
+desc: Update an existing project | Update the fields of a project using either its `name` or `id`.
+- path:idOrName string
+- query:teamId string
+- body:autoExposeSystemEnvs boolean
+- body:buildCommand string
+- body:commandForIgnoringBuildStep string
+- body:devCommand string
+- body:directoryListing boolean
+- body:enablePreviewFeedback boolean
+- body:framework string enum[blitzjs|nextjs|gatsby|remix|astro|hexo|eleventy|docusaurus-2|docusaurus|preact|solidstart|dojo]
+- body:gitForkProtection boolean
+- body:installCommand string
+- body:name string
+- body:nodeVersion string enum[18.x|16.x|14.x|12.x|10.x]
+- body:outputDirectory string
+- body:passwordProtection object
+- body:passwordProtection.deploymentType string enum[all|preview]
+- body:passwordProtection.password string
+- body:publicSource boolean
+- body:rootDirectory string
+- body:serverlessFunctionRegion string
+- body:skipGitConnectDuringLink boolean
+- body:sourceFilesOutsideRootDirectory boolean
+- body:ssoProtection object
+- body:ssoProtection.deploymentType string enum[all|preview]
+
+## S627-N0059  DELETE /v9/projects/{idOrName}/env/{id}
+desc: Remove an environment variable | Delete a specific environment variable for a given project by passing the environment variable identifier and either passing the project `id` or `name` in the URL.
+- path:idOrName string
+- path:id string
+- query:teamId string
+
+## S627-N0060  PATCH /v9/projects/{idOrName}/env/{id}
+desc: Edit an environment variable | Edit a specific environment variable for a given project by passing the environment variable identifier and either passing the project `id` or `name` in the URL.
+- path:idOrName string
+- path:id string
+- query:teamId string
+- body:gitBranch string
+- body:key string
+- body:target array<string> enum[mport("/vercel/path0/utils/env-variable-util/types").EnvTarget.Productio|mport("/vercel/path0/utils/env-variable-util/types").EnvTarget.Previe|mport("/vercel/path0/utils/env-variable-util/types").EnvTarget.Developmen]
+- body:type string enum[system|secret|encrypted|plain|sensitive]
+- body:value string
+
+## S210-N0001  POST /app-manifests/{code}/conversions
+desc: Create a GitHub App from a manifest | Use this endpoint to complete the handshake necessary when implementing the [GitHub App Manifest flow](https://docs.github.com/enterprise-cloud@latest//apps/building-github-apps/creating-github-apps-from-a-manifest/). When you create a GitHub App with the manifest flow, you receive a temporary `code` used to retrieve the GitHub App's `id`, `pem` (private key),
+- path:code string
+
+## S210-N0002  PATCH /app/hook/config
+desc: Update a webhook configuration for an app | Updates the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)." You must use a [JWT](https://docs.github.com/enterprise-cloud@latest//apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access
+- body:content_type string
+- body:insecure_ssl string
+- body:secret string
+- body:url string
+
+## S210-N0003  POST /app/hook/deliveries/{delivery_id}/attempts
+desc: Redeliver a delivery for an app webhook | Redeliver a delivery for the webhook configured for a GitHub App. You must use a [JWT](https://docs.github.com/enterprise-cloud@latest//apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+- path:delivery_id integer
+
+## S210-N0004  DELETE /app/installations/{installation_id}
+desc: Delete an installation for the authenticated app | Uninstalls a GitHub App on a user, organization, or business account. If you prefer to temporarily suspend an app's access to your account's resources, then we recommend the "[Suspend an app installation](https://docs.github.com/enterprise-cloud@latest//rest/reference/apps/#suspend-an-app-installation)" endpoint. You must use a [JWT](https://docs.
+- path:installation_id integer
+
+## S210-N0005  POST /app/installations/{installation_id}/access_tokens
+desc: Create an installation access token for an app | Creates an installation access token that enables a GitHub App to make authenticated API requests for the app's installation on an organization or individual account. Installation tokens expire one hour from the time you create them. Using an expired token produces a status code of `401 - Unauthorized`, and requires creating a new installation token
+- path:installation_id integer
+- body:permissions object
+- body:permissions.actions string enum[read|write]
+- body:permissions.administration string enum[read|write]
+- body:permissions.checks string enum[read|write]
+- body:permissions.contents string enum[read|write]
+- body:permissions.deployments string enum[read|write]
+- body:permissions.environments string enum[read|write]
+- body:permissions.issues string enum[read|write]
+- body:permissions.members string enum[read|write]
+- body:permissions.metadata string enum[read|write]
+- body:permissions.organization_administration string enum[read|write]
+- body:permissions.organization_announcement_banners string enum[read|write]
+- body:permissions.organization_custom_roles string enum[read|write]
+- body:permissions.organization_hooks string enum[read|write]
+- body:permissions.organization_packages string enum[read|write]
+- body:permissions.organization_plan string enum[read]
+- body:permissions.organization_projects string enum[read|write|admin]
+- body:permissions.organization_secrets string enum[read|write]
+- body:permissions.organization_self_hosted_runners string enum[read|write]
+- body:permissions.organization_user_blocking string enum[read|write]
+- body:permissions.packages string enum[read|write]
+- body:permissions.pages string enum[read|write]
+- body:permissions.pull_requests string enum[read|write]
+- body:permissions.repository_announcement_banners string enum[read|write]
+- body:permissions.repository_hooks string enum[read|write]
+- body:permissions.repository_projects string enum[read|write|admin]
+- body:permissions.secret_scanning_alerts string enum[read|write]
+- body:permissions.secrets string enum[read|write]
+- body:permissions.security_events string enum[read|write]
+- body:permissions.single_file string enum[read|write]
+- body:permissions.statuses string enum[read|write]
+- body:permissions.team_discussions string enum[read|write]
+- body:permissions.vulnerability_alerts string enum[read|write]
+- body:permissions.workflows string enum[write]
+- body:repositories array<string>
+- body:repository_ids array<integer>
+
+## S210-N0006  DELETE /app/installations/{installation_id}/suspended
+desc: Unsuspend an app installation | Removes a GitHub App installation suspension. You must use a [JWT](https://docs.github.com/enterprise-cloud@latest//apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+- path:installation_id integer
+
+## S210-N0007  PUT /app/installations/{installation_id}/suspended
+desc: Suspend an app installation | Suspends a GitHub App on a user, organization, or business account, which blocks the app from accessing the account's resources. When a GitHub App is suspended, the app's access to the GitHub Enterprise Cloud API or webhook events is blocked for that account. You must use a [JWT](https://docs.github.com/enterprise-cloud@latest//apps/building-github-apps/authenticating
+- path:installation_id integer
+
+## S210-N0008  DELETE /applications/{client_id}/grant
+desc: Delete an app authorization | OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/enterprise-cloud@latest//rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You m
+- path:client_id string
+- body:access_token string
+
+## S210-N0009  DELETE /applications/{client_id}/token
+desc: Delete an app token | OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/enterprise-cloud@latest//rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.
+- path:client_id string
+- body:access_token string
+
+## S210-N0010  PATCH /applications/{client_id}/token
+desc: Reset a token | OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/enterprise-cloud@latest//rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, u
+- path:client_id string
+- body:access_token string
+
+## S210-N0011  POST /applications/{client_id}/token
+desc: Check a token | OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/enterprise-cloud@latest//rest/overview/other-authentication-methods#basic-authentication) to use this endpoint
+- path:client_id string
+- body:access_token string
+
+## S210-N0012  POST /applications/{client_id}/token/scoped
+desc: Create a scoped access token | Use a non-scoped user-to-server access token to create a repository scoped and/or permission scoped user-to-server access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/enterprise-cloud@latest//rest/overview/other-authentication-methods#basic-au
+- path:client_id string
+- body:access_token string
+- body:permissions object
+- body:permissions.actions string enum[read|write]
+- body:permissions.administration string enum[read|write]
+- body:permissions.checks string enum[read|write]
+- body:permissions.contents string enum[read|write]
+- body:permissions.deployments string enum[read|write]
+- body:permissions.environments string enum[read|write]
+- body:permissions.issues string enum[read|write]
+- body:permissions.members string enum[read|write]
+- body:permissions.metadata string enum[read|write]
+- body:permissions.organization_administration string enum[read|write]
+- body:permissions.organization_announcement_banners string enum[read|write]
+- body:permissions.organization_custom_roles string enum[read|write]
+- body:permissions.organization_hooks string enum[read|write]
+- body:permissions.organization_packages string enum[read|write]
+- body:permissions.organization_plan string enum[read]
+- body:permissions.organization_projects string enum[read|write|admin]
+- body:permissions.organization_secrets string enum[read|write]
+- body:permissions.organization_self_hosted_runners string enum[read|write]
+- body:permissions.organization_user_blocking string enum[read|write]
+- body:permissions.packages string enum[read|write]
+- body:permissions.pages string enum[read|write]
+- body:permissions.pull_requests string enum[read|write]
+- body:permissions.repository_announcement_banners string enum[read|write]
+- body:permissions.repository_hooks string enum[read|write]
+- body:permissions.repository_projects string enum[read|write|admin]
+- body:permissions.secret_scanning_alerts string enum[read|write]
+- body:permissions.secrets string enum[read|write]
+- body:permissions.security_events string enum[read|write]
+- body:permissions.single_file string enum[read|write]
+- body:permissions.statuses string enum[read|write]
+- body:permissions.team_discussions string enum[read|write]
+- body:permissions.vulnerability_alerts string enum[read|write]
+- body:permissions.workflows string enum[write]
+- body:repositories array<string>
+- body:repository_ids array<integer>
+- body:target string
+- body:target_id integer
+
+## S210-N0013  PUT /enterprises/{enterprise}/actions/oidc/customization/issuer
+desc: Set the GitHub Actions OIDC custom issuer policy for an enterprise | Sets the GitHub Actions OpenID Connect (OIDC) custom issuer policy for an enterprise. You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint. GitHub Apps must have the `enterprise_administration:write` permission to use this endpoint.
+schema: actions-oidc-custom-issuer-policy-for-enterprise
+- path:enterprise string
+- body:include_enterprise_slug boolean
+
+## S210-N0014  PUT /enterprises/{enterprise}/actions/permissions
+desc: Set GitHub Actions permissions for an enterprise | Sets the GitHub Actions permissions policy for organizations and allowed actions and reusable workflows in an enterprise. You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+- path:enterprise string
+- body:allowed_actions string enum[all|local_only|selected]
+- body:enabled_organizations string enum[all|none|selected]
+
+## S210-N0015  PUT /enterprises/{enterprise}/actions/permissions/organizations
+desc: Set selected organizations enabled for GitHub Actions in an enterprise | Replaces the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-fo
+- path:enterprise string
+- body:selected_organization_ids array<integer>
+
+## S210-N0016  DELETE /enterprises/{enterprise}/actions/permissions/organizations/{org_id}
+desc: Disable a selected organization for GitHub Actions in an enterprise | Removes an organization from the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actio
+- path:enterprise string
+- path:org_id integer
+
+## S210-N0017  PUT /enterprises/{enterprise}/actions/permissions/organizations/{org_id}
+desc: Enable a selected organization for GitHub Actions in an enterprise | Adds an organization to the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-per
+- path:enterprise string
+- path:org_id integer
+
+## S210-N0018  PUT /enterprises/{enterprise}/actions/permissions/selected-actions
+desc: Set allowed actions and reusable workflows for an enterprise | Sets the actions and reusable workflows that are allowed in an enterprise. To use this endpoint, the enterprise permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)." You must authenticat
+schema: selected-actions
+- path:enterprise string
+- body:github_owned_allowed boolean
+- body:patterns_allowed array<string>
+- body:verified_allowed boolean
+
+## S210-N0020  POST /enterprises/{enterprise}/actions/runner-groups
+desc: Create a self-hosted runner group for an enterprise | Creates a new self-hosted runner group for an enterprise. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+- path:enterprise string
+- body:allows_public_repositories boolean
+- body:name string
+- body:restricted_to_workflows boolean
+- body:runners array<integer>
+- body:selected_organization_ids array<integer>
+- body:selected_workflows array<string>
+- body:visibility string enum[selected|all]
+
+## S210-N0022  PATCH /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}
+desc: Update a self-hosted runner group for an enterprise | Updates the `name` and `visibility` of a self-hosted runner group in an enterprise. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+- path:enterprise string
+- path:runner_group_id integer
+- body:allows_public_repositories boolean
+- body:name string
+- body:restricted_to_workflows boolean
+- body:selected_workflows array<string>
+- body:visibility string enum[selected|all]
+
+## S210-N0023  PUT /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations
+desc: Set organization access for a self-hosted runner group in an enterprise | Replaces the list of organizations that have access to a self-hosted runner configured in an enterprise. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+- path:enterprise string
+- path:runner_group_id integer
+- body:selected_organization_ids array<integer>
+
+## S210-N0024  DELETE /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations/{org_id}
+desc: Remove organization access to a self-hosted runner group in an enterprise | Removes an organization from the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)." You must authenticat
+- path:enterprise string
+- path:runner_group_id integer
+- path:org_id integer
+
+## S210-N0025  PUT /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations/{org_id}
+desc: Add organization access to a self-hosted runner group in an enterprise | Adds an organization to the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)." You must authenticate using 
+- path:enterprise string
+- path:runner_group_id integer
+- path:org_id integer
+
+## S210-N0026  PUT /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners
+desc: Set self-hosted runners in a group for an enterprise | Replaces the list of self-hosted runners that are part of an enterprise runner group. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+- path:enterprise string
+- path:runner_group_id integer
+- body:runners array<integer>
+
+## S210-N0027  DELETE /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners/{runner_id}
+desc: Remove a self-hosted runner from a group for an enterprise | Removes a self-hosted runner from a group configured in an enterprise. The runner is then returned to the default group. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+- path:enterprise string
+- path:runner_group_id integer
+- path:runner_id integer
+
+## S210-N0028  PUT /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners/{runner_id}
+desc: Add a self-hosted runner to a group for an enterprise | Adds a self-hosted runner to a runner group configured in an enterprise. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+- path:enterprise string
+- path:runner_group_id integer
+- path:runner_id integer
+
+## S210-N0029  POST /enterprises/{enterprise}/actions/runners/registration-token
+desc: Create a registration token for an enterprise | Returns a token that you can pass to the `config` script. The token expires after one hour. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint. #### Example using registration token Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint. ``` .
+- path:enterprise string
+
+## S210-N0030  POST /enterprises/{enterprise}/actions/runners/remove-token
+desc: Create a remove token for an enterprise | Returns a token that you can pass to the `config` script to remove a self-hosted runner from an enterprise. The token expires after one hour. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint. #### Example using remove token To remove your self-hosted runner from an enterprise, replace `TOKEN` with 
+- path:enterprise string
+
+## S210-N0031  DELETE /enterprises/{enterprise}/actions/runners/{runner_id}
+desc: Delete a self-hosted runner from an enterprise | Forces the removal of a self-hosted runner from an enterprise. You can use this endpoint to completely remove the runner when the machine you were using no longer exists. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+- path:enterprise string
+- path:runner_id integer
+
+## S210-N0032  DELETE /enterprises/{enterprise}/actions/runners/{runner_id}/labels
+desc: Remove all custom labels from a self-hosted runner for an enterprise | Remove all custom labels from a self-hosted runner configured in an enterprise. Returns the remaining read-only labels from the runner. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+- path:enterprise string
+- path:runner_id integer
+
+## S210-N0033  POST /enterprises/{enterprise}/actions/runners/{runner_id}/labels
+desc: Add custom labels to a self-hosted runner for an enterprise | Add custom labels to a self-hosted runner configured in an enterprise. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+- path:enterprise string
+- path:runner_id integer
+- body:labels array<string>
+
+## S210-N0034  PUT /enterprises/{enterprise}/actions/runners/{runner_id}/labels
+desc: Set custom labels for a self-hosted runner for an enterprise | Remove all previous custom labels and set the new custom labels for a specific self-hosted runner configured in an enterprise. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+- path:enterprise string
+- path:runner_id integer
+- body:labels array<string>
+
+## S210-N0035  DELETE /enterprises/{enterprise}/actions/runners/{runner_id}/labels/{name}
+desc: Remove a custom label from a self-hosted runner for an enterprise | Remove a custom label from a self-hosted runner configured in an enterprise. Returns the remaining labels from the runner. This endpoint returns a `404 Not Found` status if the custom label is not present on the runner. You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+- path:enterprise string
+- path:runner_id integer
+- path:name string
+
+## S210-N0036  DELETE /enterprises/{enterprise}/announcement
+desc: Remove announcement banner from enterprise | Removes the announcement banner currently set for the enterprise.
+- path:enterprise string
+
+## S210-N0037  PATCH /enterprises/{enterprise}/announcement
+desc: Set announcement banner for enterprise | Sets the announcement banner to display for the enterprise.
+schema: announcement
+- path:enterprise string
+- body:announcement string
+- body:expires_at string
+
+## S210-N0038  PATCH /enterprises/{enterprise}/code_security_and_analysis
+desc: Update code security and analysis features for an enterprise | Updates the settings for advanced security, Dependabot alerts, secret scanning, and push protection for new repositories in an enterprise. To use this endpoint, you must be an administrator of the enterprise, and you must use an access token with the `admin:enterprise` scope.
+- path:enterprise string
+- body:advanced_security_enabled_for_new_repositories boolean
+- body:dependabot_alerts_enabled_for_new_repositories boolean
+- body:secret_scanning_enabled_for_new_repositories boolean
+- body:secret_scanning_push_protection_custom_link string
+- body:secret_scanning_push_protection_enabled_for_new_repositories boolean
+
+## S210-N0039  POST /enterprises/{enterprise}/{security_product}/{enablement}
+desc: Enable or disable a security feature | Enables or disables the specified security feature for all repositories in an enterprise. To use this endpoint, you must be an administrator of the enterprise, and you must use an access token with the `admin:enterprise` scope.
+- path:enterprise string
+- path:security_product string enum[advanced_security|dependabot_alerts|secret_scanning|secret_scanning_push_protection]
+- path:enablement string enum[enable_all|disable_all]
+
+## S210-N0040  POST /gists
+desc: Create a gist | Allows you to add a new gist with one or more files. **Note:** Don't name your files "gistfile" with a numerical suffix. This is the format of the automatic naming scheme that Gist uses internally.
+- body:description string
+- body:files object
+- body:public boolean enum[true|false]
+
+## S210-N0041  DELETE /gists/{gist_id}
+desc: Delete a gist
+- path:gist_id string
+
+## S210-N0042  PATCH /gists/{gist_id}
+desc: Update a gist | Allows you to update a gist's description and to update, delete, or rename gist files. Files from the previous version of the gist that aren't explicitly changed during an edit are unchanged.
+- path:gist_id string
+- body:description string
+- body:files object
+
+## S210-N0043  POST /gists/{gist_id}/comments
+desc: Create a gist comment
+- path:gist_id string
+- body:body string
+
+## S210-N0044  DELETE /gists/{gist_id}/comments/{comment_id}
+desc: Delete a gist comment
+- path:gist_id string
+- path:comment_id integer
+
+## S210-N0045  PATCH /gists/{gist_id}/comments/{comment_id}
+desc: Update a gist comment
+- path:gist_id string
+- path:comment_id integer
+- body:body string
+
+## S210-N0046  POST /gists/{gist_id}/forks
+desc: Fork a gist
+- path:gist_id string
+
+## S210-N0047  DELETE /gists/{gist_id}/star
+desc: Unstar a gist
+- path:gist_id string
+
+## S210-N0048  PUT /gists/{gist_id}/star
+desc: Star a gist | Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-rest-api#http-verbs)."
+- path:gist_id string
+
+## S210-N0049  DELETE /installation/token
+desc: Revoke an installation access token | Revokes the installation token you're using to authenticate as an installation and access this endpoint. Once an installation token is revoked, the token is invalidated and cannot be used. Other endpoints that require the revoked installation token must have a new installation token to work. You can create a new token using the "[Create an installation access 
+
+## S210-N0050  POST /markdown
+desc: Render a Markdown document
+- body:context string
+- body:mode string enum[markdown|gfm]
+- body:text string
+
+## S210-N0051  POST /markdown/raw
+desc: Render a Markdown document in raw mode | You must send Markdown as plain text (using a `Content-Type` header of `text/plain` or `text/x-markdown`) to this endpoint, rather than using JSON format. In raw mode, [GitHub Flavored Markdown](https://github.github.com/gfm/) is not supported and Markdown will be rendered in plain format like a README.md file. Markdown content must be 400 KB or less.
+- body:(body) string
+
+## S210-N0052  PUT /notifications
+desc: Mark notifications as read | Marks all notifications as "read" for the current user. If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Cloud will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List notifications for the authenticate
+- body:last_read_at string
+- body:read boolean
+
+## S210-N0053  PATCH /notifications/threads/{thread_id}
+desc: Mark a thread as read | Marks a thread as "read." Marking a thread as "read" is equivalent to clicking a notification in your notification inbox on GitHub Enterprise Cloud: https://github.com/notifications.
+- path:thread_id integer
+
+## S210-N0054  DELETE /notifications/threads/{thread_id}/subscription
+desc: Delete a thread subscription | Mutes all future notifications for a conversation until you comment on the thread or get an **@mention**. If you are watching the repository of the thread, you will still receive notifications. To ignore future notifications for a repository you are watching, use the [Set a thread subscription](https://docs.github.com/enterprise-cloud@latest//rest/reference/activity#
+- path:thread_id integer
+
+## S210-N0055  PUT /notifications/threads/{thread_id}/subscription
+desc: Set a thread subscription | If you are watching a repository, you receive notifications for all threads by default. Use this endpoint to ignore future notifications for threads until you comment on the thread or get an **@mention**. You can also use this endpoint to subscribe to threads that you are currently not receiving notifications for or to subscribed to threads that you have previously igno
+- path:thread_id integer
+- body:ignored boolean
+
+## S210-N0057  PUT /orgs/{org}/actions/oidc/customization/sub
+desc: Set the customization template for an OIDC subject claim for an organization | Creates or updates the customization template for an OpenID Connect (OIDC) subject claim. You must authenticate using an access token with the `write:org` scope to use this endpoint. GitHub Apps must have the `admin:org` permission to use this endpoint.
+schema: oidc-custom-sub
+- path:org string
+- body:include_claim_keys array<string>
+
+## S210-N0058  PUT /orgs/{org}/actions/permissions
+desc: Set GitHub Actions permissions for an organization | Sets the GitHub Actions permissions policy for repositories and allowed actions in an organization. If the organization belongs to an enterprise that has set restrictive permissions at the enterprise level, such as `allowed_actions` to `selected` actions, then you cannot override them for the organization. You must authenticate using an access t
+- path:org string
+- body:allowed_actions string enum[all|local_only|selected]
+- body:enabled_repositories string enum[all|none|selected]
+
+## S210-N0059  PUT /orgs/{org}/actions/permissions/repositories
+desc: Set selected repositories enabled for GitHub Actions in an organization | Replaces the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissio
+- path:org string
+- body:selected_repository_ids array<integer>
+
+## S210-N0061  PUT /orgs/{org}/actions/permissions/repositories/{repository_id}
+desc: Enable a selected repository for GitHub Actions in an organization | Adds a repository to the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-ac
+- path:org string
+- path:repository_id integer
+
+## S210-N0062  PUT /orgs/{org}/actions/permissions/selected-actions
+desc: Set allowed actions for an organization | Sets the actions that are allowed in an organization. To use this endpoint, the organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)." If the organization belongs to an enterprise that has `s
+schema: selected-actions
+- path:org string
+- body:github_owned_allowed boolean
+- body:patterns_allowed array<string>
+- body:verified_allowed boolean

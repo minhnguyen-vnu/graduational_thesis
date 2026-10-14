@@ -1,0 +1,702 @@
+## S547-0001  POST /contentpro-similar-text
+summary: The /contentpro-similar-text endpoint accepts and arbitrary piece of text and returns similar articles and blogs written by companies.
+- body:text string
+
+## S549-0001  POST /setup/connection
+summary: Create or update a connection
+desc: Creates or updates the specified connection by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+
+## S549-0002  DELETE /setup/connection/{id}
+summary: Delete a connection
+desc: Permanently deletes a connection. It cannot be undone.
+- path:id string
+
+## S549-0003  POST /setup/connection_role
+summary: Create or update a connection role
+desc: Creates or updates the specified connection role by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+
+## S549-0004  DELETE /setup/connection_role/{id}
+summary: Delete a connection role.
+desc: Deletes the specified connection role.
+- path:id string
+
+## S549-0005  POST /setup/data_type/
+summary: Create or update a data type
+desc: Creates or updates the specified data type by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+
+## S549-0006  DELETE /setup/data_type/{id}
+summary: Delete a data type
+desc: Deletes the specified data type.
+- path:id string
+
+## S549-0007  POST /setup/flow/
+summary: Create or update a flow
+desc: Creates or updates the specified flow. Any parameters not provided will be left unchanged.
+
+## S549-0008  DELETE /setup/flow/{id}
+summary: Delete a flow.
+desc: Deletes the specified flow.
+- path:id string
+
+## S549-0009  POST /setup/namespace/
+summary: Create or update a namespace
+desc: Creates or updates the specified namespace. Any parameters not provided will be left unchanged.
+
+## S549-0010  DELETE /setup/namespace/{id}
+summary: Delete a namespace
+desc: Deletes the specified namespace.
+- path:id string
+
+## S549-0011  POST /setup/observer/
+summary: Create or update an event
+desc: Creates or updates the specified event observer. Any parameters not provided will be left unchanged.
+
+## S549-0012  DELETE /setup/observer/{id}
+summary: Delete an event
+desc: Deletes the specified event observer.
+- path:id string
+
+## S549-0013  POST /setup/scheduler/
+summary: Create or update an scheduler
+desc: Creates or updates the specified scheduler. Any parameters not provided will be left unchanged.
+
+## S549-0014  DELETE /setup/scheduler/{id}
+summary: Delete an schedule
+desc: Deletes the specified scheduler.
+- path:id string
+
+## S549-0015  POST /setup/schema/
+summary: Create or update an schema
+desc: Creates or updates the specified schema. Any parameters not provided will be left unchanged.
+
+## S549-0016  DELETE /setup/schema/{id}
+summary: Delete an schema.
+desc: Deletes the specified schema.
+- path:id string
+
+## S549-0017  POST /setup/translator/
+summary: Create or update a translator
+desc: Creates or updates the specified translator. Any parameters not provided will be left unchanged.
+
+## S549-0018  DELETE /setup/translator/{id}
+summary: Delete a translator
+desc: Deletes the specified translator.
+- path:id string
+
+## S549-0019  POST /setup/webhook/
+summary: Create or update a webhook
+desc: Creates or updates the specified webhook. Any parameters not provided will be left unchanged.
+
+## S549-0020  DELETE /setup/webhook/{id}
+summary: Delete a webhook
+desc: Deletes the specified webhook.
+- path:id string
+
+## S552-0001  POST /file
+summary: Faz o upload de um arquivo
+desc: Processa um arquivo CNAB para obter informações sobre o mesmo. Retorna um ID temporário para o mesmo.
+- body:file file
+
+## S554-0001  POST /api/v1/clips
+summary: create clip
+- body:end_time number
+- body:media_id string
+- body:name string
+- body:start_time number
+
+## S554-0002  DELETE /api/v1/clips/{id}
+summary: delete clip
+- path:id string
+
+## S554-0003  PUT /api/v1/clips/{id}
+summary: update clip
+- path:id string
+- body:end_time number
+- body:name string
+- body:start_time number
+
+## S554-0004  POST /api/v1/medias
+summary: create media
+- body:description string
+- body:name string
+- body:source_url string
+- body:upload_id string
+
+## S554-0005  DELETE /api/v1/medias/{id}
+summary: delete media
+- path:id string
+
+## S554-0006  PUT /api/v1/medias/{id}
+summary: update media
+- path:id string
+- body:description string
+- body:name string
+
+## S554-0007  POST /api/v1/webhook_subscriptions
+summary: create webhook subscription
+- body:subscribed_events array<any>
+- body:url string
+
+## S554-0008  DELETE /api/v1/webhook_subscriptions/{id}
+summary: delete webhook subscription
+- path:id string
+
+## S556-0001  POST /noauth/upload
+- body:imageBase64Encoded string
+- body:imageSize integer
+- body:optimizeForPrint boolean
+- body:partnerId string
+- body:styleId string
+- body:useOriginalColors boolean
+
+## S559-0001  POST /make-pdf
+summary: Generate a PDF from HTML or URL.
+- body:html string
+- body:key string
+- body:url string
+
+## S560-0001  POST /v1/history/delete
+summary: Delete History Items
+desc: Delete a number of history items by their IDs.
+- body:history_item_ids array<string>
+
+## S560-0002  POST /v1/history/download
+summary: Download History Items
+desc: Download one or more history items. If one history item ID is provided, we will return a single audio file. If more than one history item IDs are provided, we will provide the history items packed into a .zip file.
+- body:history_item_ids array<string>
+
+## S560-0003  DELETE /v1/history/{history_item_id}
+summary: Delete History Item
+desc: Delete a history item by its ID
+- path:history_item_id string
+
+## S560-0004  POST /v1/text-to-speech/{voice_id}
+summary: Text To Speech
+desc: Converts text into speech using a voice of your choice and returns audio.
+- path:voice_id string
+- body:text string
+- body:voice_settings object
+- body:voice_settings.similarity_boost number
+- body:voice_settings.stability number
+
+## S560-0005  POST /v1/text-to-speech/{voice_id}/stream
+summary: Text To Speech
+desc: Converts text into speech using a voice of your choice and returns audio as an audio stream.
+- path:voice_id string
+- body:text string
+- body:voice_settings object
+- body:voice_settings.similarity_boost number
+- body:voice_settings.stability number
+
+## S560-0006  POST /v1/voices/add
+summary: Add Voice
+desc: Add a new voice to your collection of voices in VoiceLab.
+- body:description string
+- body:files array<string>
+- body:labels string
+- body:name string
+
+## S560-0007  DELETE /v1/voices/{voice_id}
+summary: Delete Voice
+desc: Deletes a voice by its ID.
+- path:voice_id string
+
+## S560-0008  POST /v1/voices/{voice_id}/edit
+summary: Edit Voice
+desc: Edit a voice created by you.
+- path:voice_id string
+- body:description string
+- body:files array<string>
+- body:labels string
+- body:name string
+
+## S560-0009  DELETE /v1/voices/{voice_id}/samples/{sample_id}
+summary: Delete Sample
+desc: Removes a sample by its ID.
+- path:voice_id string
+- path:sample_id string
+
+## S560-0010  POST /v1/voices/{voice_id}/settings/edit
+summary: Edit Voice Settings
+desc: Edit your settings for a specific voice. "similarity_boost" corresponds to"Clarity + Similarity Enhancement" in the web app and "stability" corresponds to "Stability" slider in the web app.
+- path:voice_id string
+- body:similarity_boost number
+- body:stability number
+
+## S561-0001  POST /v3/deployments
+summary: Create a new deployment.
+desc: Required permission: `deployments_write`
+- body:created string
+- body:description string
+- body:logId string
+- body:userEmail string
+- body:userName string
+- body:version string
+
+## S561-0002  DELETE /v3/deployments/{id}
+summary: Delete a deployment by its ID.
+desc: This endpoint doesn't clear the version number of messages already annotated with this deployment version.<br/><br/>Required permission: `deployments_delete`
+- path:id string
+
+## S561-0003  POST /v3/heartbeats/{logId}/{id}
+summary: Create a new heartbeat.
+desc: Required permission: `heartbeats_write`
+- path:id string
+- path:logId string
+- body:application string
+- body:reason string
+- body:result string
+- body:took integer
+- body:version string
+
+## S561-0004  POST /v3/logs
+summary: Create a new log.
+desc: Required permission: `logs_write`
+- body:name string
+
+## S561-0005  POST /v3/logs/{id}/_disable
+summary: Disable a log by its ID.
+desc: Required permission: `logs_write`
+- path:id string
+
+## S561-0006  POST /v3/logs/{id}/_enable
+summary: Enable a log by its ID.
+desc: Required permission: `logs_write`
+- path:id string
+
+## S561-0007  DELETE /v3/messages/{logId}
+summary: Deletes a list of messages by logid and query.
+desc: Required permission: `messages_delete`
+- path:logId string
+- body:from string
+- body:query string
+- body:to string
+
+## S561-0008  POST /v3/messages/{logId}
+summary: Create a new message.
+desc: Required permission: `messages_write`
+- path:logId string
+- body:application string
+- body:breadcrumbs array<object>
+- body:breadcrumbs[].action string
+- body:breadcrumbs[].dateTime string
+- body:breadcrumbs[].message string
+- body:breadcrumbs[].severity string
+- body:category string
+- body:code string
+- body:cookies array<object>
+- body:cookies[].key string
+- body:cookies[].value string
+- body:correlationId string
+- body:data array<object>
+- body:data[].key string
+- body:data[].value string
+- body:dateTime string
+- body:detail string
+- body:form array<object>
+- body:form[].key string
+- body:form[].value string
+- body:hostname string
+- body:method string
+- body:queryString array<object>
+- body:queryString[].key string
+- body:queryString[].value string
+- body:serverVariables array<object>
+- body:serverVariables[].key string
+- body:serverVariables[].value string
+- body:severity string
+- body:source string
+- body:statusCode integer
+- body:title string
+- body:titleTemplate string
+- body:type string
+- body:url string
+- body:user string
+- body:version string
+
+## S561-0009  POST /v3/messages/{logId}/_bulk
+summary: Create one or more new messages.
+desc: Required permission: `messages_write`
+- path:logId string
+- body:application string
+- body:breadcrumbs array<object>
+- body:breadcrumbs[].action string
+- body:breadcrumbs[].dateTime string
+- body:breadcrumbs[].message string
+- body:breadcrumbs[].severity string
+- body:category string
+- body:code string
+- body:cookies array<object>
+- body:cookies[].key string
+- body:cookies[].value string
+- body:correlationId string
+- body:data array<object>
+- body:data[].key string
+- body:data[].value string
+- body:dateTime string
+- body:detail string
+- body:form array<object>
+- body:form[].key string
+- body:form[].value string
+- body:hostname string
+- body:method string
+- body:queryString array<object>
+- body:queryString[].key string
+- body:queryString[].value string
+- body:serverVariables array<object>
+- body:serverVariables[].key string
+- body:serverVariables[].value string
+- body:severity string
+- body:source string
+- body:statusCode integer
+- body:title string
+- body:titleTemplate string
+- body:type string
+- body:url string
+- body:user string
+- body:version string
+
+## S561-0010  POST /v3/messages/{logId}/_fix
+summary: Mark a list of messages as fixed by logid and query.
+desc: Required permission: `messages_write`
+- path:logId string
+- body:from string
+- body:query string
+- body:to string
+
+## S561-0011  DELETE /v3/messages/{logId}/{id}
+summary: Delete a message by its ID.
+desc: Required permission: `messages_delete`
+- path:id string
+- path:logId string
+
+## S561-0012  POST /v3/messages/{logId}/{id}/_fix
+summary: Fix a message by its ID.
+desc: Required permission: `messages_write`
+- path:id string
+- path:logId string
+- query:markAllAsFixed boolean
+
+## S561-0013  POST /v3/messages/{logId}/{id}/_hide
+summary: Hide a message by its ID.
+desc: Required permission: `messages_write`
+- path:id string
+- path:logId string
+
+## S561-0014  POST /v3/sourcemaps/{logId}
+summary: Create or update a translation between a minified JavaScript path to the minified JavaScript and source map files.
+desc: Required permission: `sourcemaps_write`
+- path:logId string
+- body:MinifiedJavaScript string
+- body:Path string
+- body:SourceMap string
+
+## S564-0001  POST /v1/verification/send
+desc: Send an SMS with verification code and a custom message for authentication purpose.
+- query:country_code string
+- query:format string enum[json|xml]
+- query:tel string
+- query:key string
+- query:mesg string
+
+## S567-0001  POST /auth/jwt-token-refresh/
+summary: Refresh a JSON Web Token (JWT)
+desc: Obtains a new JSON Web Token using existing user credentials.
+- body:token string
+
+## S567-0002  POST /auth/jwt-token-verify/
+summary: Validate JSON Web Token (JWT)
+desc: Checks veraciy of token.
+- body:token string
+
+## S567-0003  POST /auth/register/
+summary: Register a user
+desc: User registration requires confirming email address to activate user.
+- body:email string
+- body:first_name string
+- body:last_name string
+- body:password string
+- body:profile object
+- body:profile.avatar string
+- body:profile.bio string
+- body:profile.company string
+- body:profile.location string
+- body:profile.timezone string
+- body:profile.url string
+- body:username string
+
+## S567-0004  POST /v1/servers/options/server-size/
+summary: Create a new server size item
+desc: Only super users with on-premises version have acceess to this endpoint.
+- body:active boolean
+- body:cpu integer
+- body:memory integer
+- body:name string
+
+## S567-0005  DELETE /v1/servers/options/server-size/{size}/
+summary: Delete a server size by id
+desc: Only super users with on-premises version have acceess to this endpoint.
+- path:size string
+
+## S567-0006  DELETE /v1/teams/{team}/
+summary: Delete a team
+- path:team string
+
+## S567-0007  DELETE /v1/teams/{team}/groups/{group}/
+summary: Delete team group
+- path:team string
+- path:group string
+
+## S567-0008  PATCH /v1/teams/{team}/groups/{group}/
+summary: Patch team group
+- path:team string
+- path:group string
+- body:description string
+- body:name string
+- body:parent string
+- body:private boolean
+
+## S567-0009  PUT /v1/teams/{team}/groups/{group}/
+summary: Patch team group
+- path:team string
+- path:group string
+- body:description string
+- body:name string
+- body:parent string
+- body:private boolean
+
+## S567-0010  POST /v1/teams/{team}/groups/{group}/remove/
+summary: User removed from group
+- path:team string
+- path:group string
+
+## S567-0011  POST /v1/users/profiles/
+summary: Create new user
+desc: Only admin users can create new users. New users have active status by default.
+- body:email string
+- body:first_name string
+- body:last_name string
+- body:password string
+- body:profile object
+- body:profile.avatar string
+- body:profile.bio string
+- body:profile.company string
+- body:profile.location string
+- body:profile.timezone string
+- body:profile.url string
+- body:username string
+
+## S567-0012  DELETE /v1/users/profiles/{user}/
+summary: Delete a user
+- path:user string
+
+## S567-0013  DELETE /v1/users/{user}/avatar/
+summary: Delete avatar
+- path:user string
+
+## S567-0014  POST /v1/users/{user}/avatar/
+summary: Add user avatar
+- path:user string
+
+## S567-0015  PATCH /v1/users/{user}/emails/{email_id}/
+summary: Update an email address
+- path:email_id string
+- path:user string
+- body:address string
+- body:public boolean
+- body:unsubscribed boolean
+
+## S567-0016  PUT /v1/users/{user}/emails/{email_id}/
+summary: Replace an email address
+- path:email_id string
+- path:user string
+- body:address string
+- body:public boolean
+- body:unsubscribed boolean
+
+## S567-0017  PATCH /v1/{namespace}/billing/cards/{id}/
+summary: Update a credit card
+- path:namespace string
+- path:id string
+- body:address_city string
+- body:address_country string
+- body:address_line1 string
+- body:address_line2 string
+- body:address_state string
+- body:address_zip string
+- body:exp_month integer
+- body:exp_year integer
+- body:name string
+
+## S567-0018  PUT /v1/{namespace}/billing/cards/{id}/
+summary: Replace a credit card
+- path:namespace string
+- path:id string
+- body:address_city string
+- body:address_country string
+- body:address_line1 string
+- body:address_line2 string
+- body:address_state string
+- body:address_zip string
+- body:exp_month integer
+- body:exp_year integer
+- body:name string
+
+## S567-0019  PATCH /v1/{namespace}/notifications/
+summary: Mark a list of notifications as either read or unread.
+- path:namespace string
+- body:notifications array<string>
+- body:read boolean
+
+## S567-0020  PATCH /v1/{namespace}/notifications/entity/{entity}
+summary: Mark a list of notifications as either read or unread.
+- path:namespace string
+- path:entity string enum[billing]
+- body:notifications array<string>
+- body:read boolean
+
+## S567-0021  POST /v1/{namespace}/notifications/settings/
+summary: Create global notification settings
+- path:namespace string
+- body:emails_enabled boolean
+- body:enabled boolean
+
+## S567-0022  PATCH /v1/{namespace}/notifications/{notification_id}
+summary: Mark a specific notification as either read or unread.
+- path:namespace string
+- path:notification_id string
+- body:read boolean
+
+## S567-0023  POST /v1/{namespace}/projects/project-copy/
+summary: Copy a project to your own account.
+- path:namespace string
+- body:name string
+- body:project string
+
+## S567-0024  PUT /v1/{namespace}/projects/{project}/
+summary: Replace a project
+- path:namespace string
+- path:project string
+- body:description string
+- body:name string
+- body:private boolean
+
+## S567-0025  DELETE /v1/{namespace}/projects/{project}/collaborators/{collaborator}/
+summary: Delete a project collaborator
+- path:project string
+- path:namespace string
+- path:collaborator string
+
+## S567-0026  PATCH /v1/{namespace}/projects/{project}/collaborators/{collaborator}/
+summary: Update project collaborator
+- path:project string
+- path:namespace string
+- path:collaborator string
+- body:member string
+- body:owner boolean
+- body:permissions string enum[read_project|write_project]
+
+## S567-0027  POST /v1/{namespace}/projects/{project}/deployments/
+summary: Create a new deployment
+- path:project string
+- path:namespace string
+- body:config object
+- body:config.files array<string>
+- body:config.handler string
+- body:framework string enum[tensorflow]
+- body:name string
+- body:runtime string enum[python2.7]
+
+## S567-0028  PUT /v1/{namespace}/projects/{project}/deployments/{deployment}/
+summary: Replace a deployment
+- path:project string
+- path:namespace string
+- path:deployment string
+- body:config object
+- body:config.files array<string>
+- body:config.handler string
+- body:framework string enum[tensorflow]
+- body:name string
+- body:runtime string enum[python2.7]
+
+## S567-0029  POST /v1/{namespace}/projects/{project}/deployments/{deployment}/deploy/
+summary: Deploy an existing model
+- path:project string
+- path:namespace string
+- path:deployment string
+
+## S567-0030  POST /v1/{namespace}/projects/{project}/servers/
+summary: Create a new server
+- path:project string
+- path:namespace string
+- body:config object
+- body:config.command string
+- body:config.function string
+- body:config.script string
+- body:config.type string enum[jupyter|restful|cron]
+- body:connected array<string>
+- body:host string
+- body:image_name string
+- body:name string
+- body:server_size string
+- body:startup_script string
+
+## S567-0031  DELETE /v1/{namespace}/projects/{project}/servers/{server}/
+summary: Delete a server
+- path:project string
+- path:namespace string
+- path:server string
+
+## S567-0032  PUT /v1/{namespace}/projects/{project}/servers/{server}/
+summary: Replace a server
+- path:project string
+- path:namespace string
+- path:server string
+- body:config object
+- body:config.command string
+- body:config.function string
+- body:config.script string
+- body:config.type string enum[jupyter|restful|cron]
+- body:connected array<string>
+- body:host string
+- body:image_name string
+- body:name string
+- body:server_size string
+- body:startup_script string
+
+## S567-0033  POST /v1/{namespace}/projects/{project}/servers/{server}/auth/
+summary: Server api key validation
+- path:project string
+- path:namespace string
+- path:server string
+
+## S567-0034  PATCH /v1/{namespace}/projects/{project}/servers/{server}/run-stats/{id}/
+summary: Update a server's statistics
+- path:server string
+- path:project string
+- path:namespace string
+- path:id string
+- body:exit_code integer
+- body:size integer
+- body:stacktrace string
+- body:start string
+- body:stop string
+
+## S567-0035  DELETE /v1/{namespace}/projects/{project}/servers/{server}/ssh-tunnels/{tunnel}/
+summary: Delete an SSH Tunnel associated to a server
+- path:server string
+- path:project string
+- path:namespace string
+- path:tunnel string
+
+## S567-0036  PATCH /v1/{namespace}/projects/{project}/servers/{server}/triggers/{trigger}/
+summary: Update a server trigger
+- path:server string
+- path:project string
+- path:namespace string
+- path:trigger string
+- body:name string
+- body:operation string enum[start|stop|terminate]
+- body:webhook object
+- body:webhook.payload object
+- body:webhook.url string

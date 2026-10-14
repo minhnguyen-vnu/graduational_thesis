@@ -1,0 +1,728 @@
+## S598-N0071  DELETE /providers/priceLists/{priceListId}
+desc: Removes a provider price list. | Removes a provider price list.
+- path:priceListId integer
+
+## S598-N0072  DELETE /providers/{providerId}
+desc: Removes a provider. | Removes a provider.
+- path:providerId integer
+
+## S598-N0074  DELETE /quotes/{quoteId}
+desc: Removes a quote. | Removes a quote.
+- path:quoteId string
+
+## S598-N0075  POST /quotes/{quoteId}/confirmation/send
+desc: Sends a quote for customer confirmation. | Sends a quote for customer confirmation. Quote status is changed to SENT and a document is sent to the customer.
+- path:quoteId string
+
+## S598-N0076  PUT /quotes/{quoteId}/customFields
+desc: Updates custom fields of a given quote. | Updates custom fields of a given quote.
+schema: CustomFieldsDTO
+- path:quoteId string
+- body:key string
+- body:name string
+- body:type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:value object
+
+## S598-N0077  POST /quotes/{quoteId}/finance/payables
+desc: Adds a payable. | Adds a payable.
+schema: PayableCreateDTO
+- path:quoteId string
+- body:calculationUnitId integer
+- body:catLogFile object
+- body:catLogFile.content string
+- body:catLogFile.name string
+- body:catLogFile.token string
+- body:catLogFile.url string
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobId object
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-N0078  DELETE /quotes/{quoteId}/finance/payables/{payableId}
+desc: Deletes a payable. | Deletes a payable.
+- path:quoteId string
+- path:payableId integer
+
+## S598-N0079  PUT /quotes/{quoteId}/finance/payables/{payableId}
+desc: Updates a payable. | Updates a payable.
+schema: PayableDTO
+- path:quoteId string
+- path:payableId integer
+- body:calculationUnitId integer
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobId object
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-N0081  DELETE /quotes/{quoteId}/finance/receivables/{receivableId}
+desc: Deletes a receivable. | Deletes a receivable.
+- path:quoteId string
+- path:receivableId integer
+
+## S598-N0084  POST /quotes/{quoteId}/languageCombinations
+desc: Creates a new language combination for a given quote without creating a task. | Creates a new language combination for a given quote without creating a task.
+schema: CommonLanguageCombinationDTO
+- path:quoteId string
+- body:sourceLanguageId integer
+- body:targetLanguageId integer
+
+## S598-N0086  POST /quotes/{quoteId}/tasks
+desc: Creates a new task for a given quote. | Creates a new task for a given quote. Required fields are presented in the example.
+schema: TaskDTO
+- path:quoteId string
+- body:clientTaskPONumber string
+- body:customFields array<object>
+- body:customFields[].key string
+- body:customFields[].name string
+- body:customFields[].type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:customFields[].value object
+- body:dates object
+- body:dates.actualDeliveryDate object
+- body:dates.actualDeliveryDate.value integer
+- body:dates.actualStartDate object
+- body:dates.actualStartDate.value integer
+- body:dates.deadline object
+- body:dates.deadline.value integer
+- body:dates.startDate object
+- body:dates.startDate.value integer
+- body:finance object
+- body:finance.invoiceable boolean
+- body:id integer
+- body:idNumber string
+- body:instructions object
+- body:instructions.forProvider string
+- body:instructions.fromCustomer string
+- body:instructions.internal string
+- body:instructions.notes string
+- body:instructions.paymentNoteForCustomer string
+- body:instructions.paymentNoteForVendor string
+- body:jobs object
+- body:jobs.jobCount integer
+- body:jobs.jobIds array<integer>
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:name string
+- body:people object
+- body:people.customerContacts object
+- body:people.customerContacts.additionalIds array<integer>
+- body:people.customerContacts.primaryId integer
+- body:people.customerContacts.sendBackToId integer
+- body:people.responsiblePersons object
+- body:people.responsiblePersons.projectCoordinatorId integer
+- body:people.responsiblePersons.projectManagerId integer
+- body:projectId integer
+- body:quoteId integer
+
+## S598-N0087  POST /reports/export/xml
+desc: Exports reports definition to XML. | Exports reports definition to XML.
+schema: ExportRequestDTO
+- body:ids array<integer>
+
+## S598-N0088  POST /reports/import/xml
+desc: Imports reports definition from XML. | Imports a report definition from an XML using a file token. To obtain the token, you first need to upload a temporary XML file, as specified in the Files section. Note that the name of the imported report must be unique.
+schema: ImportRequestDTO
+- body:fileToken string
+
+## S598-N0089  DELETE /reports/{reportId}
+desc: Removes a report. | Removes a report.
+- path:reportId integer
+
+## S598-N0090  POST /reports/{reportId}/duplicate
+desc: Duplicates a report. | Duplicates a report.
+- path:reportId integer
+
+## S598-N0092  POST /subscription
+desc: Subscribe to event | Subscribe to event. Returns subscription Id.
+schema: SubscriptionDTO
+- body:embed string
+- body:event string
+- body:filter string
+- body:url string
+
+## S598-N0093  DELETE /subscription/{subscriptionId}
+desc: Unsubscribe from event | Unsubscribe from job status changed event
+- path:subscriptionId string
+
+## S598-N0095  PUT /tasks/{taskId}/clientTaskPONumber
+desc: Updates Client Task PO Number of a given task. | Updates Client Task PO Number of a given task.
+schema: StringDTO
+- path:taskId string
+- body:value string
+
+## S598-N0096  PUT /tasks/{taskId}/contacts
+desc: Updates contacts of a given task. | Updates contacts of a given task.
+schema: ContactsDTO
+- path:taskId string
+- body:additionalIds array<integer>
+- body:primaryId integer
+- body:sendBackToId integer
+
+## S598-N0098  PUT /tasks/{taskId}/dates
+desc: Updates dates of a given task. | Updates dates of a given task.
+schema: ProjectDatesDTO
+- path:taskId string
+- body:actualDeliveryDate object
+- body:actualDeliveryDate.value integer
+- body:actualStartDate object
+- body:actualStartDate.value integer
+- body:deadline object
+- body:deadline.value integer
+- body:startDate object
+- body:startDate.value integer
+
+## S598-N0101  PUT /tasks/{taskId}/name
+desc: Updates name of a given task. | Updates name of a given task.
+schema: StringDTO
+- path:taskId string
+- body:value string
+
+## S598-N0103  PUT /users/{userId}
+desc: Updates an existing user. | Updates an existing user.
+schema: UserDTO
+- path:userId integer
+- body:customFields array<object>
+- body:customFields[].key string
+- body:customFields[].name string
+- body:customFields[].type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:customFields[].value object
+- body:email string
+- body:firstName string
+- body:gender string
+- body:id integer
+- body:lastName string
+- body:login string
+- body:mobilePhone string
+- body:phone string
+- body:positionName string
+- body:timeZoneId string
+- body:userGroupName string
+
+## S598-N0104  PUT /users/{userId}/customFields
+desc: Updates custom fields of a given user. | Updates custom fields of a given user.
+schema: CustomFieldsDTO
+- path:userId integer
+- body:key string
+- body:name string
+- body:type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:value object
+
+## S598-N0106  PUT /users/{userId}/password
+desc: Sets user's password to a new value. | Sets user's password to a new value.
+- path:userId integer
+- body:newPassword string
+- body:oldPassword string
+
+## S598-N0107  PUT /v2/jobs/{jobId}/dates
+desc: Updates dates of a given job. | Updates dates of a given job.
+schema: JobDatesDto
+- path:jobId string
+- body:actualEndDate integer
+- body:actualStartDate integer
+- body:deadline integer
+- body:startDate integer
+
+## S598-N0108  POST /v2/jobs/{jobId}/files/addExternalLink
+schema: ExternalFileDto
+- path:jobId string
+- body:category string
+- body:externalInfo object
+- body:filename string
+- body:languageCombinationIds array<object>
+- body:languageCombinationIds[].sourceLanguageId integer
+- body:languageCombinationIds[].targetLanguageId integer
+- body:languageIds array<integer>
+
+## S598-N0109  PUT /v2/jobs/{jobId}/files/delivered/add
+desc: Adds files to the project as delivered in the job. | Adds files to the project as delivered in the job. The files have to be uploaded beforehand (see "POST /jobs/{jobId}/files/upload" operation). The following properties can be specified for each file:<ul><li>category (required, 400 Bad Request is returned otherwise)</li><li>languageIds – when the file category depends on a list of languages</li><
+schema: FileCategorizationsDto
+- path:jobId string
+- body:files array<object>
+- body:files[].category string
+- body:files[].fileId string
+- body:files[].languageCombinationIds array<object>
+- body:files[].languageCombinationIds[].sourceLanguageId integer
+- body:files[].languageCombinationIds[].targetLanguageId integer
+- body:files[].languageIds array<integer>
+
+## S598-N0110  POST /v2/jobs/{jobId}/files/delivered/addLink
+desc: Adds file link to the project as a link delivered in the job. | Adds file link to the project as a link delivered in the job. The following properties can be specified for each file link:<ul><li>url (required, 400 Bad Request is returned otherwise)</li><li>category (required, 400 Bad Request is returned otherwise)</li><li>languageIds – when the file category depends on a list of languages</li><li>
+schema: FileLinkCategorizationsDto
+- path:jobId string
+- body:fileLinks array<object>
+- body:fileLinks[].category string
+- body:fileLinks[].externalInfo object
+- body:fileLinks[].filename string
+- body:fileLinks[].languageCombinationIds array<object>
+- body:fileLinks[].languageCombinationIds[].sourceLanguageId integer
+- body:fileLinks[].languageCombinationIds[].targetLanguageId integer
+- body:fileLinks[].languageIds array<integer>
+- body:fileLinks[].toBeGenerated boolean
+- body:fileLinks[].url string
+
+## S598-N0111  POST /v2/jobs/{jobId}/files/delivered/upload
+desc: Uploads file to the project as a file delivered in the job. | Uploads file to the project as a file delivered in the job. Only one file can be uploaded at once. When the upload is finished the file has to be added by specifying its category and languages (see "PUT /jobs/{jobId}/files/add" operation).
+schema: FileToUploadDto
+- path:jobId string
+- body:file string
+
+## S598-N0112  PUT /v2/jobs/{jobId}/files/sharedReferenceFiles/share
+desc: Shares selected files as Reference Files with a job in a project. | Shares selected files as Reference Files with a job in a project. The files and the job have to be part of the same project. The operation is finished successfully even if some of the selected files were already shared with the job. If a file was shared with the job as Work File, it will now be shared as Reference File (and not as
+schema: FilesDto
+- path:jobId string
+- body:files array<string>
+
+## S598-N0113  PUT /v2/jobs/{jobId}/files/sharedWorkFiles/share
+desc: Shares selected files as Work Files with a job in a project. | Shares selected files as Work Files with a job in a project. The files and the job have to be part of the same project. The operation is finished successfully even if some of the selected files were already shared with the job. If a file was shared with the job as Reference File, it will now be shared as Work File (and not as Reference
+schema: FilesDto
+- path:jobId string
+- body:files array<string>
+
+## S598-N0114  PUT /v2/jobs/{jobId}/files/stopSharing
+desc: Stops sharing selected files with a job in a project. | Stops sharing selected files with a job in a project. The files and the job have to be part of the same project. The operation is finished successfully even if some of the selected files were not shared with the job.
+schema: FilesDto
+- path:jobId string
+- body:files array<string>
+
+## S598-N0115  PUT /v2/jobs/{jobId}/instructions
+desc: Updates instructions for a job. | Updates instructions for a job. See also "PUT /projects/{projectId}/vendorInstructions" and "PUT /quotes/{quoteId}/vendorInstructions" for updating instructions for all jobs in a project or quote.
+schema: StringDTO
+- path:jobId string
+- body:value string
+
+## S598-N0116  PUT /v2/jobs/{jobId}/status
+desc: Changes job status if possible (400 Bad Request is returned otherwise). | Changes job status if possible (400 Bad Request is returned otherwise). The status has to be specified using one of the following keys:<ul><li>OPEN – available when the job has one of the following statuses: ACCEPTED, CANCELED</li><li>ACCEPTED – available when the job has one of the following statuses: OPEN (Vendor and dates
+schema: JobStatusDTO
+- path:jobId string
+- body:externalId string
+- body:status string
+
+## S598-N0118  POST /v2/projects
+desc: Creates a new Smart Project. | Creates a new Smart Project. If the specified service ID refers to Classic Project, 400 Bad Request is returned instead.
+schema: ProjectCreateDTO
+- body:clientId integer
+- body:externalId string
+- body:name string
+- body:serviceId integer
+
+## S598-N0119  POST /v2/projects/files/archive
+desc: Prepares a ZIP archive that contains the specified files. | Prepares a ZIP archive that contains the specified files.
+schema: FilesDto
+- body:files array<string>
+
+## S598-N0120  POST /v2/projects/{projectId}/addJob
+desc: Returns process id.
+- path:projectId string
+
+## S598-N0121  PUT /v2/projects/{projectId}/clientContacts
+desc: Updates Client Contacts for a project. | Updates Client Contacts for a project.
+schema: SmartContactsDTO
+- path:projectId string
+- body:additionalIds array<integer>
+- body:primaryId integer
+
+## S598-N0122  PUT /v2/projects/{projectId}/clientDeadline
+desc: Updates Client Deadline for a project. | Updates Client Deadline for a project.
+schema: TimeDTO
+- path:projectId string
+- body:value integer
+
+## S598-N0123  PUT /v2/projects/{projectId}/clientNotes
+desc: Updates Client Notes for a project. | Updates Client Notes for a project.
+schema: StringDTO
+- path:projectId string
+- body:value string
+
+## S598-N0124  PUT /v2/projects/{projectId}/clientReferenceNumber
+desc: Updates Client Reference Number for a project. | Updates Client Reference Number for a project.
+schema: StringDTO
+- path:projectId string
+- body:value string
+
+## S598-N0125  PUT /v2/projects/{projectId}/customFields/{key}
+desc: Updates a custom field with a specified key in a project | Updates a custom field with a specified key in a project
+schema: SmartCustomFieldDTO
+- path:projectId string
+- path:key string
+- body:value object
+
+## S598-N0126  PUT /v2/projects/{projectId}/files/add
+desc: Adds files to the project as added by PM. | Adds files to the project as added by PM. The files have to be uploaded beforehand (see "POST /v2/projects/{projectId}/files/upload" operation). The following properties can be specified for each file:<ul><li>category (required, 400 Bad Request is returned otherwise)</li><li>languageIds – when the file category depends on a list of languages</li><li>lang
+schema: FileCategorizationsDto
+- path:projectId string
+- body:files array<object>
+- body:files[].category string
+- body:files[].fileId string
+- body:files[].languageCombinationIds array<object>
+- body:files[].languageCombinationIds[].sourceLanguageId integer
+- body:files[].languageCombinationIds[].targetLanguageId integer
+- body:files[].languageIds array<integer>
+
+## S598-N0127  POST /v2/projects/{projectId}/files/addExternalLink
+schema: ExternalFileDto
+- path:projectId string
+- body:category string
+- body:externalInfo object
+- body:filename string
+- body:languageCombinationIds array<object>
+- body:languageCombinationIds[].sourceLanguageId integer
+- body:languageCombinationIds[].targetLanguageId integer
+- body:languageIds array<integer>
+
+## S598-N0128  POST /v2/projects/{projectId}/files/addLink
+desc: Adds file links to the project as added by PM. | Adds file links to the project as added by PM. The following properties can be specified for each file link:<ul><li>url (required, 400 Bad Request is returned otherwise)</li><li>category (required, 400 Bad Request is returned otherwise)</li><li>languageIds – when the file category depends on a list of languages</li><li>languageCombinationIds – when 
+schema: FileLinkCategorizationsDto
+- path:projectId string
+- body:fileLinks array<object>
+- body:fileLinks[].category string
+- body:fileLinks[].externalInfo object
+- body:fileLinks[].filename string
+- body:fileLinks[].languageCombinationIds array<object>
+- body:fileLinks[].languageCombinationIds[].sourceLanguageId integer
+- body:fileLinks[].languageCombinationIds[].targetLanguageId integer
+- body:fileLinks[].languageIds array<integer>
+- body:fileLinks[].toBeGenerated boolean
+- body:fileLinks[].url string
+
+## S598-N0129  POST /v2/projects/{projectId}/files/upload
+desc: Uploads file to the project as a file uploaded by PM. | Uploads file to the project as a file uploaded by PM. Only one file can be uploaded at once. When the upload is finished the file has to be added by specifying its category and languages (see "PUT /v2/projects/{projectId}/files/add" operation
+schema: FileToUploadDto
+- path:projectId string
+- body:file string
+
+## S598-N0130  POST /v2/projects/{projectId}/finance/payables
+desc: Adds a payable to a project. | Adds a payable to a project.
+schema: PayableCreateDTO
+- path:projectId string
+- body:calculationUnitId integer
+- body:catLogFile object
+- body:catLogFile.content string
+- body:catLogFile.name string
+- body:catLogFile.token string
+- body:catLogFile.url string
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobId object
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-N0131  DELETE /v2/projects/{projectId}/finance/payables/{payableId}
+desc: Deletes a payable. | Deletes a payable.
+- path:projectId string
+- path:payableId integer
+
+## S598-N0132  PUT /v2/projects/{projectId}/finance/payables/{payableId}
+desc: Updates a payable. | Updates a payable.
+schema: PayableDTO
+- path:projectId string
+- path:payableId integer
+- body:calculationUnitId integer
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobId object
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-N0135  PUT /v2/projects/{projectId}/finance/receivables/{receivableId}
+desc: Updates a receivable. | Updates a receivable.
+schema: ReceivableDTO
+- path:projectId string
+- path:receivableId integer
+- body:calculationUnitId integer
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:taskId integer
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-N0136  PUT /v2/projects/{projectId}/internalNotes
+desc: Updates Internal Notes for a project. | Updates Internal Notes for a project.
+schema: StringDTO
+- path:projectId string
+- body:value string
+
+## S598-N0137  PUT /v2/projects/{projectId}/orderDate
+desc: Updates Order Date for a project. | Updates Order Date for a project.
+schema: TimeDTO
+- path:projectId string
+- body:value integer
+
+## S598-N0138  PUT /v2/projects/{projectId}/sourceLanguage
+desc: Updates source language for a project. | Updates source language for a project.
+schema: SourceLanguageDTO
+- path:projectId string
+- body:sourceLanguageId integer
+
+## S598-N0139  PUT /v2/projects/{projectId}/specialization
+desc: Updates specialization for a project. | Updates specialization for a project.
+schema: SpecializationDTO
+- path:projectId string
+- body:specializationId integer
+
+## S598-N0140  PUT /v2/projects/{projectId}/status
+desc: Changes project status if possible (400 Bad Request is returned otherwise). | Changes project status if possible (400 Bad Request is returned otherwise). The status has to be specified using one of the following keys: <ul><li>CANCELLED – available when the job has one of the following statuses: OPEN, STARTED</li></ul>
+schema: ProjectStatusDTO
+- path:projectId string
+- body:status string
+
+## S598-N0142  PUT /v2/projects/{projectId}/vendorInstructions
+desc: Updates instructions for all vendors performing the jobs in a project. | Updates instructions for all vendors performing the jobs in a project. See also "PUT /jobs/{jobId}/instructions" for updating instructions for a specific job in a project or quote.
+schema: StringDTO
+- path:projectId string
+- body:value string
+
+## S598-N0144  POST /v2/quotes
+desc: Creates a new Smart Quote. | Creates a new Smart Quote. If the specified service ID refers to Classic Quote, 400 Bad Request is returned instead.
+schema: QuoteCreateDTO
+- body:clientId integer
+- body:name string
+- body:opportunityOfferId integer
+- body:serviceId integer
+
+## S598-N0145  POST /v2/quotes/files/archive
+desc: Prepares a ZIP archive that contains the specified files. | Prepares a ZIP archive that contains the specified files.
+schema: FilesDto
+- body:files array<string>
+
+## S598-N0146  PUT /v2/quotes/{quoteId}/businessDays
+desc: Updates Business Days for a quote. | Updates Business Days for a quote.
+- path:quoteId string
+- body:(body) integer
+
+## S598-N0147  PUT /v2/quotes/{quoteId}/clientContacts
+desc: Updates Client Contacts for a quote. | Updates Client Contacts for a quote.
+schema: SmartContactsDTO
+- path:quoteId string
+- body:additionalIds array<integer>
+- body:primaryId integer
+
+## S598-N0149  PUT /v2/quotes/{quoteId}/clientReferenceNumber
+desc: Updates Client Reference Number for a quote. | Updates Client Reference Number for a quote.
+schema: StringDTO
+- path:quoteId string
+- body:value string
+
+## S598-N0150  PUT /v2/quotes/{quoteId}/customFields/{key}
+desc: Updates a custom field with a specified key in a quote. | Updates a custom field with a specified key in a quote.
+schema: SmartCustomFieldDTO
+- path:quoteId string
+- path:key string
+- body:value object
+
+## S598-N0151  PUT /v2/quotes/{quoteId}/expectedDeliveryDate
+desc: Updates Expected Delivery Date for a quote. | Updates Expected Delivery Date for a quote.
+schema: TimeDTO
+- path:quoteId string
+- body:value integer
+
+## S598-N0152  PUT /v2/quotes/{quoteId}/files/add
+desc: Adds files to the quote as added by PM. | Adds files to the quote as added by PM. The files have to be uploaded beforehand (see "POST v2/quotes/{quoteId}/files/upload" operation). The following properties can be specified for each file:<ul><li>category (required, 400 Bad Request is returned otherwise)</li><li>languageIds – when the file category depends on a list of languages</li><li>languageCombi
+schema: TimeDTO
+- path:quoteId string
+- body:value integer
+
+## S598-N0153  POST /v2/quotes/{quoteId}/files/upload
+desc: Uploads file to the quote as a file uploaded by PM. | Uploads file to the quote as a file uploaded by PM. Only one file can be uploaded at once. When the upload is finished the file has to be added by specifying its category and languages (see "PUT /v2/quotes/{quoteId}/files/add" operation).
+schema: FileToUploadDto
+- path:quoteId string
+- body:file string
+
+## S598-N0154  POST /v2/quotes/{quoteId}/finance/payables
+desc: Adds a payable to a quote. | Adds a payable to a quote.
+schema: PayableCreateDTO
+- path:quoteId string
+- body:calculationUnitId integer
+- body:catLogFile object
+- body:catLogFile.content string
+- body:catLogFile.name string
+- body:catLogFile.token string
+- body:catLogFile.url string
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobId object
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-N0155  DELETE /v2/quotes/{quoteId}/finance/payables/{payableId}
+desc: Deletes a payable. | Deletes a payable.
+- path:quoteId string
+- path:payableId integer
+
+## S598-N0156  PUT /v2/quotes/{quoteId}/finance/payables/{payableId}
+desc: Updates a payable. | Updates a payable.
+schema: PayableDTO
+- path:quoteId string
+- path:payableId integer
+- body:calculationUnitId integer
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobId object
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-N0157  POST /v2/quotes/{quoteId}/finance/receivables
+desc: Adds a receivable to a quote. | Adds a receivable to a quote.
+schema: ReceivableCreateDTO
+- path:quoteId string
+- body:calculationUnitId integer
+- body:catLogFile object
+- body:catLogFile.content string
+- body:catLogFile.name string
+- body:catLogFile.token string
+- body:catLogFile.url string
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:taskId integer
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-N0158  DELETE /v2/quotes/{quoteId}/finance/receivables/{receivableId}
+desc: Deletes a receivable. | Deletes a receivable.
+- path:quoteId string
+- path:receivableId integer
+
+## S598-N0159  PUT /v2/quotes/{quoteId}/finance/receivables/{receivableId}
+desc: Updates a receivable. | Updates a receivable.
+schema: ReceivableDTO
+- path:quoteId string
+- path:receivableId integer
+- body:calculationUnitId integer
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:taskId integer
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-N0160  PUT /v2/quotes/{quoteId}/internalNotes
+desc: Updates Internal Notes for a quote. | Updates Internal Notes for a quote.
+schema: StringDTO
+- path:quoteId string
+- body:value string
+
+## S598-N0161  PUT /v2/quotes/{quoteId}/quoteExpiry
+desc: Updates Quote Expiry Date for a quote. | Updates Quote Expiry Date for a quote.
+schema: TimeDTO
+- path:quoteId string
+- body:value integer
+
+## S598-N0162  PUT /v2/quotes/{quoteId}/sourceLanguage
+desc: Updates source language for a quote. | Updates source language for a quote.
+schema: SourceLanguageDTO
+- path:quoteId string
+- body:sourceLanguageId integer
+
+## S598-N0163  PUT /v2/quotes/{quoteId}/specialization
+desc: Updates specialization for a quote. | Updates specialization for a quote.
+schema: SpecializationDTO
+- path:quoteId string
+- body:specializationId integer

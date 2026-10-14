@@ -1,0 +1,625 @@
+## S338-N0052  POST /secret/
+desc: Update a secret | Update a secret and override the value, the name cannot be overridden
+schema: secrets
+- body:description string
+- body:name string
+- body:value string
+
+## S338-N0053  PUT /secret/
+desc: Create a secret | Add a secret
+schema: secrets
+- body:description string
+- body:name string
+- body:value string
+
+## S338-N0054  DELETE /secret/{name}
+desc: Delete a secret | Remove the secret by his unique name
+- path:name string
+
+## S338-N0055  POST /settings/allowed_networks/{nodeId}
+desc: Set allowed networks for a policy server | Set the list of allowed networks for a policy server
+- path:nodeId string
+- body:value object
+
+## S338-N0057  POST /settings/{settingId}
+desc: Set the value of a setting | Set the current value of a specific setting
+- path:settingId string
+- body:value string
+
+## S338-N0059  POST /system/archives/{archiveKind}/restore/{archiveRestoreKind}
+desc: Restore an archive | Restore an archive of the given kind for the given moment
+- path:archiveKind string enum[full|groups|rules|directives|parameters]
+- path:archiveRestoreKind string enum[latestArchive|latestCommit|archive ID]
+
+## S338-N0061  POST /system/regenerate/policies
+desc: Trigger a new policy generation | Trigger a full policy generation
+
+## S338-N0067  POST /techniques/reload
+desc: Reload techniques | Reload all techniques metadata from file system
+
+## S338-N0069  POST /techniques/{techniqueId}/{techniqueVersion}
+desc: Update technique | Update technique created with technique editor
+schema: techniques
+- path:techniqueId string
+- path:techniqueVersion string
+- body:calls array<object>
+- body:calls[].component string
+- body:calls[].condition string
+- body:calls[].disableReporting boolean
+- body:calls[].id string
+- body:calls[].method string
+- body:calls[].parameters array<object>
+- body:calls[].parameters[].name string
+- body:calls[].parameters[].value string
+- body:calls[].calls array<object>
+- body:calls[].calls[].component string
+- body:calls[].calls[].condition string
+- body:calls[].calls[].disableReporting boolean
+- body:calls[].calls[].id string
+- body:calls[].calls[].method string
+- body:calls[].calls[].parameters array<object>
+- body:calls[].calls[].calls array<object>
+- body:calls[].calls[].reportingLogic object
+- body:calls[].reportingLogic object
+- body:calls[].reportingLogic.type string
+- body:calls[].reportingLogic.value string
+- body:category string
+- body:description string
+- body:id string
+- body:name string
+- body:parameters array<object>
+- body:parameters[].description string
+- body:parameters[].id string
+- body:parameters[].mayBeEmpty boolean
+- body:parameters[].name string
+- body:resources array<object>
+- body:resources[].name string
+- body:resources[].state string
+- body:source string
+- body:version string
+
+## S338-N0071  POST /usermanagement/update/{username}
+desc: Update user's infos | Rename, change password (pre-hashed or not) and change permission of an user. If a parameter is empty, it will be ignored.
+schema: users
+- path:username string
+- body:isPreHahed boolean enum[False|True]
+- body:password string
+- body:role array<string>
+- body:username string
+
+## S338-N0072  DELETE /usermanagement/{username}
+desc: Delete an user | Delete the user and his permissions
+- path:username string
+
+## S368-N0001  POST /certificates
+desc: Create a Certificate | Creates a new Certificate. The default type **uploaded** allows for uploading your existing `certificate` and `private_key` in PEM format. You have to monitor its expiration date and handle renewal yourself. In contrast, type **managed** requests a new Certificate from *Let's Encrypt* for the specified `domain_names`. Only domains managed by *Hetzner DNS* are supported. We h
+- body:certificate string
+- body:domain_names array<string>
+- body:labels object
+- body:name string
+- body:private_key string
+- body:type string enum[uploaded|managed]
+
+## S368-N0002  DELETE /certificates/{id}
+desc: Delete a Certificate | Deletes a Certificate.
+- path:id integer
+
+## S368-N0003  PUT /certificates/{id}
+desc: Update a Certificate | Updates the Certificate properties. Note that when updating labels, the Certificate’s current set of labels will be replaced with the labels provided in the request body. So, for example, if you want to add a new label, you have to provide all existing labels plus the new label in the request body. Note: if the Certificate object changes during the request, the response will
+- path:id integer
+- body:labels object
+- body:name string
+
+## S368-N0005  POST /firewalls
+desc: Create a Firewall | Creates a new Firewall. #### Call specific error codes | Code | Description | |------------------------------ |-------------------------------------------------------------- | | `server_already_added` | Server added more than one time to resource | | `incompatible_network_type` | The Network type is incompatible for the given resource | | `firewall_resource_not_found` | The res
+- body:apply_to array<object>
+- body:apply_to[].label_selector object
+- body:apply_to[].label_selector.selector string
+- body:apply_to[].server object
+- body:apply_to[].server.id integer
+- body:apply_to[].type string enum[server|label_selector]
+- body:labels object
+- body:name string
+- body:rules array<object>
+- body:rules[].description string
+- body:rules[].destination_ips array<string>
+- body:rules[].direction string enum[in|out]
+- body:rules[].port string
+- body:rules[].protocol string enum[tcp|udp|icmp|esp|gre]
+- body:rules[].source_ips array<string>
+
+## S368-N0006  DELETE /firewalls/{id}
+desc: Delete a Firewall | Deletes a Firewall. #### Call specific error codes | Code | Description | |--------------------- |-------------------------------------------| | `resource_in_use` | Firewall must not be in use to be deleted |
+- path:id integer
+
+## S368-N0007  PUT /firewalls/{id}
+desc: Update a Firewall | Updates the Firewall. Note that when updating labels, the Firewall's current set of labels will be replaced with the labels provided in the request body. So, for example, if you want to add a new label, you have to provide all existing labels plus the new label in the request body. Note: if the Firewall object changes during the request, the response will be a “conflict” error.
+- path:id integer
+- body:labels object
+- body:name string
+
+## S368-N0008  POST /firewalls/{id}/actions/apply_to_resources
+desc: Apply to Resources | Applies one Firewall to multiple resources. Currently servers (public network interface) and label selectors are supported. #### Call specific error codes | Code | Description | |-------------------------------|---------------------------------------------------------------| | `firewall_already_applied` | Firewall was already applied on resource | | `incompatible_network_type`
+- path:id integer
+- body:apply_to array<object>
+- body:apply_to[].label_selector object
+- body:apply_to[].label_selector.selector string
+- body:apply_to[].server object
+- body:apply_to[].server.id integer
+- body:apply_to[].type string enum[server|label_selector]
+
+## S368-N0009  POST /firewalls/{id}/actions/remove_from_resources
+desc: Remove from Resources | Removes one Firewall from multiple resources. Currently only Servers (and their public network interfaces) are supported. #### Call specific error codes | Code | Description | |---------------------------------------|------------------------------------------------------------------------| | `firewall_already_removed` | Firewall was already removed from the resource | | `fi
+- path:id integer
+- body:remove_from array<object>
+- body:remove_from[].label_selector object
+- body:remove_from[].label_selector.selector string
+- body:remove_from[].server object
+- body:remove_from[].server.id integer
+- body:remove_from[].type string enum[server|label_selector]
+
+## S368-N0010  POST /firewalls/{id}/actions/set_rules
+desc: Set Rules | Sets the rules of a Firewall. All existing rules will be overwritten. Pass an empty `rules` array to remove all rules. The maximum amount of rules that can be defined is 50. #### Call specific error codes | Code | Description | |-------------------------------|---------------------------------------------------------------| | `firewall_resource_not_found` | The resource the Firewall sh
+- path:id integer
+- body:rules array<object>
+- body:rules[].description string
+- body:rules[].destination_ips array<string>
+- body:rules[].direction string enum[in|out]
+- body:rules[].port string
+- body:rules[].protocol string enum[tcp|udp|icmp|esp|gre]
+- body:rules[].source_ips array<string>
+
+## S368-N0012  DELETE /floating_ips/{id}
+desc: Delete a Floating IP | Deletes a Floating IP. If it is currently assigned to a Server it will automatically get unassigned.
+- path:id integer
+
+## S368-N0013  PUT /floating_ips/{id}
+desc: Update a Floating IP | Updates the description or labels of a Floating IP. Also note that when updating labels, the Floating IP’s current set of labels will be replaced with the labels provided in the request body. So, for example, if you want to add a new label, you have to provide all existing labels plus the new label in the request body.
+- path:id integer
+- body:description string
+- body:labels object
+- body:name string
+
+## S368-N0014  POST /floating_ips/{id}/actions/assign
+desc: Assign a Floating IP to a Server | Assigns a Floating IP to a Server.
+- path:id integer
+- body:server integer
+
+## S368-N0016  POST /floating_ips/{id}/actions/change_protection
+desc: Change Floating IP Protection | Changes the protection configuration of the Floating IP.
+- path:id integer
+- body:delete boolean
+
+## S368-N0017  POST /floating_ips/{id}/actions/unassign
+desc: Unassign a Floating IP | Unassigns a Floating IP, resulting in it being unreachable. You may assign it to a Server again at a later time.
+- path:id integer
+
+## S368-N0018  DELETE /images/{id}
+desc: Delete an Image | Deletes an Image. Only Images of type `snapshot` and `backup` can be deleted.
+- path:id integer
+
+## S368-N0020  POST /images/{id}/actions/change_protection
+desc: Change Image Protection | Changes the protection configuration of the Image. Can only be used on snapshots.
+- path:id integer
+- body:delete boolean
+
+## S368-N0021  POST /load_balancers
+desc: Create a Load Balancer | Creates a Load Balancer. #### Call specific error codes | Code | Description | |-----------------------------------------|-------------------------------------------------------------------------------------------------------| | `cloud_resource_ip_not_allowed` | The IP you are trying to add as a target belongs to a Hetzner Cloud resource | | `ip_not_owned` | The IP is not 
+- body:algorithm object
+- body:algorithm.type string enum[round_robin|least_connections]
+- body:labels object
+- body:labels.labelkey string
+- body:load_balancer_type string
+- body:location string
+- body:name string
+- body:network integer
+- body:network_zone string
+- body:public_interface boolean
+- body:services array<object>
+- body:services[].destination_port integer
+- body:services[].health_check object
+- body:services[].health_check.http object
+- body:services[].health_check.interval integer
+- body:services[].health_check.port integer
+- body:services[].health_check.protocol string enum[tcp|http]
+- body:services[].health_check.retries integer
+- body:services[].health_check.timeout integer
+- body:services[].http object
+- body:services[].http.certificates array<integer>
+- body:services[].http.cookie_lifetime integer
+- body:services[].http.cookie_name string
+- body:services[].http.redirect_http boolean
+- body:services[].http.sticky_sessions boolean
+- body:services[].listen_port integer
+- body:services[].protocol string enum[tcp|http|https]
+- body:services[].proxyprotocol boolean
+- body:targets array<object>
+- body:targets[].health_status array<object>
+- body:targets[].health_status[].listen_port integer
+- body:targets[].health_status[].status string enum[healthy|unhealthy|unknown]
+- body:targets[].ip object
+- body:targets[].ip.ip string
+- body:targets[].label_selector object
+- body:targets[].label_selector.selector string
+- body:targets[].server object
+- body:targets[].server.id integer
+- body:targets[].targets array<object>
+- body:targets[].targets[].health_status array<object>
+- body:targets[].targets[].server object
+- body:targets[].targets[].type string
+- body:targets[].targets[].use_private_ip boolean
+- body:targets[].type string enum[server|label_selector|ip]
+- body:targets[].use_private_ip boolean
+
+## S368-N0024  POST /load_balancers/{id}/actions/add_service
+desc: Add Service | Adds a service to a Load Balancer. #### Call specific error codes | Code | Description | |----------------------------|---------------------------------------------------------| | `source_port_already_used` | The source port you are trying to add is already in use |
+- path:id integer
+- body:destination_port integer
+- body:health_check object
+- body:health_check.http object
+- body:health_check.http.domain string
+- body:health_check.http.path string
+- body:health_check.http.response string
+- body:health_check.http.status_codes array<string>
+- body:health_check.http.tls boolean
+- body:health_check.interval integer
+- body:health_check.port integer
+- body:health_check.protocol string enum[tcp|http]
+- body:health_check.retries integer
+- body:health_check.timeout integer
+- body:http object
+- body:http.certificates array<integer>
+- body:http.cookie_lifetime integer
+- body:http.cookie_name string
+- body:http.redirect_http boolean
+- body:http.sticky_sessions boolean
+- body:listen_port integer
+- body:protocol string enum[tcp|http|https]
+- body:proxyprotocol boolean
+
+## S368-N0026  POST /load_balancers/{id}/actions/attach_to_network
+desc: Attach a Load Balancer to a Network | Attach a Load Balancer to a Network. **Call specific error codes** | Code | Description | |----------------------------------|-----------------------------------------------------------------------| | `load_balancer_already_attached` | The Load Balancer is already attached to a network | | `ip_not_available` | The provided Network IP is not available | | `no_s
+- path:id integer
+- body:ip string
+- body:network number
+
+## S368-N0027  POST /load_balancers/{id}/actions/change_algorithm
+desc: Change Algorithm | Change the algorithm that determines to which target new requests are sent.
+- path:id integer
+- body:type string enum[round_robin|least_connections]
+
+## S368-N0029  POST /load_balancers/{id}/actions/change_protection
+desc: Change Load Balancer Protection | Changes the protection configuration of a Load Balancer.
+- path:id integer
+- body:delete boolean
+
+## S368-N0030  POST /load_balancers/{id}/actions/change_type
+desc: Change the Type of a Load Balancer | Changes the type (Max Services, Max Targets and Max Connections) of a Load Balancer. **Call specific error codes** | Code | Description | |------------------------------|-----------------------------------------------------------------| | `invalid_load_balancer_type` | The Load Balancer type does not fit for the given Load Balancer |
+- path:id integer
+- body:load_balancer_type string
+
+## S368-N0032  POST /load_balancers/{id}/actions/detach_from_network
+desc: Detach a Load Balancer from a Network | Detaches a Load Balancer from a network.
+- path:id integer
+- body:network number
+
+## S368-N0034  POST /load_balancers/{id}/actions/enable_public_interface
+desc: Enable the public interface of a Load Balancer | Enable the public interface of a Load Balancer. The Load Balancer will be accessible from the internet via its public IPs.
+- path:id integer
+
+## S368-N0035  POST /load_balancers/{id}/actions/remove_target
+desc: Remove Target | Removes a target from a Load Balancer.
+- path:id integer
+- body:ip object
+- body:ip.ip string
+- body:label_selector object
+- body:label_selector.selector string
+- body:server object
+- body:server.id number
+- body:type string enum[server|label_selector|ip]
+
+## S368-N0036  POST /load_balancers/{id}/actions/update_service
+desc: Update Service | Updates a Load Balancer Service. #### Call specific error codes | Code | Description | |----------------------------|---------------------------------------------------------| | `source_port_already_used` | The source port you are trying to add is already in use |
+- path:id integer
+- body:destination_port integer
+- body:health_check object
+- body:health_check.http object
+- body:health_check.http.domain string
+- body:health_check.http.path string
+- body:health_check.http.response string
+- body:health_check.http.status_codes array<string>
+- body:health_check.http.tls boolean
+- body:health_check.interval integer
+- body:health_check.port integer
+- body:health_check.protocol string enum[tcp|http]
+- body:health_check.retries integer
+- body:health_check.timeout integer
+- body:http object
+- body:http.certificates array<integer>
+- body:http.cookie_lifetime integer
+- body:http.cookie_name string
+- body:http.redirect_http boolean
+- body:http.sticky_sessions boolean
+- body:listen_port integer
+- body:protocol string enum[tcp|http|https]
+- body:proxyprotocol boolean
+
+## S368-N0037  POST /networks
+desc: Create a Network | Creates a network with the specified `ip_range`. You may specify one or more `subnets`. You can also add more Subnets later by using the [add subnet action](https://docs.hetzner.cloud/#network-actions-add-a-subnet-to-a-network). If you do not specify an `ip_range` in the subnet we will automatically pick the first available /24 range for you. You may specify one or more routes i
+- body:ip_range string
+- body:labels object
+- body:labels.labelkey string
+- body:name string
+- body:routes array<object>
+- body:routes[].destination string
+- body:routes[].gateway string
+- body:subnets array<object>
+- body:subnets[].ip_range string
+- body:subnets[].network_zone string
+- body:subnets[].type string enum[cloud|server|vswitch]
+
+## S368-N0039  PUT /networks/{id}
+desc: Update a Network | Updates the network properties. Note that when updating labels, the network’s current set of labels will be replaced with the labels provided in the request body. So, for example, if you want to add a new label, you have to provide all existing labels plus the new label in the request body. Note: if the network object changes during the request, the response will be a “conflict”
+- path:id integer
+- body:labels object
+- body:labels.labelkey string
+- body:name string
+
+## S368-N0040  POST /networks/{id}/actions/add_route
+desc: Add a route to a Network | Adds a route entry to a Network. Note: if the Network object changes during the request, the response will be a “conflict” error.
+- path:id integer
+- body:destination string
+- body:gateway string
+
+## S368-N0041  POST /networks/{id}/actions/add_subnet
+desc: Add a subnet to a Network | Adds a new subnet object to the Network. If you do not specify an `ip_range` for the subnet we will automatically pick the first available /24 range for you if possible. Note: if the parent Network object changes during the request, the response will be a “conflict” error.
+- path:id integer
+- body:ip_range string
+- body:network_zone string
+- body:type string enum[cloud|server|vswitch]
+- body:vswitch_id integer
+
+## S368-N0042  POST /networks/{id}/actions/change_ip_range
+desc: Change IP range of a Network | Changes the IP range of a Network. IP ranges can only be extended and never shrunk. You can only add IPs at the end of an existing IP range. This means that the IP part of your existing range must stay the same and you can only change its netmask. For example if you have a range `10.0.0.0/16` you want to extend then your new range must also start with the IP `10.0.0.
+- path:id integer
+- body:ip_range string
+
+## S368-N0046  POST /placement_groups
+desc: Create a PlacementGroup | Creates a new PlacementGroup.
+- body:labels object
+- body:name string
+- body:type string enum[spread]
+
+## S368-N0048  PUT /placement_groups/{id}
+desc: Update a PlacementGroup | Updates the PlacementGroup properties. Note that when updating labels, the PlacementGroup’s current set of labels will be replaced with the labels provided in the request body. So, for example, if you want to add a new label, you have to provide all existing labels plus the new label in the request body. Note: if the PlacementGroup object changes during the request, the r
+- path:id integer
+- body:labels object
+- body:name string
+
+## S368-N0049  POST /primary_ips
+desc: Create a Primary IP | Creates a new Primary IP, optionally assigned to a Server. If you want to create a Primary IP that is not assigned to a Server, you need to provide the `datacenter` key instead of `assignee_id`. This can be either the ID or the name of the Datacenter this Primary IP shall be created in. Note that a Primary IP can only be assigned to a Server in the same Datacenter later on. #
+- body:assignee_id integer
+- body:assignee_type string enum[server]
+- body:auto_delete boolean
+- body:datacenter string
+- body:labels object
+- body:name string
+- body:type string enum[ipv4|ipv6]
+
+## S368-N0051  PUT /primary_ips/{id}
+desc: Update a Primary IP | Updates the Primary IP. Note that when updating labels, the Primary IP's current set of labels will be replaced with the labels provided in the request body. So, for example, if you want to add a new label, you have to provide all existing labels plus the new label in the request body. If the Primary IP object changes during the request, the response will be a “conflict” erro
+- path:id integer
+- body:auto_delete boolean
+- body:labels object
+- body:name string
+
+## S368-N0053  POST /primary_ips/{id}/actions/change_dns_ptr
+desc: Change reverse DNS entry for a Primary IP | Changes the hostname that will appear when getting the hostname belonging to this Primary IP.
+- path:id integer
+- body:dns_ptr string
+- body:ip string
+
+## S368-N0056  POST /servers
+desc: Create a Server | Creates a new Server. Returns preliminary information about the Server as well as an Action that covers progress of creation.
+- body:automount boolean
+- body:datacenter string
+- body:firewalls array<object>
+- body:firewalls[].firewall integer
+- body:image string
+- body:labels object
+- body:location string
+- body:name string
+- body:networks array<integer>
+- body:placement_group integer
+- body:public_net object
+- body:public_net.enable_ipv4 boolean
+- body:public_net.enable_ipv6 boolean
+- body:public_net.ipv4 integer
+- body:public_net.ipv6 integer
+- body:server_type string
+- body:ssh_keys array<string>
+- body:start_after_create boolean
+- body:user_data string
+- body:volumes array<integer>
+
+## S368-N0061  POST /servers/{id}/actions/attach_to_network
+desc: Attach a Server to a Network | Attaches a Server to a network. This will complement the fixed public Server interface by adding an additional ethernet interface to the Server which is connected to the specified network. The Server will get an IP auto assigned from a subnet of type `server` in the same `network_zone`. Using the `alias_ips` attribute you can also define one or more additional IPs to
+- path:id integer
+- body:alias_ips array<string>
+- body:ip string
+- body:network integer
+
+## S368-N0062  POST /servers/{id}/actions/change_alias_ips
+desc: Change alias IPs of a Network | Changes the alias IPs of an already attached Network. Note that the existing aliases for the specified Network will be replaced with these provided in the request body. So if you want to add an alias IP, you have to provide the existing ones from the Network plus the new alias IP in the request body.
+- path:id integer
+- body:alias_ips array<string>
+- body:network integer
+
+## S368-N0064  POST /servers/{id}/actions/change_protection
+desc: Change Server Protection | Changes the protection configuration of the Server.
+- path:id integer
+- body:delete boolean
+- body:rebuild boolean
+
+## S368-N0065  POST /servers/{id}/actions/change_type
+desc: Change the Type of a Server | Changes the type (Cores, RAM and disk sizes) of a Server. Server must be powered off for this command to succeed. This copies the content of its disk, and starts it again. You can only migrate to Server types with the same `storage_type` and equal or bigger disks. Shrinking disks is not possible as it might destroy data. If the disk gets upgraded, the Server type can 
+- path:id integer
+- body:server_type string
+- body:upgrade_disk boolean
+
+## S368-N0069  POST /servers/{id}/actions/disable_backup
+desc: Disable Backups for a Server | Disables the automatic backup option and deletes all existing Backups for a Server. No more additional charges for backups will be made. Caution: This immediately removes all existing backups for the Server!
+- path:id integer
+
+## S368-N0070  POST /servers/{id}/actions/disable_rescue
+desc: Disable Rescue Mode for a Server | Disables the Hetzner Rescue System for a Server. This makes a Server start from its disks on next reboot. Rescue Mode is automatically disabled when you first boot into it or if you do not use it for 60 minutes. Disabling rescue mode will not reboot your Server — you will have to do this yourself.
+- path:id integer
+
+## S368-N0072  POST /servers/{id}/actions/enable_rescue
+desc: Enable Rescue Mode for a Server | Enable the Hetzner Rescue System for this Server. The next time a Server with enabled rescue mode boots it will start a special minimal Linux distribution designed for repair and reinstall. In case a Server cannot boot on its own you can use this to access a Server’s disks. Rescue Mode is automatically disabled when you first boot into it or if you do not use it f
+- path:id integer
+- body:ssh_keys array<integer>
+- body:type string enum[linux64|linux32]
+
+## S368-N0073  POST /servers/{id}/actions/poweroff
+desc: Power off a Server | Cuts power to the Server. This forcefully stops it without giving the Server operating system time to gracefully stop. May lead to data loss, equivalent to pulling the power cord. Power off should only be used when shutdown does not work.
+- path:id integer
+
+## S368-N0074  POST /servers/{id}/actions/poweron
+desc: Power on a Server | Starts a Server by turning its power on.
+- path:id integer
+
+## S368-N0075  POST /servers/{id}/actions/reboot
+desc: Soft-reboot a Server | Reboots a Server gracefully by sending an ACPI request. The Server operating system must support ACPI and react to the request, otherwise the Server will not reboot.
+- path:id integer
+
+## S368-N0076  POST /servers/{id}/actions/rebuild
+desc: Rebuild a Server from an Image | Rebuilds a Server overwriting its disk with the content of an Image, thereby **destroying all data** on the target Server The Image can either be one you have created earlier (`backup` or `snapshot` Image) or it can be a completely fresh `system` Image provided by us. You can get a list of all available Images with `GET /images`. Your Server will automatically be p
+- path:id integer
+- body:image string
+
+## S368-N0079  POST /servers/{id}/actions/reset
+desc: Reset a Server | Cuts power to a Server and starts it again. This forcefully stops it without giving the Server operating system time to gracefully stop. This may lead to data loss, it’s equivalent to pulling the power cord and plugging it in again. Reset should only be used when reboot does not work.
+- path:id integer
+
+## S368-N0080  POST /servers/{id}/actions/reset_password
+desc: Reset root Password of a Server | Resets the root password. Only works for Linux systems that are running the qemu guest agent. Server must be powered on (status `running`) in order for this operation to succeed. This will generate a new password for this Server and return it. If this does not succeed you can use the rescue system to netboot the Server and manually change your Server password by h
+- path:id integer
+
+## S368-N0081  POST /servers/{id}/actions/shutdown
+desc: Shutdown a Server | Shuts down a Server gracefully by sending an ACPI shutdown request. The Server operating system must support ACPI and react to the request, otherwise the Server will not shut down.
+- path:id integer
+
+## S368-N0083  DELETE /ssh_keys/{id}
+desc: Delete an SSH key | Deletes an SSH key. It cannot be used anymore.
+- path:id string
+
+## S368-N0084  PUT /ssh_keys/{id}
+desc: Update an SSH key | Updates an SSH key. You can update an SSH key name and an SSH key labels. Please note that when updating labels, the SSH key current set of labels will be replaced with the labels provided in the request body. So, for example, if you want to add a new label, you have to provide all existing labels plus the new label in the request body.
+- path:id string
+- body:labels object
+- body:name string
+
+## S368-N0088  POST /volumes/{id}/actions/attach
+desc: Attach Volume to a Server | Attaches a Volume to a Server. Works only if the Server is in the same Location as the Volume.
+- path:id integer
+- body:automount boolean
+- body:server integer
+
+## S368-N0091  POST /volumes/{id}/actions/resize
+desc: Resize Volume | Changes the size of a Volume. Note that downsizing a Volume is not possible.
+- path:id integer
+- body:size number
+
+## S330-N0001  POST /api/v1/installer/orgs/{org_id}/devices
+desc: claimInstallerDevices | This mirrors `POST /api/v1/orgs/{org_id}/inventory` (see Inventory API)
+schema: Model_array_string
+- path:org_id string
+- body:(body) string
+
+## S330-N0002  DELETE /api/v1/installer/orgs/{org_id}/devices/{device_mac}
+desc: unassignInstallerRecentlyClaimedDevice | Unassign recently claimed devices
+- path:org_id string
+- path:device_mac string
+
+## S330-N0003  PUT /api/v1/installer/orgs/{org_id}/devices/{device_mac}
+desc: provisionInstallerDevices | Provision or Replace a device If replacing_mac is in the request payload, other attributes are ignored, we attempt to replace existing device (with mac replacing_mac) with the inventory device being configured. The replacement device must be in the inventory but not assigned, and the replacing_mac device must be assigned to a site, and satisfy grace period requirements.
+schema: Installer_devices
+- path:org_id string
+- path:device_mac string
+- body:deviceprofile_name string
+- body:for_site boolean
+- body:height number
+- body:map_id string
+- body:name string
+- body:orientation number
+- body:replacing_mac string
+- body:role string
+- body:site_id string
+- body:site_name string
+- body:x number
+- body:y number
+
+## S330-N0004  POST /api/v1/installer/orgs/{org_id}/devices/{device_mac}/locate
+desc: startInstallerLocateDevice | Locate a Device by blinking it’s LED, it’s a persisted state that has to be stopped by calling Stop Locating API
+- path:org_id string
+- path:device_mac string
+- body:(body) object
+
+## S330-N0005  POST /api/v1/installer/orgs/{org_id}/devices/{device_mac}/unlocate
+desc: stopInstallerLocateDevice | Stop it
+- path:org_id string
+- path:device_mac string
+
+## S330-N0006  DELETE /api/v1/installer/orgs/{org_id}/devices/{device_mac}/{image_name}
+desc: deleteInstallerDeviceImage | delete image
+- path:org_id string
+- path:image_name string
+- path:device_mac string
+
+## S330-N0007  POST /api/v1/installer/orgs/{org_id}/devices/{device_mac}/{image_name}
+desc: addInstallerDeviceImage | Add image
+schema: image_upload
+- path:org_id string
+- path:image_name string
+- path:device_mac string
+- body:file string
+- body:json string
+
+## S330-N0008  PUT /api/v1/installer/orgs/{org_id}/sites/{site_name}
+desc: createOrUpdateInstallerSites | Often the Installers are asked to assign Devices to Sites. The Sites can either be pre-created or created/modified by the Installer. If this is an update, the same grace period also applies.
+schema: site
+- path:org_id string
+- path:site_name string
+- body: string
+- body:address string
+- body:alarmtemplate_id string
+- body:aptemplate_id string
+- body:country_code string
+- body:created_time number
+- body:gatewaytemplate_id string
+- body:id string
+- body:latlng object
+- body:latlng.lat number
+- body:latlng.lng number
+- body:modified_time number
+- body:name string
+- body:networktemplate_id string
+- body:notes string
+- body:org_id string
+- body:rftemplate_id string
+- body:secpolicy_id string
+- body:sitegroup_ids array<string>
+- body:timezone string
+
+## S330-N0009  POST /api/v1/installer/orgs/{org_id}/sites/{site_name}/maps/import
+desc: importInstallerMap | Import data from files is a multipart POST which has an file, an optional json, and an optional csv, to create floorplan, assign & place ap if name or mac matches
+- path:org_id string
+- path:site_name string
+- body:csv string
+- body:file string
+- body:json object
+- body:json.import_all_floorplans boolean
+- body:json.import_height boolean
+- body:json.import_orientation boolean
+- body:json.vendor_name string enum[ibwave|ekahau]

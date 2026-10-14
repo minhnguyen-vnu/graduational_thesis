@@ -1,0 +1,42 @@
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
+index 0da54a9ad1..0373633df1 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
+@@ -558,6 +558,9 @@ class RestSecurityOracle {
+         if (!config.isEnabledFaultCategory(ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION)) {
+             return
+         }
++        if (!restSecurityBuilder.statefulTripleUnderEvaluation) {
++            return
++        }
+ 
+         val actions = individual.seeMainExecutableActions()
+ 
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+index 7979890bdf..4647072425 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -384,6 +384,9 @@ class RestSecurityBuilder : TimeBoxedPhase {
+     private var lastSourceCode: Int? = null
+     private var lastTransitionCode: Int? = null
+ 
++    var statefulTripleUnderEvaluation = false
++        private set
++
+     private val resetClient: Client by lazy { HttpClientFactory.createTrustingJerseyClient() }
+ 
+     private fun resetSutState() {
+@@ -640,7 +643,12 @@ class RestSecurityBuilder : TimeBoxedPhase {
+ 
+         resetSutState()
+ 
+-        val ei = fitness.computeWholeAchievedCoverageForPostProcessing(base)
++        statefulTripleUnderEvaluation = true
++        val ei = try {
++            fitness.computeWholeAchievedCoverageForPostProcessing(base)
++        } finally {
++            statefulTripleUnderEvaluation = false
++        }
+         if (ei == null) {
+             log.warn("Failed to evaluate constructed stateful-authorization individual")
+             return false

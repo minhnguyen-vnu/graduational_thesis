@@ -1,0 +1,54 @@
+1. Bối cảnh
+
+Kịch bản A1:
+
+Một quản trị viên (ADMIN) tạo tài nguyên /reports/9, sau đó bị hạ quyền
+xuống người xem (VIEWER). Nhưng chính token (JWT) cũ mà họ đã có vẫn DELETE
+/reports/9 thành công (đáng lẽ phải bị 403 Forbidden). Nguyên nhân gốc: hệ thống tin vào “role” nằm
+trong JWT và không đọc lại vai trò hiện tại của người dùng, nên một token cấp trước lúc hạ
+quyền vẫn còn hiệu lực quản trị cho tới khi hết hạn.
+
+2. Hiện thực
+
+EvoMaster — bổ sung 9 oracle bảo mật, trong đó có các oracle kiểm tra phân quyền. Ngay cả
+với các oracle này bật đầy đủ, EvoMaster vẫn mù về mặt cấu trúc đối với A1. Nguyên do:
+
+    + Evomaster dùng baseline: "Khác người dùng / cùng một thời điểm" chứ không oracle nào
+      “một hành động từng được PHÉP, sau khi quyền của nó bị thu hồi, thì phải bị từ chối”
+
+    + Để lộ được lỗi A1 cần dựng đúng một bộ ba hành động:
+      [ nạn nhân thực hiện hành động → người khác hạ quyền nạn nhân → nạn nhân lặp
+      lại hành động bằng CHÍNH token cũ ]
+
+      nhưng do Evomaster đăng nhập lại ở mỗi test nên luôn cầm một token hiện thời, không bao giờ là token cũ
+
+3. Thực nghiệm
+
+Chạy một ứng dụng springboot với 2 phiên bản, 1 lỗi, 1 vá:
+
+:8080 (VULNERABLE)          :8081 (PATCHED)
+  delete#1 (admin):   204     delete#1 (admin):   204
+  demote alice:       200     demote alice:       200
+  delete#2 (demoted): 204 ←   delete#2 (demoted): 403 ←
+
+thì khi ta thực nghiệm Evomaster trên phiên bản lỗi, 60 test, 730 giây, ta nhận được kết quả là:
+
+F101: phản hồi ko khớp schema --> 84 lần
+F100: lỗi 500
+
+vấn đề là không có lỗi F2xx ý nghĩa là lỗi phân quyền hay bảo mật nào
+
+
+4. Thuật toán
+Tham lam
+
+1. Tìm API để hạ quyền. Nó đọc danh sách API, tìm cái nào tên đường dẫn có chữ như role/permission và có tham số là tên người dùng — tự suy ra đây là chỗ đổi quyền.
+2. Tìm giá trị vai trò thấp để hạ xuống. Nó nhìn trong đặc tả, chọn nhãn kiểu viewer/guest thay vì admin — ra VIEWER.
+3. Tìm một hành động chỉ admin làm được. Nó chọn một thao tác ghi lặp lại được (PUT/PATCH, không phải xóa mất tài nguyên), và phải có bằng chứng là người thường từng bị chặn 403 ở đó — để chắc chắn đúng là hành động cần quyền admin.
+4. Tìm 'nạn nhân'. Là người từng làm được hành động đó (được server chấp nhận).
+5. Ghép thành chuỗi 3 bước: (a) nạn nhân làm hành động → được phép; (b) một admin khác hạ quyền nạn nhân xuống VIEWER; (c) nạn nhân làm lại đúng hành động đó.
+
+Phần kết luận: nhìn kết quả 3 bước — nếu (a) được phép, (b) hạ quyền thành công, mà (c) vẫn được phép bằng cùng token đó, thì kết luận là lỗi. Nếu (c) bị từ chối 403 thì đúng, không báo gì
+
+5. Kết quả hiện có
+Với oracle hiện tại thêm vào, chạy lại trên ứng dụng ở mode VULNERABLE thì đã ghi nhận được lỗi 970 (tức lỗi ở trên ta định nghĩa)

@@ -1,0 +1,34 @@
+auth:
+  - name: victim
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: victim
+        password: "victimpass"
+        usernameField: username
+        passwordField: password
+  - name: admin
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: admin
+        password: "adminpass"
+        usernameField: username
+        passwordField: password
+  - name: viewer
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: viewer
+        password: "viewerpass"
+        usernameField: username
+        passwordField: password
+
+authTemplate:
+  loginEndpointAuth:
+    endpoint: /auth/token
+    verb: POST
+    contentType: application/json
+    token:
+      extractFrom: body
+      extractSelector: /access_token
+      sendIn: header
+      sendName: Authorization
+      sendTemplate: "Bearer {token}"

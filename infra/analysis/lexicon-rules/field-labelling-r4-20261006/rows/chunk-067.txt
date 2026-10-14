@@ -1,0 +1,807 @@
+## S567-N0067  PATCH /v1/{namespace}/projects/{project}/servers/{server}/
+desc: Update a server
+schema: ServerData
+- path:project string
+- path:namespace string
+- path:server string
+- body:config object
+- body:config.command string
+- body:config.function string
+- body:config.script string
+- body:config.type string enum[jupyter|restful|cron]
+- body:connected array<string>
+- body:host string
+- body:image_name string
+- body:name string
+- body:server_size string
+- body:startup_script string
+
+## S567-N0070  POST /v1/{namespace}/projects/{project}/servers/{server}/run-stats/
+desc: Create a new server's run statistics
+schema: ServerRunStatisticsData
+- path:server string
+- path:project string
+- path:namespace string
+- body:exit_code integer
+- body:size integer
+- body:stacktrace string
+- body:start string
+- body:stop string
+
+## S567-N0071  DELETE /v1/{namespace}/projects/{project}/servers/{server}/run-stats/{id}/
+desc: Delete a server's statistics
+- path:server string
+- path:project string
+- path:namespace string
+- path:id string
+
+## S567-N0073  PUT /v1/{namespace}/projects/{project}/servers/{server}/run-stats/{id}/
+desc: Replace a server's statistics
+schema: ServerRunStatisticsData
+- path:server string
+- path:project string
+- path:namespace string
+- path:id string
+- body:exit_code integer
+- body:size integer
+- body:stacktrace string
+- body:start string
+- body:stop string
+
+## S567-N0074  POST /v1/{namespace}/projects/{project}/servers/{server}/ssh-tunnels/
+desc: Create SSH Tunnel associated to a server
+schema: SshTunnelData
+- path:server string
+- path:project string
+- path:namespace string
+- body:endpoint string
+- body:host string
+- body:local_port integer
+- body:name string
+- body:remote_port integer
+- body:username string
+
+## S567-N0076  PATCH /v1/{namespace}/projects/{project}/servers/{server}/ssh-tunnels/{tunnel}/
+desc: Update an SSH Tunnel associated to a server
+schema: SshTunnelData
+- path:server string
+- path:project string
+- path:namespace string
+- path:tunnel string
+- body:endpoint string
+- body:host string
+- body:local_port integer
+- body:name string
+- body:remote_port integer
+- body:username string
+
+## S567-N0077  PUT /v1/{namespace}/projects/{project}/servers/{server}/ssh-tunnels/{tunnel}/
+desc: Replace SSH Tunnel associated to a server
+schema: SshTunnelData
+- path:server string
+- path:project string
+- path:namespace string
+- path:tunnel string
+- body:endpoint string
+- body:host string
+- body:local_port integer
+- body:name string
+- body:remote_port integer
+- body:username string
+
+## S567-N0078  POST /v1/{namespace}/projects/{project}/servers/{server}/start/
+desc: Start a server
+- path:project string
+- path:namespace string
+- path:server string
+
+## S567-N0079  DELETE /v1/{namespace}/projects/{project}/servers/{server}/stats/{id}/
+desc: Delete a server's statistics
+- path:server string
+- path:project string
+- path:namespace string
+- path:id string
+
+## S567-N0080  PATCH /v1/{namespace}/projects/{project}/servers/{server}/stats/{id}/
+desc: Update a server's statistics
+schema: ServerStatisticsData
+- path:server string
+- path:project string
+- path:namespace string
+- path:id string
+- body:id array<string>
+- body:non_field_errors array<string>
+- body:size array<string>
+- body:start array<string>
+- body:stop array<string>
+
+## S567-N0081  PUT /v1/{namespace}/projects/{project}/servers/{server}/stats/{id}/
+desc: Replace a server's statistics
+schema: ServerStatisticsData
+- path:server string
+- path:project string
+- path:namespace string
+- path:id string
+- body:id array<string>
+- body:non_field_errors array<string>
+- body:size array<string>
+- body:start array<string>
+- body:stop array<string>
+
+## S567-N0082  POST /v1/{namespace}/projects/{project}/servers/{server}/stop/
+desc: Stop a server
+- path:project string
+- path:namespace string
+- path:server string
+
+## S567-N0083  POST /v1/{namespace}/projects/{project}/servers/{server}/triggers/
+desc: Create a new server trigger
+schema: ServerActionData
+- path:server string
+- path:project string
+- path:namespace string
+- body:name string
+- body:operation string enum[start|stop|terminate]
+- body:webhook object
+- body:webhook.payload object
+- body:webhook.url string
+
+## S567-N0084  DELETE /v1/{namespace}/projects/{project}/servers/{server}/triggers/{trigger}/
+desc: Delete a server trigger
+- path:server string
+- path:project string
+- path:namespace string
+- path:trigger string
+
+## S567-N0086  PUT /v1/{namespace}/projects/{project}/servers/{server}/triggers/{trigger}/
+desc: Replace a server trigger
+schema: ServerActionData
+- path:server string
+- path:project string
+- path:namespace string
+- path:trigger string
+- body:name string
+- body:operation string enum[start|stop|terminate]
+- body:webhook object
+- body:webhook.payload object
+- body:webhook.url string
+
+## S100-N0006  PATCH /file-storage/drives/{id}
+desc: Update Drive | Update Drive
+schema: Drive
+- path:id string
+- query:raw boolean
+- body:created_at string
+- body:created_by string
+- body:description string
+- body:id string
+- body:name string
+- body:updated_at string
+- body:updated_by string
+
+## S100-N0008  POST /file-storage/files/search
+desc: Search Files | Search Files
+schema: FilesSearch
+- query:pass_through object
+- query:fields string
+- body:drive_id string
+- body:query string
+
+## S100-N0009  DELETE /file-storage/files/{id}
+desc: Delete File | Delete File
+- path:id string
+- query:raw boolean
+
+## S100-N0012  DELETE /file-storage/folders/{id}
+desc: Delete Folder | Delete Folder
+- path:id string
+- query:raw boolean
+
+## S100-N0018  POST /file-storage/upload-sessions
+desc: Start Upload Session | Start an Upload Session. Upload sessions are used to upload large files, use the [Upload File](#operation/filesUpload) endpoint to upload smaller files (up to 100MB). Note that the base URL is upload.apideck.com instead of unify.apideck.com. For more information on uploads, refer to the [file upload guide](/guides/file-upload).
+schema: CreateUploadSessionRequest
+- query:raw boolean
+- body:drive_id string
+- body:name string
+- body:parent_folder_id string
+- body:size integer
+
+## S100-N0021  POST /file-storage/upload-sessions/{id}/finish
+desc: Finish Upload Session | Finish Upload Session. Only call this endpoint after all File parts have been uploaded to [Upload part of File](#operation/uploadSessionsUpload). Note that the base URL is upload.apideck.com instead of unify.apideck.com. For more information on uploads, refer to the [file upload guide](/guides/file-upload).
+- path:id string
+- query:raw boolean
+- body:(body) object
+
+## S598-N0001  POST /accounting/customers/invoices
+desc: Creates a new invoice. | Creates a new invoice from tasks. Tasks are grouped by client and currency, therefore multiple invoices can be created.If any of the tasks cannot be invoiced (ie. it is already invoiced, not invoiceable, not associated with a project) then an error is reported.
+schema: CustomerInvoiceCreateDTO
+- body:prepaymentsIds array<integer>
+- body:tasksIds array<integer>
+- body:type string enum[FINAL|DRAFT|CREDIT_NOTE]
+
+## S598-N0003  POST /accounting/customers/invoices/sendReminders
+desc: Sends reminders. Returns number of sent e-mails. | Sends reminders. Returns number of sent e-mails.
+schema: SendRemindersRequestDTO
+- body:ids array<integer>
+
+## S598-N0004  DELETE /accounting/customers/invoices/{invoiceId}
+desc: Removes a client invoice. | Removes a client invoice.
+- path:invoiceId integer
+
+## S598-N0005  POST /accounting/customers/invoices/{invoiceId}/duplicate
+desc: Duplicate client invoice. | Duplicate client invoice.
+- path:invoiceId integer
+
+## S598-N0006  POST /accounting/customers/invoices/{invoiceId}/duplicate/proForma
+desc: Duplicate client invoice as pro forma. | Duplicate client invoice as pro forma.
+- path:invoiceId integer
+
+## S598-N0007  POST /accounting/customers/invoices/{invoiceId}/payments
+desc: Adds a new payment to the client invoice. The invoice payment status (Not Paid, Partially Paid, Fully Paid) is automatically recalculated. | Adds a new payment to the client invoice. The invoice payment status (Not Paid, Partially Paid, Fully Paid) is automatically recalculated.
+schema: PaymentDTO
+- path:invoiceId integer
+- body:amount number
+- body:notes string
+- body:paymentDate object
+- body:paymentDate.value integer
+- body:paymentMethodId integer
+
+## S598-N0009  DELETE /accounting/customers/payments/{paymentId}
+desc: Removes a customer payment. | Removes a customer payment.
+- path:paymentId integer
+
+## S598-N0010  POST /accounting/providers/invoices
+desc: Creates a new invoice. | Creates a new invoice from jobs. Jobs are grouped by provider and currency, therefore multiple invoices can be created.If any of the jobs cannot be invoiced (ie. it is already invoiced) then an error is reported.
+schema: ProviderInvoiceCreateDTO
+- body:jobsIds array<integer>
+
+## S598-N0011  DELETE /accounting/providers/invoices/{invoiceId}
+desc: Removes a provider invoice. | Removes a provider invoice.
+- path:invoiceId integer
+
+## S598-N0012  POST /accounting/providers/invoices/{invoiceId}/payments
+desc: Creates a new payment on the vendor account and assigns the payment to the invoice. | Creates a new payment on the vendor account and assigns the payment to the invoice.
+schema: PaymentDTO
+- path:invoiceId integer
+- body:amount number
+- body:notes string
+- body:paymentDate object
+- body:paymentDate.value integer
+- body:paymentMethodId integer
+
+## S598-N0013  POST /accounting/providers/invoices/{invoiceId}/send
+desc: Sends a provider invoice. | Sends a provider invoice.
+- path:invoiceId integer
+
+## S598-N0014  POST /accounting/providers/invoices/{invoiceId}/status
+desc: Changes invoice status to given status. | Changes invoice status to given status.
+schema: StatusRequestDTO
+- path:invoiceId integer
+- body:status string enum[POSTPONED|TO_BE_SENT|SENT|CONFIRMED|BILL_CREATED]
+
+## S598-N0015  DELETE /accounting/providers/payments/{paymentId}
+desc: Removes a provider payment. | Removes a provider payment.
+- path:paymentId integer
+
+## S598-N0016  POST /browser/views/details/for/{className}/{viewId}
+desc: Selects given view as current and returns its detailed information, suitable for browser. | Selects given view as current and returns its detailed information, suitable for browser.
+- path:className string
+- path:viewId integer
+- query:place name (denotes specific place in system with the table) string
+
+## S598-N0017  POST /browser/views/for/{className}
+desc: Creates view for given class. | Creates view for given class.
+schema: ViewDTO
+- path:className string
+- body:columns array<object>
+- body:columns[].name string
+- body:columns[].settings object
+- body:order object
+- body:order.column string
+- body:order.type string
+- body:permissions object
+- body:permissions.sharedGroups array<integer>
+- body:settings object
+- body:settings.local object
+- body:settings.local.maxLinesInRow integer
+- body:settings.local.maxRows integer
+- body:settings.name string
+
+## S598-N0018  DELETE /browser/views/{viewId}
+desc: Removes a view. | Removes a view. No content is returned upon success (204).
+- path:viewId integer
+
+## S598-N0019  PUT /browser/views/{viewId}
+desc: Updates all view's information. | Updates all view's information (ie. name, columns, filters, etc).
+schema: ViewDTO
+- path:viewId integer
+- body:columns array<object>
+- body:columns[].name string
+- body:columns[].settings object
+- body:order object
+- body:order.column string
+- body:order.type string
+- body:permissions object
+- body:permissions.sharedGroups array<integer>
+- body:settings object
+- body:settings.local object
+- body:settings.local.maxLinesInRow integer
+- body:settings.local.maxRows integer
+- body:settings.name string
+
+## S598-N0020  PUT /browser/views/{viewId}/columns
+desc: Updates columns in view. | Updates columns in view.
+schema: ColumnDTO
+- path:viewId integer
+- body:name string
+- body:settings object
+
+## S598-N0021  DELETE /browser/views/{viewId}/columns/{columnName}
+desc: Deletes a single column from view. | Deletes a single column from view.
+- path:viewId integer
+- path:columnName string
+
+## S598-N0022  PUT /browser/views/{viewId}/columns/{columnName}/settings
+desc: Updates column's specific settings. | Updates column's specific settings. For example when column describes money amount we can decide whether it should display currency or not.
+- path:viewId integer
+- path:columnName string
+- body:(body) object
+
+## S598-N0023  PUT /browser/views/{viewId}/filter
+desc: Updates view's filter. | Updates view's filter.
+schema: FilterPropertyDTO
+- path:viewId integer
+- body:name string
+- body:settings object
+- body:settingsPresent boolean
+- body:type string
+
+## S598-N0025  PUT /browser/views/{viewId}/order
+desc: Updates view's order settings. | Updates view's order settings.
+schema: OrderDTO
+- path:viewId integer
+- body:column string
+- body:type string
+
+## S598-N0026  PUT /browser/views/{viewId}/permissions
+desc: Updates view's permissions. | Updates view's permissions.
+schema: PermissionsDTO
+- path:viewId integer
+- body:sharedGroups array<integer>
+
+## S598-N0029  POST /customers
+desc: Creates a new client. | Creates a new client. All available fields are presented in PUT request.<p> Required fields: <ul> <li>name</li> <li>fullName</li> <li>contact -> emails -> primary</li> </ul> </p>
+schema: CustomerDTO
+- body:accountOnCustomerServer string
+- body:accounting object
+- body:accounting.taxNumbers array<object>
+- body:accounting.taxNumbers[].number string
+- body:accounting.taxNumbers[].type string
+- body:billingAddress object
+- body:billingAddress.addressLine1 string
+- body:billingAddress.addressLine2 string
+- body:billingAddress.city string
+- body:billingAddress.countryId integer
+- body:billingAddress.postalCode string
+- body:billingAddress.provinceId integer
+- body:billingAddress.sameAsBillingAddress boolean
+- body:branchId integer
+- body:categoriesIds array<integer>
+- body:clientFirstProjectDate string
+- body:clientFirstQuoteDate string
+- body:clientLastProjectDate string
+- body:clientLastQuoteDate string
+- body:clientNumberOfProjects integer
+- body:clientNumberOfQuotes integer
+- body:contact object
+- body:contact.emails object
+- body:contact.emails.additional array<string>
+- body:contact.emails.cc array<string>
+- body:contact.emails.primary string
+- body:contact.fax string
+- body:contact.phones array<string>
+- body:contact.sms string
+- body:contact.websites array<string>
+- body:contractNumber string
+- body:correspondenceAddress object
+- body:correspondenceAddress.addressLine1 string
+- body:correspondenceAddress.addressLine2 string
+- body:correspondenceAddress.city string
+- body:correspondenceAddress.countryId integer
+- body:correspondenceAddress.postalCode string
+- body:correspondenceAddress.provinceId integer
+- body:correspondenceAddress.sameAsBillingAddress boolean
+- body:customFields array<object>
+- body:customFields[].key string
+- body:customFields[].name string
+- body:customFields[].type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:customFields[].value object
+- body:fullName string
+- body:id integer
+- body:idNumber string
+- body:industriesIds array<integer>
+- body:leadSourceId integer
+- body:limitAccessToPeopleResponsible boolean
+- body:name string
+- body:notes string
+- body:persons array<object>
+- body:persons[].active boolean
+- body:persons[].contact object
+- body:persons[].contact.emails object
+- body:persons[].contact.fax string
+- body:persons[].contact.phones array<string>
+- body:persons[].contact.sms string
+- body:persons[].customFields array<object>
+- body:persons[].customFields[].key string
+- body:persons[].customFields[].name string
+- body:persons[].customFields[].type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:persons[].customFields[].value object
+- body:persons[].customerId integer
+- body:persons[].firstProjectDate string
+- body:persons[].firstQuoteDate string
+- body:persons[].gender string enum[FEMALE|MALE]
+- body:persons[].id integer
+- body:persons[].lastName string
+- body:persons[].lastProjectDate string
+- body:persons[].lastQuoteDate string
+- body:persons[].motherTonguesIds array<integer>
+- body:persons[].name string
+- body:persons[].numberOfProjects integer
+- body:persons[].numberOfQuotes integer
+- body:persons[].positionId integer
+- body:responsiblePersons object
+- body:responsiblePersons.accountManagerId integer
+- body:responsiblePersons.projectCoordinatorId integer
+(+4 fields cut)
+
+## S598-N0030  POST /customers/persons
+desc: Creates a new person. | Creates a new person. Required fields are presented in the example. Other fields (from PUT) may also be specified here.
+schema: CustomerPersonDTO
+- body:active boolean
+- body:contact object
+- body:contact.emails object
+- body:contact.emails.additional array<string>
+- body:contact.emails.primary string
+- body:contact.fax string
+- body:contact.phones array<string>
+- body:contact.sms string
+- body:customFields array<object>
+- body:customFields[].key string
+- body:customFields[].name string
+- body:customFields[].type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:customFields[].value object
+- body:customerId integer
+- body:firstProjectDate string
+- body:firstQuoteDate string
+- body:gender string enum[FEMALE|MALE]
+- body:id integer
+- body:lastName string
+- body:lastProjectDate string
+- body:lastQuoteDate string
+- body:motherTonguesIds array<integer>
+- body:name string
+- body:numberOfProjects integer
+- body:numberOfQuotes integer
+- body:positionId integer
+
+## S598-N0031  POST /customers/persons/accessToken
+desc: Generates a single use sign-in token. | Generates a single use sign-in token for the customer person found for given login or e-mail. Returns 'url' and 'token' which allows to sign-in to customer portal as this person. Token is valid for two minutes and can be used only once. To sign-in to customer portal you should post 'token' provided as the 'accessToken' form param to the 'url' using POST meth
+schema: AccessTokenRequestDTO
+- body:loginOrEmail string
+
+## S598-N0032  DELETE /customers/persons/{personId}
+desc: Removes a person. | Removes a person.
+- path:personId integer
+
+## S598-N0033  PUT /customers/persons/{personId}
+desc: Updates an existing person. | Only specified fields will be changed. One may not specify embeddable fields here - use separate API calls for updating them.
+schema: CustomerPersonDTO
+- path:personId integer
+- body:active boolean
+- body:contact object
+- body:contact.emails object
+- body:contact.emails.additional array<string>
+- body:contact.emails.primary string
+- body:contact.fax string
+- body:contact.phones array<string>
+- body:contact.sms string
+- body:customFields array<object>
+- body:customFields[].key string
+- body:customFields[].name string
+- body:customFields[].type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:customFields[].value object
+- body:customerId integer
+- body:firstProjectDate string
+- body:firstQuoteDate string
+- body:gender string enum[FEMALE|MALE]
+- body:id integer
+- body:lastName string
+- body:lastProjectDate string
+- body:lastQuoteDate string
+- body:motherTonguesIds array<integer>
+- body:name string
+- body:numberOfProjects integer
+- body:numberOfQuotes integer
+- body:positionId integer
+
+## S598-N0034  PUT /customers/persons/{personId}/contact
+desc: Updates contact of a given person. | Updates contact of a given person. Sets that this person uses specific address and contact (not the one from customer).
+schema: PersonContactDTO
+- path:personId integer
+- body:emails object
+- body:emails.additional array<string>
+- body:emails.primary string
+- body:fax string
+- body:phones array<string>
+- body:sms string
+
+## S598-N0035  PUT /customers/persons/{personId}/customFields
+desc: Updates custom fields of a given person. | Updates custom fields of a given person.
+schema: CustomFieldsDTO
+- path:personId integer
+- body:key string
+- body:name string
+- body:type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:value object
+
+## S598-N0036  DELETE /customers/priceLists/{priceListId}
+desc: Removes a customer price list. | Removes a customer price list.
+- path:priceListId integer
+
+## S598-N0037  DELETE /customers/{customerId}
+desc: Removes a client. | Removes a client.
+- path:customerId integer
+
+## S598-N0039  PUT /customers/{customerId}/address
+desc: Updates address of a given client. | Updates address of a given client.
+schema: AddressDTO
+- path:customerId integer
+- body:addressLine1 string
+- body:addressLine2 string
+- body:city string
+- body:countryId integer
+- body:postalCode string
+- body:provinceId integer
+- body:sameAsBillingAddress boolean
+
+## S598-N0040  PUT /customers/{customerId}/categories
+desc: Updates categories of a given client. | Updates categories of a given client.
+schema: CategoriesDTO
+- path:customerId integer
+- body:(body) integer
+
+## S598-N0041  PUT /customers/{customerId}/contact
+desc: Updates contact of a given client. | Updates contact of a given client.
+schema: ContactDTO
+- path:customerId integer
+- body:emails object
+- body:emails.additional array<string>
+- body:emails.cc array<string>
+- body:emails.primary string
+- body:fax string
+- body:phones array<string>
+- body:sms string
+- body:websites array<string>
+
+## S598-N0042  PUT /customers/{customerId}/correspondenceAddress
+desc: Updates correspondence address of a given client. | Updates correspondence address of a given client.
+schema: AddressDTO
+- path:customerId integer
+- body:addressLine1 string
+- body:addressLine2 string
+- body:city string
+- body:countryId integer
+- body:postalCode string
+- body:provinceId integer
+- body:sameAsBillingAddress boolean
+
+## S598-N0043  PUT /customers/{customerId}/customFields
+desc: Updates custom fields of a given client. | Updates custom fields of a given client.
+schema: CustomFieldsDTO
+- path:customerId integer
+- body:key string
+- body:name string
+- body:type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:value object
+
+## S598-N0047  POST /files
+desc: Uploads a temporary file (ie. for XML import). Returns token which can be used in other API calls. | When a file is required by an operation (ie. task creation) it must be uploaded previously to the API. Uploading a file will result in a file token, which can be used to reference this file in other API calls. Each file must be uploaded separately. Keep in mind that file token has limited validity 
+schema: FileToUploadDto
+- body:file string
+
+## S598-N0048  PUT /jobs/{jobId}/dates
+desc: Updates dates of a given job. | Updates dates of a given job.
+schema: JobDatesDto
+- path:jobId string
+- body:actualEndDate integer
+- body:actualStartDate integer
+- body:deadline integer
+- body:startDate integer
+
+## S598-N0049  POST /jobs/{jobId}/files/output
+schema: TaskFileDTO
+- path:jobId string
+- body:category string enum[WORKFILE|TM|DICTIONARY|REF|LOG_FILE]
+- body:content string
+- body:name string
+- body:token string
+- body:url string
+
+## S598-N0050  PUT /jobs/{jobId}/instructions
+desc: Updates instructions for a job. | Updates instructions for a job.
+schema: InstructionsDTO
+- path:jobId string
+- body:forProvider string
+- body:fromCustomer string
+- body:internal string
+- body:notes string
+- body:paymentNoteForCustomer string
+- body:paymentNoteForVendor string
+
+## S598-N0054  POST /macros/{macroId}/run
+desc: Executes a macro. | Runs a specified macro on a specified list of items ("list" variable in the macro code). The list of items can be empty if the macro doesn't use it. Additional custom parameters can be provided to the macro when necessary ("params" variable in the macro code). <BR>Note: Macros that support parameters can be also run from GUI (Views in Home Portal),so they should also handle the
+schema: MacroRequestDTO
+- path:macroId integer
+- body:async boolean
+- body:ids array<integer>
+- body:params object
+
+## S598-N0057  PUT /projects/{projectId}/contacts
+desc: Updates contacts of a given project. | Updates contacts of a given project.
+schema: ContactsDTO
+- path:projectId string
+- body:additionalIds array<integer>
+- body:primaryId integer
+- body:sendBackToId integer
+
+## S598-N0058  PUT /projects/{projectId}/customFields
+desc: Updates custom fields of a given project. | Updates custom fields of a given project.
+schema: CustomFieldsDTO
+- path:projectId string
+- body:key string
+- body:name string
+- body:type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+- body:value object
+
+## S598-N0059  PUT /projects/{projectId}/dates
+desc: Updates dates of a given project. | Updates dates of a given project.
+schema: ProjectDatesDTO
+- path:projectId string
+- body:actualDeliveryDate object
+- body:actualDeliveryDate.value integer
+- body:actualStartDate object
+- body:actualStartDate.value integer
+- body:deadline object
+- body:deadline.value integer
+- body:startDate object
+- body:startDate.value integer
+
+## S598-N0060  POST /projects/{projectId}/finance/payables
+desc: Adds a payable to a project. | Adds a payable to a project.
+schema: PayableCreateDTO
+- path:projectId string
+- body:calculationUnitId integer
+- body:catLogFile object
+- body:catLogFile.content string
+- body:catLogFile.name string
+- body:catLogFile.token string
+- body:catLogFile.url string
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobId object
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-N0061  DELETE /projects/{projectId}/finance/payables/{payableId}
+desc: Deletes a payable. | Deletes a payable.
+- path:projectId string
+- path:payableId integer
+
+## S598-N0062  PUT /projects/{projectId}/finance/payables/{payableId}
+desc: Updates a payable. | Updates a payable.
+schema: PayableDTO
+- path:projectId string
+- path:payableId integer
+- body:calculationUnitId integer
+- body:currencyId integer
+- body:description string
+- body:id integer
+- body:ignoreMinimumCharge boolean
+- body:invoiceId string
+- body:jobId object
+- body:jobTypeId integer
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:languageCombinationIdNumber string
+- body:minimumCharge number
+- body:quantity number
+- body:rate number
+- body:rateOrigin string enum[PRICE_PROFILE|PRICE_LIST|FILLED_MANUALLY|AUTOCALCULATED]
+- body:total number
+- body:type string enum[SIMPLE|CAT]
+
+## S598-N0064  DELETE /projects/{projectId}/finance/receivables/{receivableId}
+desc: Deletes a receivable. | Deletes a receivable.
+- path:projectId string
+- path:receivableId integer
+
+## S598-N0066  PUT /projects/{projectId}/instructions
+desc: Updates instructions of a given project. | Updates instructions of a given project.
+schema: InstructionsDTO
+- path:projectId string
+- body:forProvider string
+- body:fromCustomer string
+- body:internal string
+- body:notes string
+- body:paymentNoteForCustomer string
+- body:paymentNoteForVendor string
+
+## S598-N0067  POST /projects/{projectId}/languageCombinations
+desc: Creates a new language combination for a given project without creating a task. | Creates a new language combination for a given project without creating a task.
+schema: CommonLanguageCombinationDTO
+- path:projectId string
+- body:sourceLanguageId integer
+- body:targetLanguageId integer
+
+## S598-N0068  POST /projects/{projectId}/tasks
+desc: Creates a new task for a given project. | Creates a new task for a given project.<p> Required fields: <ul> <li>languageCombination</li> <li>specializationId</li> <li>workflowId</li> </ul> </p>
+schema: TaskCreateDTO
+- path:projectId string
+- body:clientTaskPONumber string
+- body:dates object
+- body:dates.actualDeliveryDate object
+- body:dates.actualDeliveryDate.value integer
+- body:dates.actualStartDate object
+- body:dates.actualStartDate.value integer
+- body:dates.deadline object
+- body:dates.deadline.value integer
+- body:dates.startDate object
+- body:dates.startDate.value integer
+- body:files array<object>
+- body:files[].category string enum[WORKFILE|TM|DICTIONARY|REF|LOG_FILE]
+- body:files[].content string
+- body:files[].name string
+- body:files[].token string
+- body:files[].url string
+- body:instructions object
+- body:instructions.forProvider string
+- body:instructions.fromCustomer string
+- body:instructions.internal string
+- body:instructions.notes string
+- body:instructions.paymentNoteForCustomer string
+- body:instructions.paymentNoteForVendor string
+- body:languageCombination object
+- body:languageCombination.sourceLanguageId integer
+- body:languageCombination.targetLanguageId integer
+- body:name string
+- body:people object
+- body:people.customerContacts object
+- body:people.customerContacts.additionalIds array<integer>
+- body:people.customerContacts.primaryId integer
+- body:people.customerContacts.sendBackToId integer
+- body:people.responsiblePersons object
+- body:people.responsiblePersons.projectCoordinatorId integer
+- body:people.responsiblePersons.projectManagerId integer
+- body:specializationId integer
+- body:workflowId integer
+
+## S598-N0069  DELETE /providers/persons/{personId}
+desc: Removes a person. | Removes a person.
+- path:personId integer
+
+## S598-N0070  POST /providers/persons/{personId}/notification/invitation
+desc: Sends invitation to Vendor Portal. | Sends invitation to Vendor Portal.
+- path:personId integer

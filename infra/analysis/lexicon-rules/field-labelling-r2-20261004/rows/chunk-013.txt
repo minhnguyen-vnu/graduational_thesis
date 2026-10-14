@@ -1,0 +1,595 @@
+## S569-0001  DELETE /Devices
+summary: Deletes a device.
+- query:id string
+
+## S569-0002  POST /Dlna/{serverId}/MediaReceiverRegistrar/Control
+summary: Process a media receiver registrar control request.
+- path:serverId string
+
+## S569-0003  POST /Items/{itemId}/PlaybackInfo
+summary: Gets live playback media info for an item.
+desc: For backwards compatibility parameters can be sent via Query or Body, with Query having higher precedence.
+- path:itemId string
+- query:userId string
+- query:maxStreamingBitrate integer
+- query:startTimeTicks integer
+- query:audioStreamIndex integer
+- query:subtitleStreamIndex integer
+- query:maxAudioChannels integer
+- query:mediaSourceId string
+- query:liveStreamId string
+- query:autoOpenLiveStream boolean
+- query:enableDirectPlay boolean
+- query:enableDirectStream boolean
+- query:enableTranscoding boolean
+- query:allowVideoStreamCopy boolean
+- query:allowAudioStreamCopy boolean
+- body:AllowAudioStreamCopy boolean
+- body:AllowVideoStreamCopy boolean
+- body:AudioStreamIndex integer
+- body:AutoOpenLiveStream boolean
+- body:DeviceProfile object
+- body:DeviceProfile.AlbumArtPn string
+- body:DeviceProfile.CodecProfiles array<object>
+- body:DeviceProfile.CodecProfiles[].ApplyConditions array<object>
+- body:DeviceProfile.CodecProfiles[].Codec string
+- body:DeviceProfile.CodecProfiles[].Conditions array<object>
+- body:DeviceProfile.CodecProfiles[].Container string
+- body:DeviceProfile.CodecProfiles[].Type string enum[Video|VideoAudio|Audio]
+- body:DeviceProfile.ContainerProfiles array<object>
+- body:DeviceProfile.ContainerProfiles[].Conditions array<object>
+- body:DeviceProfile.ContainerProfiles[].Container string
+- body:DeviceProfile.ContainerProfiles[].Type string enum[Audio|Video|Photo]
+- body:DeviceProfile.DirectPlayProfiles array<object>
+- body:DeviceProfile.DirectPlayProfiles[].AudioCodec string
+- body:DeviceProfile.DirectPlayProfiles[].Container string
+- body:DeviceProfile.DirectPlayProfiles[].Type string enum[Audio|Video|Photo]
+- body:DeviceProfile.DirectPlayProfiles[].VideoCodec string
+- body:DeviceProfile.EnableAlbumArtInDidl boolean
+- body:DeviceProfile.EnableMSMediaReceiverRegistrar boolean
+- body:DeviceProfile.EnableSingleAlbumArtLimit boolean
+- body:DeviceProfile.EnableSingleSubtitleLimit boolean
+- body:DeviceProfile.FriendlyName string
+- body:DeviceProfile.Id string
+- body:DeviceProfile.Identification object
+- body:DeviceProfile.Identification.FriendlyName string
+- body:DeviceProfile.Identification.Headers array<object>
+- body:DeviceProfile.Identification.Manufacturer string
+- body:DeviceProfile.Identification.ManufacturerUrl string
+- body:DeviceProfile.Identification.ModelDescription string
+- body:DeviceProfile.Identification.ModelName string
+- body:DeviceProfile.Identification.ModelNumber string
+- body:DeviceProfile.Identification.ModelUrl string
+- body:DeviceProfile.Identification.SerialNumber string
+- body:DeviceProfile.IgnoreTranscodeByteRangeRequests boolean
+- body:DeviceProfile.Manufacturer string
+- body:DeviceProfile.ManufacturerUrl string
+- body:DeviceProfile.MaxAlbumArtHeight integer
+- body:DeviceProfile.MaxAlbumArtWidth integer
+- body:DeviceProfile.MaxIconHeight integer
+- body:DeviceProfile.MaxIconWidth integer
+- body:DeviceProfile.MaxStaticBitrate integer
+- body:DeviceProfile.MaxStaticMusicBitrate integer
+- body:DeviceProfile.MaxStreamingBitrate integer
+- body:DeviceProfile.ModelDescription string
+- body:DeviceProfile.ModelName string
+- body:DeviceProfile.ModelNumber string
+- body:DeviceProfile.ModelUrl string
+- body:DeviceProfile.MusicStreamingTranscodingBitrate integer
+- body:DeviceProfile.Name string
+- body:DeviceProfile.ProtocolInfo string
+- body:DeviceProfile.RequiresPlainFolders boolean
+- body:DeviceProfile.RequiresPlainVideoItems boolean
+- body:DeviceProfile.ResponseProfiles array<object>
+- body:DeviceProfile.ResponseProfiles[].AudioCodec string
+- body:DeviceProfile.ResponseProfiles[].Conditions array<object>
+- body:DeviceProfile.ResponseProfiles[].Container string
+- body:DeviceProfile.ResponseProfiles[].MimeType string
+- body:DeviceProfile.ResponseProfiles[].OrgPn string
+- body:DeviceProfile.ResponseProfiles[].Type string enum[Audio|Video|Photo]
+- body:DeviceProfile.ResponseProfiles[].VideoCodec string
+- body:DeviceProfile.SerialNumber string
+- (39 truong bi cat)
+
+## S569-0004  POST /Library/VirtualFolders/Name
+summary: Renames a virtual folder.
+- query:name string
+- query:newName string
+- query:refreshLibrary boolean
+
+## S569-0005  POST /LiveTv/ListingProviders
+summary: Adds a listings provider.
+- query:pw string
+- query:validateListings boolean
+- query:validateLogin boolean
+- body:ChannelMappings array<object>
+- body:ChannelMappings[].Name string
+- body:ChannelMappings[].Value string
+- body:Country string
+- body:EnableAllTuners boolean
+- body:EnabledTuners array<string>
+- body:Id string
+- body:KidsCategories array<string>
+- body:ListingsId string
+- body:MovieCategories array<string>
+- body:MoviePrefix string
+- body:NewsCategories array<string>
+- body:Password string
+- body:Path string
+- body:PreferredLanguage string
+- body:SportsCategories array<string>
+- body:Type string
+- body:UserAgent string
+- body:Username string
+- body:ZipCode string
+
+## S569-0006  POST /LiveTv/TunerHosts
+summary: Adds a tuner host.
+- body:AllowHWTranscoding boolean
+- body:DeviceId string
+- body:EnableStreamLooping boolean
+- body:FriendlyName string
+- body:Id string
+- body:ImportFavoritesOnly boolean
+- body:Source string
+- body:TunerCount integer
+- body:Type string
+- body:Url string
+- body:UserAgent string
+
+## S569-0007  POST /Notifications/Admin
+summary: Sends a notification to all admins.
+- query:url string
+- query:level string enum[Normal|Warning|Error]
+- query:name string
+- query:description string
+
+## S569-0008  POST /Packages/Installed/{name}
+summary: Installs a package.
+- path:name string
+- query:assemblyGuid string
+- query:version string
+- query:repositoryUrl string
+
+## S569-0009  POST /Playlists
+summary: Creates a new playlist.
+desc: For backwards compatibility parameters can be sent via Query or Body, with Query having higher precedence.
+- query:name string
+- query:ids array<string>
+- query:userId string
+- query:mediaType string
+- body:Ids array<string>
+- body:MediaType string
+- body:Name string
+- body:UserId string
+
+## S569-0010  DELETE /Plugins/{pluginId}/{version}
+summary: Uninstalls a plugin by version.
+- path:pluginId string
+- path:version object
+
+## S569-0011  POST /Plugins/{pluginId}/{version}/Enable
+summary: Enables a disabled plugin.
+- path:pluginId string
+- path:version object
+
+## S569-0012  POST /QuickConnect/Activate
+summary: Temporarily activates quick connect for five minutes.
+
+## S569-0013  POST /QuickConnect/Available
+summary: Enables or disables quick connect.
+- query:status string enum[Unavailable|Available|Active]
+
+## S569-0014  POST /QuickConnect/Deauthorize
+summary: Deauthorize all quick connect devices for the current user.
+
+## S569-0015  DELETE /ScheduledTasks/Running/{taskId}
+summary: Stop specified task.
+- path:taskId string
+
+## S569-0016  POST /Sessions/Logout
+summary: Reports that a session has ended.
+
+## S569-0017  POST /Sessions/{sessionId}/Command/{command}
+summary: Issues a general command to a client.
+- path:sessionId string
+- path:command string enum[MoveUp|MoveDown|MoveLeft|MoveRight|PageUp|PageDown|PreviousLetter|NextLetter|ToggleOsd|ToggleContextMenu|Select|Back]
+
+## S569-0018  POST /Sessions/{sessionId}/System/{command}
+summary: Issues a system command to a client.
+- path:sessionId string
+- path:command string enum[MoveUp|MoveDown|MoveLeft|MoveRight|PageUp|PageDown|PreviousLetter|NextLetter|ToggleOsd|ToggleContextMenu|Select|Back]
+
+## S569-0019  POST /Sessions/{sessionId}/User/{userId}
+summary: Adds an additional user to a session.
+- path:sessionId string
+- path:userId string
+
+## S569-0020  POST /SyncPlay/Leave
+summary: Leave the joined SyncPlay group.
+
+## S569-0021  POST /SyncPlay/MovePlaylistItem
+summary: Request to move an item in the playlist in SyncPlay group.
+- body:NewIndex integer
+- body:PlaylistItemId string
+
+## S569-0022  POST /SyncPlay/NextItem
+summary: Request next item in SyncPlay group.
+- body:PlaylistItemId string
+
+## S569-0023  POST /SyncPlay/SetIgnoreWait
+summary: Request SyncPlay group to ignore member during group-wait.
+- body:IgnoreWait boolean
+
+## S569-0024  POST /SyncPlay/SetNewQueue
+summary: Request to set new playlist in SyncPlay group.
+- body:PlayingItemPosition integer
+- body:PlayingQueue array<string>
+- body:StartPositionTicks integer
+
+## S569-0025  POST /SyncPlay/SetRepeatMode
+summary: Request to set repeat mode in SyncPlay group.
+- body:Mode string enum[RepeatOne|RepeatAll|RepeatNone]
+
+## S569-0026  POST /System/Ping
+summary: Pings the system.
+
+## S569-0027  POST /System/Shutdown
+summary: Shuts down the application.
+
+## S569-0028  POST /Users/AuthenticateWithQuickConnect
+summary: Authenticates a user with quick connect.
+- body:Token string
+
+## S569-0029  POST /Users/ForgotPassword
+summary: Initiates the forgot password process for a local user.
+- body:EnteredUsername string
+
+## S569-0030  POST /Users/{userId}/Authenticate
+summary: Authenticates a user.
+- path:userId string
+- query:pw string
+- query:password string
+
+## S569-0031  DELETE /Users/{userId}/Images/{imageType}
+summary: Delete the user's image.
+- path:userId string
+- path:imageType string enum[Primary|Art|Backdrop|Banner|Logo|Thumb|Disc|Box|Screenshot|Menu|Chapter|BoxRear]
+- query:index integer
+
+## S569-0032  POST /Users/{userId}/Images/{imageType}
+summary: Sets the user image.
+- path:userId string
+- path:imageType string enum[Primary|Art|Backdrop|Banner|Logo|Thumb|Disc|Box|Screenshot|Menu|Chapter|BoxRear]
+- query:index integer
+
+## S569-0033  POST /Users/{userId}/Images/{imageType}/{index}
+summary: Sets the user image.
+- path:userId string
+- path:imageType string enum[Primary|Art|Backdrop|Banner|Logo|Thumb|Disc|Box|Screenshot|Menu|Chapter|BoxRear]
+- path:index integer
+
+## S569-0034  POST /Users/{userId}/PlayedItems/{itemId}
+summary: Marks an item as played for user.
+- path:userId string
+- path:itemId string
+- query:datePlayed string
+
+## S569-0035  DELETE /Users/{userId}/PlayingItems/{itemId}
+summary: Reports that a user has stopped playing an item.
+- path:userId string
+- path:itemId string
+- query:mediaSourceId string
+- query:nextMediaType string
+- query:positionTicks integer
+- query:liveStreamId string
+- query:playSessionId string
+
+## S569-0036  POST /Videos/{itemId}/Subtitles
+summary: Upload an external subtitle file.
+- path:itemId string
+- body:Data string
+- body:Format string
+- body:IsForced boolean
+- body:Language string
+
+## S570-0001  POST /auth/jwt
+summary: General-purpose authentication
+desc: ## Note: * The JWT tokens returned should be passed to any resource that requires authentication, in the Authentication header, in the format `Bearer: your-token-here` * Only JWT authentication tokens are provided (no refresh tokens). These tokens are valid for 30 seconds from the moment they were issued
+- body:username string
+- body:password string
+- body:role string
+
+## S570-0002  POST /clients/{clientId}/datasets/{datasetId}/snps/
+summary: Get a large group of SNPs
+desc: SNPs that are not present in the dataset are ignored, 404 is returned only if the dataset/client does not exist
+- path:clientId string
+- path:datasetId string
+- body:snps string
+
+## S570-0003  POST /products/{productId}/authorizations/{authorizationId}
+summary: Signal that processing is complete, without uploading any result
+- path:productId string
+- path:authorizationId string
+
+## S570-0004  POST /products/{productId}/authorizations/{authorizationId}/credentials
+summary: Provide a result for the authorization
+desc: These can be log-in credentials for a website where the result is available
+- path:productId string
+- path:authorizationId string
+- body:credentials_username string
+- body:credentials_password string
+- body:report_url string
+
+## S570-0005  POST /products/{productId}/authorizations/{authorizationId}/file
+summary: Provide a file result to the authorization, e
+desc: g. a pdf report
+- path:productId string
+- path:authorizationId string
+- query:original_filename string
+- body:file_report file
+
+## S570-0006  POST /products/{productId}/authorizations/{authorizationId}/unfulfillable
+summary: Catch-all Authorization state, for authorizations that passed all verifications and should reach the partner Product, but cannot be fulfilled for various reasons
+- path:productId string
+- path:authorizationId string
+
+## S571-0001  POST /exports/list.json
+desc: Returns a list of your exports.
+- body:key string
+
+## S571-0002  POST /exports/whitelist.json
+desc: Begins an export of your rejection whitelist. The whitelist will be exported to a zip archive containing a single file named whitelist.csv that includes the following fields: email, detail, created_at.
+- body:key string
+- body:notify_email string
+
+## S571-0003  POST /inbound/add-route.json
+desc: Add a new mailbox route to an inbound domain
+- body:domain string
+- body:key string
+- body:pattern string
+- body:url string
+
+## S571-0004  POST /inbound/check-domain.json
+desc: Check the MX settings for an inbound domain. The domain must have already been added with the add-domain call
+- body:domain string
+- body:key string
+
+## S571-0005  POST /inbound/update-route.json
+desc: Update the pattern or webhook of an existing inbound mailbox route. If null is provided for any fields, the values will remain unchanged.
+- body:id string
+- body:key string
+- body:pattern string
+- body:url string
+
+## S571-0006  POST /ips/delete-pool.json
+desc: Deletes a pool. A pool must be empty before you can delete it, and you cannot delete your default pool.
+- body:key string
+- body:pool string
+
+## S571-0007  POST /ips/list.json
+desc: Lists your dedicated IPs.
+- body:key string
+
+## S571-0008  POST /ips/provision.json
+desc: Requests an additional dedicated IP for your account. Accounts may have one outstanding request at any time, and provisioning requests are processed within 24 hours.
+- body:key string
+- body:pool string
+- body:warmup boolean
+
+## S571-0009  POST /messages/cancel-scheduled.json
+desc: Cancels a scheduled email.
+- body:id null
+- body:key string
+
+## S571-0010  POST /messages/list-scheduled.json
+desc: Queries your scheduled emails by sender or recipient, or both.
+- body:key string
+- body:to string
+
+## S571-0011  POST /messages/reschedule.json
+desc: Reschedules a scheduled email.
+- body:id string
+- body:key string
+- body:send_at string
+
+## S571-0012  POST /messages/send-template.json
+desc: Send a new transactional message through Mandrill using a template
+- body:async boolean
+- body:ip_pool string
+- body:key string
+- body:message object
+- body:message.attachments array<object>
+- body:message.attachments[].content string
+- body:message.attachments[].name string
+- body:message.attachments[].type string
+- body:message.auto_html null
+- body:message.auto_text null
+- body:message.bcc_address string
+- body:message.from_email string
+- body:message.from_name string
+- body:message.global_merge_vars array<object>
+- body:message.global_merge_vars[].content string
+- body:message.global_merge_vars[].name string
+- body:message.google_analytics_campaign string
+- body:message.google_analytics_domains array<string>
+- body:message.headers object
+- body:message.headers.Reply-To string
+- body:message.html string
+- body:message.images array<object>
+- body:message.images[].content string
+- body:message.images[].name string
+- body:message.images[].type string
+- body:message.important boolean
+- body:message.inline_css null
+- body:message.merge boolean
+- body:message.merge_vars array<object>
+- body:message.merge_vars[].rcpt string
+- body:message.merge_vars[].vars array<object>
+- body:message.metadata object
+- body:message.metadata.website string
+- body:message.preserve_recipients null
+- body:message.recipient_metadata array<object>
+- body:message.recipient_metadata[].rcpt string
+- body:message.recipient_metadata[].values object
+- body:message.return_path_domain null
+- body:message.signing_domain null
+- body:message.subaccount string
+- body:message.subject string
+- body:message.tags array<string>
+- body:message.text string
+- body:message.to array<object>
+- body:message.to[].email string
+- body:message.to[].name string
+- body:message.to[].type string
+- body:message.track_clicks null
+- body:message.track_opens null
+- body:message.tracking_domain null
+- body:message.url_strip_qs null
+- body:message.view_content_link null
+- body:send_at string
+- body:template_content array<object>
+- body:template_content[].content string
+- body:template_content[].name string
+- body:template_name string
+
+## S571-0013  POST /metadata/delete.json
+desc: Delete an existing custom metadata field. Deletion isn't instataneous, and /metadata/list will continue to return the field until the asynchronous deletion process is complete.
+- body:key string
+- body:name string
+
+## S571-0014  POST /rejects/delete.json
+desc: Deletes an email rejection. There is no limit to how many rejections you can remove from your blacklist, but keep in mind that each deletion has an affect on your reputation.
+- body:email string
+- body:key string
+- body:subaccount string
+
+## S571-0015  POST /senders/verify-domain.json
+desc: Sends a verification email in order to verify ownership of a domain. Domain verification is an optional step to confirm ownership of a domain. Once a domain has been verified in a Mandrill account, other accounts may not have their messages signed by that domain unless they also verify the domain. This prevents other Mandrill accounts from sending mail signed by your domain.
+- body:domain string
+- body:key string
+- body:mailbox string
+
+## S571-0016  POST /subaccounts/add.json
+desc: Add a new subaccount
+- body:custom_quota integer
+- body:id string
+- body:key string
+- body:name string
+- body:notes string
+
+## S571-0017  POST /subaccounts/list.json
+desc: Get the list of subaccounts defined for the account, optionally filtered by a prefix
+- body:key string
+- body:q string
+
+## S571-0018  POST /subaccounts/pause.json
+desc: Pause a subaccount's sending. Any future emails delivered to this subaccount will be queued for a maximum of 3 days until the subaccount is resumed.
+- body:id string
+- body:key string
+
+## S571-0019  POST /subaccounts/update.json
+desc: Update an existing subaccount
+- body:custom_quota integer
+- body:id string
+- body:key string
+- body:name string
+- body:notes string
+
+## S571-0020  POST /tags/delete.json
+desc: Deletes a tag permanently. Deleting a tag removes the tag from any messages that have been sent, and also deletes the tag's stats. There is no way to undo this operation, so use it carefully.
+- body:key string
+- body:tag string
+
+## S571-0021  POST /tags/info.json
+desc: Return more detailed information about a single tag, including aggregates of recent stats
+- body:key string
+- body:tag string
+
+## S571-0022  POST /tags/list.json
+desc: Return all of the user-defined tag information
+- body:key string
+
+## S571-0023  POST /templates/add.json
+desc: Add a new template
+- body:code string
+- body:from_email string
+- body:from_name string
+- body:key string
+- body:labels array<string>
+- body:name string
+- body:publish boolean
+- body:subject string
+- body:text string
+
+## S571-0024  POST /templates/publish.json
+desc: Publish the content for the template. Any new messages sent using this template will start using the content that was previously in draft.
+- body:key string
+- body:name string
+
+## S571-0025  POST /templates/update.json
+desc: Update the code for an existing template. If null is provided for any fields, the values will remain unchanged.
+- body:code string
+- body:from_email string
+- body:from_name string
+- body:key string
+- body:labels array<string>
+- body:name string
+- body:publish boolean
+- body:subject string
+- body:text string
+
+## S571-0026  POST /urls/check-tracking-domain.json
+desc: Checks the CNAME settings for a tracking domain. The domain must have been added already with the add-tracking-domain call
+- body:domain string
+- body:key string
+
+## S571-0027  POST /urls/list.json
+desc: Get the 100 most clicked URLs
+- body:key string
+
+## S571-0028  POST /urls/search.json
+desc: Return the 100 most clicked URLs that match the search query given
+- body:key string
+- body:q string
+
+## S571-0029  POST /urls/time-series.json
+desc: Return the recent history (hourly stats for the last 30 days) for a url
+- body:key string
+- body:url string
+
+## S571-0030  POST /users/info.json
+desc: Return the information about the API-connected user
+- body:key string
+
+## S571-0031  POST /users/ping.json
+desc: Validate an API key and respond to a ping
+- body:key string
+
+## S571-0032  POST /webhooks/delete.json
+desc: Delete an existing webhook
+- body:id integer
+- body:key string
+
+## S571-0033  POST /webhooks/update.json
+desc: Update an existing webhook
+- body:description string
+- body:events array<string>
+- body:id integer
+- body:key string
+- body:url string
+
+## S571-0034  POST /whitelists/add.json
+desc: Adds an email to your email rejection whitelist. If the address is currently on your blacklist, that blacklist entry will be removed automatically.
+- body:email string
+- body:key string
+
+## S571-0035  POST /whitelists/delete.json
+desc: Removes an email address from the whitelist.
+- body:email string
+- body:key string
+
+## S571-0036  POST /whitelists/list.json
+desc: Retrieves your email rejection whitelist. You can provide an email address or search prefix to limit the results. Returns up to 1000 results.
+- body:email string
+- body:key string

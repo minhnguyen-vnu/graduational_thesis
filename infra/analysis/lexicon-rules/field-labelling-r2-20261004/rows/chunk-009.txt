@@ -1,0 +1,705 @@
+## S532-0001  PUT /group/{groupId}/settings
+summary: Update group settings
+- path:groupId string
+
+## S532-0002  POST /monitor/dep-graph
+summary: Monitor Dep Graph
+desc: Use this endpoint to monitor a [DepGraph data object](https://github.com/snyk/dep-graph#depgraphdata).
+- query:org string
+- body:depGraph object
+- body:depGraph.graph object
+- body:depGraph.graph.nodes array<any>
+- body:depGraph.graph.rootNodeId string
+- body:depGraph.pkgManager object
+- body:depGraph.pkgManager.name string
+- body:depGraph.pkgManager.repositories array<any>
+- body:depGraph.pkgs array<any>
+- body:depGraph.schemaVersion string
+- body:meta object
+- body:meta.targetFramework string
+
+## S532-0003  POST /org/{orgId}/audit
+summary: Get organization level audit logs
+- path:orgId string
+- query:from string
+- query:to string
+- query:page number
+- query:sortOrder string
+- body:filters object
+- body:filters.email string
+- body:filters.event string enum[api.access|org.billing.info.edit|org.billing.subscription.edit|org.cloud_config.settings.edit|org.create|org.delete|org.edit|org.ignore_policy.edit|org.integration.create|org.integration.delete|org.integration.edit|org.integration.settings.edit]
+- body:filters.excludeEvent string enum[api.access|org.billing.info.edit|org.billing.subscription.edit|org.cloud_config.settings.edit|org.create|org.delete|org.edit|org.ignore_policy.edit|org.integration.create|org.integration.delete|org.integration.edit|org.integration.settings.edit]
+- body:filters.projectId string
+- body:filters.userId string
+
+## S532-0004  POST /org/{orgId}/dependencies
+summary: List all dependencies
+- path:orgId string
+- query:sortBy string enum[projects|dependency|severity|dependenciesWithIssues]
+- query:order string enum[asc|desc]
+- query:page number
+- query:perPage number
+- body:filters object
+- body:filters.depStatus string
+- body:filters.dependencies any
+- body:filters.languages array<any>
+- body:filters.licenses any
+- body:filters.projects any
+- body:filters.severity array<any>
+
+## S532-0005  PUT /org/{orgId}/integrations/{integrationId}
+summary: Update existing integration
+desc: + Update integration's credentials for given organization. Integration must be **not brokered** + Enable or disable brokered integration for given organization. *Credentials required for disabling brokered integration* Examples in right section: 1. Set up a broker for an existing integration 2. Update credentials for an existing non-brokered integration 3. Disable broker for an existing integratio
+- path:orgId string
+- path:integrationId string
+- body:broker object
+- body:broker.enabled boolean
+- body:type string enum[acr|artifactory-cr|azure-repos|bitbucket-cloud|bitbucket-server|digitalocean-cr|docker-hub|ecr|gcr|github|github-cr|github-enterprise]
+- body:credentials object
+- body:credentials.AcrCredentials object
+- body:credentials.AcrCredentials.password string
+- body:credentials.AcrCredentials.registryBase string
+- body:credentials.AcrCredentials.username string
+- body:credentials.ArtifactoryCrCredentials object
+- body:credentials.ArtifactoryCrCredentials.password string
+- body:credentials.ArtifactoryCrCredentials.registryBase string
+- body:credentials.ArtifactoryCrCredentials.username string
+- body:credentials.AzureReposCredentials object
+- body:credentials.AzureReposCredentials.url string
+- body:credentials.AzureReposCredentials.username string
+- body:credentials.BitbucketCloudCredentials object
+- body:credentials.BitbucketCloudCredentials.password string
+- body:credentials.BitbucketCloudCredentials.username string
+- body:credentials.BitbucketServerCredentials object
+- body:credentials.BitbucketServerCredentials.password string
+- body:credentials.BitbucketServerCredentials.url string
+- body:credentials.BitbucketServerCredentials.username string
+- body:credentials.DigitalOceanCrCredentials object
+- body:credentials.DigitalOceanCrCredentials.token string
+- body:credentials.DockerHubCredentials object
+- body:credentials.DockerHubCredentials.password string
+- body:credentials.DockerHubCredentials.username string
+- body:credentials.EcrCredentials object
+- body:credentials.EcrCredentials.region string
+- body:credentials.EcrCredentials.roleArn string
+- body:credentials.GcrCredentials object
+- body:credentials.GcrCredentials.password string
+- body:credentials.GcrCredentials.registryBase string
+- body:credentials.GitHubCredentials object
+- body:credentials.GitHubCredentials.token string
+- body:credentials.GitHubCrCredentials object
+- body:credentials.GitHubCrCredentials.password string
+- body:credentials.GitHubCrCredentials.registryBase string
+- body:credentials.GitHubCrCredentials.username string
+- body:credentials.GitHubEnterpriseCredentials object
+- body:credentials.GitHubEnterpriseCredentials.token string
+- body:credentials.GitHubEnterpriseCredentials.url string
+- body:credentials.GitLabCredentials object
+- body:credentials.GitLabCredentials.token string
+- body:credentials.GitLabCredentials.url string
+- body:credentials.GitLabCrCredentials object
+- body:credentials.GitLabCrCredentials.password string
+- body:credentials.GitLabCrCredentials.registryBase string
+- body:credentials.GitLabCrCredentials.username string
+- body:credentials.GoogleArtifactCrCredentials object
+- body:credentials.GoogleArtifactCrCredentials.password string
+- body:credentials.GoogleArtifactCrCredentials.registryBase string
+- body:credentials.HarborCrCredentials object
+- body:credentials.HarborCrCredentials.password string
+- body:credentials.HarborCrCredentials.registryBase string
+- body:credentials.HarborCrCredentials.username string
+- body:credentials.NexusCrCredentials object
+- body:credentials.NexusCrCredentials.password string
+- body:credentials.NexusCrCredentials.registryBase string
+- body:credentials.NexusCrCredentials.username string
+- body:credentials.QuayCrCredentials object
+- body:credentials.QuayCrCredentials.password string
+- body:credentials.QuayCrCredentials.registryBase string
+- body:credentials.QuayCrCredentials.username string
+
+## S532-0006  POST /org/{orgId}/integrations/{integrationId}/authentication/provision-token
+summary: Provision new broker token
+desc: Issue a new and unique provisional broker token for the brokered integration. Used for zero down-time token rotation with the Snyk Broker. Once provisioned, the token can be used to initialize a new broker client before using the switch API to update the token in use by the integration. The new provisional token will fail to be created if the integration, or any other integration in the same group
+- path:orgId string
+- path:integrationId string
+
+## S532-0007  POST /org/{orgId}/integrations/{integrationId}/authentication/switch-token
+summary: Switch between broker tokens
+desc: Switch the existing broker token with the provisioned token for this integration and any other in the same group. Only perform this action when you have a Broker client running with the provisioned token. This action will fail if there is no token provisioned for this integration or any integration in the same group.
+- path:orgId string
+- path:integrationId string
+
+## S532-0008  POST /org/{orgId}/integrations/{integrationId}/import
+summary: Import targets
+- path:orgId string
+- path:integrationId string
+- body:exclusionGlobs string
+- body:files array<any>
+- body:target object
+- body:target.branch string
+- body:target.name string
+- body:target.owner string
+
+## S532-0009  PUT /org/{orgId}/integrations/{integrationId}/settings
+summary: Update
+- path:orgId string
+- path:integrationId string
+- body:autoDepUpgradeEnabled boolean
+- body:autoDepUpgradeIgnoredDependencies array<any>
+- body:autoDepUpgradeLimit number
+- body:autoDepUpgradeMinAge number
+- body:autoRemediationPrs object
+- body:autoRemediationPrs.backlogPrsEnabled boolean
+- body:autoRemediationPrs.freshPrsEnabled boolean
+- body:autoRemediationPrs.usePatchRemediation boolean
+- body:dockerfileSCMEnabled boolean
+- body:manualRemediationPrs object
+- body:manualRemediationPrs.usePatchRemediation boolean
+- body:pullRequestAssignment object
+- body:pullRequestAssignment.assignees array<any>
+- body:pullRequestAssignment.enabled boolean
+- body:pullRequestAssignment.type string enum[auto|manual]
+- body:pullRequestFailOnAnyVulns boolean
+- body:pullRequestFailOnlyForHighSeverity boolean
+- body:pullRequestTestEnabled boolean
+
+## S532-0010  POST /org/{orgId}/invite
+summary: Invite users
+- path:orgId string
+- body:email string
+- body:isAdmin boolean
+
+## S532-0011  DELETE /org/{orgId}/members/{userId}
+summary: Remove a member from the organization
+- path:orgId string
+- path:userId string
+
+## S532-0012  PUT /org/{orgId}/members/{userId}
+summary: Update a member in the organization
+- path:orgId string
+- path:userId string
+- body:role string
+
+## S532-0013  DELETE /org/{orgId}/project/{projectId}
+summary: Delete a project
+- path:orgId string
+- path:projectId string
+
+## S532-0014  PUT /org/{orgId}/project/{projectId}
+summary: Update a project
+- path:orgId string
+- path:projectId string
+- body:branch string
+- body:owner object
+- body:owner.id string
+
+## S532-0015  POST /org/{orgId}/project/{projectId}/activate
+summary: Activate
+desc: Activating a project will: - Add a repository webhook for supported integrations. - Enable pull request tests for new vulnerabilities. - Open Fix pull request for newly disclosed vulnerabilities. - Enable recurring tests, sending email alerts about newly disclosed vulnerabilities.
+- path:orgId string
+- path:projectId string
+
+## S532-0016  POST /org/{orgId}/project/{projectId}/attributes
+summary: Applying attributes
+desc: Applies an attribute to the provided project. It is possible to assign multiple values to each attribute, but you can only assign values to one of the predefined attribute categories, using the predefined options for this category. Assigning an attribute requires the caller to be either an Organization Administrator or a Group Administrator. Assigning an attribute will override any existing values
+- path:orgId string
+- path:projectId string
+- body:criticality array<any>
+- body:environment array<any>
+- body:lifecycle array<any>
+
+## S532-0017  POST /org/{orgId}/project/{projectId}/history/{snapshotId}/aggregated-issues
+summary: List all project snapshot aggregated issues
+- path:orgId string
+- path:projectId string
+- path:snapshotId string
+- body:filters object
+- body:filters.exploitMaturity array<any>
+- body:filters.ignored boolean
+- body:filters.patched boolean
+- body:filters.priority object
+- body:filters.priority.score object
+- body:filters.severities array<any>
+- body:filters.types array<any>
+- body:includeDescription boolean
+- body:includeIntroducedThrough boolean
+
+## S532-0018  DELETE /org/{orgId}/project/{projectId}/ignore/{issueId}
+summary: Delete ignores
+- path:orgId string
+- path:projectId string
+- path:issueId string
+
+## S532-0019  POST /org/{orgId}/project/{projectId}/ignore/{issueId}
+summary: Add ignore
+- path:orgId string
+- path:projectId string
+- path:issueId string
+- body:disregardIfFixable boolean
+- body:expires string
+- body:ignorePath string
+- body:reason string
+- body:reasonType string enum[not-vulnerable|wont-fix|temporary-ignore]
+
+## S532-0020  POST /org/{orgId}/project/{projectId}/issue/{issueId}/jira-issue
+summary: Create jira issue
+- path:issueId string
+- path:orgId string
+- path:projectId string
+- body:fields object
+- body:fields.issuetype object
+- body:fields.project object
+- body:fields.summary string
+
+## S532-0021  POST /org/{orgId}/project/{projectId}/tags
+summary: Add a tag to a project
+desc: ​
+- path:orgId string
+- path:projectId string
+- body:key string
+- body:value string
+
+## S532-0022  POST /org/{orgId}/project/{projectId}/tags/remove
+summary: Remove a tag from a project
+- path:orgId string
+- path:projectId string
+- body:key string
+- body:value string
+
+## S532-0023  POST /org/{orgId}/projects
+summary: List all projects
+- path:orgId string
+- body:filters object
+- body:filters.attributes object
+- body:filters.attributes.criticality array<any>
+- body:filters.attributes.environment array<any>
+- body:filters.attributes.lifecycle array<any>
+- body:filters.isMonitored boolean
+- body:filters.name string
+- body:filters.origin string
+- body:filters.tags object
+- body:filters.tags.includes array<any>
+- body:filters.type string
+
+## S532-0024  DELETE /org/{orgId}/provision
+summary: Delete pending user provision
+- path:orgId string
+
+## S532-0025  POST /org/{orgId}/provision
+summary: Provision a user to the organization
+- path:orgId string
+- body:email string
+- body:role string
+- body:rolePublicId string
+
+## S532-0026  PUT /org/{orgId}/settings
+summary: Update organization settings
+desc: Settings that are not provided will not be modified.
+- path:orgId string
+- body:requestAccess object
+- body:requestAccess.enabled boolean
+
+## S532-0027  POST /org/{orgId}/webhooks
+summary: Create a webhook
+- path:orgId string
+- body:secret string
+- body:url string
+
+## S532-0028  POST /reporting/counts/projects
+summary: Get project counts
+- query:from string
+- query:to string
+- body:filters object
+- body:filters.languages array<any>
+- body:filters.orgs any
+- body:filters.projects any
+
+## S532-0029  POST /reporting/counts/projects/latest
+summary: Get latest project counts
+- body:filters object
+- body:filters.languages array<any>
+- body:filters.orgs any
+- body:filters.projects any
+
+## S532-0030  POST /reporting/issues/
+summary: Get list of issues
+- query:from string
+- query:to string
+- query:page number
+- query:perPage number
+- query:sortBy string enum[severity|issueTitle|projectName|isFixed|isPatched|isIgnored|introducedDate|isUpgradable|isPatchable|priorityScore]
+- query:order string
+- query:groupBy string enum[issue]
+- body:filters object
+- body:filters.exploitMaturity array<any>
+- body:filters.fixable boolean
+- body:filters.identifier string
+- body:filters.ignored boolean
+- body:filters.isFixed boolean
+- body:filters.isPatchable boolean
+- body:filters.isPinnable boolean
+- body:filters.isUpgradable boolean
+- body:filters.issues any
+- body:filters.languages array<any>
+- body:filters.orgs any
+- body:filters.patched boolean
+- body:filters.priorityScore object
+- body:filters.priorityScore.max number
+- body:filters.priorityScore.min number
+- body:filters.projects any
+- body:filters.severity array<any>
+- body:filters.types array<any>
+
+## S532-0031  POST /reporting/issues/latest
+summary: Get list of latest issues
+- query:page number
+- query:perPage number
+- query:sortBy string enum[severity|issueTitle|projectName|isFixed|isPatched|isIgnored|introducedDate|isUpgradable|isPatchable|priorityScore]
+- query:order string
+- query:groupBy string enum[issue]
+- body:filters object
+- body:filters.exploitMaturity array<any>
+- body:filters.fixable boolean
+- body:filters.identifier string
+- body:filters.ignored boolean
+- body:filters.isFixed boolean
+- body:filters.isPatchable boolean
+- body:filters.isPinnable boolean
+- body:filters.isUpgradable boolean
+- body:filters.issues any
+- body:filters.languages array<any>
+- body:filters.orgs any
+- body:filters.patched boolean
+- body:filters.priorityScore object
+- body:filters.priorityScore.max number
+- body:filters.priorityScore.min number
+- body:filters.projects any
+- body:filters.severity array<any>
+- body:filters.types array<any>
+
+## S532-0032  POST /test/dep-graph
+summary: Test Dep Graph
+desc: Use this endpoint to find issues in a [DepGraph data object](https://github.com/snyk/dep-graph#depgraphdata).
+- query:org string
+- body:depGraph object
+- body:depGraph.graph object
+- body:depGraph.graph.nodes array<any>
+- body:depGraph.graph.rootNodeId string
+- body:depGraph.pkgManager object
+- body:depGraph.pkgManager.name string
+- body:depGraph.pkgManager.repositories array<any>
+- body:depGraph.pkgs array<any>
+- body:depGraph.schemaVersion string
+
+## S532-0033  POST /test/golangdep
+summary: Test Gopkg.toml & Gopkg.lock File
+desc: You can test your Go dep packages for issues according to their manifest file & lockfile using this action. It takes a JSON object containing a "target" `Gopkg.toml` and a `Gopkg.lock`.
+- query:org string
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.additional array<any>
+- body:files.target object
+- body:files.target.contents string
+
+## S532-0034  POST /test/govendor
+summary: Test vendor.json File
+desc: You can test your Go vendor packages for issues according to their manifest file using this action. It takes a JSON object containing a "target" `vendor.json`.
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.target object
+- body:files.target.contents string
+
+## S532-0035  POST /test/maven
+summary: Test maven file
+desc: You can test your Maven packages for issues according to their manifest file using this action. It takes a JSON object containing a the "target" `pom.xml`. Additional manifest files, if they are needed, like parent `pom.xml` files, child poms, etc., according the the definitions in the target `pom.xml` file, should be supplied in the `additional` body parameter.
+- query:org string
+- query:repository string
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.additional array<any>
+- body:files.target object
+- body:files.target.contents string
+
+## S532-0036  POST /test/pip
+summary: Test requirements.txt file
+desc: You can test your pip packages for issues according to their manifest file using this action. It takes a JSON object containing a the "target" `requirements.txt`.
+- body:encoding string enum[plain|base64]
+- body:files object
+- body:files.target object
+- body:files.target.contents string
+
+## S533-0001  POST /versions/publish/anon
+summary: Publish Anonymous
+desc: Anonymously publish to API Docs. This endpoint will take a JSON spec or a URL to a swagger or raml spec. ``` { "specData": {...} } ``` or ``` { "url": "http://petstore.swagger.io/v2/swagger.json" } ``` The spec will be published to api-docs.io anonymously, which means you will not be able to update or remove this documentation. The response will contain a url to the published documentation. ``` { 
+- body:specData object
+- body:url string
+
+## S533-0002  PUT /versions/{versionId}/import
+summary: Import
+desc: Import the given specification into an existing version. **Warning, this is a destructive action! Any resources present in both the existing version, and the specification being imported, will be overwritten.** This endpoint is particularly useful when you manage a specification file (Swagger or RAML) outside of Stoplight, and want to keep your Stoplight API version up to date as that specificatio
+- path:versionId string
+- body:options object
+- body:options.removeExtraEndpoints boolean
+- body:options.removeExtraSchemas boolean
+- body:options.removeExtraTextSections boolean
+- body:options.removeExtraTraits boolean
+- body:specData object
+- body:url string
+
+## S533-0003  POST /versions/{versionId}/publish
+summary: Publish
+desc: Re-publish an API version in Stoplight. This will re-publish the given API version, with whatever publish settings have already been setup in the app. This will only work with APIs that have previously been published at least once. This works well with the #endpoint:957qEfc97BB5XGAeZ endpoint to augment your continuous integration processes, and automatically re-publish your documentation when cer
+- path:versionId string
+
+## S533-0004  PUT /versions/{versionId}/unpublish
+summary: Unpublish
+desc: Unpublish the documentation associated with the given API version.
+- path:versionId string
+
+## S534-0001  POST /api-public/v1/incidents
+summary: Create a new incident
+desc: Create a new incident. This call replicates the function of our <a href="https://help.victorops.com/knowledge-base/manual-incident-creation/">manual incident creation process</a>. Monitoring tools and custom integrations should be configured using our <a href="https://help.victorops.com/knowledge-base/victorops-restendpoint-integration/">REST Endpoint</a>. This API may be called a maximum of 60 ti
+- body:details string
+- body:summary string
+- body:targets array<object>
+- body:targets[].slug string
+- body:targets[].type string enum[User|EscalationPolicy]
+- body:userName string
+
+## S534-0002  PATCH /api-public/v1/incidents/ack
+summary: Acknowledge an incident or list of incidents
+desc: The incident(s) must be currently open. The user supplied must be a valid VictorOps user and a member of your organization. This API may be called a maximum of 60 times per minute.
+- body:incidentNames array<string>
+- body:message string
+- body:userName string
+
+## S534-0003  PATCH /api-public/v1/incidents/byUser/ack
+summary: Acknowledge all incidents for which a user was paged.
+desc: The incident(s) must be currently open. The user supplied must be a valid VictorOps user and a member of your organization. This API may be called a maximum of 60 times per minute.
+- body:message string
+- body:userName string
+
+## S534-0004  PATCH /api-public/v1/incidents/byUser/resolve
+summary: Resolve all incidents for which a user was paged.
+desc: The incident(s) must be currently open. The user supplied must be a valid VictorOps user and a member of your organization. This API may be called a maximum of 60 times per minute.
+- body:message string
+- body:userName string
+
+## S534-0005  POST /api-public/v1/incidents/reroute
+summary: Reroute one or more incidents to one or more new routable destinations.
+desc: Reroute one or more incidents to one or more users and/or escalation policies This API may be called a maximum of 60 times per minute.
+- body:reroutes array<object>
+- body:reroutes[].incidentNumber string
+- body:reroutes[].targets array<object>
+- body:reroutes[].targets[].slug string
+- body:reroutes[].targets[].type string enum[User|EscalationPolicy]
+- body:userName string
+
+## S534-0006  PATCH /api-public/v1/incidents/resolve
+summary: Resolve an incident or list of incidents
+desc: The incident(s) must be currently open. The user supplied must be a valid VictorOps user and a member of your organization. This API may be called a maximum of 60 times per minute.
+- body:incidentNames array<string>
+- body:message string
+- body:userName string
+
+## S534-0007  POST /api-public/v1/maintenancemode/start
+summary: Start maintenance mode for routing keys
+- body:names array<string>
+- body:purpose string
+- body:type string enum[RoutingKeys]
+
+## S534-0008  PUT /api-public/v1/maintenancemode/{maintenancemodeid}/end
+summary: End maintenance mode for routing keys
+- path:maintenancemodeid string
+
+## S534-0009  POST /api-public/v1/overrides
+summary: Creates a new scheduled override
+desc: Creates a new scheduled override. Start and end dates are in ISO8601 format. E.g. `2018-09-28'T'05:00:00Z` This API may be called a maximum of 60 times per minute.
+- body:end string
+- body:start string
+- body:timezone string
+- body:username string
+
+## S534-0010  DELETE /api-public/v1/overrides/{publicId}
+summary: Deletes a scheduled override
+desc: Deletes a scheduled override This API may be called a maximum of 60 times per minute.
+- path:publicId string
+
+## S534-0011  DELETE /api-public/v1/overrides/{publicId}/assignments/{policySlug}
+summary: Delete the scheduled override assignment
+desc: Delete the scheduled override assignment This API may be called a maximum of 60 times per minute.
+- path:publicId string
+- path:policySlug string
+
+## S534-0012  PUT /api-public/v1/overrides/{publicId}/assignments/{policySlug}
+summary: Update the scheduled override assignment
+desc: Update the scheduled override assignment This API may be called a maximum of 60 times per minute.
+- path:publicId string
+- path:policySlug string
+- body:policy string
+- body:username string
+
+## S534-0013  PATCH /api-public/v1/policies/{policy}/oncall/user
+summary: Create an on-call override (take on-call)
+desc: Replaces a currently on-call user in the escalation policy with another. In many cases, the policy slug will match the slug of the team that contains it. This API may be called a maximum of 60 times per minute.
+- path:policy string
+- body:fromUser string
+- body:toUser string
+
+## S534-0014  POST /api-public/v1/profile/{username}/policies
+summary: Create a paging policy step
+desc: Create a paging policy step This API may be called a maximum of 60 times per minute.
+- path:username string
+- body:rules array<object>
+- body:rules[].contact object
+- body:rules[].contact.id number
+- body:rules[].contact.type string enum[email|phone]
+- body:rules[].type string enum[push|email|sms|phone]
+- body:timeout integer enum[1|5|10|15|20|25|30|45|60]
+
+## S534-0015  POST /api-public/v1/profile/{username}/policies/{step}
+summary: Create a rule for a paging policy step
+desc: Create a rule for a paging policy step This API may be called a maximum of 60 times per minute.
+- path:username string
+- path:step number
+- body:contact object
+- body:contact.id number
+- body:contact.type string enum[email|phone]
+- body:type string enum[push|email|sms|phone]
+
+## S534-0016  PUT /api-public/v1/profile/{username}/policies/{step}
+summary: Update a paging policy step
+desc: Update a paging policy step This API may be called a maximum of 60 times per minute.
+- path:username string
+- path:step number
+- body:rules array<object>
+- body:rules[].contact object
+- body:rules[].contact.id number
+- body:rules[].contact.type string enum[email|phone]
+- body:rules[].type string enum[push|email|sms|phone]
+- body:timeout integer enum[1|5|10|15|20|25|30|45|60]
+
+## S534-0017  DELETE /api-public/v1/profile/{username}/policies/{step}/{rule}
+summary: Delete a rule from a paging policy step
+desc: Delete a rule from a paging policy step This API may be called a maximum of 60 times per minute.
+- path:username string
+- path:step number
+- path:rule number
+
+## S534-0018  PUT /api-public/v1/profile/{username}/policies/{step}/{rule}
+summary: Update a rule for a paging policy step
+desc: Update a rule for a paging policy step This API may be called a maximum of 60 times per minute.
+- path:username string
+- path:step number
+- path:rule number
+- body:contact object
+- body:contact.id number
+- body:contact.type string enum[email|phone]
+- body:type string enum[push|email|sms|phone]
+
+## S534-0019  POST /api-public/v1/team
+summary: Add a team
+desc: Add a team to your organization. This API may be called a maximum of 60 times per minute.
+- body:name string
+
+## S534-0020  DELETE /api-public/v1/team/{team}
+summary: Remove a team
+desc: Remove a team from your organization. This API may be called a maximum of 60 times per minute.
+- path:team string
+
+## S534-0021  PUT /api-public/v1/team/{team}
+summary: Update a team
+desc: Update the designated team This API may be called a maximum of 60 times per minute.
+- path:team string
+- body:name string
+
+## S534-0022  POST /api-public/v1/team/{team}/members
+summary: Add a team member
+desc: Add a team member to your team. This API may be called a maximum of 60 times per minute.
+- path:team string
+- body:username string
+
+## S534-0023  DELETE /api-public/v1/team/{team}/members/{user}
+summary: Remove a team member
+desc: Remove a team from your organization. This API may be called a maximum of 60 times per minute.
+- path:team string
+- path:user string
+- body:replacement string
+
+## S534-0024  PATCH /api-public/v1/team/{team}/oncall/user
+summary: Create an on-call override (take on-call)
+desc: __NOTE: This API call is deprecated. Please use `PATCH /api-public/v2/policies/{policy}/oncall/user`__ Replaces a currently on-call user on the team with another. This API may be called a maximum of 60 times per minute.
+- path:team string
+- body:fromUser string
+- body:toUser string
+
+## S534-0025  POST /api-public/v1/user
+summary: Add a user
+desc: Add a user to your organization This API may be called a maximum of 60 times per minute.
+- body:admin boolean
+- body:email string
+- body:expirationHours number
+- body:firstName string
+- body:lastName string
+- body:username string
+
+## S534-0026  DELETE /api-public/v1/user/{user}
+summary: Remove a user
+desc: Remove a user from your organization. If no replacement is specified, an empty JSON payload ("{}") is still required. This API may be called a maximum of 60 times per minute.
+- path:user string
+- body:replacement string
+
+## S534-0027  PUT /api-public/v1/user/{user}
+summary: Update a user
+desc: Update the designated user This API may be called a maximum of 60 times per minute.
+- path:user string
+- body:admin boolean
+- body:email string
+- body:expirationHours number
+- body:firstName string
+- body:lastName string
+- body:username string
+
+## S534-0028  DELETE /api-public/v1/user/{user}/contact-methods/devices/{contactId}
+summary: Delete a contact device for a user
+desc: Delete a contact device for a user This API may be called a maximum of 60 times per minute.
+- path:user string
+- path:contactId string
+
+## S534-0029  PUT /api-public/v1/user/{user}/contact-methods/devices/{contactId}
+summary: Update a contact device for a user
+desc: Update a contact device for a user This API may be called a maximum of 60 times per minute.
+- path:user string
+- path:contactId string
+- body:chat_escalation_sound string
+- body:device_label string
+- body:escalation_notification_sound string
+- body:resolved_notification_sound string
+
+## S534-0030  POST /api-public/v1/user/{user}/contact-methods/emails
+summary: Create a contact emails for a user
+desc: Create a contact email for a user This API may be called a maximum of 60 times per minute.
+- path:user string
+- body:email string
+- body:label string
+- body:rank integer
+
+## S534-0031  DELETE /api-public/v1/user/{user}/contact-methods/emails/{contactId}
+summary: Delete a contact email for a user
+desc: Delete the indicated contact email for the user This API may be called a maximum of 60 times per minute.
+- path:user string
+- path:contactId string
+
+## S534-0032  POST /api-public/v1/user/{user}/contact-methods/phones
+summary: Create a contact phones for a user
+desc: Create a contact phone for a user This API may be called a maximum of 60 times per minute.
+- path:user string
+- body:label string
+- body:phone string
+- body:rank integer
+
+## S534-0033  DELETE /api-public/v1/user/{user}/contact-methods/phones/{contactId}
+summary: Delete a contact phone for a user
+desc: Delete the indicated contact phone for the user This API may be called a maximum of 60 times per minute.
+- path:user string
+- path:contactId string

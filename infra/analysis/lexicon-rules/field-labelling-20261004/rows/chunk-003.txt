@@ -1,0 +1,668 @@
+## S108-0003  POST /admin/hooks
+summary: Create a hook
+- body:active boolean
+- body:authorization_header string
+- body:branch_filter string
+- body:config object
+- body:events array<string>
+- body:type string enum[dingtalk|discord|gitea|gogs|msteams|slack|telegram|feishu|wechatwork|packagist]
+
+## S108-0007  POST /admin/users
+summary: Create a user
+- body:created_at string
+- body:email string
+- body:full_name string
+- body:login_name string
+- body:must_change_password boolean
+- body:password string
+- body:restricted boolean
+- body:send_notify boolean
+- body:source_id integer
+- body:username string
+- body:visibility string
+
+## S108-0008  DELETE /admin/users/{username}
+summary: Delete a user
+- path:username string
+
+## S108-0010  POST /admin/users/{username}/keys
+summary: Add a public key on behalf of a user
+- path:username string
+- body:key string
+- body:read_only boolean
+- body:title string
+
+## S108-0011  DELETE /admin/users/{username}/keys/{id}
+summary: Delete a user's public key
+- path:username string
+- path:id integer
+
+## S108-0013  POST /admin/users/{username}/repos
+summary: Create a repository on behalf of a user
+- path:username string
+- body:auto_init boolean
+- body:default_branch string
+- body:description string
+- body:gitignores string
+- body:issue_labels string
+- body:license string
+- body:name string
+- body:private boolean
+- body:readme string
+- body:template boolean
+- body:trust_model string enum[default|collaborator|committer|collaboratorcommitter]
+
+## S108-0017  PUT /notifications
+summary: Mark notification threads as read, pinned or unread
+- query:last_read_at string
+- query:all string
+- query:status-types array<string>
+- query:to-status string
+
+## S108-0020  POST /orgs
+summary: Create an organization
+- body:description string
+- body:full_name string
+- body:location string
+- body:repo_admin_change_team_access boolean
+- body:username string
+- body:visibility string enum[public|limited|private]
+- body:website string
+
+## S108-0023  POST /orgs/{org}/hooks
+summary: Create a hook
+- path:org string
+- body:active boolean
+- body:authorization_header string
+- body:branch_filter string
+- body:config object
+- body:events array<string>
+- body:type string enum[dingtalk|discord|gitea|gogs|msteams|slack|telegram|feishu|wechatwork|packagist]
+
+## S108-0026  POST /orgs/{org}/labels
+summary: Create a label for an organization
+- path:org string
+- body:color string
+- body:description string
+- body:exclusive boolean
+- body:name string
+
+## S108-0030  DELETE /orgs/{org}/public_members/{username}
+summary: Conceal a user's membership
+- path:org string
+- path:username string
+
+## S108-0035  POST /repos/migrate
+summary: Migrate a remote git repository
+- body:auth_password string
+- body:auth_token string
+- body:auth_username string
+- body:clone_addr string
+- body:description string
+- body:issues boolean
+- body:labels boolean
+- body:lfs boolean
+- body:lfs_endpoint string
+- body:milestones boolean
+- body:mirror boolean
+- body:mirror_interval string
+- body:private boolean
+- body:pull_requests boolean
+- body:releases boolean
+- body:repo_name string
+- body:repo_owner string
+- body:service string enum[git|github|gitea|gitlab]
+- body:uid integer
+- body:wiki boolean
+
+## S108-0043  DELETE /repos/{owner}/{repo}/collaborators/{collaborator}
+summary: Delete a collaborator from a repository
+- path:owner string
+- path:repo string
+- path:collaborator string
+
+## S108-0049  POST /repos/{owner}/{repo}/forks
+summary: Fork a repository
+- path:owner string
+- path:repo string
+- body:name string
+- body:organization string
+
+## S108-0050  POST /repos/{owner}/{repo}/hooks
+summary: Create a hook
+- path:owner string
+- path:repo string
+- body:active boolean
+- body:authorization_header string
+- body:branch_filter string
+- body:config object
+- body:events array<string>
+- body:type string enum[dingtalk|discord|gitea|gogs|msteams|slack|telegram|feishu|wechatwork|packagist]
+
+## S108-0059  POST /repos/{owner}/{repo}/issues/comments/{id}/assets
+summary: Create a comment attachment
+- path:owner string
+- path:repo string
+- path:id integer
+- query:name string
+- body:attachment string
+
+## S108-0065  PATCH /repos/{owner}/{repo}/issues/{index}
+summary: Edit an issue. If using deadline only the date will be taken into account, and time of day ignored.
+- path:owner string
+- path:repo string
+- path:index integer
+- body:assignee string
+- body:assignees array<string>
+- body:body string
+- body:due_date string
+- body:milestone integer
+- body:ref string
+- body:state string
+- body:title string
+- body:unset_due_date boolean
+
+## S108-0082  DELETE /repos/{owner}/{repo}/issues/{index}/subscriptions/{user}
+summary: Unsubscribe user from issue
+- path:owner string
+- path:repo string
+- path:index integer
+- path:user string
+
+## S108-0083  PUT /repos/{owner}/{repo}/issues/{index}/subscriptions/{user}
+summary: Subscribe user to issue
+- path:owner string
+- path:repo string
+- path:index integer
+- path:user string
+
+## S108-0085  POST /repos/{owner}/{repo}/issues/{index}/times
+summary: Add tracked time to a issue
+- path:owner string
+- path:repo string
+- path:index integer
+- body:created string
+- body:time integer
+- body:user_name string
+
+## S108-0087  POST /repos/{owner}/{repo}/keys
+summary: Add a key to a repository
+- path:owner string
+- path:repo string
+- body:key string
+- body:read_only boolean
+- body:title string
+
+## S108-0088  DELETE /repos/{owner}/{repo}/keys/{id}
+summary: Delete a key from a repository
+- path:owner string
+- path:repo string
+- path:id integer
+
+## S108-0091  PATCH /repos/{owner}/{repo}/labels/{id}
+summary: Update a label
+- path:owner string
+- path:repo string
+- path:id integer
+- body:color string
+- body:description string
+- body:exclusive boolean
+- body:name string
+
+## S108-0101  DELETE /repos/{owner}/{repo}/pulls/{index}/requested_reviewers
+summary: cancel review requests for a pull request
+- path:owner string
+- path:repo string
+- path:index integer
+- body:reviewers array<string>
+- body:team_reviewers array<string>
+
+## S108-0103  POST /repos/{owner}/{repo}/pulls/{index}/reviews
+summary: Create a review to an pull request
+- path:owner string
+- path:repo string
+- path:index integer
+- body:body string
+- body:comments array<object>
+- body:comments[].body string
+- body:comments[].new_position integer
+- body:comments[].old_position integer
+- body:comments[].path string
+- body:commit_id string
+- body:event string
+
+## S108-0104  DELETE /repos/{owner}/{repo}/pulls/{index}/reviews/{id}
+summary: Delete a specific review from a pull request
+- path:owner string
+- path:repo string
+- path:index integer
+- path:id integer
+
+## S108-0110  POST /repos/{owner}/{repo}/push_mirrors-sync
+summary: Sync all push mirrored repository
+- path:owner string
+- path:repo string
+
+## S108-0124  DELETE /repos/{owner}/{repo}/teams/{team}
+summary: Delete a team from a repository
+- path:owner string
+- path:repo string
+- path:team string
+
+## S108-0125  PUT /repos/{owner}/{repo}/teams/{team}
+summary: Add a team to a repository
+- path:owner string
+- path:repo string
+- path:team string
+
+## S108-0129  POST /repos/{owner}/{repo}/transfer
+summary: Transfer a repo ownership
+- path:owner string
+- path:repo string
+- body:new_owner string
+- body:team_ids array<integer>
+
+## S108-0136  DELETE /teams/{id}
+summary: Delete a team
+- path:id integer
+
+## S108-0139  PUT /teams/{id}/members/{username}
+summary: Add a team member
+- path:id integer
+- path:username string
+
+## S108-0149  POST /user/gpg_key_verify
+summary: Verify a GPG key
+
+## S108-0151  DELETE /user/gpg_keys/{id}
+summary: Remove a GPG key
+- path:id integer
+
+## S108-0156  DELETE /user/starred/{owner}/{repo}
+summary: Unstar the given repo
+- path:owner string
+- path:repo string
+
+## S108-0159  DELETE /users/{username}/tokens/{token}
+summary: delete an access token
+- path:username string
+- path:token string
+
+## S109-0001  PUT /v3/application/settings
+summary: Modify application settings
+desc: Modify application settings
+- body:default_branch_protection integer enum[0|1|2]
+- body:default_project_visibility integer enum[0|10|20]
+- body:default_snippet_visibility integer enum[0|10|20]
+- body:default_group_visibility integer enum[0|10|20]
+- body:restricted_visibility_levels array<string>
+- body:import_sources array<string> enum[github|bitbucket|gitlab|google_code|fogbugz|git|gitlab_project]
+- body:disabled_oauth_sign_in_sources array<string>
+- body:enabled_git_access_protocol string enum[ssh|http|nil]
+- body:gravatar_enabled boolean
+- body:default_projects_limit integer
+- body:max_attachment_size integer
+- body:session_expire_delay integer
+- body:user_oauth_applications boolean
+- body:user_default_external boolean
+- body:signup_enabled boolean
+- body:send_user_confirmation_email boolean
+- body:domain_whitelist string
+- body:domain_blacklist_enabled boolean
+- body:domain_blacklist string
+- body:after_sign_up_text string
+- body:signin_enabled boolean
+- body:require_two_factor_authentication boolean
+- body:two_factor_grace_period integer
+- body:home_page_url string
+- body:after_sign_out_path string
+- body:sign_in_text string
+- body:help_page_text string
+- body:shared_runners_enabled boolean
+- body:shared_runners_text string
+- body:max_artifacts_size integer
+- body:container_registry_token_expire_delay integer
+- body:metrics_enabled boolean
+- body:metrics_host string
+- body:metrics_port integer
+- body:metrics_pool_size integer
+- body:metrics_timeout integer
+- body:metrics_method_call_threshold integer
+- body:metrics_sample_interval integer
+- body:metrics_packet_size integer
+- body:sidekiq_throttling_enabled boolean
+- body:sidekiq_throttling_queus array<string>
+- body:sidekiq_throttling_factor number
+- body:recaptcha_enabled boolean
+- body:recaptcha_site_key string
+- body:recaptcha_private_key string
+- body:akismet_enabled boolean
+- body:akismet_api_key string
+- body:admin_notification_email string
+- body:sentry_enabled boolean
+- body:sentry_dsn string
+- body:repository_storage string
+- body:repository_checks_enabled boolean
+- body:koding_enabled boolean
+- body:koding_url string
+- body:plantuml_enabled boolean
+- body:plantuml_url string
+- body:version_check_enabled boolean
+- body:email_author_in_body boolean
+- body:html_emails_enabled boolean
+- body:housekeeping_enabled boolean
+- body:housekeeping_bitmaps_enabled boolean
+- body:housekeeping_incremental_repack_period integer
+- body:housekeeping_full_repack_period integer
+- body:housekeeping_gc_period integer
+
+## S109-0003  POST /v3/groups
+summary: Create a group. Available only for users who can create groups.
+desc: Create a group. Available only for users who can create groups.
+- body:name string
+- body:path string
+- body:description string
+- body:visibility_level integer
+- body:lfs_enabled boolean
+- body:request_access_enabled boolean
+
+## S109-0004  DELETE /v3/groups/{id}
+summary: Remove a group.
+desc: Remove a group.
+- path:id string
+
+## S109-0005  PUT /v3/groups/{id}
+summary: Update a group. Available only for users who can administrate groups.
+desc: Update a group. Available only for users who can administrate groups.
+- path:id string
+- body:name string
+- body:path string
+- body:description string
+- body:visibility_level integer
+- body:lfs_enabled boolean
+- body:request_access_enabled boolean
+
+## S109-0006  POST /v3/groups/{id}/access_requests
+summary: Requests access for the authenticated user to a group.
+desc: This feature was introduced in GitLab 8.11.
+- path:id string
+
+## S109-0007  DELETE /v3/groups/{id}/access_requests/{user_id}
+summary: Denies an access request for the given user.
+desc: This feature was introduced in GitLab 8.11.
+- path:id string
+- path:user_id integer
+
+## S109-0008  PUT /v3/groups/{id}/access_requests/{user_id}/approve
+summary: Approves an access request for the given user.
+desc: This feature was introduced in GitLab 8.11.
+- path:id string
+- path:user_id integer
+- body:access_level integer
+
+## S109-0009  POST /v3/groups/{id}/members
+summary: Adds a member to a group or project.
+desc: Adds a member to a group or project.
+- path:id string
+- body:user_id integer
+- body:access_level integer
+- body:expires_at string
+
+## S109-0010  DELETE /v3/groups/{id}/members/{user_id}
+summary: Removes a user from a group or project.
+desc: Removes a user from a group or project.
+- path:id string
+- path:user_id integer
+
+## S109-0011  PUT /v3/groups/{id}/members/{user_id}
+summary: Updates a member of a group or project.
+desc: Updates a member of a group or project.
+- path:id string
+- path:user_id integer
+- body:access_level integer
+- body:expires_at string
+
+## S109-0013  POST /v3/groups/{id}/projects/{project_id}
+summary: Transfer a project to the group namespace. Available only for admin.
+desc: Transfer a project to the group namespace. Available only for admin.
+- path:id string
+- path:project_id string
+
+## S109-0021  POST /v3/projects/fork/{id}
+summary: Fork new project for the current user or provided namespace.
+desc: Fork new project for the current user or provided namespace.
+- path:id string
+- body:namespace string
+
+## S109-0022  POST /v3/projects/user/{user_id}
+summary: Create new project for a specified user. Only available to admin users.
+desc: Create new project for a specified user. Only available to admin users.
+- path:user_id integer
+- body:name string
+- body:default_branch string
+- body:description string
+- body:issues_enabled boolean
+- body:merge_requests_enabled boolean
+- body:wiki_enabled boolean
+- body:builds_enabled boolean
+- body:snippets_enabled boolean
+- body:shared_runners_enabled boolean
+- body:container_registry_enabled boolean
+- body:lfs_enabled boolean
+- body:public boolean
+- body:visibility_level integer enum[0|10|20]
+- body:public_builds boolean
+- body:request_access_enabled boolean
+- body:only_allow_merge_if_build_succeeds boolean
+- body:only_allow_merge_if_all_discussions_are_resolved boolean
+- body:namespace_id integer
+- body:import_url string
+
+## S109-0026  POST /v3/projects/{id}/access_requests
+summary: Requests access for the authenticated user to a project.
+desc: This feature was introduced in GitLab 8.11.
+- path:id string
+
+## S109-0027  DELETE /v3/projects/{id}/access_requests/{user_id}
+summary: Denies an access request for the given user.
+desc: This feature was introduced in GitLab 8.11.
+- path:id string
+- path:user_id integer
+
+## S109-0028  PUT /v3/projects/{id}/access_requests/{user_id}/approve
+summary: Approves an access request for the given user.
+desc: This feature was introduced in GitLab 8.11.
+- path:id string
+- path:user_id integer
+- body:access_level integer
+
+## S109-0034  POST /v3/projects/{id}/builds/{build_id}/cancel
+summary: Cancel a specific build of a project
+desc: Cancel a specific build of a project
+- path:id string
+- path:build_id integer
+
+## S109-0040  DELETE /v3/projects/{id}/deploy_keys/{key_id}/disable
+summary: Disable a deploy key for a project
+desc: This feature was added in GitLab 8.11
+- path:id string
+- path:key_id integer
+
+## S109-0049  PUT /v3/projects/{id}/hooks/{hook_id}
+summary: Update an existing project hook
+desc: Update an existing project hook
+- path:id string
+- path:hook_id integer
+- body:url string
+- body:push_events boolean
+- body:issues_events boolean
+- body:merge_requests_events boolean
+- body:tag_push_events boolean
+- body:note_events boolean
+- body:build_events boolean
+- body:pipeline_events boolean
+- body:wiki_page_events boolean
+- body:enable_ssl_verification boolean
+- body:token string
+
+## S109-0059  POST /v3/projects/{id}/issues/{issue_id}/reset_spent_time
+summary: Reset spent time for a project issue
+desc: Reset spent time for a project issue
+- path:id string
+- path:issue_id integer
+
+## S109-0077  POST /v3/projects/{id}/members
+summary: Adds a member to a group or project.
+desc: Adds a member to a group or project.
+- path:id string
+- body:user_id integer
+- body:access_level integer
+- body:expires_at string
+
+## S109-0105  POST /v3/projects/{id}/merge_requests/{subscribable_id}/subscription
+summary: Subscribe to a resource
+desc: Subscribe to a resource
+- path:id string
+- path:subscribable_id string
+
+## S109-0108  PUT /v3/projects/{id}/notification_settings
+summary: Update project level notification level settings, defaults to Global
+desc: This feature was introduced in GitLab 8.12
+- path:id string
+- body:level string
+- body:new_note boolean
+- body:new_issue boolean
+- body:reopen_issue boolean
+- body:close_issue boolean
+- body:reassign_issue boolean
+- body:new_merge_request boolean
+- body:reopen_merge_request boolean
+- body:close_merge_request boolean
+- body:reassign_merge_request boolean
+- body:merge_merge_request boolean
+- body:failed_pipeline boolean
+- body:success_pipeline boolean
+
+## S109-0127  POST /v3/projects/{id}/runners
+summary: Enable a runner for a project
+desc: Enable a runner for a project
+- path:id string
+- body:runner_id integer
+
+## S109-0142  PUT /v3/projects/{id}/services/hipchat
+summary: Set hipchat service for project
+desc: Set hipchat service for project
+- path:id integer
+- body:token string
+- body:room string
+- body:color string
+- body:notify boolean
+- body:api_version string
+- body:server string
+- body:push_events string
+- body:issue_events string
+- body:confidential_issue_events string
+- body:merge_request_events string
+- body:note_events string
+- body:tag_push_events string
+- body:build_events string
+
+## S109-0151  PUT /v3/projects/{id}/services/pushover
+summary: Set pushover service for project
+desc: Set pushover service for project
+- path:id integer
+- body:api_key string
+- body:user_key string
+- body:priority string
+- body:device string
+- body:sound string
+- body:push_events string
+
+## S109-0154  PUT /v3/projects/{id}/services/slack-slash-commands
+summary: Set slack-slash-commands service for project
+desc: Set slack-slash-commands service for project
+- path:id integer
+- body:token string
+
+## S109-0188  POST /v3/user/emails
+summary: Add new email address to the currently authenticated user
+desc: Add new email address to the currently authenticated user
+- body:email string
+
+## S109-0189  DELETE /v3/user/emails/{email_id}
+summary: Delete an email address from the currently authenticated user
+desc: Delete an email address from the currently authenticated user
+- path:email_id integer
+
+## S109-0191  DELETE /v3/user/keys/{key_id}
+summary: Delete an SSH key from the currently authenticated user
+desc: Delete an SSH key from the currently authenticated user
+- path:key_id integer
+
+## S109-0192  POST /v3/users
+summary: Create a user. Available only for admins.
+desc: Create a user. Available only for admins.
+- body:email string
+- body:password string
+- body:name string
+- body:username string
+- body:skype string
+- body:linkedin string
+- body:twitter string
+- body:website_url string
+- body:organization string
+- body:projects_limit integer
+- body:extern_uid string
+- body:provider string
+- body:bio string
+- body:location string
+- body:admin boolean
+- body:can_create_group boolean
+- body:confirm boolean
+- body:external boolean
+
+## S109-0194  PUT /v3/users/{id}
+summary: Update a user. Available only for admins.
+desc: Update a user. Available only for admins.
+- path:id integer
+- body:email string
+- body:password string
+- body:name string
+- body:username string
+- body:skype string
+- body:linkedin string
+- body:twitter string
+- body:website_url string
+- body:organization string
+- body:projects_limit integer
+- body:extern_uid string
+- body:provider string
+- body:bio string
+- body:location string
+- body:admin boolean
+- body:can_create_group boolean
+- body:confirm boolean
+- body:external boolean
+
+## S109-0195  PUT /v3/users/{id}/block
+summary: Block a user. Available only for admins.
+desc: Block a user. Available only for admins.
+- path:id integer
+
+## S109-0198  POST /v3/users/{id}/keys
+summary: Add an SSH key to a specified user. Available only for admins.
+desc: Add an SSH key to a specified user. Available only for admins.
+- path:id integer
+- body:key string
+- body:title string
+
+## S109-0199  DELETE /v3/users/{id}/keys/{key_id}
+summary: Delete an existing SSH key from a specified user. Available only for admins.
+desc: Delete an existing SSH key from a specified user. Available only for admins.
+- path:id integer
+- path:key_id integer
+
+## S109-0200  PUT /v3/users/{id}/unblock
+summary: Unblock a user. Available only for admins.
+desc: Unblock a user. Available only for admins.
+- path:id integer

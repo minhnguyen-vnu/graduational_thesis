@@ -1,0 +1,38 @@
+auth:
+  - name: victim
+    fixedHeaders:
+      - name: X-AICC-Csrf
+        value: "1"
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: victim
+        password: victimpassw0rd
+        usernameField: username
+        passwordField: password
+  - name: admin
+    fixedHeaders:
+      - name: X-AICC-Csrf
+        value: "1"
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: admin
+        password: aiccseedpass
+        usernameField: username
+        passwordField: password
+  - name: viewer
+    fixedHeaders:
+      - name: X-AICC-Csrf
+        value: "1"
+    loginEndpointAuth:
+      payloadUserPwd:
+        username: viewer
+        password: viewerpassw0rd
+        usernameField: username
+        passwordField: password
+
+authTemplate:
+  loginEndpointAuth:
+    endpoint: /api/v1/auth/login
+    verb: POST
+    contentType: application/json
+    expectCookies: true

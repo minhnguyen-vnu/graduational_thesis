@@ -1,0 +1,858 @@
+## S101-N0136  POST /v0.1/public/apps/{owner_name}/{app_name}/install_analytics
+desc: Notify download(s) for the provided distribution release(s).
+- path:owner_name string
+- path:app_name string
+- body:releases array<object>
+- body:releases[].distribution_group_id string
+- body:releases[].release_id integer
+- body:releases[].user_id string
+
+## S101-N0137  POST /v0.1/public/codepush/report_status/deploy
+desc: Report Deployment status metric
+- body:app_version string
+- body:client_unique_id string
+- body:deployment_key string
+- body:label string
+- body:previous_deployment_key string
+- body:previous_label_or_app_version string
+- body:status string
+
+## S101-N0141  DELETE /v0.1/user/devices/{device_udid}
+desc: Removes an existing device from a user
+- path:device_udid string
+
+## S101-N0142  POST /v0.1/user/dsr/delete
+
+## S101-N0143  POST /v0.1/user/dsr/delete/{token}/cancel
+- path:token string
+- body:email string
+
+## S101-N0144  POST /v0.1/user/dsr/export
+
+## S101-N0145  POST /v0.1/user/dsr/export/{token}/cancel
+- path:token string
+
+## S101-N0146  POST /v0.1/user/invitations/apps/{invitation_token}/accept
+desc: Accepts a pending invitation for the specified user
+- path:invitation_token string
+- body:(body) object
+
+## S101-N0147  POST /v0.1/user/invitations/apps/{invitation_token}/reject
+desc: Rejects a pending invitation for the specified user
+- path:invitation_token string
+- body:(body) object
+
+## S101-N0148  POST /v0.1/user/invitations/distribution_groups/accept
+desc: Accepts all pending invitations to distribution groups for the specified user
+- body:(body) object
+
+## S101-N0149  POST /v0.1/user/invitations/orgs/{invitation_token}/accept
+desc: Accepts a pending organization invitation for the specified user
+- path:invitation_token string
+- body:(body) object
+
+## S101-N0150  POST /v0.1/user/invitations/orgs/{invitation_token}/reject
+desc: Rejects a pending organization invitation
+- path:invitation_token string
+- body:(body) object
+
+## S125-N0001  POST /acceptance-requested
+desc: Acceptance requested | This webhook will be invoked whenever acceptance has been requested for the order.
+schema: acceptance-requested
+- body:Currency string
+- body:Customer object
+- body:Customer.Id number
+- body:Customer.Name string
+- body:Customer.PreviousRestaurantOrderCount number
+- body:Customer.PreviousTotalOrderCount number
+- body:CustomerNotes object
+- body:FriendlyOrderReference string
+- body:Fulfilment object
+- body:Fulfilment.Address object
+- body:Fulfilment.Address.City string
+- body:Fulfilment.Address.Geolocation object
+- body:Fulfilment.Address.Lines array<string>
+- body:Fulfilment.Address.PostalCode string
+- body:Fulfilment.CustomerDueAsap boolean
+- body:Fulfilment.CustomerDueDate string
+- body:Fulfilment.Method string enum[Delivery|Collection]
+- body:Fulfilment.PhoneMaskingCode string
+- body:Fulfilment.PhoneNumber string
+- body:Fulfilment.PreparationTime string
+- body:IsTest boolean
+- body:Items array<object>
+- body:Items[].Items array<object>
+- body:Items[].Items[].Items array<object>
+- body:Items[].Items[].Name string
+- body:Items[].Items[].Quantity number
+- body:Items[].Items[].Reference string
+- body:Items[].Items[].TotalPrice number
+- body:Items[].Items[].UnitPrice number
+- body:Items[].Name string
+- body:Items[].Quantity number
+- body:Items[].Reference string
+- body:Items[].TotalPrice number
+- body:Items[].UnitPrice number
+- body:OrderId string
+- body:Payment object
+- body:Payment.Lines array<object>
+- body:Payment.Lines[].Paid boolean
+- body:Payment.Lines[].Type string
+- body:Payment.Lines[].Value number
+- body:PlacedDate string
+- body:PriceBreakdown object
+- body:PriceBreakdown.Discount number
+- body:PriceBreakdown.Fees object
+- body:PriceBreakdown.Fees.Delivery number
+- body:PriceBreakdown.Fees.Other number
+- body:PriceBreakdown.Fees.ServiceCharge number
+- body:PriceBreakdown.Items number
+- body:PriceBreakdown.Taxes number
+- body:PriceBreakdown.Tips number
+- body:Restaurant object
+- body:Restaurant.Address object
+- body:Restaurant.Address.City string
+- body:Restaurant.Address.Geolocation object
+- body:Restaurant.Address.Lines array<string>
+- body:Restaurant.Address.PostalCode string
+- body:Restaurant.Id string
+- body:Restaurant.Name string
+- body:Restaurant.PhoneNumber string
+- body:Restaurant.Reference string
+- body:Restaurant.TimeZone string
+- body:Restrictions array<object>
+- body:Restrictions[].Type string enum[Alcohol]
+- body:TotalPrice number
+
+## S125-N0006  DELETE /consumers/{tenant}/me/communication-preferences/{type}/subscribedChannels/{channel}
+desc: Remove subscription of a specific communication preference channel | Remove subscription of a specific communication preference channel.
+- path:tenant string
+- path:type string enum[marketing]
+- path:channel string
+
+## S125-N0010  DELETE /delivery/pools/{deliveryPoolId}
+desc: Delete a delivery pool | The restaurants will no longer be associated with the pool.
+- path:deliveryPoolId string
+
+## S125-N0011  PATCH /delivery/pools/{deliveryPoolId}
+desc: Modify a delivery pool | Modify a delivery pool, changing its name, restaurants or both
+schema: patch-delivery-pool
+- path:deliveryPoolId string
+- body:name string
+- body:restaurants array<number>
+
+## S125-N0012  PUT /delivery/pools/{deliveryPoolId}
+desc: Replace an existing delivery pool | Replace an existing delivery pool changing all of its properties
+schema: create-delivery-pool
+- path:deliveryPoolId string
+- body:name string
+- body:restaurants array<number>
+
+## S125-N0013  PUT /delivery/pools/{deliveryPoolId}/availability/relative
+desc: Set availability for pickup | Set the average amount of time it will take a driver to collect a new order from a restaurant in the pool.
+schema: estimated-time
+- path:deliveryPoolId string
+- body:bestGuess string
+
+## S125-N0014  PUT /delivery/pools/{deliveryPoolId}/hours
+desc: Set the delivery pools daily start and end times | Set the daily start and end times for a pool or set closed flag if the pool does not operate on that day. Start and end times for all days must be provided. Though the API accepts array of start and end times for each day, multiple start and end time for a day are not accepted. If the end time for a day is equal to or before start time, end time w
+schema: delivery-pool-hours
+- path:deliveryPoolId string
+- body:friday object
+- body:friday.closed boolean
+- body:friday.poolTimes array<object>
+- body:friday.poolTimes[].endTime string
+- body:friday.poolTimes[].startTime string
+- body:monday object
+- body:monday.closed boolean
+- body:monday.poolTimes array<object>
+- body:monday.poolTimes[].endTime string
+- body:monday.poolTimes[].startTime string
+- body:saturday object
+- body:saturday.closed boolean
+- body:saturday.poolTimes array<object>
+- body:saturday.poolTimes[].endTime string
+- body:saturday.poolTimes[].startTime string
+- body:sunday object
+- body:sunday.closed boolean
+- body:sunday.poolTimes array<object>
+- body:sunday.poolTimes[].endTime string
+- body:sunday.poolTimes[].startTime string
+- body:thursday object
+- body:thursday.closed boolean
+- body:thursday.poolTimes array<object>
+- body:thursday.poolTimes[].endTime string
+- body:thursday.poolTimes[].startTime string
+- body:tuesday object
+- body:tuesday.closed boolean
+- body:tuesday.poolTimes array<object>
+- body:tuesday.poolTimes[].endTime string
+- body:tuesday.poolTimes[].startTime string
+- body:wednesday object
+- body:wednesday.closed boolean
+- body:wednesday.poolTimes array<object>
+- body:wednesday.poolTimes[].endTime string
+- body:wednesday.poolTimes[].startTime string
+
+## S125-N0015  DELETE /delivery/pools/{deliveryPoolId}/restaurants
+desc: Remove restaurants from a delivery pool | Remove restaurants from a delivery pool
+- path:deliveryPoolId string
+- body:restaurants array<number>
+
+## S125-N0016  PUT /delivery/pools/{deliveryPoolId}/restaurants
+desc: Add restaurants to an existing delivery pool | Add additional restaurants to a delivery pool
+- path:deliveryPoolId string
+
+## S125-N0017  PUT /driver-assigned-to-delivery
+desc: Driver Assigned to Delivery | Driver Assigned to Delivery
+schema: driver-status
+- body:DriverContactNumber string
+- body:DriverName string
+- body:EstimatedDeliveryTime string
+- body:EstimatedPickupTime string
+- body:Event string enum[DriverAssigned|DriverAtRestaurant|OnItsWay|AtDeliveryAddress|Delivered]
+- body:OrderId string
+- body:TimeStamp string
+
+## S125-N0018  PUT /driver-at-delivery-address
+desc: Driver at delivery address | Driver at delivery address
+schema: driver-status
+- body:DriverContactNumber string
+- body:DriverName string
+- body:EstimatedDeliveryTime string
+- body:EstimatedPickupTime string
+- body:Event string enum[DriverAssigned|DriverAtRestaurant|OnItsWay|AtDeliveryAddress|Delivered]
+- body:OrderId string
+- body:TimeStamp string
+
+## S125-N0019  PUT /driver-at-restaurant
+desc: Driver at restaurant | Driver at restaurant
+schema: driver-status
+- body:DriverContactNumber string
+- body:DriverName string
+- body:EstimatedDeliveryTime string
+- body:EstimatedPickupTime string
+- body:Event string enum[DriverAssigned|DriverAtRestaurant|OnItsWay|AtDeliveryAddress|Delivered]
+- body:OrderId string
+- body:TimeStamp string
+
+## S125-N0020  PUT /driver-has-delivered-order
+desc: Driver has delivered order | Driver has delivered order
+schema: driver-status
+- body:DriverContactNumber string
+- body:DriverName string
+- body:EstimatedDeliveryTime string
+- body:EstimatedPickupTime string
+- body:Event string enum[DriverAssigned|DriverAtRestaurant|OnItsWay|AtDeliveryAddress|Delivered]
+- body:OrderId string
+- body:TimeStamp string
+
+## S125-N0022  PUT /driver-on-their-way-to-delivery-address
+desc: Driver on their way to delivery address | Driver on their way to delivery address
+schema: driver-status
+- body:DriverContactNumber string
+- body:DriverName string
+- body:EstimatedDeliveryTime string
+- body:EstimatedPickupTime string
+- body:Event string enum[DriverAssigned|DriverAtRestaurant|OnItsWay|AtDeliveryAddress|Delivered]
+- body:OrderId string
+- body:TimeStamp string
+
+## S125-N0023  POST /late-order-compensation-query
+desc: late order compensation query, restaurant response required | This webhook will be invoked when a late order compensation query has been raised and a restaurant response is required.
+schema: late-order-compensation-query
+- body:compensationOptions array<object>
+- body:compensationOptions[].amount number
+- body:compensationOptions[].isRecommended boolean
+- body:orderId string
+- body:restaurantId string
+- body:tenant string
+
+## S125-N0024  POST /late-order-query
+desc: late order query, restaurant response required | This webhook will be invoked when a late order query has been raised and a restaurant response is required.
+schema: late-order-query
+- body:orderId string
+- body:restaurantId string
+- body:tenant string
+
+## S125-N0027  POST /order-cancelled
+desc: Order cancelled | This webhook will be invoked whenever the order was cancelled.
+schema: order-cancelled
+- body:Event string
+- body:OrderId string
+- body:Reason string enum[cust_cancelled_changed_mind|cust_cancelled_delivery_too_long|cust_cancelled_made_mistake|cust_cancelled_other|delivery_partner_cancelled|rest_cancelled_customer_absent|rest_cancelled_customer_requested|rest_cancelled_declined|rest_cancelled_drivers_unavailable|rest_cancelled_fake_order|rest_cancelled_other|rest_cancelled_out_of_stock]
+
+## S125-N0028  POST /order-eligible-for-restaurant-compensation
+desc: Order Eligible For Restaurant Compensation | This webhook will be invoked for every cancelled order and it will inform if the order is eligible for compensation.
+schema: OrderEligibleForRestaurantCompensation
+- body:IsEligible boolean
+- body:OrderId string
+
+## S125-N0029  PUT /order-is-ready-for-pickup
+desc: Order ready for pickup | <p>The "Ready for pickup" event lets the delivery partner know that the food has been cooked and is now ready for collection up from the restaurant.</p><p>When this event is received, it is important that you let your driver know that the order should now be collected from inside the restaurant. For example, this driver notification could take the form of an in-app notific
+schema: ready-for-pickup
+- body:Event string enum[Ready for pickup]
+- body:Timestamp string
+
+## S125-N0030  POST /order-ready-for-preparation-async
+desc: Order ready for preparation (async) | This webhook will be invoked when we have determined that an order is ready for preparation. Upon receiving the request, you should perform any preparation-related activities, such as sending the order to the POS system / kitchen screen. **NOTE:** This version of the webhook is asynchronous, and we expect a response in two parts: 1. We expect an immediate `202
+schema: order-ready-for-preparation
+- body:Currency string
+- body:Customer object
+- body:Customer.Id string
+- body:Customer.Name string
+- body:CustomerNotes object
+- body:Fulfilment object
+- body:Fulfilment.Address object
+- body:Fulfilment.Address.City string
+- body:Fulfilment.Address.Geolocation object
+- body:Fulfilment.Address.Lines array<string>
+- body:Fulfilment.Address.PostalCode string
+- body:Fulfilment.CustomerDueAsap boolean
+- body:Fulfilment.CustomerDueDate string
+- body:Fulfilment.Method string enum[Delivery|Collection]
+- body:Fulfilment.PhoneNumber string
+- body:Fulfilment.PreparationTime string
+- body:Fulfilment.PrepareFor string
+- body:IsTest boolean
+- body:Items array<object>
+- body:Items[].Items array<object>
+- body:Items[].Items[].Items array<object>
+- body:Items[].Items[].Name string
+- body:Items[].Items[].Quantity integer
+- body:Items[].Items[].Reference string
+- body:Items[].Items[].UnitPrice integer
+- body:Items[].Name string
+- body:Items[].Quantity integer
+- body:Items[].Reference string
+- body:Items[].UnitPrice integer
+- body:OrderId string
+- body:Payment object
+- body:Payment.Lines array<object>
+- body:Payment.Lines[].Paid boolean
+- body:Payment.Lines[].Type string enum[card|cash|credit|other]
+- body:Payment.Lines[].Value number
+- body:PlacedDate string
+- body:PriceBreakdown object
+- body:PriceBreakdown.Discount number
+- body:PriceBreakdown.Fees object
+- body:PriceBreakdown.Fees.Delivery number
+- body:PriceBreakdown.Fees.Other number
+- body:PriceBreakdown.Fees.ServiceCharge number
+- body:PriceBreakdown.Items number
+- body:PriceBreakdown.Taxes number
+- body:PriceBreakdown.Tips number
+- body:Restaurant object
+- body:Restaurant.Address object
+- body:Restaurant.Address.City string
+- body:Restaurant.Address.Geolocation object
+- body:Restaurant.Address.Lines array<string>
+- body:Restaurant.Address.PostalCode string
+- body:Restaurant.Id string
+- body:Restaurant.Name string
+- body:Restaurant.PhoneNumber string
+- body:Restaurant.Reference string
+- body:TotalPrice number
+
+## S125-N0031  POST /order-ready-for-preparation-sync
+desc: Order ready for preparation (sync) | This webhook will be invoked when we have determined that an order is ready for preparation. Upon receiving the request, you should perform any preparation-related activities, such as sending the order to the POS system / kitchen screen.
+schema: order-ready-for-preparation
+- body:Currency string
+- body:Customer object
+- body:Customer.Id string
+- body:Customer.Name string
+- body:CustomerNotes object
+- body:Fulfilment object
+- body:Fulfilment.Address object
+- body:Fulfilment.Address.City string
+- body:Fulfilment.Address.Geolocation object
+- body:Fulfilment.Address.Lines array<string>
+- body:Fulfilment.Address.PostalCode string
+- body:Fulfilment.CustomerDueAsap boolean
+- body:Fulfilment.CustomerDueDate string
+- body:Fulfilment.Method string enum[Delivery|Collection]
+- body:Fulfilment.PhoneNumber string
+- body:Fulfilment.PreparationTime string
+- body:Fulfilment.PrepareFor string
+- body:IsTest boolean
+- body:Items array<object>
+- body:Items[].Items array<object>
+- body:Items[].Items[].Items array<object>
+- body:Items[].Items[].Name string
+- body:Items[].Items[].Quantity integer
+- body:Items[].Items[].Reference string
+- body:Items[].Items[].UnitPrice integer
+- body:Items[].Name string
+- body:Items[].Quantity integer
+- body:Items[].Reference string
+- body:Items[].UnitPrice integer
+- body:OrderId string
+- body:Payment object
+- body:Payment.Lines array<object>
+- body:Payment.Lines[].Paid boolean
+- body:Payment.Lines[].Type string enum[card|cash|credit|other]
+- body:Payment.Lines[].Value number
+- body:PlacedDate string
+- body:PriceBreakdown object
+- body:PriceBreakdown.Discount number
+- body:PriceBreakdown.Fees object
+- body:PriceBreakdown.Fees.Delivery number
+- body:PriceBreakdown.Fees.Other number
+- body:PriceBreakdown.Fees.ServiceCharge number
+- body:PriceBreakdown.Items number
+- body:PriceBreakdown.Taxes number
+- body:PriceBreakdown.Tips number
+- body:Restaurant object
+- body:Restaurant.Address object
+- body:Restaurant.Address.City string
+- body:Restaurant.Address.Geolocation object
+- body:Restaurant.Address.Lines array<string>
+- body:Restaurant.Address.PostalCode string
+- body:Restaurant.Id string
+- body:Restaurant.Name string
+- body:Restaurant.PhoneNumber string
+- body:Restaurant.Reference string
+- body:TotalPrice number
+
+## S125-N0035  POST /orders
+desc: Create order | Create order
+schema: order-request-v2
+- body:Customer object
+- body:Customer.Address object
+- body:Customer.Address.City string
+- body:Customer.Address.GeoLocation object
+- body:Customer.Address.Lines array<string>
+- body:Customer.Address.PostalCode string
+- body:Customer.DisplayPhoneNumber string
+- body:Customer.Email string
+- body:Customer.Name string
+- body:Customer.PhoneNumber string
+- body:CustomerNotes object
+- body:CustomerNotes.NoteForDelivery string
+- body:CustomerNotes.NoteForRestaurant string
+- body:FriendlyOrderReference string
+- body:Fulfilment object
+- body:Fulfilment.DueAsap boolean
+- body:Fulfilment.DueDate string
+- body:Fulfilment.Method string enum[Delivery|Collection]
+- body:IsTest boolean
+- body:Items array<object>
+- body:Items[].Items array<object>
+- body:Items[].Items[].Items array<object>
+- body:Items[].Items[].Name string
+- body:Items[].Items[].Quantity integer
+- body:Items[].Items[].Reference string
+- body:Items[].Items[].UnitPrice integer
+- body:Items[].Name string
+- body:Items[].Quantity integer
+- body:Items[].Reference string
+- body:Items[].TotalPrice number
+- body:Items[].UnitPrice integer
+- body:OrderReference string
+- body:Payment object
+- body:Payment.Fees array<object>
+- body:Payment.Fees[].Type string
+- body:Payment.Fees[].Value number
+- body:Payment.Lines array<object>
+- body:Payment.Lines[].LastCardDigits string
+- body:Payment.Lines[].Paid boolean
+- body:Payment.Lines[].ServiceFee number
+- body:Payment.Lines[].Type string enum[Cash|Card|AccountCredit|Voucher]
+- body:Payment.Lines[].Value number
+- body:Payment.PaidDate string
+- body:Payment.Taxes array<object>
+- body:Payment.Taxes[].Percentage number
+- body:Payment.Taxes[].Type string
+- body:Payment.Taxes[].Value number
+- body:Payment.Tips array<object>
+- body:Payment.Tips[].Type string
+- body:Payment.Tips[].Value number
+- body:Restaurant object
+- body:Restaurant.Id integer
+- body:Restaurant.Reference string
+- body:TotalPrice number
+
+## S125-N0036  PUT /orders/deliverystate/driverlocation
+desc: Update current driver locations (bulk upload) | Current driver location (bulk upload)
+schema: bulk-delivery-details-list
+- body:EtaAtDeliveryAddress string
+- body:EtaAtRestaurant string
+- body:Location object
+- body:Location.Accuracy number
+- body:Location.Heading number
+- body:Location.Latitude number
+- body:Location.Longitude number
+- body:Location.Speed number
+- body:OrderId string
+- body:TimeStampWithUtcOffset string
+
+## S125-N0037  PUT /orders/{orderId}/accept
+desc: Accept order | Call when an order has been accepted. An order can only be accepted if it hasn't previously been accepted, rejected, cancelled or ignored
+schema: order-accept-request
+- path:orderId string
+- body:TimeAcceptedFor string
+
+## S125-N0038  PUT /orders/{orderId}/cancel
+desc: Cancel order | Call when an order has been cancelled by Ops. Cancelling an order overrides any previous accept/reject calls. This should not be used for restaurant rejection but only from Ops involvement
+schema: order-cancel-request
+- path:orderId string
+- body:Message string
+
+## S125-N0040  PUT /orders/{orderId}/deliverystate/atdeliveryaddress
+desc: Update order with driver at delivery address details | <p>The _at delivery address_ callback should be sent when the driver thinks that they have arrived at the specified delivery address.</p><p>NB&semi; This callback should be distinct from the delivered callback, as Just Eat use this callback to understand how much time is spent locating the customer's address.</p>
+schema: delivery-details
+- path:orderId string
+- body:Location object
+- body:Location.Accuracy number
+- body:Location.Heading number
+- body:Location.Latitude number
+- body:Location.Longitude number
+- body:Location.Speed number
+- body:TimeStampWithUtcOffset string
+
+## S125-N0041  PUT /orders/{orderId}/deliverystate/atrestaurant
+desc: Update order with driver at restaurant details | The _at restaurant_ callback should be sent when the driver arrives at the restaurant and is ready to collect the order.
+schema: delivery-driver-details-with-eta
+- path:orderId string
+- body:EtaAtDeliveryAddress string
+- body:Location object
+- body:Location.Accuracy number
+- body:Location.Heading number
+- body:Location.Latitude number
+- body:Location.Longitude number
+- body:Location.Speed number
+- body:TimeStampWithUtcOffset string
+
+## S125-N0042  PUT /orders/{orderId}/deliverystate/atrestauranteta
+desc: Update the driver's estimated time to arrive at the Restaurant | <p>In the UK, this endpoint updates the estimated arrival time at the restaurant. This value can be overridden from other endpoints like <a href="https://uk.api.just-eat.io/docs#tag/Order-Delivery-API/paths/~1orders~1{orderId}~1deliverystate~1driverlocation/put">Driver Locations</a> </p> <p> This endpoint should be used to set initia
+schema: eta-estimate
+- path:orderId string
+- body:bestGuess string
+- body:estimatedAt string
+
+## S125-N0043  PUT /orders/{orderId}/deliverystate/delivered
+desc: Update order with delivered details | The _delivered_ callback should be sent when the driver has handed the food to the customer and completed the order.
+schema: delivery-details
+- path:orderId string
+- body:Location object
+- body:Location.Accuracy number
+- body:Location.Heading number
+- body:Location.Latitude number
+- body:Location.Longitude number
+- body:Location.Speed number
+- body:TimeStampWithUtcOffset string
+
+## S125-N0044  PUT /orders/{orderId}/deliverystate/driverassigned
+desc: Update order with driver assigned details | The _driver assigned_ callback should be sent when a driver is assigned to the order. It should communicate important details about the driver - and also an estimated time for the driver to arrive at the restaurant and delivery address.
+schema: delivery-driver-assigned-details
+- path:orderId string
+- body:DriverContactNumber string
+- body:DriverName string
+- body:EtaAtDeliveryAddress string
+- body:EtaAtRestaurant string
+- body:Location object
+- body:Location.Accuracy number
+- body:Location.Heading number
+- body:Location.Latitude number
+- body:Location.Longitude number
+- body:Location.Speed number
+- body:TimeStampWithUtcOffset string
+- body:VehicleDetails object
+- body:VehicleDetails.Vehicle string
+- body:VehicleDetails.VehicleRegistration string
+
+## S125-N0046  PUT /orders/{orderId}/deliverystate/driverunassigned
+desc: Update order with driver unassigned details | The _driver unassigned_ callback should be sent when a driver is unassigned from the order. It may details about the reason for cancelling the assignment, the driver details, and any newer at restaurant and customer estimations.
+schema: delivery-driver-unassigned-details
+- path:orderId string
+- body:Comment string
+- body:DriverContactNumber string
+- body:DriverName string
+- body:EtaAtDeliveryAddress string
+- body:EtaAtRestaurant string
+- body:Location: object
+- body:Location:.Accuracy number
+- body:Location:.Heading number
+- body:Location:.Latitude number
+- body:Location:.Longitude number
+- body:Location:.Speed number
+- body:Reason string
+- body:TimeStampWithUtcOffset string
+- body:UnassignedBy string
+
+## S125-N0047  PUT /orders/{orderId}/deliverystate/onitsway
+desc: Update order with driver on its way details | The _on its way_ callback should be sent when the driver departs the restaurant with the customer's order. It should contain an ETA that records when the driver expects to arrive at the customer's address.
+schema: on-its-way-details
+- path:orderId string
+- body:EstimatedArrivalTime string
+- body:Location object
+- body:Location.Accuracy number
+- body:Location.Heading number
+- body:Location.Latitude number
+- body:Location.Longitude number
+- body:Location.Speed number
+- body:TimeStampWithUtcOffset string
+
+## S125-N0048  PUT /orders/{orderId}/duedate
+desc: Update order ETA | Use this to update the estimated time of arrival for an order (i.e. when you expect the customer to receive the food). NOTE: An initial estimate is given [upon acceptance](#/paths/~1orders~1{orderId}~1accept/put). This endpoint can be used to update that estimate.
+schema: order-due-date-request
+- path:orderId string
+- body:DueDate string
+
+## S125-N0049  PUT /orders/{orderId}/ignore
+desc: Ignore order | Call when an order has been ignored by restaurant. An order can only be ignored if it hasn't previously been accepted, rejected, cancelled or ignored
+- path:orderId string
+
+## S125-N0055  PUT /redelivery-requested
+desc: Customer Requested Redelivery | This webhook will be invoked whenever the customer responds to the attempted delivery notification.
+schema: attempted-delivery-response-received
+- body:Notes string
+- body:OrderId string
+- body:Tenant string
+- body:Update string
+
+## S125-N0058  PUT /restaurants/driver/eta
+desc: Set ETA for pickup | Set the average amount of time it will take a driver to collect a new order from a restaurant.
+schema: RestaurantETAs
+- body:etaAtRestaurant number
+- body:restaurantId string
+
+## S125-N0061  PUT /restaurants/{tenant}/{restaurantId}/fees
+desc: Create or Update Restaurant Fees | Creates or Updates the fees for a restaurant in a particular tenant
+schema: RestaurantFees
+- path:tenant string
+- path:restaurantId string
+- body:bagFee object
+- body:bagFee.description string
+- body:bagFee.serviceTypes object
+- body:bagFee.serviceTypes.collection object
+- body:bagFee.serviceTypes.default object
+- body:bagFee.serviceTypes.delivery object
+
+## S125-N0065  POST /send-to-pos-failed
+desc: Send to POS failed | This webhook will be invoked if we experience an error or timeout in sending an order to the underlying POS / kitchen screen. When notified via this webhook, typically you will perform some form of alerting or backup flow (e.g. ask the operator to enter the order manually into the POS). NOTE: This message contains the `OrderId`, but not the full order. It is assumed that you h
+schema: send-to-pos-failed
+- body:OrderId string
+
+## S105-N0005  POST /api/images/id-document
+desc: Add an id document image to the specified registration.
+schema: Credas.Api.Models.Images.AddIdDocumentImageRequest
+- body:documentParameters array<object>
+- body:documentParameters[].key string
+- body:documentParameters[].value string
+- body:documentType integer enum[0|1|2|3|4|5|6|7|9|10|11]
+- body:imageData string
+- body:registrationId string
+
+## S105-N0014  PUT /api/registrations/{id}/settings
+desc: Updates registration settings.
+schema: Credas.Api.Models.Registrations.RegistrationSettings
+- path:id string
+- body:capturePersonalDetails boolean
+- body:nameMatchRoutine integer enum[1|2]
+- body:requiredChecks array<integer> enum[0|1|2|3|4|5|6|7|8]
+- body:skipEmailStep boolean
+
+## S324-N0002  DELETE /account/relay-auto-configs/{id}
+desc: Delete a relay proxy configuration by ID.
+- path:id string
+
+## S324-N0007  PATCH /destinations/{projectKey}/{environmentKey}/{destinationId}
+desc: Perform a partial update to a data export destination.
+schema: PatchOperation
+- path:projectKey string
+- path:environmentKey string
+- path:destinationId string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-N0008  POST /flags/{projectKey}
+desc: Creates a new feature flag.
+- path:projectKey string
+- query:clone string
+- body:clientSideAvailability object
+- body:clientSideAvailability.usingEnvironmentId boolean
+- body:clientSideAvailability.usingMobileKey boolean
+- body:defaults object
+- body:defaults.offVariation integer
+- body:defaults.onVariation integer
+- body:description string
+- body:includeInSnippet boolean
+- body:key string
+- body:name string
+- body:tags array<string>
+- body:temporary boolean
+- body:variations array<object>
+- body:variations[]._id string
+- body:variations[].description string
+- body:variations[].name string
+- body:variations[].value object
+
+## S324-N0009  DELETE /flags/{projectKey}/{featureFlagKey}
+desc: Delete a feature flag in all environments. Be careful-- only delete feature flags that are no longer being used by your application.
+- path:projectKey string
+- path:featureFlagKey string
+
+## S324-N0010  PATCH /flags/{projectKey}/{featureFlagKey}
+desc: Perform a partial update to a feature.
+- path:projectKey string
+- path:featureFlagKey string
+- body:comment string
+- body:patch array<object>
+- body:patch[].op string
+- body:patch[].path string
+- body:patch[].value object
+
+## S324-N0011  POST /flags/{projectKey}/{featureFlagKey}/copy
+desc: Copies the feature flag configuration from one environment to the same feature flag in another environment.
+- path:projectKey string
+- path:featureFlagKey string
+- body:comment string
+- body:excludedActions array<string> enum[updateOn|updatePrerequisites|updateTargets|updateRules|updateFallthrough|updateOffVariation]
+- body:includedActions array<string> enum[updateOn|updatePrerequisites|updateTargets|updateRules|updateFallthrough|updateOffVariation]
+- body:source object
+- body:source.currentVersion integer
+- body:source.key string
+- body:target object
+- body:target.currentVersion integer
+- body:target.key string
+
+## S324-N0012  PATCH /flags/{projectKey}/{featureFlagKey}/expiring-user-targets/{environmentKey}
+desc: Update, add, or delete expiring user targets on feature flag
+- path:projectKey string
+- path:environmentKey string
+- path:featureFlagKey string
+- body:(body) object
+
+## S324-N0013  POST /integrations/{integrationKey}
+desc: Create a new integration subscription of a given kind.
+- path:integrationKey string
+- body:config object
+- body:name string
+- body:on boolean
+- body:statements array<object>
+- body:statements[].actions array<string>
+- body:statements[].effect string enum[allow|deny]
+- body:statements[].notActions array<string>
+- body:statements[].notResources array<string>
+- body:statements[].resources array<string>
+- body:tags array<string>
+
+## S324-N0016  POST /members
+desc: Invite new members.
+- body:customRoles array<string>
+- body:email string
+- body:firstName string
+- body:inlineRole array<object>
+- body:inlineRole[].actions array<string>
+- body:inlineRole[].effect string enum[allow|deny]
+- body:inlineRole[].notActions array<string>
+- body:inlineRole[].notResources array<string>
+- body:inlineRole[].resources array<string>
+- body:lastName string
+- body:role string enum[writer|reader|admin|owner]
+
+## S324-N0027  DELETE /projects/{projectKey}/flags/{featureFlagKey}/environments/{environmentKey}/approval-requests/{approvalRequestId}
+desc: Delete an approval request for a feature flag config
+- path:projectKey string
+- path:environmentKey string
+- path:featureFlagKey string
+- path:approvalRequestId string
+- body:comment string
+- body:description string
+- body:executionDate integer
+- body:instructions array<object>
+- body:instructions[].kind string
+- body:notifyMemberIds array<string>
+- body:operatingOnId string
+
+## S324-N0035  POST /roles
+desc: Create a new custom role.
+- body:description string
+- body:key string
+- body:name string
+- body:policy array<object>
+- body:policy[].actions array<string>
+- body:policy[].effect string
+- body:policy[].notActions array<string>
+- body:policy[].notResources array<string>
+- body:policy[].resources array<string>
+
+## S324-N0037  PATCH /roles/{customRoleKey}
+desc: Modify a custom role by key.
+schema: PatchOperation
+- path:customRoleKey string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-N0040  PATCH /segments/{projectKey}/{environmentKey}/{userSegmentKey}
+desc: Perform a partial update to a user segment.
+schema: PatchOperation
+- path:projectKey string
+- path:environmentKey string
+- path:userSegmentKey string
+- body:op string
+- body:path string
+- body:value object
+
+## S324-N0044  DELETE /tokens/{tokenId}
+desc: Delete an access token by ID.
+- path:tokenId string
+
+## S324-N0046  POST /tokens/{tokenId}/reset
+desc: Reset an access token's secret key with an optional expiry time for the old key.
+- path:tokenId string
+- query:expiry integer
+
+## S324-N0047  DELETE /users/{projectKey}/{environmentKey}/{userKey}
+desc: Delete a user by ID.
+- path:projectKey string
+- path:environmentKey string
+- path:userKey string
+
+## S303-N0001  POST /AddToCollection
+desc: Collections - Add to collection | Add an item to a collection
+schema: inputCollectionModify
+- body:index string
+- body:input array<string>
+- body:item string
+- body:items array<string>
+
+## S303-N0002  POST /CSVtoJSON
+desc: Data - CSV to JSON | Convert a CSV string to a JSON array
+schema: inputCsvConversionJSON
+- body:header boolean
+- body:input string
+
+## S303-N0003  POST /CalculateAbsolute
+desc: Math - Calculate Absolute | Calculate the absolute value of a number
+schema: inputCalculateNumber
+- body:decimals number
+- body:input number
+
+## S303-N0005  POST /CalculateAverage
+desc: Math - Calculate average | Calculate the average of two or more numbers
+schema: inputCalculateSeries
+- body:decimals number
+- body:input array<number>
+
+## S303-N0006  POST /CalculateCosine
+desc: Math - Calculate Cosine | Calculate the cosine value of an angle
+schema: inputCalculateNumber
+- body:decimals number
+- body:input number
+
+## S303-N0009  POST /CalculateMedian
+desc: Math - Calculate median | Calculate the median of two or more numbers
+schema: inputCalculateSeries
+- body:decimals number
+- body:input array<number>
+
+## S303-N0011  POST /CalculateModulo
+desc: Math - Calculate Modulo | Calculate the remainder of dividing two numbers
+schema: inputCalculateNumbers
+- body:decimals number
+- body:input number
+- body:value number

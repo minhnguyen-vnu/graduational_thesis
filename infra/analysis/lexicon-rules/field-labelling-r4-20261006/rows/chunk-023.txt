@@ -1,0 +1,914 @@
+## S592-N0021  POST /calls/{call_control_id}/actions/bridge
+desc: Bridge calls | Bridge two call control calls. **Expected Webhooks:** - `call.bridged` for Leg A - `call.bridged` for Leg B
+schema: BridgeRequest
+- path:call_control_id string
+- body:call_control_id string
+- body:client_state string
+- body:command_id string
+- body:park_after_unbridge string
+- body:queue string
+
+## S592-N0022  POST /calls/{call_control_id}/actions/enqueue
+desc: Enqueue call | Put the call in a queue.
+schema: EnqueueRequest
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+- body:max_size integer
+- body:max_wait_time_secs integer
+- body:queue_name string
+
+## S592-N0023  POST /calls/{call_control_id}/actions/fork_start
+desc: Forking start | Call forking allows you to stream the media from a call to a specific target in realtime. This stream can be used to enable realtime audio analysis to support a variety of use cases, including fraud detection, or the creation of AI-generated audio responses. Requests must specify either the `target` attribute or the `rx` and `tx` attributes. **Expected Webhooks:** - `call.fork.star
+schema: StartForkingRequest
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+- body:rx string
+- body:stream_type string enum[raw|decrypted]
+- body:target string
+- body:tx string
+
+## S592-N0024  POST /calls/{call_control_id}/actions/fork_stop
+desc: Forking stop | Stop forking a call. **Expected Webhooks:** - `call.fork.stopped`
+schema: StopForkingRequest
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+
+## S592-N0025  POST /calls/{call_control_id}/actions/gather_stop
+desc: Gather stop | Stop current gather. **Expected Webhooks:** - `call.gather.ended`
+schema: StopGatherRequest
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+
+## S592-N0026  POST /calls/{call_control_id}/actions/gather_using_audio
+desc: Gather using audio | Play an audio file on the call until the required DTMF signals are gathered to build interactive menus. You can pass a list of valid digits along with an 'invalid_audio_url', which will be played back at the beginning of each prompt. Playback will be interrupted when a DTMF signal is received. The [Answer](/docs/api/v2/call-control/Call-Commands#CallControlAnswer) command must
+schema: GatherUsingAudioRequest
+- path:call_control_id string
+- body:audio_url string
+- body:client_state string
+- body:command_id string
+- body:inter_digit_timeout_millis integer
+- body:invalid_audio_url string
+- body:invalid_media_name string
+- body:maximum_digits integer
+- body:maximum_tries integer
+- body:media_name string
+- body:minimum_digits integer
+- body:terminating_digit string
+- body:timeout_millis integer
+- body:valid_digits string
+
+## S592-N0027  POST /calls/{call_control_id}/actions/gather_using_speak
+desc: Gather using speak | Convert text to speech and play it on the call until the required DTMF signals are gathered to build interactive menus. You can pass a list of valid digits along with an 'invalid_payload', which will be played back at the beginning of each prompt. Speech will be interrupted when a DTMF signal is received. The [Answer](/docs/api/v2/call-control/Call-Commands#CallControlAnswer) 
+schema: GatherUsingSpeakRequest
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+- body:inter_digit_timeout_millis integer
+- body:invalid_payload string
+- body:language string enum[arb|cmn-CN|cy-GB|da-DK|de-DE|en-AU|en-GB|en-GB-WLS|en-IN|en-US|es-ES|es-MX]
+- body:maximum_digits integer
+- body:maximum_tries integer
+- body:minimum_digits integer
+- body:payload string
+- body:payload_type string enum[text|ssml]
+- body:service_level string enum[basic|premium]
+- body:terminating_digit string
+- body:timeout_millis integer
+- body:valid_digits string
+- body:voice string enum[male|female]
+
+## S592-N0030  POST /calls/{call_control_id}/actions/playback_start
+desc: Play audio URL | Play an audio file on the call. If multiple play audio commands are issued consecutively, the audio files will be placed in a queue awaiting playback. *Notes:* - When `overlay` is enabled, `target_legs` is limited to `self`. - A customer cannot Play Audio with `overlay=true` unless there is a Play Audio with `overlay=false` actively playing. **Expected Webhooks:** - `call.playback
+schema: PlayAudioUrlRequest
+- path:call_control_id string
+- body:audio_url string
+- body:client_state string
+- body:command_id string
+- body:loop string
+- body:media_name string
+- body:overlay boolean
+- body:stop string
+- body:target_legs string
+
+## S592-N0032  POST /calls/{call_control_id}/actions/record_pause
+desc: Record pause | Pause recording the call. Recording can be resumed via Resume recording command. **Expected Webhooks:** There are no webhooks associated with this command.
+schema: PauseRecordingRequest
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+
+## S592-N0034  POST /calls/{call_control_id}/actions/record_start
+desc: Recording start | Start recording the call. Recording will stop on call hang-up, or can be initiated via the Stop Recording command. **Expected Webhooks:** - `call.recording.saved`
+schema: StartRecordingRequest
+- path:call_control_id string
+- body:channels string enum[single|dual]
+- body:client_state string
+- body:command_id string
+- body:format string enum[wav|mp3]
+- body:max_length integer
+- body:play_beep boolean
+
+## S592-N0035  POST /calls/{call_control_id}/actions/record_stop
+desc: Recording stop | Stop recording the call. **Expected Webhooks:** - `call.recording.saved`
+schema: StopRecordingRequest
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+
+## S592-N0036  POST /calls/{call_control_id}/actions/refer
+desc: SIP Refer a call | Initiate a SIP Refer on a Call Control call. You can initiate a SIP Refer at any point in the duration of a call. **Expected Webhooks:** - `call.refer.started` - `call.refer.completed` - `call.refer.failed`
+schema: ReferRequest
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+- body:custom_headers array<object>
+- body:custom_headers[].name string
+- body:custom_headers[].value string
+- body:sip_address string
+- body:sip_auth_password string
+- body:sip_auth_username string
+
+## S592-N0037  POST /calls/{call_control_id}/actions/reject
+desc: Reject a call | Reject an incoming call. **Expected Webhooks:** - `call.hangup`
+schema: RejectRequest
+- path:call_control_id string
+- body:cause string enum[CALL_REJECTED|USER_BUSY]
+- body:client_state string
+- body:command_id string
+
+## S592-N0039  POST /calls/{call_control_id}/actions/speak
+desc: Speak text | Convert text to speech and play it back on the call. If multiple speak text commands are issued consecutively, the audio files will be placed in a queue awaiting playback. **Expected Webhooks:** - `call.speak.started` - `call.speak.ended`
+schema: SpeakRequest
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+- body:language string enum[arb|cmn-CN|cy-GB|da-DK|de-DE|en-AU|en-GB|en-GB-WLS|en-IN|en-US|es-ES|es-MX]
+- body:payload string
+- body:payload_type string enum[text|ssml]
+- body:service_level string enum[basic|premium]
+- body:stop string
+- body:voice string enum[male|female]
+
+## S592-N0040  POST /calls/{call_control_id}/actions/transcription_start
+desc: Transcription start | Start real-time transcription. Transcription will stop on call hang-up, or can be initiated via the Transcription stop command.
+schema: TranscriptionStartRequest
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+- body:language string enum[de|en|es|fr|it|pl]
+
+## S592-N0041  POST /calls/{call_control_id}/actions/transcription_stop
+desc: Transcription stop | Stop real-time transcription.
+schema: TranscriptionStopRequest
+- path:call_control_id string
+- body:client_state string
+- body:command_id string
+
+## S592-N0043  POST /comments
+desc: Create a comment
+schema: Comment
+- body:body string
+- body:comment_record_id string
+- body:comment_record_type string enum[number_order|sub_number_order|number_order_phone_number]
+- body:commenter string
+- body:commenter_type string enum[admin|user]
+- body:created_at string
+- body:id string
+- body:read_at string
+- body:updated_at string
+
+## S592-N0044  PATCH /comments/{id}/read
+desc: Mark a comment as read
+- path:id string
+
+## S592-N0046  POST /conferences/{id}/actions/dial_participant
+desc: Dial a new participant into a conference | Dials a phone number and, when the call is answered, automatically joins them into the specified conference. **Expected Webhooks:** - `call.hangup` - `call.answered` - `conference.participant.joined` - `conference.participant.left`
+schema: ConferenceCallRequest
+- path:id string
+- body:call_control_id string
+- body:client_state string
+- body:command_id string
+- body:from string
+- body:hold boolean
+- body:hold_audio_url string
+- body:hold_media_name string
+- body:mute boolean
+- body:start_conference_on_enter boolean
+- body:supervisor_role string enum[barge|monitor|none|whisper]
+- body:to string
+- body:whisper_call_control_ids array<string>
+
+## S592-N0049  POST /conferences/{id}/actions/leave
+desc: Leave a conference | Removes a call leg from a conference and moves it back to parked state. **Expected Webhooks:** - `conference.participant.left`
+schema: LeaveConferenceRequest
+- path:id string
+- body:beep_enabled string enum[always|never|on_enter|on_exit]
+- body:call_control_id string
+- body:command_id string
+
+## S592-N0050  POST /conferences/{id}/actions/mute
+desc: Mute conference participants | Mute a list of participants in a conference call
+schema: ConferenceMuteRequest
+- path:id string
+- body:call_control_ids array<string>
+
+## S592-N0052  POST /conferences/{id}/actions/record_start
+desc: Conference recording start | Start recording the conference. Recording will stop on conference end, or via the Stop Recording command. **Expected Webhooks:** - `conference.recording.saved`
+schema: StartRecordingRequest
+- path:id string
+- body:channels string enum[single|dual]
+- body:client_state string
+- body:command_id string
+- body:format string enum[wav|mp3]
+- body:max_length integer
+- body:play_beep boolean
+
+## S592-N0053  POST /conferences/{id}/actions/record_stop
+desc: Conference recording stop | Stop recording the conference. **Expected Webhooks:** - `conference.recording.saved`
+schema: StopRecordingRequest
+- path:id string
+- body:client_state string
+- body:command_id string
+
+## S592-N0054  POST /conferences/{id}/actions/speak
+desc: Speak text to conference participants | Convert text to speech and play it to all or some participants.
+schema: ConferenceSpeakRequest
+- path:id string
+- body:call_control_ids array<string>
+- body:command_id string
+- body:language string enum[arb|cmn-CN|cy-GB|da-DK|de-DE|en-AU|en-GB|en-GB-WLS|en-IN|en-US|es-ES|es-MX]
+- body:payload string
+- body:payload_type string enum[text|ssml]
+- body:voice string enum[male|female]
+
+## S592-N0055  POST /conferences/{id}/actions/stop
+desc: Stop audio being played on the conference | Stop audio being played to all or some participants on a conference call.
+schema: ConferenceStopRequest
+- path:id string
+- body:call_control_ids array<string>
+
+## S592-N0056  POST /conferences/{id}/actions/unhold
+desc: Unhold conference participants | Unhold a list of participants in a conference call
+schema: ConferenceUnholdRequest
+- path:id string
+- body:call_control_ids array<string>
+
+## S592-N0058  POST /conferences/{id}/actions/update
+desc: Update conference participant | Update conference participant supervisor_role
+schema: UpdateConferenceRequest
+- path:id string
+- body:call_control_id string
+- body:command_id string
+- body:supervisor_role string enum[barge|monitor|none|whisper]
+- body:whisper_call_control_ids array<string>
+
+## S592-N0059  POST /credential_connections
+desc: Create a credential connection | Creates a credential connection.
+schema: CreateCredentialConnectionRequest
+- body:active boolean
+- body:anchorsite_override string enum[Latency|Chicago, IL|Ashburn, VA|San Jose, CA|Sydney, Australia|Amsterdam, Netherlands|London, UK|Toronto, Canada|Vancouver, Canada|Frankfurt, Germany]
+- body:connection_name string
+- body:default_on_hold_comfort_noise_enabled boolean
+- body:dtmf_type string enum[RFC 2833|Inband|SIP INFO]
+- body:encode_contact_header_enabled boolean
+- body:encrypted_media string enum[SRTP|ZRTP]
+- body:inbound object
+- body:inbound.ani_number_format string enum[+E.164|E.164|+E.164-national|E.164-national]
+- body:inbound.channel_limit integer
+- body:inbound.codecs array<string>
+- body:inbound.dnis_number_format string enum[+e164|e164|national|sip_username]
+- body:inbound.generate_ringback_tone boolean
+- body:inbound.isup_headers_enabled boolean
+- body:inbound.prack_enabled boolean
+- body:inbound.privacy_zone_enabled boolean
+- body:inbound.sip_compact_headers_enabled boolean
+- body:inbound.timeout_1xx_secs integer
+- body:inbound.timeout_2xx_secs string
+- body:onnet_t38_passthrough_enabled boolean
+- body:outbound object
+- body:outbound.ani_override string
+- body:outbound.ani_override_type string enum[always|normal|emergency]
+- body:outbound.call_parking_enabled boolean
+- body:outbound.channel_limit integer
+- body:outbound.generate_ringback_tone boolean
+- body:outbound.instant_ringback_enabled boolean
+- body:outbound.localization string
+- body:outbound.outbound_voice_profile_id string
+- body:outbound.t38_reinvite_source string enum[telnyx|customer|disabled|passthru|caller-passthru|callee-passthru]
+- body:password string
+- body:rtcp_settings object
+- body:rtcp_settings.capture_enabled boolean
+- body:rtcp_settings.port string enum[rtcp-mux|rtp+1]
+- body:rtcp_settings.report_frequency_secs integer
+- body:sip_uri_calling_preference string enum[disabled|unrestricted|internal]
+- body:user_name string
+- body:webhook_api_version string enum[1|2]
+- body:webhook_event_failover_url string
+- body:webhook_event_url string
+- body:webhook_timeout_secs integer
+
+## S592-N0060  DELETE /credential_connections/{id}
+desc: Delete a credential connection | Deletes an existing credential connection.
+- path:id string
+
+## S592-N0061  PATCH /credential_connections/{id}
+desc: Update a credential connection | Updates settings of an existing credential connection.
+schema: UpdateCredentialConnectionRequest
+- path:id string
+- body:active boolean
+- body:anchorsite_override string enum[Latency|Chicago, IL|Ashburn, VA|San Jose, CA|Sydney, Australia|Amsterdam, Netherlands|London, UK|Toronto, Canada|Vancouver, Canada|Frankfurt, Germany]
+- body:connection_name string
+- body:default_on_hold_comfort_noise_enabled boolean
+- body:dtmf_type string enum[RFC 2833|Inband|SIP INFO]
+- body:encode_contact_header_enabled boolean
+- body:encrypted_media string enum[SRTP|ZRTP]
+- body:inbound object
+- body:inbound.ani_number_format string enum[+E.164|E.164|+E.164-national|E.164-national]
+- body:inbound.channel_limit integer
+- body:inbound.codecs array<string>
+- body:inbound.dnis_number_format string enum[+e164|e164|national|sip_username]
+- body:inbound.generate_ringback_tone boolean
+- body:inbound.isup_headers_enabled boolean
+- body:inbound.prack_enabled boolean
+- body:inbound.privacy_zone_enabled boolean
+- body:inbound.sip_compact_headers_enabled boolean
+- body:inbound.timeout_1xx_secs integer
+- body:inbound.timeout_2xx_secs string
+- body:onnet_t38_passthrough_enabled boolean
+- body:outbound object
+- body:outbound.ani_override string
+- body:outbound.ani_override_type string enum[always|normal|emergency]
+- body:outbound.call_parking_enabled boolean
+- body:outbound.channel_limit integer
+- body:outbound.generate_ringback_tone boolean
+- body:outbound.instant_ringback_enabled boolean
+- body:outbound.localization string
+- body:outbound.outbound_voice_profile_id string
+- body:outbound.t38_reinvite_source string enum[telnyx|customer|disabled|passthru|caller-passthru|callee-passthru]
+- body:password string
+- body:rtcp_settings object
+- body:rtcp_settings.capture_enabled boolean
+- body:rtcp_settings.port string enum[rtcp-mux|rtp+1]
+- body:rtcp_settings.report_frequency_secs integer
+- body:sip_uri_calling_preference string enum[disabled|unrestricted|internal]
+- body:user_name string
+- body:webhook_api_version string enum[1|2]
+- body:webhook_event_failover_url string
+- body:webhook_event_url string
+- body:webhook_timeout_secs integer
+
+## S592-N0062  POST /documents
+desc: Upload a document | Upload a document.<br /><br />Uploaded files must be linked to a service within 30 minutes or they will be automatically deleted.
+schema: CreateDocServiceDocumentRequest
+- body:url string
+- body:file string
+
+## S592-N0063  DELETE /documents/{id}
+desc: Delete a document | Delete a document.<br /><br />A document can only be deleted if it's not linked to a service. If it is linked to a service, it must be unlinked prior to deleting.
+- path:id string
+
+## S592-N0064  PATCH /documents/{id}
+desc: Update a document | Update a document.
+schema: DocServiceDocument
+- path:id string
+- body:created_at string
+- body:id string
+- body:record_type string
+- body:updated_at string
+- body:content_type string
+- body:filename string
+- body:sha256 string
+- body:size object
+- body:size.amount integer
+- body:size.unit string
+- body:status string enum[pending|verified|denied]
+
+## S592-N0065  POST /fax_applications
+desc: Creates a Fax Application | Creates a new Fax Application based on the parameters sent in the request. The application name and webhook URL are required. Once created, you can assign phone numbers to your application using the `/phone_numbers` endpoint.
+schema: CreateFaxApplicationRequest
+- body:active boolean
+- body:anchorsite_override string enum[Latency|Chicago, IL|Ashburn, VA|San Jose, CA|Sydney, Australia|Amsterdam, Netherlands|London, UK|Toronto, Canada|Vancouver, Canada|Frankfurt, Germany]
+- body:application_name string
+- body:inbound object
+- body:inbound.channel_limit integer
+- body:inbound.sip_subdomain string
+- body:inbound.sip_subdomain_receive_settings string enum[only_my_connections|from_anyone]
+- body:outbound object
+- body:outbound.channel_limit integer
+- body:outbound.outbound_voice_profile_id string
+- body:webhook_event_failover_url string
+- body:webhook_event_url string
+- body:webhook_timeout_secs integer
+
+## S592-N0066  DELETE /fax_applications/{id}
+desc: Deletes a Fax Application | Permanently deletes a Fax Application. Deletion may be prevented if the application is in use by phone numbers.
+- path:id string
+
+## S592-N0067  PATCH /fax_applications/{id}
+desc: Update a Fax Application | Updates settings of an existing Fax Application based on the parameters of the request.
+schema: UpdateFaxApplicationRequest
+- path:id string
+- body:active boolean
+- body:anchorsite_override string enum[Latency|Chicago, IL|Ashburn, VA|San Jose, CA|Sydney, Australia|Amsterdam, Netherlands|London, UK|Toronto, Canada|Vancouver, Canada|Frankfurt, Germany]
+- body:application_name string
+- body:inbound object
+- body:inbound.channel_limit integer
+- body:inbound.sip_subdomain string
+- body:inbound.sip_subdomain_receive_settings string enum[only_my_connections|from_anyone]
+- body:outbound object
+- body:outbound.channel_limit integer
+- body:outbound.outbound_voice_profile_id string
+- body:webhook_event_failover_url string
+- body:webhook_event_url string
+- body:webhook_timeout_secs integer
+
+## S592-N0068  POST /faxes
+desc: Send a fax
+schema: SendFaxRequest
+- body:connection_id string
+- body:from string
+- body:media_name string
+- body:media_url string
+- body:quality string
+- body:store_media boolean
+- body:to string
+
+## S592-N0069  DELETE /faxes/{id}
+desc: Delete a fax
+- path:id string
+
+## S592-N0070  POST /faxes/{id}/actions/refresh
+desc: Refresh a fax | Refreshes the inbound fax's media_url when it has expired
+- path:id string
+
+## S592-N0071  POST /fqdn_connections
+desc: Create an FQDN connection | Creates a FQDN connection.
+schema: CreateFqdnConnectionRequest
+- body:active boolean
+- body:anchorsite_override string enum[Latency|Chicago, IL|Ashburn, VA|San Jose, CA|Sydney, Australia|Amsterdam, Netherlands|London, UK|Toronto, Canada|Vancouver, Canada|Frankfurt, Germany]
+- body:connection_name string
+- body:default_on_hold_comfort_noise_enabled boolean
+- body:dtmf_type string enum[RFC 2833|Inband|SIP INFO]
+- body:encode_contact_header_enabled boolean
+- body:encrypted_media string enum[SRTP|ZRTP]
+- body:inbound object
+- body:inbound.ani_number_format string enum[+E.164|E.164|+E.164-national|E.164-national]
+- body:inbound.channel_limit integer
+- body:inbound.codecs array<string>
+- body:inbound.default_routing_method string enum[sequential|round-robin]
+- body:inbound.dnis_number_format string enum[+e164|e164|national|sip_username]
+- body:inbound.generate_ringback_tone boolean
+- body:inbound.isup_headers_enabled boolean
+- body:inbound.prack_enabled boolean
+- body:inbound.privacy_zone_enabled boolean
+- body:inbound.sip_compact_headers_enabled boolean
+- body:inbound.sip_region string enum[US|Europe|Australia]
+- body:inbound.sip_subdomain string
+- body:inbound.sip_subdomain_receive_settings string enum[only_my_connections|from_anyone]
+- body:inbound.timeout_1xx_secs integer
+- body:inbound.timeout_2xx_secs integer
+- body:onnet_t38_passthrough_enabled boolean
+- body:rtcp_settings object
+- body:rtcp_settings.capture_enabled boolean
+- body:rtcp_settings.port string enum[rtcp-mux|rtp+1]
+- body:rtcp_settings.report_frequency_secs integer
+- body:transport_protocol string enum[UDP|TCP|TLS]
+- body:webhook_api_version string enum[1|2]
+- body:webhook_event_failover_url string
+- body:webhook_event_url string
+- body:webhook_timeout_secs integer
+
+## S592-N0072  DELETE /fqdn_connections/{id}
+desc: Delete an FQDN connection | Deletes an FQDN connection.
+- path:id string
+
+## S592-N0073  PATCH /fqdn_connections/{id}
+desc: Update an FQDN connection | Updates settings of an existing FQDN connection.
+schema: UpdateFqdnConnectionRequest
+- path:id string
+- body:active boolean
+- body:anchorsite_override string enum[Latency|Chicago, IL|Ashburn, VA|San Jose, CA|Sydney, Australia|Amsterdam, Netherlands|London, UK|Toronto, Canada|Vancouver, Canada|Frankfurt, Germany]
+- body:connection_name string
+- body:default_on_hold_comfort_noise_enabled boolean
+- body:dtmf_type string enum[RFC 2833|Inband|SIP INFO]
+- body:encode_contact_header_enabled boolean
+- body:encrypted_media string enum[SRTP|ZRTP]
+- body:inbound object
+- body:inbound.ani_number_format string enum[+E.164|E.164|+E.164-national|E.164-national]
+- body:inbound.channel_limit integer
+- body:inbound.codecs array<string>
+- body:inbound.default_routing_method string enum[sequential|round-robin]
+- body:inbound.dnis_number_format string enum[+e164|e164|national|sip_username]
+- body:inbound.generate_ringback_tone boolean
+- body:inbound.isup_headers_enabled boolean
+- body:inbound.prack_enabled boolean
+- body:inbound.privacy_zone_enabled boolean
+- body:inbound.sip_compact_headers_enabled boolean
+- body:inbound.sip_region string enum[US|Europe|Australia]
+- body:inbound.sip_subdomain string
+- body:inbound.sip_subdomain_receive_settings string enum[only_my_connections|from_anyone]
+- body:inbound.timeout_1xx_secs integer
+- body:inbound.timeout_2xx_secs integer
+- body:onnet_t38_passthrough_enabled boolean
+- body:rtcp_settings object
+- body:rtcp_settings.capture_enabled boolean
+- body:rtcp_settings.port string enum[rtcp-mux|rtp+1]
+- body:rtcp_settings.report_frequency_secs integer
+- body:transport_protocol string enum[UDP|TCP|TLS]
+- body:webhook_api_version string enum[1|2]
+- body:webhook_event_failover_url string
+- body:webhook_event_url string
+- body:webhook_timeout_secs integer
+
+## S592-N0074  POST /fqdns
+desc: Create an FQDN | Create a new FQDN object.
+schema: CreateFqdnRequest
+- body:connection_id string
+- body:dns_record_type string
+- body:fqdn string
+- body:port integer
+
+## S592-N0075  DELETE /fqdns/{id}
+desc: Delete an FQDN | Delete an FQDN.
+- path:id string
+
+## S592-N0076  PATCH /fqdns/{id}
+desc: Update an FQDN | Update the details of a specific FQDN.
+schema: UpdateFqdnRequest
+- path:id string
+- body:connection_id string
+- body:dns_record_type string
+- body:fqdn string
+- body:port integer
+
+## S592-N0077  POST /ip_connections
+desc: Create an Ip connection | Creates an IP connection.
+schema: CreateIpConnectionRequest
+- body:active boolean
+- body:anchorsite_override string enum[Latency|Chicago, IL|Ashburn, VA|San Jose, CA|Sydney, Australia|Amsterdam, Netherlands|London, UK|Toronto, Canada|Vancouver, Canada|Frankfurt, Germany]
+- body:connection_name string
+- body:default_on_hold_comfort_noise_enabled boolean
+- body:dtmf_type string enum[RFC 2833|Inband|SIP INFO]
+- body:encode_contact_header_enabled boolean
+- body:encrypted_media string enum[SRTP|ZRTP]
+- body:inbound object
+- body:inbound.ani_number_format string enum[+E.164|E.164|+E.164-national|E.164-national]
+- body:inbound.channel_limit integer
+- body:inbound.codecs array<string>
+- body:inbound.default_routing_method string enum[sequential|round-robin]
+- body:inbound.dnis_number_format string enum[+e164|e164|national|sip_username]
+- body:inbound.generate_ringback_tone boolean
+- body:inbound.isup_headers_enabled boolean
+- body:inbound.prack_enabled boolean
+- body:inbound.privacy_zone_enabled boolean
+- body:inbound.sip_compact_headers_enabled boolean
+- body:inbound.sip_region string enum[US|Europe|Australia]
+- body:inbound.sip_subdomain string
+- body:inbound.sip_subdomain_receive_settings string enum[only_my_connections|from_anyone]
+- body:inbound.timeout_1xx_secs integer
+- body:inbound.timeout_2xx_secs integer
+- body:onnet_t38_passthrough_enabled boolean
+- body:outbound object
+- body:outbound.ani_override string
+- body:outbound.ani_override_type string enum[always|normal|emergency]
+- body:outbound.call_parking_enabled boolean
+- body:outbound.channel_limit integer
+- body:outbound.generate_ringback_tone boolean
+- body:outbound.instant_ringback_enabled boolean
+- body:outbound.ip_authentication_method string enum[tech-prefixp-charge-info|token]
+- body:outbound.ip_authentication_token string
+- body:outbound.localization string
+- body:outbound.outbound_voice_profile_id string
+- body:outbound.t38_reinvite_source string enum[telnyx|customer|disabled|passthru|caller-passthru|callee-passthru]
+- body:outbound.tech_prefix string
+- body:rtcp_settings object
+- body:rtcp_settings.capture_enabled boolean
+- body:rtcp_settings.port string enum[rtcp-mux|rtp+1]
+- body:rtcp_settings.report_frequency_secs integer
+- body:transport_protocol string enum[UDP|TCP|TLS]
+- body:webhook_api_version string enum[1|2]
+- body:webhook_event_failover_url string
+- body:webhook_event_url string
+- body:webhook_timeout_secs integer
+
+## S592-N0078  DELETE /ip_connections/{id}
+desc: Delete an Ip connection | Deletes an existing IP connection.
+- path:id string
+
+## S592-N0079  PATCH /ip_connections/{id}
+desc: Update an Ip connection | Updates settings of an existing IP connection.
+schema: UpdateIpConnectionRequest
+- path:id string
+- body:active boolean
+- body:anchorsite_override string enum[Latency|Chicago, IL|Ashburn, VA|San Jose, CA|Sydney, Australia|Amsterdam, Netherlands|London, UK|Toronto, Canada|Vancouver, Canada|Frankfurt, Germany]
+- body:connection_name string
+- body:default_on_hold_comfort_noise_enabled boolean
+- body:dtmf_type string enum[RFC 2833|Inband|SIP INFO]
+- body:encode_contact_header_enabled boolean
+- body:encrypted_media string enum[SRTP|ZRTP]
+- body:inbound object
+- body:inbound.ani_number_format string enum[+E.164|E.164|+E.164-national|E.164-national]
+- body:inbound.channel_limit integer
+- body:inbound.codecs array<string>
+- body:inbound.default_primary_ip_id string
+- body:inbound.default_routing_method string enum[sequential|round-robin]
+- body:inbound.default_secondary_ip_id string
+- body:inbound.default_tertiary_ip_id string
+- body:inbound.dnis_number_format string enum[+e164|e164|national|sip_username]
+- body:inbound.generate_ringback_tone boolean
+- body:inbound.isup_headers_enabled boolean
+- body:inbound.prack_enabled boolean
+- body:inbound.privacy_zone_enabled boolean
+- body:inbound.sip_compact_headers_enabled boolean
+- body:inbound.sip_region string enum[US|Europe|Australia]
+- body:inbound.sip_subdomain string
+- body:inbound.sip_subdomain_receive_settings string enum[only_my_connections|from_anyone]
+- body:inbound.timeout_1xx_secs integer
+- body:inbound.timeout_2xx_secs integer
+- body:onnet_t38_passthrough_enabled boolean
+- body:outbound object
+- body:outbound.ani_override string
+- body:outbound.ani_override_type string enum[always|normal|emergency]
+- body:outbound.call_parking_enabled boolean
+- body:outbound.channel_limit integer
+- body:outbound.generate_ringback_tone boolean
+- body:outbound.instant_ringback_enabled boolean
+- body:outbound.ip_authentication_method string enum[tech-prefixp-charge-info|token]
+- body:outbound.ip_authentication_token string
+- body:outbound.localization string
+- body:outbound.outbound_voice_profile_id string
+- body:outbound.t38_reinvite_source string enum[telnyx|customer|disabled|passthru|caller-passthru|callee-passthru]
+- body:outbound.tech_prefix string
+- body:rtcp_settings object
+- body:rtcp_settings.capture_enabled boolean
+- body:rtcp_settings.port string enum[rtcp-mux|rtp+1]
+- body:rtcp_settings.report_frequency_secs integer
+- body:transport_protocol string enum[UDP|TCP|TLS]
+- body:webhook_api_version string enum[1|2]
+- body:webhook_event_failover_url string
+- body:webhook_event_url string
+- body:webhook_timeout_secs integer
+
+## S592-N0080  POST /ips
+desc: Create an Ip | Create a new IP object.
+schema: CreateIpRequest
+- body:connection_id string
+- body:ip_address string
+- body:port integer
+
+## S592-N0081  DELETE /ips/{id}
+desc: Delete an Ip | Delete an IP.
+- path:id string
+
+## S592-N0082  PATCH /ips/{id}
+desc: Update an Ip | Update the details of a specific IP.
+schema: UpdateIpRequest
+- path:id string
+- body:connection_id string
+- body:ip_address string
+- body:port integer
+
+## S592-N0084  POST /managed_accounts
+desc: Create a new managed account. | Create a new managed account owned by the authenticated user. You need to be explictly approved by Telnyx in order to become a manager account.
+schema: CreateManagedAccountRequest
+- body:business_name string
+- body:email string
+- body:password string
+
+## S592-N0085  POST /managed_accounts/{id}/actions/disable
+desc: Disables a managed account | Disables a managed account, forbidding it to use Telnyx services, including sending or receiving phone calls and SMS messages. Ongoing phone calls will not be affected. The managed account and its sub-users will still be able to log in via the mission control portal.
+- path:id string
+
+## S592-N0086  POST /managed_accounts/{id}/actions/enable
+desc: Enables a managed account | Enables a managed account and its sub-users to use Telnyx services.
+- path:id string
+
+## S592-N0087  POST /media
+desc: Upload media | Upload media file to Telnyx so it can be used with other Telnyx services
+schema: UploadMediaRequest
+- body:media_name string
+- body:media_url string
+- body:ttl_secs integer
+
+## S592-N0088  DELETE /media/{media_name}
+desc: Deletes stored media | Deletes a stored media file.
+- path:media_name string
+
+## S592-N0090  POST /messages
+desc: Send a message | Send a message with a Phone Number, Alphanumeric Sender ID, Short Code or Number Pool. This endpoint allows you to send a message with any messaging resource. Current messaging resources include: long-code, short-code, number-pool, and alphanumeric-sender-id.
+schema: CreateMessageRequest
+- body:auto_detect boolean
+- body:from string
+- body:media_urls array<string>
+- body:messaging_profile_id string
+- body:subject string
+- body:text string
+- body:to string
+- body:type string enum[SMS|MMS]
+- body:use_profile_webhooks boolean
+- body:webhook_failover_url string
+- body:webhook_url string
+
+## S592-N0091  POST /messages/long_code
+desc: Send a long code message
+schema: CreateLongCodeMessageRequest
+- body:auto_detect boolean
+- body:from string
+- body:media_urls array<string>
+- body:subject string
+- body:text string
+- body:to string
+- body:type string enum[SMS|MMS]
+- body:use_profile_webhooks boolean
+- body:webhook_failover_url string
+- body:webhook_url string
+
+## S592-N0092  POST /messages/number_pool
+desc: Send a message using number pool
+schema: CreateNumberPoolMessageRequest
+- body:auto_detect boolean
+- body:media_urls array<string>
+- body:messaging_profile_id string
+- body:subject string
+- body:text string
+- body:to string
+- body:type string enum[SMS|MMS]
+- body:use_profile_webhooks boolean
+- body:webhook_failover_url string
+- body:webhook_url string
+
+## S592-N0093  POST /messages/short_code
+desc: Send a short code message
+schema: CreateShortCodeMessageRequest
+- body:auto_detect boolean
+- body:from string
+- body:media_urls array<string>
+- body:subject string
+- body:text string
+- body:to string
+- body:type string enum[SMS|MMS]
+- body:use_profile_webhooks boolean
+- body:webhook_failover_url string
+- body:webhook_url string
+
+## S592-N0094  POST /messaging_hosted_number_orders
+desc: Create a messaging hosted number order
+schema: CreateMessagingHostedNumberOrderRequest
+- body:messaging_profile_id string
+- body:phone_numbers array<string>
+
+## S592-N0095  POST /messaging_hosted_number_orders/{id}/actions/file_upload
+desc: Upload file required for a messaging hosted number order
+schema: UploadFileMessagingHostedNumberOrderRequest
+- path:id string
+- body:bill string
+- body:loa string
+
+## S592-N0096  DELETE /messaging_hosted_numbers/{id}
+desc: Delete a messaging hosted number
+- path:id string
+
+## S592-N0097  POST /messaging_profiles
+desc: Create a messaging profile
+schema: CreateMessagingProfileRequest
+- body:enabled boolean
+- body:name string
+- body:number_pool_settings object
+- body:number_pool_settings.geomatch boolean
+- body:number_pool_settings.long_code_weight number
+- body:number_pool_settings.skip_unhealthy boolean
+- body:number_pool_settings.sticky_sender boolean
+- body:number_pool_settings.toll_free_weight number
+- body:url_shortener_settings object
+- body:url_shortener_settings.domain string
+- body:url_shortener_settings.prefix string
+- body:url_shortener_settings.replace_blacklist_only boolean
+- body:url_shortener_settings.send_webhooks boolean
+- body:webhook_api_version string enum[1|2|2010-04-01]
+- body:webhook_failover_url string
+- body:webhook_url string
+
+## S592-N0099  PATCH /messaging_profiles/{id}
+desc: Update a messaging profile
+schema: UpdateMessagingProfileRequest
+- path:id string
+- body:created_at string
+- body:enabled boolean
+- body:id string
+- body:name string
+- body:number_pool_settings object
+- body:number_pool_settings.geomatch boolean
+- body:number_pool_settings.long_code_weight number
+- body:number_pool_settings.skip_unhealthy boolean
+- body:number_pool_settings.sticky_sender boolean
+- body:number_pool_settings.toll_free_weight number
+- body:record_type string enum[messaging_profile]
+- body:updated_at string
+- body:url_shortener_settings object
+- body:url_shortener_settings.domain string
+- body:url_shortener_settings.prefix string
+- body:url_shortener_settings.replace_blacklist_only boolean
+- body:url_shortener_settings.send_webhooks boolean
+- body:v1_secret string
+- body:webhook_api_version string enum[1|2|2010-04-01]
+- body:webhook_failover_url string
+- body:webhook_url string
+- body:whitelisted_destinations array<string>
+
+## S592-N0100  POST /notification_channels
+desc: Create a notification channel | Create a notification channel.
+schema: NotificationChannel
+- body:channel_destination string
+- body:channel_type_id string enum[sms|voice|email|webhook]
+- body:created_at string
+- body:id string
+- body:notification_profile_id string
+- body:updated_at string
+
+## S592-N0101  DELETE /notification_channels/{id}
+desc: Delete a notification channel | Delete a notification channel.
+- path:id string
+
+## S592-N0102  PATCH /notification_channels/{id}
+desc: Update a notification channel | Update a notification channel.
+schema: NotificationChannel
+- path:id string
+- body:channel_destination string
+- body:channel_type_id string enum[sms|voice|email|webhook]
+- body:created_at string
+- body:id string
+- body:notification_profile_id string
+- body:updated_at string
+
+## S592-N0103  POST /notification_profiles
+desc: Create a notification profile | Create a notification profile.
+schema: NotificationProfile
+- body:created_at string
+- body:id string
+- body:name string
+- body:updated_at string
+
+## S592-N0104  DELETE /notification_profiles/{id}
+desc: Delete a notification profile | Delete a notification profile.
+- path:id string
+
+## S592-N0105  PATCH /notification_profiles/{id}
+desc: Update a notification profile | Update a notification profile.
+schema: NotificationProfile
+- path:id string
+- body:created_at string
+- body:id string
+- body:name string
+- body:updated_at string
+
+## S592-N0106  POST /notification_settings
+desc: Add a Notification Setting | Add a notification setting.
+schema: NotificationSetting
+- body:associated_record_type string
+- body:associated_record_type_value string
+- body:created_at string
+- body:id string
+- body:notification_channel_id string
+- body:notification_event_condition_id string
+- body:notification_profile_id string
+- body:parameters array<object>
+- body:parameters[].name string
+- body:parameters[].value string
+- body:status string enum[enabled|enable-received|enable-pending|enable-submtited|delete-received|delete-pending|delete-submitted|deleted]
+- body:updated_at string
+
+## S592-N0107  DELETE /notification_settings/{id}
+desc: Delete a notification setting | Delete a notification setting.
+- path:id string
+
+## S592-N0108  POST /number_block_orders
+desc: Create a number block order | Creates a phone number block order.
+schema: CreateNumberBlockOrderRequest
+- body:connection_id string
+- body:created_at string
+- body:customer_reference string
+- body:errors string
+- body:id string
+- body:messaging_profile_id string
+- body:phone_numbers_count integer
+- body:range integer
+- body:record_type string
+- body:requirements_met boolean
+- body:starting_number string
+- body:status string enum[pending|success|failure]
+- body:updated_at string
+
+## S592-N0109  POST /number_order_documents
+desc: Create a number order document | Upload a phone number order document.
+schema: CreateNumberOrderDocumentRequest
+- body:created_at string
+- body:customer_reference string
+- body:file_id string
+- body:id string
+- body:record_type string
+- body:requirement_type string enum[address_proof|identification|reg_form]
+- body:requirements_id string

@@ -1,0 +1,568 @@
+## S405-0025  DELETE /users/invitations/{userInvitationId}
+desc: Cancel user invitation
+- path:userInvitationId string
+
+## S405-0026  DELETE /users/{userId}
+desc: Delete user
+- path:userId integer
+
+## S406-0001  DELETE /api/baskets/{name}
+desc: Delete basket | Permanently deletes this basket and all collected requests.
+- path:name string
+
+## S406-0002  POST /api/baskets/{name}
+desc: Create new basket | Creates a new basket with this name.
+schema: Config
+- path:name string
+- body:capacity integer
+- body:expand_path boolean
+- body:forward_url string
+- body:insecure_tls boolean
+- body:proxy_response boolean
+
+## S406-0003  PUT /api/baskets/{name}
+desc: Update basket settings | Updates configuration settings of this basket. Special configuration parameters for request forwarding: * `insecure_tls` controls certificate verification when forwarding requests. Setting this parameter to `true` allows to forward collected HTTP requests via HTTPS protocol even if the forward end-point is configured with self-signed TLS/SSL certificate. **Warning:** enabl
+schema: Config
+- path:name string
+- body:capacity integer
+- body:expand_path boolean
+- body:forward_url string
+- body:insecure_tls boolean
+- body:proxy_response boolean
+
+## S406-0004  DELETE /api/baskets/{name}/requests
+desc: Delete all requests | Deletes all requests collected by this basket.
+- path:name string
+
+## S406-0005  PUT /api/baskets/{name}/responses/{method}
+desc: Update response settings | Allows to configure HTTP response of this basket. The service will reply with configured response to any HTTP request sent to the basket with appropriate HTTP method. If nothing is configured, the default response is HTTP 200 - OK with empty content.
+schema: Response
+- path:name string
+- path:method string enum[GET|HEAD|POST|PUT|PATCH|DELETE|CONNECT|OPTIONS|TRACE]
+- body:body string
+- body:headers object
+- body:is_template boolean
+- body:status integer
+
+## S406-0006  DELETE /baskets/{name}
+desc: Delete basket | Permanently deletes this basket and all collected requests.
+- path:name string
+
+## S406-0007  POST /baskets/{name}
+desc: Create new basket | Creates a new basket with this name.
+schema: Config
+- path:name string
+- body:capacity integer
+- body:expand_path boolean
+- body:forward_url string
+- body:insecure_tls boolean
+- body:proxy_response boolean
+
+## S406-0008  PUT /baskets/{name}
+desc: Update basket settings | Updates configuration settings of this basket. Special configuration parameters for request forwarding: * `insecure_tls` controls certificate verification when forwarding requests. Setting this parameter to `true` allows to forward collected HTTP requests via HTTPS protocol even if the forward end-point is configured with self-signed TLS/SSL certificate. **Warning:** enabl
+schema: Config
+- path:name string
+- body:capacity integer
+- body:expand_path boolean
+- body:forward_url string
+- body:insecure_tls boolean
+- body:proxy_response boolean
+
+## S406-0009  DELETE /baskets/{name}/requests
+desc: Delete all requests | Deletes all requests collected by this basket.
+- path:name string
+
+## S406-0010  PUT /baskets/{name}/responses/{method}
+desc: Update response settings | Allows to configure HTTP response of this basket. The service will reply with configured response to any HTTP request sent to the basket with appropriate HTTP method. If nothing is configured, the default response is HTTP 200 - OK with empty content.
+schema: Response
+- path:name string
+- path:method string enum[GET|HEAD|POST|PUT|PATCH|DELETE|CONNECT|OPTIONS|TRACE]
+- body:body string
+- body:headers object
+- body:is_template boolean
+- body:status integer
+
+## S407-0001  POST /chart
+desc: Generate a chart (POST) | Generate a chart based on the provided configuration in the request body.
+- body:backgroundColor string
+- body:chart object
+- body:format string
+- body:height integer
+- body:width integer
+
+## S407-0002  POST /qr
+desc: Generate a QR code (POST) | Generate a QR code based on the provided configuration in the request body.
+- body:format string
+- body:height integer
+- body:margin integer
+- body:text string
+- body:width integer
+
+## S408-0001  DELETE /key
+desc: Revoke an Authentiq ID using email & phone. If called with `email` and `phone` only, a verification code will be sent by email. Do a second call adding `code` to complete the revocation.
+- query:email string
+- query:phone string
+- query:code string
+
+## S408-0002  POST /key
+desc: Register a new ID `JWT(sub, devtoken)` v5: `JWT(sub, pk, devtoken, ...)` See: https://github.com/skion/authentiq/wiki/JWT-Examples
+schema: AuthentiqID
+- body:devtoken string
+- body:sub string
+
+## S408-0003  DELETE /key/{PK}
+desc: Revoke an Identity (Key) with a revocation secret
+- path:PK string
+- query:secret string
+
+## S408-0004  POST /key/{PK}
+desc: update properties of an Authentiq ID. (not operational in v4; use PUT for now) v5: POST issuer-signed email & phone scopes in a self-signed JWT See: https://github.com/skion/authentiq/wiki/JWT-Examples
+schema: AuthentiqID
+- path:PK string
+- body:devtoken string
+- body:sub string
+
+## S408-0005  PUT /key/{PK}
+desc: Update Authentiq ID by replacing the object. v4: `JWT(sub,email,phone)` to bind email/phone hash; v5: POST issuer-signed email & phone scopes and PUT to update registration `JWT(sub, pk, devtoken, ...)` See: https://github.com/skion/authentiq/wiki/JWT-Examples
+schema: AuthentiqID
+- path:PK string
+- body:devtoken string
+- body:sub string
+
+## S408-0006  POST /login
+desc: push sign-in request See: https://github.com/skion/authentiq/wiki/JWT-Examples
+schema: PushToken
+- query:callback string
+- body:aud string
+- body:exp integer
+- body:iat integer
+- body:iss string
+- body:nbf integer
+- body:sub string
+
+## S408-0007  POST /scope
+desc: scope verification request See: https://github.com/skion/authentiq/wiki/JWT-Examples
+schema: Claims
+- query:test integer
+- body:email string
+- body:phone string
+- body:scope string
+- body:sub string
+- body:type string
+
+## S408-0008  DELETE /scope/{job}
+desc: delete a verification job
+- path:job string
+
+## S408-0009  POST /scope/{job}
+desc: this is a scope confirmation
+- path:job string
+
+## S408-0010  PUT /scope/{job}
+desc: authority updates a JWT with its signature See: https://github.com/skion/authentiq/wiki/JWT-Examples
+- path:job string
+
+## S409-0001  POST /v1/accounts
+desc: Add a new account | Creates a new fire.com account. **Please note there is a charge associated with creating a new account.**
+- body:acceptFeesAndCharges boolean
+- body:accountName string
+- body:currency string enum[EUR|GBP]
+
+## S409-0002  POST /v1/apps
+desc: Create a new API Application | Create a new API Application with specified permissions
+- body:applicationName string
+- body:enabled boolean
+- body:expiry string
+- body:ican integer
+- body:numberOfPayeeApprovalsRequired integer
+- body:numberOfPaymentApprovalsRequired integer
+- body:permissions array<string>
+
+## S409-0003  POST /v1/apps/accesstokens
+desc: Authenticate with the API. | Access to the API is by Bearer Tokens. The process is somewhat similar to OAuth2.0, but with some changes to improve security. 1. You must first log into the firework online application and create a new Application in the Profile > API page. (You will need your PIN digits and 2-Factor Authentication device). 2. Give your application a Name and select the scope/permissi
+- body:clientId string
+- body:clientSecret string
+- body:grantType string enum[AccessToken]
+- body:nonce integer
+- body:refreshToken string
+
+## S409-0004  POST /v1/batches
+desc: Create a new batch of payments | The fire.com API allows businesses to automate payments between their accounts or to third parties across the UK and Europe. For added security, the API can only set up the payments in batches. These batches must be approved by an authorised user via the firework mobile app. The process is as follows: **1.**Create a new batch **2.**Add payments to the batch **3.**S
+- body:batchName string
+- body:callbackUrl string
+- body:currency string
+- body:jobNumber string
+- body:type string enum[BANK_TRANSFER|INTERNAL_TRANSFER]
+
+## S409-0005  DELETE /v1/batches/{batchUuid}
+desc: Cancel a batch | Cancels the Batch. You can only cancel a batch before it is submitted for approval (while it is in the OPEN state).
+- path:batchUuid string
+
+## S409-0006  PUT /v1/batches/{batchUuid}
+desc: Submit a batch for approval | Submits the Batch (for approval in the case of a **BANK_TRANSFER**). If this is an **INTERNAL_TRANSFER** batch, the transfers are immediately queued for processing. If this is a **BANK_TRANSFER** batch, this will trigger requests for approval to the firework mobile apps of authorised users. Once those users approve the batch, it is queued for processing. You can only 
+- path:batchUuid string
+
+## S409-0007  POST /v1/batches/{batchUuid}/banktransfers
+desc: Add a bank transfer payment to the batch. | There are two ways to process bank transfers - by Payee ID (**Mode 1**) or by Payee Account Details (**Mode 2**). **Mode 1:** Use the payee IDs of existing approved payees set up against your account. These batches can be approved in the normal manner. **Mode 2:** Use the account details of the payee. In the event that these details correspond to an exis
+- path:batchUuid string
+- body:amount integer
+- body:destAccountHolderName string
+- body:destAccountNumber string
+- body:destIban string
+- body:destNsc string
+- body:icanFrom integer
+- body:myRef string
+- body:payeeType string enum[ACCOUNT_DETAILS]
+- body:yourRef string
+- body:payeeId integer
+
+## S409-0008  DELETE /v1/batches/{batchUuid}/banktransfers/{itemUuid}
+desc: Remove a Payment from the Batch (Bank Transfers) | Removes a Payment from the Batch (Bank Transfers). You can only remove payments before the batch is submitted for approval (while it is in the OPEN state).
+- path:batchUuid string
+- path:itemUuid string
+
+## S409-0009  POST /v1/batches/{batchUuid}/internaltransfers
+desc: Add an internal transfer payment to the batch | Simply specify the source account, destination account, amount and a reference.
+- path:batchUuid string
+- body:amount integer
+- body:icanFrom integer
+- body:icanTo integer
+- body:ref string
+
+## S409-0010  DELETE /v1/batches/{batchUuid}/internaltransfers/{itemUuid}
+desc: Remove a Payment from the Batch (Internal Transfer) | Removes a Payment from the Batch (Internal Transfer). You can only remove payments before the batch is submitted for approval (while it is in the OPEN state).
+- path:batchUuid string
+- path:itemUuid string
+
+## S409-0011  POST /v1/cards
+desc: Create a new debit card. | You can create multiple debit cards which can be linked to your fire.com accounts.
+- body:acceptFeesAndCharges boolean
+- body:addressType string enum[HOME|BUSINESS]
+- body:cardPin string
+- body:eurIcan integer
+- body:gbpIcan integer
+- body:userId integer
+
+## S409-0012  POST /v1/cards/{cardId}/block
+desc: Block a card | Updates status of an existing card to block which prevents any transactions being carried out with that card.
+- path:cardId integer
+
+## S409-0013  POST /v1/cards/{cardId}/unblock
+desc: Unblock a card | Updates status of an existing card to unblock which means that transactions can be carried out with that card.
+- path:cardId integer
+
+## S409-0014  POST /v1/directdebits/{directDebitUuid}/reject
+desc: Reject a direct debit payment | This endpoint allows you to reject a direct debit payment where the status is still set to RECEIVED. Permission name PERM_BUSINESS_POST_DIRECT_DEBIT_REJECT
+- path:directDebitUuid string
+
+## S409-0015  POST /v1/mandates/{mandateUuid}
+desc: Update a direct debit mandate alias | Update Direct Debit Mandate Alias The permision needed to access this endpoint is PERM_BUSINESS_PUT_MANDATE
+- path:mandateUuid string
+
+## S409-0016  POST /v1/mandates/{mandateUuid}/activate
+desc: Activate a direct debit mandate | This endpoint can only be used to activate a direct debit mandate when it is in the status REJECT_REQUESTED (even if the account has direct debits disabled). This action will also enable the account for direct debits if it was previously set to be disabled. The permision needed to access this endpoint is PERM_BUSINESS_POST_MANDATE_ACTIVATE
+- path:mandateUuid string
+
+## S409-0017  POST /v1/mandates/{mandateUuid}/cancel
+desc: Cancel a direct debit mandate | This endpoint allows you to cancel a direct debit mandate. The permision needed to access this endpoint is PERM_BUSINESS_POST_MANDATE_CANCEL
+- path:mandateUuid string
+
+## S409-0018  POST /v1/paymentrequests
+desc: Create a Fire Open Payment request | Fire Open Payments is a feature of the fire.com business account that leverages Open Banking to allow your customers to pay you via bank transfer and to reconcile those payments as they are received into your fire.com GBP or EUR account. To set up each Fire Open Payment you first need to create a payment request. This contains the details of the payment such as
+- body:additionalFields string
+- body:amount integer
+- body:collectFields string
+- body:currency string enum[EUR|GBP]
+- body:description string
+- body:expiry string
+- body:icanTo integer
+- body:mandatoryFields string
+- body:maxNumberPayments integer
+- body:myRef string
+- body:orderDetails object
+- body:orderDetails.comment1 string
+- body:orderDetails.comment2 string
+- body:orderDetails.customerNumber string
+- body:orderDetails.deliveryAddressLine1 string
+- body:orderDetails.deliveryAddressLine2 string
+- body:orderDetails.deliveryCity string
+- body:orderDetails.deliveryCountry string
+- body:orderDetails.deliveryPostCode string
+- body:orderDetails.merchantCustomerIdentification string
+- body:orderDetails.merchantNumber string
+- body:orderDetails.orderId string
+- body:orderDetails.productId string
+- body:orderDetails.variableReference string
+- body:returnUrl string
+- body:type string enum[OTHER]
+
+## S413-0001  POST /questions
+desc: Create a New Question | You may create your own question using this action. It takes a JSON object containing a question and a collection of answers in the form of choices.
+- body:choices array<string>
+- body:question string
+
+## S415-0001  POST /mapping
+desc: Allows mapping from third-party identifiers to FIGIs.
+schema: BulkMappingJob
+- body:contractSize array<number>
+- body:coupon array<number>
+- body:currency string
+- body:exchCode string
+- body:expiration array<string>
+- body:idType string enum[ID_ISIN|ID_BB_UNIQUE|ID_SEDOL|ID_COMMON|ID_WERTPAPIER|ID_CUSIP|ID_BB|ID_ITALY|ID_EXCH_SYMBOL|ID_FULL_EXCHANGE_SYMBOL|COMPOSITE_ID_BB_GLOBAL|ID_BB_GLOBAL_SHARE_CLASS_LEVEL]
+- body:idValue string
+- body:includeUnlistedEquities boolean
+- body:marketSecDes string
+- body:maturity array<string>
+- body:micCode string
+- body:optionType string enum[Put|Call]
+- body:securityType string
+- body:securityType2 string
+- body:stateCode string enum[AB|AC|AC|AH|AK|AL|AM|AR|AS|AT|AZ|BC]
+- body:strike array<number>
+
+## S416-0001  POST /upload
+desc: Batch upload | Upload csv file with minimum two columns (Id, SourceLocality). Return search results in json
+schema: MultipartFormDataInput
+- query:type string
+- body:formData object
+- body:formDataMap object
+- body:parts array<object>
+- body:parts[].bodyAsString string
+- body:parts[].contentTypeFromMessage boolean
+- body:parts[].headers object
+- body:parts[].mediaType object
+- body:parts[].mediaType.parameters object
+- body:parts[].mediaType.subtype string
+- body:parts[].mediaType.type string
+- body:parts[].mediaType.wildcardSubtype boolean
+- body:parts[].mediaType.wildcardType boolean
+- body:preamble string
+
+## S417-0001  DELETE /api/media-object/{id}
+desc: Removes the MediaObject resource. | Removes the MediaObject resource.
+- path:id string
+
+## S417-0002  DELETE /api/team-invitation/{id}
+desc: Removes the TeamInvitation resource. | Removes the TeamInvitation resource.
+- path:id string
+
+## S417-0003  DELETE /api/transport-bandwidth/{id}
+desc: Removes the TransportBandwidth resource. | Removes the TransportBandwidth resource.
+- path:id string
+
+## S417-0004  DELETE /api/transport-chatwork/{id}
+desc: Removes the TransportChatwork resource. | Removes the TransportChatwork resource.
+- path:id string
+
+## S417-0005  PUT /api/transport-chatwork/{id}
+desc: Replaces the TransportChatwork resource. | Replaces the TransportChatwork resource.
+schema: TransportChatwork-put
+- path:id string
+- body:chatworkApiToken string
+- body:chatworkRoomId string
+- body:dataSegmentCode string
+- body:transportName string
+
+## S417-0006  PUT /api/transport-click-send/{id}
+desc: Replaces the TransportClickSend resource. | Replaces the TransportClickSend resource.
+schema: TransportClickSend-put
+- path:id string
+- body:clickSendApiKey string
+- body:clickSendApiUsername string
+- body:clickSendFrom string
+- body:clickSendFromEmail string
+- body:clickSendListId string
+- body:clickSendSource string
+- body:dataSegmentCode string
+- body:transportName string
+
+## S417-0007  DELETE /api/transport-email/{id}
+desc: Removes the TransportEmail resource. | Removes the TransportEmail resource.
+- path:id string
+
+## S417-0008  PUT /api/transport-engagespot/{id}
+desc: Replaces the TransportEngagespot resource. | Replaces the TransportEngagespot resource.
+schema: TransportEngagespot-put
+- path:id string
+- body:dataSegmentCode string
+- body:engagespotApiKey string
+- body:engagespotCampaignName string
+- body:transportName string
+
+## S417-0009  POST /api/transport-esendex
+desc: Creates a TransportEsendex resource. | Creates a TransportEsendex resource.
+schema: TransportEsendex-post
+- body:dataSegmentCode string
+- body:esendexAccountReference string
+- body:esendexFrom string
+- body:esendexPassword string
+- body:esendexUsername string
+- body:partition string
+- body:transportName string
+
+## S417-0010  POST /api/transport-freshdesk
+desc: Creates a TransportFreshdesk resource. | Creates a TransportFreshdesk resource.
+schema: TransportFreshdesk-post
+- body:dataSegmentCode string
+- body:freshdeskApiKey string
+- body:freshdeskEmail string
+- body:freshdeskHost string
+- body:freshdeskPriority string
+- body:freshdeskType string
+- body:partition string
+- body:transportName string
+
+## S417-0011  POST /api/transport-gitter
+desc: Creates a TransportGitter resource. | Creates a TransportGitter resource.
+schema: TransportGitter-post
+- body:dataSegmentCode string
+- body:gitterRoomId string
+- body:gitterToken string
+- body:partition string
+- body:transportName string
+
+## S417-0012  PUT /api/transport-light-sms/{id}
+desc: Replaces the TransportLightSms resource. | Replaces the TransportLightSms resource.
+schema: TransportLightSms-put
+- path:id string
+- body:dataSegmentCode string
+- body:lightSmsLogin string
+- body:lightSmsPhone string
+- body:lightSmsToken string
+- body:transportName string
+
+## S417-0013  POST /api/transport-linked-in
+desc: Creates a TransportLinkedIn resource. | Creates a TransportLinkedIn resource.
+schema: TransportLinkedIn-post
+- body:dataSegmentCode string
+- body:linkedInToken string
+- body:linkedInUserId string
+- body:partition string
+- body:transportName string
+
+## S417-0014  POST /api/transport-mastodon
+desc: Creates a TransportMastodon resource. | Creates a TransportMastodon resource.
+schema: TransportMastodon-post
+- body:dataSegmentCode string
+- body:mastodonAccessToken string
+- body:mastodonHost string
+- body:partition string
+- body:transportName string
+
+## S417-0015  PUT /api/transport-mastodon/{id}
+desc: Replaces the TransportMastodon resource. | Replaces the TransportMastodon resource.
+schema: TransportMastodon-put
+- path:id string
+- body:dataSegmentCode string
+- body:mastodonAccessToken string
+- body:mastodonHost string
+- body:transportName string
+
+## S417-0016  DELETE /api/transport-mercure/{id}
+desc: Removes the TransportMercure resource. | Removes the TransportMercure resource.
+- path:id string
+
+## S417-0017  PUT /api/transport-mercure/{id}
+desc: Replaces the TransportMercure resource. | Replaces the TransportMercure resource.
+schema: TransportMercure-put
+- path:id string
+- body:dataSegmentCode string
+- body:mercureHubJwtToken string
+- body:mercureHubUrl string
+- body:mercureTopic string
+- body:transportName string
+
+## S417-0018  POST /api/transport-message-bird
+desc: Creates a TransportMessageBird resource. | Creates a TransportMessageBird resource.
+schema: TransportMessageBird-post
+- body:dataSegmentCode string
+- body:messageBirdFrom string
+- body:messageBirdToken string
+- body:partition string
+- body:transportName string
+
+## S417-0019  PUT /api/transport-message-media/{id}
+desc: Replaces the TransportMessageMedia resource. | Replaces the TransportMessageMedia resource.
+schema: TransportMessageMedia-put
+- path:id string
+- body:dataSegmentCode string
+- body:messageMediaApiKey string
+- body:messageMediaApiSecret string
+- body:messageMediaFrom string
+- body:transportName string
+
+## S417-0020  POST /api/transport-microsoft-teams
+desc: Creates a TransportMicrosoftTeams resource. | Creates a TransportMicrosoftTeams resource.
+schema: TransportMicrosoftTeams-post
+- body:dataSegmentCode string
+- body:microsoftTeamsPath string
+- body:partition string
+- body:transportName string
+
+## S417-0021  PUT /api/transport-octopush/{id}
+desc: Replaces the TransportOctopush resource. | Replaces the TransportOctopush resource.
+schema: TransportOctopush-put
+- path:id string
+- body:dataSegmentCode string
+- body:octopushApiKey string
+- body:octopushFrom string
+- body:octopushType string
+- body:octopushUserLogin string
+- body:transportName string
+
+## S417-0022  DELETE /api/transport-pager-duty/{id}
+desc: Removes the TransportPagerDuty resource. | Removes the TransportPagerDuty resource.
+- path:id string
+
+## S417-0023  DELETE /api/transport-pager-tree/{id}
+desc: Removes the TransportPagerTree resource. | Removes the TransportPagerTree resource.
+- path:id string
+
+## S417-0024  POST /api/transport-pushover
+desc: Creates a TransportPushover resource. | Creates a TransportPushover resource.
+schema: TransportPushover-post
+- body:dataSegmentCode string
+- body:partition string
+- body:pushoverAppToken string
+- body:pushoverUserKey string
+- body:transportName string
+
+## S417-0025  DELETE /api/transport-sms-biuras/{id}
+desc: Removes the TransportSmsBiuras resource. | Removes the TransportSmsBiuras resource.
+- path:id string
+
+## S417-0026  DELETE /api/transport-smsc/{id}
+desc: Removes the TransportSmsc resource. | Removes the TransportSmsc resource.
+- path:id string
+
+## S417-0027  POST /api/transport-spot-hit
+desc: Creates a TransportSpotHit resource. | Creates a TransportSpotHit resource.
+schema: TransportSpotHit-post
+- body:dataSegmentCode string
+- body:partition string
+- body:spotHitFrom string
+- body:spotHitToken string
+- body:transportName string
+
+## S417-0028  PUT /api/transport-spot-hit/{id}
+desc: Replaces the TransportSpotHit resource. | Replaces the TransportSpotHit resource.
+schema: TransportSpotHit-put
+- path:id string
+- body:dataSegmentCode string
+- body:spotHitFrom string
+- body:spotHitToken string
+- body:transportName string
+
+## S417-0029  PUT /api/transport-telegram/{id}
+desc: Replaces the TransportTelegram resource. | Replaces the TransportTelegram resource.
+schema: TransportTelegram-put
+- path:id string
+- body:dataSegmentCode string
+- body:telegramChatId string
+- body:telegramToken string
+- body:transportName string
+
+## S417-0030  DELETE /api/transport-telnyx/{id}
+desc: Removes the TransportTelnyx resource. | Removes the TransportTelnyx resource.
+- path:id string
