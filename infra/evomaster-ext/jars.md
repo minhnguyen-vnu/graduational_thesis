@@ -31,8 +31,9 @@ trích số từ 2026-10-04 tới 2026-10-14.
 
 ## Chuỗi P1–P2f, mới nhất trước
 
-`EvoMaster/evomaster-P2f-64ee8ffc.jar` (sha256 `64ee8ffc…`, `.sha256` cạnh jar) = jar P2e + bản vá chưa commit
-`wip/setfield-leaf-activate-20261015.patch` (2 dòng `RestSecurityBuilder.kt:1360-1361`: `setField` neo cả `trySetFromStringValue`
+`EvoMaster/evomaster-P2f-64ee8ffc.jar` (sha256 `64ee8ffc…`, `.sha256` cạnh jar) = jar P2e + bản vá
+`wip/setfield-leaf-activate-20261015.patch`, dựng 2026-10-15; commit `f73010103b` (2026-10-18, đã push) mang đúng các
+dòng đổi của bản vá (2 dòng `RestSecurityBuilder.kt:1360-1361`: `setField` neo cả `trySetFromStringValue`
 và `activateAncestors` vào lá `f.value` thay vì `f.gene`, nên trường nullable/optional serialize present+value thay vì
 `null`). P2 thay hàm `setAdminFlagActive` của AF2 bằng `setField` chung làm trượt điểm bật wrapper → `is_admin`
 (`{"type":["boolean","null"]}`) serialize `null` → PATCH 200 không hạ quyền → FN trên target phát triển artifact-keeper.
@@ -44,11 +45,14 @@ artifact-keeper vuln 5/5 nổ 970, PATCH `{"is_admin":false}`, soát cấu trúc
 mọi arm trùng AF2 từng seed (`seeds_p2f_only`/`seeds_af2_only` rỗng, McNemar chính xác p = 1.000), 0 FP trên bản vá,
 audit 59 PASS 0 FAIL 0 UNPARSED; pyLoad reset tăng số bộ ba dựng được (36→75) nhưng phán quyết không đổi
 (`p2f-full-20261015/compare.out`, `RESULTS.md`). Lượt này là một jar duy nhất, gỡ lệch luật bộ gộp trộn jar của bảng §4;
-giá trị các ô không đổi. Promote thành jar luận văn: chờ user quyết. Còn thiếu self-test falsifiable riêng cho bản vá (§2).
+giá trị các ô không đổi. Promote thành jar luận văn: chờ user quyết. Self-test `setfield-leaf-activate-20261015.sh` 7/7
+(`em-results/setfield-selftest-20261018-180347/`): trên stub có `is_admin` `{"type":["boolean","null"]}`, 3/3 transition
+trong bộ ba gửi `{"is_admin": false}`; jar P2e gửi `null` ở 2/4. Chỉ kiểm tra thân PATCH tách được hai jar: stub có reset,
+nên P2e thử lại và vẫn nổ 970.
 Hệ quả tài liệu chờ soát: `docs/argument.md` K3/K4 (FN do refactor P2 gây ra trên target phát triển).
 
-`EvoMaster/evomaster-P2e-6ae8277b.jar` (sha256 `6ae8277b…`, `.sha256` cạnh jar) = commit `a544c996ac` (2026-10-14,
-chưa push; `git diff 8d6cf8431f a544c996ac -- core/src/main/kotlin` trùng từng byte bản vá cả cây) = jar P2d + 4 dòng trong
+`EvoMaster/evomaster-P2e-6ae8277b.jar` (sha256 `6ae8277b…`, `.sha256` cạnh jar) = commit `a544c996ac` (2026-10-14;
+`git diff 8d6cf8431f a544c996ac -- core/src/main/kotlin` trùng từng byte bản vá cả cây) = jar P2d + 4 dòng trong
 `RestSecurityBuilder.kt:1265–1269` (`wip/p2e-increment-over-p2d-20261013.diff`; cả cây
 `wip/p2e-restore-high-20261013.patch`, diễn tập rollback 2026-10-13 trùng từng byte; model CSV `9a7a7749…`, trùng bản
 trong jar). Giá trị nâng quyền của trường enum chỉ gồm các giá trị mô hình chấm `high > low`. AF2 chỉ nâng bằng giá trị

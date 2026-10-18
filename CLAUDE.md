@@ -14,8 +14,8 @@ Mỗi sự kiện nằm ở một file: file này giữ luật và trỏ tới p
 - Giai đoạn: phát triển tới **2026-09-30** (§6). Tháng 10: tinh chỉnh, đánh giá, viết. Hạn: **cuối tháng 11 năm 2026**.
 - Luận văn viết bằng **tiếng Việt**. Trả lời theo ngôn ngữ của user.
 - Tác giả: kỹ sư phần mềm, ~2 năm fintech, Java/Spring Boot. Đọc được Kotlin, viết Kotlin chưa thoải mái.
-- Mã nguồn: `/Users/minhnguyen/IdeaProjects/EvoMaster`, nhánh `stateful-authz-oracle`, 12 commit trên `v6.1.1`, HEAD
-  `a544c996ac` (jar P2e, chưa push); commit ngay trước `8d6cf8431f` là jar AF2. Chi tiết: `infra/evomaster-ext/README.md`.
+- Mã nguồn: `/Users/minhnguyen/IdeaProjects/EvoMaster`, nhánh `stateful-authz-oracle`, 13 commit trên `v6.1.1`, HEAD
+  `f73010103b` (jar P2f, đã push); `a544c996ac` là jar P2e, `8d6cf8431f` là jar AF2. Chi tiết: `infra/evomaster-ext/README.md`.
 - Thư mục luận văn là một git repo (nhánh `main`, 2 commit).
 - Đã dựng: quan hệ MR-A1, cách dựng bộ ba, phán quyết 970, và ba target — Tier-1 `reports-api`, Tier-2 `vampi-seeded`,
   Tier-2b pyLoad CVE-2026-41133.
@@ -149,6 +149,10 @@ Mỗi sự kiện nằm ở một file: file này giữ luật và trỏ tới p
 - Mọi con số hiện tại: `EvoMaster/evomaster-P2e-6ae8277b.jar` = commit `a544c996ac` (nhánh `stateful-authz-oracle`):
   AF2 + P1 duyệt nhiều op, 20 lần thử thay vì 8 + P2 Naive Bayes thay các danh sách viết tay (thiết kế
   `infra/evomaster-ext/wip/p2-design-20261012.md`). Số lấy từ bộ gộp có lệch luật (§4).
+- Jar đang phát triển: `EvoMaster/evomaster-P2f-64ee8ffc.jar` = commit `f73010103b` = P2e + `setField` ghi giá trị và
+  bật wrapper từ lá (`RestSecurityBuilder.kt:1360–1361`), sửa FN `is_admin: null` trên artifact-keeper. Qua cổng 21/21
+  (2026-10-15) và đo lại đầy đủ 180 hàng một jar (`p2f-full-20261015/`), mọi ô trùng AF2 từng seed. Promote thành jar
+  trích số: chờ user quyết.
 - AF2 (`evomaster-AF2-6b5606d4.jar`, commit `8d6cf8431f`) và jar R (`5bce137f`, `007e5e09f9`) giữ làm nguồn gốc;
   replay trong `docs/results.md` §3 còn trên AF2.
 - Một jar mới chỉ trích lại một con số sau khi qua cổng hồi quy, và khi cách dựng bộ ba đổi thì phải đo lại các arm bị

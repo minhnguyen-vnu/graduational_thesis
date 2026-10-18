@@ -6,9 +6,9 @@ Results: `docs/results.md`. Build, jars, rollback: skill `evomaster-build`. Runn
 
 ## 1. What changed
 
-`git diff --stat v6.1.1..HEAD`: 12 commits, 6 files, +1825, 0 deletions, no comments. HEAD `a544c996ac` builds
-jar P2e and is not pushed. `8d6cf8431f`, one commit earlier, builds jar AF2, which quoted the numbers 2026-10-04 to 10-14; P2e quotes them now
-(`docs/results.md` §0).
+`git diff --stat v6.1.1..HEAD`: 13 commits, 6 files, +1825, 0 deletions, no comments. HEAD `f73010103b` builds
+jar P2f and is pushed. `a544c996ac`, one commit earlier, builds jar P2e, which quotes the numbers now (`docs/results.md`
+§0). `8d6cf8431f` builds jar AF2, which quoted them 2026-10-04 to 10-14.
 
 | File | + | Holds |
 |---|---|---|
@@ -45,6 +45,14 @@ values from the current role (`isLowPrivRole`, `8d6cf8431f` line 651) and elevat
 (`em-results/p2c-interleave-seeds-20261012/`, `em-results/p2c-vs-af2-debug-20261012/`). Without C, P2d spent one of
 three restore attempts on `EVOMASTER`, the invalid-data value EvoMaster appends to string enums, and missed vampi
 seed 11 (`em-results/p2d-night-20261012/STOPPED.md`).
+
+### P2f, commit `f73010103b` on top of `a544c996ac`
+
+`RestSecurityBuilder.kt:1360–1361`: `setField` writes the value into the leaf gene `f.value` and activates the wrappers
+from that leaf up, instead of from the field gene `f.gene`. Before, a nullable field such as `is_admin`
+(`{"type":["boolean","null"]}`) kept its `NullableGene` inactive and went out as `null`; on artifact-keeper the PATCH
+returned 200 without demoting (`em-results/artifactkeeper-machine-20261014/iterate-RESULTS.md`). The changed lines equal
+`wip/setfield-leaf-activate-20261015.patch`. Self-test `setfield-leaf-activate-20261015.sh`. Jar: `jars.md`.
 
 ## 2. Where it plugs in
 
