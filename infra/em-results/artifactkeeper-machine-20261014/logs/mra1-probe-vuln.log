@@ -1,0 +1,8 @@
+admin is_admin=True
+victim id=980d2e28-aded-49b2-8ac7-ae5cd54bae36
+[A] V_OLD is_admin=True
+[B] source victim write (expect 2xx) -> 200
+[C] viewer write (expect 403) -> 403
+[D] demote victim is_admin=false (expect 2xx) -> 200
+[E] fresh victim is_admin=False write (expect 403) -> 403
+[F] REPLAY V_OLD write after demotion (vuln=2xx bug / fixed=403) -> 200

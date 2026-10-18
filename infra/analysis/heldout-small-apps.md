@@ -806,3 +806,172 @@ BẢNG CHỐT artifact-keeper (jar AF2-6b5606d4, 389 op, maxTime 1200s, oracle g
 | fixed e64cc5c6 | — | 0/3 |
 Máy tự phát hiện trên app công khai vendor-confirmed (artifact-keeper 1097★, #1821), ngoài lỗi tự gieo. Giống pyLoad.
 Còn: cổng hồi quy reports-api/vampi trên AF2 (bắt buộc vì đổi cách dựng bộ ba) trước khi trích số vào luận văn.
+
+## 19. Lùng held-out cho jar P2f, sao 50–1000, rút practice từ app đã tìm (ghi 2026-10-16 14:20, trước khi mở repo nào)
+
+Lý do vòng này: user (2026-10-16) yêu cầu bỏ ứng viên sao thấp (tibba 1★, open-kanban 2★, snaplink), tìm trong khoảng
+50–1000 sao, và suy practice từ các app đã tìm ra. Jar đo: `evomaster-P2f-64ee8ffc.jar`. App qua chạy P2f không sửa
+code builder trên log của nó (giữ held-out); lỗi builder thì ghi và dừng app đó.
+
+### Practice rút từ các app đã xét (§12–§18, `cve-survey/coverage.md`)
+
+Hình dạng NỔ 970 (máy), quan sát trên hai app đã nổ:
+- pyLoad CVE-2026-41133: authz theo cookie phiên nhưng quyền đặt bằng `POST /api/set_user_permission` (permission=1 +
+  role tìm trái); C4 xác nhận từng lần hạ. Nổ.
+- artifact-keeper #1821: `is_admin` nằm trong claim JWT lúc mint, KHÔNG tra DB; transition `PATCH /users/{id}
+  {is_admin:false}`; source `POST /admin/*` (require_admin, idempotent); token cũ giữ 200, token mới 403. Nổ 5/5.
+
+Điều kiện dương (chữ ký để nổ), xét theo thứ tự:
+- P1 **authz mang trong credential**: role/cờ/permission nằm trong claim JWT (hoặc gắn API-key), được tin mà KHÔNG tra
+  DB/session mỗi request ở bản dính. Bản vá của vendor thêm tra DB / watermark đổi-quyền / `privileges_changed_at` /
+  denylist token theo thời điểm phát hành. (Đọc trên diff bản vá + code authz.)
+- P2 **transition là write REST-JSON cấp user**: `PATCH`/`PUT /users/{id}` đặt `role`/`roles[]`/`is_admin`/`is_staff`/
+  `is_superuser`/`enabled` xuống mức thấp hơn. Ưu tiên trường **nullable** (chỗ P2f fix tác động).
+- P3 **nạn nhân đăng nhập lại được sau transition** → có credential mới đã thu hẹp để D1 so (loại dạng xoá chủ thể:
+  Vikunja xoá share, NocoDB xoá token).
+- P4 **có admin-write idempotent/lặp-lại-được làm source** (hoặc có endpoint reset): ranh giới wagoe §14.
+- P5 login mật khẩu→Bearer-JWT một bước (không thách thức hai bước, không captcha, rate-limit nới được); có spec
+  OpenAPI; dựng bằng Docker/stack chuẩn; từ chối trả 403 trên dây.
+- P6 nạn nhân định danh bằng path param KHÔNG chứa dấu chấm, tên param nằm trong tín hiệu builder (ranh giới bamf §12,
+  giới hạn EvoMaster v6.1.1).
+
+Chữ ký ÂM (không nổ) → loại ngay khi sàng:
+- "invalidate cache/session/projection on role change" = authz đọc DB/cache/session/read-model mỗi request → token
+  mới cũng cũ trong cửa sổ → fresh==old → D1 không tách (lớp ZITADEL: orkestra §16, open-kanban, snaplink).
+- transition đổi role đòi step-up/MFA (orkestra §16 lý do #1).
+- transition không phải HTTP, hoặc trường hạ quyền không có trong body REST (Airflow `active`).
+- đăng nhập hai bước thách thức / captcha / lockout không nới được (tibba §vòng này, truthy §9, bamf §12).
+
+### Luật sàng
+
+S1–S10 như §1/§5/§13, **trừ** S7: lần này **50 ≤ sao ≤ 1000**, commit trong 24 tháng. Sau khi qua S1–S10, xét tiếp
+P1–P6 trên code authz + diff bản vá; loại nếu khớp bất kỳ chữ ký âm. Tiebreak: ưu tiên app có trường hạ quyền
+nullable (P2) và source idempotent (P4).
+
+### Truy vấn (mỗi truy vấn chạy một lần, JSON thô vào `raw/`, bỏ trùng #101–#296 và §3/§8)
+
+Nhắm bug "authz mang trong credential, tin claim không tra lại", không phải "invalidate cache/session":
+- Commit (`search/commits`): q26 `recheck role from database jwt`; q27 `jwt still admin after role change`;
+  q28 `privileges_changed_at`; q29 `reject tokens issued before role change`.
+- Issue/PR (`search/issues`): q30 `jwt old role in:title`; q31 `token still admin after demotion in:title`.
+- Repo (`search/repositories`): q32 `jwt rbac admin stars:50..1000 pushed:>2025-01-01`;
+  q33 `topic:rbac topic:jwt stars:50..1000`.
+
+Stars lọc sau từ metadata (commit/issue search không lọc sao trực tiếp): chỉ giữ repo 50–1000 sao. Xét theo thứ tự
+truy vấn rồi thứ tự API trả. Dừng khi **2 app qua trọn S1–S10 + P1–P6 và có cặp dính/vá dựng được**, hoặc hết q26–q33.
+Kết quả mong đợi không ghi ở đây.
+
+### Kết quả §19 (ghi 2026-10-16 14:35, sau khi chạy q26–q33 và sàng)
+
+q26 204 / q27 11398 / q28 161419 (bị tokenize, quá rộng) / q29 30 items / q30 9 issue / q31 0 / q32 11 repo / q33 24 repo.
+Raw ở `raw/q26.json`..`q33.json`. **0 app qua trọn S1–S10 + P1–P6.**
+
+Chữ ký âm xác nhận lại trên app 50–1000★ (q32/q33 là repo-search đã lọc sao): phần lớn là scaffold admin RBAC dùng
+**Casbin / Spring Security / session** — authz tra DB mỗi request, role đổi là có hiệu lực ngay → lớp ZITADEL, không
+nổ (hequan2017/go-admin #76, deatil/lakego-admin #77, zclzone/isme-nest-serve #70, qingwave/weave #75,
+andrechristikan/ack-nestjs #71, codemation/easyauth #63 — đã loại vòng trước); phần còn lại là thư viện/plugin
+(greenpau/caddy-authorize, banzaicloud/jwt-to-rbac) hoặc template thiếu Docker.
+
+Ba lead credential-carried đúng theme (fix = tra DB/denylist, không phải invalidate-cache), lọc 50–1000★:
+- **everruns/everruns** (60★, Rust, MIT, active): bug EVE-703 thật — bản dính `f3f77b61e477` tin `roles=["admin"]`
+  trong JWT thay vì DB; fix `e7237e065ba7` (#2659) suy role từ DB. Credential-carried đúng hình dạng. **Loại**: spec
+  204 path (**S4 trượt, >200**) và **không có endpoint REST hạ role người khác** (chỉ `GET /v1/users`, `PATCH
+  /v1/users/me`; không `PATCH /users/{id}`, không `/orgs/{org}/members/...`) → đổi role/membership đi qua CLI/DB/console
+  → **ranh giới Airflow** (transition không gọi được bằng HTTP, `cve-survey/coverage.md` §4).
+- cgerard321/champlain_petclinic (65★, Java): fork giảng dạy Spring PetClinic; commit "only admins can change user
+  roles" là sửa guard, không phải staleness credential. Spring Security tra authority từ DB/session → P1 trượt.
+- SandeepVashishtha/Eventra (150★, JS): "remove permissions from JWT payload" đúng theme (perms từng ở trong JWT) nhưng
+  **không license → S1 trượt**.
+
+Các bug trúng MR-A1 nhất qua commit/issue search đều ở repo **0–8★** (ngoài khoảng user đặt): courtknights/courtknights
+0★ ("demoted admins stay admin"), kunal-ak23/rentaxis 0★ (NextAuth JWT không re-validate; không license),
+renan-utida/expensehub-api 0★ ("reject bearer tokens issued before a role change"), vicanso/tibba 1★ (§vòng trước).
+
+Practice rút ra (suy từ các app, cho mục giới hạn/tổng quát hoá của luận văn): để 970 nổ cần **đồng thời** bốn điều —
+(1) authz mang trong credential không tra lại DB, (2) hạ quyền user là write REST-JSON gọi được, (3) nạn nhân đăng
+nhập lại được, (4) có admin-write idempotent làm source. App credible (50–1000★) "đàng hoàng" thường thoả (2)(3)(4)
+nhưng **vi phạm (1)** vì tra authz từ DB (Casbin/Spring/session); app có (1) thì thường **vi phạm (2)** vì đổi role đi
+qua CLI/DB/console, không phải REST (everruns, Airflow). artifact-keeper thoả cả bốn là ngoại lệ hiếm (và nay là
+target phát triển cho P2f). Trong sweep 50–1000★ này không có app mới thoả cả bốn.
+
+### Vòng góc sản phẩm (ghi 2026-10-16 14:48, q34–q39, 50–1000★, nhắm product self-hosted không scaffold/lib)
+
+q34–q39 (`raw/q34.json`..`q39.json`), 18 repo product sau bỏ scaffold/lib. Sàng các product có team/role:
+- **terrapod** (mattrobinsonsre, 261★, Python/FastAPI, MPL-2.0): có router REST `role_assignments`+`roles`+`users`
+  (qua ĐK (2)/ranh giới Airflow — khác everruns). **Loại**: **53 router → >200 operation (S4)**; auth OAuth/OIDC/
+  API-token/capability-URL cấp doanh nghiệp (S5; cùng tác giả bamf §12 có PKCE hai bước).
+- **ever-co/ever-teams** (588★, TS): repo này là frontend Next.js (route `apps/web/app/api/*` là proxy); backend thật
+  là `ever-co/gauzy` (NestJS monolith khổng lồ, >200 op) → loại scale/S4.
+- **compartment** (207★, TS, Apache): API là tầng query/mutation (`*.query.ts`), không spec OpenAPI → S3 trượt.
+- Panel AI-agent (pinchy, Saki-Panel, AgentHub, voidllm, opencrew, Claude-Agent-Team): cần key provider, role tối giản.
+- bitsandbots/inventory (67★ PHP, không license → S1); ArkGravity/burrow (67★ Go, là OIDC IdP → S5 như warrant/aserto);
+  oxisto/okr2go (55★ Go, 39 file, không RBAC đa người dùng → S6); Mortaza-Seydi/Task-Manager (52★ JS, frontend/
+  server-render, không spec → S3/S8); koochooloo (URL shortener, 1 admin).
+
+**0 app product 50–1000★ qua.** Củng cố practice: ĐK (1) (bug credential-carried) nghịch biến với "product credible,
+đàng hoàng" — product tốt tra authz từ DB (không nổ) hoặc quá lớn/enterprise-auth (S4/S5) hoặc frontend-only/không
+spec. Bug credential-carried thật tập trung ở repo 0–8★ (courtknights, renan-utida, tibba). Hai vòng (§19 + góc sản
+phẩm) đồng kết: trong 50–1000★ không có app mới nổ được. Để có một lần nổ held-out thật phải hạ sàn sao xuống nơi bug
+nằm, hoặc nhận pyLoad+artifact-keeper là datapoint công khai.
+
+## 20. Chọn cặp-sạch OSS: bubbafat/lumiverb (ghi 2026-10-16 15:30, trước khi dựng)
+
+User (2026-10-16) chọn: tìm cặp dính/vá sạch của chính vendor (fix ở tầng request → bản vá từ chối token cũ → 0-FP
+sạch), OSS, trước khi dựng. Thêm truy vấn q40–q45 (issue + commit nhắm "invalidate tokens/recheck role per request/
+token_version"); lọc message kiểu recheck-tầng-request rồi batch license, chỉ giữ SPDX OSS. Phần lớn hit là
+"invalidate sessions" (lớp ZITADEL) hoặc repo 0★ không license. Trong các hit cặp-sạch (token_version / role-from-DB
+on-every-request), chỉ ít repo OSS: everruns (đã loại §19), gatehouse (6★ AGPL — là dịch vụ authz/IdP, OIDC/TOTP,
+fix xoay quanh /refresh → S5), và **bubbafat/lumiverb** (0★, Python, MIT).
+
+### lumiverb — cặp sạch, EvoMaster lái được (xác nhận trên source, chưa dựng)
+Fix `6210c88923c6` / bản dính `6c3998f06747` (lịch sử tuyến tính; fix chạm `api/middleware.py`, `routers/auth.py`,
+`models/control_plane.py`, `repository/control_plane.py`, migration `3f9c1d2e7a64_users_token_version`).
+- ĐK1 (credential-carried) ✓: bản dính `src/server/api/middleware.py:99` `role = claims["role"]` → middleware lấy
+  role từ claim JWT, không tra DB, không check tv; `_issue_jwt` (bản dính `routers/auth.py:67–82`) nhét `role` vào
+  payload. Token cũ (claim admin) qua guard admin sau khi hạ → replay trực tiếp nổ.
+- Bản vá: middleware từ chối token sai `tv` + lấy role từ DB; đổi role bump `users.token_version` → token cũ bị từ
+  chối → follow-up INCONCLUSIVE → 0 FP. Cặp sạch của chính vendor.
+- ĐK2 (transition REST-JSON) ✓: `routers/users.py` `UpdateRoleRequest{role}`, "update role" (prefix `/v1/users`);
+  `VALID_ROLES` có `viewer` (giá trị hạ).
+- ĐK3 (nạn nhân re-login được) ✓: `POST /login {email,password}` → `{access_token, bearer}` (JWT mới lấy role DB).
+- ĐK4 (admin-write idempotent làm source): chờ dựng/hand-check (builder tự chọn — như artifact-keeper §18).
+- S1 MIT ✓; S3 FastAPI tự xuất `/openapi.json` (dev) ✓; S8 FastAPI HTTPException 403 JSON ✓; P5 password→Bearer, không
+  OAuth/không 2-bước ✓; P6 user_id chuỗi (kiểm dạng khi dựng).
+- Caveat độ tin cậy (ghi để thầy tự cân, như orkestra §15–16): 0★, AI-developed (commit có `Co-Authored-By Claude`);
+  một bản vá token_version của chính maintainer là hợp đồng thật — mạnh hơn lỗi tự gieo, yếu hơn CVE.
+
+### Giao thức dựng (ghi trước lượt chạy)
+Target `infra/lumiverb-target/`: `src/` = `git archive` hai commit. Stack: postgres `pgvector/pgvector:pg18`
+(control_plane) trong Docker; server FastAPI chạy (uvicorn) host hoặc Dockerfile của repo. Đa tenant: control-plane giữ
+users/role/token_version; vision API per-tenant đặt key giả (`vision_api_key=not-a-key`, endpoint phân tích ảnh có thể
+lỗi — lệch luật khai, như callcenter §6).
+- Jar đo: `evomaster-P2f-64ee8ffc.jar`. KHÔNG sửa code builder trên log lumiverb → giữ held-out. Lỗi builder thì ghi
+  và dừng app; nếu sửa builder theo lumiverb thì lumiverb thành target phát triển (như callcenter/truthy/bamf).
+- Bootstrap REST (không chọc DB nếu được): admin bootstrap → tạo `victim` (admin/cao), `viewer` (viewer). Auth config
+  `infra/em-config/lumiverb-auth.yaml` (extractFrom body `/access_token`, Bearer). Reseed sạch mỗi seed.
+- Kiểm tay MR-A1 TRƯỚC EvoMaster, trên cả hai bản, ghi file: bản dính token-cũ 2xx / token-mới 403; bản vá token-cũ
+  401/403 (tv) → 0 FP. Chỉ xác nhận target chạy; không đổi cấu hình theo kết quả của nó.
+- Lệch luật dự kiến (khai trước): nới rate-limit login (`login_limiter`) qua env/config; vision key giả; nếu spec
+  >200 op (S4) thì cắt spec đưa EvoMaster (như pyLoad `nokill`), app nguyên vẹn; reseed mỗi seed.
+- Luật dừng sớm: (1) seed 1 thiếu đăng nhập một tài khoản trong traffic hoặc `Evaluated tests` < số op → dừng, sai
+  thiết lập; (2) 3 seed đầu cùng mẫu và 0 bộ ba hợp lệ → dừng, đọc builder-debug; (3) máy ngủ → dừng; (4) dựng được bộ
+  ba nhưng 0 nổ → đọc builder-debug (source non-idempotent = ranh giới wagoe, không phải oracle sai); (5) FP trên bản
+  vá → dừng, kiểm tay lại. Bọc `caffeinate -dims`, dừng khi `pmset` thấy `Entering Sleep`.
+
+### Kết quả §20 (ghi 2026-10-16, chi tiết `infra/lumiverb-target/PROBE-RESULTS.md`)
+
+Dựng bản dính `6c3998f06747` (postgres pgvector 5433, server uvicorn, spec 177 op < 200). Kiểm tay MR-A1 **nổ** (lỗi
+thật: middleware tin `claims["role"]`; token cũ replay 201 sau khi bị hạ; `handcheck-vuln.log`). Probe P2f seed 1 ba
+lượt (`em-results/lumiverb-probe-20261016{c,d,e}`): **đều FN, 0 fault 970**.
+- Black-box spec live (c): reduced role values `[read,member,guest]` không khớp vocab thật `{admin,editor,viewer}`
+  (trường `role` không có enum trong spec) → transition 400.
+- Black-box spec trung thực thêm enum (d): có `[viewer,editor]` nhưng builder dựng demotion kiểu mảng/cờ, không set
+  trường **scalar enum string** → PATCH không hạ victim → re-login thấy quyền còn → UNCONFIRMED.
+- Declared-transition (e): `PATCH /v1/users/{user_id}` trả **404** vì không map được `<victim>` → path param ULID
+  `usr_…` (lớp bamf §12).
+
+Hai ranh giới FN của builder v6.1.1 (không phải oracle): (1) trường role scalar enum string (builder chỉ xử lý mảng
+`roles` và cờ boolean `is_admin`); (2) định danh victim bằng path param ULID không map được. Nguồn admin-write
+idempotent thì có (`PUT /v1/ai/jobs/{job}` victim 2xx). lumiverb = **FN held-out trên app công khai vendor-confirmed**:
+lỗi thật, oracle đủ điều kiện (kiểm tay), builder chưa với tới. User quyết (2026-10-16): mở rộng builder (→ dev-target)
+hay chốt làm FN held-out — đang chờ.

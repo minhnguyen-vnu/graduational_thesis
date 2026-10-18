@@ -29,7 +29,23 @@ jar R từng seed (detection, four-cells, ablation gains {3,7,8,9,12,16,19} / lo
 reports+vampi (pyLoad auth cookie, xác nhận bằng `verify_ground_truth.sh`), replay 55/59. AF2 thay jar R làm jar
 trích số từ 2026-10-04 tới 2026-10-14.
 
-## Chuỗi P1–P2e, mới nhất trước
+## Chuỗi P1–P2f, mới nhất trước
+
+`EvoMaster/evomaster-P2f-64ee8ffc.jar` (sha256 `64ee8ffc…`, `.sha256` cạnh jar) = jar P2e + bản vá chưa commit
+`wip/setfield-leaf-activate-20261015.patch` (2 dòng `RestSecurityBuilder.kt:1360-1361`: `setField` neo cả `trySetFromStringValue`
+và `activateAncestors` vào lá `f.value` thay vì `f.gene`, nên trường nullable/optional serialize present+value thay vì
+`null`). P2 thay hàm `setAdminFlagActive` của AF2 bằng `setField` chung làm trượt điểm bật wrapper → `is_admin`
+(`{"type":["boolean","null"]}`) serialize `null` → PATCH 200 không hạ quyền → FN trên target phát triển artifact-keeper.
+Diễn tập rollback 2026-10-15 trùng từng byte. Qua cổng hồi quy 21/21 MATCH 2026-10-15
+(`regression-check/archive-20261015-P2f-64ee8ffc/observed.csv`, snapshot `~/thesis-backups/thesis-full-20261015-*.tar.gz`).
+artifact-keeper vuln 5/5 nổ 970, PATCH `{"is_admin":false}`, soát cấu trúc 5/5 PASS
+(`em-results/artifactkeeper-machine-20261014/`). Construction đổi (setField) nên phải đo lại §4 các arm bị ảnh hưởng.
+Đã đo lại §4 đầy đủ trên riêng P2f 2026-10-16 (`em-results/p2f-full-20261015/`, 180 hàng một jar, cổng 21/21 trong lượt):
+mọi arm trùng AF2 từng seed (`seeds_p2f_only`/`seeds_af2_only` rỗng, McNemar chính xác p = 1.000), 0 FP trên bản vá,
+audit 59 PASS 0 FAIL 0 UNPARSED; pyLoad reset tăng số bộ ba dựng được (36→75) nhưng phán quyết không đổi
+(`p2f-full-20261015/compare.out`, `RESULTS.md`). Lượt này là một jar duy nhất, gỡ lệch luật bộ gộp trộn jar của bảng §4;
+giá trị các ô không đổi. Promote thành jar luận văn: chờ user quyết. Còn thiếu self-test falsifiable riêng cho bản vá (§2).
+Hệ quả tài liệu chờ soát: `docs/argument.md` K3/K4 (FN do refactor P2 gây ra trên target phát triển).
 
 `EvoMaster/evomaster-P2e-6ae8277b.jar` (sha256 `6ae8277b…`, `.sha256` cạnh jar) = commit `a544c996ac` (2026-10-14,
 chưa push; `git diff 8d6cf8431f a544c996ac -- core/src/main/kotlin` trùng từng byte bản vá cả cây) = jar P2d + 4 dòng trong
