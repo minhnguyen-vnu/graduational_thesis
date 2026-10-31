@@ -81,3 +81,6 @@ Phần AI dừng tại hàng đợi người gán. Chưa học mô hình mới, 
 - Thêm mã `member_remove` vào B và vào `T_core`: nhãn cũ có 25 T, 15 N trên các op `DELETE` gỡ thành viên, không nhất quán.
 - Test 365 công ty, thiết kế ước lượng 350 nhà.
 - Mã hoá A, B, C thành mã tiếng Anh ngắn để kiểm được đầu ra.
+- 2026-11-01 01:05, sau train 001–005: Cohen `T_core` 0,856 trên 375 dòng, Sonnet 3, Opus 4 dòng T, lệch 1; `U` Sonnet 34,
+  Opus 56. Không dừng. Năm khối này tốn khoảng 1,6% quota 5 giờ mỗi cặp nên từ khối 006 đặt `DISABLE_PROMPT_CACHING=1`:
+  mỗi khối chỉ gọi một lần, cache không được dùng lại. Biến này không đổi prompt hay model.

@@ -50,6 +50,7 @@ over = {k: v for k, v in per.items() if k[1] in first_id and first_id[k[1]] != b
 check("khoi da xong khong bi goi lai nhieu lan", not over, str(list(over.items())[:3]))
 check("moi loi goi co --safe-mode va --tools rong", all(c[4] == "1" and c[5] == "True" for c in calls))
 check("bien moi truong phien chinh bi go", all(c[6] == "0" for c in calls))
+check("moi loi goi tat cache", all(c[7] == "1" for c in calls))
 order = [first_id[c[3]][0] for c in calls if c[3] in first_id and c[2] == "claude-sonnet-5-5"]
 seen = list(dict.fromkeys(order))
 check("thu tu: train dau, known, test, train con lai", seen[:3] == ["train", "known", "test"], str(seen))

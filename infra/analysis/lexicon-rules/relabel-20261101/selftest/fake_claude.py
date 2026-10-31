@@ -38,8 +38,9 @@ def main():
     n = bump()
     model = sys.argv[sys.argv.index("--model") + 1]
     with open(os.path.join(STATE, "calls.log"), "a") as fh:
-        fh.write("%.3f %d %s %s %s %s %s\n" % (time.time(), n, model, ids[0], int("--safe-mode" in sys.argv),
-                                               sys.argv[sys.argv.index("--tools") + 1] == "", int(SYSTEM_ENV)))
+        fh.write("%.3f %d %s %s %s %s %s %s\n" % (time.time(), n, model, ids[0], int("--safe-mode" in sys.argv),
+                                                  sys.argv[sys.argv.index("--tools") + 1] == "", int(SYSTEM_ENV),
+                                                  os.environ.get("DISABLE_PROMPT_CACHING", "0")))
     time.sleep(0.15)
     if n == 5:
         reset = time.time() + 4

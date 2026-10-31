@@ -236,6 +236,7 @@ def main():
     system = guide + ("\n\nĐầu ra: chỉ in CSV, header `row_id,A,B,C,U,victim,role,order`, một dòng cho mọi operation trong "
                       "khối, không thêm chữ nào khác. Giá trị có dấu phẩy đặt trong ngoặc kép.")
     env = {k: v for k, v in os.environ.items() if k not in DROP_ENV}
+    env["DISABLE_PROMPT_CACHING"] = "1"
     cwd = os.path.join(WORK, "empty-cwd")
     os.makedirs(cwd, exist_ok=True)
     queue = build_queue(manifest, only)
