@@ -1,0 +1,81 @@
+kiem: dau hieu op mo phong 166, trong jar 166, lech lon nhat 0
+
+## Gốc, nhãn đa số
+reports-api      PUT     /users/{username}/role                 diem +8.504 pos 1/1
+vampi-seeded     PUT     /users/v1/{username}/role              diem +8.504 pos 1/1
+pyLoad           POST    /api/set_user_permission               diem +5.613 pos 1/3
+Airflow          PATCH   /auth/fab/v1/users/{username}          diem +9.742 pos 1/2
+artifact-keeper  PATCH   /api/v1/users/{id}                     diem +3.704 pos 4/7
+bamf             PATCH   /api/v1/users/{email}                  diem +6.031 pos 1/3
+raouf            PUT     /v1/users/{id}/role                    diem +2.591 pos 1/1
+magic            DELETE  /magic/system/magic/users_roles        diem +4.076 pos 1/2
+
+## E1, từng tổ hợp lượt gán, pos/số khả dụng
+| Vòng 3 + vòng 4 | Op T | reports-api | vampi-seeded | pyLoad | Airflow | artifact-keeper | bamf | raouf | magic |
+|---|---|---|---|---|---|---|---|---|---|
+| L1 + LA | 175 | 1/1 | 1/1 | 1/3 | 1/4 | 4/7 | 1/3 | 1/2 | 1/2 |
+| L1 + LB | 145 | 1/1 | 1/1 | 1/3 | 1/2 | 4/8 | 1/3 | 1/2 | 2/3 |
+| L1 + LM | 174 | 1/1 | 1/1 | 1/3 | 1/2 | 6/11 | 1/3 | -/0 | 1/3 |
+| L2 + LA | 205 | 1/1 | 1/1 | 1/3 | 1/4 | 4/7 | 1/3 | -/1 | 1/2 |
+| L2 + LB | 175 | 1/1 | 1/1 | 1/3 | 1/2 | 4/7 | 1/3 | -/1 | 1/2 |
+| L2 + LM | 204 | 1/1 | 1/1 | 1/3 | 1/2 | 6/11 | 1/3 | -/0 | 1/3 |
+
+## E1, 6 lần
+| Target | Điểm op > 0 | pos ≤ 4 | Trung vị pos |
+|---|---|---|---|
+| reports-api | 6/6 | 6/6 | 1.0 |
+| vampi-seeded | 6/6 | 6/6 | 1.0 |
+| pyLoad | 6/6 | 6/6 | 1.0 |
+| Airflow | 6/6 | 6/6 | 1.0 |
+| artifact-keeper | 6/6 | 4/6 | 4.0 |
+| bamf | 6/6 | 6/6 | 1.0 |
+| raouf | 6/6 | 2/6 | 1.0 |
+| magic | 6/6 | 6/6 | 1.0 |
+
+## E2, bootstrap nhà cung cấp, 200 lần
+| Target | Điểm op > 0 | pos ≤ 4 | Trung vị pos |
+|---|---|---|---|
+| reports-api | 200/200 | 200/200 | 1.0 |
+| vampi-seeded | 200/200 | 200/200 | 1.0 |
+| pyLoad | 200/200 | 198/200 | 1.0 |
+| Airflow | 200/200 | 192/200 | 1.0 |
+| artifact-keeper | 200/200 | 146/200 | 3 |
+| bamf | 200/200 | 192/200 | 1.0 |
+| raouf | 200/200 | 108/200 | 1.0 |
+| magic | 200/200 | 197/200 | 1 |
+
+## E3, lật 10% (20 op mỗi chiều), 100 lần
+| Target | Điểm op > 0 | pos ≤ 4 | Trung vị pos |
+|---|---|---|---|
+| reports-api | 100/100 | 100/100 | 1.0 |
+| vampi-seeded | 100/100 | 100/100 | 1.0 |
+| pyLoad | 100/100 | 100/100 | 1.0 |
+| Airflow | 100/100 | 100/100 | 1.0 |
+| artifact-keeper | 100/100 | 95/100 | 4.0 |
+| bamf | 100/100 | 100/100 | 1.0 |
+| raouf | 100/100 | 38/100 | 1.0 |
+| magic | 100/100 | 100/100 | 1.0 |
+
+## E3, lật 20% (40 op mỗi chiều), 100 lần
+| Target | Điểm op > 0 | pos ≤ 4 | Trung vị pos |
+|---|---|---|---|
+| reports-api | 100/100 | 100/100 | 1.0 |
+| vampi-seeded | 100/100 | 100/100 | 1.0 |
+| pyLoad | 100/100 | 100/100 | 1.0 |
+| Airflow | 100/100 | 100/100 | 1.0 |
+| artifact-keeper | 100/100 | 85/100 | 4.0 |
+| bamf | 100/100 | 100/100 | 1.0 |
+| raouf | 100/100 | 26/100 | 1.0 |
+| magic | 100/100 | 100/100 | 1.0 |
+
+## E3, lật 30% (60 op mỗi chiều), 100 lần
+| Target | Điểm op > 0 | pos ≤ 4 | Trung vị pos |
+|---|---|---|---|
+| reports-api | 100/100 | 100/100 | 1.0 |
+| vampi-seeded | 100/100 | 100/100 | 1.0 |
+| pyLoad | 100/100 | 100/100 | 1.0 |
+| Airflow | 100/100 | 100/100 | 1.0 |
+| artifact-keeper | 100/100 | 73/100 | 4 |
+| bamf | 100/100 | 100/100 | 1.0 |
+| raouf | 100/100 | 26/100 | 1.0 |
+| magic | 100/100 | 100/100 | 1.0 |
