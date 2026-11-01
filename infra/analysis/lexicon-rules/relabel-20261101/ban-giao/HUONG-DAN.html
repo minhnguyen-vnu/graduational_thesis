@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hướng dẫn gán nhãn</title>
+<style>
+:root{--bg:#f7f7f5;--panel:#fff;--text:#1c1917;--muted:#6b6b6b;--line:#dedcd8;--accent:#1d4ed8;--code:#f0efec;--hl:#fff7e0}
+@media (prefers-color-scheme: dark){:root{--bg:#161618;--panel:#1f1f22;--text:#e8e6e3;--muted:#a3a3a3;--line:#3a3a3f;--accent:#7aa2ff;--code:#2a2a2e;--hl:#2e2715}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:26px;margin:0 0 8px}
+h2{font-size:20px;margin:36px 0 8px;padding-top:8px;border-top:1px solid var(--line)}
+h3{font-size:16px;margin:20px 0 6px}
+a{color:var(--accent)}
+code,pre{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+code{background:var(--code);padding:1px 4px;border-radius:4px}
+pre{background:var(--code);padding:8px 10px;border-radius:6px;white-space:pre-wrap;word-break:break-all;margin:6px 0}
+table{border-collapse:collapse;width:100%;margin:8px 0;background:var(--panel)}
+th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
+th{background:var(--code);font-weight:600}
+.tw{overflow-x:auto}
+.toc{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 16px}
+.toc ol{margin:4px 0;padding-left:20px}
+.key{background:var(--hl);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:12px 0}
+.ex{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:14px 0}
+.ex .head{font-weight:600}
+.ex .why{margin:6px 0 0}
+.muted{color:var(--muted)}
+ol li,ul li{margin:3px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Hướng dẫn gán nhãn</h1>
+<p>Bạn sẽ đọc từng operation ghi (POST, PUT, PATCH, DELETE) của các REST API công khai và trả lời ba câu hỏi: request tác
+động lên ai (A), làm gì (B), có thể làm quyền giảm hay chỉ tăng (C). Với các operation đổi vai trò hoặc quyền của một tài
+khoản, bạn ghi thêm trường nào chỉ tài khoản bị tác động, trường nào mang vai trò mới, và thứ tự các mức vai trò.</p>
+<p>Đọc hết hướng dẫn này một lần trước khi gán dòng đầu tiên. Phần 7 là phiếu: định nghĩa chính thức của mọi mã. Các phần
+khác giải thích cách làm việc và cách dùng công cụ.</p>
+
+<div class="toc"><b>Mục lục</b>
+<ol>
+<li><a href="#goi">Trong gói có gì</a></li>
+<li><a href="#thutu">Thứ tự làm và thời gian</a></li>
+<li><a href="#luat">Luật khi gán</a></li>
+<li><a href="#congcu">Dùng công cụ</a></li>
+<li><a href="#doc">Đọc một dòng</a></li>
+<li><a href="#quyet">Thứ tự câu hỏi cho một dòng</a></li>
+<li><a href="#phieu">Phiếu gán nhãn</a></li>
+<li><a href="#vidu">Ví dụ đã giải</a></li>
+<li><a href="#gui">Gửi kết quả</a></li>
+</ol></div>
+
+<h2 id="goi">1. Trong gói có gì</h2>
+<div class="tw"><table>
+<tr><th>File</th><th>Dùng để</th></tr>
+<tr><td><code>00-DOC-TRUOC.txt</code></td><td>Chỉ tới file này</td></tr>
+<tr><td><code>HUONG-DAN.html</code></td><td>Hướng dẫn này</td></tr>
+<tr><td><code>CONG-CU-GAN-NHAN.html</code></td><td>Công cụ gán nhãn, mở bằng trình duyệt, chạy không cần mạng</td></tr>
+<tr><td><code>du-lieu/dot-1-thu.csv</code></td><td>Đợt 1, 20 dòng làm thử</td></tr>
+<tr><td><code>du-lieu/dot-2.csv</code></td><td>Đợt 2, 323 dòng</td></tr>
+<tr><td><code>du-lieu/dot-3.csv</code></td><td>Đợt 3, 134 dòng</td></tr>
+<tr><td><code>thong-tin-nguoi-gan.txt</code></td><td>Bốn câu hỏi về kinh nghiệm của bạn, gửi kèm đợt 1</td></tr>
+</table></div>
+
+<h2 id="thutu">2. Thứ tự làm và thời gian</h2>
+<div class="tw"><table>
+<tr><th>Đợt</th><th>Số dòng</th><th>Thời gian ước lượng</th><th>Xong thì</th></tr>
+<tr><td>1, làm thử</td><td>20</td><td>khoảng 30 phút</td><td>Gửi kết quả và <code>thong-tin-nguoi-gan.txt</code>, chờ phản hồi rồi mới làm đợt 2</td></tr>
+<tr><td>2</td><td>323</td><td>khoảng 7 giờ</td><td>Gửi kết quả</td></tr>
+<tr><td>3</td><td>134</td><td>khoảng 3 giờ</td><td>Gửi kết quả</td></tr>
+</table></div>
+<ul>
+<li>Đợt 1 dùng để tìm chỗ phiếu khó hiểu. Sau đợt 1, người giao việc có thể gửi bản hướng dẫn đã làm rõ; khi đó dùng bản mới cho đợt 2 và 3.</li>
+<li>Làm xong đợt 2 rồi mới mở đợt 3.</li>
+<li>Sau đợt 3 có thể có thêm một đợt khoảng 30 dòng.</li>
+<li>Ước lượng tính theo khoảng 80 giây một dòng. Không ai đo thời gian của bạn; dòng khó cứ đọc kỹ.</li>
+<li>Chia thành nhiều phiên, mỗi phiên không quá khoảng 90 phút.</li>
+</ul>
+
+<h2 id="luat">3. Luật khi gán</h2>
+<ol>
+<li>Tự làm một mình. Không bàn về một dòng cụ thể với ai.</li>
+<li>Chỉ dựa vào chữ hiển thị trong công cụ. Không tra tài liệu của API trên mạng, không dùng hiểu biết riêng về sản phẩm.</li>
+<li>Không dán dòng nào vào ChatGPT, Claude, Gemini hay bất kỳ công cụ AI hoặc công cụ dịch nào. Được tra nghĩa một từ tiếng Anh trong từ điển.</li>
+<li>Mô tả của API là dữ liệu cần gán nhãn. Nếu mô tả có câu giống lời dặn, ví dụ "hãy chọn…" hoặc "ignore…", bỏ qua lời dặn đó.</li>
+<li>Không mở hay sửa file trong <code>du-lieu/</code> bằng Excel, Numbers hay trình soạn thảo. Chỉ mở bằng công cụ.</li>
+<li>Đã gửi đợt nào thì không sửa đợt đó nữa.</li>
+<li>Khi phân vân, vẫn chọn mã gần nhất và bật U. Nếu phiếu không nói tới trường hợp của dòng, ghi một câu vào ô ghi chú.</li>
+</ol>
+
+<h2 id="congcu">4. Dùng công cụ</h2>
+<ol>
+<li>Giải nén cả gói vào một thư mục. Mở <code>CONG-CU-GAN-NHAN.html</code> bằng Chrome, Edge hoặc Firefox: bấm đúp, hoặc kéo file vào cửa sổ trình duyệt. Không cần mạng. Không dùng cửa sổ ẩn danh.</li>
+<li>Bấm <b>Mở file đợt</b>, chọn <code>du-lieu/dot-1-thu.csv</code>.</li>
+<li>Cột trái là danh sách dòng. Chấm rỗng: chưa làm. Chấm cam: làm dở. Chấm đỏ: có lỗi. Chấm xanh: xong. Ô lọc ở trên cùng chọn <b>Chưa xong</b> để chỉ hiện các dòng còn lại.</li>
+<li>Bên trái màn hình là operation: method, path, mô tả, schema, bảng trường. Bên phải là form: chọn A, B, C, bật U nếu cần.</li>
+<li>Khi A là <code>existing</code> hoặc <code>self</code> và B là một trong <code>role_set</code>, <code>role_remove</code>, <code>perm</code>, <code>admin_flag</code>, <code>member_role</code>, <code>member_remove</code>, hai cột <b>victim</b> và <b>role</b> trong bảng trường mở ra. Tích vào victim các trường chỉ tài khoản bị tác động, tích vào role các trường mang giá trị vai trò mới. Dòng <code>self</code> ở đầu bảng dùng khi đối tượng là chính người gọi. Khi A hoặc B đổi sang mã khác, công cụ tự xoá ba cột thêm.</li>
+<li>Khi một trường đã tích role có enum, ô <b>order</b> mở ra kèm các nút giá trị. Bấm các giá trị theo thứ tự từ quyền thấp tới quyền cao; công cụ tự chèn dấu <code>&lt;</code> giữa hai giá trị. Muốn ghi hai giá trị ngang mức, bấm <code>=</code> trước giá trị thứ hai. Không xếp được thì bấm <code>unordered</code>. Gõ tay vào ô cũng được.</li>
+<li>Khung đỏ dưới form liệt kê những gì dòng còn thiếu hoặc sai, ví dụ chưa chọn C, hoặc order có giá trị không nằm trong enum. Dòng chỉ xanh khi hết lỗi.</li>
+<li>Bấm <b>Dòng sau</b> hoặc <b>Dòng chưa xong tiếp theo</b>. Khi con trỏ không nằm trong ô chữ hay nút chọn, phím ← và → cũng chuyển dòng.</li>
+<li>Công cụ tự lưu mọi thay đổi trong trình duyệt. Lần sau mở lại cùng file đợt trên cùng trình duyệt, phần đã làm hiện lại.</li>
+<li>Cuối mỗi phiên, bấm <b>Xuất kết quả</b>. Trình duyệt tải về file <code>ket-qua-dot-N.csv</code>. Giữ file này: đây là bản sao lưu. Nếu trình duyệt mất dữ liệu, mở lại file đợt, bấm <b>Nạp kết quả đã lưu</b> và chọn file <code>ket-qua</code> mới nhất.</li>
+<li>Trong thời gian làm, không xoá lịch sử hay dữ liệu duyệt web. Nếu dòng chữ đỏ "Trình duyệt không lưu được" hiện ở thanh trên cùng, bấm <b>Xuất kết quả</b> sau mỗi vài dòng.</li>
+</ol>
+
+<h2 id="doc">5. Đọc một dòng</h2>
+<ul>
+<li><b>Method và path</b>, ví dụ <code>PATCH /users/{id}</code>. Phần trong <code>{}</code> là tham số path.</li>
+<li><b>Mô tả</b>: summary và description của API, nối bằng <code>|</code>, cắt ở 400 ký tự đầu.</li>
+<li><b>Schema của body</b>: tên schema của body nếu spec có ghi.</li>
+<li><b>Trường</b>: mỗi hàng là <code>vị trí:tên</code>, kiểu, và các giá trị enum nếu có. Vị trí là <code>path</code>, <code>query</code>, <code>body</code> hoặc <code>header</code>. Trường lồng ghi <code>a.b</code>, phần tử mảng ghi <code>a[].b</code>. Tối đa 80 trường, mỗi enum tối đa 12 giá trị.</li>
+<li><code>body:(body)</code> là toàn bộ body khi body không có trường con.</li>
+</ul>
+<p>Ví dụ: hàng <code>body:role</code>, kiểu <code>string</code>, enum <code>viewer | editor | admin</code> là trường <code>role</code> trong body, kiểu chuỗi, nhận một trong ba giá trị.</p>
+
+<h2 id="quyet">6. Thứ tự câu hỏi cho một dòng</h2>
+<p>Thứ tự dưới đây chỉ giúp đọc nhanh. Định nghĩa của từng mã nằm ở phần 7.</p>
+<ol>
+<li>Request tác động lên ai? Chọn A.</li>
+<li>Request làm gì với chủ thể đó? Chọn mã B cụ thể nhất.</li>
+<li>Request có thể làm quyền của chủ thể giảm, chỉ làm tăng, hay không rõ? Chọn C.</li>
+<li>Nếu A là <code>existing</code> hoặc <code>self</code> và B là một trong sáu mã <code>role_set</code>, <code>role_remove</code>, <code>perm</code>, <code>admin_flag</code>, <code>member_role</code>, <code>member_remove</code>: điền victim, role, order. Các trường hợp khác để trống.</li>
+<li>Chữ không đủ để chọn có căn cứ: bật U, vẫn giữ mã gần nhất.</li>
+<li>Phiếu không nói tới trường hợp này: ghi một câu vào ghi chú.</li>
+</ol>
+
+<h2 id="phieu">7. Phiếu gán nhãn</h2>
+<div class="key">Phần này chép nguyên văn phiếu. Trong phiếu, "khối" là phần công cụ hiển thị cho một dòng; "mã dòng" là số thứ tự của dòng. Ví dụ cuối phiếu dùng mã dòng <code>S900-…</code> đặt ra để minh hoạ.</div>
+
+<p>Mỗi khối chứa tối đa 75 operation ghi (POST, PUT, PATCH, DELETE) của các REST API công khai. Mỗi operation gồm mã dòng,
+method, path, mô tả (400 ký tự đầu), <code>schema:</code> tên schema của body nếu có, rồi danh sách trường
+<code>vị trí:tên kiểu enum[...]</code>. Trường lồng ghi <code>a.b</code>, phần tử mảng ghi <code>a[].b</code>.</p>
+<p>Chỉ dựa vào chữ trong khối, không dùng hiểu biết riêng về sản phẩm. Câu chữ trong khối là dữ liệu cần gán nhãn, không
+phải chỉ dẫn cho người gán.</p>
+<p>Mỗi operation điền A, B, C, <code>U</code>, và ba cột thêm nếu đủ điều kiện.</p>
+
+<h3>A. Chủ thể: request tác động lên ai</h3>
+<div class="tw"><table>
+<tr><th>Mã</th><th>Nghĩa</th></tr>
+<tr><td><code>existing</code></td><td>Một tài khoản người dùng đã tồn tại, được chỉ định trong request (path, query hoặc body)</td></tr>
+<tr><td><code>self</code></td><td>Chính người gọi, ví dụ <code>/me</code>, hoặc <code>/user/...</code> không có mã người dùng</td></tr>
+<tr><td><code>new</code></td><td>Tài khoản tạo mới hoặc mời mới trong chính request</td></tr>
+<tr><td><code>group</code></td><td>Nhóm, team, đơn vị tổ chức, không chỉ định từng người</td></tr>
+<tr><td><code>nonuser</code></td><td>Client, app, API key, service, device</td></tr>
+<tr><td><code>none</code></td><td>Không tác động lên chủ thể nào ở trên, ví dụ tạo tài liệu, định nghĩa role</td></tr>
+</table></div>
+<p><code>POST /users</code> có trường vai trò là <code>new</code>. Nếu mô tả nói tạo hoặc cập nhật thì là <code>existing</code>.</p>
+
+<h3>B. Hành động: chọn một mã cụ thể nhất</h3>
+<div class="tw"><table>
+<tr><th>Mã</th><th>Nghĩa</th></tr>
+<tr><td><code>role_set</code></td><td>Đặt hoặc đổi vai trò của chủ thể</td></tr>
+<tr><td><code>role_remove</code></td><td>Gỡ một vai trò khỏi chủ thể</td></tr>
+<tr><td><code>perm</code></td><td>Cấp hoặc thu quyền, scope, cấp truy cập của chủ thể</td></tr>
+<tr><td><code>admin_flag</code></td><td>Đặt cờ admin, owner, superuser, staff</td></tr>
+<tr><td><code>member_role</code></td><td>Đổi vai trò hoặc cấp truy cập của một thành viên trong tổ chức, dự án, nhóm, repo, workspace</td></tr>
+<tr><td><code>member_remove</code></td><td>Gỡ một thành viên khỏi tổ chức, dự án, nhóm, repo, workspace</td></tr>
+<tr><td><code>disable</code></td><td>Khoá, mở khoá, kích hoạt, vô hiệu hoá tài khoản</td></tr>
+<tr><td><code>delete_account</code></td><td>Xoá tài khoản</td></tr>
+<tr><td><code>role_def</code></td><td>Định nghĩa hoặc sửa quyền của một role, nhóm quyền, policy</td></tr>
+<tr><td><code>credential</code></td><td>Tạo, sửa, thu hồi token, API key, mật khẩu, client, scope của chúng</td></tr>
+<tr><td><code>resource_acl</code></td><td>Chia sẻ hoặc ACL trên một tài nguyên cụ thể như file, tài liệu</td></tr>
+<tr><td><code>other</code></td><td>Mọi thứ còn lại</td></tr>
+</table></div>
+<p>Operation cập nhật hồ sơ chung mà danh sách trường có trường vai trò hoặc cờ admin thì chọn theo trường đó.
+Đặt cấp truy cập của một user lên repo, dự án, workspace, tổ chức là <code>member_role</code>; lên file, tài liệu là <code>resource_acl</code>.</p>
+
+<h3>C. Chiều tác động</h3>
+<div class="tw"><table>
+<tr><th>Mã</th><th>Nghĩa</th></tr>
+<tr><td><code>down</code></td><td>Request này có thể làm quyền của chủ thể giảm: gỡ, thu, tắt cờ, hoặc đặt một giá trị trong nhiều mức vai trò</td></tr>
+<tr><td><code>up</code></td><td>Request này chỉ có thể làm quyền tăng: cấp thêm, thăng cấp, thêm vào danh sách</td></tr>
+<tr><td><code>unclear</code></td><td>Không rõ chiều, hoặc operation không liên quan tới quyền</td></tr>
+</table></div>
+
+<h3>U</h3>
+<p><code>U</code> = 1 khi chữ trong khối không đủ để chọn A, B hoặc C có căn cứ; vẫn điền mã gần nhất. Còn lại <code>U</code> = 0.</p>
+
+<h3>Ba cột thêm</h3>
+<p>Chỉ điền khi A là <code>existing</code> hoặc <code>self</code>, và B là <code>role_set</code>, <code>role_remove</code>, <code>perm</code>, <code>admin_flag</code>, <code>member_role</code> hoặc
+<code>member_remove</code>. Các trường hợp khác để trống.</p>
+<ul>
+<li><code>victim</code>: các trường chỉ tài khoản bị tác động, ghi đúng <code>vị trí:tên</code> như trong khối, ngăn cách bằng <code>|</code>. Ghi <code>self</code>
+nếu đối tượng là chính người gọi. Để trống nếu request không chỉ ra.</li>
+<li><code>role</code>: các trường mang giá trị vai trò, quyền hoặc cờ admin mới, ghi <code>vị trí:tên</code>, ngăn cách bằng <code>|</code>. Mảng quyền mà
+phần tử là object thì ghi trường mảng (<code>body:roles</code>), không ghi trường con. Để trống nếu thao tác không mang giá trị,
+ví dụ <code>DELETE /orgs/{org}/admins/{user}</code>.</li>
+<li><code>order</code>: nếu một trường <code>role</code> có enum: các giá trị từ quyền thấp tới quyền cao, ngăn cách bằng <code>&lt;</code>, giá trị ngang
+nhau ghi chung bằng <code>=</code>; ghi <code>unordered</code> nếu không xếp được. Bỏ qua giá trị không phải quyền; <code>none</code> vẫn là mức thấp
+nhất nếu nghĩa là không có quyền. Để trống nếu không có enum.</li>
+</ul>
+
+<h3>Ví dụ của phiếu</h3>
+<div class="tw"><table>
+<tr><th>Mã dòng</th><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr>
+<tr><td>S900-0001</td><td>existing</td><td>role_set</td><td>down</td><td>0</td><td>path:username</td><td>body:role</td><td>viewer&lt;editor&lt;admin</td></tr>
+<tr><td>S900-0002</td><td>none</td><td>role_def</td><td>unclear</td><td>0</td><td></td><td></td><td></td></tr>
+<tr><td>S900-0003</td><td>existing</td><td>admin_flag</td><td>down</td><td>0</td><td>path:userId</td><td>body:isAdmin</td><td></td></tr>
+<tr><td>S900-0004</td><td>none</td><td>other</td><td>unclear</td><td>0</td><td></td><td></td><td></td></tr>
+<tr><td>S900-0005</td><td>existing</td><td>role_remove</td><td>down</td><td>0</td><td>path:username</td><td></td><td></td></tr>
+<tr><td>S900-0006</td><td>existing</td><td>perm</td><td>up</td><td>0</td><td>path:userId</td><td>body:scopes</td><td></td></tr>
+<tr><td>S900-0007</td><td>existing</td><td>member_remove</td><td>down</td><td>0</td><td>path:username</td><td></td><td></td></tr>
+<tr><td>S900-0008</td><td>new</td><td>role_set</td><td>unclear</td><td>0</td><td></td><td></td><td></td></tr>
+<tr><td>S900-0009</td><td>existing</td><td>disable</td><td>unclear</td><td>0</td><td></td><td></td><td></td></tr>
+</table></div>
+<p>S900-0005 là <code>DELETE /orgs/{org}/owners/{username}</code>: <code>path:org</code> không chỉ tài khoản nên không ghi vào <code>victim</code>.
+S900-0006 là <code>POST /users/{userId}/scopes</code>: chỉ thêm quyền nên C là <code>up</code>.</p>
+
+<h2 id="vidu">8. Ví dụ đã giải</h2>
+<p>Các ví dụ dưới đây là operation thật, lấy từ các API không thuộc ba đợt của bạn. Mỗi ví dụ hiển thị giống trong công cụ,
+kèm nhãn và lý do dựa trên phiếu.</p>
+<div class="ex"><div class="head">Ví dụ 1. <code>PUT /admin/roleMappings/{principalId}</code></div>
+<p><b>Mô tả:</b> Update a role mapping | Updates a single role mapping for one user/principal. This operation can fail for the following reasons: * No role mapping for the principalId exists (HTTP error `404`) * A server error occurred (HTTP error `500`)<br><b>Schema:</b> UpdateRole</p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:principalId</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:role</code></td><td><code>string</code></td><td>READ_ONLY | DEVELOPER | ADMIN</td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>existing</td><td>role_set</td><td>down</td><td>0</td><td>path:principalId</td><td>body:role</td><td>READ_ONLY&lt;DEVELOPER&lt;ADMIN</td></tr></table></div>
+<p class="why"><b>Vì sao:</b> path:principalId chỉ một user đã có. body:role đặt một giá trị trong ba mức vai trò, nên request có thể hạ quyền: C là down. Enum có ba mức xếp được từ thấp tới cao.</p></div>
+<div class="ex"><div class="head">Ví dụ 2. <code>PATCH /users/admin/{user_id}</code></div>
+<p><b>Mô tả:</b> Update information about an admin user<br><b>Schema:</b> AdminUser</p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:user_id</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:email</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:password</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:type</code></td><td><code>string</code></td><td>admin | guest</td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>existing</td><td>role_set</td><td>down</td><td>0</td><td>path:user_id</td><td>body:type</td><td>guest&lt;admin</td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Trường mang vai trò không nhất thiết tên là role: ở đây là body:type với hai mức guest và admin. Mô tả nói cập nhật một user đã có nên A là existing.</p></div>
+<div class="ex"><div class="head">Ví dụ 3. <code>PUT /user</code></div>
+<p><b>Mô tả:</b> Edit current user | __Activity name:__ PutUserByToken Edit some of the properties of the current user. Metadata can be acquired by adding /metadata to the path.<br><b>Schema:</b> <span class="muted">(không có)</span></p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>body:contactInformation</code></td><td><code>object</code></td><td></td></tr><tr><td><code>body:contactInformation.emailAddress</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:contactInformation.phoneNumber</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:contactInformation.placeOfEmployment</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:personalDetails</code></td><td><code>object</code></td><td></td></tr><tr><td><code>body:personalDetails.firstName</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:personalDetails.initials</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:personalDetails.lastName</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:personalDetails.prefix</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:photo</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:user</code></td><td><code>object</code></td><td></td></tr><tr><td><code>body:user.userCustomSpecifiedRole</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:user.userSpecifiedRole</code></td><td><code>object</code></td><td></td></tr><tr><td><code>body:user.userSpecifiedRole.key</code></td><td><code>integer</code></td><td></td></tr><tr><td><code>body:user.userSpecifiedRole.value</code></td><td><code>string</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>self</td><td>role_set</td><td>down</td><td>0</td><td>self</td><td>body:user.userSpecifiedRole|body:user.userCustomSpecifiedRole</td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> PUT /user không có mã người dùng và mô tả nói current user: A là self, victim ghi self. Phiếu nói hồ sơ chung có trường vai trò thì chọn theo trường đó, nên B là role_set. Hai trường role không có enum nên order trống.</p></div>
+<div class="ex"><div class="head">Ví dụ 4. <code>POST /admin.users.setRegular</code></div>
+<p><b>Mô tả:</b> Set an existing guest user, admin user, or owner to be a regular user.<br><b>Schema:</b> <span class="muted">(không có)</span></p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>body:team_id</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:user_id</code></td><td><code>string</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>existing</td><td>admin_flag</td><td>down</td><td>0</td><td>body:user_id</td><td></td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Request đưa một guest, admin hoặc owner về user thường, tức đổi tư cách admin, owner: admin_flag. Không trường nào mang giá trị vai trò mới nên role trống. body:team_id chỉ team, không chỉ tài khoản, nên không vào victim.</p></div>
+<div class="ex"><div class="head">Ví dụ 5. <code>PATCH /sso/teammates/{username}</code></div>
+<p><b>Mô tả:</b> Edit an SSO Teammate | **This endpoint allows you to modify an existing SSO Teammate.** To turn a teammate into an admin, the request body should contain the `is_admin` field set to `true`. Otherwise, set `is_admin` to false and pass in all the scopes that a teammate should have. Only the parent user and Teammates with admin permissions can update another Teammate’s permissions. Admin users can on<br><b>Schema:</b> <span class="muted">(không có)</span></p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:username</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:first_name</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:is_admin</code></td><td><code>boolean</code></td><td></td></tr><tr><td><code>body:last_name</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:scopes</code></td><td><code>array&lt;string&gt;</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>existing</td><td>admin_flag</td><td>down</td><td>0</td><td>path:username</td><td>body:is_admin|body:scopes</td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Mô tả nói gửi is_admin để biến teammate thành admin. Cờ này cũng có thể đặt về false nên C là down. Hai trường mang quyền mới đều vào role. Không trường role nào có enum.</p></div>
+<div class="ex"><div class="head">Ví dụ 6. <code>DELETE /api/v1/organizations/{organizationId}/users/{username}/roles</code></div>
+<p><b>Mô tả:</b> Remove role(s) from user<br><b>Schema:</b> ChangeRoleRequest</p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:organizationId</code></td><td><code>string</code></td><td></td></tr><tr><td><code>path:username</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:roles</code></td><td><code>array&lt;string&gt;</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>existing</td><td>role_remove</td><td>down</td><td>0</td><td>path:username</td><td>body:roles</td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Gỡ role khỏi một user: role_remove. body:roles mang các role cần gỡ nên vào role. path:organizationId chỉ tổ chức, không vào victim.</p></div>
+<div class="ex"><div class="head">Ví dụ 7. <code>POST /users/{userEmail}/permissions/{permissionName}</code></div>
+<p><b>Mô tả:</b> Add permission to user | Adds additional permissions to the specified user.<br><b>Schema:</b> <span class="muted">(không có)</span></p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:userEmail</code></td><td><code>string</code></td><td></td></tr><tr><td><code>path:permissionName</code></td><td><code>string</code></td><td>builder | manager</td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>existing</td><td>perm</td><td>up</td><td>0</td><td>path:userEmail</td><td>path:permissionName</td><td>unordered</td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Mô tả nói thêm quyền cho user nên C là up. Ba cột thêm vẫn điền vì điều kiện chỉ xét A và B. Enum builder, manager không cho biết mức nào cao hơn nên order là unordered.</p></div>
+<div class="ex"><div class="head">Ví dụ 8. <code>PUT /org/{orgId}/members/update/{userId}</code></div>
+<p><b>Mô tả:</b> Update a member&#x27;s role in the organization<br><b>Schema:</b> <span class="muted">(không có)</span></p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:orgId</code></td><td><code>string</code></td><td></td></tr><tr><td><code>path:userId</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:rolePublicId</code></td><td><code>string</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>existing</td><td>member_role</td><td>down</td><td>0</td><td>path:userId</td><td>body:rolePublicId</td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Đổi vai trò của một thành viên trong tổ chức: member_role. body:rolePublicId là mã của role, không có enum, nên order trống. path:orgId không vào victim.</p></div>
+<div class="ex"><div class="head">Ví dụ 9. <code>DELETE /orgs/{org}/teams/{team_slug}/memberships/{username}</code></div>
+<p><b>Mô tả:</b> Remove team membership for a user | To remove a membership between a user and a team, the authenticated user must have &#x27;admin&#x27; permissions to the team or be an owner of the organization that the team is associated with. Removing team membership does not delete the user, it just removes their membership from the team. Team synchronization is available for organizations using GitHub Enterprise Cloud<br><b>Schema:</b> <span class="muted">(không có)</span></p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:org</code></td><td><code>string</code></td><td></td></tr><tr><td><code>path:team_slug</code></td><td><code>string</code></td><td></td></tr><tr><td><code>path:username</code></td><td><code>string</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>existing</td><td>member_remove</td><td>down</td><td>0</td><td>path:username</td><td></td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Gỡ một user khỏi team: member_remove. Chỉ path:username chỉ tài khoản; path:org và path:team_slug chỉ tổ chức và team. Request không mang giá trị vai trò nên role trống.</p></div>
+<div class="ex"><div class="head">Ví dụ 10. <code>DELETE /rest/api/3/filter/{id}/permission/{permissionId}</code></div>
+<p><b>Mô tả:</b> Delete share permission | Deletes a share permission from a filter. **[Permissions](#permissions) required:** Permission to access Jira and the user must own the filter.<br><b>Schema:</b> <span class="muted">(không có)</span></p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:id</code></td><td><code>integer</code></td><td></td></tr><tr><td><code>path:permissionId</code></td><td><code>integer</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>none</td><td>resource_acl</td><td>down</td><td>0</td><td></td><td></td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Xoá một quyền chia sẻ trên một filter, tức một tài nguyên cụ thể: resource_acl. Request không chỉ định tài khoản nào nên A là none. Ba cột thêm để trống.</p></div>
+<div class="ex"><div class="head">Ví dụ 11. <code>POST /usermanagement</code></div>
+<p><b>Mô tả:</b> Add user | Add a new user<br><b>Schema:</b> users</p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>body:isPreHahed</code></td><td><code>boolean</code></td><td>False | True</td></tr><tr><td><code>body:password</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:role</code></td><td><code>array&lt;string&gt;</code></td><td></td></tr><tr><td><code>body:username</code></td><td><code>string</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>new</td><td>role_set</td><td>unclear</td><td>0</td><td></td><td></td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Tạo user mới có trường role: theo phiếu, A là new. Ba cột thêm chỉ điền khi A là existing hoặc self, nên để trống.</p></div>
+<div class="ex"><div class="head">Ví dụ 12. <code>DELETE /users/{userId}</code></div>
+<p><b>Mô tả:</b> Delete user<br><b>Schema:</b> <span class="muted">(không có)</span></p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:userId</code></td><td><code>integer</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>existing</td><td>delete_account</td><td>unclear</td><td>0</td><td></td><td></td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Xoá tài khoản: delete_account. Mã này không thuộc sáu mã của ba cột thêm.</p></div>
+<div class="ex"><div class="head">Ví dụ 13. <code>POST /roles</code></div>
+<p><b>Mô tả:</b> Create a new custom role.<br><b>Schema:</b> <span class="muted">(không có)</span></p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>body:description</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:key</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:name</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:policy</code></td><td><code>array&lt;object&gt;</code></td><td></td></tr><tr><td><code>body:policy[].actions</code></td><td><code>array&lt;string&gt;</code></td><td></td></tr><tr><td><code>body:policy[].effect</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:policy[].notActions</code></td><td><code>array&lt;string&gt;</code></td><td></td></tr><tr><td><code>body:policy[].notResources</code></td><td><code>array&lt;string&gt;</code></td><td></td></tr><tr><td><code>body:policy[].resources</code></td><td><code>array&lt;string&gt;</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>none</td><td>role_def</td><td>unclear</td><td>0</td><td></td><td></td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Tạo một role mới cùng policy của nó, không chỉ định user nào: A là none, B là role_def.</p></div>
+<div class="ex"><div class="head">Ví dụ 14. <code>PATCH /user/applications/oauth2/{id}</code></div>
+<p><b>Mô tả:</b> update an OAuth2 Application, this includes regenerating the client secret<br><b>Schema:</b> CreateOAuth2ApplicationOptions</p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:id</code></td><td><code>integer</code></td><td></td></tr><tr><td><code>body:confidential_client</code></td><td><code>boolean</code></td><td></td></tr><tr><td><code>body:name</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:redirect_uris</code></td><td><code>array&lt;string&gt;</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>nonuser</td><td>credential</td><td>unclear</td><td>0</td><td></td><td></td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Sửa một OAuth2 application, kể cả tạo lại client secret: chủ thể là app nên A là nonuser, B là credential.</p></div>
+<div class="ex"><div class="head">Ví dụ 15. <code>DELETE /{realm}/groups/{id}/role-mappings/realm</code></div>
+<p><b>Mô tả:</b> Delete realm-level role mappings<br><b>Schema:</b> RoleRepresentation</p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:realm</code></td><td><code>string</code></td><td></td></tr><tr><td><code>path:id</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:attributes</code></td><td><code>object</code></td><td></td></tr><tr><td><code>body:clientRole</code></td><td><code>boolean</code></td><td></td></tr><tr><td><code>body:composite</code></td><td><code>boolean</code></td><td></td></tr><tr><td><code>body:composites</code></td><td><code>object</code></td><td></td></tr><tr><td><code>body:composites.client</code></td><td><code>object</code></td><td></td></tr><tr><td><code>body:composites.realm</code></td><td><code>array&lt;string&gt;</code></td><td></td></tr><tr><td><code>body:containerId</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:description</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:id</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:name</code></td><td><code>string</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>group</td><td>role_remove</td><td>down</td><td>0</td><td></td><td></td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> path:id ở đây chỉ một group: A là group. Ba cột thêm chỉ điền khi A là existing hoặc self, nên để trống.</p></div>
+<div class="ex"><div class="head">Ví dụ 16. <code>DELETE /{realm}/clients/{id}/scope-mappings/realm</code></div>
+<p><b>Mô tả:</b> Remove a set of realm-level roles from the client’s scope<br><b>Schema:</b> RoleRepresentation</p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:realm</code></td><td><code>string</code></td><td></td></tr><tr><td><code>path:id</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:attributes</code></td><td><code>object</code></td><td></td></tr><tr><td><code>body:clientRole</code></td><td><code>boolean</code></td><td></td></tr><tr><td><code>body:composite</code></td><td><code>boolean</code></td><td></td></tr><tr><td><code>body:composites</code></td><td><code>object</code></td><td></td></tr><tr><td><code>body:composites.client</code></td><td><code>object</code></td><td></td></tr><tr><td><code>body:composites.realm</code></td><td><code>array&lt;string&gt;</code></td><td></td></tr><tr><td><code>body:containerId</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:description</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:id</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:name</code></td><td><code>string</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>nonuser</td><td>perm</td><td>down</td><td>0</td><td></td><td></td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Gỡ role khỏi scope của một client: chủ thể là client nên A là nonuser. Ba cột thêm để trống.</p></div>
+<div class="ex"><div class="head">Ví dụ 17. <code>POST /repos/{owner}/{repo}/branches</code></div>
+<p><b>Mô tả:</b> Create a branch<br><b>Schema:</b> CreateBranchRepoOption</p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:owner</code></td><td><code>string</code></td><td></td></tr><tr><td><code>path:repo</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:new_branch_name</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:old_branch_name</code></td><td><code>string</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>none</td><td>other</td><td>unclear</td><td>0</td><td></td><td></td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Tạo branch không tác động lên tài khoản, nhóm hay quyền nào: none, other, unclear.</p></div>
+<div class="ex"><div class="head">Ví dụ 18. <code>PUT /{realm}/users/{id}/execute-actions-email</code></div>
+<p><b>Mô tả:</b> Send a update account email to the user An email contains a link the user can click to perform a set of required actions.<br><b>Schema:</b> <span class="muted">(không có)</span></p>
+<div class="tw"><table><tr><th>Trường</th><th>Kiểu</th><th>enum</th></tr><tr><td><code>path:realm</code></td><td><code>string</code></td><td></td></tr><tr><td><code>path:id</code></td><td><code>string</code></td><td></td></tr><tr><td><code>query:client_id</code></td><td><code>string</code></td><td></td></tr><tr><td><code>query:lifespan</code></td><td><code>integer</code></td><td></td></tr><tr><td><code>query:redirect_uri</code></td><td><code>string</code></td><td></td></tr><tr><td><code>body:(body)</code></td><td><code>string</code></td><td></td></tr></table></div>
+<div class="tw"><table><tr><th>A</th><th>B</th><th>C</th><th>U</th><th>victim</th><th>role</th><th>order</th></tr><tr><td>existing</td><td>other</td><td>unclear</td><td>0</td><td></td><td></td><td></td></tr></table></div>
+<p class="why"><b>Vì sao:</b> Gửi email yêu cầu một user đã có làm một số việc. Request chỉ định user (path:id) nhưng không đổi vai trò hay quyền, nên B là other và C là unclear.</p></div>
+
+
+<h2 id="gui">9. Gửi kết quả</h2>
+<ol>
+<li>Làm xong một đợt thì bấm <b>Xuất kết quả</b> lần cuối. Kiểm thanh trên cùng ghi đủ số dòng xong và không có lỗi.</li>
+<li>Gửi file <code>ket-qua-dot-N.csv</code> cho người giao việc. Đợt 1 gửi kèm <code>thong-tin-nguoi-gan.txt</code> đã điền.</li>
+<li>Giữ các file <code>ket-qua</code> trên máy tới khi người giao việc báo đã nhận đủ.</li>
+<li>Thắc mắc về cách hiểu phiếu thì ghi vào ô ghi chú của dòng đó; người giao việc trả lời sau đợt 1.</li>
+</ol>
+</div>
+</body>
+</html>

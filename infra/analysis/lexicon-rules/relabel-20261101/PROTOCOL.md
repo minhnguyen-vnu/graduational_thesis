@@ -84,3 +84,17 @@ Phần AI dừng tại hàng đợi người gán. Chưa học mô hình mới, 
 - 2026-11-01 01:05, sau train 001–005: Cohen `T_core` 0,856 trên 375 dòng, Sonnet 3, Opus 4 dòng T, lệch 1; `U` Sonnet 34,
   Opus 56. Không dừng. Năm khối này tốn khoảng 1,6% quota 5 giờ mỗi cặp nên từ khối 006 đặt `DISABLE_PROMPT_CACHING=1`:
   mỗi khối chỉ gọi một lần, cache không được dùng lại. Biến này không đổi prompt hay model.
+- 2026-11-01 15:11, user đổi sang tài khoản Claude khác khi tài khoản đầu hết quota 5 giờ; driver khởi động lại để bỏ
+  lượt chờ. Cùng CLI 2.1.316, model, effort, phiếu. Mọi lời gọi từ 15:12:44 dùng tài khoản mới: train A từ khối 109, B
+  từ khối 088 (`run.log`, `usage.csv`).
+- 2026-11-01 15:33 phần AI xong, 0 khối hỏng; số thật ở `AI-REPORT.md`. User giữ `member_remove` trong `T_core`: 94 dòng
+  train chỉ là T nhờ mã này, nhãn cũ ghi 46 T, 48 N.
+- Gói bàn giao `ban-giao-gan-nhan-20261101.zip`, dựng bằng `pack_handover.sh` từ `ban-giao/`. Gồm: phiếu chép nguyên văn,
+  hướng dẫn làm việc, công cụ HTML chạy offline, câu hỏi về nền chuyên môn của người gán. Người gán có thêm 18 ví dụ đã
+  giải mà hai lượt AI không có: dòng train hai AI khớp hoàn toàn, nằm ngoài mọi hàng đợi. Luật cho người gán: làm một
+  mình, chỉ dựa vào chữ hiển thị, không dùng công cụ AI hay công cụ dịch. File đổi tên, nội dung trùng sha256 trong
+  `SEALS.txt`: `pilot.csv` thành `dot-1-thu.csv`, `test-queue.csv` thành `dot-2.csv`, `train-queue.csv` thành
+  `dot-3.csv`. Self-test công cụ `selftest/handover_tool_test.js`: 52/52.
+- Hai mục trên thêm sau khi niêm phong; bỏ chúng thì `PROTOCOL.md` khớp mã băm trong `SEALS.txt`. Nhãn AI, `sealed/`,
+  `AI-REPORT.md`, `rows-known.jsonl` không vào git tới khi người gán xong, vì người gán có thể đọc repo; bản sao ở
+  `~/thesis-backups/relabel-20261101-sealed-20261101-1632/`. `SEALS.txt` vào git để giữ mốc thời gian.
