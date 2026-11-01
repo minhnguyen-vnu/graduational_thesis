@@ -1,0 +1,52 @@
+======== round 3, both labellers agree S101-0104
+-- what the labeller sees (field-labelling-r3-20261006/rows/chunk-001.txt)
+## S101-0104  PATCH /v0.1/apps/{owner_name}/{app_name}/users/{user_email}
+desc: Update user permission for the app
+- path:owner_name string
+- path:app_name string
+- path:user_email string
+- body:permissions array<string> enum[manager|developer|viewer]
+-- what each labeller wrote
+L1: S101-0104,1,path:user_email,body:permissions,viewer<developer<manager,
+L2: S101-0104,1,path:user_email,body:permissions,viewer<developer<manager,
+-- final {'row_id': 'S101-0104', 'T': '1', 'victim': 'path:user_email', 'role': 'body:permissions', 'order': 'viewer<developer<manager', 'source': 'agree'}
+======== round 4, two of three say T=1 S304-N0080
+-- what the labeller sees (field-labelling-r4-20261006/rows/chunk-014.txt)
+## S304-N0080  POST /teams/{team_gid}/removeUser
+desc: Remove a user from a team | The user making this call must be a member of the team in order to remove themselves or others.
+- path:team_gid string
+- query:opt_pretty boolean
+- query:opt_fields array<string>
+- body:user string
+-- what each labeller wrote
+LA: S304-N0080,1,body:user,,,
+LB: S304-N0080,0,,,,
+LM: S304-N0080,1,body:user,,,
+-- final {'row_id': 'S304-N0080', 'T': '1', 'victim': 'body:user', 'role': '', 'order': '', 'source': 'r4:majority'}
+======== round 4, no majority on columns, adjudicated S330-N0048
+-- what the labeller sees (field-labelling-r4-20261006/rows/chunk-005.txt)
+## S330-N0048  PUT /api/v1/orgs/{org_id}/admins/{admin_id}
+desc: updateOrgAdmin | Invite Org Admin
+schema: admin
+- path:org_id string
+- path:admin_id string
+- body:admin_id string
+- body:email string
+- body:enable_two_factor boolean
+- body:first_name string
+- body:hours integer
+- body:last_name string
+- body:oauth_google boolean
+-- what each labeller wrote
+LA: S330-N0048,1,path:admin_id|body:admin_id,body:privileges,,
+LB: S330-N0048,1,path:admin_id,body:privileges,unordered,
+LM: S330-N0048,1,path:admin_id,body:privileges,read<helpdesk<installer<write<admin,
+-- final {'row_id': 'S330-N0048', 'T': '1', 'victim': 'path:admin_id', 'role': 'body:privileges', 'order': 'unordered', 'source': 'r4:adjudicated'}
+======== adjudication rows shown to the adjudicator, S330-N0048
+{'row_id': 'S330-N0048', 'letter': 'X', 'T': '1', 'victim': 'path:admin_id', 'role': 'body:privileges', 'order': 'unordered'}
+{'row_id': 'S330-N0048', 'letter': 'Y', 'T': '1', 'victim': 'path:admin_id', 'role': 'body:privileges', 'order': 'read<helpdesk<installer<write<admin'}
+{'row_id': 'S330-N0048', 'letter': 'Z', 'T': '1', 'victim': 'body:admin_id|path:admin_id', 'role': 'body:privileges', 'order': ''}
+adjudicator: {'row_id': 'S330-N0048', 'T': '1', 'victim': 'path:admin_id', 'role': 'body:privileges', 'order': 'unordered', 'reason': 'Victim đúng là path:admin_id (body:admin_id chỉ là trường của schema admin nên Z thừa và Z bỏ order dù có enum), còn installer là vai trò chuyên biệt không so sánh tuyến tính được với read/helpdesk nên unordered hợp lý hơn chuỗi đầy đủ của Y.'}
+op_docs: positive 199, negative 10182, prior ln(199/10182) = -3.935
+role_docs: positive 184, negative 1279, prior ln(184/1279) = -1.939
+victim_docs: positive 187, negative 1142, prior ln(187/1142) = -1.809

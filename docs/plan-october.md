@@ -23,6 +23,9 @@ Mọi con số tháng 10 ghi tên jar; bảng không trộn jar.
 Cập nhật 2026-10-04: jar trích số đã chốt là `AF2-6b5606d4` (commit `8d6cf8431f`), tái lập jar `R` từng seed
 (`af2-full-remeasure-20261003/`). Bảng §3 giữ nhãn jar của bản nháp 09-27.
 
+Cập nhật 2026-10-31: HEAD `1cd0d091f4` (jar SR) đã gỡ reset, transition khai báo và D1. Nhánh B2, B3 và mọi arm dùng cờ
+D1 chỉ chạy được trên P2f và các jar trước.
+
 ## 3. Các nhánh
 
 | # | Nhánh | Đo gì | Lượt | Giờ | Dữ liệu đã có |
@@ -54,6 +57,9 @@ Tổng A2 + B1–B3 + C + D: khoảng 110 giờ máy, chừng 5–6 ngày đêm 
 | Cờ tắt từng thành phần | nhánh D | gate |
 | Gán giá trị vào mảng object (`roles: [{"name": ...}]`) | Airflow hiện chỉ gửi `roles: []`; khôi phục quyền không làm được | self-test Airflow |
 | Chủ động dựng nguồn (D2) | Vikunja: nguồn thiếu nạn nhân | ngoài phạm vi nếu hết giờ |
+| Xét lại luật `roleField` bỏ path param (`RestSecurityBuilder.kt:1215`, jar SR) | lý do chưa ghi ở đâu; op đặt vai trò ở path như `DELETE /users/{id}/roles/{role}` (`rules-draft.md:75`) thành không khả dụng | đếm op T có vai trò ở path trong nhãn vòng 4 |
+| Xét gỡ `routeLooksMissing` (`:1779`, jar SR) | bỏ nhầm route con có thật khi chỉ route cha 404; thêm vào lúc trần còn 8, nay 20, và nhánh 404 ở `:1082` cũng chuyển op | Grafana có và không có hàm |
+| Xét gỡ check timeout trước mỗi source (`RestSecurityBuilder.kt:709`, jar SR) | giữa `:709` và check trước mỗi nạn nhân `:722` chỉ có `victimSlicesOn`, hàm này không gửi request | self-test so log stateful |
 
 ## 5. Thứ tự đề xuất
 

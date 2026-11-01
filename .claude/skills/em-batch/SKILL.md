@@ -1,6 +1,6 @@
 ---
 name: em-batch
-description: Run EvoMaster black-box against the thesis targets, one run or a batch - containers, reseed, auth config, flags for oracle 970, reset ablation, declared transition, nohup launch, monitoring, then audit, replay and backup. Use before starting any EvoMaster run.
+description: Run EvoMaster black-box against the thesis targets, one run or a batch - containers, reseed, auth config, flags for oracle 970, nohup launch, monitoring, then audit, replay and backup. Use before starting any EvoMaster run.
 ---
 
 # Running EvoMaster on the thesis targets
@@ -20,7 +20,7 @@ Build and start: `infra/reports-api/README.md`, `docs/tier2-seeded-benchmark-pla
 
 ```bash
 curl -s -X POST http://localhost:8080/reset >/dev/null
-JAVA_HOME=$(/usr/libexec/java_home -v 17) java -jar /Users/minhnguyen/IdeaProjects/EvoMaster/evomaster-P2e-6ae8277b.jar \
+JAVA_HOME=$(/usr/libexec/java_home -v 17) java -jar /Users/minhnguyen/IdeaProjects/EvoMaster/evomaster-P2f-64ee8ffc.jar \
   --blackBox true --bbSwaggerUrl http://localhost:8080/v3/api-docs --bbTargetUrl http://localhost:8080 \
   --configPath infra/em-config/reports-auth.yaml \
   --useExperimentalOracles true --extraPhaseBudgetPercentage 0.6 \
@@ -32,11 +32,10 @@ JAVA_HOME=$(/usr/libexec/java_home -v 17) java -jar /Users/minhnguyen/IdeaProjec
 - The security phase gets `extraPhaseBudgetPercentage × maxTime`; below ~0.6 at 150 s construction starves.
 - `--security` requires `--minimize`.
 - pyLoad: add `--endpointExclude "/api/kill,/api/restart"`; recorded runs used `--ratePerMinute 200 --maxTime 10m`.
-- Reset ablation: `--statefulAuthzResetEndpoint "POST http://localhost:8080/reset"` (Tier-1),
-  `"GET http://localhost:5002/createdb"` (Tier-2), `"POST http://localhost:8090/thesis/reset"` (Tier-2b).
-  Off by default. Each call logs `SUT state reset via … -> 200`.
-- Declared transition: `--statefulAuthzTransition "<VERB> <PATH> k=v k=v"` with `<victim>`/`<operator>`.
-  It also raises the attempt ceiling to 40 (inferred: 20 on P2e, 8 on AF2) and orders guards. Never quote a black-box recall from it.
+- Reset (`--statefulAuthzResetEndpoint`), the declared transition (`--statefulAuthzTransition`) and D1
+  (`--statefulAuthzTwoCredentialJudgment`) exist only on P2f and earlier jars, to reproduce recorded rows. The
+  refactor jar `evomaster-SR-77465fe5.jar` (2026-10-27) removed all three and rejects them with
+  `is not a recognized option`.
 - Baseline arms: released v6.1.1, `infra/em-venv/bin/evomaster` (security oracles on by default).
 - Auth config keys (WFC, v6.1.1): `extractFrom: body`, `extractSelector: /token` (JSON Pointer), `sendIn: header`,
   `sendName: Authorization`, `sendTemplate: "Bearer {token}"`. v6.1.1 rejects `extractFromField`,

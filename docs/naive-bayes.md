@@ -21,8 +21,8 @@ Pha security chạy sau search. `addForStatefulAccessControl` (`RestSecurityBuil
 | Chọn giá trị hạ quyền và nâng quyền | `harvestReducedRoleCandidates` `:1252`, `restoreValues` `:1260`, `valueScore` `:225` | `low`, `high`, `lowstr`, `highstr` |
 
 Oracle dùng cùng vị từ `looksLikePermissionReducingTransition` (`:241`): verb ghi và điểm op > 0, tức
-hậu nghiệm > 0,5. Khi D1 tắt, oracle bỏ qua source mà vị từ này nhận (`RestSecurityOracle.kt:583`) và đòi lời gọi xen giữa mà
-vị từ này nhận (`:602`). Builder và oracle dùng một vị từ ở một ngưỡng, nên builder không dựng bộ ba mà oracle từ
+hậu nghiệm > 0,5. Oracle bỏ qua source mà vị từ này nhận (`RestSecurityOracle.kt:580` trên HEAD) và đòi lời gọi xen giữa mà
+vị từ này nhận (`:599`). P2f và các jar trước chỉ làm vậy khi D1 tắt (`:583`, `:602`). Builder và oracle dùng một vị từ ở một ngưỡng, nên builder không dựng bộ ba mà oracle từ
 chối.
 
 ## 2. Cách tính
@@ -70,11 +70,13 @@ sách viết tay 117; Naive Bayes so với RF p = 0,065–0,27.
 
 ## 4. Trên target
 
-- Hạng của transition: 1 ở reports, vampi, pyLoad, Airflow, bamf; 3 ở artifact-keeper.
+- Hạng của transition, xếp từ spec tĩnh qua bộ lọc RF: 1 ở reports, vampi, pyLoad, Airflow, bamf; 3 ở artifact-keeper.
 - Trên reports, vampi, pyLoad (180 hàng), số lần nổ 970 và FP trùng `AF2` ở cả 12 arm. Chỗ khác `AF2` (thêm bộ ba và
   VOID trên pyLoad có reset, thêm một VOID ở vampi fixed không reset seed 19) đến từ trần lần thử 20 thay vì 8 (P1)
   (`em-results/p2e-continue-20261013/RESULTS.md`, Soát tay).
-- P2e chưa chạy Airflow, bamf, artifact-keeper; hạng ở trên xếp từ spec tĩnh.
+- artifact-keeper: P2e 0/2, vì `is_admin` lên dây thành `null`; P2f sửa lỗi này và đạt 5/5
+  (`em-results/artifactkeeper-machine-20261014/`). Lúc chạy P2f, `PATCH /api/v1/users/{id}` là ứng viên 4 trên 7.
+- P2e và P2f chưa chạy Airflow, bamf.
 
 ## 5. File mô hình
 

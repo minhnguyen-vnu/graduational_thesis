@@ -30,17 +30,20 @@ JAVA_HOME=$(/usr/libexec/java_home -v 17) mvn -f /Users/minhnguyen/IdeaProjects/
 unzip -p <jar> 'org/evomaster/core/EMConfig*.class' | strings | grep -o "statefulAuthz[A-Za-z]*" | sort -u
 ```
 
+  Jar SR prints nothing: its `EMConfig.kt` equals v6.1.1.
+
 | Jar | Commit | Use |
 |---|---|---|
-| `evomaster-P2f-64ee8ffc.jar` | `f73010103b` (HEAD) | gate 21/21 on 2026-10-15, full remeasure `em-results/p2f-full-20261015/`; promotion to quoting jar pending |
-| `evomaster-P2e-6ae8277b.jar` | `a544c996ac` | every current number, on a merged set with a declared deviation (`docs/results.md` §0) |
+| `evomaster-SR-77465fe5.jar` | `f73010103b` + `wip/refactor-simplify-20261027.patch`; HEAD `1cd0d091f4` differs from the patch by one blank line (`RestSecurityBuilder.kt:781`) | refactor 2026-10-27: no reset, declared transition or D1, C4 only, loops for lambdas; gate 12/12 no-reset rows (`regression-check-SR-20261027/`); quotes nothing |
+| `evomaster-P2f-64ee8ffc.jar` | `f73010103b` (parent of HEAD) | every current number from 2026-10-18; gate 21/21 on 2026-10-15, full remeasure `em-results/p2f-full-20261015/` |
+| `evomaster-P2e-6ae8277b.jar` | `a544c996ac` | provenance; quoted 2026-10-14 to 10-18 on a merged set with a declared deviation; held-out apps `docs/results.md` §5c |
 | `evomaster-AF2-6b5606d4.jar` | `8d6cf8431f` | provenance; quoted 2026-10-04 to 10-14; replay in `docs/results.md` §3 (`af2-full-remeasure-20261003/`) |
 | `evomaster-R-5bce137f.jar` | `007e5e09f9` | provenance; AF2 reproduces §4 per-seed |
 | `evomaster-B-06c70147.jar` | `8436f6dba6` | superseded Tier-2b round |
 | `evomaster-frozen-769c16d.jar` | `6dd65f3706` | superseded Tier-1/Tier-2 rounds |
 | `evomaster-0e-bf26b653.jar` sha256 `7974e8031991e0af…` | source of `bf26b65322` (HEAD `6a43a852d0` + 0e patch) | gate 21/21 on 2026-09-13; no batch |
 
-The filenames of `B`, `R`, `AF2`, `P2e` and `P2f` carry the first 8 hex digits of the jar's sha256; `frozen` and `0e` carry
+The filenames of `B`, `R`, `AF2`, `P2e`, `P2f` and `SR` carry the first 8 hex digits of the jar's sha256; `frozen` and `0e` carry
 commit hashes from before the 2026-09-01 history rewrite. The commit column is current.
 
 ## Rollback rehearsal

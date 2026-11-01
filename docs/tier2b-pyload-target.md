@@ -60,7 +60,8 @@ Between runs they are restored over HTTP by the injected `/thesis/reset` endpoin
 **Six** deviations from a plain out-of-the-box run. Each must be stated in the write-up; none of
 them creates, hides, or moves the bug. They are not of one kind, and the write-up must not blur
 them together — the **Where** column is the distinction that matters. Deviations 1–4 change the
-system under test or its specification; 5–6 only change how the tool is invoked.
+system under test or its specification; 5–6 only change how the tool is invoked. Deviation 6 and the
+reset use of deviation 4 apply to P2f and earlier: HEAD `1cd0d091f4` (jar SR) removed both options.
 
 | # | Where | Deviation | Why it is needed | Why it does not affect the result |
 |---|---|---|---|---|

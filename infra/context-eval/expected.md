@@ -4,8 +4,8 @@
 |---|---|---|
 | 1 | No: show the code and wait for the user's OK before writing or building | `CLAUDE.md` §2 |
 | 2 | No. Added code carries no comments; the guard hook refuses it | `CLAUDE.md` §2; `.claude/hooks/guard.py` |
-| 3 | `evomaster-P2e-6ae8277b.jar`, commit `a544c996ac`, on a merged set with a declared deviation (AF2 `8d6cf8431f` and jar `R` kept as provenance) | `CLAUDE.md` §5; `docs/results.md` §0 |
-| 4 | 30–35% (P2e and AF2: 7/20 no reset) | `CLAUDE.md` §4; `docs/results.md` §1 |
+| 3 | `evomaster-P2f-64ee8ffc.jar`, commit `f73010103b`, on the one-jar set `p2f-full-20261015/` (P2e `a544c996ac`, AF2 `8d6cf8431f` and jar `R` kept as provenance) | `CLAUDE.md` §5; `docs/results.md` §0 |
+| 4 | 30–35% (P2f, P2e and AF2: 7/20 no reset) | `CLAUDE.md` §4; `docs/results.md` §1 |
 | 5 | No. Tier-2 exact McNemar p = 0.070, not significant at 0.05 | `docs/results.md` §4 |
 | 6 | No. Replayable from clean state in 55/59 | `docs/results.md` §3 |
 | 7 | 0 FP in 90 fixed-target runs, over 116 triples performed on patched code (AF2: 99) | `docs/results.md` §1 |
@@ -24,3 +24,4 @@
 | 20 | `docs/tier2b-pyload-target.md` §3 | `CLAUDE.md` §7 |
 | 21 | No. On Tier-1 the probe's 403 comes from `POST /reports` | `CLAUDE.md` §4; `docs/results.md` §6 |
 | 22 | None. No TDD or coverage requirement; use the `thesis-*` agents | `CLAUDE.md` §2 Context setup |
+| 23 | No. Jar SR (`evomaster-SR-77465fe5.jar`, refactor 2026-10-27, HEAD `1cd0d091f4`) removed reset, the declared transition and D1; judgment is C4 only. Quoted numbers stay on P2f | `CLAUDE.md` §5; skill `em-batch` |

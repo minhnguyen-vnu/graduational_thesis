@@ -14,9 +14,10 @@ Mỗi sự kiện nằm ở một file: file này giữ luật và trỏ tới p
 - Giai đoạn: phát triển tới **2026-09-30** (§6). Tháng 10: tinh chỉnh, đánh giá, viết. Hạn: **cuối tháng 11 năm 2026**.
 - Luận văn viết bằng **tiếng Việt**. Trả lời theo ngôn ngữ của user.
 - Tác giả: kỹ sư phần mềm, ~2 năm fintech, Java/Spring Boot. Đọc được Kotlin, viết Kotlin chưa thoải mái.
-- Mã nguồn: `/Users/minhnguyen/IdeaProjects/EvoMaster`, nhánh `stateful-authz-oracle`, 13 commit trên `v6.1.1`, HEAD
-  `f73010103b` (jar P2f, đã push); `a544c996ac` là jar P2e, `8d6cf8431f` là jar AF2. Chi tiết: `infra/evomaster-ext/README.md`.
-- Thư mục luận văn là một git repo (nhánh `main`, 2 commit).
+- Mã nguồn: `/Users/minhnguyen/IdeaProjects/EvoMaster`, nhánh `stateful-authz-oracle`, 14 commit trên `v6.1.1`, HEAD
+  `1cd0d091f4` (2026-10-29, đã push, jar SR, §5): gỡ reset, transition khai báo và D1; phán quyết chỉ còn probe C4.
+  `f73010103b` là jar P2f, `a544c996ac` là jar P2e, `8d6cf8431f` là jar AF2. Chi tiết: `infra/evomaster-ext/README.md`.
+- Thư mục luận văn là một git repo (nhánh `main`, 3 commit).
 - Đã dựng: quan hệ MR-A1, cách dựng bộ ba, phán quyết 970, và ba target — Tier-1 `reports-api`, Tier-2 `vampi-seeded`,
   Tier-2b pyLoad CVE-2026-41133.
 
@@ -120,7 +121,7 @@ Mỗi sự kiện nằm ở một file: file này giữ luật và trỏ tới p
 - Phạm vi: A1, hạ vai trò. A2 (chuyển quyền sở hữu) và A3 (hết hạn quyền) đã định nghĩa, chưa chứng minh.
   Lỗi chéo tài khoản (BOLA/BFLA) thuộc về baseline, Şahin et al. arXiv:2604.00702 (`docs/related-work.md`).
 
-## 4. Số hiện tại — jar P2e (`6ae8277b`, bộ gộp có lệch luật); chi tiết, nguồn và dè dặt trong `docs/results.md`
+## 4. Số hiện tại — jar P2f (`64ee8ffc`, một jar, 180 hàng); chi tiết, nguồn và dè dặt trong `docs/results.md`
 
 | Target | 970 nổ, không reset | 970 nổ, có reset | FP trên bản đã sửa |
 |---|---|---|---|
@@ -128,37 +129,44 @@ Mỗi sự kiện nằm ở một file: file này giữ luật và trỏ tới p
 | Tier-2 `vampi-seeded` | 7/20 | 13/20 | 0/40 |
 | Tier-2b pyLoad | 5/5 | 5/5 | 0/10 |
 
-- Bộ gộp 180 hàng `p2e-continue-20261013/merged.csv`: 71 hàng P2e, 109 hàng P2d. Lệch luật đã khai (user,
-  2026-10-14): bảng trộn jar, và cổng chạy trên P2d (21/21, `p2d-night-20261012/gate/`), chưa chạy trên P2e. 109
-  hàng P2d không chạy qua đoạn mã P2e đổi. Mọi ô trùng AF2 (`af2-full-remeasure-20261003/`) và jar R từng seed. Lượt đầy đủ trên riêng P2e để sau
-  (`p2e-full-20261014/`).
+- 180 hàng `p2f-full-20261015/runs.csv`, một jar, promote ngày 2026-10-18 (user). Mọi ô 970 trùng bộ gộp P2e
+  (`p2e-continue-20261013/merged.csv`), AF2 (`af2-full-remeasure-20261003/`) và jar R từng seed.
 - 0 FP trong 90 lượt chạy target đã sửa, trên 116 bộ ba dựng được trên mã đã vá (AF2: 99).
-- Soát cấu trúc: 59/59 lần nổ reports+vampi qua kiểm tra (P2e và AF2); pyLoad (auth bằng cookie) xác nhận bằng
-  `verify_ground_truth.sh`. Replay từ trạng thái sạch, jar AF2, chưa chạy lại trên P2e: 55/59 (reports 38/39,
+- Soát cấu trúc: 59/59 lần nổ reports+vampi qua kiểm tra (P2f, P2e và AF2); pyLoad (auth bằng cookie) xác nhận bằng
+  `verify_ground_truth.sh`. Replay từ trạng thái sạch, jar AF2, chưa chạy lại trên P2e hay P2f: 55/59 (reports 38/39,
   vampi 17/20); pyLoad 28/38, 10 trượt ở assertion thân phản hồi, không ở mã trạng thái.
 - Ghi recall black-box của Tier-2 là **30–35%**.
 - Ablation reset **không có ý nghĩa thống kê**: Tier-2 McNemar chính xác p = 0,070. Không bao giờ viết "nhân quả".
 - Viết "replay được 55/59", không bao giờ viết "tái lập được".
 - "Phát hiện khi đã có một bộ ba hợp lệ" gần như là định nghĩa. Không bao giờ trích nó như độ chính xác.
-- Không reset là con số chính. Endpoint reset của Tier-1 và Tier-2b là của ta.
+- Không reset là con số chính. Endpoint reset của Tier-1 và Tier-2b là của ta. Jar SR không còn reset: cột có reset
+  chỉ đo được trên P2f và các jar trước.
 - Trên Tier-1, mã 403 của probe C4 đến từ `POST /reports`. Không viết rằng C4 thử lại guard ở đó.
 - Transition của pyLoad buộc `permission=1` và một giá trị `role` tìm sang trái; C4 xác nhận từng lần hạ quyền.
 
 ## 5. Jar — sổ đầy đủ `infra/evomaster-ext/jars.md`
 
-- Mọi con số hiện tại: `EvoMaster/evomaster-P2e-6ae8277b.jar` = commit `a544c996ac` (nhánh `stateful-authz-oracle`):
-  AF2 + P1 duyệt nhiều op, 20 lần thử thay vì 8 + P2 Naive Bayes thay các danh sách viết tay (thiết kế
-  `infra/evomaster-ext/wip/p2-design-20261012.md`). Số lấy từ bộ gộp có lệch luật (§4).
-- Jar đang phát triển: `EvoMaster/evomaster-P2f-64ee8ffc.jar` = commit `f73010103b` = P2e + `setField` ghi giá trị và
-  bật wrapper từ lá (`RestSecurityBuilder.kt:1360–1361`), sửa FN `is_admin: null` trên artifact-keeper. Qua cổng 21/21
-  (2026-10-15) và đo lại đầy đủ 180 hàng một jar (`p2f-full-20261015/`), mọi ô trùng AF2 từng seed. Promote thành jar
-  trích số: chờ user quyết.
-- AF2 (`evomaster-AF2-6b5606d4.jar`, commit `8d6cf8431f`) và jar R (`5bce137f`, `007e5e09f9`) giữ làm nguồn gốc;
-  replay trong `docs/results.md` §3 còn trên AF2.
+- Mọi con số hiện tại: `EvoMaster/evomaster-P2f-64ee8ffc.jar` = commit `f73010103b` (cha của HEAD, nhánh
+  `stateful-authz-oracle`) = P2e + `setField` ghi giá trị và bật wrapper từ lá (`RestSecurityBuilder.kt:1360–1361`),
+  sửa FN `is_admin: null` trên artifact-keeper. P2e = AF2 + P1 duyệt nhiều op, 20 lần thử thay vì 8 + P2 Naive Bayes
+  thay các danh sách viết tay (thiết kế `infra/evomaster-ext/wip/p2-design-20261012.md`).
+- P2e (`evomaster-P2e-6ae8277b.jar`, commit `a544c996ac`) trích số 2026-10-14 tới 10-18 trên bộ gộp có lệch luật;
+  §5c của `docs/results.md` (app held-out công khai) còn trên P2e. AF2 (`evomaster-AF2-6b5606d4.jar`, commit
+  `8d6cf8431f`) và jar R (`5bce137f`, `007e5e09f9`) giữ làm nguồn gốc; replay trong `docs/results.md` §3 còn trên AF2.
 - Một jar mới chỉ trích lại một con số sau khi qua cổng hồi quy, và khi cách dựng bộ ba đổi thì phải đo lại các arm bị
-  ảnh hưởng. AF2 đã qua cổng (2026-10-02) và đo lại đầy đủ (`af2-full-remeasure-20261003/`). P2d qua cổng 21/21
-  (2026-10-13, `p2d-night-20261012/gate/`); trong đó chỉ 2 hàng vampi seed 3 chạy qua đoạn mã P2e đổi, và 2 hàng này
-  chạy lại trên P2e vẫn khớp kỳ vọng của cổng (`p2e-continue-20261013/gate-predict.out`). P2e chưa chạy cổng.
+  ảnh hưởng. P2f qua cổng 21/21 hai lần (2026-10-15, `regression-check/archive-20261015-P2f-64ee8ffc/`; và 21 hàng
+  cổng trong `p2f-full-20261015/gate.csv`). AF2 qua cổng 2026-10-02 và đo lại đầy đủ (`af2-full-remeasure-20261003/`).
+- Jar đang phát triển: `EvoMaster/evomaster-SR-77465fe5.jar`, dựng 2026-10-27 từ `f73010103b` +
+  `infra/evomaster-ext/wip/refactor-simplify-20261027.patch`. HEAD `1cd0d091f4` là refactor đó, khác bản vá đúng một
+  dòng trống (`RestSecurityBuilder.kt:781`). Jar này:
+  - gỡ `--statefulAuthzResetEndpoint`, `--statefulAuthzTransition` và `--statefulAuthzTwoCredentialJudgment` (D1);
+    `EMConfig.kt` trùng v6.1.1, và jar SR báo `is not a recognized option` với cả ba cờ;
+  - phán quyết chỉ còn C4;
+  - viết lại lambda và stream thành vòng lặp.
+  Self-test `refactor-simplify-20261027.sh`: log stateful trùng từng dòng với P2f chạy không reset, không D1, trên
+  22 mode. Cổng: 12/12 hàng không reset MATCH ngày 2026-10-27 (`em-results/regression-check-SR-20261027/`); 9 hàng
+  reset N/A. Chưa trích số nào; promote là quyết định của user. Ghi chú từng hàm:
+  `docs/evomaster-study/03-ham-stateful-authz.md`.
 
 ## 6. Hiện trạng cuối giai đoạn phát triển
 
@@ -168,8 +176,8 @@ của một lớp).
 **Từ vựng.** AF2 chấm transition bằng lexicon (53 path + 45 param) và nhận diện trường bằng danh sách viết tay. P2e
 thay cả hai bằng Naive Bayes rút từ nhãn vòng 4 (10.381 op ghi, 230 API): bảng `op`, `role`, `victim`, `low`/`high`
 trong `stateful-authz-model.csv` (`infra/evomaster-ext/wip/p2-design-20261012.md`). Còn viết tay: `1, 0, 2` cho trường
-số, token `id`. Số kiểm chéo đo trên 47 spec test đã bị nhìn nhiều lần, nên chỉ là thăm dò. Khi tắt D1, cổng
-posterior > 0,5 cũng chặn phán quyết (`RestSecurityOracle.kt:583`, `:602`).
+số, token `id`. Số kiểm chéo đo trên 47 spec test đã bị nhìn nhiều lần, nên chỉ là thăm dò. Cổng
+posterior > 0,5 cũng chặn phán quyết (`RestSecurityOracle.kt:580`, `:599` trên HEAD).
 
 **Lexicon.** Rút từ các spec thật đã gán nhãn, đo trên spec held-out. Toàn bộ luật, nhãn, ba lần rút và thứ hạng:
 `docs/lexicon.md`, `infra/analysis/lexicon-rules/`, `infra/analysis/corpus/sampling-plan.md`. Những con số không được
@@ -189,16 +197,15 @@ trích sai:
 - Thay bộ hardcode bằng lexicon rút được không làm mất phát hiện nào trên target của ta: jar `L` 0 trên 30 hàng ghép
   đôi (`docs/results.md` §5b); jar `TT` trùng jar `R` ở 80 cặp seed Tier-1/2 (`transitiontrim-chain-20260927c/RESULTS.md`).
 
-**D1, phán quyết bằng hai credential.** Sau bộ ba, một test riêng đăng nhập nạn nhân mới tinh và gửi đúng lời gọi
-follow-up. 970 cần source 2xx, transition 2xx, follow-up cũ 2xx, follow-up mới bị từ chối. Mỗi test đăng nhập một lần,
-nên lời gọi bằng token cũ chạy trước. "Bị từ chối" theo §3 cho mọi method: 403 là từ chối, 2xx không phải, mã khác thì
-ghi INCONCLUSIVE và không nổ gì (`infra/analysis/denial-codes-2026-09-17.md`). D1 lấy vị từ transition (bộ từ vựng trên
-AF2, cổng Naive Bayes trên P2e) và phần replay lát cắt ra khỏi phán quyết.
+**D1, phán quyết bằng hai credential.** Gỡ khỏi mã ngày 2026-10-27 (jar SR), cùng với transition khai báo và reset.
+Phán quyết dùng probe C4 (`docs/design-relogin-probe.md`). P2f và các jar trước còn D1, sau một cờ mặc định tắt.
+Lịch sử D1: `infra/evomaster-ext/jars.md`.
 
 **Target held-out.** Chỉ một app chưa hề bị đụng vào bởi một thay đổi mã mới là held-out. Airflow (từ 09-23), Grafana,
 callcenter, truthy, bamf (từ 09-30 11:17) và artifact-keeper (từ 10-01) đều đã thành target phát triển, vì các bản sửa
-builder được viết trong lúc chạy chính chúng. Diễn biến từng app: `infra/analysis/heldout-small-apps.md`,
-`infra/analysis/cve-survey/`.
+builder được viết trong lúc chạy chính chúng. Nhãn này chỉ chặn khẳng định về app lạ (recall). Một lỗi thật tool bắt
+được, không có chuỗi riêng của app trong mã, vẫn báo cáo được, kèm lịch sử sửa (user, 2026-10-31). Diễn biến từng app:
+`infra/analysis/heldout-small-apps.md`, `infra/analysis/cve-survey/`.
 - Airflow với `AIRFLOW__FAB__CACHE_TTL=0` (lệch luật đã khai): hai bộ ba hợp lệ, follow-up 403, không có 970. Đây là
   **2 TN trên mã của bên thứ ba** (`em-results/airflow-ttl-20260927/RESULTS.md`).
 - bamf trên jar `LP`: 0 bộ ba, builder không nhận `{email}` là tham số user. bamf không có lỗi theo hợp đồng của chính
@@ -206,8 +213,10 @@ builder được viết trong lúc chạy chính chúng. Diễn biến từng ap
 - bamf trên jar `ER`: 5/10 seed nổ 970, trên một target đã thành target phát triển, với bảy lệch luật đã khai. Các lần
   nổ bắt đúng hành vi bamf ghi trong hợp đồng; xếp vào ô nào chưa quyết.
 - Vikunja: 0 bộ ba trên mọi jar; điểm nghẽn là source không có nạn nhân.
-- artifact-keeper (target phát triển cho nhận-diện cờ admin boolean của AF2): bản lỗi 5/5 tự nổ 970 (bộ ba
-  `PATCH /api/v1/users/{id}` 200/200/200), bản vá 0 FP trên 3 lượt (`em-results/artifactkeeper-machine-20261001/`).
+- artifact-keeper, lỗi vendor #1821, target phát triển: không sửa logic app, spec của app bỏ `DELETE /users/{id}`.
+  Bản lỗi theo jar: `ER` 0/1, `AF` 1/4, `AF2` 5/5, `P2e` 0/2, `P2f` 5/5 (`em-results/artifactkeeper-machine-20261014/`;
+  bộ ba `PATCH /api/v1/users/{id}` 200/200/200). Bản vá của vendor `e64cc5c608`: 0/3 FP, chỉ trên `AF2`
+  (`em-results/artifactkeeper-machine-20261001/`), chưa chạy trên `P2f`. Jar SR chưa chạy app này.
 
 **Nhịp làm việc.** Một phiên tương tác làm việc; không có phiên chạy không người trông. Squad tắt từ 2026-09-17;
 `infra/squad/` ở lại làm sổ chạy và kho đề bài. Mỗi lúc một việc nặng.
@@ -217,9 +226,9 @@ seeds 1–10 trên mọi arm và target; thay đổi lớn hoặc một arm mớ
 
 **Còn mở.** `infra/analysis/cve-survey/coverage.md`, `docs/argument.md`, `docs/lexicon.md`.
 
-**Tháng 10.** Cũ và D1 và D1 + lexicon trên cùng bộ seed, TP/TN/FP/FN theo tier; phát lệnh khôi phục của operator vào
+**Tháng 10.** TP/TN/FP/FN theo tier trên cùng bộ seed; phát lệnh khôi phục của operator vào
 test sinh ra (sửa replay Tier-1, seed 16 không reset); ablation theo từng thành phần; RESTler trong related work
-(`docs/related-work.md` §4); một arm so sánh dùng LLM phân loại transition; dựng chủ động (D2). Đã xong: P1–P2e, duyệt
+(`docs/related-work.md` §4); một arm so sánh dùng LLM phân loại transition; dựng chủ động (D2). Đã xong: P1–P2f, duyệt
 nhiều op và Naive Bayes thay bộ từ vựng cùng các danh sách viết tay (`docs/naive-bayes.md`, `infra/evomaster-ext/jars.md`).
 
 **Hạn chế phải viết.** A2/A3 chưa chứng minh; mã từ chối chưa cấu hình được; path param chứa dấu chấm (email, tên miền)
@@ -246,6 +255,7 @@ không nhận được giá trị nạn nhân trong EvoMaster v6.1.1.
 | Khảo sát CVE: truy vấn, dữ liệu thô, ứng viên | `infra/analysis/cve-survey/` |
 | Mã từ chối trên ba target | `infra/analysis/denial-codes-2026-09-17.md` |
 | Thiết kế probe C4 re-login | `docs/design-relogin-probe.md` |
+| Ghi chú từng hàm của builder, jar SR: làm gì, ai gọi, ví dụ chạy tay | `docs/evomaster-study/03-ham-stateful-authz.md` |
 | Target Tier-1 | `infra/reports-api/README.md` |
 | Target Tier-2 | `docs/tier2-seeded-benchmark-plan.md` §4 |
 | Target Tier-2b và các lệch luật đã khai | `docs/tier2b-pyload-target.md` §3 |

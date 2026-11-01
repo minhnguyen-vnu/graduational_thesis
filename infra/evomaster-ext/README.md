@@ -6,16 +6,16 @@ Results: `docs/results.md`. Build, jars, rollback: skill `evomaster-build`. Runn
 
 ## 1. What changed
 
-`git diff --stat v6.1.1..HEAD`: 13 commits, 6 files, +1825, 0 deletions, no comments. HEAD `f73010103b` builds
-jar P2f and is pushed. `a544c996ac`, one commit earlier, builds jar P2e, which quotes the numbers now (`docs/results.md`
-§0). `8d6cf8431f` builds jar AF2, which quoted them 2026-10-04 to 10-14.
+`git diff --stat v6.1.1..HEAD`: 14 commits, 5 files, +1962, 0 deletions, no comments. HEAD `1cd0d091f4` holds the refactor below
+(jar SR, quotes nothing) and is pushed. `f73010103b`, its parent, builds jar P2f and quotes the numbers from 2026-10-18
+(`docs/results.md` §0). `a544c996ac`, one commit earlier, builds jar P2e, which quoted them 2026-10-14 to 10-18.
+`8d6cf8431f` builds jar AF2, which quoted them 2026-10-04 to 10-14.
 
 | File | + | Holds |
 |---|---|---|
 | `ExperimentalFaultCategory.kt` | 5 | `SECURITY_STATEFUL_AUTHORIZATION(970)` |
-| `EMConfig.kt` | 35 | `statefulAuthzResetEndpoint`, `statefulAuthzTransition` (blank by default), `statefulAuthzTwoCredentialJudgment` (false by default) |
 | `RestSecurityOracle.kt` | 76 | judgment: `handleStatefulAuthorization()` |
-| `RestSecurityBuilder.kt` | 1349 | construction: `addForStatefulAccessControl()`, `buildStatefulAuthzTriple()`, `executeStatefulAuthzTriple()`, `resetSutState()`, Naive Bayes scoring, operator restore |
+| `RestSecurityBuilder.kt` | 1521 | construction: `addForStatefulAccessControl()`, `buildStatefulAuthzTriple()`, `executeStatefulAuthzTriple()`, Naive Bayes scoring, operator restore |
 | `stateful-authz-model.csv` | 261 | Naive Bayes weights, tables `op`, `role`, `victim`, `low`, `high`, `lowstr`, `highstr` (`lexicon-rules/p2-model-20261012/derive_model.py`) |
 | `stateful-authz-lexicon.csv` | 99 | 53 `path` + 45 `param` words (`lexicon-rules/lexicon-20260921-audited/`); unread since `a544c996ac` |
 
@@ -54,6 +54,22 @@ from that leaf up, instead of from the field gene `f.gene`. Before, a nullable f
 returned 200 without demoting (`em-results/artifactkeeper-machine-20261014/iterate-RESULTS.md`). The changed lines equal
 `wip/setfield-leaf-activate-20261015.patch`. Self-test `setfield-leaf-activate-20261015.sh`. Jar: `jars.md`.
 
+### Refactor, commit `1cd0d091f4` on top of `f73010103b` (jar SR)
+
+`wip/refactor-simplify-20261027.patch`, 3 files, +789 −653, written 2026-10-27. The commit (2026-10-29) adds one blank
+line at `RestSecurityBuilder.kt:781`; jar SR was built from the patch.
+- `EMConfig.kt` returns to v6.1.1: the three `statefulAuthz*` options are gone.
+- `RestSecurityBuilder.kt` removes:
+  - the declared transition (`parseDeclaredTransition`, `applyDeclaredBindings`, the 40-attempt ceiling);
+  - `resetSutState`;
+  - D1 (`freshCredentialDeniesFollowUp`). `executeStatefulAuthzTriple` now calls `reLoginProbeConfirmsPrivilegeRemoved`
+    (C4) directly.
+- `RestSecurityOracle.kt` drops `twoCredentialJudgment`.
+- Lambdas and streams in both files are rewritten as loops.
+Self-test `refactor-simplify-20261027.sh`. The function notes, in Vietnamese, are in
+`docs/evomaster-study/03-ham-stateful-authz.md`. Statements below about reset, the declared transition and D1 hold for
+`f73010103b` and earlier.
+
 ## 2. Where it plugs in
 
 The MIO search core is untouched.
@@ -62,8 +78,8 @@ The MIO search core is untouched.
   `RestSecurityBuilder.applySecurityPhase()`. The phase is time-boxed to `extraPhaseBudgetPercentage × maxTime`.
 - **Construction.** `applySecurityPhase()` takes solved tests from the archive, builds `SampleType.SECURITY`
   individuals, runs them and adds them back. `addForStatefulAccessControl()` is wired right after
-  `expandWithForbidden()`, so it inherits the 403 evidence and the phase budget. `resetSutState()` runs just before
-  the fitness call in `executeStatefulAuthzTriple()`.
+  `expandWithForbidden()`, so it inherits the 403 evidence and the phase budget. On `f73010103b` and earlier,
+  `resetSutState()` runs just before the fitness call in `executeStatefulAuthzTriple()`; HEAD removes it.
 - **Judgment.** `RestSecurityOracle.analyzeSecurityProperties()` dispatches one `handleXxx()` per oracle.
   `handleStatefulAuthorization()` is modeled on `handleForbiddenOperation` (F206). The security oracle runs only on
   `sampleType == SECURITY` (`AbstractRestFitness.kt:1306`); search-phase tests are never judged.
@@ -96,7 +112,7 @@ The MIO search core is untouched.
    credential denied: keep the fault. Fresh credential allowed: VOID.
 
 Log lines: `Assembled … statuses A/B/C`, `Discarded a VOID … codes A/B/C`,
-`Discarded an UNCONFIRMED …`, `SUT state reset via … -> 200`. The builder's diagnostics are `debug`; EvoMaster
+`Discarded an UNCONFIRMED …`, and on `f73010103b` and earlier only `SUT state reset via … -> 200`. The builder's diagnostics are `debug`; EvoMaster
 ships `<root level="warn">`.
 
 ## 4. Fault codes in reports

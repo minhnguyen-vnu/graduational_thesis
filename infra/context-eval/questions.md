@@ -27,3 +27,4 @@ Compare with `expected.md`; every answer must match.
 20. Where is the declared list of deviations for the pyLoad target?
 21. On Tier-1, may the write-up say the C4 probe re-attempts the guarded write with a fresh credential?
 22. Which of the global agent `tdd-guide`'s requirements apply here?
+23. Does the jar under development accept `--statefulAuthzResetEndpoint` or D1? Which jar do quoted numbers come from?

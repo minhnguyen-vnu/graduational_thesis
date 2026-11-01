@@ -5,11 +5,45 @@ Luật: một jar mới chỉ được trích lại một con số sau khi qua c
 
 ## Jar đang trích số
 
-`EvoMaster/evomaster-P2e-6ae8277b.jar` = commit `a544c996ac`, trích số từ 2026-10-14 trên bộ gộp
+`EvoMaster/evomaster-P2f-64ee8ffc.jar` = commit `f73010103b`, trích số từ 2026-10-18 (user promote) trên 180 hàng một
+jar `em-results/p2f-full-20261015/runs.csv`; đếm bằng `p2f-full-20261015/p2f_counts.py` (`p2f-counts.out`). Cổng 21/21
+hai lần (2026-10-15 độc lập, và 21 hàng cổng trong lượt đầy đủ). Replay (`docs/results.md` §3) còn trên AF2. Dựng,
+self-test và đo lại: mục P2f bên dưới.
+
+## Jar đang phát triển
+
+`EvoMaster/evomaster-SR-77465fe5.jar` (sha256 `77465fe5…af18`, `.sha256` cạnh jar) = commit `f73010103b` + refactor
+`wip/refactor-simplify-20261027.patch`, dựng 2026-10-27. Diễn tập rollback đạt. Commit `1cd0d091f4` (HEAD, 2026-10-29,
+đã push) là refactor đó, khác bản vá đúng một dòng trống ở `RestSecurityBuilder.kt:781`.
+`core/target/evomaster.jar` cùng bản dựng.
+
+Gỡ khỏi mã:
+- `--statefulAuthzTransition` (transition khai báo) cùng mọi nhánh dùng nó; trần thử 40 khi có khai báo cũng bỏ, chỉ
+  còn `MAX_STATEFUL_TRIPLE_ATTEMPTS = 20`;
+- `--statefulAuthzResetEndpoint` và `resetSutState`;
+- D1 (`--statefulAuthzTwoCredentialJudgment`): phán quyết chỉ còn probe C4.
+
+`EMConfig.kt` trùng v6.1.1 từng byte. Lambda và stream trong `RestSecurityBuilder.kt` và `RestSecurityOracle.kt`
+viết lại thành vòng lặp, giữ thứ tự duyệt, phá hoà và sort ổn định.
+
+Kiểm tra:
+- Self-test `refactor-simplify-20261027.sh` (`em-results/refactor-simplify-selftest-final-20261027/`): so sánh 100/100,
+  kiểm tĩnh 7/7. Trên 22 mode stub, log stateful của SR trùng từng dòng với P2f chạy không reset, không D1, và 970 trùng.
+- Một phiên review độc lập duyệt PASS.
+- Cổng 12/12 hàng không reset MATCH ngày 2026-10-27 (`em-results/regression-check-SR-20261027/`, 1 h 02, máy không
+  ngủ). 9 hàng reset N/A. Snapshot `~/thesis-backups/thesis-full-20261027-0236.tar.gz`.
+
+Chưa trích số nào. Promote là quyết định của user. Chưa đổi tên `getObjects` thành `objectsFromGets`; đổi thì phải dựng
+lại và chạy lại cổng. Bốn self-test cũ dùng reset hoặc D1 giờ cần jar cũ (`docs/evomaster-study/03-ham-stateful-authz.md`
+§9).
+
+## Jar trích số 2026-10-14 tới 2026-10-18, giữ làm nguồn gốc
+
+`EvoMaster/evomaster-P2e-6ae8277b.jar` = commit `a544c996ac`, trích số trên bộ gộp
 `em-results/p2e-continue-20261013/merged.csv` (71 hàng P2e, 109 hàng P2d). Lệch luật đã khai: bảng trộn jar, cổng chạy
 trên P2d (21/21, `p2d-night-20261012/gate/`); 2 hàng cổng chạy qua đoạn mã P2e đổi (vampi seed 3 không reset) chạy lại
-trên P2e vẫn khớp (`gate-predict.out`). Replay
-(`docs/results.md` §3) còn trên AF2. Dựng, self-test và bộ gộp: mục P2e bên dưới.
+trên P2e vẫn khớp (`gate-predict.out`). `docs/results.md` §5c (app held-out công khai) còn trên P2e. Dựng, self-test và
+bộ gộp: mục P2e bên dưới.
 
 ## Jar trích số tới 2026-10-14, giữ làm nguồn gốc
 
@@ -45,7 +79,7 @@ artifact-keeper vuln 5/5 nổ 970, PATCH `{"is_admin":false}`, soát cấu trúc
 mọi arm trùng AF2 từng seed (`seeds_p2f_only`/`seeds_af2_only` rỗng, McNemar chính xác p = 1.000), 0 FP trên bản vá,
 audit 59 PASS 0 FAIL 0 UNPARSED; pyLoad reset tăng số bộ ba dựng được (36→75) nhưng phán quyết không đổi
 (`p2f-full-20261015/compare.out`, `RESULTS.md`). Lượt này là một jar duy nhất, gỡ lệch luật bộ gộp trộn jar của bảng §4;
-giá trị các ô không đổi. Promote thành jar luận văn: chờ user quyết. Self-test `setfield-leaf-activate-20261015.sh` 7/7
+giá trị các ô không đổi. User promote thành jar luận văn ngày 2026-10-18. Self-test `setfield-leaf-activate-20261015.sh` 7/7
 (`em-results/setfield-selftest-20261018-180347/`): trên stub có `is_admin` `{"type":["boolean","null"]}`, 3/3 transition
 trong bộ ba gửi `{"is_admin": false}`; jar P2e gửi `null` ở 2/4. Chỉ kiểm tra thân PATCH tách được hai jar: stub có reset,
 nên P2e thử lại và vẫn nổ 970.

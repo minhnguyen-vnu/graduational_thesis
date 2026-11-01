@@ -1,0 +1,23 @@
+ops 10381  T=1 199  T=0 10182  providers with T=1 56
+prior ln(199/10182) = -3.935
+p:role       d_T  18  d_N    41  providers  6  w = ln(19/201) - ln(42/10184) = +3.132  model +3.132
+p:username   d_T  25  d_N    97  providers  5  w = ln(26/201) - ln(98/10184) = +2.598  model +2.598
+p:users      d_T  62  d_N   298  providers 22  w = ln(63/201) - ln(299/10184) = +2.368  model +2.368
+f:role       d_T  35  d_N   218  providers 17  w = ln(36/201) - ln(219/10184) = +2.120  model +2.120
+f:username   d_T  38  d_N   327  providers 13  w = ln(39/201) - ln(328/10184) = +1.796  model +1.796
+v:PUT        d_T  60  d_N  2020  providers 30  w = ln(61/201) - ln(2021/10184) = +0.425  model +0.425
+v:POST       d_T  60  d_N  4918  providers 33  w = ln(61/201) - ln(4919/10184) = -0.465  model -0.465
+reports-api write ops, table op
+  PUT    /users/{username}/role   score +8.504  posterior 0.9998  f:role+2.120 f:username+1.796 p:role+3.132 p:username+2.598 p:users+2.368 v:PUT+0.425
+  PUT    /reports/{id}            score -3.510  posterior 0.0290  v:PUT+0.425
+  DELETE /reports/{id}            score -3.772  posterior 0.0225  v:DELETE+0.163
+  POST   /reset                   score -4.400  posterior 0.0121  v:POST-0.465
+  POST   /reports                 score -4.400  posterior 0.0121  v:POST-0.465
+  POST   /auth/login              score -1.459  posterior 0.1887  f:password+1.145 f:username+1.796 v:POST-0.465
+role field: prior -1.939 k:enum+1.524 l:body+0.201 w:role+3.108 n:role+2.777 = +5.672  posterior 0.9966
+victim field: prior -1.809 k:str+0.334 l:path+1.439 w:username+2.494 n:username+2.648 = +5.104  posterior 0.9940
+value VIEWER: low 0.333 high 0.000 k = low - high = +0.333
+value ADMIN: low 0.000 high 0.771 k = low - high = -0.771
+label S101-0104 PATCH /v0.1/apps/{owner_name}/{app_name}/users/{user_email} fields ['path:owner_name', 'path:app_name', 'path:user_email', 'body:permissions'] T=1 victim=path:user_email role=body:permissions order=viewer<developer<manager
+label S101-0063 POST /v0.1/apps/{owner_name}/{app_name}/invitations/{user_email} fields ['path:owner_name', 'path:app_name', 'path:user_email', 'body:role'] T=0 victim= role= order=
+label S313-0010 PUT /authn/{account}/api_key fields ['path:account', 'query:role'] T=0 victim= role= order=

@@ -5,23 +5,24 @@ A number in another doc that disagrees with this file is superseded. Paths are u
 
 ## 0. Provenance
 
-- Thesis jar `evomaster-P2e-6ae8277b.jar` (commit `a544c996ac`, branch `stateful-authz-oracle`) for §1, §1a, §4
-  and §5, on the merged set `p2e-continue-20261013/merged.csv` (180 runs): 71 runs on P2e, 109 on jar P2d
-  (`2e0dbd4d`), column `jar`. **Declared deviation** (user, 2026-10-14): the set mixes two jars. P2e differs from
-  P2d only in the enum restore values (`RestSecurityBuilder.kt:1265–1269`). None of the 109 P2d runs reaches that
-  code: 106 make no restore call, 3 pyLoad runs restore integer fields. The 11 runs that reach it gave the P2d row
-  again on P2e (`p2e-continue-20261013/RESULTS.md`). A single-jar run is prepared, not run (`p2e-full-20261014/`).
-- P2e = AF2 + P1 (every transition candidate, 20 triple attempts instead of 8) + P2 (Naive Bayes in place of the
-  hand-written lists). Every 970 cell equals AF2 seed for seed (`af2-full-remeasure-20261003/runs.csv`,
-  2026-10-03/04), and AF2 equals the earlier jar-`R` batches. The places P2e differs from AF2 are marked below.
-  AF2 (`evomaster-AF2-6b5606d4.jar`, commit `8d6cf8431f`), jar `R` (`5bce137f`, commit `007e5e09f9`) and their
-  batches (`tier1-clean-remeasure/`, `restore-remeasure/`, `restore-reset-remeasure/`, `tier2b-restore-trials/`)
-  are kept as provenance.
-- Regression gate: jar P2d passed the 21-row gate as a job, 21/21 MATCH (2026-10-13 01:44,
-  `p2d-night-20261012/gate/`). In that run only Tier-2 seed 3 no reset, vuln and fixed, reached the code P2e
-  changes (one restore with `EVOMASTER` each); the other 19 rows made no restore call. Both seed-3 rows re-run on
-  P2e match the gate's expectation (`p2e-continue-20261013/gate-predict.out`). P2e has not run the gate as a job.
-  AF2 passed the gate on 2026-10-02 (`regression-check/`).
+- Thesis jar `evomaster-P2f-64ee8ffc.jar` (commit `f73010103b`, branch `stateful-authz-oracle`) for §1, §1a, §4
+  and §5, on the single-jar set `p2f-full-20261015/runs.csv` (180 runs, 2026-10-15/16). Promoted by the user on
+  2026-10-18. Counts below come from `p2f-full-20261015/p2f_counts.py` (`p2f-counts.out`).
+- P2f = P2e + `setField` writing the leaf gene and activating its wrappers (`RestSecurityBuilder.kt:1360–1361`).
+  P2e = AF2 + P1 (every transition candidate, 20 triple attempts instead of 8) + P2 (Naive Bayes in place of the
+  hand-written lists). Every 970 cell equals P2e and AF2 seed for seed (`p2f-full-20261015/RESULTS.md`,
+  `af2-full-remeasure-20261003/runs.csv`), and AF2 equals the earlier jar-`R` batches. P2f differs from the P2e set
+  in three counts, none a verdict: Tier-2b vuln reset performed 75 triples (P2e 73), the statuses of 4 Tier-2b reset
+  rows, and 9 refused restores on each Tier-2 no-reset arm (P2e 8).
+- Regression gate: P2f passed it twice, 21/21 MATCH: as a job on 2026-10-15 (`regression-check/archive-20261015-P2f-64ee8ffc/`)
+  and as the 21 gate rows run first inside the full set (`p2f-full-20261015/gate.csv`).
+- Provenance: P2e (`evomaster-P2e-6ae8277b.jar`, commit `a544c996ac`) quoted from 2026-10-14 to 10-18 on the merged
+  set `p2e-continue-20261013/merged.csv` (71 runs on P2e, 109 on jar P2d `2e0dbd4d`; declared mixed-jar deviation
+  of 2026-10-14); §5c still runs on P2e. AF2 (`evomaster-AF2-6b5606d4.jar`, commit `8d6cf8431f`), jar `R`
+  (`5bce137f`, commit `007e5e09f9`) and their batches (`tier1-clean-remeasure/`, `restore-remeasure/`,
+  `restore-reset-remeasure/`, `tier2b-restore-trials/`) are kept as well.
+- Jar SR (`evomaster-SR-77465fe5.jar`, HEAD `1cd0d091f4`) quotes nothing here. It removed reset, the declared
+  transition and D1, so every reset arm and the §4 ablation can only be measured on P2f and earlier.
 - Seeds 1–20 per arm (Tier-2b: 1–5), reseed before each run, `--useExperimentalOracles true`,
   `--extraPhaseBudgetPercentage 0.6`. Tier-1/Tier-2 `--maxTime 150s`; Tier-2b `--maxTime 10m`.
 - Each run records the triple it performed as `[source/transition/follow-up]` statuses, so construction
@@ -32,7 +33,7 @@ A number in another doc that disagrees with this file is superseded. Paths are u
 
 | Target | Arm | Runs with a performed triple | 970 raised | Source |
 |---|---|---|---|---|
-| Tier-1 | vuln, no reset | 19/20 | **19/20** [76, 99] | `p2e-continue-20261013/merged.csv` |
+| Tier-1 | vuln, no reset | 19/20 | **19/20** [76, 99] | `p2f-full-20261015/runs.csv` |
 | Tier-1 | fixed, no reset | 19/20 | 0/20 | same |
 | Tier-1 | vuln, reset | 20/20 | 20/20 [84, 100] | same |
 | Tier-1 | fixed, reset | 20/20 | 0/20 | same |
@@ -42,17 +43,18 @@ A number in another doc that disagrees with this file is superseded. Paths are u
 | Tier-2 | fixed, reset | 13/20 | 0/20 | same |
 | Tier-2b | vuln, no reset | 5/5 (5 triples) | **5/5** [57, 100] | same |
 | Tier-2b | fixed, no reset | 5/5 (5 triples) | 0/5 | same |
-| Tier-2b | vuln, reset | 5/5 (73 triples) | 5/5 | same |
+| Tier-2b | vuln, reset | 5/5 (75 triples) | 5/5 | same |
 | Tier-2b | fixed, reset | 5/5 (52 triples) | 0/5 | same |
 
-Intervals are Wilson 95%. AF2 and the jar-`R` batches gave the same 970 cells seed for seed (§0). AF2 performed 36
-and 35 triples on the Tier-2b reset arms: it stops at 8 attempts per run.
+Intervals are Wilson 95%. P2e, AF2 and the jar-`R` batches gave the same 970 cells seed for seed (§0). AF2 performed
+36 and 35 triples on the Tier-2b reset arms: it stops at 8 attempts per run.
 
 ### 1a. Four cells per tier
 
-Same runs, counted per run by `p2e-continue-20261013/four_cells_merged.py` (output `four-cells.md`); AF2 and jar
-`R` give the same cells (`infra/analysis/confusion/jar-R-four-cells.md`). The vulnerable target gives TP/FN, the
-fixed target FP/TN. TN counts only fixed runs with a performed triple (§2).
+Same runs, counted per run by `p2f-full-20261015/p2f_counts.py` (output `p2f-counts.out`); P2e
+(`p2e-continue-20261013/four-cells.md`), AF2 and jar `R` (`infra/analysis/confusion/jar-R-four-cells.md`) give the
+same cells. The vulnerable target gives TP/FN, the fixed target FP/TN. TN counts only fixed runs with a performed
+triple (§2).
 
 | Target | Reset | TP | FN, triple, no 970 | FN, no triple | FP | TN | Fixed, no triple | Runs vuln/fixed |
 |---|---|---|---|---|---|---|---|---|
@@ -70,7 +72,7 @@ precision is 1.0 on every row; recall is the TP column over 20 (Tier-2b: 5).
   over **116 triples performed on patched code** (39 Tier-1, 20 Tier-2, 57 Tier-2b; AF2: 99, with 40 on Tier-2b).
 - Every performed triple reads `200/200/200` on the vulnerable side and `200/200/403` on the fixed side.
 - Vulnerable vs fixed, Fisher one-sided: Tier-2 no reset 7/20 vs 0/20, p = 0.004; Tier-2b 5/5 vs 0/5, p = 0.004.
-- **Tier-2 black-box recall is quoted as 30–35%.** P2e and AF2 give 7/20 no reset; the structural audit confirmed
+- **Tier-2 black-box recall is quoted as 30–35%.** P2f, P2e and AF2 give 7/20 no reset; the structural audit confirmed
   all 20 vulnerable-side firings (§3). The earlier jar-`R` audit re-run gave 6/20 (`audit-batch/runs.csv`),
   differing on seed 15 only, whose victim `name1` had been deleted during the search (source 401).
 - Operator restores, no-reset arms: Tier-1 5 (vuln) and 6 (fixed); Tier-2 5 and 5; Tier-2b 5 and 5.
@@ -79,7 +81,7 @@ precision is 1.0 on every row; recall is the TP column over 20 (Tier-2b: 5).
 
 ## 2. How to read the numbers
 
-- The 0-FP count is the independent accuracy measurement. P2e, like AF2, is post-0e (`bf26b65322`): judgment is
+- The 0-FP count is the independent accuracy measurement. P2f, like P2e and AF2, is post-0e (`bf26b65322`): judgment is
   restricted to the triples our builder constructed, so the 0 false positives are over the 116 builder triples
   on patched code (§1a). On jar `R`, before 0e, the handler judged every security-phase test including those
   built by EvoMaster's own security builders (which skip C4); that broader 0-FP claim holds only for jar-`R` data.
@@ -95,9 +97,11 @@ precision is 1.0 on every row; recall is the TP column over 20 (Tier-2b: 5).
 
 ## 3. Hand-audit and replay
 
-This section is jar AF2 (`af2-full-remeasure-20261003/`). On the merged P2e set the structural audit gives the same
-counts: Tier-1 39/39, Tier-2 20/20, 37 + 20 silent triples (`p2e-continue-20261013/audit970-merged.out`). Replay
-has not been re-run on P2e.
+This section is jar AF2 (`af2-full-remeasure-20261003/`). On P2f the structural audit passes Tier-1 39/39 and
+Tier-2 20/20, with 37 + 19 silent triples (`p2f-full-20261015/audit970.out`). The missing silent triple is Tier-2
+fixed seed 15 no reset: its log assembles `200/200/403` on `PUT /books/v1/{book_title}/secret`, but the emitted
+suite holds no test the parser reads as that triple (P2e set: 37 + 20, `p2e-continue-20261013/audit970-merged.out`).
+Replay has not been re-run on P2e or P2f.
 
 | | Tier-1 | Tier-2 | Tier-2b |
 |---|---|---|---|
@@ -138,8 +142,9 @@ Same seeds, no reset vs reset, vulnerable side.
 | Tier-2 audit re-run | 3, 7, 8, 9, 12, 16, 19 | none | 0.016 |
 | Tier-1 | 17 | none | 1.0 |
 
-- P2e and AF2 reproduce this discordance exactly: reset gains seeds {3, 7, 8, 9, 12, 16, 19}, loses {15}
-  (`p2e-continue-20261013/merged.csv`, `af2-full-remeasure-20261003/runs.csv`), so the recorded McNemar p = 0.070
+- P2f, P2e and AF2 reproduce this discordance exactly: reset gains seeds {3, 7, 8, 9, 12, 16, 19}, loses {15}
+  (`p2f-full-20261015/p2f-counts.out`, `p2e-continue-20261013/merged.csv`, `af2-full-remeasure-20261003/runs.csv`),
+  so the recorded McNemar p = 0.070
   carries over unchanged.
 - **Not significant at 0.05 on the recorded batch. The diagnosis is not called causal.**
 - Power of the exact test at 40% discordant seeds with 7/8 gains: 20 seeds 45%, 40 seeds 86%, 60 seeds 97%
@@ -162,26 +167,26 @@ Same seeds, no reset vs reset, vulnerable side.
 - Transition inferred (no `--statefulAuthzTransition`): `POST /api/set_user_permission`, victim `pyload`,
   operator `alice`.
 - No reset: every triple is performed after an operator restore (`pyload` raises `alice`, writing `0` to both
-  `permission` and `role`, as AF2 did through `setAllRoleFieldsTo`; AF2's log prints one value, P2e's one per field),
+  `permission` and `role`, as AF2 did through `setAllRoleFieldsTo`; AF2's log prints one value, P2f's one per field),
   identically on both variants.
 - **VOID attempts.** No reset: 20, 10 vulnerable and 10 patched, each `200/401/200` on `/json/status`, as on AF2:
   the transition (`POST /api/set_user_permission`) answered 401 (INCONCLUSIVE), so the triple is VOID and raises
-  nothing. Reset arms: 63 on P2e, none on AF2, which stops at 8 attempts: 38 `200/500/200` on `/json/status`
+  nothing. Reset arms: 63 on P2f (P2e the same), none on AF2, which stops at 8 attempts: 38 `200/500/200` on `/json/status`
   (20 vulnerable, 18 patched) and 25 `200/401/200` on `/json/update_users` (patched). A VOID triple is evidence in
   neither direction (§2). (jar `R` instead reported C4 discarding 8 `POST /json/add_package` attempts at
   `200/200/200`.)
-- **Transition values.** The 78 vulnerable-side 970 tests (AF2: 38) send `user=pyload&permission=1` with a
-  `role` value left by the search, never `0` (`p2e-continue-20261013/pyload-970-tests.out`). The binder writes the
+- **Transition values.** The 80 vulnerable-side 970 tests (P2e: 78, AF2: 38) send `user=pyload&permission=1` with a
+  `role` value left by the search, never `0` (`p2f-full-20261015/p2f-counts.out`). The binder writes the
   reduced value to `permission`, the first matching field; pyLoad treats role `0` as admin and any other value as
   not, so the demotion lands. The tool did not infer the role value; C4 confirmed the privilege was gone. The
   follow-up endpoints span 15 `POST /json/*` routes (most often `/json/status`), broader than jar `R`'s single
   `add_package`. Each requires a permission the transition removes: `ADMIN`, `ACCOUNTS`, `MODIFY`, `LIST`,
-  `STATUS` or `SETTINGS` (`p2e-continue-20261013/RESULTS.md`, Soát tay).
+  `STATUS` or `SETTINGS` (`p2e-continue-20261013/RESULTS.md`, Soát tay; P2f hits the same 15 routes).
 - **AF2 performed 41 vulnerable-side triples but emitted 38 970 tests.** In seeds 3–5 with reset it assembled
   `POST /json/edit_package` at `200/200/200` and raised nothing. With D1 off, the oracle skips a source the builder's
   predicate calls a transition (`RestSecurityOracle.kt:583`); on AF2 that predicate is the lexicon, whose word `name`
-  (0.08) matches the field `pack_name`. P2e's model scores the op −4.58, below the gate, so its 78 triples give 78
-  tests (`p2e-continue-20261013/af2-41-vs-38.md`).
+  (0.08) matches the field `pack_name`. The Naive Bayes model (P2e, P2f) scores the op −4.58, below the gate, so
+  P2f's 80 triples give 80 tests (P2e 78 and 78; `p2e-continue-20261013/af2-41-vs-38.md`).
 - Restore ceiling: at least one privileged credential must survive. With every admin demoted, a fresh login
   cannot promote anyone (401).
 
