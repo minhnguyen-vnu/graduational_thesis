@@ -1,0 +1,18 @@
+\begin{center}
+\textbf{\large{Tóm tắt}}
+\end{center}
+
+\addcontentsline{toc}{chapter}{Tóm tắt}
+
+\begin{small}
+
+Kiểm soát truy cập giới hạn những thao tác mà mỗi người dùng được phép thực hiện trên REST API. Các kỹ thuật kiểm thử tự động hiện nay chủ yếu tập trung vào lỗi phân quyền phi trạng thái, như lỗi ở mức đối tượng (BOLA) hoặc mức chức năng (BFLA). Lớp lỗ hổng phân quyền có trạng thái (Stateful Broken Access Control) ít được các kỹ thuật này kiểm tra trực tiếp. Lỗi này xuất hiện khi quyền hạn của người dùng bị thu hồi trong vận hành, nhưng hệ thống vẫn tiếp tục chấp nhận các phiên làm việc cũ.
+
+Khóa luận đề xuất giải pháp tự động phát hiện lớp lỗ hổng này bằng kiểm thử suy biến trên công cụ EvoMaster. Giải pháp dựa trên quan hệ MR-A1: thao tác đã thành công trước khi tài khoản bị hạ quyền phải bị từ chối khi gửi lại cùng token sau đó. Mỗi kịch bản kiểm thử gồm bộ ba thao tác \texttt{[source/transition/follow-up]}. Mô hình Naive Bayes tự động nhận diện thao tác hạ quyền từ đặc tả OpenAPI, nhờ đó giảm cấu hình thủ công.
+
+Thực nghiệm gồm 98 lượt chạy ở chế độ hộp đen trên bốn ứng dụng mục tiêu. reports-api và vampi-seeded mang lỗi gieo; pyLoad mang lỗ hổng CVE-2026-41133; artifact-keeper mang một lỗi mà nhà phát triển đã vá. Trên các biến thể có lỗ hổng, công cụ phát hiện vi phạm ở 19/20 lượt với reports-api, 7/20 lượt với vampi-seeded, 5/5 lượt với pyLoad và 5/5 lượt với artifact-keeper. Trên 48 lượt chạy với các biến thể đã vá, gồm bản vá của chính nhà phát triển artifact-keeper, công cụ không phát sinh báo động giả nào. Quan hệ MR-A1 phát hiện được việc máy chủ tiếp tục chấp nhận quyền đã thu hồi trên cả bốn ứng dụng đã khảo sát.
+
+\vspace*{1cm}
+\textbf{Từ khóa}: REST API, kiểm soát truy cập, phân quyền có trạng thái, kiểm thử suy biến, EvoMaster
+
+\end{small}

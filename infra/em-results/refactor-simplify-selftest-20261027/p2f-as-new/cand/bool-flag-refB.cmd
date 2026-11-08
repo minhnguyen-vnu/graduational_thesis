@@ -1,1 +1,0 @@
-/Users/minhnguyen/IdeaProjects/graduational-thesis/infra/em-results/refactor-simplify-selftest-20261027/cand/bool-flag-refB.cmd

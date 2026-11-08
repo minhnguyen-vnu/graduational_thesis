@@ -410,7 +410,7 @@ danh mục gốc của sampler.
 | Target | `actionDefinitions.size` | Nguồn |
 |---|---|---|
 | `reports-api` | **9** | `audit-batch/logs/t1-vuln-seed1-r0.log` dòng 15 |
-| `vampi-seeded` | 16 | `docs/tier2-seeded-benchmark-plan.md` |
+| `vampi-seeded` | 16 | `docs/archive/tier2-seeded-benchmark-plan.md` |
 | pyLoad | **105** | `tier2b-restore-trials/logs/vuln-noreset-seed1.log` dòng 16 |
 
 Log in ra nguyên văn: `There are 9 usable RESTful API endpoints defined in the schema configuration`.

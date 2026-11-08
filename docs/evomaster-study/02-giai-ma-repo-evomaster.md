@@ -454,8 +454,7 @@ createSingleCallOnEachEndpoint(bob)              9 test     thêm vào list sau 
 
 `smartSample()` lấy từ **cuối** list (`RestSampler.kt:46`, `removeAt(size - 1)`), nên 9 test đầu tiên được chấm là của
 bob, tài khoản cuối trong file YAML. Hết 36 test này mới sang cách lấy mẫu khác. Ngân sách nhỏ hơn số endpoint × số tài
-khoản thì tài khoản đầu file không bao giờ được thử: CLAUDE.md §2 ghi Grafana (309 endpoint) và Mattermost (623) mất
-`victim` theo đúng cách này.
+khoản thì tài khoản đầu file không bao giờ được thử (CLAUDE.md §2).
 
 ### 7.5 Fitness: chạy một test và chấm điểm
 

@@ -1,0 +1,30 @@
+exercises RestSecurityBuilder.kt:91-349 (model, tokens, schema fields, scores as loops), :641-764 (addForStatefulAccessControl, stopSources flag), :766-836 (guardedSources, anyAuthenticatedSuccess, victimSlicesOn, operatorsFor), :838-990 (buildStatefulAuthzTriple, tryReducedRoles, restoreOperatorsAndRetry, RoleAttempt), :1018-1193 (executeStatefulAuthzTriple without declared/reset/D1, C4 probe), :1195-1811 (field, value, restore and victim-object helpers as loops); RestSecurityOracle.kt:575-603; EMConfig without the three options
+jar-new a872a464816f8bea  jar-ref 77465fe5cda89098  stop --stoppingCriterion ACTION_EVALUATIONS --maxEvaluations 300  setfield-stop --stoppingCriterion ACTION_EVALUATIONS --maxEvaluations 300
+ran gaps query-role new=0 refA=0 refB=0
+PASS  gaps-query-role-cmdline-only-jar-differs     full command lines differ only in the jar path
+PASS  gaps-query-role-schema-lines-identical       2 schema-only lines, first diff none
+INFO  gaps-query-role-aa                           SR twice: identical (15 lines)
+PASS  gaps-query-role-trace-identical              15 stateful lines; first diff none
+PASS  gaps-query-role-970-same                     970 new True refA True refB True
+PASS  gaps-query-role-path-reached                 'roleField query:role' in SR True, in new True
+summary 5/5 checks passed
+--- legacy p2_checks.py on the new jar
+FAIL  p1-has-no-nb-debug                 P1 jar emits no NB candidate debug (mechanism is new); log present False
+summary 0/1 checks passed
+--- legacy candidate_checks.py on the new jar
+FAIL  noop-decoy-survives          new jar exit None, stack trace False
+FAIL  reject-decoy-survives        new jar exit None, stack trace False
+FAIL  restore-budget-survives      new jar exit None, stack trace False
+FAIL  protected-victim-survives    new jar exit None, stack trace False
+FAIL  revoke-survives              new jar exit None, stack trace False
+FAIL  proven-404-survives          new jar exit None, stack trace False
+FAIL  alpha-survives               new jar exit None, stack trace False
+FAIL  cap20-survives               new jar exit None, stack trace False
+FAIL  bool-flag-survives           new jar exit None, stack trace False
+--- legacy setfield_checks.py on the new jar
+Traceback (most recent call last):
+  File "/Users/minhnguyen/IdeaProjects/graduational-thesis/infra/evomaster-ext/selftest/setfield_checks.py", line 54, in <module>
+    exits = {tag: open("%s/%s.exit" % (OUT, tag)).read().strip() for tag in ("new", "old")}
+                  ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/minhnguyen/IdeaProjects/graduational-thesis/infra/em-results/redundant-code-selftest-20261103/query-role-evals/setfield/new.exit'
+output /Users/minhnguyen/IdeaProjects/graduational-thesis/infra/em-results/redundant-code-selftest-20261103/query-role-evals

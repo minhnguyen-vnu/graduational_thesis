@@ -1,0 +1,38 @@
+\chapter{Danh mục endpoint của các ứng dụng mục tiêu}
+\label{chap:appendix_a}
+
+Bảng~\ref{tab:appendix_endpoints} liệt kê các endpoint tham gia bộ ba do công cụ dựng trên bốn ứng dụng mục tiêu mô tả ở Mục~\ref{sec:impl_benchmarks}.
+
+\begin{table}[htbp]
+\centering
+\caption{Các endpoint trong bộ ba do công cụ dựng trên bốn ứng dụng mục tiêu}
+\label{tab:appendix_endpoints}
+\small
+\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\toprule
+\textbf{Endpoint} & \textbf{Quyền} & \textbf{Vai trò trong kịch bản} \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{reports-api}} \\
+\texttt{POST /auth/login} & Mọi tài khoản & Đăng nhập, cấp JWT chứa vai trò \\
+\texttt{PUT /reports/\{id\}} & Quản trị & Source và follow-up \\
+\texttt{PUT /users/\{u\}/role} & Quản trị & Chuyển trạng thái \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{vampi-seeded}} \\
+\texttt{POST /users/v1/login} & Mọi tài khoản & Đăng nhập, cấp JWT chứa cờ quản trị \\
+\texttt{PUT /books/v1/\{t\}/secret} & Quản trị & Source và follow-up \\
+\texttt{PUT /users/v1/\{u\}/role} & Quản trị & Chuyển trạng thái \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{pyLoad}} \\
+\texttt{POST /login} & Mọi tài khoản & Đăng nhập, tạo cookie phiên \\
+\texttt{POST /json/status} & Quản trị & Source và follow-up \\
+\texttt{POST /api/set\_user\_permission} & Quản trị & Chuyển trạng thái \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{artifact-keeper}} \\
+\texttt{POST /api/v1/auth/login} & Mọi tài khoản & Đăng nhập, cấp JWT chứa cờ \texttt{is\_admin} \\
+\texttt{POST /api/v1/admin/analytics/snapshot} & Quản trị & Source và follow-up \\
+\texttt{PATCH /api/v1/users/\{id\}} & Quản trị & Chuyển trạng thái \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Trên pyLoad, nhóm đường dẫn \texttt{/json/*} từ chối bằng mã 403, còn nhóm \texttt{/api/*} trả mã 401. Vì MR-A1 chỉ coi 403 là lời từ chối, thao tác source hợp lệ chỉ đến từ nhóm \texttt{/json/*}. Phép kiểm tra HTTP thủ công trên pyLoad dùng source \texttt{POST} \path{/json/generate_apikey} và thao tác chuyển trạng thái \texttt{POST} \path{/json/update_users}.

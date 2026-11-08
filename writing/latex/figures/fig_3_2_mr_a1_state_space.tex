@@ -1,0 +1,73 @@
+% Hình 3.2: Không gian chuyển trạng thái phân quyền và Quan hệ kiểm thử suy biến MR-A1
+% Thiết kế đơn sắc chuẩn học thuật: Bố cục 3 tầng không chồng chéo, có text width cho hộp công thức.
+\begin{tikzpicture}[
+  >=Stealth,
+  scale=0.88, transform shape,
+  state/.style={rectangle, draw=black, fill=white, thick, rounded corners=4pt, minimum width=3.4cm, minimum height=1.3cm, align=center, font=\small},
+  safestate/.style={rectangle, draw=black, fill=gray!12, thick, rounded corners=4pt, minimum width=3.4cm, minimum height=1.3cm, align=center, font=\small},
+  vulnstate/.style={rectangle, draw=black, very thick, dashed, fill=white, rounded corners=4pt, minimum width=3.4cm, minimum height=1.3cm, align=center, font=\small}
+]
+
+  % ==================== TẦNG 1: CÁC TRẠNG THÁI CHÍNH ====================
+  % Trạng thái ban đầu Q0
+  \node[state] (q0) at (0, 0) {
+    \textbf{Trạng thái ban đầu $s$}\\
+    Vai trò: quản trị\\
+    Thông tin xác thực $c$\\
+    \textit{Quan sát: \textsc{allowed}}
+  };
+
+  % Trạng thái trung gian Q_trans
+  \node[state] (q_trans) at (8.5, 0) {
+    \textbf{Sau transition $s' = T(s)$}\\
+    Vai trò: thấp hơn\\
+    Giữ nguyên $c$\\
+    \textit{Phiên cũ chưa bị hủy}
+  };
+
+  % Tự lặp ở Q0 (Source request)
+  \draw[->, thick] (q0) to[out=135, in=45, looseness=3.5] 
+    node[above=1pt, font=\scriptsize, fill=white, inner sep=1pt] {Source $\rightarrow$ \textbf{2xx}} (q0);
+
+  % Chuyển trạng thái Q0 -> Q_trans
+  \draw[->, very thick] (q0) -- 
+    node[above=2pt, font=\footnotesize\bfseries, fill=white, inner sep=1.5pt] {Transition $T$: hạ vai trò}
+    node[below=2pt, font=\scriptsize, fill=white, inner sep=1.5pt] {do tài khoản quản trị thực hiện} (q_trans);
+
+  % ==================== TẦNG 2: HAI NHÁNH KẾT QUẢ TỪ Q_TRANS ====================
+  % Nhánh 1: An toàn (Q_safe)
+  \node[safestate] (q_safe) at (6.0, -3.2) {
+    \textbf{Nhánh an toàn}\\
+    Từ chối thông tin xác thực cũ\\
+    Phản hồi: \textbf{403}\\[2pt]
+    \textbf{MR-A1 được thỏa}
+  };
+
+  % Nhánh 2: Lỗ hổng (Q_vuln)
+  \node[vulnstate] (q_vuln) at (10.8, -3.2) {
+    \textbf{Nhánh vi phạm}\\
+    Chấp nhận thông tin xác thực cũ\\
+    Phản hồi: \textbf{2xx}\\[2pt]
+    \textbf{Vi phạm MR-A1}
+  };
+
+  % Mũi tên từ Q_trans xuống Q_safe (thẳng, nhãn nằm bên trái rõ ràng)
+  \draw[->, thick] (q_trans.south) -- (q_safe.north)
+    node[midway, left=4pt, font=\scriptsize, align=right, fill=white, inner sep=1.5pt] {Follow-up bị\\từ chối (\textbf{403})};
+
+  % Mũi tên từ Q_trans xuống Q_vuln (thẳng, nhãn nằm bên phải rõ ràng)
+  \draw[->, very thick] (q_trans.south) -- (q_vuln.north)
+    node[midway, right=4pt, font=\scriptsize, align=left, fill=white, inner sep=1.5pt] {Follow-up vẫn\\thành công (\textbf{2xx})};
+
+  % ==================== TẦNG 3: HỘP CÔNG THỨC TOÁN HỌC MR-A1 ====================
+  % Nằm ở góc dưới bên trái, cố định text width = 4.8cm để TUYỆT ĐỐI không tràn sang Q_safe
+  \node[rectangle, draw=black!70, fill=gray!5, rounded corners=3pt, 
+        text width=4.5cm, align=left, font=\scriptsize, inner sep=5pt] at (0, -3.2) {
+    \textbf{MR-A1 (Công thức 3.1):}\\[3pt]
+    $\mathrm{Obs}(a, c, s) = \textsc{allowed} \wedge \mathit{Pre}(a, T)$\\
+    $\quad \implies \mathrm{Obs}(a, c, s') = \textsc{denied}$.\\[3pt]
+    Nếu $\mathrm{Obs}(a, c, s') = \textsc{allowed}$:\\
+    vi phạm MR-A1, Oracle 970 báo lỗi.
+  };
+
+\end{tikzpicture}

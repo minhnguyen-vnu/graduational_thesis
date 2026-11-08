@@ -1,0 +1,401 @@
+% ==============================================================================
+% TÀI LIỆU THAM KHẢO KHÓA LUẬN TỐT NGHIỆP UET
+% Đề tài: Phát hiện lỗ hổng phân quyền có trạng thái trong REST API sử dụng kiểm thử suy biến mở rộng cho EvoMaster
+% Định dạng: BibTeX (unsrt style, theo template bộ môn)
+% Nguồn: docs/related-work.md, infra/analysis/lexicon-rules/sources.md và các bài gốc đã đối chiếu.
+% Key cũ được giữ để tương thích; năm trong key không thay thế trường year.
+% Entry định danh tài liệu; không tự chứng minh kết luận nghiên cứu hay trạng thái bản vá.
+% ==============================================================================
+
+% ------------------------------------------------------------------------------
+% 1. NHÓM CÔNG CỤ EVOMASTER & CÁC CÔNG TRÌNH TÁC GIẢ NỀN TẢNG
+% ------------------------------------------------------------------------------
+
+% Nền tảng bổ sung cho Chương 2: QRS 2017, MIO SSBSE 2017, tool ICST 2018.
+% Nguồn đối chiếu: https://github.com/WebFuzzing/EvoMaster/blob/master/docs/publications.md
+@inproceedings{arcuri2017rest,
+  author    = {Andrea Arcuri},
+  title     = {{RESTful API Automated Test Case Generation}},
+  booktitle = {2017 IEEE International Conference on Software Quality, Reliability and Security (QRS)},
+  pages     = {9--20},
+  year      = {2017},
+  doi       = {10.1109/QRS.2017.11}
+}
+
+@inproceedings{arcuri2017mio,
+  author    = {Andrea Arcuri},
+  title     = {{Many Independent Objective (MIO) Algorithm for Test Suite Generation}},
+  booktitle = {Search Based Software Engineering},
+  publisher = {Springer},
+  pages     = {3--17},
+  year      = {2017},
+  doi       = {10.1007/978-3-319-66299-2_1}
+}
+
+@inproceedings{arcuri2018evomaster,
+  author    = {Andrea Arcuri},
+  title     = {{EvoMaster: Evolutionary Multi-context Automated System Test Generation}},
+  booktitle = {2018 IEEE 11th International Conference on Software Testing, Verification and Validation (ICST)},
+  pages     = {394--397},
+  year      = {2018},
+  doi       = {10.1109/ICST.2018.00046}
+}
+
+@article{arcuri2019evomaster,
+  author    = {Andrea Arcuri},
+  title     = {{RESTful API Automated Test Case Generation with EvoMaster}},
+  journal   = {ACM Transactions on Software Engineering and Methodology (TOSEM)},
+  volume    = {28},
+  number    = {1},
+  pages     = {3:1--3:37},
+  year      = {2019},
+  doi       = {10.1145/3293455}
+}
+
+@article{arcuri2021evomaster,
+  author    = {Andrea Arcuri and Juan Pablo Galeotti and Bogdan Marculescu and Man Zhang},
+  title     = {{EvoMaster: A Search-Based System Test Generation Tool}},
+  journal   = {Journal of Open Source Software},
+  volume    = {6},
+  number    = {57},
+  pages     = {2153},
+  year      = {2021},
+  doi       = {10.21105/joss.02153}
+}
+
+% Online 2024-11-29; trích dẫn theo tập 32, bài 4 (2025) của nhà xuất bản.
+@article{arcuri2024evomastertool,
+  author    = {Andrea Arcuri and Man Zhang and Susruthan Seran and Juan Pablo Galeotti and Amid Golmohammadi and Onur Duman and Agustina Aldasoro and Hernan Ghianni},
+  title     = {{Tool report: EvoMaster---black and white box search-based fuzzing for REST, GraphQL and RPC APIs}},
+  journal   = {Automated Software Engineering},
+  volume    = {32},
+  number    = {1},
+  pages     = {4},
+  year      = {2025},
+  doi       = {10.1007/s10515-024-00478-1}
+}
+
+@inproceedings{arcuri2025issre,
+  author    = {Andrea Arcuri and {\"O}m{\"u}r {\c{S}}ahin and Man Zhang},
+  title     = {{Fuzzing for Detecting Access Policy Violations in REST APIs}},
+  booktitle = {Proceedings of the 36th IEEE International Symposium on Software Reliability Engineering (ISSRE)},
+  pages     = {130--141},
+  year      = {2025},
+  doi       = {10.1109/ISSRE66568.2025.00025}
+}
+
+% Giữ bản arXiv đã đọc cho chi tiết 9 oracle theo docs/related-work.md §2.
+% arXiv liên kết bản JSS qua DOI 10.1016/j.jss.2026.113060;
+% không đổi entry này sang metadata bản xuất bản khi chưa chốt phiên bản trích dẫn.
+@article{sahin2024bola,
+  author    = {{\"O}m{\"u}r {\c{S}}ahin and Man Zhang and Andrea Arcuri},
+  title     = {{Enhancing REST API Fuzzing with Access Policy Violation Checks and Injection Attacks}},
+  journal   = {arXiv preprint arXiv:2604.00702},
+  year      = {2026},
+  doi       = {10.48550/arXiv.2604.00702},
+  url       = {https://arxiv.org/abs/2604.00702v1}
+}
+
+@article{zhang2026flakiness,
+  author    = {Man Zhang and Chongyang Shen and Andrea Arcuri and Tao Yue},
+  title     = {{Detecting and Mitigating Flakiness in REST API Fuzzing}},
+  journal   = {arXiv preprint arXiv:2603.28452},
+  year      = {2026}
+}
+
+% Công trình upstream về 25 HTTP-semantics oracles trong EvoMaster v6.2.0 (nguồn docs/related-work.md §4).
+@article{sahin2026validating,
+  author    = {{\"O}m{\"u}r {\c{S}}ahin and Andrea Arcuri},
+  title     = {{Validating HTTP Semantics in REST APIs With Constructed Call Sequence Scenarios}},
+  journal   = {arXiv preprint arXiv:2608.16239},
+  year      = {2026},
+  doi       = {10.48550/arXiv.2608.16239},
+  url       = {https://arxiv.org/abs/2608.16239}
+}
+
+% ------------------------------------------------------------------------------
+% 2. KIỂM THỬ SUY BIẾN (METAMORPHIC TESTING)
+% ------------------------------------------------------------------------------
+
+@techreport{chen1998metamorphic,
+  author      = {Tsong Yueh Chen and Shing Chi Cheung and Shiu Ming Yiu},
+  title       = {{Metamorphic Testing: A New Approach for Generating Next Test Cases}},
+  institution = {Hong Kong University of Science and Technology},
+  number      = {HKUST-CS98-01},
+  year        = {1998}
+}
+
+@article{chen2018metamorphic,
+  author    = {Tsong Yueh Chen and Fei-Ching Kuo and Huai Liu and Pak-Lok Poon and Dave Towey and T. H. Tse and Zhi Quan Zhou},
+  title     = {{Metamorphic Testing: A Review of Challenges and Opportunities}},
+  journal   = {ACM Computing Surveys (CSUR)},
+  volume    = {51},
+  number    = {1},
+  pages     = {4:1--4:27},
+  year      = {2018},
+  doi       = {10.1145/3143561}
+}
+
+@article{barr2015oracle,
+  author    = {Earl T. Barr and Mark Harman and Phil McMinn and Muzammil Shahbaz and Shin Yoo},
+  title     = {{The Oracle Problem in Software Testing: A Survey}},
+  journal   = {IEEE Transactions on Software Engineering},
+  volume    = {41},
+  number    = {5},
+  pages     = {507--525},
+  year      = {2015},
+  doi       = {10.1109/TSE.2014.2372785}
+}
+
+% ------------------------------------------------------------------------------
+% 3. CÁC CÔNG CỤ VÀ NGHIÊN CỨU LIÊN QUAN (RELATED WORK & BASELINES)
+% ------------------------------------------------------------------------------
+
+% Làm rõ nhóm SMRL được nhắc tại docs/related-work.md §3 bằng một bài cụ thể.
+% Tác giả và DOI theo bài gốc: https://orbilu.uni.lu/handle/10993/43205
+@inproceedings{mai2020smrl,
+  author    = {Phu X. Mai and Arda Goknil and Fabrizio Pastore and Lionel C. Briand},
+  title     = {{SMRL: A Metamorphic Security Testing Tool for Web Systems}},
+  booktitle = {Proceedings of the ACM/IEEE 42nd International Conference on Software Engineering: Companion Proceedings},
+  pages     = {9--12},
+  year      = {2020},
+  doi       = {10.1145/3377812.3382152}
+}
+
+@inproceedings{atlidakis2019restler,
+  author    = {Vaggelis Atlidakis and Patrice Godefroid and Marina Polishchuk},
+  title     = {{RESTler: Stateful REST API Fuzzing}},
+  booktitle = {Proceedings of the 41st International Conference on Software Engineering (ICSE)},
+  pages     = {748--758},
+  year      = {2019},
+  doi       = {10.1109/ICSE.2019.00083}
+}
+
+@inproceedings{viglianisi2020resttestgen,
+  author    = {Emanuele Viglianisi and Michael Dallago and Mariano Ceccato},
+  title     = {{RestTestGen: Automated Black-Box Testing of RESTful APIs}},
+  booktitle = {Proceedings of the 2020 IEEE 13th International Conference on Software Testing, Validation and Verification (ICST)},
+  pages     = {142--152},
+  year      = {2020},
+  doi       = {10.1109/ICST46399.2020.00024}
+}
+
+@inproceedings{liu2025bacscan,
+  author    = {Fengyu Liu and Yuan Zhang and Enhao Li and Wei Meng and Youkun Shi and Qianheng Wang and Chenlin Wang and Zihan Lin and Min Yang},
+  title     = {{BACScan: Automatic Black-Box Detection of Broken-Access-Control Vulnerabilities in Web Applications}},
+  booktitle = {Proceedings of the 2025 ACM SIGSAC Conference on Computer and Communications Security (CCS)},
+  pages     = {1320--1333},
+  year      = {2025},
+  doi       = {10.1145/3719027.3744825}
+}
+
+@article{dharmaadi2025bacfuzz,
+  author    = {I Putu Arya Dharmaadi and Mohannad Alhanahnah and Van-Thuan Pham and Fadi Mohsen and Fatih Turkmen},
+  title     = {{BACFuzz: Exposing the Silence on Broken Access Control Vulnerabilities in Web Applications}},
+  journal   = {arXiv preprint arXiv:2507.15984},
+  year      = {2025}
+}
+
+% Bản v2 được nộp ngày 2026-08-03; bản v1 có từ 2025. Giữ key cũ.
+@article{graphqler2025,
+  author    = {Omar Tsai and Jianing Li and Tsz Tung Cheung and Lejing Huang and Hao Zhu and Jianrui Xiao and Iman Sharafaldin and Mohammad A. Tayebi},
+  title     = {{GraphQLer: Enhancing GraphQL Security with Context-Aware API Testing}},
+  journal   = {arXiv preprint arXiv:2504.13358v2},
+  year      = {2026},
+  url       = {https://arxiv.org/abs/2504.13358v2}
+}
+
+@article{khan2026armeta,
+  author    = {Shehroz Khan and Abdullah Mughees and Gaadha Sudheerbabu and Tanwir Ahmad and Dragos Truscan},
+  title     = {{Multi-Agent LLM-based Metamorphic Testing for REST APIs}},
+  journal   = {arXiv preprint arXiv:2605.28321},
+  year      = {2026}
+}
+
+@inproceedings{kim2022issta,
+  author    = {Myeongsoo Kim and Qi Xin and Saurabh Sinha and Alessandro Orso},
+  title     = {{Automated Test Generation for REST APIs: No Time to Rest Yet}},
+  booktitle = {Proceedings of the 31st ACM SIGSOFT International Symposium on Software Testing and Analysis (ISSTA)},
+  pages     = {289--301},
+  year      = {2022},
+  doi       = {10.1145/3533767.3534401}
+}
+
+% ------------------------------------------------------------------------------
+% 4. TIÊU CHUẨN CÔNG NGHIỆP, RFC VÀ AN TOÀN BẢO MẬT
+% ------------------------------------------------------------------------------
+
+@misc{rfc9110,
+  author       = {Roy T. Fielding and Mark Nottingham and Julian Reschke},
+  title        = {{HTTP Semantics}},
+  series       = {Request for Comments},
+  number       = {9110},
+  howpublished = {RFC 9110, RFC Editor},
+  publisher    = {RFC Editor},
+  month        = jun,
+  year         = {2022},
+  doi          = {10.17487/RFC9110}
+}
+
+@misc{rfc7519,
+  author       = {Michael B. Jones and John Bradley and Nat Sakimura},
+  title        = {{JSON Web Token (JWT)}},
+  series       = {Request for Comments},
+  number       = {7519},
+  howpublished = {RFC 7519, RFC Editor},
+  publisher    = {RFC Editor},
+  month        = may,
+  year         = {2015},
+  doi          = {10.17487/RFC7519}
+}
+
+@misc{rfc7643,
+  author       = {Phil Hunt and Kelly Grizzle and Erik Wahlstroem and Chuck Mortimore},
+  title        = {{System for Cross-domain Identity Management: Core Schema}},
+  series       = {Request for Comments},
+  number       = {7643},
+  howpublished = {RFC 7643, RFC Editor},
+  publisher    = {RFC Editor},
+  month        = sep,
+  year         = {2015},
+  doi          = {10.17487/RFC7643}
+}
+
+@article{ferraiolo2001rbac,
+  author    = {David F. Ferraiolo and Ravi Sandhu and Serban Gavrila and D. Richard Kuhn and Ramaswamy Chandramouli},
+  title     = {{Proposed NIST Standard for Role-Based Access Control}},
+  journal   = {ACM Transactions on Information and System Security (TISSEC)},
+  volume    = {4},
+  number    = {3},
+  pages     = {224--274},
+  year      = {2001},
+  doi       = {10.1145/501978.501980}
+}
+
+@techreport{incits359draft,
+  author       = {{BSR INCITS 359 Committee}},
+  title        = {{Role Based Access Control (Draft)}},
+  institution  = {InterNational Committee for Information Technology Standards (INCITS)},
+  month        = apr,
+  year         = {2003},
+  howpublished = {\url{https://csrc.nist.gov/CSRC/media/Projects/Role-Based-Access-Control/documents/rbac-std-ncits.pdf}}
+}
+
+@misc{openapi3,
+  author       = {{OpenAPI Initiative}},
+  title        = {{OpenAPI Specification v3.0.3}},
+  howpublished = {\url{https://spec.openapis.org/oas/v3.0.3}},
+  year         = {2020}
+}
+
+@misc{owasp2023api,
+  author       = {{OWASP Foundation}},
+  title        = {{OWASP API Security Top 10 2023}},
+  howpublished = {\url{https://owasp.org/API-Security/}},
+  year         = {2023}
+}
+
+@misc{cwe613,
+  author       = {{MITRE}},
+  title        = {{CWE-613: Insufficient Session Expiration}},
+  howpublished = {\url{https://cwe.mitre.org/data/definitions/613.html}},
+  year         = {2024}
+}
+
+@misc{cwe863,
+  author       = {{MITRE}},
+  title        = {{CWE-863: Incorrect Authorization}},
+  howpublished = {\url{https://cwe.mitre.org/data/definitions/863.html}},
+  year         = {2024}
+}
+
+% ------------------------------------------------------------------------------
+% 5. PHƯƠNG PHÁP THỐNG KÊ VÀ HỌC MÁY
+% ------------------------------------------------------------------------------
+
+@article{wilson1927interval,
+  author    = {Edwin B. Wilson},
+  title     = {{Probable Inference, the Law of Succession, and Statistical Inference}},
+  journal   = {Journal of the American Statistical Association},
+  volume    = {22},
+  number    = {158},
+  pages     = {209--212},
+  year      = {1927},
+  doi       = {10.1080/01621459.1927.10502953}
+}
+
+@article{mcnemar1947test,
+  author    = {Quinn McNemar},
+  title     = {{Note on the sampling error of the difference between correlated proportions or percentages}},
+  journal   = {Psychometrika},
+  volume    = {12},
+  number    = {2},
+  pages     = {153--157},
+  year      = {1947},
+  doi       = {10.1007/BF02295996}
+}
+
+@article{fisher1922test,
+  author    = {Ronald A. Fisher},
+  title     = {{On the Interpretation of $\chi^2$ from Contingency Tables, and the Calculation of P}},
+  journal   = {Journal of the Royal Statistical Society},
+  volume    = {85},
+  number    = {1},
+  pages     = {87--94},
+  year      = {1922},
+  doi       = {10.2307/2340521}
+}
+
+@article{cohen1960kappa,
+  author    = {Jacob Cohen},
+  title     = {{A Coefficient of Agreement for Nominal Scales}},
+  journal   = {Educational and Psychological Measurement},
+  volume    = {20},
+  number    = {1},
+  pages     = {37--46},
+  year      = {1960},
+  doi       = {10.1177/001316446002000104}
+}
+
+@article{clopper1934use,
+  author    = {C. J. Clopper and E. S. Pearson},
+  title     = {{The Use of Confidence or Fiducial Limits Illustrated in the Case of the Binomial}},
+  journal   = {Biometrika},
+  volume    = {26},
+  number    = {4},
+  pages     = {404--413},
+  year      = {1934},
+  doi       = {10.1093/biomet/26.4.404}
+}
+
+% ------------------------------------------------------------------------------
+% 6. MÃ LỖ HỔNG VÀ BÁO CÁO AN NINH THỰC TẾ (CVE & ADVISORIES)
+% ------------------------------------------------------------------------------
+
+@misc{cve202641133,
+  author       = {{MITRE CVE Program}},
+  title        = {{CVE-2026-41133: pyLoad Privilege Revocation Bypass}},
+  howpublished = {\url{https://cve.org/CVERecord?id=CVE-2026-41133}},
+  year         = {2026}
+}
+
+% Giới hạn dựng bộ ba và trạng thái chạy máy thuộc tài liệu thực nghiệm trong repo,
+% không phải metadata xuất bản của bản ghi CVE.
+% ------------------------------------------------------------------------------
+% 7. PHẦN MỀM THỰC NGHIỆM VÀ ĐẶC TẢ ĐỊNH DANH (TARGET APPS & SPECIFICATIONS)
+% ------------------------------------------------------------------------------
+
+@misc{artifactkeeper1821,
+  author       = {{artifact-keeper Contributors}},
+  title        = {{fix(security): invalidate tokens on admin/role privilege change (Closes \#1821)}},
+  howpublished = {\url{https://github.com/artifact-keeper/artifact-keeper/commit/e64cc5c608df4afdd0b35feae5f140a9d809a8f3}},
+  year         = {2026}
+}
+
+@misc{ulid2016,
+  author       = {Alizain Feerasta},
+  title        = {{Universally Unique Lexicographically Sortable Identifier (ULID)}},
+  howpublished = {\url{https://github.com/ulid/spec}},
+  year         = {2016}
+}
+

@@ -9,7 +9,7 @@ Quyết định của user ngày 2026-10-06. Thay quyết định "giữ nhóm n
 | Chế độ | Thông tin transition đến từ | Câu hỏi nó trả lời | Danh sách từ nhận diện | Trạng thái |
 |---|---|---|---|---|
 | A1 | Người kiểm thử khai báo `--statefulAuthzTransition "<VERB> <PATH> name=value ..."` (`EMConfig.kt:3065`) | Oracle có bắt được lỗi khi biết transition | Không gọi | Tuỳ chọn đã có; đã dùng ở pyLoad §5.2 (`docs/tier2b-pyload-target.md` §3, dòng 6) |
-| A2 | Script ngoài EvoMaster gửi OpenAPI spec cho LLM, nhận về đúng dòng khai báo của A1 | LLM có thay được người khai báo | Không gọi | Chưa làm; thuộc nhánh E của `docs/plan-october.md` |
+| A2 | Script ngoài EvoMaster gửi OpenAPI spec cho LLM, nhận về đúng dòng khai báo của A1 | LLM có thay được người khai báo | Không gọi | Chưa làm; thuộc nhánh E của `docs/archive/plan-october.md` |
 | B, chính | Builder tự suy ra trong lúc chạy | EvoMaster tự dựng được bộ ba trên API lạ (recall black-box) | Rút từ corpus gán nhãn (§2) | Đang làm |
 
 A1 và A2, khi bật D1 (`--statefulAuthzTwoCredentialJudgment`):
@@ -63,4 +63,4 @@ Hạn chế mang theo: 3.972 op cũ có L1 là phiên chính, đã thấy dữ l
 | 10-09 | Rút, đo, `RESULTS.md` |
 | 10-10 – 10-11 | Thay mã (duyệt trước), self-test, cổng hồi quy |
 | 10-12 – 10-14 | Đo lại bảng §4 trên jar mới; B trên artifact-keeper, bamf |
-| Từ 10-15 | A2 (nhánh E) và phần còn lại của `docs/plan-october.md` |
+| Từ 10-15 | A2 (nhánh E) và phần còn lại của `docs/archive/plan-october.md` |

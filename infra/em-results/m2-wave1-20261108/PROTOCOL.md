@@ -1,7 +1,8 @@
 # M2 model rerun campaign, 2026-11-08
 
 Chạy lại mọi target với mô hình M2 (Naive Bayes rút lại từ corpus gán nhãn lại). Kết quả và bảng số:
-`docs/results.md` §5d. Thư mục: wave 1 ở đây, wave 2 ở `../m2-wave2-20261108/`.
+`docs/results.md` §0–§1 (đếm: `m2_counts.py`, `m2-counts-final.out`). Thư mục: wave 1 ở đây, wave 2 ở
+`../m2-wave2-20261108/`.
 
 ## Jar
 
@@ -21,7 +22,8 @@ Không qua cổng 21 hàng: chạy thẳng trên target, so số với bộ P2f/
 
 Như `docs/results.md` §0, trừ: bỏ `--statefulAuthzTwoCredentialJudgment` (jar DC từ chối cờ này; phán quyết chỉ còn
 C4). `--useExperimentalOracles true --extraPhaseBudgetPercentage` 0,6 (reports/vampi/bamf) hoặc 0,25
-(artifact-keeper, theo lượt AF2 cũ). Tier-1/2 `--maxTime 150s`; pyLoad/artifact-keeper 1200s; bamf 600s. Mỗi JVM
+(artifact-keeper, theo lượt AF2 cũ). Tier-1/2 `--maxTime 150s`; pyLoad `10m` (`m2_wave1.sh` dòng 96; bản ghi
+trước đây viết 1200s là sai); artifact-keeper 1200s; bamf 600s. Mỗi JVM
 `-Xmx2g`. Reseed SUT trước mỗi lượt. Mỗi làn `cd` một thư mục làm việc riêng để cách ly `process_data`.
 
 ## Thứ tự
@@ -42,7 +44,7 @@ Mỗi làn tự kiểm sau mỗi hàng; luật nổ thì dừng làn đó (ghi `
 
 ## Kết quả
 
-`docs/results.md` §5d. Tóm: reports 19/20, vampi 7/20, pyLoad 5/5 (trùng P2f), các bản sửa 0 FP; artifact-keeper lỗi
+`docs/results.md` §1, §5, §7. Tóm: reports 19/20, vampi 7/20, pyLoad 5/5 (trùng P2f), các bản sửa 0 FP; artifact-keeper lỗi
 5/5, bản vá 0/3 (trùng AF2); bamf 0/10 (ER cũ 5/10, không tái lập — transition `{email}` luôn VOID).
 
 ## Lệch luật đã khai

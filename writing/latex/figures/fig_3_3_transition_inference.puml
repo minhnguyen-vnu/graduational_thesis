@@ -1,0 +1,40 @@
+@startuml
+skinparam dpi 300
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 11
+skinparam roundcorner 4
+skinparam rectangleBorderThickness 1.2
+skinparam arrowThickness 1.2
+
+file "Đặc tả OpenAPI" as spec
+
+rectangle "Trích xuất đặc trưng" as feat {
+  component "Tiền xử lý\nvà tách token" as tok
+}
+
+package "Cơ chế tính điểm" as models {
+  component "Mô hình Naive Bayes\n(tổng trọng số logarit)" as nb
+  component "Bộ từ vựng\n(phương án so sánh)" as lex
+}
+
+component "Xếp hạng thao tác\nvà chọn trường" as engine
+
+package "Quyết định sinh kịch bản" as decisions {
+  component "1. Thao tác hạ quyền\n(score > 0)" as d1
+  component "2. Trường vai trò\nvà giá trị hạ quyền" as d2
+  component "3. Trường định danh\ntài khoản nạn nhân" as d3
+}
+
+spec -> tok
+tok --> nb : Vector đặc trưng
+tok ..> lex : Khớp từ khóa
+nb --> engine : score(op)
+lex ..> engine : Điểm cực đại
+
+engine --> d1
+engine --> d2
+engine --> d3
+
+@enduml

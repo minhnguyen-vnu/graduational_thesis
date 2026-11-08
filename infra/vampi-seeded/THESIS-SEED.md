@@ -1,4 +1,4 @@
-# `infra/vampi-seeded/` — Tier-2 seeded benchmark target
+# vampi-seeded target
 
 A thesis fork of **VAmPI** carrying a planted **stateful/temporal authorization bug (A1)**: privilege
 persists after a role downgrade, because authorization trusts a role claim snapshotted into an
@@ -6,7 +6,8 @@ already-issued JWT.
 
 - **Upstream:** <https://github.com/erev0s/VAmPI> @ commit `f16052dce83f05847133ec98f01c5193a41de7d8`
   (vendored, not a submodule; upstream `.git` removed). Upstream licence: see `LICENSE`.
-- **Design rationale, verification results, and the run matrix:** `docs/tier2-seeded-benchmark-plan.md`.
+- **Numbers:** `docs/results.md` §1 (jar M2). Running EvoMaster on it: skill `em-batch`.
+- The seeded endpoints are named in VAmPI's idiom by us, so the transition name is ours (`docs/results.md` §9).
 - **Every seeded line is marked `THESIS SEED`** in the source — `git`-less diffing against a fresh upstream
   clone is therefore unnecessary; grep for the marker.
 
@@ -20,6 +21,9 @@ already-issued JWT.
 | `api_views/books.py` | `update_book_secret()` — the guarded, non-consuming admin-only write |
 | `openapi_specs/openapi3.yml` | specs for the two new endpoints (role enum `['admin','user']`) |
 | `Dockerfile` | `tokentimetolive` 60 → 3600; `statefulrolecheck=0` |
+
+The longer token lifetime is a declared seeding choice: a 60 s token expires mid-triple and turns the follow-up into a
+401 (INCONCLUSIVE). A non-admin calling a book that does not exist still gets 403, never a masking 404.
 
 Note that the deterministic starter-book title is an **upstream bug fix, not part of the seed**: stock
 `register_user()` picks `bookTitle<randrange(100)>` against a UNIQUE column, so `GET /createdb` returns
@@ -57,21 +61,6 @@ curl -s -o /dev/null -w 'source=%{http_code}\n'     -X PUT localhost:$P/books/v1
 curl -s -o /dev/null -w 'transition=%{http_code}\n' -X PUT localhost:$P/users/v1/admin/role        -H "Authorization: Bearer $OP"  -H 'Content-Type: application/json' -d '{"role":"user"}'
 curl -s -o /dev/null -w 'followup=%{http_code}\n'   -X PUT localhost:$P/books/v1/bookTitle1/secret -H "Authorization: Bearer $TOK" -H 'Content-Type: application/json' -d '{"secret":"s2"}'
 ```
-
-## Run the oracle against it
-
-```bash
-curl -s http://localhost:5002/createdb >/dev/null
-JAVA_HOME=$(/usr/libexec/java_home -v 17) java -jar ~/IdeaProjects/EvoMaster/core/target/evomaster.jar \
-  --blackBox true --bbSwaggerUrl http://localhost:5002/openapi.json --bbTargetUrl http://localhost:5002 \
-  --configPath infra/em-config/vampi-seeded-auth.yaml \
-  --useExperimentalOracles true --extraPhaseBudgetPercentage 0.6 \
-  --outputFormat PYTHON_UNITTEST --ratePerMinute 120 --maxTime 150s --seed 1 \
-  --outputFolder infra/em-results/<run>
-```
-
-Verified at seed 1 (2026-08-06): **:5002 → fault 970** plus the failing test
-`test_19_put_on_secret_stillAllowedAfterPermissionRevoked`; **:5003 → no 970**.
 
 ## Known caveat
 

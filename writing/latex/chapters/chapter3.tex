@@ -1,0 +1,213 @@
+\chapter{Phương pháp đề xuất}
+\label{chap:method}
+
+% Cho phép co giãn khẩn cấp để ngắt dòng trước các định danh monospace dài; giới hạn trong chương.
+\begingroup
+\emergencystretch=3em
+
+Phương pháp đề xuất phát hiện lỗ hổng phân quyền có trạng thái bằng cách đối chiếu kết quả của cùng một thao tác trước và sau khi quyền của chủ thể bị thu hồi. Chương này trình bày phương pháp từ quan hệ suy biến MR-A1 đến kịch bản kiểm thử chạy được trong EvoMaster.
+
+\section{Tổng quan giải pháp và kiến trúc Oracle 970}
+\label{sec:method_overview}
+
+Với kiểm thử phân quyền REST API, bài toán thiếu oracle (Mục~\ref{sec:bg_metamorphic}) phát sinh vì mã trạng thái HTTP không phản ánh đúng quyết định phân quyền. Một yêu cầu có thể nhận mã \texttt{200 OK} ngay cả khi máy chủ chấp nhận thao tác trái với chính sách phân quyền.
+
+Oracle 970 thực hiện phép so sánh theo thời gian trong pha kiểm thử bảo mật của EvoMaster v6.1.1, theo kiến trúc oracle an toàn của Arcuri và Şahin \cite{arcuri2025issre, sahin2024bola}. Mã 970 là mã lỗi mà phần mở rộng gán cho vi phạm MR-A1 trong nhóm oracle thử nghiệm của EvoMaster. Pha kiểm thử bảo mật (Mục~\ref{sec:bg_sbst}) lấy đầu vào từ kho lưu trữ ca kiểm thử \cite{arcuri2019evomaster, sahin2024bola}.
+
+Phương pháp tách hai thành phần: bộ dựng kịch bản kiểm thử tạo các bộ ba thao tác \texttt{[source/transition/follow-up]}, còn bộ phán quyết đánh giá các bộ ba đã thực hiện thành công. Cách tách này phân biệt được lượt không dựng được bộ ba hợp lệ với lượt có bộ ba nhưng không có vi phạm. Hình~\ref{fig:triple_sequence} trình bày trình tự thực hiện bộ ba và điều kiện kích hoạt Oracle 970.
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_3_1_triple_flow}
+  \caption{Trình tự thực hiện bộ ba thao tác và kích hoạt Oracle 970}
+  \label{fig:triple_sequence}
+\end{figure}
+
+Nhóm oracle so sánh chéo tài khoản (differential oracle) của Şahin và cộng sự đối chiếu quyền giữa nhiều tài khoản tại cùng thời điểm để phát hiện lỗi BOLA và BFLA \cite{sahin2024bola}. Ngược lại, Oracle 970 theo dõi cùng một tài khoản trước và sau khi quyền thay đổi, với thông tin xác thực giữ nguyên.
+
+\section{Quan hệ kiểm thử suy biến MR-A1}
+\label{sec:method_mra1}
+
+Dựa trên nguyên lý kiểm thử suy biến ở Mục~\ref{sec:bg_metamorphic}, MR-A1 xác định quan hệ kỳ vọng giữa hai lần thực hiện một thao tác, trước và sau khi thu hồi quyền \cite{chen1998metamorphic, chen2018metamorphic}.
+
+MR-A1 xét một chủ thể $p$, tức tài khoản được kiểm tra, có quyền thực hiện thao tác trước khi bị hạ quyền. Chủ thể này gửi yêu cầu bằng thông tin xác thực $c$, có thể là token hoặc cookie phiên định danh $p$. Thao tác $a$ là một lời gọi REST API ghi dữ liệu có kiểm soát phân quyền, chẳng hạn cập nhật một báo cáo, việc chỉ quản trị viên được làm. Trạng thái $s$ mô tả phân quyền của hệ thống tại thời điểm quan sát. Thao tác chuyển trạng thái $T$ (transition) do một tài khoản quản trị thực hiện, nhằm hạ vai trò hoặc thu hồi quyền của $p$.
+
+Hàm quan sát $\mathrm{Obs}(a, c, s)$ lấy kết quả từ mã trạng thái HTTP khi chủ thể dùng $c$ gọi thao tác $a$ tại trạng thái $s$ \cite{rfc9110}. Bảng~\ref{tab:obs_status} nêu ba giá trị quan sát và mã trạng thái tương ứng. Mã \texttt{2xx} cho biết máy chủ chấp nhận yêu cầu ở tầng HTTP, nhưng không xác nhận trạng thái dữ liệu nghiệp vụ sau thao tác. Oracle phán quyết dựa trên mã 403. Mã \texttt{401} ở bước follow-up thường gặp ở hệ thống thu hồi quyền bằng cách vô hiệu hóa phiên, chẳng hạn bản vá của artifact-keeper (Mục~\ref{sec:eval_cases}), và nằm ngoài phạm vi phán quyết. Mã 404 không được coi là lời từ chối.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Ánh xạ giá trị quan sát sang mã trạng thái HTTP}
+  \label{tab:obs_status}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    Giá trị & Mã HTTP & Ý nghĩa \\
+    \midrule
+    \textsc{allowed} & 2xx & Máy chủ chấp nhận lời gọi ở tầng HTTP. \\
+    \textsc{denied} & 403 & Máy chủ từ chối lời gọi trên cơ sở phân quyền. \\
+    \textsc{inconclusive} & 401 & Phiên hết hạn hoặc chưa xác định được quyền; bộ ba bị hủy và dựng lại. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Gọi $s' = T(s)$ là trạng thái sau khi thực hiện $T$. Khi $c$ được giữ cố định qua hai lần quan sát, MR-A1 có dạng Công thức~\eqref{eq:mra1}.
+\begin{equation}
+  \mathrm{Obs}(a, c, s) = \textsc{allowed}\ \wedge\ \mathit{Pre}(a, T)\ \implies\ \mathrm{Obs}(a, c, s') = \textsc{denied}.
+  \label{eq:mra1}
+\end{equation}
+Trong đó, $\mathit{Pre}(a, T)$ là điều kiện tiền đề, yêu cầu thao tác $a$ cần đúng quyền mà $T$ thu hồi đối với chủ thể đang xét. Khi vế trái đúng, kết quả kỳ vọng ở trạng thái $s'$ là \textsc{denied}. Nếu kết quả vẫn là \textsc{allowed}, MR-A1 bị vi phạm và oracle báo lỗi, vì máy chủ vẫn chấp nhận thông tin xác thực cũ cho thao tác đã mất quyền.
+
+Theo giả định của phương pháp, thao tác follow-up giữ nguyên token ban đầu mà không đăng nhập lại để tái hiện lỗi phiên cũ vẫn giữ quyền đã thu hồi. Hiện tượng này có thể thuộc điểm yếu CWE-613 \cite{cwe613} (Mục~\ref{sec:intro_problem}); các oracle sẵn có của EvoMaster chưa kiểm tra nó.
+
+Điều kiện tiền đề loại các thao tác không phụ thuộc vào quyền bị thu hồi, nhờ đó giảm báo động giả. Chẳng hạn, thao tác cập nhật hồ sơ cá nhân dùng chung cho nhiều vai trò, nên việc máy chủ tiếp tục chấp nhận nó sau khi hạ quyền là hành vi đúng. Chuẩn RBAC để ngỏ cách cập nhật quyền trên phiên đang hoạt động \cite{incits359draft}, nên yêu cầu từ chối ngay sau khi hạ quyền là chính sách riêng của từng hệ thống mục tiêu.
+
+Bảng~\ref{tab:temporal_vs_diff} đối chiếu MR-A1 với các oracle so sánh chéo tài khoản đã nêu ở Mục~\ref{sec:method_overview}. Hình~\ref{fig:mr_a1_state_space} biểu diễn không gian chuyển trạng thái phân quyền cùng nhánh an toàn và nhánh vi phạm.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Đối chiếu oracle so sánh chéo tài khoản và quan hệ MR-A1}
+  \label{tab:temporal_vs_diff}
+  \begin{tabularx}{\textwidth}{lXX}
+    \toprule
+    Tiêu chí & Oracle so sánh chéo tài khoản & MR-A1 (theo thời gian) \\
+    \midrule
+    So sánh theo & nhiều tài khoản tại một thời điểm & một tài khoản trước và sau khi hạ quyền \\
+    Thông tin xác thực & khác nhau theo tài khoản & giữ cố định và dùng lại \\
+    Nội dung kiểm tra & tài khoản không có quyền vẫn truy cập được & quyền đã thu hồi vẫn được chấp nhận \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.80\textwidth]{figures/fig_3_2_mr_a1_state_space.png}
+  \caption{Không gian trạng thái phân quyền và quan hệ MR-A1}
+  \label{fig:mr_a1_state_space}
+\end{figure}
+
+\section{Bộ ba thao tác và điều kiện tiền đề}
+\label{sec:method_triple}
+
+Bộ dựng kịch bản kiểm thử chuyển quan hệ MR-A1 thành ca kiểm thử chạy được trên REST API, gọi là kịch bản kiểm thử MR-A1. Đầu vào của bộ dựng là các ca kiểm thử trong kho lưu trữ, gồm cả những ca nhận mã 403 do bước sinh phản hồi 403 có sẵn của EvoMaster tạo ra \cite{arcuri2019evomaster}.
+
+\subsection{Cấu trúc bộ ba thao tác}
+\label{subsec:method_triple_structure}
+
+Kịch bản kiểm thử MR-A1 gồm các lời gọi khởi tạo tiền đề (nếu có) và bộ ba thao tác chính, thực hiện theo trình tự sau:
+\begin{enumerate}
+    \item \textbf{Khởi tạo (setup):} các lời gọi đi trước thao tác gốc trong ca kiểm thử ban đầu của nạn nhân nhằm tạo tài nguyên cần thao tác. Bước này không bắt buộc nếu tài nguyên đã có sẵn trong hệ thống.
+    \item \textbf{Thao tác gốc (source):} tài khoản nạn nhân gọi một thao tác ghi nhạy cảm trước khi bị hạ quyền và nhận mã \texttt{2xx}.
+    \item \textbf{Thao tác chuyển trạng thái (transition):} tài khoản quản trị hạ vai trò hoặc thu hồi quyền tương ứng của nạn nhân.
+    \item \textbf{Thao tác kiểm chứng (follow-up):} nạn nhân gọi lại đúng thao tác source với cùng tham số, dùng đúng token cũ.
+\end{enumerate}
+
+Thao tác follow-up dùng lại token cũ nhờ EvoMaster đăng nhập mỗi tài khoản một lần ở đầu ca kiểm thử, rồi dùng token hoặc cookie phiên đó cho mọi thao tác sau.
+
+\subsection{Điều kiện tiền đề và giả định trên tài nguyên}
+\label{subsec:method_guard}
+
+Bộ dựng kiểm tra điều kiện tiền đề ngay khi chọn thao tác gốc. Một thao tác ghi được chọn làm source khi có đồng thời hai quan sát sau:
+\begin{enumerate}
+    \item Ít nhất một tài khoản khác từng bị từ chối với mã 403 khi gọi thao tác này.
+    \item Tài khoản nạn nhân từng thực hiện thành công thao tác này với mã \texttt{2xx} ở vai trò hiện tại.
+\end{enumerate}
+
+Cặp phản hồi 403 và \texttt{2xx} này chỉ là dấu hiệu ban đầu, vì lời từ chối có thể đến từ quyền sở hữu tài nguyên hoặc một điều kiện khác. Do follow-up lặp lại source trên cùng tài nguyên, bộ dựng ưu tiên các thao tác cập nhật gọi lại được nhiều lần như \texttt{PUT} và \texttt{PATCH}. Phương thức \texttt{POST} chỉ được xét đến khi không tìm thấy thao tác cập nhật nào phù hợp.
+
+\subsection{Bộ ba bị hủy và bước đăng nhập lại}
+\label{subsec:method_void}
+
+Bộ dựng chuyển bộ ba sang bộ phán quyết khi cả ba phản hồi đều hợp lệ. Bộ ba bị hủy và loại khỏi tập đánh giá khi source hoặc transition trả mã ngoài nhóm \texttt{2xx}, hoặc khi follow-up nhận một mã khác \texttt{2xx} và 403, chẳng hạn \texttt{401}. Sau mỗi bộ ba bị hủy, bộ dựng thử một tổ hợp mới gồm tài khoản nạn nhân, tài khoản quản trị và giá trị vai trò thấp hơn.
+
+Trong một số lần thử, mọi tài khoản quản trị đều bị từ chối khi hạ quyền, dù source của nạn nhân vẫn thành công. Tình huống này xảy ra khi pha tìm kiếm đã hạ quyền các tài khoản quản trị nhưng chưa hạ quyền tài khoản nạn nhân. Bộ dựng khi đó dùng quyền quản trị còn hiệu lực của tài khoản nạn nhân để khôi phục vai trò cho tài khoản quản trị rồi thử lại.
+
+Khi follow-up nhận \texttt{2xx}, bộ dựng chạy thêm bước đăng nhập lại trước khi chuyển bộ ba sang bộ phán quyết. Bước này kiểm tra thao tác transition có thực sự thu hồi quyền, vì tên endpoint chưa đủ để khẳng định điều đó. Một endpoint có tên gợi ý hạ quyền vẫn có thể nâng quyền, tùy giá trị vai trò gửi kèm.
+
+Ở bước đăng nhập lại, bộ dựng dùng token mới của tài khoản nạn nhân để chạy lại chuỗi lời gọi của nạn nhân trong ca kiểm thử gốc. Chuỗi này gồm các lời gọi khởi tạo dữ liệu và thao tác source. Do EvoMaster dừng chuỗi tại lời gọi tạo tài nguyên đầu tiên thất bại, bộ dựng đọc mã trạng thái của lời gọi cuối cùng được thực thi. Mã 403 tại lời gọi này cho thấy token mới đã mất quyền ghi.
+
+Khi nhận mã 403, bộ dựng chạy lại cùng chuỗi một lần nữa mà không kèm thông tin xác thực để làm phép đối chứng. Nếu lượt gọi nặc danh này cũng bị từ chối với mã 403, phản hồi nhận được bằng token mới chưa chắc phản ánh việc thu hồi quyền. Bộ ba chỉ được giữ lại khi lượt đối chứng trả về một mã khác 403, chẳng hạn mã 401. Mọi trường hợp còn lại, kể cả khi token mới vẫn nhận \texttt{2xx}, đều làm bộ ba bị hủy.
+
+Bước đăng nhập lại chạy sau follow-up, vì ở hệ thống giữ một phiên cho mỗi tài khoản, lần đăng nhập mới sẽ vô hiệu hóa token cũ mà follow-up cần. EvoMaster đăng nhập ở đầu mỗi ca kiểm thử, nên bước lấy token mới chạy trong một ca kiểm thử riêng.
+
+Công cụ hộp đen không quan sát trực tiếp được điều kiện tiền đề $\mathit{Pre}(a, T)$, do quy tắc phân quyền này nằm ở tầng logic nội bộ của ứng dụng. Bộ dựng ước lượng điều kiện này bằng dấu hiệu HTTP ở hai thời điểm: khi chọn source và ở bước đăng nhập lại. Tại bước sau, mã 403 có thể đến từ một lời gọi khởi tạo thay vì từ chính source. Một cảnh báo của Oracle 970 vì vậy là vi phạm MR-A1 khi hai giả định cùng đúng: mã 403 phản ánh quyết định phân quyền, và phiên mới mang quyền hiện hành. Nếu giả định thứ hai sai, tức token mới vẫn mang quyền cũ, bước đăng nhập lại có thể loại nhầm một bộ ba chứa lỗ hổng.
+
+\subsection{Thuật toán dựng kịch bản kiểm thử MR-A1}
+\label{subsec:method_builder_algo}
+
+Dựa trên cấu trúc bộ ba và các điều kiện hủy nêu trên, bộ dựng duyệt các thao tác chuyển trạng thái đã xếp hạng cùng thao tác ghi ứng viên trong kho lưu trữ. Mỗi tổ hợp được thực thi trong giới hạn số lần thử, kèm bước khôi phục quyền khi thao tác chuyển trạng thái bị từ chối. Các bước của quy trình này được trình bày trong Thuật toán~\ref{alg:build_stateful_triple}.
+
+Trong Thuật toán~\ref{alg:build_stateful_triple}, $c_v$ và $c_o$ là thông tin xác thực của tài khoản nạn nhân $v$ và tài khoản quản trị. \textsc{CandidateWrites} ước lượng $\mathit{Pre}(a, T)$ bằng hai quan sát ở Mục~\ref{subsec:method_guard} và loại chính thao tác $T$. \textsc{Discarded} xét lần lượt source, transition và follow-up theo các điều kiện hủy ở Mục~\ref{subsec:method_void}, gồm cả bước đăng nhập lại khi follow-up nhận \texttt{2xx}. Bước khôi phục quyền ở Mục~\ref{subsec:method_void} do \textsc{RestoreOperator} thực hiện; lần thử kế tiếp cho biết bước này có thành công hay không.
+
+Thuật toán giới hạn chi phí thực thi bằng ba trần: tổng $N = 20$ lần thử trong cả pha, $K = 5$ lần thử cho mỗi thao tác chuyển trạng thái và $R = 3$ lần khôi phục quyền cho mỗi thao tác chuyển trạng thái. Thuật toán được trình bày ở dạng rút gọn: trong cài đặt, trần $K$ không áp dụng cho thao tác chuyển trạng thái đã dựng được bộ ba và cho ứng viên cuối của danh sách. Với mỗi thao tác ghi ứng viên, bộ ba hợp lệ đầu tiên được đưa vào tập kết quả cho bộ phán quyết, kể cả khi follow-up nhận 403. Bộ dựng sau đó chuyển sang ứng viên kế tiếp, nên một lượt chạy có thể cho nhiều bộ ba.
+
+\begin{algorithm}[htbp]
+\caption{Dựng kịch bản kiểm thử MR-A1}
+\label{alg:build_stateful_triple}
+\begin{algorithmic}[1]
+\Require test store $\mathcal{A}$, attempt budgets $K$ and $N$, restore budget $R$
+\Ensure set $\mathcal{I}$ of performed triples
+\State $n \gets 0$; $\mathcal{I} \gets \emptyset$
+\For{each $T \in \Call{RankTransitions}{\mathcal{A}}$}
+    \State $k \gets 0$; $r \gets 0$
+    \For{each $a \in \Call{CandidateWrites}{\mathcal{A}, T}$}
+        \While{$k < K$ \textbf{and} $n < N$}
+            \State $I \gets [\mathit{setup}(a),\ a(c_v),\ T(c_o, v),\ a(c_v)]$
+            \State $\Call{Execute}{I}$
+            \If{$\neg\Call{Discarded}{I}$}
+                \State $\mathcal{I} \gets \mathcal{I} \cup \{I\}$; \textbf{break}
+            \ElsIf{$T$ refused with 401 or 403 \textbf{and} $r < R$}
+                \State $\Call{RestoreOperator}{c_v}$; $r \gets r + 1$
+            \EndIf
+            \State $k \gets k + 1$; $n \gets n + 1$
+        \EndWhile
+    \EndFor
+\EndFor
+\State \Return $\mathcal{I}$
+\end{algorithmic}
+\end{algorithm}
+
+\section{Tự động nhận diện và xếp hạng thao tác chuyển trạng thái}
+\label{sec:method_ranking}
+
+Số lần thử của Thuật toán~\ref{alg:build_stateful_triple} có giới hạn, nên bộ dựng cần thử trước các thao tác có khả năng hạ quyền cao theo một danh sách đã xếp hạng. Một danh sách từ khóa cố định khó nhận diện thao tác hạ quyền trên một REST API bất kỳ, nên bộ dựng chấm điểm từng thao tác ghi để lập danh sách. Nghiên cứu phát triển hai cơ chế chấm điểm: bộ từ vựng (Mục~\ref{subsec:method_lexicon}) là phiên bản ban đầu, sau đó được thay thế bằng mô hình Naive Bayes (Mục~\ref{subsec:method_naive_bayes}). Hình~\ref{fig:transition_inference} tóm tắt quy trình nhận diện.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.65\textwidth]{figures/fig_3_3_transition_inference.png}
+  \caption{Quy trình nhận diện thao tác hạ quyền từ đặc tả OpenAPI}
+  \label{fig:transition_inference}
+\end{figure}
+
+\subsection{Tiếp cận dựa trên bộ từ vựng}
+\label{subsec:method_lexicon}
+
+Bộ từ vựng (lexicon) được học có giám sát từ một tập ngữ liệu thao tác ghi gán nhãn theo ba lớp. Nhãn \texttt{R} dành cho thao tác làm giảm quyền của một chủ thể, nhãn \texttt{N} cho thao tác không hạ quyền, và nhãn \texttt{U} cho trường hợp đặc tả không đủ cơ sở phân loại. Năm quy tắc nhận diện nhãn \texttt{R} gồm xóa vai trò hoặc quyền, gỡ chủ thể khỏi vai trò, vô hiệu hóa tài khoản, đặt giá trị vai trò và bỏ vai trò khỏi phiên. Các quy tắc này dựa trên chuẩn kiểm soát truy cập theo vai trò INCITS 359 \cite{incits359draft} và chuẩn quản lý danh tính SCIM \cite{rfc7643}. Phần huấn luyện của tập ngữ liệu gồm 29 bản đặc tả, với 36 thao tác nhãn \texttt{R} và 441 thao tác nhãn \texttt{N}. Nhãn do mô hình ngôn ngữ lớn gán tự động qua hai lượt, sau đó một phần nhãn được soát lại thủ công.
+
+Hai nhóm token đường dẫn và token tham số được trích xuất lần lượt từ URL và tên tham số của các thao tác mang nhãn \texttt{R}. Quá trình tiền xử lý tách chuỗi theo quy tắc camelCase cùng các ký tự phân tách đặc biệt, sau đó chuyển toàn bộ về chữ thường. Các token thuần chữ số hoặc có độ dài dưới bốn ký tự bị loại bỏ. Điểm của mỗi từ $w$ được tính theo Công thức~\eqref{eq:lex_score}:
+\begin{equation}
+  \mathrm{s}(w) = \frac{d_R + 1}{d_R + d_N + 2} \times \frac{n_{cc}}{n_{cc} + 1}.
+  \label{eq:lex_score}
+\end{equation}
+Trong đó, $d_R$ và $d_N$ là số thao tác nhãn \texttt{R} và \texttt{N} chứa $w$, còn $n_{cc}$ là số nhà cung cấp API có thao tác nhãn \texttt{R} chứa $w$. Thừa số $n_{cc}/(n_{cc}+1)$ giảm điểm của token xuất hiện ở một nhà cung cấp duy nhất. Điểm của một endpoint bằng điểm lớn nhất của các token khớp với chuỗi định danh của nó. Bộ từ vựng thu được gồm 53 token đường dẫn và 45 token tham số.
+
+Chuỗi định danh của mỗi endpoint được tổng hợp từ đường dẫn, phương thức HTTP và danh sách các trường trong thân yêu cầu (\textit{request body}). Thành phần này giúp nhận diện những thao tác hạ quyền mà vai trò được truyền qua dữ liệu gửi kèm thay vì thể hiện trực tiếp trên URL. Chẳng hạn, thao tác \texttt{PATCH /users/\{id\}} có thể vô hiệu hóa một tài khoản qua trường \texttt{enabled} trong thân yêu cầu, trong khi URL không chứa từ nào về quyền. Khi hai endpoint cùng điểm, bộ từ vựng ưu tiên endpoint có tham số định danh tài khoản người dùng, rồi theo thứ tự \texttt{PUT}, \texttt{PATCH}, \texttt{POST}, \texttt{DELETE}.
+
+Hạn chế chính của bộ từ vựng là cách lấy điểm cực đại: điểm của endpoint chỉ dựa vào một token, các token khác bị bỏ qua. Trên đặc tả của netbox, token \texttt{outside} (điểm 0,375, lấy từ trường \texttt{nat\_outside}) thắng token \texttt{username} (0,171) và đẩy thao tác hạ quyền xuống hạng 77. Mô hình Naive Bayes cộng bằng chứng từ mọi đặc trưng có mặt. Mô hình này còn dùng chung cho xếp hạng thao tác, chọn trường vai trò và giá trị hạ quyền, nên được chọn thay cho bộ từ vựng. Chương~\ref{chap:eval} so sánh hai cách xếp hạng.
+
+\subsection{Tiếp cận dựa trên mô hình Naive Bayes}
+\label{subsec:method_naive_bayes}
+
+Naive Bayes là bộ phân loại xác suất dựa trên định lý Bayes, giả định các đặc trưng độc lập có điều kiện khi biết nhãn. Mô hình học từ một tập ngữ liệu lớn hơn, gồm 10.381 thao tác ghi của 230 REST API. Nhãn nhị phân của mỗi thao tác cho biết thao tác đó có cấp, đổi hoặc gỡ vai trò hay quyền của một tài khoản đã tồn tại hay không. Hai lượt gán độc lập của mô hình ngôn ngữ lớn cho nhãn khởi đầu. Người gán xem 602 thao tác: mọi thao tác mà hai lượt bất đồng, 165 trong 173 thao tác hai lượt cùng gọi chuyển trạng thái, và 371 thao tác bốc ngẫu nhiên trong 10.142 thao tác hai lượt cùng gọi thông thường. Thao tác nào người gán khác cả hai lượt thì được xem lại và chốt riêng. 9.771 thao tác hai lượt cùng gọi thông thường mà chưa ai xem giữ nhãn thông thường. Tập nhãn cuối có 209 thao tác thuộc lớp chuyển trạng thái. Mô hình đi kèm công cụ học trên toàn bộ tập này và được chấm trên một tập đặc tả riêng (Mục~\ref{sec:eval_ranking}). Ngoài xếp hạng thao tác chuyển trạng thái, bộ dựng dùng mô hình để chọn trường vai trò, trường định danh tài khoản nạn nhân và giá trị hạ hoặc nâng quyền.
+
+Với mỗi đặc trưng $t$, mô hình tính một trọng số logarit theo tần suất của $t$ ở hai lớp. Điểm của một thao tác $op$ được tính theo Công thức~\eqref{eq:nb_weight}:
+\begin{equation}
+  w(t) = \ln\frac{d_T + 1}{N_T + 2} - \ln\frac{d_N + 1}{N_N + 2}, \qquad
+  \mathrm{score}(op) = \ln\frac{N_T}{N_N} + \sum_{t \in op} w(t).
+  \label{eq:nb_weight}
+\end{equation}
+Trong đó, $d_T$ và $d_N$ là số thao tác thuộc lớp chuyển trạng thái và lớp thông thường có chứa $t$, còn $N_T$ và $N_N$ là tổng số thao tác của hai lớp. Thao tác có $\mathrm{score}(op) > 0$ được coi là ứng viên chuyển trạng thái. Trường hợp hai thao tác có điểm số bằng nhau, bộ dựng ưu tiên theo thứ tự xuất hiện ban đầu của chúng trong đặc tả OpenAPI. Điểm số chỉ dùng để xếp hạng các ứng viên; nó chưa được hiệu chuẩn để đọc như một xác suất hậu nghiệm.
+
+Không gian đặc trưng gồm ba nhóm: token đường dẫn, tên trường hoặc tham số, và phương thức HTTP. Mô hình giữ những đặc trưng xuất hiện trong thao tác chuyển trạng thái của ít nhất hai nhà cung cấp API, và đặc trưng được giữ vẫn có thể mang trọng số âm. Điểm số được tính bằng tổng trọng số của các đặc trưng xuất hiện trong thao tác. Khác với biến thể Bernoulli Naive Bayes đầy đủ vốn xét cả xác suất của đặc trưng không xuất hiện, mô hình ở đây bỏ qua các đặc trưng này. Bộ dựng và bộ phán quyết dùng chung quy tắc $\mathrm{score}(op) > 0$, nên bộ phán quyết luôn coi thao tác ở giữa mỗi bộ ba là thao tác chuyển trạng thái.
+
+Trong kiểm chứng chéo ở Mục~\ref{sec:eval_ranking}, Naive Bayes để tối đa 3 ứng viên đứng trước thao tác đích, còn bộ từ vựng có một lần để 76 ứng viên đứng trước. Giả định độc lập của mô hình bị vi phạm một phần ở các token thường đi cùng nhau, như các token về người dùng, tên đăng nhập và thư điện tử.
+
+\endgroup

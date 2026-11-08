@@ -1,12 +1,10 @@
-# Các hàm của oracle 970 sau đợt refactor 2026-10-27
+# Các hàm của oracle 970 (jar SR)
 
 Mã: `EvoMaster/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt` (gọi tắt **B**) và
-`.../rest/oracle/RestSecurityOracle.kt` (gọi tắt **O**). Số dòng là của bản vá refactor
-(`infra/evomaster-ext/wip/refactor-simplify-20261027.patch`, jar `evomaster-SR-77465fe5.jar`). Trên HEAD `1cd0d091f4`,
-dòng của **B** từ `:781` trở đi lùi xuống một.
-
-Đợt này bỏ ba thứ: transition khai tay (`--statefulAuthzTransition`), reset SUT (`--statefulAuthzResetEndpoint`) và D1
-(`--statefulAuthzTwoCredentialJudgment`). Phán quyết giờ chỉ dùng probe C4 (đăng nhập lại).
+`.../rest/oracle/RestSecurityOracle.kt` (gọi tắt **O**). Số dòng là của jar SR (`evomaster-SR-77465fe5.jar`, bản vá
+`infra/evomaster-ext/wip/refactor-simplify-20261027.patch`). HEAD `9c4be5b1dc` (nền của jar M2) xoá thêm mã thừa, giữ
+hành vi và log, nên số dòng ở đây lệch HEAD và vài nhánh nhắc ở đây đã gộp hoặc bỏ
+(`infra/evomaster-ext/wip/redundant-code-20261103.md`).
 
 Mỗi mục gồm: **Làm gì**, **Ai gọi**, **Vào và ra**, **Ví dụ**. Ví dụ chạy tay lấy từ lượt self-test thật
 `infra/em-results/refactor-simplify-pilot-20261027/cand/restore-budget-refA.log` (stub `candidate_stub.py`, mode
@@ -293,27 +291,7 @@ Chạy tay rút gọn của lượt `restore-budget`:
 | `transitionNotFoundSeen` | transition chưa chứng minh trả 404 sau source 2xx | mỗi transition |
 | `victimRefused` | trong lượt của nạn nhân hiện tại có lần bị từ chối | đầu mỗi `buildStatefulAuthzTriple` |
 
-## 9. Ghi chú về tính tương đương
-
-- Con số chính (không reset) chạy với reset rỗng, declared rỗng và D1 tắt. Mã bị xoá chỉ thuộc các nhánh không chạy ở cấu
-  hình đó. Các arm có reset trong bảng số chỉ chạy được trên P2f và các jar trước.
-- Các lambda đổi sang vòng lặp đều giữ thứ tự duyệt, giữ phần tử lớn nhất **đầu tiên** khi bằng điểm, và giữ quy tắc "dòng sau
-  thắng" của map. Các sort còn lại (`sortedBy`, `sortedByDescending`) đều ổn định.
-- Tương đương chỉ được bảo đảm khi điểm là số hữu hạn. Có ba chỗ mà NaN hoặc số 0 có dấu sẽ cho kết quả khác bản cũ:
-  1. `valueScore` dùng `>`, bản cũ dùng `maxOfOrNull`;
-  2. `reducedRoleValues` xếp NaN vào nhóm `rest`, bản cũ lọc bỏ NaN;
-  3. `victimField` chọn khác khi hai trường cùng điểm NaN.
-
-  Mô hình ở commit `f73010103b` có mọi trọng số hữu hạn (session review đã kiểm ngày 2026-10-27), và `valueScore` trả 0.0
-  khi không khớp, nên cả ba trường hợp không xảy ra.
-- Bằng chứng: `infra/evomaster-ext/selftest/refactor-simplify-20261027.sh`. Mỗi mode chạy jar mới và P2f với cùng dòng lệnh,
-  không reset và không D1. Trace stateful của jar mới giống từng byte với trace của P2f.
-- Bốn self-test cũ truyền các cờ đã bỏ, nên từ jar SR trở đi chỉ chạy được trên jar cũ: `p2-stateful-authz.sh`,
-  `setfield-leaf-activate-20261015.sh`, mode `cap20` của `candidate-iteration.sh` và `d1-two-credential-judgment.sh`.
-- Đổi tên còn treo (không chặn, chưa làm để jar đã test không bị đổi): `getObjects` (B:1626) thực chất chỉ giữ object lấy từ
-  phản hồi GET. Nên đổi thành `objectsFromGets`.
-
-## 10. Từ điển `RestIndividualSelectorUtils` (upstream)
+## 9. Từ điển `RestIndividualSelectorUtils` (upstream)
 
 Mã: `EvoMaster/core/src/main/kotlin/org/evomaster/core/problem/rest/builder/RestIndividualSelectorUtils.kt` (gọi tắt
 **U**). Đây là một `object` của Kotlin, tương đương một class Java chỉ có method static. Mọi hàm tìm trong archive

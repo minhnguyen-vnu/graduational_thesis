@@ -1,28 +1,33 @@
-# Mô hình Naive Bayes chọn transition và trường — jar P2e
+# Mô hình Naive Bayes chọn transition và trường
 
-Từ jar `P2e` (commit `a544c996ac`), builder chọn transition, trường vai trò, trường nạn nhân và giá trị quyền bằng
-một mô hình Naive Bayes rút từ nhãn vòng 4 (10.381 op ghi, 230 API). Mô hình thay bộ từ vựng 53 + 45 từ của jar `L`
-tới `AF2` (`docs/lexicon.md`) và các danh sách viết tay. Kiểm chéo theo nhà cung cấp: op transition thật (op T) đứng
-đầu ở 16–18, trong 4 đầu ở 21–25 của 47 spec test. Trên ba target của luận văn, thay danh sách viết tay bằng mô hình
-không mất phát hiện 970 nào: trên 180 hàng, số nổ 970 và FP trùng `AF2` từng seed (`docs/results.md` §0). 47 spec test đã bị nhìn nhiều
-lần khi chọn mô hình, nên mọi số kiểm chéo là số thăm dò.
+Mô hình hiện tại là M2 (jar `M2`, 2026-11-08): cùng công thức và cùng mã với M1 dưới đây, học lại từ corpus gán nhãn
+lại `nop-hoi-dong/nhan-hoc-cuoi.csv` (209 op T trên 10.381 op ghi). File: `infra/analysis/lexicon-rules/m2-model-20261107/`
+(`derive_m2.py`, `stateful-authz-model.csv`, sha256 `b2deef150bf8…`). Số đo của M2 trên nửa thi: `docs/results.md` §7.
+Phần còn lại của file tả M1, mô hình trong jar `P2e` và `P2f`.
+
+Builder chọn transition, trường vai trò, trường nạn nhân và giá trị quyền bằng mô hình Naive Bayes. M1 rút từ nhãn
+vòng 4 (10.381 op ghi, 230 API) và thay bộ từ vựng 53 + 45 từ của jar `L` tới `AF2` (`docs/lexicon.md`) cùng các danh
+sách viết tay. Kiểm chéo theo nhà cung cấp: op transition thật (op T) đứng đầu ở 16–18, trong 4 đầu ở 21–25 của 47 spec
+test. 47 spec này đã bị nhìn nhiều lần khi chọn mô hình, nên mọi số kiểm chéo là số thăm dò. Đổi cách chấm không mất
+phát hiện 970 nào (`docs/results.md` §6).
 
 Thiết kế, mọi lựa chọn bị loại và số đo đầy đủ: `infra/evomaster-ext/wip/p2-design-20261012.md`.
 
 ## 1. Mô hình quyết định gì
 
-Pha security chạy sau search. `addForStatefulAccessControl` (`RestSecurityBuilder.kt:600`) gọi mô hình ở bốn chỗ:
+Pha security chạy sau search. `addForStatefulAccessControl` (`RestSecurityBuilder.kt:631`, HEAD `9c4be5b1dc`) gọi
+mô hình ở bốn chỗ:
 
 | Việc | Hàm | Bảng |
 |---|---|---|
-| Xếp hạng op ghi làm transition | `rankPermissionReducingTransitions` `:1201`, `transitionScore` `:223` | `op` |
-| Chọn trường vai trò trong transition | `roleField` `:1215` | `role` |
-| Chọn trường chỉ nạn nhân | `victimField` `:1222` | `victim` |
-| Chọn giá trị hạ quyền và nâng quyền | `harvestReducedRoleCandidates` `:1252`, `restoreValues` `:1260`, `valueScore` `:225` | `low`, `high`, `lowstr`, `highstr` |
+| Xếp hạng op ghi làm transition | `rankPermissionReducingTransitions` `:1175`, `transitionScore` `:316` | `op` |
+| Chọn trường vai trò trong transition | `roleField` `:1185` | `role` |
+| Chọn trường chỉ nạn nhân | `victimField` `:1201` | `victim` |
+| Chọn giá trị hạ quyền và nâng quyền | `harvestReducedRoleCandidates` `:1262`, `restoreValues` `:1277`, `valueScore` `:318` | `low`, `high`, `lowstr`, `highstr` |
 
-Oracle dùng cùng vị từ `looksLikePermissionReducingTransition` (`:241`): verb ghi và điểm op > 0, tức
-hậu nghiệm > 0,5. Oracle bỏ qua source mà vị từ này nhận (`RestSecurityOracle.kt:580` trên HEAD) và đòi lời gọi xen giữa mà
-vị từ này nhận (`:599`). P2f và các jar trước chỉ làm vậy khi D1 tắt (`:583`, `:602`). Builder và oracle dùng một vị từ ở một ngưỡng, nên builder không dựng bộ ba mà oracle từ
+Oracle dùng cùng vị từ `looksLikePermissionReducingTransition` (`:341`): verb ghi và điểm op > 0, tức
+hậu nghiệm > 0,5. Oracle bỏ qua source mà vị từ này nhận (`RestSecurityOracle.kt:577`) và đòi lời gọi xen giữa mà
+vị từ này nhận (`:596`). Builder và oracle dùng một vị từ ở một ngưỡng, nên builder không dựng bộ ba mà oracle từ
 chối.
 
 ## 2. Cách tính
@@ -70,13 +75,10 @@ sách viết tay 117; Naive Bayes so với RF p = 0,065–0,27.
 
 ## 4. Trên target
 
-- Hạng của transition, xếp từ spec tĩnh qua bộ lọc RF: 1 ở reports, vampi, pyLoad, Airflow, bamf; 3 ở artifact-keeper.
-- Trên reports, vampi, pyLoad (180 hàng), số lần nổ 970 và FP trùng `AF2` ở cả 12 arm. Chỗ khác `AF2` (thêm bộ ba và
-  VOID trên pyLoad có reset, thêm một VOID ở vampi fixed không reset seed 19) đến từ trần lần thử 20 thay vì 8 (P1)
-  (`em-results/p2e-continue-20261013/RESULTS.md`, Soát tay).
-- artifact-keeper: P2e 0/2, vì `is_admin` lên dây thành `null`; P2f sửa lỗi này và đạt 5/5
-  (`em-results/artifactkeeper-machine-20261014/`). Lúc chạy P2f, `PATCH /api/v1/users/{id}` là ứng viên 4 trên 7.
-- P2e và P2f chưa chạy Airflow, bamf.
+- Hạng của transition thật trong các op dựng được bộ ba, như nhau dưới M1 và M2: 1 trên 1 ở reports-api và
+  vampi-seeded, 1 trên 3 ở pyLoad, 4 trên 7 (M1) và 4 trên 5 (M2) ở artifact-keeper
+  (`infra/analysis/lexicon-rules/m2-model-20261107/compare_targets.out`).
+- Số 970 và FP theo jar M2: `docs/results.md` §1.
 
 ## 5. File mô hình
 
@@ -88,9 +90,8 @@ sinh lại trùng từng byte, trọng số bằng script đo, `low`/`high` kh�
 ## 6. Còn viết tay và hạn chế
 
 - Viết tay: `1, 0, 2` / `0, 1, 2` cho trường vai trò kiểu số; token `id` khi điền giá trị nạn nhân.
-- Giá trị nâng quyền của trường enum chỉ gồm giá trị mô hình chấm `high > low` (P2e, `RestSecurityBuilder.kt:1265–1269`):
-  trước sửa này, restore tiêu một lượt vào `EVOMASTER`, giá trị EvoMaster tự chèn vào enum chuỗi, và vampi seed 11
-  mất 970 (`em-results/p2d-night-20261012/STOPPED.md`).
+- Giá trị nâng quyền của trường enum chỉ gồm giá trị mô hình chấm `high > low`. Nhờ đó restore không tiêu lượt vào
+  `EVOMASTER`, giá trị EvoMaster tự chèn vào enum chuỗi.
 - 47 spec test đã bị nhìn nhiều lần: số kiểm chéo là thăm dò, không gắn p-value xác nhận. Ước lượng sạch cần spec gán
   nhãn mới.
 - Giả định độc lập sai với các token đi cùng nhau (`user`, `username`, `email`, `password`); mô hình chỉ cộng dấu hiệu

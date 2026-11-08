@@ -2,7 +2,7 @@
 # Can the MR-A1 triple's PRECONDITION be rebuilt through the target's own API, with no /thesis/reset?
 #
 # Measured by hand 2026-08-24, before any code was written. Full record and reading:
-# docs/measurement-self-provisioning-2026-08-24.md
+# docs/archive/measurement-self-provisioning-2026-08-24.md
 #
 # Part A -- the generic chain (restore the VICTIM), the Tier-1/Tier-2 failure mode.
 # Part B -- restore the OPERATOR, which is pyLoad's ACTUAL failure mode: all 40 VOID attempts in

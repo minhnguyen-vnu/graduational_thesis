@@ -1,21 +1,48 @@
 # Sổ jar — oracle 970
 
-Sổ này giữ toàn bộ dòng đời các jar. `CLAUDE.md` §5 chỉ giữ jar đang trích số, jar đang phát triển nếu có, và jar giữ làm nguồn gốc.
-Luật: một jar mới chỉ được trích lại một con số sau khi qua cổng hồi quy, và khi construction đổi thì phải đo lại các arm bị ảnh hưởng.
+Sổ này giữ toàn bộ dòng đời các jar. `CLAUDE.md` §5 chỉ giữ jar đang trích số, jar dự phòng và dòng mã hiện tại.
+Luật: một jar mới chỉ trích lại số sau khi qua cổng hồi quy (12 hàng không reset, skill `regression-gate`) hoặc sau
+một lượt đo lại đầy đủ; khi cách dựng bộ ba đổi thì phải đo lại các arm bị ảnh hưởng.
 
 ## Jar đang trích số
 
-`EvoMaster/evomaster-P2f-64ee8ffc.jar` = commit `f73010103b`, trích số từ 2026-10-18 (user promote) trên 180 hàng một
-jar `em-results/p2f-full-20261015/runs.csv`; đếm bằng `p2f-full-20261015/p2f_counts.py` (`p2f-counts.out`). Cổng 21/21
-hai lần (2026-10-15 độc lập, và 21 hàng cổng trong lượt đầy đủ). Replay (`docs/results.md` §3) còn trên AF2. Dựng,
-self-test và đo lại: mục P2f bên dưới.
+`EvoMaster/evomaster-M2-917c57dd.jar` (sha256 `917c57ddafcc3d93…`, `.sha256` cạnh jar) = HEAD `9c4be5b1dc` (jar DC)
+với `core/src/main/resources/stateful-authz-model.csv` thay bằng mô hình M2 (sha256 `b2deef150bf8…`,
+`infra/analysis/lexicon-rules/m2-model-20261107/`). Dựng 2026-11-08; cây mã trả lại M1 ngay sau khi dựng, nên M2 chưa
+nằm trong commit nào. Self-test: mô hình trong jar có sha M2; `EMConfig` không còn cờ `statefulAuthz*`.
 
-## Jar đang phát triển
+Đo lại đầy đủ ngày 2026-11-08 thay cho cổng (`em-results/m2-wave1-20261108/`, `m2-wave2-20261108/`): mọi arm của
+reports-api, vampi-seeded, pyLoad (90 hàng), artifact-keeper (8) và bamf (10). Trùng P2f ở 90/90 ô 970, và ở 89/90 hàng
+về bộ ba và mã trạng thái. Đếm bằng `m2-wave1-20261108/m2_counts.py` (`m2-counts-final.out`). Số: `docs/results.md`.
 
-`EvoMaster/evomaster-SR-77465fe5.jar` (sha256 `77465fe5…af18`, `.sha256` cạnh jar) = commit `f73010103b` + refactor
-`wip/refactor-simplify-20261027.patch`, dựng 2026-10-27. Diễn tập rollback đạt. Commit `1cd0d091f4` (HEAD, 2026-10-29,
-đã push) là refactor đó, khác bản vá đúng một dòng trống ở `RestSecurityBuilder.kt:781`.
-`core/target/evomaster.jar` cùng bản dựng.
+## Jar dự phòng
+
+`EvoMaster/evomaster-P2f-64ee8ffc.jar` = commit `f73010103b`. Jar trích số từ 2026-10-18 tới 2026-11-08, trên 180 hàng
+một jar `em-results/p2f-full-20261015/runs.csv`; cổng 21/21 hai lần. Còn reset, transition khai báo và D1 (sau cờ mặc
+định tắt). Chi tiết: mục P2f bên dưới.
+
+## Dòng mã hiện tại
+
+`9c4be5b1dc` (HEAD, 2026-11-03, đã push) = `1cd0d091f4` + `wip/redundant-code-20261103.patch`; các dòng đổi của
+commit trùng bản vá. Jar `EvoMaster/evomaster-DC-a872a464.jar` (sha256 `a872a464…27f3`, `.sha256` cạnh jar), dựng từ
+bản vá ngày 2026-11-03. Xoá mã thừa trong phần ta thêm, giữ hành vi và log: −129/+64 dòng trên `RestSecurityBuilder.kt`
+và `RestSecurityOracle.kt`, cùng `stateful-authz-lexicon.csv` mà không code nào đọc. Từng thay đổi và lý do tương
+đương: `wip/redundant-code-20261103.md`.
+
+Kiểm tra:
+- Self-test `selftest/redundant-code-20261103.sh` (`em-results/redundant-code-selftest-20261103/`): kiểm tĩnh đạt hết.
+  Trên 30 mode stub (22 mode cũ, 8 mode mới trong `gaps_stub.py` cho các nhánh 22 mode cũ không chạy tới), log stateful
+  trùng từng dòng với SR, 970 trùng, mọi mốc đường đi đều chạy tới. Riêng `query-role`, hai lượt SR theo `--maxTime 30s`
+  đã khác nhau, nên mode này chạy lại theo `--maxEvaluations 300`: ba lượt trùng nhau (`query-role-evals/`). Các FAIL
+  của `p2_checks.py` và `candidate_checks.py` trùng đúng tập FAIL trên lượt SR ngày 2026-10-27. Bộ so sánh trượt
+  khi thay log của jar AF2 vào.
+- Phiên review độc lập `graduational-thesis-07`: chỉ ra một nhánh timeout còn sống (đã khôi phục) và 4 dòng thừa bị bỏ
+  sót (đã xoá); duyệt bản cuối.
+- Cổng 12/12 hàng không reset MATCH ngày 2026-11-03 (`em-results/regression-check-DC-20261103/`, 1 h 01, máy không ngủ).
+
+`1cd0d091f4` (2026-10-29, đã push) = commit `f73010103b` + refactor `wip/refactor-simplify-20261027.patch`, khác bản vá
+đúng một dòng trống ở `RestSecurityBuilder.kt:781`. Jar `EvoMaster/evomaster-SR-77465fe5.jar` (sha256 `77465fe5…af18`),
+dựng từ bản vá ngày 2026-10-27. Diễn tập rollback đạt.
 
 Gỡ khỏi mã:
 - `--statefulAuthzTransition` (transition khai báo) cùng mọi nhánh dùng nó; trần thử 40 khi có khai báo cũng bỏ, chỉ
@@ -31,18 +58,29 @@ Kiểm tra:
   kiểm tĩnh 7/7. Trên 22 mode stub, log stateful của SR trùng từng dòng với P2f chạy không reset, không D1, và 970 trùng.
 - Một phiên review độc lập duyệt PASS.
 - Cổng 12/12 hàng không reset MATCH ngày 2026-10-27 (`em-results/regression-check-SR-20261027/`, 1 h 02, máy không
-  ngủ). 9 hàng reset N/A. Snapshot `~/thesis-backups/thesis-full-20261027-0236.tar.gz`.
+  ngủ). Snapshot `~/thesis-backups/thesis-full-20261027-0236.tar.gz`.
 
-Chưa trích số nào. Promote là quyết định của user. Chưa đổi tên `getObjects` thành `objectsFromGets`; đổi thì phải dựng
-lại và chạy lại cổng. Bốn self-test cũ dùng reset hoặc D1 giờ cần jar cũ (`docs/evomaster-study/03-ham-stateful-authz.md`
-§9).
+Tương đương với P2f:
+- Mã bị gỡ chỉ thuộc các nhánh không chạy khi P2f chạy không reset, transition khai báo rỗng và D1 tắt.
+- Vòng lặp thay lambda giữ thứ tự duyệt, giữ phần tử lớn nhất đầu tiên khi bằng điểm và giữ quy tắc "dòng sau thắng"
+  của map.
+- Tương đương chỉ chắc khi điểm hữu hạn. Ba chỗ NaN hoặc số 0 có dấu cho kết quả khác P2f: `valueScore` dùng `>` thay
+  `maxOfOrNull`; `reducedRoleValues` xếp NaN vào nhóm `rest` thay vì lọc bỏ; `victimField` chọn khác khi hai trường
+  cùng điểm NaN. Mô hình ở `f73010103b` có mọi trọng số hữu hạn và `valueScore` trả 0.0 khi không khớp, nên cả ba
+  không xảy ra.
+
+Bốn self-test cũ truyền cờ đã gỡ nên chỉ chạy trên jar cũ: `p2-stateful-authz.sh`, `setfield-leaf-activate-20261015.sh`,
+mode `cap20` của `candidate-iteration.sh` và `d1-two-credential-judgment.sh`.
+
+Đổi tên còn treo (chưa làm để jar đã test không đổi): `getObjects` chỉ giữ object lấy từ phản hồi GET, nên đổi thành
+`objectsFromGets`.
 
 ## Jar trích số 2026-10-14 tới 2026-10-18, giữ làm nguồn gốc
 
 `EvoMaster/evomaster-P2e-6ae8277b.jar` = commit `a544c996ac`, trích số trên bộ gộp
 `em-results/p2e-continue-20261013/merged.csv` (71 hàng P2e, 109 hàng P2d). Lệch luật đã khai: bảng trộn jar, cổng chạy
 trên P2d (21/21, `p2d-night-20261012/gate/`); 2 hàng cổng chạy qua đoạn mã P2e đổi (vampi seed 3 không reset) chạy lại
-trên P2e vẫn khớp (`gate-predict.out`). `docs/results.md` §5c (app held-out công khai) còn trên P2e. Dựng, self-test và
+trên P2e vẫn khớp (`gate-predict.out`). Dựng, self-test và
 bộ gộp: mục P2e bên dưới.
 
 ## Jar trích số tới 2026-10-14, giữ làm nguồn gốc
@@ -83,7 +121,6 @@ giá trị các ô không đổi. User promote thành jar luận văn ngày 2026
 (`em-results/setfield-selftest-20261018-180347/`): trên stub có `is_admin` `{"type":["boolean","null"]}`, 3/3 transition
 trong bộ ba gửi `{"is_admin": false}`; jar P2e gửi `null` ở 2/4. Chỉ kiểm tra thân PATCH tách được hai jar: stub có reset,
 nên P2e thử lại và vẫn nổ 970.
-Hệ quả tài liệu chờ soát: `docs/argument.md` K3/K4 (FN do refactor P2 gây ra trên target phát triển).
 
 `EvoMaster/evomaster-P2e-6ae8277b.jar` (sha256 `6ae8277b…`, `.sha256` cạnh jar) = commit `a544c996ac` (2026-10-14;
 `git diff 8d6cf8431f a544c996ac -- core/src/main/kotlin` trùng từng byte bản vá cả cây) = jar P2d + 4 dòng trong
@@ -190,7 +227,7 @@ máy ngủ làm hỏng, chạy lại 09-29, cũng khớp (`em-results/victimid-r
 self-test, không đo). Self-test 8/8, cổng 21/21, seeds 1–10: 0 trên 50 hàng ghép đôi đổi so với jar `PF`
 (`em-results/transitiontrim-chain-20260927c/RESULTS.md`). Seeds 1–20 mọi arm, không reset: Tier-1 19/20, Tier-2 7/20,
 pyLoad 20/20, FP 0/60; Tier-1/2 giống jar `R` từng seed (80 cặp).
-Đóng băng 09:31–14:50 ngày 2026-09-28 cho lượt Grafana held-out (`infra/analysis/cve-survey/heldout-20260928.md`).
+Đóng băng 09:31–14:50 ngày 2026-09-28 cho lượt Grafana held-out (`~/thesis-archive/infra/analysis/cve-survey/heldout-20260928.md`).
 User mở băng 14:50: bản sửa cho hai nguyên nhân Grafana đi sang jar mới, đo trên một app held-out thứ hai chưa chạy bao
 giờ; Grafana thành target phát triển của jar đó.
 
@@ -210,7 +247,7 @@ cũng 0/50: `em-results/field-harvest-chain-20260923/`). `em-results/rolefield-c
 `evomaster-L-5b3d5442.jar` = `core/target/evomaster.jar` dựng 2026-09-21 22:20: commit `634850be3a` + bản sửa mã từ chối
 chưa commit + bản vá xếp hạng chưa commit + `core/src/main/resources/stateful-authz-lexicon.csv`. Self-test 14/14,
 cổng 21/21, seeds 1–10 trên ba target và 20 lượt arm fixed, 0 phát hiện mất so với các hàng D1
-(`em-results/lexicon-chain-20260921/`, `docs/results.md` §5b).
+(`em-results/lexicon-chain-20260921/`, `docs/results.md` §6).
 
 `evomaster-prelexicon-2c343573.jar` (sha256 `2c343573…`) = commit `634850be3a` + bản sửa mã từ chối chưa commit
 (`wip/d1-denial-codes-20260917.patch`): D1 sau một cờ mặc định tắt, và trong nhánh hai credential thì 403 một mình là

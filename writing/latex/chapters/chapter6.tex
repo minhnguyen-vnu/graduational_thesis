@@ -1,0 +1,31 @@
+\chapter{Kết luận và hướng phát triển}
+\label{chap:conclusion}
+
+Oracle 970 phát hiện được vi phạm MR-A1 trên cả bốn ứng dụng đã khảo sát, nhưng còn giới hạn ở khâu dựng bộ ba và khả năng mở rộng sang ứng dụng khác. Chương này tổng kết các đóng góp, nêu hạn chế và đề xuất hướng phát triển.
+
+\section{Tổng kết kết quả nghiên cứu}
+\label{sec:conclusion_summary}
+
+Khóa luận đã mở rộng EvoMaster bằng Oracle 970 để tự động kiểm tra lỗ hổng phân quyền có trạng thái thuộc quan hệ MR-A1. Phần mở rộng chạy trong pha kiểm thử bảo mật và không thay đổi thuật toán tìm kiếm. Các kết quả dưới đây được trình bày theo bốn đóng góp nêu ở Mục~\ref{sec:intro_contributions}.
+
+Thứ nhất, quan hệ MR-A1 được cài đặt thông qua điều kiện tiền đề và bộ ba thao tác \texttt{[source/\allowbreak transition/\allowbreak follow-up]}. Trên 98 lượt chạy, Oracle 970 phát hiện vi phạm ở 19/20 lượt với reports-api, 7/20 lượt với vampi-seeded, 5/5 lượt với pyLoad và 5/5 lượt với artifact-keeper. Công cụ không phát sinh báo động giả nào trong 48 lượt trên biến thể đã vá, trong đó 30 lượt có bộ ba hợp lệ. Mọi lượt bỏ sót đều không dựng được bộ ba hợp lệ để phán quyết.
+
+Thứ hai, mô hình Naive Bayes tự động nhận diện thao tác chuyển trạng thái từ đặc tả OpenAPI. Trên 237 bản đặc tả không tham gia huấn luyện, 117 trong 153 thao tác chuyển trạng thái có điểm dương. Trong kiểm chứng chéo trên 47 bản đặc tả, bộ từ vựng đứng hạng 1 nhiều hơn, nhưng chỉ Naive Bayes luôn giữ thao tác đích trong 4 hạng đầu, với tối đa 3 ứng viên đứng trước. Trên pyLoad và artifact-keeper, công cụ tự chọn thao tác hạ quyền từ đặc tả mà không cần khai báo thủ công.
+
+Thứ ba, bước đăng nhập lại loại các bộ ba mà token mới vẫn được chấp nhận, nhằm tránh phán quyết trên những thao tác chuyển trạng thái chưa xác nhận là hạ quyền. Trên các bộ ba hợp lệ đã được phán quyết, không ghi nhận trường hợp oracle bỏ sót vi phạm hay báo động giả.
+
+Thứ tư, công cụ phát hiện hai lỗi thật không do tác giả viết. Trên pyLoad (CVE-2026-41133), Oracle 970 báo vi phạm ở 5/5 lượt trên biến thể có lỗ hổng và 0/5 lượt trên biến thể đã vá. Trên artifact-keeper, Oracle 970 báo vi phạm ở 5/5 lượt trên commit có lỗi và 0/3 lượt trên bản vá của nhà phát triển.
+
+\section{Hạn chế hiện tại của đề tài}
+\label{sec:conclusion_limitations}
+
+Khóa luận chỉ kiểm chứng quan hệ MR-A1, tức trường hợp hạ vai trò; các quan hệ khác của cùng lớp lỗi được nêu ở Mục~\ref{sec:conclusion_future_work}. Mã từ chối được cố định là 403 và chưa cấu hình được; bản vá của artifact-keeper trả 401 cho token cũ, nên công cụ không dựng được bộ ba nào trên bản vá này. pyLoad và artifact-keeper là ứng dụng dùng trong lúc phát triển bộ dựng, nên khóa luận không khẳng định tỷ lệ phát hiện trên ứng dụng chưa từng chạy. Các giới hạn còn lại, gồm quy mô mẫu nhỏ và phán quyết dựa trên mã trạng thái HTTP, được phân tích ở Mục~\ref{sec:eval_threats}.
+
+\section{Hướng phát triển trong tương lai}
+\label{sec:conclusion_future_work}
+
+Để nhận diện thao tác chuyển trạng thái trong các đặc tả đặt tên không theo quy ước, có thể dùng mô hình ngôn ngữ lớn (Large Language Model, LLM) đề xuất ứng viên. Naive Bayes hiện chỉ dựa vào token đường dẫn, tên trường và phương thức. LLM có thể khai thác mô tả trong đặc tả OpenAPI và ngữ cảnh thao tác để đề xuất ứng viên, trong khi phép phán quyết giữ nguyên.
+
+Phần mở rộng cũng có thể nhận thêm các tín hiệu từ chối ngoài mã 403, như mã 401 khi phiên bị vô hiệu hóa, để đánh giá được những bản vá như của artifact-keeper. Ngoài ra, bộ dựng có thể chủ động tạo tài nguyên và tài khoản cần thiết trước khi chạy kịch bản kiểm thử MR-A1, thay vì chỉ dựa vào kho lưu trữ. Cải tiến này nhắm vào 6 trong 14 lượt bỏ sót, nơi bộ dựng không thực hiện lần thử nào.
+
+Ngoài MR-A1, nghiên cứu tiếp theo có thể xét các quan hệ khác của lớp phân quyền có trạng thái, như chuyển quyền sở hữu tài nguyên và quyền hết hạn theo thời gian. Mỗi quan hệ cần điều kiện tiền đề và cơ chế phán quyết riêng. Các hướng trên chưa được kiểm chứng trong phạm vi khóa luận.

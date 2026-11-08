@@ -1,9 +1,0 @@
-=== lumiverb VULN hand-check MR-A1 (v2, 2 admins) 09:22:55 commit 6c3998f0 ===
-[A] victim OLD token role: admin
-[B source] OLD(admin) POST /v1/users -> 201  (expect 201)
-[C guard] VIEWER POST /v1/users -> 403  (expect 403)
-[D transition] OPERATOR PATCH /v1/users/usr_01M520790994D97PSCAZMBRKH0 {role:viewer} -> 200  (expect 200)
-[E fresh] new victim token role: viewer
-[E fresh] NEW(demoted) POST /v1/users -> 403  (expect 403)
-[F REPLAY] OLD(admin claim) POST /v1/users -> 201  (VULN expect 201 = MR-A1 violation)
-[F2 REPLAY on transition] OLD(admin claim) PATCH /v1/users/usr_01M520790994D97PSCAZMBRKH0 {role:admin} -> 200  (VULN expect 200: old token self-repromote)

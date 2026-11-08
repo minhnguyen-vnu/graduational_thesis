@@ -1606,7 +1606,7 @@ Chạy tay Tier-1, `enumValues = [ADMIN, VIEWER]`, giả sử archive có phản
 | 1249 | kết quả | `[VIEWER]` |
 
 Transition sinh ra là `PUT /users/alice/role` với thân `{"role":"VIEWER"}`, đúng lời gọi ở bước 4 của
-`docs/handbook/tier1-reports-api.md`.
+`docs/archive/handbook/tier1-reports-api.md`.
 
 ### 18.6 `sortedWith` nhiều khoá
 

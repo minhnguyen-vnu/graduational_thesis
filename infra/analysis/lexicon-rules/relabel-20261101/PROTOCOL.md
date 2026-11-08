@@ -142,6 +142,7 @@ Quyết định của user:
   sau khi tách `|` và sắp xếp) được user soát lại và chọn người, hai AI, Sonnet hoặc Opus; lúc soát chỉ hiện nhãn người
   và hai AI. Op chưa xem lấy nhãn Sonnet; ở mọi op này hai AI cùng T/N, op T cùng trường.
 - Khoảng tin cậy: Clopper–Pearson 95%, mẫu đếm theo nhãn cuối.
+- Không báo cáo: kappa (2026-11-06), hai cận, nhóm nào chọn theo nhãn cũ hoặc theo M1.
 - Không dùng commit làm mốc thời gian. `../m2-model-20261107/derive_m2.py` dựng lại M2 từ `nhan-hoc-cuoi.csv`, trùng
   từng byte; đầu vào không có dòng phần thi.
 

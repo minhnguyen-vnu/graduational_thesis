@@ -6,69 +6,22 @@ Results: `docs/results.md`. Build, jars, rollback: skill `evomaster-build`. Runn
 
 ## 1. What changed
 
-`git diff --stat v6.1.1..HEAD`: 14 commits, 5 files, +1962, 0 deletions, no comments. HEAD `1cd0d091f4` holds the refactor below
-(jar SR, quotes nothing) and is pushed. `f73010103b`, its parent, builds jar P2f and quotes the numbers from 2026-10-18
-(`docs/results.md` §0). `a544c996ac`, one commit earlier, builds jar P2e, which quoted them 2026-10-14 to 10-18.
-`8d6cf8431f` builds jar AF2, which quoted them 2026-10-04 to 10-14.
+`git diff --stat v6.1.1..HEAD`: 15 commits, 4 files, +1798, 0 deletions, no comments. HEAD `9c4be5b1dc` (pushed).
+The thesis jar M2 is HEAD with model M2 in place of the model file below; the tree holds M1. Commit history, the jar
+each commit built, and its self-test: `jars.md`.
 
 | File | + | Holds |
 |---|---|---|
 | `ExperimentalFaultCategory.kt` | 5 | `SECURITY_STATEFUL_AUTHORIZATION(970)` |
-| `RestSecurityOracle.kt` | 76 | judgment: `handleStatefulAuthorization()` |
-| `RestSecurityBuilder.kt` | 1521 | construction: `addForStatefulAccessControl()`, `buildStatefulAuthzTriple()`, `executeStatefulAuthzTriple()`, Naive Bayes scoring, operator restore |
-| `stateful-authz-model.csv` | 261 | Naive Bayes weights, tables `op`, `role`, `victim`, `low`, `high`, `lowstr`, `highstr` (`lexicon-rules/p2-model-20261012/derive_model.py`) |
-| `stateful-authz-lexicon.csv` | 99 | 53 `path` + 45 `param` words (`lexicon-rules/lexicon-20260921-audited/`); unread since `a544c996ac` |
+| `RestSecurityOracle.kt` | 68 | judgment: `handleStatefulAuthorization()` |
+| `RestSecurityBuilder.kt` | 1464 | construction: `addForStatefulAccessControl()`, `buildStatefulAuthzTriple()`, `executeStatefulAuthzTriple()`, Naive Bayes scoring, operator restore, C4 probe |
+| `stateful-authz-model.csv` | 261 | Naive Bayes weights, tables `op`, `role`, `victim`, `low`, `high`, `lowstr`, `highstr` (M1 in the tree; M2 in jar M2, `lexicon-rules/m2-model-20261107/`) |
 
 `statefulTripleUnderEvaluation` is true only while `executeStatefulAuthzTriple` evaluates its own triple, and the
 handler returns unless it is true (commit `bf26b65322`).
 
-The `.patch` files directly in this folder predate the 2026-09-01 history rewrite and do not apply to the
-current tree.
-
-### P2 stack, commit `a544c996ac` on top of `8d6cf8431f`
-
-`RestSecurityBuilder.kt` and `core/src/main/resources/stateful-authz-model.csv`.
-`git diff 8d6cf8431f a544c996ac -- core/src/main/kotlin` equals `wip/p2e-restore-high-20261013.patch` byte for byte.
-The steps below were built as patches before the commit. Jar per step: `jars.md`.
-
-| Step | Patch | Does | Self-test |
-|---|---|---|---|
-| P1 | `candidate-iteration-20261011` | tries every usable transition op instead of stopping at the first; 20 attempts in total, 5 per unproven op | `candidate-iteration.sh` |
-| P2 | `p2-nb-20261012` (includes P1) | Naive Bayes replaces the hand-written lists: op score (A), role field (B1), victim field (B3); values by field kind (B2); response reading by identity key (B4); anonymous control in D1 and C4; gate posterior > 0.5 | `p2-stateful-authz.sh` |
-| P2c | `p2-nb-restoreswap-20261012` | restore call `:858`: restorer = victim, target = operator, as in AF2 | `restore-swap-20261012.sh` |
-| P2d | `p2d-increment-over-p2c-20261012.diff` | A `:1248–1249`: a current-role value the model scores low does not exclude reduced values. B `:1261`: an operator snapshot the model scores low is not the restore value; enum values ranked by `high − low` are used | `p2d-reduce-elevate-20261012.sh` |
-| P2e | `p2e-increment-over-p2d-20261013.diff` | C `:1265–1269`: enum restore values are only those the model scores `high > low`; the whole ranking when none is | `p2e-restore-high-20261013.sh` |
-
-P2c, P2d and P2e restore three AF2 behaviours that P2 lost when it removed the hand-written lists: AF2 dropped low
-values from the current role (`isLowPrivRole`, `8d6cf8431f` line 651) and elevated the operator to a high enum value only
-(`harvestElevatedRoleCandidates`). Without A and B, P2c missed reports seeds 10/13/16 where AF2 fires
-(`em-results/p2c-interleave-seeds-20261012/`, `em-results/p2c-vs-af2-debug-20261012/`). Without C, P2d spent one of
-three restore attempts on `EVOMASTER`, the invalid-data value EvoMaster appends to string enums, and missed vampi
-seed 11 (`em-results/p2d-night-20261012/STOPPED.md`).
-
-### P2f, commit `f73010103b` on top of `a544c996ac`
-
-`RestSecurityBuilder.kt:1360–1361`: `setField` writes the value into the leaf gene `f.value` and activates the wrappers
-from that leaf up, instead of from the field gene `f.gene`. Before, a nullable field such as `is_admin`
-(`{"type":["boolean","null"]}`) kept its `NullableGene` inactive and went out as `null`; on artifact-keeper the PATCH
-returned 200 without demoting (`em-results/artifactkeeper-machine-20261014/iterate-RESULTS.md`). The changed lines equal
-`wip/setfield-leaf-activate-20261015.patch`. Self-test `setfield-leaf-activate-20261015.sh`. Jar: `jars.md`.
-
-### Refactor, commit `1cd0d091f4` on top of `f73010103b` (jar SR)
-
-`wip/refactor-simplify-20261027.patch`, 3 files, +789 −653, written 2026-10-27. The commit (2026-10-29) adds one blank
-line at `RestSecurityBuilder.kt:781`; jar SR was built from the patch.
-- `EMConfig.kt` returns to v6.1.1: the three `statefulAuthz*` options are gone.
-- `RestSecurityBuilder.kt` removes:
-  - the declared transition (`parseDeclaredTransition`, `applyDeclaredBindings`, the 40-attempt ceiling);
-  - `resetSutState`;
-  - D1 (`freshCredentialDeniesFollowUp`). `executeStatefulAuthzTriple` now calls `reLoginProbeConfirmsPrivilegeRemoved`
-    (C4) directly.
-- `RestSecurityOracle.kt` drops `twoCredentialJudgment`.
-- Lambdas and streams in both files are rewritten as loops.
-Self-test `refactor-simplify-20261027.sh`. The function notes, in Vietnamese, are in
-`docs/evomaster-study/03-ham-stateful-authz.md`. Statements below about reset, the declared transition and D1 hold for
-`f73010103b` and earlier.
+The `.patch` files directly in this folder predate a history rewrite and do not apply to the current tree.
+Function notes, in Vietnamese: `docs/evomaster-study/03-ham-stateful-authz.md`.
 
 ## 2. Where it plugs in
 
@@ -78,8 +31,7 @@ The MIO search core is untouched.
   `RestSecurityBuilder.applySecurityPhase()`. The phase is time-boxed to `extraPhaseBudgetPercentage × maxTime`.
 - **Construction.** `applySecurityPhase()` takes solved tests from the archive, builds `SampleType.SECURITY`
   individuals, runs them and adds them back. `addForStatefulAccessControl()` is wired right after
-  `expandWithForbidden()`, so it inherits the 403 evidence and the phase budget. On `f73010103b` and earlier,
-  `resetSutState()` runs just before the fitness call in `executeStatefulAuthzTriple()`; HEAD removes it.
+  `expandWithForbidden()`, so it inherits the 403 evidence and the phase budget.
 - **Judgment.** `RestSecurityOracle.analyzeSecurityProperties()` dispatches one `handleXxx()` per oracle.
   `handleStatefulAuthorization()` is modeled on `handleForbiddenOperation` (F206). The security oracle runs only on
   `sampleType == SECURITY` (`AbstractRestFitness.kt:1306`); search-phase tests are never judged.
@@ -92,12 +44,11 @@ The MIO search core is untouched.
 ## 3. How a triple is built
 
 1. **Transition**: a write op with Naive Bayes posterior > 0.5 (`transitionScore > 0`), e.g.
-   `PUT /users/{username}/role`, ranked by score with ties in spec order; every such op is tried (P1). The role
+   `PUT /users/{username}/role`, ranked by score with ties in spec order; every such op is tried. The role
    field is the non-path field with the highest role score above zero. Reduced values follow the field kind:
    enum values ranked by `valueScore(low) − valueScore(high)`, bool flipped, array `[]`, numbers `1, 0, 2`,
    strings from the model's `lowstr` table. A value equal to the victim's current role is skipped, unless the
-   model scores that role low (P2d A). On `8d6cf8431f` (AF2) the score is the highest lexicon word, at most 8 candidates
-   are tried, and reduced values come from hand-written lists.
+   model scores that role low.
 2. **Source**: a guarded write some user was denied (403) and the victim was allowed (2xx). PUT/PATCH first;
    POST only when PUT/PATCH give no candidate.
 3. **Individual**: `[create?, source(victim), transition(operator → victim reduced), follow-up(victim, same token)]`.
@@ -106,14 +57,15 @@ The MIO search core is untouched.
 5. **Operator restore**: when every operator is refused while the victim's source succeeded, the victim's
    credential calls the transition upward on the operator (restorer = victim, target = operator), then the triple
    is retried; at most `MAX_PRIVILEGE_RESTORES = 3`. The upward value is the operator's observed role unless the
-   model scores it low (P2d B); otherwise the enum values the model scores `high > low` (P2e C), bool `true`,
+   model scores it low; otherwise the enum values the model scores `high > low`, bool `true`,
    numbers `0, 1, 2`, strings from `highstr`. Repairs a lost authorization, never a deleted account.
-6. **C4 re-login probe**: only on a would-be fault; the victim logs in again and replays its slice. Fresh
-   credential denied: keep the fault. Fresh credential allowed: VOID.
+6. **C4 re-login probe** (`reLoginProbeConfirmsPrivilegeRemoved`): only on a would-be fault; the victim logs in
+   again and replays its slice. The fault is kept when the slice's last recorded status is 403 and the same slice
+   sent without credentials does not also end in 403; otherwise it is UNCONFIRMED.
 
-Log lines: `Assembled … statuses A/B/C`, `Discarded a VOID … codes A/B/C`,
-`Discarded an UNCONFIRMED …`, and on `f73010103b` and earlier only `SUT state reset via … -> 200`. The builder's diagnostics are `debug`; EvoMaster
-ships `<root level="warn">`.
+Log lines: `Assembled … statuses A/B/C`, `Discarded a VOID … codes A/B/C`, `Discarded an UNCONFIRMED …`, and
+`… proven by an attempt with statuses A/B/C` once per transition op (count triples from `Assembled` only). The
+builder's diagnostics are `debug`; EvoMaster ships `<root level="warn">`.
 
 ## 4. Fault codes in reports
 

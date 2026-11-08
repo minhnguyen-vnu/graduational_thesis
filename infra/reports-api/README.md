@@ -1,9 +1,9 @@
-# reports-api — Tier-1 controlled target
+# reports-api target
 
 A minimal **Spring Boot 3 / Java 17** REST API with **one deliberately planted authorization bug
 (A1): privilege persists after a role downgrade.** It is the controlled ground-truth target for a
-thesis extending EvoMaster with a stateful authorization oracle. See `app-detail.md` for the full
-build specification.
+thesis extending EvoMaster with a stateful authorization oracle. Numbers: `docs/results.md` §1 (jar M2).
+The original build specification: `docs/archive/tier1-spring-boot-spec.md`.
 
 ## The planted bug (A1) in one sentence
 
@@ -49,7 +49,7 @@ Status ordering is **401 → 400 → 403 → 404**. Writes authorize before exis
 deleting a missing id gets `403`. Body validation runs before authorization: a viewer sending an invalid
 body gets `400`, a valid body `403`.
 
-### Spec and validation (cleanup of 2026-09-10)
+### Spec and validation
 
 - `CurrentUser` is hidden from springdoc (`web/OpenApiConfig.java`), so no operation publishes a `caller` param.
 - `RoleUpdateRequest.role` declares `enum: ["ADMIN","VIEWER"]` and stays a `String`, so an unknown value
@@ -59,8 +59,8 @@ body gets `400`, a valid body `403`.
   `GET|PUT|DELETE /reports/{id}` add `400/404`; `/users/me` `200/401`; `PUT /users/{u}/role` `200/400/401/403/404`.
 - Input is validated with `@Valid`: `POST /reports {}` and `POST /auth/login {"password":"x"}` return 400.
   `ApiExceptionHandler` maps validation, type-mismatch and unreadable-body failures to `{"error":…}`.
-- Reduced-role inference depends on the declared enum: `stringRoleCandidates` is lowercase-only and
-  `UserController.parseRole` uses `Role.valueOf`, so `VIEWER` is the only reduced value the server accepts.
+- `UserController.parseRole` uses `Role.valueOf`, so `VIEWER` is the only reduced value the server accepts; the tool
+  reads it from the declared enum.
 
 ### Seed data (startup and `POST /reset`)
 
@@ -122,4 +122,4 @@ docker run -d --name reports-api-fixed -p 8081:8080 \
 - `InputValidationTest` — invalid input returns 400, never 500; lowercase `viewer` is rejected.
 - `OpenApiContractTest` — no `caller` param, the role enum, the exact declared statuses per operation.
 
-28 tests, `mvn test` green (2026-09-10).
+28 tests.

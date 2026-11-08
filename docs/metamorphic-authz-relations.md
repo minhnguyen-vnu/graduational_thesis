@@ -1,7 +1,7 @@
 # Metamorphic Authorization Relations (MR-A)
 
 > Working spec for the thesis oracle. Written in English for now; the thesis chapter
-> will be the Vietnamese adaptation of this. Grounded throughout in the Tier-1
+> will be the Vietnamese adaptation of this. Grounded throughout in the
 > `reports-api` app so every abstract line has a concrete example.
 > Companion: the runnable PoC at `infra/oracle-poc/temporal_oracle_poc.sh`.
 
@@ -129,8 +129,8 @@ MR-A1 turns into a **`grant → transition → re-attempt` triple**. This is the
 form the generalized generator (future work) has to emit for any API:
 
 ```
-1. reset                          # clean, known state; MUST restore p to the HIGHER
-                                  #   privilege, and seed >=2 resources a can act on
+1. known state                    # p holds the HIGHER privilege, and >=2 resources
+                                  #   a can act on exist
 2. login p           → capture c  # the credential we will keep
 3. do a with c       → expect ALLOWED    [① source: prove the action works while permitted]
 4. apply T (by someone still allowed to) → reduces p's permission   [② the transition]
@@ -143,8 +143,9 @@ form the generalized generator (future work) has to emit for any API:
 ```
 
 Steps 1–5 are **construction** (build the scenario). Step 6 is **judgment** (the oracle).
-The PoC hard-codes construction for alice/reports; step 6 is already the real, reusable
-oracle.
+The builder takes step 1 from the state the search left behind, restoring a demoted operator
+through the target's own API when needed, and constructs steps 2–5 from the archive
+(`infra/evomaster-ext/README.md` §3).
 
 ---
 
@@ -202,17 +203,13 @@ to guess.
 
 ### 5.2 What is a "permission-reducing transition", and how we recognize one
 
-`T` is permission-reducing if it moves `p` to a state with **fewer** rights over `a`. The
-generalized tool infers candidate `T`s from the **OpenAPI spec + endpoint naming**:
-
-- **Naming signals:** `demote`, `downgrade`, `revoke`, `expire`, `disable`, `deactivate`,
-  `remove` (a member/role), `transfer` (ownership), `cancel` (a subscription), `leave`.
-- **Shape signals:** a `PUT`/`PATCH`/`DELETE` on a *user / membership / role /
-  subscription / ownership* resource, or a body field like `role`, `plan`, `owner`,
-  `active`.
-- For the thesis core we **scope A1 to an explicit role-change endpoint** (`PUT
-  /users/{u}/role` with a "lower" role value), where "reducing" is unambiguous. Broader
-  inference is future work / configurable seeds.
+`T` is permission-reducing if it moves `p` to a state with **fewer** rights over `a`. The tool
+infers candidate `T`s from the OpenAPI spec: a Naive Bayes model scores every write op on its
+path, field and verb tokens, and every op with posterior > 0.5 is tried in score order
+(`docs/naive-bayes.md`). Examples on the targets: `PUT /users/{username}/role` with a lower enum
+value (reports-api), `POST /api/set_user_permission` with a numeric permission (pyLoad),
+`PATCH /api/v1/users/{id}` with `{"is_admin": false}` (artifact-keeper). 970 is raised only
+after the C4 probe (§5.6) confirms that a fresh login of the victim is denied.
 
 ### 5.3 The same-credential rule (restating the crux as an instruction)
 
@@ -235,8 +232,7 @@ Under role-downgrade scoping, the API's own rule is unambiguous — *a VIEWER mu
 a report* — so a `2xx` follow-up is a genuine authorization violation, by the app's own
 contract. False-positive risks we neutralise:
 
-- **State pollution across runs** → the harness reseeds the target (`POST /reset`) before each run. A reset before
-  every triple is only the ablation arm (`--statefulAuthzResetEndpoint`, off by default, P2f and earlier only; `docs/results.md` §4).
+- **State pollution across runs** → the harness reseeds the target (`POST /reset`) before each run.
 - **"Already done" noise** (e.g. deleting a resource that was already gone) → the follow-up
   acts on a **different, existing** resource than the source (`/reports/2`, not `/reports/1`).
   This is valid **only because `reports-api` authorization is role-uniform across report
@@ -259,6 +255,30 @@ A 🔴/🟢 verdict is only meaningful when **all** of these hold; if any fails,
 
 V5 is the one that turns the relation from *almost right* into *exactly right*; V1–V2 are
 the ones most likely to bite on a real, unfamiliar target.
+
+### 5.6 The C4 re-login probe
+
+C4 runs only on a would-be fault: the old credential was still allowed after `T`. The victim logs in again and its
+slice of the test is replayed with the fresh credential; then the same slice is sent without credentials
+(`reLoginProbeConfirmsPrivilegeRemoved`, `RestSecurityBuilder.kt`).
+
+| Fresh login, last recorded status of the slice | Same slice without credentials | Result |
+|---|---|---|
+| 403 | a status other than 403 | 970 kept |
+| 403 | 403, or no status | UNCONFIRMED |
+| anything else, or no status | not run | UNCONFIRMED |
+
+- The probe and the oracle ask different questions of different credentials. The fresh credential shows the privilege
+  is gone; the old one shows whether it is still honoured. Neither result alone raises 970.
+- The follow-up runs before the re-login. On a target that allows one session per user, a re-login first could kill
+  the old credential and turn the follow-up into a 401.
+- The 403 can come from an earlier call in the slice than the guarded write. On reports-api it comes from
+  `POST /reports` (`CLAUDE.md` §4).
+- The anonymous replay removes a 403 that does not depend on who calls.
+- The re-login needs no change to authentication: EvoMaster logs every user in at the start of each test
+  (`AuthUtils.getTokens()`), so the probe is a second individual.
+- Limitation: on a target whose fresh credential still carries the old privilege, the probe reads "not reduced". The
+  result is a missed bug, never a false alarm.
 
 ---
 

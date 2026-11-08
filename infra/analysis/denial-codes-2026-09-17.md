@@ -8,8 +8,8 @@ Ghi 2026-09-17. Lý do: `CLAUDE.md` §6 định nghĩa D1 coi mọi mã không t
 | Target | Từ chối quyền | 401 sinh ra từ đâu | 404 |
 |---|---|---|---|
 | Tier-1 `reports-api` | 403 | xác thực hỏng (`infra/reports-api/src/main/java/com/thesis/reportsapi/security/AuthFilter.java:98`) | — |
-| Tier-2 `vampi-seeded` | 403 (`docs/tier2-seeded-benchmark-plan.md:62`) | token hết hạn sau 60 giây, đã ghi là INCONCLUSIVE (`:70`) | đã kiểm: non-admin gọi sách không tồn tại vẫn nhận 403, không che bằng 404 (`:71`) |
-| Tier-2b pyLoad | 403 trên `/json/*` (`docs/tier2b-pyload-target.md:106–107`) | `/api/*` trả 401 cho lỗi phân quyền, đã ghi là INCONCLUSIVE (`:107–108`) | — |
+| Tier-2 `vampi-seeded` | 403 (`docs/archive/tier2-seeded-benchmark-plan.md:62`) | token hết hạn sau 60 giây, đã ghi là INCONCLUSIVE (`:70`) | đã kiểm: non-admin gọi sách không tồn tại vẫn nhận 403, không che bằng 404 (`:71`) |
+| Tier-2b pyLoad | 403 trên `/json/*` (`docs/tier2b-pyload-target.md` §4) | `/api/*` trả 401 cho lỗi phân quyền, đã ghi là INCONCLUSIVE (cùng mục) | — |
 
 Nguồn mã 403 của Tier-1: `infra/reports-api/src/main/java/com/thesis/reportsapi/security/ApiException.java:25`
 dùng `HttpStatus.FORBIDDEN`.

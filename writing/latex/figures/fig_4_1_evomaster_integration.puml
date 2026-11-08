@@ -1,0 +1,34 @@
+@startuml
+skinparam dpi 300
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 11
+skinparam roundcorner 4
+skinparam rectangleBorderThickness 1.2
+skinparam databaseBorderThickness 1.2
+skinparam arrowThickness 1.2
+
+package "Pha tìm kiếm (EvoMaster gốc)" as search {
+  component "Thuật toán MIO" as mio
+  database "Kho lưu trữ\nca kiểm thử" as store
+  mio -> store : Lưu ca kiểm thử
+}
+
+package "Pha kiểm thử bảo mật (Phần mở rộng)" as sec {
+  component "Bộ cấu hình" as config
+  component "Bộ dựng kịch bản\nMR-A1" as builder
+  component "Trọng số\nNaive Bayes" as weights
+  component "Bộ phán quyết\n(Oracle 970)" as oracle
+  file "Cảnh báo vi phạm\nOracle 970" as report
+
+  config -down-> builder : Cấu hình tham số
+  config -down-> oracle : Tiêu chí phán quyết
+  weights -up-> builder : Nhận diện thao tác hạ quyền
+  builder -right-> oracle : Kịch bản bộ ba
+  oracle -down-> report : Xuất báo cáo
+}
+
+store -right-> builder : Dữ liệu hạt giống
+
+@enduml

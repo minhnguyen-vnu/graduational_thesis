@@ -16,6 +16,8 @@ P2MODES=(${=P2MODES-enum-role bool-restricted num-two path-id-username access-le
 CANDMODES=(${=CANDMODES-noop-decoy reject-decoy restore-budget protected-victim revoke proven-404 alpha cap20 bool-flag})
 SETMODES=(${=SETMODES-setfield})
 PATHMODES=(${=PATHMODES-cap5 cap20 unavailable budget})
+GAPMODES=(${=GAPMODES-})
+LEXJAR=${LEXJAR:-$JAR}
 SETSTOP=(${=SETSTOP:---stoppingCriterion ACTION_EVALUATIONS --maxEvaluations 300})
 STATIC=${STATIC:-1}
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
@@ -23,7 +25,7 @@ DEBUG="-Dlogback.configurationFile=$THESIS/infra/em-config/logback-builder-debug
 SRC=$EM/core/src/main/kotlin/org/evomaster/core
 REMOVED="statefulAuthzTransition|statefulAuthzResetEndpoint|statefulAuthzTwoCredentialJudgment|parseDeclaredTransition|DeclaredTransition|resetSutState|freshCredentialDeniesFollowUp|privilegeRemovalConfirmed|unconfirmedReason|inconclusiveProbe|applyDeclaredBindings|distinctUsersOn|MAX_STATEFUL_TRIPLE_ATTEMPTS_DECLARED|maxStatefulAttempts"
 
-mkdir -p $OUT/p2 $OUT/cand $OUT/setfield $OUT/paths
+mkdir -p $OUT/p2 $OUT/cand $OUT/setfield $OUT/paths $OUT/gaps
 FAILED=0
 pass() { echo "PASS  $1"; }
 fail() { echo "FAIL  $1  --  $2"; FAILED=1; }
@@ -123,6 +125,7 @@ stub_start() {
     cand) python3 $SELF/candidate_stub.py $mode $PORT > $dir/$mode-$tag-stub.err 2>&1 & ;;
     setfield) python3 $SELF/setfield_stub.py $PORT $dir/$tag-stub.jsonl > $dir/$mode-$tag-stub.err 2>&1 & ;;
     paths) python3 $SELF/refactor_paths_stub.py $mode $PORT > $dir/$mode-$tag-stub.err 2>&1 & ;;
+    gaps) python3 $SELF/gaps_stub.py $mode $PORT > $dir/$mode-$tag-stub.err 2>&1 & ;;
   esac
   STUB_PID=$!
 }
@@ -168,7 +171,7 @@ fixture_scores() {
   wait $STUB_PID 2>/dev/null
 }
 
-unzip -p $JAR stateful-authz-lexicon.csv > $OUT/cand/lexicon.csv
+unzip -p $LEXJAR stateful-authz-lexicon.csv > $OUT/cand/lexicon.csv
 
 for mode in $P2MODES; do
   auth_yaml $OUT/p2/auth-$mode.yaml alice:alicepass boss:bosspass bob:bobpass
@@ -215,7 +218,15 @@ for mode in $PATHMODES; do
   echo "ran paths $mode new=$(cat $OUT/paths/$mode-new.exit) refA=$(cat $OUT/paths/$mode-refA.exit) refB=$(cat $OUT/paths/$mode-refB.exit)"
 done
 
-python3 $SELF/refactor_compare.py $OUT "$P2MODES" "$CANDMODES" "$SETMODES" "$PATHMODES" || FAILED=1
+for mode in $GAPMODES; do
+  auth_yaml $OUT/gaps/auth-$mode.yaml alice:alicepass boss:bosspass bob:bobpass eve:evepass
+  run gaps $mode new $JAR
+  run gaps $mode refA $REFJAR
+  run gaps $mode refB $REFJAR
+  echo "ran gaps $mode new=$(cat $OUT/gaps/$mode-new.exit) refA=$(cat $OUT/gaps/$mode-refA.exit) refB=$(cat $OUT/gaps/$mode-refB.exit)"
+done
+
+python3 $SELF/refactor_compare.py $OUT "$P2MODES" "$CANDMODES" "$SETMODES" "$PATHMODES" "$GAPMODES" || FAILED=1
 
 echo "--- legacy p2_checks.py on the new jar"
 python3 $SELF/p2_checks.py $OUT/p2 $P2MODES > $OUT/p2-checks.txt

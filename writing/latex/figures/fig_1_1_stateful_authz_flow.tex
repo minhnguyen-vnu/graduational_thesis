@@ -1,0 +1,26 @@
+% Hình 1.1 (flowchart, thay sequence diagram fig_1_1_stateful_authz_flaw): vòng đời lỗ hổng phân quyền có trạng thái.
+% Vẽ trực tiếp bằng TikZ để là hình vector, cùng font với thân bài.
+\begin{tikzpicture}[
+  >=Stealth,
+  font=\small\linespread{1}\selectfont,
+  node distance=8mm and 7mm,
+  procbox/.style={rectangle, draw, rounded corners=2pt, fill=gray!10, align=center,
+                  text width=4.1cm, minimum height=1.5cm},
+  decision/.style={diamond, draw, fill=gray!10, align=center, aspect=2.2, inner sep=1pt},
+  safe/.style={rectangle, draw, rounded corners=6pt, align=center, text width=4.1cm, minimum height=1.0cm},
+  vuln/.style={rectangle, draw, very thick, rounded corners=6pt, align=center, text width=4.1cm, minimum height=1.0cm},
+  lbl/.style={font=\footnotesize}
+]
+  \node[procbox] (s1) {\textbf{1. Thao tác ghi ban đầu}\\Tài khoản vai trò quản trị gửi thao tác ghi bằng \mbox{token $c$}, nhận 2xx};
+  \node[procbox, right=of s1] (s2) {\textbf{2. Hạ quyền}\\Quản trị viên hạ vai trò của tài khoản; token $c$ vẫn còn hạn};
+  \node[procbox, right=of s2] (s3) {\textbf{3. Tái sử dụng token cũ}\\Tài khoản gửi lại thao tác ghi bằng token $c$};
+  \node[decision, below=of s3] (d) {Máy chủ tra lại\\vai trò hiện hành?};
+  \node[safe, below=8mm of d] (ok) {403: từ chối\\(quyền đã thu hồi có hiệu lực)};
+  \node[vuln, left=14mm of d] (bad) {2xx: vẫn chấp nhận\\(lỗ hổng phân quyền có trạng thái)};
+
+  \draw[->] (s1) -- (s2);
+  \draw[->] (s2) -- (s3);
+  \draw[->] (s3) -- (d);
+  \draw[->] (d) -- node[lbl, right] {Có} (ok);
+  \draw[->] (d) -- node[lbl, above] {Không} (bad);
+\end{tikzpicture}

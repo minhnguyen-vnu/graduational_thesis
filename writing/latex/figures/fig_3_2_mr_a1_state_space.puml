@@ -1,0 +1,37 @@
+@startuml
+skinparam dpi 300
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 11
+skinparam roundcorner 4
+skinparam stateBorderThickness 1.2
+skinparam arrowThickness 1.2
+
+[*] --> S0 : Khởi tạo phiên (c)
+
+state "<b>Trạng thái ban đầu s</b>\n- Vai trò: Quản trị\n- Token xác thực: c\n- Quyền thao tác: Cho phép (2xx)" as S0
+
+S0 --> S0 : <b>Thao tác gốc (Source)</b>\n[Thành công: 2xx]
+
+S0 --> S_trans : <b>Thao tác chuyển trạng thái T</b>\n[Hạ vai trò, giữ nguyên token c]
+
+state "<b>Sau chuyển trạng thái s' = T(s)</b>\n- Vai trò hiện hành: Thấp hơn\n- Token sử dụng: Giữ nguyên c" as S_trans
+
+state "<b>Nhánh an toàn (Phù hợp MR-A1)</b>\n- Phản hồi: 403\n- Quyền đã thu hồi có hiệu lực" as Safe
+
+state "<b>Nhánh vi phạm MR-A1</b>\n- Phản hồi: 2xx\n- Kích hoạt cảnh báo Oracle 970" as Vuln
+
+S_trans --> Safe : <b>Từ chối token cũ</b>\n[Mã 403]
+S_trans --> Vuln : <b>Chấp nhận token cũ</b>\n[Mã 2xx]
+
+Safe --> [*]
+Vuln --> [*]
+
+note left of S0
+  <b>Quan hệ MR-A1:</b>
+  Obs(a, c, s) = Cho phép <font:Cambria Math>∧</font> Pre(a, T)
+  <font:Cambria Math>⇒</font> Obs(a, c, s') = Từ chối
+end note
+
+@enduml

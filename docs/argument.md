@@ -1,71 +1,60 @@
-# Bản đồ lập luận — 2026-09-28, cập nhật 2026-10-14
+# Bản đồ lập luận
 
 Mỗi khẳng định của luận văn một mục: con số, đối chứng, trường hợp không do ta viết, giới hạn. Số trích từ file
 nguồn ghi bên cạnh; con số nào không có nguồn thì không vào luận văn.
 
-Hai jar chính: `P2f` (`evomaster-P2f-64ee8ffc.jar`, mọi số ở `docs/results.md`, 180 hàng một jar, promote 2026-10-18;
-mọi ô 970 trùng jar `P2e`, `AF2` và jar `R` từng seed) và `TT` (`evomaster-TT-129a7a56.jar`, bộ từ vựng và sáu sửa
-builder). Mỗi hàng của bảng chỉ mang số của một jar, ghi ở đầu hàng.
+Jar chính: `M2` (`evomaster-M2-917c57dd.jar`, mọi số ở `docs/results.md`, chạy 2026-11-08). Hàng nào mang số của jar
+khác thì ghi tên jar ở đầu hàng.
 
 ## K1. Khi dựng được bộ ba hợp lệ, oracle phán đúng
 
 | | |
 |---|---|
-| Con số, jar `P2f` | Không reset: mọi bộ ba dựng được trên bản lỗi đều ra 970 (19/19, 7/7, 5/5); 0 FP trong 90 lượt bản đã vá, trên 116 bộ ba thực hiện trên mã đã vá (`docs/results.md` §1, §1a) |
-| Con số, jar `TT` | 20 seeds: TP 19, 7, 20; FP 0 trong 60 lượt bản đã vá; TN 19, 7, 20 (`em-results/transitiontrim-chain-20260927c/RESULTS.md`) |
-| Đối chứng | Mỗi target có bản đã vá chỉ khác đúng chỗ lỗi; bộ ba trên bản đã vá đọc `200/200/403` |
-| Không do ta viết, jar `TT` | Airflow, `cache_ttl=0`: 2 bộ ba hợp lệ, follow-up 403, không 970 (`em-results/airflow-ttl-20260927/RESULTS.md`). Airflow mặc định: bộ ba `204/200/204` bị C4 loại vì bộ đệm vai trò 30 giây theo user, đúng như kiểm tay 09-20 dự đoán (`analysis/cve-survey/airflow-handcheck-20260920.md` §4) |
-| Giới hạn | Airflow là target phát triển từ 09-23. `cache_ttl=0` là cấu hình của ta. "Phát hiện khi có bộ ba hợp lệ" gần như định nghĩa, không trích làm độ chính xác (`docs/results.md` §2) |
+| Con số, jar `M2` | Mọi bộ ba dựng được trên bản lỗi đều ra 970 (19/19, 7/7, 5/5, 5/5); 0 FP trong 48 lượt bản đã vá, trên 30 bộ ba thực hiện trên mã đã vá (`docs/results.md` §1, §1a) |
+| Đối chứng | Mỗi target có bản đã vá chỉ khác đúng chỗ lỗi; bộ ba trên bản đã vá đọc `200/200/403`. Bản vá của artifact-keeper là của vendor |
+| Giới hạn | Bản vá của artifact-keeper trả 401 cho token cũ, nên 3 lượt không dựng được bộ ba: không báo nhầm, cũng không có TN. "Phát hiện khi có bộ ba hợp lệ" gần như định nghĩa, không trích làm độ chính xác (`docs/results.md` §2) |
 
 ## K2. Oracle bắt được lỗi thật
 
 | | |
 |---|---|
-| Con số, jar `P2f` | pyLoad CVE-2026-41133: bản lỗi 5/5, bản vá 0/5, Fisher một phía p = 0,004 (`docs/results.md` §1) |
-| Con số, jar `TT` | pyLoad: bản lỗi 20/20, bản vá 0/20 (`em-results/transitiontrim-chain-20260927c/RESULTS.md`) |
-| Con số, jar `P2f` (app công khai) | artifact-keeper, lỗi vendor #1821: bản lỗi 5/5, transition `PATCH /api/v1/users/{id}` gửi `{"is_admin":false}`, soát cấu trúc 5/5 (`em-results/artifactkeeper-machine-20261014/`) |
-| Con số, jar `AF2` (app công khai) | artifact-keeper, bản vá của vendor `e64cc5c608`: 0/3 FP (`em-results/artifactkeeper-machine-20261001/`); chưa chạy trên `P2f` |
-| Con số, jar `P2e` (app công khai) | raouf, nhánh declared: dựng bộ ba, nổ 970; soát tay bản sạch `PATCH /categories` ADMIN 200 / CUSTOMER 403 → TP thật, không phải đọc không-guard (`docs/results.md` §5c). Bốn app held-out (raouf, fastschema, alvaro, magic) đều kiểm tay xác nhận MR-A1 thật |
-| Đối chứng | pyLoad bản đã vá; artifact-keeper bản vá của vendor |
-| Không do ta viết | Lỗi là của pyLoad, upstream chưa vá; bản đối chứng đã vá, endpoint reset và spec ghép là của ta (`docs/tier2b-pyload-target.md` §2, §3). artifact-keeper: lỗi, bản vá và spec là của vendor; ta chỉ bỏ `DELETE /users/{id}` khỏi spec và chỉnh cách dựng container (`analysis/heldout-small-apps.md` §18) |
-| Giới hạn | Một CVE và một lỗi vendor. artifact-keeper là target phát triển: 5/5 đến sau các lần sửa tổng quát (`CLAUDE.md` §6), nên không nói gì về app lạ. Trong 11 CVE đã xét, chạy máy bắt được 1; 2 tái hiện được bằng tay nhưng oracle chưa với tới; 3 ngoài lớp; 5 không dựng được hoặc chưa chạy (`analysis/cve-survey/coverage.md` §2). 74 ứng viên còn lại xét 09-28, không cái nào đi tới chạy máy (`analysis/cve-survey/heldout-20260928.md`) |
+| Con số, jar `M2` | pyLoad CVE-2026-41133: bản lỗi 5/5, bản vá 0/5, Fisher một phía p = 0,004. artifact-keeper, lỗi vendor #1821: bản lỗi 5/5, bản vá của vendor 0/3, p = 0,018 (`docs/results.md` §1) |
+| Đối chứng | pyLoad: bản vá do ta viết. artifact-keeper: bản vá của vendor `e64cc5c608` |
+| Không do ta viết | pyLoad: lỗi của pyLoad, upstream chưa vá; bản đối chứng, endpoint reseed và spec `/json/*` là của ta (`docs/tier2b-pyload-target.md` §3). artifact-keeper: lỗi, bản vá, mã app và spec là của vendor; ta chỉ bỏ `DELETE /users/{id}` khỏi spec và chỉnh cách dựng container (`docs/artifact-keeper-target.md` §2) |
+| Giới hạn | Một CVE và một lỗi vendor. Cả hai là target phát triển: năm bản sửa builder được viết khi chạy pyLoad (`docs/tier2b-pyload-target.md` §5), ba khi chạy artifact-keeper, mã và mô hình không chứa chuỗi nào của app (`docs/results.md` §5); số của hai target không nói gì về recall trên app lạ. |
 
 ## K3. Tool tự tìm transition, không cần người khai
 
 | | |
 |---|---|
-| Con số, mô hình của jar `P2e` và `P2f` | Naive Bayes trên nhãn vòng 4 (10.381 op ghi, 230 API), kiểm chéo theo nhà cung cấp 5 phần × 4 lần lặp: op T đứng đầu ở 16–18, trong 4 đầu ở 21–25 của 47 spec test (`infra/evomaster-ext/wip/p2-design-20261012.md` §1). Trên target, xếp từ spec tĩnh, op T hạng 1 ở reports, vampi, pyLoad, Airflow, bamf, hạng 3 ở artifact-keeper; lúc chạy `P2f`, op T của artifact-keeper là ứng viên 4 trên 7 |
-| Con số, bộ từ vựng (jar `AF2`, `TT`) | Endpoint `R` hạng 1 ở 4 trong 6 spec test, top-8 ở 6 (`docs/lexicon.md` §7) |
-| Con số, bộ từ viết tay (trước jar `L`) | 8 từ path + 9 từ param, `firstOrNull`: 0 trong 6 (`docs/lexicon.md` §1) |
-| Đối chứng, jar `P2f` | Thay danh sách viết tay bằng mô hình không đổi phát hiện nào: trên 180 hàng một jar, số nổ 970 và FP trùng jar `AF2` từng seed ở cả 12 arm (`em-results/p2f-full-20261015/RESULTS.md`) |
-| Đối chứng, jar `L` và `TT` | Thay bộ từ viết tay bằng bộ từ vựng không đổi phát hiện nào: jar `L` 0 trên 30 hàng ghép đôi (`docs/results.md` §5b); jar `TT` Tier-1/2 không reset trùng jar `R` ở 80 cặp seed (`em-results/transitiontrim-chain-20260927c/RESULTS.md`) |
-| Không do ta viết, jar `TT` | Airflow: builder tự chọn `PATCH /auth/fab/v1/users/{username}` và hai nguồn, không khai transition (`em-results/airflow-ttl-20260927/`). P2e và P2f chưa chạy Airflow |
-| Giới hạn | 47 spec test đã bị nhìn nhiều lần khi chọn mô hình: số là thăm dò, không gắn p-value xác nhận; không chênh nào với luật max có p < 0,05. Airflow là target phát triển. Vikunja, jar `TT`: 0 bộ ba, kể cả khi spec có example id (`em-results/vikunja-examples-20260927/RESULTS.md`). Nhãn của bộ từ vựng: kappa người–LLM 0,369; mô hình phân xử 32 dòng (`docs/lexicon.md` §4) |
+| Con số, mô hình `M2` | Trên nửa thi của corpus gán nhãn lại (237 spec, 8.674 op ghi, 153 op T): 117 op T có điểm dương (76,5%, Clopper–Pearson 68,9–82,9%); 763 trong 880 op điểm dương mang nhãn N (`docs/results.md` §7). Trên target, xếp từ spec tĩnh: op T hạng 1 ở reports-api, vampi-seeded, pyLoad; hạng 4 trong 5 op khả dụng ở artifact-keeper (`lexicon-rules/m2-model-20261107/compare_targets.out`) |
+| Con số, mô hình `M1` (jar `P2e`, `P2f`) | Kiểm chéo theo nhà cung cấp 5 phần × 4 lần lặp: op T đứng đầu ở 16–18, trong 4 đầu ở 21–25 của 47 spec test (`infra/evomaster-ext/wip/p2-design-20261012.md` §1) |
+| Con số, bộ từ vựng (jar `L` tới `AF2`) | Endpoint `R` hạng 1 ở 4 trong 6 spec test, top-8 ở 6 (`docs/lexicon.md` §7). Bộ từ viết tay trước jar `L` (8 từ path + 9 từ param, `firstOrNull`): 0 trong 6 |
+| Đối chứng | Đổi cách chấm không mất phát hiện nào: từ vựng (AF2) sang M1 (P2f) trùng từng seed ở mọi ô 970; M1 sang M2 trùng 90/90 hàng; artifact-keeper 5/5 trên AF2, P2f và M2 (`docs/results.md` §6) |
+| Không do ta viết | pyLoad và artifact-keeper: builder tự chọn transition từ spec, không khai báo. |
+| Giới hạn | 47 spec test của M1 đã bị nhìn nhiều lần: số là thăm dò. Điểm dương chỉ chọn ứng viên. Đường dẫn `/role` của vampi-seeded do ta đặt. |
 
 ## K4. Recall thấp có nguyên nhân đo được
 
 | | |
 |---|---|
-| Con số, jar `P2f` | Mọi FN là lượt không dựng được bộ ba; 0 FN có bộ ba (`docs/results.md` §1a). Tier-2 7/20 |
-| Con số, jar `TT` | Mọi FN là lượt không dựng được bộ ba; 0 FN có bộ ba (`infra/analysis/confusion/jar-TT-four-cells.md`) |
-| Con số, jar `P2e` (app công khai) | Hai cơ chế FN đo được trên app thật: raouf role field không enum → giá trị hạ quyền lấy từ `lowstr`, sai role thật; magic nguồn `PUT roles` crud-update trả 404 với tên lạ → 0 guarded source candidate (`docs/results.md` §5c). Cùng họ với bamf (`{email}`), artifact-keeper (admin-flip) |
-| Đối chứng, jar `P2f` | Nhánh reset: Tier-2 13/20; McNemar p = 0,070, không có ý nghĩa (`docs/results.md` §4) |
-| Không do ta viết, jar `TT` | Airflow seed 2: không dựng được bộ ba cặp đúng ở cả hai nhánh (`em-results/airflow-ttl-20260927/RESULTS.md`) |
-| Giới hạn | Giới hạn nằm ở search dựng bộ ba, không ở phán quyết. Không viết "nhân quả" cho reset |
+| Con số, jar `M2` | Mọi FN là lượt không dựng được bộ ba; 0 FN có bộ ba (`docs/results.md` §1a). vampi-seeded 7/20 |
+| Giới hạn | Giới hạn nằm ở bước search dựng bộ ba. Search phá điều kiện tiền đề: hạ quyền làm source 403, xoá tài khoản nạn nhân (`docs/results.md` §7) |
 
-## Ranh giới phải viết (`analysis/cve-survey/coverage.md` §4)
+## Ranh giới phải viết
 
 1. Transition phải gọi được bằng HTTP.
 2. Sau transition phải cấp được chứng chỉ mới để so. Lỗi dạng xoá chủ thể không có chứng chỉ mới.
-3. Lỗi "không cưỡng chế với ai cả" (ZITADEL) và bộ đệm theo user (Airflow) bị C4 loại đúng thiết kế (P2f và các jar trước: cả D1); phân biệt
-   chỉ bằng so với bản vá.
+3. Lỗi mà đăng nhập mới cũng không bị từ chối thì C4 loại, đúng thiết kế (`docs/metamorphic-authz-relations.md` §5.6).
+4. Từ chối phải là 403. Bản vá trả 401 (artifact-keeper) cho ra bộ ba VOID (`docs/results.md` §1).
 
 ## Câu hỏi người chấm dễ hỏi, trả lời ở đâu
 
 | Câu hỏi | Trả lời |
 |---|---|
-| Chỉ một CVE, có phải may? | K2 giới hạn, `coverage.md` |
-| Airflow có phải cài cắm? | Image chính thức, không sửa mã; nhưng là target phát triển (K1, K3 giới hạn) |
-| Mô hình có quá khớp? | 47 spec test đã bị nhìn nhiều lần (K3 giới hạn); ước lượng sạch cần spec mới |
-| Vì sao Tier-2 thấp? | K4 |
-| 0 FP có ý nghĩa không? | 116 bộ ba trên mã đã vá, không chỉ 90 lượt (K1) |
+| Chỉ một CVE, có phải may? | K2: thêm một lỗi vendor có bản vá của vendor |
+| Sao chỉ bốn app? | Hai lỗi gieo đo trên mã ta kiểm soát; hai lỗi thật có bản vá để đếm FP. Không khẳng định recall trên app lạ (K2 giới hạn) |
+| artifact-keeper có phải cài cắm? | Mã app, lỗi, bản vá là của vendor; mã công cụ không chứa chuỗi nào của app; nhưng là target phát triển (K2 giới hạn) |
+| Mô hình có quá khớp? | M2 đo trên nửa thi chưa dùng để học (K3); số kiểm chéo của M1 là thăm dò |
+| Vì sao vampi-seeded thấp? | K4 |
+| 0 FP có ý nghĩa không? | 48 lượt, trên 30 bộ ba thực hiện trên mã đã vá (K1) |

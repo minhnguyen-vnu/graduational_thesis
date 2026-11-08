@@ -1,0 +1,56 @@
+@startuml
+skinparam dpi 300
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 11
+skinparam roundcorner 4
+skinparam sequenceParticipantBorderThickness 1.2
+skinparam sequenceLifeLineBorderColor #333333
+skinparam sequenceArrowThickness 1.0
+skinparam noteBorderThickness 1.0
+skinparam sequenceMessagePadding 4
+skinparam sequenceGroupMargin 4
+skinparam sequenceGroupBodyPadding 4
+skinparam participantPadding 8
+
+actor "Nạn nhân" as victim
+participant "Dịch vụ REST API" as api
+actor "Quản trị viên" as admin
+database "CSDL & Phiên" as db
+
+autonumber 1 "<b>[0]</b>"
+
+== 1. Trước khi hạ quyền ==
+victim -> api: Thao tác ghi (token quản trị)
+activate api
+api -> db: Kiểm tra quyền
+activate db
+db --> api: Hợp lệ
+deactivate db
+api --> victim: 200 OK (Thành công)
+deactivate api
+
+== 2. Hạ quyền ==
+admin -> api: Hạ vai trò của nạn nhân
+activate api
+api -> db: Cập nhật vai trò mới
+activate db
+db --> api: Đã cập nhật
+deactivate db
+api --> admin: 200 OK
+deactivate api
+
+== 3. Tái sử dụng token cũ ==
+victim -> api: Gọi lại thao tác ghi (token cũ)
+activate api
+note over api
+  <b>Nguyên nhân lỗ hổng:</b>
+  Máy chủ dùng vai trò lưu trong token hoặc phiên,
+  không tra lại vai trò hiện hành trong CSDL
+end note
+api --> victim: <b>Thực tế: 200 OK (Lỗ hổng)</b>
+api --[#gray]> victim: <i>Kỳ vọng: 403 Forbidden (An toàn)</i>
+deactivate api
+
+@enduml

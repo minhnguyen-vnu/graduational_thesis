@@ -21,7 +21,8 @@ thuộc bộ 56 từ viết tay), rồi lấy
 `firstOrNull` theo thứ tự verb (`RestSecurityBuilder.kt:809`, bản trước patch). Trên nửa test, endpoint được
 chọn là endpoint `R` ở 0 trong 6 spec (`infra/analysis/lexicon-rules/lexicon-20260920/RESULTS.md` §10). Tám từ
 đó chưa từng được chỉnh trên corpus này, nên `0/6` là số sạch. Bộ 8 từ do ta tự đặt và chỉ dùng làm phép kiểm
-tra lúc phát triển.
+tra lúc phát triển. Bộ 56 từ viết tay không phải baseline: không bảng nào so nó với bộ từ vựng. Nó là chính điểm yếu
+mà chương mô hình sửa.
 
 ## 2. Luật gán nhãn
 
@@ -146,8 +147,8 @@ Builder xếp mọi endpoint ghi theo `diem(endpoint)`; hoà điểm thì endpoi
 rồi theo verb `PUT, PATCH, POST, DELETE`, rồi theo thứ tự trong spec.
 
 Chuỗi so gồm path, verb và tên trường thân yêu cầu (`rules-draft.md` §13, biến thể V1, chọn bằng luật phá hoà
-khai trước trên nửa train). Tên trường được thêm vì `PATCH /auth/fab/v1/users/{username}` của Airflow mang quyền
-ở trường thân `roles`.
+khai trước trên nửa train). Tên trường được thêm cho transition mang quyền ở trường
+thân yêu cầu.
 
 ## 6. Ba lần rút
 
@@ -178,10 +179,12 @@ Nhiều endpoint cùng điểm, cùng verb, cùng trạng thái tham số. Hạn
 Cột "khoảng" là cận tốt nhất–xấu nhất trên mọi cách phá hoà; cột "thứ tự spec" là giá trị runtime nhận, vì
 `actionDefinitions` giữ thứ tự spec.
 
-| Chuỗi so | top-1 thứ tự spec | top-1 khoảng | top-3 thứ tự spec | top-8 thứ tự spec |
-|---|---|---|---|---|
-| path + verb (jar `L`) | 0,500 | 0,333–0,667 | 0,667 | 1,000 |
-| path + verb + tên trường thân (jar `RF` tới `AF2`) | 0,667 | 0,500–0,833 | 0,833 | 1,000 |
+| Chuỗi so | top-1 thứ tự spec | top-1 khoảng | top-3 thứ tự spec | top-3 khoảng | top-8 thứ tự spec | top-8 khoảng |
+|---|---|---|---|---|---|---|
+| path + verb (jar `L`) | 0,500 | 0,333–0,667 | 0,667 | 0,500–0,667 | 1,000 | 0,833–1,000 |
+| path + verb + tên trường thân (jar `RF` tới `AF2`) | 0,667 | 0,500–0,833 | 0,833 | 0,667–0,833 | 1,000 | 0,833–1,000 |
+
+Khoảng không phải sai số lấy mẫu; nó chỉ đo phần hạng do cách phá hoà chưa khai báo quyết định.
 
 Nguồn: `lexicon-20260921-audited/rank-exact.txt`, `field-gate-20260923/rank-field.txt`.
 
@@ -204,10 +207,9 @@ giảm từ 0,375 xuống 0,250. Luật không sửa sau khi thấy giá đó (`
 
 | Target | Transition | Hạng |
 |---|---|---|
-| Tier-1 `reports-api` | `PUT /users/{username}/role` | 1 |
-| Tier-2 `vampi-seeded` | `PUT /users/v1/{username}/role` | 1 |
-| Tier-2b pyLoad | `POST /api/set_user_permission` | 1 |
-| Airflow | `PATCH /auth/fab/v1/users/{username}` | 1–5 trên 68 endpoint ghi |
+| `reports-api` | `PUT /users/{username}/role` | 1 |
+| `vampi-seeded` | `PUT /users/v1/{username}/role` | 1 |
+| pyLoad | `POST /api/set_user_permission` | 1 |
 
 Nguồn: `field-gate-20260923/RESULTS.md` §2–§3, xếp từ spec tĩnh.
 
@@ -217,10 +219,6 @@ Chạy EvoMaster, seeds 1–10, cờ D1 tắt:
   (`em-results/lexicon-chain-20260921/`).
 - Jar `RF` (thêm tên trường thân, thu giá trị quyền cục bộ): 0 trên 50 dòng đổi kết quả 970 so với jar `L`
   (`em-results/rolefield-chain-20260924/RESULTS.md`).
-
-Airflow: jar `RF` chọn đúng `PATCH /auth/fab/v1/users/{username}` (`em-results/airflow-lexicon-20260923/RESULTS.md`).
-Jar `TT` dựng được bộ ba hợp lệ đầu tiên trên Airflow, `204/200/204`, bị C4 loại vì bộ đệm vai trò 30 giây của
-FAB (`em-results/transitiontrim-chain-20260927b/RESULTS.md`).
 
 ## 9. Hạn chế
 
@@ -241,5 +239,5 @@ FAB (`em-results/transitiontrim-chain-20260927b/RESULTS.md`).
   `infra/analysis/lexicon-rules/field-identification-hardcode-20261004.md`.
 - Tới `AF2`, sáu danh sách giá trị quyền thấp/cao viết tay: corpus không có nhãn thứ tự giữa các giá trị quyền.
   `P2e` thay chúng bằng bảng `low`, `high`, `lowstr`, `highstr` (`docs/naive-bayes.md` §5).
-- Hạng trên Airflow và ba target xếp từ spec tĩnh; EvoMaster có thể bớt endpoint trước khi xếp.
+- Hạng trên ba target xếp từ spec tĩnh; EvoMaster có thể bớt endpoint trước khi xếp.
 - Nhóm `N8` (xoá user) và `N9` (rời group, team) bị loại vì lý do đo đạc (§2).

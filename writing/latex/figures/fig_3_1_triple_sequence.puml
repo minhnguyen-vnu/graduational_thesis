@@ -1,0 +1,69 @@
+@startuml
+skinparam dpi 300
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 11
+skinparam roundcorner 4
+skinparam sequenceParticipantBorderThickness 1.2
+skinparam sequenceLifeLineBorderColor #333333
+skinparam sequenceArrowThickness 1.0
+skinparam noteBorderThickness 1.0
+skinparam sequenceMessagePadding 3
+skinparam sequenceGroupMargin 3
+skinparam sequenceGroupBodyPadding 3
+skinparam participantPadding 8
+
+participant "EvoMaster" as em
+participant "Dịch vụ REST API" as api
+database "CSDL & Phiên" as db
+
+autonumber 1 "<b>[0]</b>"
+
+== 1. Thao tác gốc (Source) ==
+em -> api: Lời gọi ghi nhạy cảm (token c_v)
+activate api
+api -> db: Ghi dữ liệu
+activate db
+db --> api: Thành công
+deactivate db
+api --> em: 2xx
+deactivate api
+note over em: Lưu thao tác và token c_v
+
+== 2. Chuyển trạng thái (Transition) ==
+em -> api: Hạ quyền nạn nhân (token c_o)
+activate api
+api -> db: Cập nhật vai trò thấp hơn
+activate db
+db --> api: Đã cập nhật
+deactivate db
+api --> em: 2xx
+deactivate api
+
+== 3. Thao tác kiểm chứng (Follow-up) ==
+em -> api: Gọi lại thao tác ghi (token cũ c_v)
+
+== 4. Phán quyết (Oracle 970) ==
+alt Từ chối token cũ
+    api --> em: 403
+    note over em: Phù hợp MR-A1
+else Chấp nhận token cũ
+    api --> em: 2xx (dấu hiệu vi phạm)
+    group Bước đăng nhập lại
+        em -> api: Đăng nhập lại tài khoản nạn nhân
+        api --> em: Token mới c_v'
+        em -> api: Chạy lại chuỗi lời gọi (token mới c_v')
+        alt Token mới bị từ chối
+            api --> em: 403
+            em -> api: Chạy lại chuỗi, không xác thực
+            api --> em: Mã khác 403
+            note over em: <b>Oracle 970:</b> báo vi phạm MR-A1
+        else Các trường hợp còn lại
+            api --> em: 2xx hoặc mã khác
+            note over em: Hủy bộ ba
+        end
+    end
+end
+
+@enduml

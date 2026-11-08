@@ -1,0 +1,60 @@
+% Hình 2.1: Kiến trúc tổng thể và chu trình sinh test của EvoMaster với Pha Security mở rộng
+% Thiết kế đơn sắc (Black & White / Grayscale) cho in ấn học thuật.
+\begin{tikzpicture}[
+  >=Stealth,
+  node distance=1.0cm and 1.2cm,
+  scale=0.90, transform shape,
+  box/.style={rectangle, draw=black, fill=white, thick, minimum width=2.6cm, minimum height=1.0cm, align=center, rounded corners=3pt, font=\small},
+  inputbox/.style={rectangle, draw=black, fill=gray!12, thick, minimum width=2.6cm, minimum height=1.0cm, align=center, rounded corners=3pt, font=\bfseries\small},
+  corebox/.style={rectangle, draw=black, fill=gray!12, thick, minimum width=2.8cm, minimum height=1.1cm, align=center, rounded corners=3pt, font=\bfseries\small},
+  secbox/.style={rectangle, draw=black, fill=gray!18, very thick, minimum width=3.0cm, minimum height=1.1cm, align=center, rounded corners=3pt, font=\bfseries\small},
+  storebox/.style={cylinder, draw=black, fill=white, shape border rotate=90, aspect=0.25, thick, minimum width=2.6cm, minimum height=1.2cm, align=center, font=\bfseries\small},
+  outbox/.style={rectangle, draw=black, fill=white, thick, minimum width=2.8cm, minimum height=1.0cm, align=center, rounded corners=3pt, font=\bfseries\small},
+  groupbox/.style={draw=black!50, dashed, fill=gray!4, rounded corners=6pt, inner sep=10pt}
+]
+
+  % Đầu vào
+  \node[inputbox] (spec) {Đặc tả OpenAPI\\/ Swagger Spec};
+  \node[inputbox, below=0.8cm of spec] (sut) {Hệ thống API\\(SUT Target)};
+
+  % Khối Search Phase (EvoMaster Core)
+  \node[corebox, right=1.6cm of spec] (ga) {Giải thuật di truyền\\(MIO / GA Engine)};
+  \node[box, below=0.6cm of ga] (executor) {Bộ thực thi HTTP\\\& Đo độ phủ};
+  \node[storebox, right=1.6cm of ga] (store) {Kho lưu trữ\\ca kiểm thử};
+
+  % Khối Pha Security (Phần đóng góp của đề tài)
+  \node[secbox, right=1.6cm of store, yshift=1.2cm] (sec_builder) {Bộ dựng kịch bản\\kiểm thử};
+  \node[secbox, right=1.6cm of store, yshift=-1.2cm] (sec_oracle) {Bộ phán quyết\\(Oracle 970)};
+  \node[box, above=0.5cm of sec_builder] (sec_sampler) {Ngân sách thời gian\\và tài khoản kiểm thử};
+
+  % Đầu ra
+  \node[outbox, right=1.6cm of sec_oracle] (report) {Cảnh báo\\Oracle 970};
+  \node[outbox, right=1.6cm of sec_builder] (testsuite) {Bộ test kiểm thử\\(JUnit / Python)};
+
+  % Viền bao quanh Pha Search và Pha Security
+  \begin{scope}[on background layer]
+    \node[groupbox, fit=(ga) (executor), 
+          label={[font=\bfseries\small, text=black]above:Pha tìm kiếm}] (search_group) {};
+    \node[groupbox, fit=(sec_builder) (sec_oracle) (sec_sampler), 
+          label={[font=\bfseries\small, text=black]above:Pha kiểm thử bảo mật}] (sec_group) {};
+  \end{scope}
+
+  % Các đường liên kết
+  \draw[->, thick] (spec) -- (ga);
+  \draw[->, thick] (sut) -- (executor);
+  \draw[<->, thick] (ga) -- (executor);
+  \draw[->, thick] (executor) -| (store);
+  
+  \draw[->, thick] (store.north) |- (sec_builder.west);
+  \draw[->, thick] (store.south) |- (sec_oracle.west);
+  \draw[<->, very thick] (sec_builder) -- (sec_oracle);
+  \draw[->, thick] (sec_sampler) -- (sec_builder);
+
+  \draw[->, thick] (sec_builder) -- (testsuite);
+  \draw[->, very thick] (sec_oracle) -- (report);
+
+  % Tương tác kiểm thử hộp đen với SUT
+  \draw[->, dashed, black!75] (sec_builder.south) to[out=-120, in=-20] 
+    node[below, font=\scriptsize] {Gửi bộ ba request qua HTTP} (sut.east);
+
+\end{tikzpicture}

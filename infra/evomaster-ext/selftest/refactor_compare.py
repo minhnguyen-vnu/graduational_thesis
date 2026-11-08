@@ -5,7 +5,9 @@ import sys
 
 OUT = sys.argv[1]
 FAMILIES = [("p2", sys.argv[2].split()), ("cand", sys.argv[3].split()), ("setfield", sys.argv[4].split()),
-            ("paths", sys.argv[5].split() if len(sys.argv) > 5 else [])]
+            ("paths", sys.argv[5].split() if len(sys.argv) > 5 else []),
+            ("gaps", sys.argv[6].split() if len(sys.argv) > 6 else [])]
+REF = os.environ.get("REFLABEL", "P2f")
 RESULTS = []
 
 TRACE = re.compile(r"Stateful-authorization|MR-A1|Privilege-restore")
@@ -25,6 +27,14 @@ REACH = {
     ("paths", "cap20"): "attempt cap 20 reached",
     ("paths", "unavailable"): "restore unavailable",
     ("paths", "budget"): "restore budget of 3 spent",
+    ("gaps", "route-missing"): "skipped: every call on its path and parent path returned 404",
+    ("gaps", "query-role"): "roleField query:role",
+    ("gaps", "current-false"): "current roles [false], reduced role values [true]",
+    ("gaps", "current-held"): "current roles [ADMIN]",
+    ("gaps", "restore-snapshot"): "Privilege-restore accepted for 'boss' by 'alice' with role 'OWNER'",
+    ("gaps", "user-name-field"): "set user-name fields [username]",
+    ("gaps", "num-id"): "Assembled a stateful-authorization",
+    ("gaps", "body-user-path-id"): "Assembled a stateful-authorization",
 }
 
 
@@ -95,16 +105,16 @@ for fam, modes in FAMILIES:
               "%d schema-only lines, first diff %s" % (len(schema_ref), first_diff(schema_new, schema_ref)))
 
         aa = ref_a == ref_b
-        print("INFO  %-44s %s" % (key + "-aa", "P2f twice: identical (%d lines)" % len(ref_a) if aa
-                                   else "P2f twice: differ, %s" % first_diff(ref_a, ref_b)))
+        print("INFO  %-44s %s" % (key + "-aa", "%s twice: identical (%d lines)" % (REF, len(ref_a)) if aa
+                                   else "%s twice: differ, %s" % (REF, first_diff(ref_a, ref_b))))
         if aa:
             check(key + "-trace-identical", new == ref_a,
                   "%d stateful lines; first diff %s" % (len(new), first_diff(new, ref_a)))
         else:
             same = new == ref_a or new == ref_b
             check(key + "-trace-identical-to-one-ref", same,
-                  "A/A differs, so new must equal one P2f run; vs refA %s; vs refB %s"
-                  % (first_diff(new, ref_a), first_diff(new, ref_b)))
+                  "A/A differs, so new must equal one %s run; vs refA %s; vs refB %s"
+                  % (REF, first_diff(new, ref_a), first_diff(new, ref_b)))
 
         d = (det970(fam, mode, "new"), det970(fam, mode, "refA"), det970(fam, mode, "refB"))
         check(key + "-970-same", d[0] is not None and d[0] in (d[1], d[2]),
@@ -115,7 +125,7 @@ for fam, modes in FAMILIES:
             in_ref = any(marker in l for l in ref_a)
             in_new = any(marker in l for l in new)
             check(key + "-path-reached", in_ref and in_new,
-                  "%r in P2f no-reset %s, in new %s" % (marker, in_ref, in_new))
+                  "%r in %s %s, in new %s" % (marker, REF, in_ref, in_new))
 
 print("summary %d/%d checks passed" % (sum(RESULTS), len(RESULTS)))
 sys.exit(0 if all(RESULTS) else 1)
