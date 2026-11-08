@@ -1,0 +1,692 @@
+stt,method,path,mo_ta,schema,truong,A,B,C,U,victim,role,order
+1,DELETE,/v1/builds/{id}/relationships/individualTesters,,BuildIndividualTestersLinkagesRequest,"path:id string
+body:id string
+body:type string enum[betaTesters]",,,,,,,
+2,POST,/Users/{userId},Updates a user.,UserDto,"path:userId string
+body:Configuration object
+body:Configuration.AudioLanguagePreference string
+body:Configuration.DisplayCollectionsView boolean
+body:Configuration.DisplayMissingEpisodes boolean
+body:Configuration.EnableLocalPassword boolean
+body:Configuration.EnableNextEpisodeAutoPlay boolean
+body:Configuration.GroupedFolders array<string>
+body:Configuration.HidePlayedInLatest boolean
+body:Configuration.LatestItemsExcludes array<string>
+body:Configuration.MyMediaExcludes array<string>
+body:Configuration.OrderedViews array<string>
+body:Configuration.PlayDefaultAudioTrack boolean
+body:Configuration.RememberAudioSelections boolean
+body:Configuration.RememberSubtitleSelections boolean
+body:Configuration.SubtitleLanguagePreference string
+body:Configuration.SubtitleMode string enum[Default|Always|OnlyForced|None|Smart]
+body:EnableAutoLogin boolean
+body:HasConfiguredEasyPassword boolean
+body:HasConfiguredPassword boolean
+body:HasPassword boolean
+body:Id string
+body:LastActivityDate string
+body:LastLoginDate string
+body:Name string
+body:Policy object
+body:Policy.AccessSchedules array<object>
+body:Policy.AccessSchedules[].DayOfWeek string enum[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Everyday|Weekday|Weekend]
+body:Policy.AccessSchedules[].EndHour number
+body:Policy.AccessSchedules[].Id integer
+body:Policy.AccessSchedules[].StartHour number
+body:Policy.AccessSchedules[].UserId string
+body:Policy.AuthenticationProviderId string
+body:Policy.BlockUnratedItems array<string> enum[Movie|Trailer|Series|Music|Book|LiveTvChannel|LiveTvProgram|ChannelContent|Other]
+body:Policy.BlockedChannels array<string>
+body:Policy.BlockedMediaFolders array<string>
+body:Policy.BlockedTags array<string>
+body:Policy.EnableAllChannels boolean
+body:Policy.EnableAllDevices boolean
+body:Policy.EnableAllFolders boolean
+body:Policy.EnableAudioPlaybackTranscoding boolean
+body:Policy.EnableContentDeletion boolean
+body:Policy.EnableContentDeletionFromFolders array<string>
+body:Policy.EnableContentDownloading boolean
+body:Policy.EnableLiveTvAccess boolean
+body:Policy.EnableLiveTvManagement boolean
+body:Policy.EnableMediaConversion boolean
+body:Policy.EnableMediaPlayback boolean
+body:Policy.EnablePlaybackRemuxing boolean
+body:Policy.EnablePublicSharing boolean
+body:Policy.EnableRemoteAccess boolean
+body:Policy.EnableRemoteControlOfOtherUsers boolean
+body:Policy.EnableSharedDeviceControl boolean
+body:Policy.EnableSyncTranscoding boolean
+body:Policy.EnableUserPreferenceAccess boolean
+body:Policy.EnableVideoPlaybackTranscoding boolean
+body:Policy.EnabledChannels array<string>
+body:Policy.EnabledDevices array<string>
+body:Policy.EnabledFolders array<string>
+body:Policy.ForceRemoteSourceTranscoding boolean
+body:Policy.InvalidLoginAttemptCount integer
+body:Policy.IsAdministrator boolean
+body:Policy.IsDisabled boolean
+body:Policy.IsHidden boolean
+body:Policy.LoginAttemptsBeforeLockout integer
+body:Policy.MaxActiveSessions integer
+body:Policy.MaxParentalRating integer
+body:Policy.PasswordResetProviderId string
+body:Policy.RemoteClientBitrateLimit integer
+body:Policy.SyncPlayAccess string enum[CreateAndJoinGroups|JoinGroups|None]
+body:PrimaryImageAspectRatio number
+body:PrimaryImageTag string
+body:ServerId string
+body:ServerName string",,,,,,,
+3,POST,/projects/{project_gid}/removeMembers,Remove users from a project | Removes the specified list of users from members of the project. Returns the updated project record.,,"path:project_gid string
+query:opt_pretty boolean
+query:opt_fields array<string>
+body:members string",,,,,,,
+4,POST,/admin.users.setOwner,"Set an existing guest, regular user, or admin user to be a workspace owner.",,"body:team_id string
+body:user_id string",,,,,,,
+5,DELETE,/admin/roleMappings/{principalId},"Delete a role mapping | Deletes a single role mapping, effectively denying access to a user/principal. This operation can fail for the following reasons: * No role mapping for the principalId exists (HTTP error `404`) * A server error occurred (HTTP error `500`)",,path:principalId string,,,,,,,
+7,PUT,/providers/employers/{employerId}/dashboardLicenses,Edit the dashboard license | __Activity name:__ PutDashboardLicensesByEmployerId Edit the dashboard licenses __Metadata :__ There is no metadata endpoint for this resource.,,"path:employerId string
+body:license object
+body:license.user object
+body:license.user.personalDetails object
+body:license.user.userId string",,,,,,,
+8,PATCH,/v1/users/{id}/relationships/visibleApps,,UserVisibleAppsLinkagesRequest,"path:id string
+body:id string
+body:type string enum[apps]",,,,,,,
+9,PATCH,/groups/{ID}/memberships,Promote or demote a member's privileges within a group that you created. The user must exist within the current access token's bubble and be an existing member of the group.,,"path:ID integer
+body:moderator boolean
+body:user_id integer",,,,,,,
+10,DELETE,/conversations/group/{convId}/participants,"Removes participants from a group conversation | Removes one or more participants from the given group conversation. The last participant of a group conversation cannot be removed. This operation can only be performed on behalf of a user who is already a member of the conversation. OauthScopes: WRITE_CONVERSATIONS, MANAGE_CONVERSATIONS",,"path:convId string
+query:participants array<string>",,,,,,,
+11,DELETE,/api-public/v1/user/{user},"Remove a user | Remove a user from your organization. If no replacement is specified, an empty JSON payload (""{}"") is still required. This API may be called a maximum of 60 times per minute.",DeleteUserPayload,"path:user string
+body:replacement string",,,,,,,
+12,POST,/offerings/{offeringId}/users,Adds user to the offering | Adds one or more users to the offering.,OfferingUser,"path:offeringId string
+body:email string
+body:firstName string
+body:isFacilitator boolean
+body:isMarker boolean
+body:isReadonly boolean
+body:lastName string
+body:metadata object
+body:metadata.tags array<string>
+body:personId string
+body:profile object
+body:profile.displayName string
+body:sendInvite boolean
+body:sendNotificationEmail boolean",,,,,,,
+13,POST,/usermanagement/update/{username},"Update user's infos | Rename, change password (pre-hashed or not) and change permission of an user. If a parameter is empty, it will be ignored.",users,"path:username string
+body:isPreHahed boolean enum[False|True]
+body:password string
+body:role array<string>
+body:username string",,,,,,,
+14,PUT,/api/2/project/{projectIdOrKey}/role/{id},Updates a project role to include the specified actors (users or groups).,,"path:projectIdOrKey string
+path:id integer",,,,,,,
+15,PATCH,/providers/employers/{employerId}/users/{userId}/departments,Link or unlink departments from an user. | __Activity name:__ PatchEmployerUserLinkedDepartmentsByEmployerIdAndUserId This endpoint enables the user to link or unlink multiple 'linkages' with one call.,,"path:employerId string
+path:userId string
+body:action string enum[link|unlink]
+body:departmentId string
+body:hasAccessToSubDepartments boolean",,,,,,,
+16,PATCH,/admin/users/{username},Edit an existing user,EditUserOption,"path:username string
+body:active boolean
+body:admin boolean
+body:allow_create_organization boolean
+body:allow_git_hook boolean
+body:allow_import_local boolean
+body:description string
+body:email string
+body:full_name string
+body:location string
+body:login_name string
+body:max_repo_creation integer
+body:must_change_password boolean
+body:password string
+body:prohibit_login boolean
+body:restricted boolean
+body:source_id integer
+body:visibility string
+body:website string",,,,,,,
+20,PUT,/v3/users/{id},Update a user. Available only for admins. | Update a user. Available only for admins.,,"path:id integer
+body:email string
+body:password string
+body:name string
+body:username string
+body:skype string
+body:linkedin string
+body:twitter string
+body:website_url string
+body:organization string
+body:projects_limit integer
+body:extern_uid string
+body:provider string
+body:bio string
+body:location string
+body:admin boolean
+body:can_create_group boolean
+body:confirm boolean
+body:external boolean",,,,,,,
+21,DELETE,/v0.1/orgs/{org_name}/invitations,Removes a user's invitation to an organization,,"path:org_name string
+body:user_email string",,,,,,,
+22,PATCH,/members/{memberId},Modify a team member by ID.,PatchOperation,"path:memberId string
+body:op string
+body:path string
+body:value object",,,,,,,
+23,PATCH,/securitymappings/{webId},Update a security mapping by replacing items in its definition.,SecurityMapping,"path:webId string
+body:Account string
+body:Description string
+body:Id string
+body:Links object
+body:Links.AssetServer string
+body:Links.Security string
+body:Links.SecurityEntries string
+body:Links.SecurityIdentity string
+body:Links.Self string
+body:Name string
+body:Path string
+body:SecurityIdentityWebId string
+body:WebException object
+body:WebException.Errors array<string>
+body:WebException.StatusCode integer enum[100|101|200|201|202|203|204|205|206|207|300|301]
+body:WebId string",,,,,,,
+24,POST,/leaveChat,"Use this method for your bot to leave a group, supergroup or channel. Returns *True* on success.",,body:chat_id integer,,,,,,,
+27,PUT,/projects/{owner}/{projectId}/members,"Update a project's members list | When updating a project, the `members` list _replaces_ the existing one. This means that to add new members to a project, you need to send the `members` list containing both the existing and new members.",ProjectMemberList,"path:owner string
+path:projectId string
+body:members array<object>
+body:members[].name string
+body:members[].roles array<string> enum[MEMBER|OWNER]
+body:members[].type string enum[USER|TEAM]",,,,,,,
+28,DELETE,/offerings/{offeringId}/users/{markerEmail}/marks,Remove learners from coach's marking list | Removes an array of learners from coach's marking list.,,"path:offeringId string
+path:markerEmail string
+body:(body) string",,,,,,,
+29,DELETE,/api/v1/sites/{site_id}/guests/{guest_mac},deleteSiteGuestAuthorization | Delete Guest Authorization,,"path:site_id string
+path:guest_mac string",,,,,,,
+31,PUT,/v4/nodes/rooms/{room_id}/config,Configure room | ### Description: Configure a room. ### Precondition: User needs to be a <span style='padding: 3px; background-color: #F6F7F8; border: 1px solid #000; border-radius: 5px; display: inline;'>&#128100; Room Administrator</span>. ### Postcondition: Room's configuration is changed. ### Further Information: Provided (or default) classification is taken from room when file gets uploaded w,ConfigRoomRequest,"path:room_id integer
+body:adminGroupIds array<integer>
+body:adminIds array<integer>
+body:classification integer enum[1|2|3|4]
+body:hasActivitiesLog boolean
+body:inheritPermissions boolean
+body:newGroupMemberAcceptance string enum[autoallow|pending]
+body:recycleBinRetentionPeriod integer
+body:takeOverPermissions boolean",,,,,,,
+33,PUT,/api/v1/orgs/{org_id}/invites/{invite_id},updateOrgAdminInvite | Update Admin Invite,admin,"path:org_id string
+path:invite_id string
+body:admin_id string
+body:email string
+body:enable_two_factor boolean
+body:first_name string
+body:hours integer
+body:last_name string
+body:oauth_google boolean
+body:phone string
+body:phone2 string
+body:privileges array<object>
+body:privileges[].for_site boolean
+body:privileges[].msp_id string
+body:privileges[].msp_logo_url string
+body:privileges[].msp_name string
+body:privileges[].msp_url string
+body:privileges[].name string
+body:privileges[].org_id string
+body:privileges[].org_name string
+body:privileges[].orggroup_ids array<string>
+body:privileges[].role string enum[admin|write|read|helpdesk|installer]
+body:privileges[].scope string enum[org|site|msp|orggroup]
+body:privileges[].site_id string
+body:privileges[].sitegroup_ids array<string>
+body:privileges[].views array<string>
+body:session_expiry integer
+body:tags array<string>
+body:two_factor_verified boolean
+body:via_sso string",,,,,,,
+34,PUT,/providers/employers/users/{userId},Edit the details of an user | __Activity name :__ PutEmployerUserByUserId __Metadata :__ Possible options for fields of the type 'metadata' can be acquired (GET) by adding `/metadata` to the PUT URL. Edit the details of an user,,"path:userId string
+body:accessStatus object
+body:accessStatus.key integer
+body:accessStatus.value string
+body:azureActiveDirectory object
+body:azureActiveDirectory.tenant object
+body:azureActiveDirectory.tenant.description string
+body:azureActiveDirectory.tenant.id string
+body:azureActiveDirectory.tenant.tenantRegistrationLevel string enum[provider|employer]
+body:azureActiveDirectory.userId string
+body:contactInformation object
+body:contactInformation.emailAddress string
+body:contactInformation.phoneNumber string
+body:contactInformation.placeOfEmployment string
+body:dateTimeCreation string
+body:dateTimeLastLogin string
+body:hasAccessToPayrollingTestData boolean
+body:hasIntegrations boolean
+body:hasMultiFactorAuthentication boolean
+body:id string
+body:isDepartmentManager boolean
+body:isLinkedToMultipleEmployers boolean
+body:loginMethod object
+body:loginMethod.key integer
+body:loginMethod.value string
+body:personalDetails object
+body:personalDetails.firstName string
+body:personalDetails.initials string
+body:personalDetails.lastName string
+body:personalDetails.prefix string
+body:twoFactorAuthenticationRequired boolean
+body:userCustomSpecifiedRole string
+body:userName string
+body:userSpecifiedRole object
+body:userSpecifiedRole.key integer
+body:userSpecifiedRole.value string",,,,,,,
+37,PUT,/api/v1/orgs/{org_id}/admins/{admin_id},updateOrgAdmin | Invite Org Admin,admin,"path:org_id string
+path:admin_id string
+body:admin_id string
+body:email string
+body:enable_two_factor boolean
+body:first_name string
+body:hours integer
+body:last_name string
+body:oauth_google boolean
+body:phone string
+body:phone2 string
+body:privileges array<object>
+body:privileges[].for_site boolean
+body:privileges[].msp_id string
+body:privileges[].msp_logo_url string
+body:privileges[].msp_name string
+body:privileges[].msp_url string
+body:privileges[].name string
+body:privileges[].org_id string
+body:privileges[].org_name string
+body:privileges[].orggroup_ids array<string>
+body:privileges[].role string enum[admin|write|read|helpdesk|installer]
+body:privileges[].scope string enum[org|site|msp|orggroup]
+body:privileges[].site_id string
+body:privileges[].sitegroup_ids array<string>
+body:privileges[].views array<string>
+body:session_expiry integer
+body:tags array<string>
+body:two_factor_verified boolean
+body:via_sso string",,,,,,,
+38,PUT,/users,Update user,UserAccount,"body:created string
+body:updated string
+body:accountId integer
+body:accountName string
+body:email string
+body:fullName string
+body:isCollaborator boolean
+body:isOwner boolean
+body:pageSize integer
+body:password string
+body:roleId integer
+body:roleName string
+body:twoFactorAuthEnabled boolean
+body:userId integer",,,,,,,
+39,PATCH,/users/{userEmail}/transfer,Transfer a user between offerings | Moves the user's access and progress from one offering to another.,TransferRequest,"path:userEmail string
+body:fromOfferingId string
+body:sendInvite boolean
+body:toOfferingId string",,,,,,,
+40,PUT,/spaces/{id},"Update a space | Update a space OauthScopes: WRITE_SPACE, UPDATE_SPACE_CONTENT",,"path:id string
+body:accessModeType string enum[INTERNAL_ONLY|INTERNAL_EXTERNAL|NO_CHANGE]
+body:description string
+body:largePictureBase64 string
+body:name string
+body:ownerId string
+body:role string enum[MODERATOR|AUTHOR|PARTICIPANT|READER|NO_CHANGE]
+body:smallPictureBase64 string
+body:status string enum[ENABLED|DISABLED]
+body:tags array<string>
+body:type string enum[OPEN|CLOSED|SECRET|NO_CHANGE]",,,,,,,
+41,POST,/spaces/{spaceId}/participant/{participantId}/deny,"Deny access for a space | Deny access for a space OauthScopes: WRITE_SPACE, MANAGE_SPACE",,"path:spaceId string
+path:participantId string
+body:reason string",,,,,,,
+42,DELETE,/orgs/{org}/memberships/{username},"Remove organization membership for a user | In order to remove a user's membership with an organization, the authenticated user must be an organization owner. If the specified user is an active member of the organization, this will remove them from the organization. If the specified user has been invited to the organization, this will cancel their invitation. The specified user will receive an ema",,"path:org string
+path:username string",,,,,,,
+43,PUT,/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users,"Set user access restrictions | Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/githubs",,"path:owner string
+path:repo string
+path:branch string
+body:users array<string>",,,,,,,
+44,DELETE,/api/v1/orgs/{org_id}/invites/{invite_id},uninviteOrgAdmin | Delete Admin Invite,,"path:org_id string
+path:invite_id string",,,,,,,
+45,POST,/roles/{account}/{kind}/{identifier},"Update or modify an existing role membership | Updates or modifies an existing role membership. If a role A is granted to a role B, then role A is said to have role B as a member. These relationships are described in the “members” portion of the returned JSON. When the `members` query parameter is provided, you will get the members of a role. When the `members` and `member` query parameters are pr",,"path:account string
+path:kind string
+path:identifier string
+query:members string
+query:member string",,,,,,,
+46,PATCH,/providers/employers/{employerId}/users/{userId}/authorizations,Manage the employer user authorizations | __Activity name :__ PatchEmployerUserAuthorizationsByUserId Manage the employer user authorizations and `authorizationSet`. Only the changes supplied are processed existing records not supplied in the request body will be left unchanged. e.g. If three authorizations are enabled for the user and a patch is performed with in the body one new authorization wi,,"path:employerId string
+path:userId string
+body:authorizationSet object
+body:authorizationSet.description string
+body:authorizationSet.id string
+body:authorizations array<object>
+body:authorizations[].availableForEmployerUser boolean
+body:authorizations[].description string
+body:authorizations[].id string
+body:authorizations[].isEnabled boolean",,,,,,,
+47,PATCH,/v0.1/orgs/{org_name}/invitations/{email},Allows the role of an invited user to be changed,,"path:org_name string
+path:email string
+body:role string enum[admin|collaborator|member]",,,,,,,
+48,PUT,/api/v1/sites/{site_id}/guests/{guest_mac},updateSiteGuestAuthorization | Update Guest Authorization,guest,"path:site_id string
+path:guest_mac string
+body:authorized boolean
+body:authorized_expiring_time integer
+body:authorized_time integer
+body:company string
+body:email string
+body:field1 string
+body:field2 string
+body:field3 string
+body:field4 string
+body:mac string
+body:minutes integer
+body:name string
+body:ssid string
+body:wlan_id string",,,,,,,
+49,POST,/courses/{rootContentId}/permissions/{userEmail},Update course access | Provide a user with access to a specific course by rootContentId.,,"path:rootContentId string
+path:userEmail string
+body:isBuilder boolean
+body:isReviewer boolean",,,,,,,
+51,PATCH,/user,Update User | Update User,,"body:allowed_ips string
+body:announcements_read boolean
+body:attachments_permission boolean
+body:authenticate_until string
+body:authentication_method string enum[password|unused_former_ldap|sso|none|email_signup|password_with_imported_hash]
+body:avatar_delete boolean
+body:avatar_file string
+body:billing_permission boolean
+body:bypass_inactive_disable boolean
+body:bypass_site_allowed_ips boolean
+body:change_password string
+body:change_password_confirmation string
+body:company string
+body:dav_permission boolean
+body:disabled boolean
+body:email string
+body:ftp_permission boolean
+body:grant_permission string
+body:group_id integer
+body:group_ids string
+body:header_text string
+body:imported_password_hash string
+body:language string
+body:name string
+body:notes string
+body:notification_daily_send_time integer
+body:office_integration_enabled boolean
+body:password string
+body:password_confirmation string
+body:password_validity_days integer
+body:receive_admin_alerts boolean
+body:require_2fa string enum[use_system_setting|always_require|never_require]
+body:require_password_change boolean
+body:restapi_permission boolean
+body:self_managed boolean
+body:sftp_permission boolean
+body:site_admin boolean
+body:skip_welcome_screen boolean
+body:ssl_required string enum[use_system_setting|always_require|never_require]
+body:sso_strategy_id integer
+body:subscribe_to_newsletter boolean
+body:time_zone string
+body:user_root string
+body:username string",,,,,,,
+52,POST,/unbanChatMember,"Use this method to unban a previously kicked user in a supergroup or channel. The user will **not** return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. By default, this method guarantees that after the call the user is not a member of the chat, but will be able to join it. So if the user is a member of the chat th",,"body:chat_id integer
+body:only_if_banned boolean
+body:user_id integer",,,,,,,
+53,PUT,/api/v1/msps/{msp_id}/invites/{invite_id},updateMspAdminInvite | Update MSP admin invite,admin,"path:msp_id string
+path:invite_id string
+body:admin_id string
+body:email string
+body:enable_two_factor boolean
+body:first_name string
+body:hours integer
+body:last_name string
+body:oauth_google boolean
+body:phone string
+body:phone2 string
+body:privileges array<object>
+body:privileges[].for_site boolean
+body:privileges[].msp_id string
+body:privileges[].msp_logo_url string
+body:privileges[].msp_name string
+body:privileges[].msp_url string
+body:privileges[].name string
+body:privileges[].org_id string
+body:privileges[].org_name string
+body:privileges[].orggroup_ids array<string>
+body:privileges[].role string enum[admin|write|read|helpdesk|installer]
+body:privileges[].scope string enum[org|site|msp|orggroup]
+body:privileges[].site_id string
+body:privileges[].sitegroup_ids array<string>
+body:privileges[].views array<string>
+body:session_expiry integer
+body:tags array<string>
+body:two_factor_verified boolean
+body:via_sso string",,,,,,,
+54,PUT,/organizations/{idOrg}/members,updateOrganizationsMembersByIdOrg(),organizations_members,"path:idOrg string
+query:key string
+query:token string
+body:email string
+body:fullName string
+body:type string",,,,,,,
+55,POST,/servers/{serverid}/users/{userid}/role/,Get or create a role for a specific user. | Get or create a role for a specific user. Required permission: 'users'.,,"path:serverid string
+path:userid string",,,,,,,
+56,DELETE,/repos/{owner}/{repo}/invitations/{invitation_id},Delete a repository invitation,,"path:owner string
+path:repo string
+path:invitation_id integer",,,,,,,
+59,POST,/restrictChatMember,Use this method to restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate admin rights. Pass *True* for all permissions to lift restrictions from a user. Returns *True* on success.,,"body:chat_id integer
+body:permissions object
+body:permissions.can_add_web_page_previews boolean
+body:permissions.can_change_info boolean
+body:permissions.can_invite_users boolean
+body:permissions.can_pin_messages boolean
+body:permissions.can_send_media_messages boolean
+body:permissions.can_send_messages boolean
+body:permissions.can_send_other_messages boolean
+body:permissions.can_send_polls boolean
+body:until_date integer
+body:user_id integer",,,,,,,
+60,DELETE,/teams/{team_id}/members/{username},"Remove team member (Legacy) | The ""Remove team member"" endpoint (described below) is deprecated. We recommend using the [Remove team membership for a user](https://docs.github.com/enterprise-cloud@latest//rest/reference/teams#remove-team-membership-for-a-user) endpoint instead. It allows you to remove both active and pending memberships. Team synchronization is available for organizations using Gi",,"path:team_id integer
+path:username string",,,,,,,
+61,PUT,/repos/{owner}/{repo}/collaborators/{username},"Add a repository collaborator | This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest//github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See ""[Secondary rate limits](https://docs.github.com/enterprise-cloud@latest//rest/overview/resources-in-the-res",,"path:owner string
+path:repo string
+path:username string
+body:permission string",,,,,,,
+63,DELETE,/projects/{project_id}/collaborators/{username},Remove user as a collaborator | Removes a collaborator from an organization project. You must be an organization owner or a project `admin` to remove a collaborator.,,"path:project_id integer
+path:username string",,,,,,,
+64,PUT,/collaborators,Update collaborator,CollaboratorUpdate,"body:roleId integer
+body:userId integer",,,,,,,
+66,PUT,/ssousers/{id},Update a SSO User | Update a SSO User,SsoUsers,"path:id integer
+body:email string
+body:groupid integer
+body:id integer
+body:lastLoginDate string
+body:lastLoginSite integer
+body:name string
+body:password string
+body:userid integer
+body:username string",,,,,,,
+67,PATCH,/repos/{owner}/{repo}/invitations/{invitation_id},Update a repository invitation,,"path:owner string
+path:repo string
+path:invitation_id integer
+body:permissions string enum[read|write|maintain|triage|admin]",,,,,,,
+69,POST,/GroupV2/{groupId}/Members/IndividualInviteCancel/{membershipType}/{membershipId}/,Cancels a pending invitation to join a group.,,"path:groupId integer
+path:membershipId integer
+path:membershipType integer",,,,,,,
+70,DELETE,/v3/groups/{id}/members/{user_id},Removes a user from a group or project. | Removes a user from a group or project.,,"path:id string
+path:user_id integer",,,,,,,
+72,PATCH,/v0.1/orgs/{org_name}/users/{user_name},Updates the given organization user,,"path:org_name string
+path:user_name string
+body:role string enum[admin|collaborator|member]",,,,,,,
+73,POST,/spaces/{id}/participant,"Add Participant to Space | Add a participant to a space OauthScopes: WRITE_SPACE, MANAGE_SPACE",,"path:id string
+body:role string enum[DEFAULT|MODERATOR|AUTHOR|PARTICIPANT|READER]
+body:userId array<string>",,,,,,,
+74,DELETE,/api/2/role/{id}/actors,Removes default actor from the given role.,,"path:id integer
+query:user string
+query:group string",,,,,,,
+75,DELETE,/v1/teams/{teamId}/members/{uid},"Remove a Team Member | Remove a Team Member from the Team, or dismiss a user that requested access, or leave a team.",,"path:uid string
+path:teamId string",,,,,,,
+82,POST,/conversations.leave,Leaves a conversation.,,body:channel string,,,,,,,
+83,DELETE,/v1/users/{id}/relationships/visibleApps,,UserVisibleAppsLinkagesRequest,"path:id string
+body:id string
+body:type string enum[apps]",,,,,,,
+84,PUT,/user-organizations/{id},Replaces the UserOrganization resource.,UserOrganization-Write,"path:id string
+body:functionalRoles array<string>",,,,,,,
+85,DELETE,/rest/api/3/project/{projectIdOrKey}/role/{id},"Delete actors from project role | Deletes actors from a project role for the project. To remove default actors from the project role, use [Delete default actors from project role](#api-rest-api-3-role-id-actors-delete). This operation can be accessed anonymously. **[Permissions](#permissions) required:** *Administer Projects* [project permission](https://confluence.atlassian.com/x/yodKLg) for the ",,"path:projectIdOrKey string
+path:id integer
+query:user string
+query:group string
+query:groupId string",,,,,,,
+86,PUT,/users/{userId},Updates an existing user. | Updates an existing user.,UserDTO,"path:userId integer
+body:customFields array<object>
+body:customFields[].key string
+body:customFields[].name string
+body:customFields[].type string enum[TEXT|DATE|DATE_AND_TIME|NUMBER|CHECKBOX|SELECTION|MULTI_SELECTION]
+body:customFields[].value object
+body:email string
+body:firstName string
+body:gender string
+body:id integer
+body:lastName string
+body:login string
+body:mobilePhone string
+body:phone string
+body:positionName string
+body:timeZoneId string
+body:userGroupName string",,,,,,,
+87,DELETE,/api/v1/msps/{msp_id}/invites/{invite_id},uninviteMspAdmin | Delete admin invite,,"path:msp_id string
+path:invite_id string",,,,,,,
+88,PUT,/boards/{idBoard}/members,updateBoardsMembersByIdBoard(),boards_members,"path:idBoard string
+query:key string
+query:token string
+body:email string
+body:fullName string
+body:type string",,,,,,,
+92,POST,/v1/financial_connections/accounts/{account}/disconnect,"<p>Disables your access to a Financial Connections <code>Account</code>. You will no longer be able to access data associated with the account (e.g. balances, transactions).</p>",,"path:account string
+body:expand array<string>",,,,,,,
+95,DELETE,/orgs/{org}/members/{username},Remove an organization member | Removing a user from this list will remove them from all teams and they will no longer have any access to the organization's repositories.,,"path:org string
+path:username string",,,,,,,
+96,DELETE,/v1/betaTesters/{id}/relationships/builds,,BetaTesterBuildsLinkagesRequest,"path:id string
+body:id string
+body:type string enum[builds]",,,,,,,
+97,DELETE,/rest-service-fecru/admin/permission-schemes/{name}/users,"Removes user permission [username, action name] from given permission scheme",,path:name string,,,,,,,
+98,PUT,/spaces/{spaceId}/participant,"Update participant | Update participant in space OauthScopes: WRITE_SPACE, MANAGE_SPACE, ORGANIZE_SPACE",,"path:spaceId string
+body:role string enum[MODERATOR|AUTHOR|PARTICIPANT|READER]
+body:userId string",,,,,,,
+99,POST,/admin.users.assign,Add an Enterprise user to a workspace.,,"body:channel_ids string
+body:is_restricted boolean
+body:is_ultra_restricted boolean
+body:team_id string
+body:user_id string",,,,,,,
+100,DELETE,/api-public/v1/team/{team}/members/{user},Remove a team member | Remove a team from your organization. This API may be called a maximum of 60 times per minute.,RemoveTeamMemberPayload,"path:team string
+path:user string
+body:replacement string",,,,,,,
+103,POST,/v1/organizations/{organizationId}/members/{userId},Update Member Permissions | This endpoint adds a Member identified by the `userId` to one or more Permission Groups. This endpoint can also be used to move a Member between Permission Groups within a Product. Only a single Permission Group can be set per Product.,AddUserToGroupRequest,"path:organizationId string
+path:userId string
+body:permissionGroupIds array<integer>",,,,,,,
+104,DELETE,/rest/api/3/role/{id}/actors,"Delete default actors from project role | Deletes the [default actors](#api-rest-api-3-resolution-get) from a project role. You may delete a group or user, but you cannot delete a group and a user in the same request. Changing a project role's default actors does not affect project role members for projects already created. **[Permissions](#permissions) required:** *Administer Jira* [global permis",,"path:id integer
+query:user string
+query:groupId string
+query:group string",,,,,,,
+107,PATCH,/v1/users/{id},,UserUpdateRequest,"path:id string
+body:allAppsVisible boolean
+body:provisioningAllowed boolean
+body:roles array<string> enum[ADMIN|FINANCE|TECHNICAL|ACCOUNT_HOLDER|READ_ONLY|SALES|MARKETING|APP_MANAGER|DEVELOPER|ACCESS_TO_REPORTS|CUSTOMER_SUPPORT|CREATE_APPS]
+body:visibleApps object
+body:visibleApps.data array<object>
+body:visibleApps.data[].id string
+body:visibleApps.data[].type string enum[apps]",,,,,,,
+108,POST,/group/{groupId}/org/{orgId}/members,Add a member to an organization within a group,,"path:groupId string
+path:orgId string
+body:role string
+body:userId string",,,,,,,
+109,DELETE,/user-projects/{id},Removes the UserProject resource.,,path:id string,,,,,,,
+110,DELETE,/org/{orgId}/provision,Delete pending user provision,,path:orgId string,,,,,,,
+112,PUT,/organizations/{idOrg}/memberships/{idMembership},updateOrganizationsMembershipsByIdOrgByIdMembership(),organizations_memberships,"path:idOrg string
+path:idMembership string
+query:key string
+query:token string
+body:member_fields string
+body:type string",,,,,,,
+114,DELETE,/v0.1/apps/{owner_name}/{app_name}/invitations/{user_email},Removes a user's invitation to an app,,"path:owner_name string
+path:app_name string
+path:user_email string",,,,,,,
+115,DELETE,/organizations/{organizationId}/admins/{adminId},Revoke all access for a dashboard administrator within this organization | Revoke all access for a dashboard administrator within this organization,,"path:organizationId string
+path:adminId string",,,,,,,
+116,POST,/usergroups.users.update,Update the list of users for a User Group,,"body:include_count boolean
+body:usergroup string
+body:users string",,,,,,,
+117,POST,/v1/teams/{team}/groups/{group}/remove/,User removed from group,,"path:team string
+path:group string",,,,,,,
+118,PUT,/user-projects/{id},Replaces the UserProject resource.,UserProject-Write,"path:id string
+body:functionalRoles array<string>",,,,,,,
+119,POST,/v1/accounts/{account}/capabilities/{capability},<p>Updates an existing Account Capability.</p>,,"path:account string
+path:capability string
+body:expand array<string>
+body:requested boolean",,,,,,,
+120,POST,/v0.1/orgs/{org_name}/invitations/{email}/resend,Cancels an existing organization invitation for the user and sends a new one,,"path:org_name string
+path:email string
+body:role string enum[admin|collaborator|member]",,,,,,,
+121,PUT,/apis/rbac.authorization.k8s.io/v1/clusterrolebindings/{name},replace the specified ClusterRoleBinding,io.k8s.api.rbac.v1.ClusterRoleBinding,"path:name string
+query:pretty string
+query:dryRun string
+query:fieldManager string
+query:fieldValidation string
+body:apiVersion string
+body:kind string
+body:metadata object
+body:metadata.annotations object
+body:metadata.creationTimestamp string
+body:metadata.deletionGracePeriodSeconds integer
+body:metadata.deletionTimestamp string
+body:metadata.finalizers array<string>
+body:metadata.generateName string
+body:metadata.generation integer
+body:metadata.labels object
+body:metadata.managedFields array<object>
+body:metadata.managedFields[].apiVersion string
+body:metadata.managedFields[].fieldsType string
+body:metadata.managedFields[].fieldsV1 object
+body:metadata.managedFields[].manager string
+body:metadata.managedFields[].operation string
+body:metadata.managedFields[].subresource string
+body:metadata.managedFields[].time string
+body:metadata.name string
+body:metadata.namespace string
+body:metadata.ownerReferences array<object>
+body:metadata.ownerReferences[].apiVersion string
+body:metadata.ownerReferences[].blockOwnerDeletion boolean
+body:metadata.ownerReferences[].controller boolean
+body:metadata.ownerReferences[].kind string
+body:metadata.ownerReferences[].name string
+body:metadata.ownerReferences[].uid string
+body:metadata.resourceVersion string
+body:metadata.selfLink string
+body:metadata.uid string
+body:roleRef object
+body:roleRef.apiGroup string
+body:roleRef.kind string
+body:roleRef.name string
+body:subjects array<object>
+body:subjects[].apiGroup string
+body:subjects[].kind string
+body:subjects[].name string
+body:subjects[].namespace string",,,,,,,
+122,POST,/v0.1/orgs/{org_name}/invitations/{email}/revoke,Removes a user's invitation to an organization,,"path:org_name string
+path:email string
+body:(body) object",,,,,,,
+124,DELETE,/members/{memberId},Delete a team member by ID.,,path:memberId string,,,,,,,
+125,DELETE,/api/2/user/application,Remove user from given application. Admin permission will be required to perform this operation.,,"query:username string
+query:applicationKey string",,,,,,,
+126,DELETE,/user-organizations/{id},Removes the UserOrganization resource.,,path:id string,,,,,,,
+127,POST,/SyncPlay/Leave,Leave the joined SyncPlay group.,,,,,,,,,
+128,POST,/v3/projects/{id}/members,Adds a member to a group or project. | Adds a member to a group or project.,,"path:id string
+body:user_id integer
+body:access_level integer
+body:expires_at string",,,,,,,
+130,PATCH,/groups/{id},Update Group | Update Group,,"path:id integer
+body:admin_ids string
+body:name string
+body:notes string
+body:user_ids string",,,,,,,
+131,DELETE,/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users,"Remove user access restrictions | Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-cloud@latest//github/getting-started-with-github/gith",,"path:owner string
+path:repo string
+path:branch string
+body:users array<string>",,,,,,,
+133,PUT,/organizers/{organizerKey},"Update organizer | Updates the products of the specified organizer. To add a product (G2M, G2W, G2T, OPENVOICE) for the organizer, the call must be sent once for each product you want to add. To remove all products for the organizer, set status to 'suspended'. The call is limited to users with the admin role.",OrganizerStatus,"path:organizerKey integer
+body:productType string enum[G2M|G2T|G2W|OPENVOICE]
+body:status string enum[suspended]",,,,,,,

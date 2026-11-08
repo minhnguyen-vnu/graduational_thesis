@@ -98,3 +98,79 @@ Phần AI dừng tại hàng đợi người gán. Chưa học mô hình mới, 
 - Hai mục trên thêm sau khi niêm phong; bỏ chúng thì `PROTOCOL.md` khớp mã băm trong `SEALS.txt`. Nhãn AI, `sealed/`,
   `AI-REPORT.md`, `rows-known.jsonl` không vào git tới khi người gán xong, vì người gán có thể đọc repo; bản sao ở
   `~/thesis-backups/relabel-20261101-sealed-20261101-1632/`. `SEALS.txt` vào git để giữ mốc thời gian.
+
+## 10. Đợt 4, chốt 2026-11-06 trước khi gán
+
+Phạm vi dùng (user, 2026-11-05 và 11-06): bỏ mọi tầng chọn theo nhãn cũ hoặc theo M1 và pilot. Bỏ: train `cu_T_moi_N`
+15, `N_diem_cao` 23; test `top4` 80, `biet` 16; pilot 20. Còn dùng: train `lech` 66, `cung_T` 30; test `T` 176, `nhieu` 51.
+
+Cỡ mẫu theo quy ước mức chắc 95%, độ rộng ±5 điểm: n = ⌈384,16 / (1 + 383,16 / N)⌉, N là cỡ nhóm (công thức Cochran,
+chưa kiểm trên nguồn gốc). Nhóm 173 dòng ra 120, gần cả nhóm, nên xem hết.
+
+| Tầng đợt 4 | Nhóm | Cỡ nhóm | Luật | Dòng |
+|---|---|---|---|---|
+| `cung_T_con_lai` | Train, hai AI cùng T, khớp `victim`, `role`, `order` | 173 | Mọi dòng chưa xem, trừ 8 dòng là ví dụ trong `HUONG-DAN.html` | 135 |
+| `N_ngau_nhien_hoc` | Train, hai AI cùng N | 10.142 | Ngẫu nhiên, seed `SEED + 30`, từ 10.132 dòng (trừ 10 dòng ví dụ) | 371 |
+| `N_ngau_nhien_thi` | Test, hai AI cùng N | 8.498 | Ngẫu nhiên, seed `SEED + 31`, từ chỗ bốc của 51 dòng `nhieu` (8.382 dòng) trừ 51 dòng đó | 317 |
+
+- 51 + 317 = 368 dòng là một mẫu ngẫu nhiên của 8.382 dòng. Chỗ bốc vẫn trừ 116 dòng top-4 M1 như lần đầu; số 2 nói về
+  8.382 dòng đó.
+- Trộn bằng seed `SEED + 32`. Phiếu `handover/dot-4.csv`, khoá `sealed/key-dot-4.csv`, script `select_dot4.py` (16 kiểm
+  tra PASS, gồm bốc lại seed cũ ra đúng 51 dòng `nhieu`).
+- 18 ví dụ trong hướng dẫn là dòng train hai AI khớp hoàn toàn: 8 dòng trong nhóm 173, 10 dòng trong nhóm 10.142. Người
+  gán đã thấy lời giải nên không đưa vào đợt 4. Câu cũ "lấy từ các API không thuộc ba đợt" sai: op nằm ngoài hàng đợi
+  nhưng API thì không (S210, S213, S514, S532, S626 có op trong đợt 3). Bản mới ghi "Không ví dụ nào nằm trong các đợt
+  của bạn".
+- 371 dòng train có 1 dòng trùng hàng đợi đợt 3 (tầng đã bỏ) và 1 dòng trùng pilot; 135 dòng có 6 dòng pilot. Các dòng
+  này dùng nhãn đợt 4.
+- Dòng 188 (`S506-N0018`, train) có 2 trường tên chứa dấu cách. Công cụ hiện nguyên dòng chữ và vẫn gán xong được; hai
+  lượt AI thấy cùng chữ.
+- Gói `ban-giao-gan-nhan-20261106.zip` dựng bằng `pack_dot4.py` từ `ban-giao/` vào `ban-giao-dot4/`. Định nghĩa, phiếu
+  và 18 ví dụ giữ nguyên; chỉ đổi phần quy trình: 8 chỗ trong `HUONG-DAN.html`, 1 câu trong công cụ. Bỏ đợt 1 và
+  `thong-tin-nguoi-gan.txt`. `da-gan/` giữ 227 dòng đợt 2 và 96 dòng đợt 3 cùng kết quả, theo `stt` gốc. Kết quả đợt 2
+  được lọc theo `stt` bằng script; không in nhãn nào, phần test vẫn chưa mở. Bản người gán trả về nguyên vẹn ở `tra-ve/`.
+  Self-test `selftest/dot4_pack_check.sh`: 6/6. Mã băm: `SEALS-dot4.txt`.
+- Ước lượng 823 × 80 giây, khoảng 18 giờ.
+
+## 11. Nhãn cuối và ba số, 2026-11-07 tới 11-08
+
+Quyết định của user:
+
+- Bỏ `U` (2026-11-04). Nhãn cuối chỉ dùng A, B, C để suy T, cùng `victim`, `role`, `order` của op T. Khác mã trong 6 mã B
+  của §3 không tính là lệch; luận văn không báo cáo theo từng mã.
+- Op người gán đã xem lấy nhãn người. Op người khác cả hai AI (khác T/N, hoặc cùng T nhưng khác `victim`, `role`, `order`
+  sau khi tách `|` và sắp xếp) được user soát lại và chọn người, hai AI, Sonnet hoặc Opus; lúc soát chỉ hiện nhãn người
+  và hai AI. Op chưa xem lấy nhãn Sonnet; ở mọi op này hai AI cùng T/N, op T cùng trường.
+- Khoảng tin cậy: Clopper–Pearson 95%, mẫu đếm theo nhãn cuối.
+- Không dùng commit làm mốc thời gian. `../m2-model-20261107/derive_m2.py` dựng lại M2 từ `nhan-hoc-cuoi.csv`, trùng
+  từng byte; đầu vào không có dòng phần thi.
+
+| Phần | File | Op soát | Chọn | Op | T |
+|---|---|---|---|---|---|
+| Học | `nop-hoi-dong/nhan-hoc-cuoi.csv` (`b00e4a1623f73079…`) | 66 | người 14, hai AI 35, Opus 17 | 10.381 | 209 |
+| Thi | `nop-hoi-dong/nhan-thi-cuoi.csv` (`bc716bb8194e57b5…`) | 53, rồi 44 | người 6, hai AI 20, Opus 25, Sonnet 2; lần sau đổi 4 | 8.674 | 153 |
+
+- Dựng bằng `build_nhan_hoc_cuoi.py` (17 kiểm tra), `build_nhan_thi_cuoi.py` (15 kiểm tra); lựa chọn ở
+  `review-lech-hoc/review-66.csv`, `review-lech-thi/review-thi.csv`. 8 op ví dụ trong hướng dẫn ghi nguồn `hai_AI`.
+- Phần học: 0/371 op ngẫu nhiên hai AI cùng N là T; số op T sót trong 9.771 op chưa xem 0–97.
+- M2: `../m2-model-20261107/stateful-authz-model.csv` (`b2deef150bf88837…`), cùng công thức và mã với M1. So offline với
+  M1 trên 5 target (`../m2-model-20261107/compare_targets.out`): transition giữ hạng, trường role, victim và giá trị hạ;
+  artifact-keeper có 6 op ra khỏi guard.
+- Lệch luật: trong lúc soát phần học, một lệnh in 2 dòng nhãn người phần thi (đợt 2, tầng T).
+- Lệch luật, 2026-11-08: sau khi chấm M2 và đã in điểm vài op thi, user soát lại 44 op một AI gọi T, một AI gọi N
+  (`review-lech-thi/soat-so1.csv`; lúc soát chỉ hiện nhãn người và hai AI). 40 op giữ; 4 op đổi N sang T: `E004-N0071`
+  theo Sonnet, `E219-N0016`, `E219-N0024`, `E219-N0033` theo Opus. Nguồn `sonnet_soat_lai`, `opus_soat_lai`. Bản nhãn
+  trước lần này: `~/thesis-backups/relabel-20261101-nhan-thi-cuoi-20261107-2345/` (`a6b847299e2f5dd9…`).
+
+Ba số phần thi (`cham-thi/score_thi.py`; trước soát lại `cham-thi/ket-qua.txt`, sau `cham-thi/ket-qua-sau-soat-lai.txt`). Điểm op = prior + tổng trọng số bảng `op` của M2, tính
+bằng `derive_model.op_feats` trong Python, chưa qua jar; ứng viên khi điểm > 0.
+
+| Số | Định nghĩa | Kết quả |
+|---|---|---|
+| 1 | Trong 176 op ít nhất một AI gọi T, op có nhãn cuối T | 153/176 (trước 149/176): hai AI cùng T cùng trường 102/102, cùng T lệch trường 30/30, một AI T 21/44 (trước 17/44) |
+| 2 | Trong 368 op ngẫu nhiên hai AI cùng N, op có nhãn cuối T | 0/368; sót 0–80 trong 8.014 op chưa xem |
+| 3 | Bắt được: op T có điểm > 0 | 117/153 = 76,5%, CP 68,9–82,9% (trước 116/149 = 77,9%, CP 70,3–84,2%); nếu 80 op sót đều điểm ≤ 0: 117/233 |
+| 3 | Báo nhầm: op điểm > 0 có nhãn cuối N | 763/880 (trước 764/880); 727 op nhãn AI chưa xem, 93 op thuộc 116 op top-4 P2f |
+
+- Mẫu ngẫu nhiên không có op T nên Số 3 có trọng số hay không như nhau.
+- Số 3 không đo việc chọn trường role, victim.

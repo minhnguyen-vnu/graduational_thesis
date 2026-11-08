@@ -1,0 +1,228 @@
+stt,method,path,A,B,C,U,victim,role,order,ghi_chu
+1,DELETE,/v2.1/accounts/{accountId}/signing_groups/{signingGroupId}/users,existing,member_remove,down,0,body:users[].email|body:users[].userName,,,
+2,POST,/account/guests/{guestId}/{type}/permissions/patch,existing,resource_acl,down,0,,,,
+3,POST,/users,existing,role_set,unclear,1,body:user.id|body:user.email,body:user.roles|body:user.allowed_products,endUser,Role chỉ có enum endUser; không đủ căn cứ xác định chiều khi đặt lại role duy nhất hoặc allowed_products.
+5,POST,/v4/networkgroups/organisations/{ownerId}/networkgroups/{networkGroupId}/members,existing,member_role,up,0,body:email,body:role,,
+7,PUT,/api/v2/Roles/{id}/Users,existing,role_set,down,0,body:Id,path:id,,
+8,POST,/oauth/device/token,nonuser,credential,unclear,0,,,,
+9,PUT,/users/{id},existing,admin_flag,down,0,path:id,body:administrator|body:readonly|body:deviceReadonly|body:limitCommands,,
+10,DELETE,/users/{user_id}/groups/{group_id},existing,member_remove,down,0,path:user_id,,,
+11,DELETE,/account/institution/roles/{account_id}/{group_id}/{role_id},group,role_remove,down,0,,,,
+13,DELETE,/accounts/{id}/managers/,existing,member_remove,down,1,,,,Path cho biết gỡ managers khỏi account nhưng không chỉ định người; chưa rõ gỡ tư cách manager hay thành viên.
+14,DELETE,/spaces/{spaceId}/persons/{id}/guest-in-space,existing,member_remove,down,0,path:id,,,
+15,DELETE,/chat/channels/{channelId}/members/me,self,member_remove,down,0,self,,,
+16,DELETE,/users/{userId}/schedulers,existing,perm,down,0,path:userId,,,"Quyền bị thu là quyền lập lịch của assistant; path:userId chỉ user/assistant, không ghi các scheduler không được chỉ định."
+17,POST,/web_links,none,other,unclear,0,,,,
+18,DELETE,/users/{userId}/schedulers/{schedulerId},existing,perm,down,0,path:userId,,,schedulerId chỉ người được lập lịch thay; quyền bị thu thuộc assistant tại userId.
+19,DELETE,/{workspace_slug}/members/{member_slug},existing,member_remove,down,0,path:member_slug,,,
+20,PUT,/organisations/{id}/members/{userId},existing,member_role,down,0,path:userId,body:role,,
+21,POST,/transactions/{id}/attachments,none,other,unclear,0,,,,
+22,DELETE,/tasks/{taskID}/members/{userID},existing,member_remove,down,0,path:userID,,,
+23,DELETE,/{account_slug}/members/{member_id},existing,member_remove,down,0,path:member_id,,,
+25,POST,/project_statuses/add_default,none,other,unclear,0,,,,
+27,PUT,/v2.1/accounts/{accountId}/envelopes/{envelopeId}/email_settings,none,other,unclear,0,,,,
+29,PUT,/members/{id},existing,other,unclear,0,,,,
+30,DELETE,/projects/{project_id}/users/{user_id},existing,member_remove,down,0,path:user_id,,,
+31,PUT,/channels/{channel_id}/videos/{video_id}/privacy/users,existing,resource_acl,up,0,,,,Mô tả chỉ định danh sách user bằng URI trong body nhưng danh sách trường không hiển thị trường đó.
+34,DELETE,/users/{userId}/assistants,existing,perm,down,0,path:userId,,,
+35,DELETE,/phone/call_queues/{callQueueId}/members/{memberId},existing,member_remove,down,1,path:memberId,,,Mô tả cho phép member là phone user hoặc common area phone; chọn existing gần nhất.
+37,DELETE,/scrapers/{scraperTargetID}/labels/{labelID},none,other,unclear,0,,,,
+38,PATCH,/spaces/{spaceId}/folders/{id}/messages/{messageId},none,other,unclear,0,,,,
+42,POST,/{userId},existing,other,unclear,0,,,,
+43,DELETE,/spaces/{spaceId}/persons/{id}/invitation,existing,member_remove,down,0,path:id,,,
+44,PUT,/fleets/{fleet_id}/members/{member_id}/,existing,member_role,down,0,path:member_id,body:role,squad_member<squad_commander<wing_commander<fleet_commander,
+45,PUT,/api/sublabs/{id},nonuser,other,unclear,0,,,,
+46,POST,/V1.0/Expenses/{parentId}/Items,none,other,unclear,0,,,,
+47,PATCH,/accounts/{id}/,existing,admin_flag,down,1,body:owner,,,Suy từ trường owner là đổi chủ account; không có mô tả xác nhận ý nghĩa trường này.
+48,POST,/users/,existing,admin_flag,down,0,body:email,body:is_admin,,
+49,PATCH,/users/{id},existing,role_set,down,0,path:id,body:role|body:permissions,user<admin,
+50,DELETE,/api/v2/AuthorizationCategories/{id}/Users/{userID},existing,resource_acl,down,0,,,,Thu quyền xem một AuthorizationCategory cụ thể; cùng quy tắc ACL tài nguyên như PackageTypes/UpdateGroups.
+53,POST,/draft_registrations/{draft_id}/contributors/,existing,resource_acl,up,0,,,,
+54,DELETE,/accounts/{id}/workers/,existing,member_remove,down,1,,,,Path gợi ý gỡ workers khỏi account; không có mô tả hoặc trường chỉ từng worker.
+55,POST,/mimic/agent/{agentNum}/timer/script/add/{script}/{interval}/{arg},none,other,unclear,0,,,,
+56,DELETE,/scrapers/{scraperTargetID}/owners/{userID},existing,role_remove,down,0,path:userID,,,Khôi phục role_remove theo ví dụ S900-0005.
+57,POST,/user/{userID}/monetary-account/{monetary-accountID}/schedule/{scheduleID}/schedule-instance/{schedule-instanceID}/note-text,none,other,unclear,0,,,,
+59,PUT,/account/guests/{guestId}/{type}/permissions/patch,existing,resource_acl,down,0,,,,
+62,DELETE,/V1.0/ComanagedAssociations/{id},none,other,unclear,0,,,,
+64,PUT,/group_memberships/{group_membership_id},existing,member_role,down,0,,body:role|body:configurable_permissions,member<admin,group_membership_id chỉ bản ghi tư cách thành viên; không có trường trực tiếp chỉ tài khoản.
+65,DELETE,/telegrafs/{telegrafID}/owners/{userID},existing,role_remove,down,0,path:userID,,,Khôi phục role_remove theo ví dụ S900-0005.
+66,PUT,/v1/me/employees/{employee_id},existing,role_set,down,0,path:employee_id|body:id,body:role_ids|body:authorized_location_ids,,
+68,PATCH,/V1.0/Resources/{parentId}/ServiceDeskRoles,existing,role_set,down,1,path:parentId|body:resourceID,body:roleID,,Không có mô tả; suy từ ResourceServiceDeskRoleModel rằng resourceID là tài khoản nhân sự được gán role.
+69,POST,/itv/items/clips,none,other,unclear,0,,,,
+71,DELETE,/orgs/{orgID}/members/{userID},existing,member_remove,down,0,path:userID,,,
+72,PATCH,/spaces/{id}/persons/{memberId}/player,existing,admin_flag,down,0,path:memberId,body:IsAdmin|body:Player|body:ClientManagement,unordered,
+75,POST,/roles/{roleId}/members,existing,role_set,down,1,body:members[].email|body:members[].id,path:roleId,,"Thêm thành viên vào role; chưa rõ thay thế hay cộng dồn quyền, U=1 về C."
+76,PATCH,/account/users/{user_id},existing,admin_flag,down,0,path:user_id,body:client_admin|body:org_default_role|body:org_roles,,
+78,PATCH,/spaces/{id}/portfolios/{portfolioId}/persons/{memberId},existing,admin_flag,down,0,path:memberId,body:IsAdmin|body:Role,unordered,
+79,DELETE,/users/{userId}/assistants/{assistantId},existing,perm,down,0,path:assistantId,,,
+80,PUT,/user/{internal_user_id},existing,role_set,down,0,path:internal_user_id,body:roles,,
+81,POST,/V1.0/DocumentCategories/{parentId}/Documents,none,other,unclear,0,,,,
+83,POST,/channels/{type}/{id},existing,member_role,down,0,body:add_members[].user_id|body:add_members[].user.id|body:assign_roles[].user_id|body:assign_roles[].user.id,body:add_members|body:assign_roles,,Body có add_members và assign_roles mang các bản ghi thành viên; theo phiếu dùng trường mảng object cho role.
+84,DELETE,/dashboards/{dashboardID}/owners/{userID},existing,role_remove,down,0,path:userID,,,Khôi phục role_remove theo ví dụ S900-0005.
+85,POST,/inboxes,none,other,unclear,0,,,,
+88,POST,/preprints/{preprint_id}/contributors/,existing,resource_acl,up,0,,,,
+89,PUT,/subaccounts/{subaccount_id},existing,perm,down,1,path:subaccount_id,body:access_billing|body:access_contacts|body:access_reporting|body:access_settings|body:access_users|body:share_campaigns,,"Subaccount có tên, email và mật khẩu; chọn tài khoản người dùng nhưng không có mô tả xác nhận loại chủ thể."
+91,DELETE,/buckets/{bucketID}/owners/{userID},existing,role_remove,down,0,path:userID,,,Khôi phục role_remove theo ví dụ S900-0005.
+92,DELETE,/api/folder/user/assign,existing,resource_acl,down,1,,,,Mô tả có user nhưng source/target không giải thích bên nào là user.
+98,DELETE,/account/articles/{article_id}/private_links/{link_id},none,resource_acl,down,0,,,,
+99,PATCH,/client_roles/{id}/,existing,member_role,down,1,body:user,body:is_manager,,Suy từ ClientRole và trường user/is_manager là vai trò thành viên; thiếu mô tả xác nhận manager có phải cờ quản trị.
+100,PATCH,/spaces/{spaceId}/persons/{id}/invitation,existing,admin_flag,down,0,path:id,body:IsAdmin|body:Player|body:ClientManagement|body:EmployeeAccess|body:Folders,unordered,
+101,PUT,/v2.1/accounts/{accountId}/users,existing,admin_flag,down,0,body:users[].email,body:users[].isAdmin|body:users[].isAlternateAdmin|body:users[].permissionProfileId|body:users[].permissionProfileName,,Cập nhật danh sách nhiều người dùng trong account
+102,DELETE,/v2.1/accounts/{accountId}/tab_definitions/{customTabId},none,other,unclear,0,,,,
+103,PUT,/V1.0/ComanagedAssociations,none,other,unclear,0,,,,
+104,PUT,/{account_slug}/members/{member_id},existing,member_role,down,0,path:member_id,body:role|body:site_access,unordered,
+106,POST,/api/v1/transactions/{key}/confirm,none,other,unclear,0,,,,
+107,PUT,/api/v2/Users/{id}/Roles,existing,role_set,down,0,path:id,body:Name,,
+108,POST,/lists/members/destroy.json,existing,member_remove,down,0,query:user_id|query:screen_name,,,
+109,PUT,/v1/users/{username}/deny-access,existing,perm,down,0,path:username,,,
+111,DELETE,/files/upload_sessions/{upload_session_id},none,other,unclear,0,,,,
+112,PUT,/client_roles/{id}/,existing,member_role,down,1,body:user,body:is_manager,,Suy từ ClientRole và trường user/is_manager là vai trò thành viên; thiếu mô tả xác nhận manager có phải cờ quản trị.
+113,DELETE,/orgs/{orgID}/owners/{userID},existing,role_remove,down,0,path:userID,,,Điều chỉnh B=role_remove theo ví dụ S900-0005 (xóa owner).
+114,PUT,/V1.0/ClientPortalUsers,existing,perm,down,0,body:id,body:securityLevel,,
+117,PUT,/v2.1/accounts/{accountId}/users/{userId}/settings,existing,perm,down,0,path:userId,body:accountManagementGranular.canManageAccountSecuritySettings|body:accountManagementGranular.canManageAccountSettings|body:accountManagementGranular.canManageAdmins|body:accountManagementGranular.canManageConnect|body:accountManagementGranular.canManageDocumentRetention|body:accountManagementGranular.canManageEnvelopeTransfer|body:accountManagementGranular.canManageGroupsButNotUsers|body:accountManagementGranular.canManageJointAgreements|body:accountManagementGranular.canManageReporting|body:accountManagementGranular.canManageSharing,,
+118,PUT,/api/v/4/user/manage,existing,role_set,down,0,body:user,body:changes.roles,,
+119,PATCH,/phone/users/{userId}/settings/{settingType},existing,resource_acl,down,0,,,,
+120,DELETE,/application/entity/project/bulk,none,other,unclear,0,,,,
+121,POST,/account/guests/{guestId},existing,perm,down,0,path:guestId,body:currentGrant|body:extendedGrants|body:groupGrants|body:tlGrants|body:tpGrants,,
+123,POST,/documents/{documentId}/regenerate_preview,none,other,unclear,0,,,,
+124,PUT,/application/entity/user/{user_id},existing,admin_flag,down,0,path:user_id,body:is_admin,,
+126,PATCH,/account_roles/{id}/,existing,member_role,down,1,body:user,body:is_manager|body:is_worker,,"AccountRole có user/is_manager/is_worker; chọn vai trò thành viên, chưa rõ manager có nghĩa quản trị."
+127,DELETE,/orgunits/{orgid}/usergroups/{groupid}/members/{uuid},existing,member_remove,down,0,path:uuid,,,
+128,POST,/{userId}/user-groups,existing,other,unclear,1,,,,Path user-groups nhưng schema ActiveWidget không khớp; chưa rõ hành động và quan hệ với quyền.
+129,DELETE,/permissions,existing,perm,down,1,body:userId|body:managedUserId,,,Permission liên kết nhiều loại object; không đủ chữ phân biệt quyền user chung với ACL tài nguyên cụ thể.
+131,PATCH,/channels/{channel_id}/moderators,existing,member_role,down,0,body:user_uri,,,
+133,PUT,/admin/developers/{systemKey},existing,admin_flag,down,1,body:owner,,,Đổi owner của system theo mô tả; trường change không có cấu trúc để xác định thêm đối tượng developer.
+134,POST,/mimic/access/add/{user}/{agents}/{mask},existing,perm,down,1,path:user,path:mask,,mask gợi ý giá trị quyền nhưng không có mô tả trường xác nhận.
+135,PATCH,/nodes/{node_id}/contributors/{user_id}/,existing,member_role,down,0,path:user_id,body:permission,read<write<admin,
+136,DELETE,/groups/{GroupId}/participants,existing,member_remove,down,0,body:wa_ids,,,
+137,PUT,/v2.1/accounts/{accountId}/shared_access,existing,resource_acl,down,0,,,,
+138,PUT,/users/{id}/,existing,admin_flag,down,0,path:id,body:is_admin,,
+140,POST,/downgrade-proofreader,self,role_set,down,1,self,,,downgrade-proofreader gợi ý hạ role; không có trường hoặc mô tả xác nhận đối tượng là người gọi.
+141,PATCH,/users/{userId},existing,other,unclear,0,,,,
+142,PATCH,/V1.0/Resources/{parentId}/RoleDepartments,existing,member_role,down,1,path:parentId|body:resourceID,body:roleID,,Không có mô tả; suy từ ResourceRoleDepartmentModel rằng resourceID là nhân sự có role trong đơn vị.
+143,DELETE,/dashboards/{dashboardID}/members/{userID},existing,member_remove,down,0,path:userID,,,
+144,POST,/{userId}/suspend,existing,disable,unclear,0,,,,
+145,POST,/channels/{type}/query,none,other,unclear,0,,,,
+146,PUT,/keys/{id},nonuser,credential,unclear,0,,,,
+148,POST,/voice,none,other,unclear,0,,,,
+152,POST,/spaces/{spaceId}/folders/{id}/other-taxes,none,other,unclear,0,,,,
+153,PATCH,/users/{userId},existing,other,unclear,0,,,,
+154,POST,/account/projects/{project_id}/leave,self,member_remove,down,0,self,,,
+155,POST,/groups/{group_id}/unsubscribe,self,member_remove,down,0,self,,,
+156,DELETE,/v1/consents/{consentId},none,resource_acl,down,1,,,,Xoá consent truy cập thông tin tài khoản; không chỉ định người/app nhận quyền nên chọn ACL tài nguyên gần nhất.
+157,POST,/business-groups/{id}/spaces/{spaceId}/legal-entities/{personId}/customers/{folderId}/guest-in-space,new,member_role,unclear,0,,,,
+158,POST,/api/createOrder,none,other,unclear,0,,,,
+159,PATCH,/V1.0/ClientPortalUsers,existing,perm,down,0,body:id,body:securityLevel,,
+160,POST,/groups/{GroupId}/leave,self,member_remove,down,0,self,,,
+161,PUT,/v1/projects/{project}/instances/{instance}/users,existing,role_set,down,0,query:name|body:name,body:sqlserverUserDetails.serverRoles,,
+163,PUT,/V1.0/Resources,existing,role_set,down,0,body:id,body:defaultServiceDeskRoleID,,
+164,DELETE,/channels/{channel_id}/moderators/{user_id},existing,member_remove,down,0,path:user_id,,,
+165,PUT,/accounts/{id}/,existing,admin_flag,down,1,body:owner,,,Suy từ trường owner là đổi chủ account; không có mô tả xác nhận ý nghĩa trường này.
+167,DELETE,/chat/channels/{channelId}/members/{memberId},existing,member_remove,down,0,path:memberId,,,
+169,POST,/channels/{type}/{id}/query,none,other,unclear,0,,,,
+170,POST,/v2/user/catalogs/{storeId}/importations/{executionId}/catalogColumns/{columnId}/map,none,other,unclear,0,,,,
+171,DELETE,/orgunits/{orgid}/projects/{projectid}/participants/${participantId},existing,member_remove,down,0,path:participantId,,,
+172,PUT,/phone/call_queues/{callQueueId}/manager,existing,member_role,down,0,body:member_id,,,
+173,POST,/{userId}/downgrade-proofreader,existing,role_set,down,0,path:userId,,,
+175,PATCH,/V1.0/ComanagedAssociations,none,other,unclear,0,,,,
+176,PUT,/profile,self,perm,down,1,self,body:restricted,,restricted gợi ý giới hạn quyền của người gọi; mô tả chỉ nói cập nhật profile.
+177,PUT,/mimic/terminate,none,other,unclear,0,,,,
+178,DELETE,/groups/{groupId}/members/{memberId},existing,member_remove,down,0,path:memberId,,,
+179,DELETE,/roles/{roleId}/members/{memberId},existing,role_remove,down,0,path:memberId,path:roleId,,
+181,POST,/fleets/{fleet_id}/members/,new,member_role,unclear,1,,,,"Mô tả tạo lời mời (invitation); A=new theo phiếu, U=1 do ranh giới giữa tài khoản mới và thêm vào nhóm."
+182,PUT,/time_location_features/{id}/,none,other,unclear,0,,,,
+183,DELETE,/phone/shared_line_groups/{sharedLineGroupId}/members/{memberId},existing,member_remove,down,0,path:memberId,,,
+186,POST,/account/collections/{collection_id}/publish,none,other,unclear,0,,,,
+189,PUT,/V1/company/assignRoles,existing,member_role,down,0,body:userId,body:roles,,
+190,PUT,/api/v1/users/{id},existing,admin_flag,down,0,path:id,body:adminFlags|body:role,unordered,Không có định nghĩa các mã số của role/adminFlags để xếp thứ tự quyền.
+193,PUT,/v2.1/accounts/{accountId}/users/{userId},existing,admin_flag,down,0,path:userId,body:isAdmin|body:isAlternateAdmin,,
+194,PUT,/api/v1/scheduled_statuses/{id},none,other,unclear,0,,,,
+195,DELETE,/organizers/{organizerKey}/trainings/{trainingKey}/registrants/{registrantKey},none,other,unclear,0,,,,
+196,PUT,/users/{id},existing,admin_flag,down,0,path:id,body:is_admin,,
+197,POST,/V1.0/Tasks/{parentId}/Attachments,none,other,unclear,0,,,,
+198,DELETE,/settings/application/media/providers/{ProviderName},none,other,unclear,0,,,,
+199,PUT,/v2.1/accounts/{accountId}/users/{userId}/custom_settings,existing,other,unclear,0,,,,
+200,DELETE,/permission/apps/{appId},nonuser,perm,down,0,,,,Chủ thể mất quyền là app được chỉ định bởi appId; userId chỉ chủ dữ liệu.
+201,PUT,/users/{user_id},existing,role_set,down,0,path:user_id,body:role|body:can_see_managed_users|body:is_external_collab_restricted,user<coadmin,
+202,POST,/senders,none,other,unclear,0,,,,
+203,DELETE,/v2/user/customer/stores/{storeId}/shares/{userId},existing,resource_acl,down,0,,,,
+204,PUT,/individuals/{partyId}/licenses/{productId},none,other,unclear,0,,,,
+205,PUT,/users/{id},existing,role_set,down,0,path:id,body:permission_group_id,,
+206,DELETE,/V1.0/Companies/{parentId}/Teams/{id},group,other,unclear,0,,,,
+207,PUT,/admin/user/{systemKey},existing,role_set,down,0,body:user,body:changes.roles,,
+208,POST,/api/folder/user/assign,existing,resource_acl,unclear,1,,,,"Assign user vào folder gợi ý cấp quyền, nhưng có oldFolder gợi ý chuyển quyền; C=unclear, U=1."
+210,POST,/admin/platform/developer,existing,disable,unclear,0,,,,
+211,PATCH,/spaces/{id}/folders/{folderId}/persons/{memberId}/unactiveaccess,existing,resource_acl,down,0,,,,
+212,PUT,/account_roles/{id}/,existing,member_role,down,1,body:user,body:is_manager|body:is_worker,,"AccountRole có user/is_manager/is_worker; chọn vai trò thành viên, chưa rõ manager có nghĩa quản trị."
+213,DELETE,/phone/users/{userId}/settings/{settingType},existing,resource_acl,down,0,,,,
+214,PUT,/individuals/{partyId}/roles/{roleId},none,other,unclear,0,,,,
+217,DELETE,/v2.1/accounts/{accountId}/groups/{groupId}/users,existing,member_remove,down,0,body:users,,,
+218,POST,/api/v2/LicenseActivations/RegisterEDTLite,none,other,unclear,0,,,,
+220,DELETE,/channels/{channel_id}/moderators,existing,member_remove,down,0,body:user_uri,,,
+222,POST,/account/projects/{project_id}/collaborators,new,member_role,unclear,1,,,,"Mô tả là Invite users; A=new theo phiếu, U=1 do ranh giới giữa tài khoản mới và thêm vào nhóm."
+223,POST,/v2/users/{userId}/roleUpdate,existing,role_set,down,0,path:userId,body:roles,,
+224,PUT,/V1.0/Resources/{parentId}/RoleDepartments,existing,member_role,down,1,path:parentId|body:resourceID,body:roleID,,Không có mô tả; suy từ ResourceRoleDepartmentModel rằng resourceID là nhân sự có role trong đơn vị.
+225,POST,/v1/object/product,none,other,unclear,0,,,,
+227,DELETE,/account/projects/{project_id}/collaborators/{user_id},existing,member_remove,down,0,path:user_id,,,
+228,DELETE,/api/v2/PackageTypes/{id}/Users/{userID},existing,resource_acl,down,0,,,,
+229,PATCH,/users/{user_id},existing,role_set,down,0,path:user_id,body:roles,,
+231,POST,/lists/members/destroy_all.json,existing,member_remove,down,0,query:user_id|query:screen_name,,,
+232,DELETE,/maps/{id}/collaborators/{user_id},existing,member_remove,down,0,path:user_id,,,
+234,DELETE,/groups/{id}/members.json,existing,member_remove,down,0,body:usernames,,,
+235,DELETE,/api/v2/UpdateGroups/{id}/Users/{userID},existing,resource_acl,down,0,,,,
+236,DELETE,/groups/{GroupId}/admins,existing,admin_flag,down,0,body:wa_ids,,,
+238,DELETE,/V1.0/Tasks/{parentId}/SecondaryResources/{id},none,other,unclear,0,,,,
+239,DELETE,/tasks/{taskID}/owners/{userID},existing,role_remove,down,0,path:userID,,,Điều chỉnh B=role_remove theo ví dụ S900-0005 (xóa owner).
+240,POST,/vendor_users,existing,role_set,down,0,body:external_id,body:permission_group_id,,
+241,DELETE,/spaces/{id}/persons/{personId},existing,member_remove,down,0,path:personId,,,
+245,DELETE,/telegrafs/{telegrafID}/members/{userID},existing,member_remove,down,0,path:userID,,,
+246,DELETE,/account_roles/{id}/,existing,member_remove,down,1,,,,account_roles gợi ý bản ghi quan hệ user/account; không có mô tả xác nhận xoá thành viên hay chỉ gỡ vai trò.
+247,DELETE,/databases/postgresql/instances/{instanceId}/backups/{backupId},none,other,unclear,0,,,,
+248,POST,/api/SubUser,existing,perm,down,0,body:Id,body:PermissionLevel,SelectedFolderOnly<SelectedFolderAndSubfoldersMeters,
+249,POST,/api/v1/transactions,none,other,unclear,0,,,,
+250,DELETE,/likes/playlists/{playlist_id},none,other,unclear,0,,,,
+251,POST,/permissions,existing,perm,up,1,body:userId|body:managedUserId,,,Permission liên kết nhiều loại object; không đủ chữ phân biệt quyền user chung với ACL tài nguyên cụ thể.
+252,POST,/v2.1/accounts/{accountId}/groups,group,perm,unclear,1,,,,"Tạo nhóm mới kèm gán profile quyền; group/perm/unclear, U=1."
+253,DELETE,/spaces/{id}/groups/{groupId}/persons/{memberId},existing,member_remove,down,0,path:memberId,,,
+255,DELETE,/mimic/access/del/{user},existing,perm,down,0,path:user,,,
+256,POST,/me,self,other,unclear,0,,,,
+257,PATCH,/maps/{id}/collaborators/{user_id},existing,resource_acl,down,0,,,,
+258,POST,/accounts/users/remove,existing,member_remove,down,0,body:users,,,
+259,POST,/images,none,other,unclear,0,,,,
+260,DELETE,/me/groups/{group_id},self,member_remove,down,0,self,,,
+262,PUT,/v2/team-members/{team_member_id},existing,admin_flag,down,0,path:team_member_id,body:team_member.is_owner,,
+265,PUT,/user/{userID}/monetary-account/{monetary-accountID}/ideal-merchant-transaction/{ideal-merchant-transactionID}/note-attachment/{itemId},none,other,unclear,0,,,,
+271,DELETE,/customer_categories/{id}/customers.json,none,other,unclear,0,,,,
+272,DELETE,/buckets/{bucketID}/members/{userID},existing,member_remove,down,0,path:userID,,,
+273,DELETE,/chat/users/{userId}/channels/{channelId}/members/{memberId},existing,member_remove,down,0,path:memberId,,,
+274,POST,/api/v1/abuses/{abuseId}/messages,none,other,unclear,0,,,,
+275,PUT,/account/users/{username}/grants,existing,perm,down,0,path:username,body:database|body:domain|body:global|body:image|body:linode|body:longview|body:nodebalancer|body:stackscript|body:volume,,Các quyền tài nguyên là mảng object nên chọn trường mảng; global là object quyền chung. Enum trường con không thuộc trường role đã chọn.
+281,POST,/V1.0/Projects/{parentId}/Notes,none,other,unclear,0,,,,
+282,PUT,/account/users/{username},existing,perm,down,0,path:username,body:restricted,,
+283,DELETE,/fleets/{fleet_id}/members/{member_id}/,existing,member_remove,down,0,path:member_id,,,
+285,POST,/accounts/{id}/change_owner/,existing,admin_flag,down,0,body:owner,,,
+286,DELETE,/api/patients/{id}/onpatient_access,existing,perm,down,1,path:id,,,Revoke invites gợi ý thu truy cập của patient; chưa rõ id/email có chỉ tài khoản người dùng hay hồ sơ bệnh nhân.
+287,DELETE,/im/groups/{groupId}/members/{memberId},existing,member_remove,down,0,path:memberId,,,
+289,DELETE,/groups/{GroupId}/icon,none,other,unclear,0,,,,
+291,POST,/nodes/{node_id}/contributors/,existing,resource_acl,up,0,,,,Mô tả node là tài nguyên có quyền đọc/sửa và nói thêm quan hệ contributor; chọn resource_acl theo quy tắc tài nguyên cụ thể.
+293,PATCH,/users/{id}/,existing,admin_flag,down,0,path:id,body:is_admin,,
+294,DELETE,/scrapers/{scraperTargetID}/members/{userID},existing,member_remove,down,0,path:userID,,,
+295,POST,/corporate/users,existing,other,unclear,0,,,,
+296,PATCH,/spaces/{id}/folders/{folderId}/persons/{memberId},existing,admin_flag,down,0,path:memberId,body:IsAdmin|body:Role,unordered,
+297,PATCH,/V1.0/Resources,existing,role_set,down,0,body:id,body:defaultServiceDeskRoleID,,
+298,DELETE,/group_memberships/{group_membership_id},existing,member_remove,down,0,,,,group_membership_id chỉ bản ghi tư cách thành viên; không có trường trực tiếp chỉ tài khoản.
+300,DELETE,/collaboration_whitelist_exempt_targets/{collaboration_whitelist_exempt_target_id},existing,perm,down,0,,,,ID chỉ bản ghi exemption; không có trường trực tiếp chỉ tài khoản trong danh sách trường.
+302,PUT,/kkid/userlist,existing,admin_flag,down,0,query:userID,query:enableAdmin,,
+303,DELETE,/channels/{channel_id}/privacy/users/{user_id},existing,resource_acl,down,0,,,,
+308,POST,/predictions,none,other,unclear,0,,,,
+309,PATCH,/spaces/{spaceId}/persons/{id}/guest-in-space,existing,admin_flag,down,0,path:id,body:IsAdmin|body:Player|body:ClientManagement|body:Folders,unordered,
+310,DELETE,/individuals/{partyId}/roles/{roleId},none,other,unclear,0,,,,
+313,PATCH,/spaces/{spaceId}/persons/{id}/call-for-document,existing,admin_flag,down,0,path:id,body:IsAdmin|body:Player|body:ClientManagement,unordered,
+314,DELETE,/v4/networkgroups/organisations/{ownerId}/networkgroups/{networkGroupId}/members/{memberId},existing,member_remove,down,0,path:memberId,,,
+315,DELETE,/nodes/{node_id}/contributors/{user_id}/,existing,member_remove,down,0,path:user_id,,,
+316,DELETE,/v2/customers/{customer_id}/groups/{group_id},none,other,unclear,0,,,,
+317,PUT,/V1.0/Resources/{parentId}/ServiceDeskRoles,existing,role_set,down,1,path:parentId|body:resourceID,body:roleID,,Không có mô tả; suy từ ResourceServiceDeskRoleModel rằng resourceID là tài khoản nhân sự được gán role.
+318,DELETE,/shield_information_barrier_segment_members/{shield_information_barrier_segment_member_id},existing,member_remove,down,0,,,,ID là bản ghi thành viên segment; không có trường trực tiếp chỉ user.
+321,PUT,/organizers/{organizerKey}/trainings/{trainingKey}/organizers,existing,member_role,down,0,body:organizers,,,
+322,DELETE,/organisations/{id}/members/{userId},existing,member_remove,down,0,path:userId,,,
+323,DELETE,/webinars/{webinarId}/panelists,existing,member_remove,down,0,,,,"Xoá mọi panelist là các cá nhân, không phải group/team được chỉ định; request không liệt kê tài khoản."

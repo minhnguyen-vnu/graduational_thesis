@@ -1,0 +1,135 @@
+﻿stt,method,path,A,B,C,U,victim,role,order,ghi_chu
+1,DELETE,/v1/builds/{id}/relationships/individualTesters,existing,resource_acl,down,1,,,,Suy từ quan hệ build-individualTesters là gỡ quyền tester trên build; không có mô tả xác nhận quyền.
+2,POST,/Users/{userId},existing,admin_flag,down,0,path:userId,body:Policy.IsAdministrator|body:Policy,,Hồ sơ chung có IsAdministrator và object Policy mang các quyền; chọn cả cờ trực tiếp và object quyền. Ví dụ 3/5.
+3,POST,/projects/{project_gid}/removeMembers,existing,member_remove,down,0,body:members,,,
+4,POST,/admin.users.setOwner,existing,admin_flag,up,0,body:user_id,,,Chỉ đưa guest/user/admin lên owner; đối chiếu chiều ngược lại trong ví dụ 4.
+5,DELETE,/admin/roleMappings/{principalId},existing,role_remove,down,0,path:principalId,,,
+6,POST,/users,new,admin_flag,unclear,0,,,,"Tạo user có site_admin; theo ví dụ 11 và quy tắc cờ admin, ba cột thêm trống."
+7,PUT,/providers/employers/{employerId}/dashboardLicenses,existing,perm,down,1,body:license.user.userId,,,"License có userId, nhưng chưa rõ đây là quyền truy cập dashboard hay bản ghi giấy phép nghiệp vụ."
+8,PATCH,/v1/users/{id}/relationships/visibleApps,existing,perm,down,1,path:id,body:id,,PATCH visibleApps suy là thay danh sách app user được truy cập; body:id chỉ app. Thiếu mô tả xác nhận.
+9,PATCH,/groups/{ID}/memberships,existing,member_role,down,0,body:user_id,body:moderator,,
+10,DELETE,/conversations/group/{convId}/participants,existing,member_remove,down,0,query:participants,,,
+11,DELETE,/api-public/v1/user/{user},existing,member_remove,down,0,path:user,,,Mô tả nói remove from organization; không suy delete_account chỉ từ DELETE /user.
+12,POST,/offerings/{offeringId}/users,existing,member_role,up,1,body:personId|body:email,body:isFacilitator|body:isMarker|body:isReadonly,,"Adds user hỗ trợ up; sendInvite và offering chưa rõ là mời tài khoản mới hay thêm tài khoản có sẵn, hoặc ACL khóa học."
+13,POST,/usermanagement/update/{username},existing,role_set,down,0,path:username,body:role,,
+14,PUT,/api/2/project/{projectIdOrKey}/role/{id},existing,member_role,down,1,,path:id,,Updates include actors có thể thay tập thành viên; actor có thể user/group. Body actors không được hiển thị nên victim trống.
+15,PATCH,/providers/employers/{employerId}/users/{userId}/departments,existing,member_role,down,0,path:userId,body:hasAccessToSubDepartments,,Link/unlink đơn vị của user có thể thu tư cách thành viên; action không phải enum cấp quyền nên không đưa vào order.
+16,PATCH,/admin/users/{username},existing,admin_flag,down,0,path:username,body:admin|body:allow_create_organization|body:allow_git_hook|body:allow_import_local|body:max_repo_creation|body:restricted,,
+17,POST,/v1/workgroups/{workgroup_id}/projects/{project_id}/teammembers,existing,member_role,up,1,body:user_id,body:role_id,,Suy từ POST teammembers và schema role_id/user_id là thêm thành viên dự án; mô tả chỉ có thông báo deprecated.
+18,POST,/api/v1/organizations/{organizationId}/users/{username}/roles,existing,role_set,up,0,path:username,body:roles,,Add roles là cấp thêm; đối chiếu ví dụ 6 và 7.
+19,POST,/groups/{group_id}/users,new,admin_flag,unclear,0,,,,"Tạo user có site_admin; theo ví dụ 11 và quy tắc cờ admin, ba cột thêm trống."
+20,PUT,/v3/users/{id},existing,admin_flag,down,0,path:id,body:admin|body:can_create_group|body:projects_limit,,
+21,DELETE,/v0.1/orgs/{org_name}/invitations,existing,member_remove,down,1,body:user_email,,,Thu lời mời tổ chức; chưa rõ invited user đã có tài khoản. Chọn existing gần nhất cho lời mời đã tồn tại.
+22,PATCH,/members/{memberId},existing,member_role,unclear,1,path:memberId,,,"PatchOperation op/path/value không cho biết sửa hồ sơ hay vai trò. member_role là mã gần nhất, không đoán value mang quyền."
+23,PATCH,/securitymappings/{webId},none,role_def,unclear,1,,,,Security mapping definition có Account và SecurityIdentityWebId; chưa rõ đây là policy hay ánh xạ danh tính.
+24,POST,/leaveChat,nonuser,member_remove,down,0,,,,"Mô tả nói bot là chủ thể rời nhóm; theo A=nonuser, không dùng self cho tài khoản người."
+25,POST,/{realm}/partialImport,none,other,unclear,1,,,,"Đồng ý thao tác chính là import cấu hình hỗn hợp; việc tôi chọn client credential từ phần đầu schema quá hẹp. Chốt none/other/unclear, U=1 vì chứa nhiều loại chủ thể và phiếu thiếu mã tổng hợp."
+26,PUT,/api/auths/{id},nonuser,credential,unclear,1,,,,Giữ nonuser/credential theo cấu hình auth module có clientSecret/password/scope; gần ví dụ 14. Không đồng ý bỏ nội dung xác thực chỉ vì đây là config. Loại module so với client chưa được định nghĩa trực tiếp nên bổ sung U=1.
+27,PUT,/projects/{owner}/{projectId}/members,existing,member_role,down,1,body:members[].name,body:members,,Mô tả nói thay toàn bộ danh sách nên có thể giảm quyền. Member type USER hoặc TEAM gây bất định A; role dùng mảng object theo phiếu.
+28,DELETE,/offerings/{offeringId}/users/{markerEmail}/marks,none,other,unclear,0,,,,"Đồng ý đây là danh sách chấm điểm nghiệp vụ, không có bằng chứng đổi tài khoản hoặc quyền. markerEmail là phạm vi tài nguyên. Chốt none/other/unclear, U=0 như nguyên tắc ví dụ 17."
+29,DELETE,/api/v1/sites/{site_id}/guests/{guest_mac},nonuser,perm,down,0,,,,guest_mac chỉ thiết bị được cấp quyền; không phải định danh tài khoản người dùng.
+30,PATCH,/v1/users/profiles/{user}/,existing,other,unclear,0,,,,Cập nhật profile có password nhưng không có role/admin; hành động chính là hồ sơ chung.
+31,PUT,/v4/nodes/rooms/{room_id}/config,existing,resource_acl,down,1,,,,Room config có adminIds/adminGroupIds và inheritPermissions; chọn ACL tài nguyên. Đối tượng có cả người và nhóm.
+32,POST,/rest/api/3/dashboard/{id}/copy,existing,resource_acl,up,1,,,,Tạo bản sao dashboard có ACL mới; schema có user và group/project selectors nên A chưa duy nhất. Không coi nested role.admin là cờ admin tài khoản.
+33,PUT,/api/v1/orgs/{org_id}/invites/{invite_id},existing,member_role,down,1,body:admin_id,body:privileges,,Sửa lời mời đã có với privileges; chưa rõ tài khoản tồn tại hay chỉ invite. Mảng privileges object nên order trống dù trường con có enum.
+34,PUT,/providers/employers/users/{userId},existing,role_set,down,0,path:userId,body:userSpecifiedRole|body:userCustomSpecifiedRole|body:hasAccessToPayrollingTestData|body:isDepartmentManager,,"Đồng ý bổ sung isDepartmentManager như tư cách mang quyền tiềm năng, nhưng không tự coi là admin hệ thống. Giữ role_set; giữ cả hasAccessToPayrollingTestData vì mang truy cập rõ."
+35,POST,/api/auths,nonuser,credential,unclear,1,,,,Giữ nonuser/credential theo cấu hình auth module có clientSecret/password/scope; gần ví dụ 14. Không đồng ý bỏ nội dung xác thực chỉ vì đây là config. Loại module so với client chưa được định nghĩa trực tiếp nên bổ sung U=1.
+36,POST,/applications/{client_id}/token/scoped,nonuser,credential,unclear,0,,,,"Tạo scoped token: scope của credential, không chọn perm cho user."
+37,PUT,/api/v1/orgs/{org_id}/admins/{admin_id},existing,member_role,down,1,path:admin_id,body:privileges,,"Summary updateOrgAdmin và description Invite Org Admin mâu thuẫn; ưu tiên cập nhật chủ thể theo path, U về A."
+38,PUT,/users,existing,admin_flag,down,0,body:userId,body:isOwner|body:roleId|body:roleName|body:isCollaborator,,
+39,PATCH,/users/{userEmail}/transfer,existing,member_role,down,1,path:userEmail,,,Chuyển access giữa offerings có thể thu truy cập offering cũ; chưa rõ offering là không gian thành viên hay tài nguyên khóa học.
+40,PUT,/spaces/{id},existing,admin_flag,down,1,body:ownerId,,,"Space update có ownerId và role, nhưng chưa giải thích role áp lên ai. Chọn đổi owner gần nhất; không đoán role là giá trị của owner mới."
+41,POST,/spaces/{spaceId}/participant/{participantId}/deny,existing,member_remove,down,1,path:participantId,,,Deny access space có thể gỡ tư cách hoặc từ chối yêu cầu tham gia; member_remove gần nhất.
+42,DELETE,/orgs/{org}/memberships/{username},existing,member_remove,down,0,path:username,,,"Mô tả nêu cả active membership và pending invitation, đều gỡ quan hệ với tổ chức."
+43,PUT,/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users,existing,resource_acl,down,0,,,,Set restrictions users trên branch cụ thể; danh sách có thể thay thế quyền trước đó.
+44,DELETE,/api/v1/orgs/{org_id}/invites/{invite_id},existing,member_remove,down,1,,,,"Xóa lời mời admin; không rõ invite có tài khoản chưa. invite_id chỉ bản ghi lời mời, không ghi victim như user ID."
+45,POST,/roles/{account}/{kind}/{identifier},none,role_def,unclear,0,,,,Mô tả quan hệ role A có role B làm member; không phải user membership.
+46,PATCH,/providers/employers/{employerId}/users/{userId}/authorizations,existing,perm,down,0,path:userId,body:authorizationSet|body:authorizations,,"isEnabled có thể tắt; chọn mảng quyền object, không chọn trường con. Không có enum ở trường role đã chọn."
+47,PATCH,/v0.1/orgs/{org_name}/invitations/{email},existing,member_role,down,1,path:email,body:role,unordered,Sửa role lời mời có sẵn; chưa rõ user đã là tài khoản tồn tại. Không suy collaborator/member có thứ tự rõ.
+48,PUT,/api/v1/sites/{site_id}/guests/{guest_mac},nonuser,perm,down,0,,,,Guest định danh bằng MAC; authorized có thể false nên down.
+49,POST,/courses/{rootContentId}/permissions/{userEmail},existing,resource_acl,down,0,,,,Đồng ý giảm U: course cụ thể và các cờ quyền đã đủ căn cứ A/B/C; false có thể thu quyền nên down.
+50,POST,/{tenantID}/applications,nonuser,credential,unclear,1,,,,Giữ nonuser/credential gần ví dụ 14 vì application config có key/password credentials. Có cả appRoles/OAuth definitions nên không có mã duy nhất bao quát; bổ sung U=1 thay vì coi một B chắc chắn đúng.
+51,PATCH,/user,self,admin_flag,down,0,self,body:site_admin|body:attachments_permission|body:billing_permission|body:bypass_site_allowed_ips|body:dav_permission|body:ftp_permission|body:grant_permission|body:restapi_permission|body:sftp_permission,,"PATCH /user không có user ID, đối chiếu ví dụ 3; hồ sơ có site_admin và quyền dịch vụ."
+52,POST,/unbanChatMember,existing,perm,down,0,body:user_id,,,Mô tả cho biết có thể gỡ user hiện là member để đảm bảo sau call không còn member; vì vậy không phải chỉ tăng quyền khi unban.
+53,PUT,/api/v1/msps/{msp_id}/invites/{invite_id},existing,member_role,down,1,body:admin_id,body:privileges,,Cập nhật lời mời admin có privileges; chưa rõ user đã tồn tại. Enum trường con không phải enum mảng privileges đã chọn.
+54,PUT,/organizations/{idOrg}/members,new,member_role,unclear,1,,,,"PUT members chỉ có email/fullName/type, không có mô tả; suy là mời thêm thành viên. type chưa có enum/giải thích để khẳng định role."
+55,POST,/servers/{serverid}/users/{userid}/role/,existing,role_set,unclear,1,path:userid,,,"Get or create role không cho biết cấp thêm, thay role hay chỉ trả về. Không có trường giá trị role nên để trống."
+56,DELETE,/repos/{owner}/{repo}/invitations/{invitation_id},existing,member_remove,down,1,,,,"Thu lời mời repo đã có; chưa xác nhận user tồn tại. invitation_id là bản ghi, không chọn owner repo làm victim."
+57,POST,/{realm}/users/{id}/role-mappings/clients/{client},existing,role_set,up,0,path:id,body:id|body:name,,"Add client-level roles cho user: cấp thêm; body id/name là role được gán, path client chỉ client không phải victim."
+58,PATCH,/{tenantID}/applications/{applicationObjectId},nonuser,credential,unclear,1,,,,Giữ nonuser/credential gần ví dụ 14 vì application config có key/password credentials. Có cả appRoles/OAuth definitions nên không có mã duy nhất bao quát; bổ sung U=1 thay vì coi một B chắc chắn đúng.
+59,POST,/restrictChatMember,existing,member_role,down,0,body:user_id,body:permissions,,Quyền thành viên supergroup có thể hạn chế hoặc gỡ hạn chế; down vì có khả năng giảm.
+60,DELETE,/teams/{team_id}/members/{username},existing,member_remove,down,0,path:username,,,
+61,PUT,/repos/{owner}/{repo}/collaborators/{username},existing,member_role,down,1,path:username,body:permission,,"Repo là member_role theo phiếu. Add collaborator có permission nhưng chưa nói chỉ thêm hay đặt lại quyền đã có; chọn down gần nhất, U về C."
+62,POST,/v4/roles/{role_id}/users,existing,role_set,up,0,body:ids,path:role_id,,"Postcondition nêu users will be added to a role; đủ căn cứ cấp thêm, khác assign role không rõ thay thế."
+63,DELETE,/projects/{project_id}/collaborators/{username},existing,member_remove,down,0,path:username,,,
+64,PUT,/collaborators,existing,member_role,down,1,body:userId,body:roleId,,"Update collaborator có roleId nhưng không nói không gian/tài nguyên nào; member_role gần nhất, U về B."
+65,POST,/users/permissions/,none,role_def,unclear,1,,,,"WritableObjectPermission có actions/constraints/object_types và users/groups; nghiêng định nghĩa policy, nhưng chưa rõ policy tái sử dụng hay ACL một tài nguyên."
+66,PUT,/ssousers/{id},existing,other,unclear,0,,,,SSO profile có groupid nhưng không mô tả group là quyền; không suy role từ mọi thuộc tính group.
+67,PATCH,/repos/{owner}/{repo}/invitations/{invitation_id},existing,member_role,down,1,,body:permissions,unordered,Sửa quyền lời mời repo có sẵn; invitation_id không chỉ trực tiếp user. Chưa rõ tài khoản tồn tại; không đoán thứ tự triage/maintain từ hiểu biết sản phẩm.
+68,PUT,/users/permissions/,none,role_def,unclear,1,,,,"WritableObjectPermission có actions/constraints/object_types và users/groups; nghiêng định nghĩa policy, nhưng chưa rõ policy tái sử dụng hay ACL một tài nguyên."
+69,POST,/GroupV2/{groupId}/Members/IndividualInviteCancel/{membershipType}/{membershipId}/,existing,member_remove,down,1,,,,"Hủy pending invitation; membershipId là ID quan hệ, membershipType không được giải thích nên A còn bất định."
+70,DELETE,/v3/groups/{id}/members/{user_id},existing,member_remove,down,0,path:user_id,,,
+71,PUT,/rest/api/3/dashboard/{id},existing,resource_acl,down,1,,,,Thay dashboard details gồm ACL có thể giảm quyền. Schema có user accountId selectors; không coi nested project/role metadata là role tài khoản.
+72,PATCH,/v0.1/orgs/{org_name}/users/{user_name},existing,member_role,down,0,path:user_name,body:role,unordered,
+73,POST,/spaces/{id}/participant,existing,member_role,up,0,body:userId,body:role,unordered,Add participant là cấp tư cách mới. DEFAULT không phải mức quyền xác định; không bịa thứ tự AUTHOR/PARTICIPANT.
+74,DELETE,/api/2/role/{id}/actors,none,role_def,unclear,1,,,,"Default actors là khuôn gán role, không nêu current project membership. User/group hỗn hợp; nghiêng sửa cấu hình role, chưa có ví dụ trực tiếp."
+75,DELETE,/v1/teams/{teamId}/members/{uid},existing,member_remove,down,0,path:uid,,,uid chỉ user được gỡ dù có nhánh leave; không mặc định self khi request có uid.
+76,PATCH,/orgs/{org}/teams/{team_slug}/team-sync/group-mappings,group,other,unclear,0,,,,Đồng ý giảm U: cập nhật kết nối IdP groups được mô tả đủ để chọn group/other/unclear; không cần biết mọi tác động gián tiếp tới quyền mới chọn được nhãn.
+77,PATCH,/users/permissions/{id}/,none,role_def,unclear,1,,,,"WritableObjectPermission có actions/constraints/object_types và users/groups; nghiêng định nghĩa policy, nhưng chưa rõ policy tái sử dụng hay ACL một tài nguyên."
+78,POST,/1.1/workgroups/{workgroup_id}/projects/{project_id}/teammembers,new,member_role,unclear,1,,,,"Invite user hoặc toàn bộ team template; A có thể new/existing/group. Chọn new theo lời mời, không giữ cột thêm chỉ để bảo toàn dữ liệu."
+79,POST,/admin/users/{username}/orgs,group,other,unclear,0,,,,Tạo organization; username trong path không tự biến thao tác tạo nhóm thành đổi quyền user. Đối chiếu ví dụ 17.
+80,POST,/api/2/role/{id}/actors,none,role_def,unclear,1,,,,"Thêm default actors user/group cho role; nghiêng sửa khuôn role, không có danh sách user/group trong trường hiển thị."
+81,PUT,/v3/groups/{id}/access_requests/{user_id}/approve,existing,member_role,up,0,path:user_id,body:access_level,,Duyệt access request là cấp membership mới; access_level không có enum nên order trống.
+82,POST,/conversations.leave,self,member_remove,down,0,self,,,
+83,DELETE,/v1/users/{id}/relationships/visibleApps,existing,perm,down,1,path:id,body:id,,"Suy visibleApps là danh sách ứng dụng user được truy cập; DELETE thu app access, body:id là giá trị app bị gỡ."
+84,PUT,/user-organizations/{id},existing,member_role,down,1,,body:functionalRoles,,Thay UserOrganization có functionalRoles; ID quan hệ không phải user ID trực tiếp. Chưa rõ functionalRoles là role quyền hay chức danh nghiệp vụ.
+85,DELETE,/rest/api/3/project/{projectIdOrKey}/role/{id},existing,role_remove,down,1,query:user,path:id,,"Gỡ actor khỏi project role, không gỡ toàn bộ project membership. Query có nhánh user hoặc group nên A bất định."
+86,PUT,/users/{userId},existing,other,unclear,0,,,,Profile có userGroupName nhưng không chứng minh mang quyền; không tự suy role_set.
+87,DELETE,/api/v1/msps/{msp_id}/invites/{invite_id},existing,member_remove,down,1,,,,"Hủy admin invite đã có, chưa rõ tài khoản tồn tại. Không ghi invite_id là victim trực tiếp."
+88,PUT,/boards/{idBoard}/members,new,member_role,unclear,1,,,,"PUT board members chỉ có email/fullName/type; suy mời mới, nhưng chưa có mô tả xác nhận type là role hoặc add/update."
+89,PATCH,/orgs/{org},group,perm,down,1,,,,Cấu hình tổ chức đặt default repository permission và khả năng tạo repo của members; chưa rõ phân loại quyền group hay định nghĩa policy chung. Không điền cột thêm cho group.
+90,PUT,/rest/api/3/filter/{id},existing,resource_acl,down,1,,,,Filter sharing tương tự ví dụ 10; ACL selectors có user/group/project nên chọn existing gần nhất khi không có một loại chủ thể duy nhất.
+91,POST,/{tenantID}/servicePrincipals/{objectId}/$links/owners,existing,admin_flag,up,1,,,,"Add owner chỉ tăng tư cách owner; body:url không giải thích là user hay service principal/group nên A chưa rõ, không tự coi URL là role."
+92,POST,/v1/financial_connections/accounts/{account}/disconnect,self,resource_acl,down,0,,,,Mô tả your access to Financial Connections Account là thu truy cập tài nguyên dữ liệu tài chính; không vô hiệu hóa tài khoản user.
+93,POST,/rest/api/3/filter,existing,resource_acl,up,1,,,,"Tạo filter có ACL ban đầu; selectors có user/group và default sharing. Chọn existing gần nhất, chưa rõ chủ thể cụ thể áp dụng."
+94,PUT,/v1/permissions/{permissionGroupId},none,role_def,unclear,0,,,,Định nghĩa Permission Group với các quyền; không chỉ user nhận quyền. Ví dụ 13.
+95,DELETE,/orgs/{org}/members/{username},existing,member_remove,down,0,path:username,,,
+96,DELETE,/v1/betaTesters/{id}/relationships/builds,existing,resource_acl,down,1,,,,Suy liên kết betaTester-build là quyền xem/test build; thiếu mô tả để xác nhận quan hệ chính là access.
+97,DELETE,/rest-service-fecru/admin/permission-schemes/{name}/users,existing,perm,down,1,,,,"Mô tả thu user permission trong scheme, nhưng không hiển thị username/action fields. Có thể là sửa định nghĩa scheme thay vì quyền user trực tiếp."
+98,PUT,/spaces/{spaceId}/participant,existing,member_role,down,0,body:userId,body:role,unordered,
+99,POST,/admin.users.assign,existing,member_role,up,0,body:user_id,body:is_restricted|body:is_ultra_restricted,,"Mô tả Add Enterprise user to workspace: thêm membership. Flags đặt mức hạn chế ban đầu, chưa có bằng chứng thu membership/quyền workspace đã có."
+100,DELETE,/api-public/v1/team/{team}/members/{user},existing,member_remove,down,1,path:user,,,"Summary/path nói remove team member, description nói remove team from organization; ưu tiên path/summary và ghi xung đột."
+101,PATCH,/teams/{team_id}/team-sync/group-mappings,group,other,unclear,0,,,,Đồng ý giảm U: cập nhật kết nối IdP groups được mô tả đủ để chọn group/other/unclear; không cần biết mọi tác động gián tiếp tới quyền mới chọn được nhãn.
+102,PATCH,/site,none,other,unclear,0,,,,"Cập nhật site settings/bảo mật chung, không chỉ user/group/client; không phân loại theo chữ admin trong cấu hình."
+103,POST,/v1/organizations/{organizationId}/members/{userId},existing,member_role,down,0,path:userId,body:permissionGroupIds,,"Mô tả nói có thể chuyển group, mỗi product chỉ một group nên có thể hạ quyền."
+104,DELETE,/rest/api/3/role/{id}/actors,none,role_def,unclear,0,,,,"Mô tả nêu default actors không ảnh hưởng thành viên dự án đã có; sửa khuôn gán role cho tương lai, không thu quyền user hiện tại."
+105,PATCH,/teams/{teamId}/memberships/{membershipId}/status,existing,member_role,up,1,body:userId,,,"Accept invitation cấp membership, không phải mời mới trong request. Role không có giá trị mới; chưa rõ userId và membershipId đại diện cùng user hay người xác nhận."
+106,POST,/v1/users/{id}/relationships/visibleApps,existing,perm,up,1,path:id,body:id,,POST visibleApps suy là thêm app access cho user; không có description xác nhận ngữ nghĩa quyền.
+107,PATCH,/v1/users/{id},existing,role_set,down,0,path:id,body:roles|body:allAppsVisible|body:provisioningAllowed|body:visibleApps,unordered,Enum roles gồm nhiều chức năng không có thứ bậc tổng. unordered không tự làm U=1. Hồ sơ chung có role theo ví dụ 3.
+108,POST,/group/{groupId}/org/{orgId}/members,existing,member_role,up,0,body:userId,body:role,,
+109,DELETE,/user-projects/{id},existing,member_remove,down,1,,,,"Xóa UserProject có thể gỡ quan hệ thành viên, chưa chứng minh thu quyền; ID quan hệ không là user ID trực tiếp."
+110,DELETE,/org/{orgId}/provision,new,other,unclear,1,,,,Delete pending user provision nhưng không có user ID hoặc mô tả; chưa rõ hủy tạo tài khoản hay hủy quy trình cấp quyền.
+111,POST,/scores/{score}/collaborators,existing,resource_acl,down,1,,,,"Add/invite/update ACL score có thể đặt false các acl flags. Chủ thể có thể existing user, email mời mới hoặc group; chọn existing gần nhất."
+112,PUT,/organizations/{idOrg}/memberships/{idMembership},existing,member_role,down,1,,body:type,,"Schema organization membership có type nhưng không định nghĩa giá trị; suy role, chưa đủ xác nhận. ID membership không phải định danh user trực tiếp."
+113,PUT,/rest-service-fecru/admin/projects/{key}/allowed-reviewer-users,existing,member_role,up,1,,,,"Allowed reviewer users của project là cấp quyền thành viên; danh sách user không được hiển thị trong schema, nên victim/role trống."
+114,DELETE,/v0.1/apps/{owner_name}/{app_name}/invitations/{user_email},existing,member_remove,down,1,path:user_email,,,"Thu lời mời app; chưa rõ app là không gian membership hay client tài nguyên, và user có tài khoản chưa."
+115,DELETE,/organizations/{organizationId}/admins/{adminId},existing,perm,down,0,path:adminId,,,Revoke all access rõ là thu quyền admin; không tự suy xóa tài khoản. DELETE admin không có cờ mới.
+116,POST,/usergroups.users.update,existing,member_role,down,1,body:users,,,Update list user-group có thể thay tập thành viên; không mô tả rõ danh sách này mang quyền hay chỉ nhóm liên lạc.
+117,POST,/v1/teams/{team}/groups/{group}/remove/,self,member_remove,down,1,self,,,"Summary User removed from group nhưng không có user ID; suy user hiện tại, chưa có chữ current user xác nhận."
+118,PUT,/user-projects/{id},existing,member_role,down,1,,body:functionalRoles,,Thay UserProject có functionalRoles; chưa rõ chức danh nghiệp vụ hay cấp quyền. ID quan hệ không là user ID trực tiếp.
+119,POST,/v1/accounts/{account}/capabilities/{capability},none,other,unclear,1,,,,"Account Capability requested có thể là khả năng tài khoản nghiệp vụ, chưa chứng minh account là tài khoản người dùng hoặc capability là quyền truy cập."
+120,POST,/v0.1/orgs/{org_name}/invitations/{email}/resend,new,member_role,unclear,1,,,,Hủy rồi gửi lời mời mới với role; theo new cho mời mới nhưng chưa rõ tài khoản đã tồn tại. Không bịa thứ tự collaborator/member.
+121,PUT,/apis/rbac.authorization.k8s.io/v1/clusterrolebindings/{name},existing,role_set,down,1,body:subjects[].name,body:roleRef,,"ClusterRoleBinding thay roleRef/subjects; kind chưa có enum nên có thể User/Group hoặc chủ thể dịch vụ. existing là mã gần nhất, không coi binding là định nghĩa quyền role."
+122,POST,/v0.1/orgs/{org_name}/invitations/{email}/revoke,existing,member_remove,down,1,path:email,,,Thu lời mời tổ chức đã tồn tại; chưa xác định user đã có tài khoản hay chỉ email mời.
+123,PUT,/teams/{team_id}/members/{username},new,member_role,unclear,1,,,,Summary Add member nhưng description cho phép invite new organization members; A existing/new chưa duy nhất. Chọn new gần nghĩa invite.
+124,DELETE,/members/{memberId},existing,member_remove,down,0,path:memberId,,,Delete team member là gỡ khỏi team; không xóa tài khoản toàn hệ thống theo ví dụ 9/12.
+125,DELETE,/api/2/user/application,existing,perm,down,1,query:username,query:applicationKey,,Remove user from application gợi ý thu app access; chưa rõ application là nhóm membership hay tài nguyên. applicationKey xác định phạm vi quyền bị thu.
+126,DELETE,/user-organizations/{id},existing,member_remove,down,1,,,,"Xóa UserOrganization nghiêng gỡ membership; không có user ID trực tiếp, chưa có mô tả quyền."
+127,POST,/SyncPlay/Leave,self,member_remove,down,0,self,,,
+128,POST,/v3/projects/{id}/members,existing,member_role,up,0,body:user_id,body:access_level,,
+129,POST,/teams,group,other,unclear,0,,,,"Đồng ý giảm U: chọn thao tác chính tạo team, group/other/unclear. Việc creator tự là owner và roles chưa giải thích không tự làm A/B/C của thao tác tạo team thiếu căn cứ."
+130,PATCH,/groups/{id},existing,admin_flag,down,1,body:admin_ids,,,"Group update có admin_ids và user_ids; suy thay danh sách admin nhưng chưa nói thêm hay thay và có tác động membership khác. admin_ids chỉ người, không giá trị role."
+131,DELETE,/repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users,existing,resource_acl,down,1,,,,DELETE users khỏi restrictions của branch là gỡ mục user trong danh sách truy cập branch; summary remove restrictions chưa mô tả chiều chi tiết nên chọn down gần nhất.
+132,PUT,/rest-service-fecru/admin/groups/{name}/users,existing,member_role,up,0,,,,Add user to group; không có trường user trong danh sách hiển thị nên victim trống.
+133,PUT,/organizers/{organizerKey},existing,perm,down,0,path:organizerKey,body:productType,unordered,Quyền dùng sản phẩm có thể bị thu hết khi suspended; không gọi disable tài khoản vì mô tả chỉ nói products. productType là các phạm vi quyền không có thứ tự.
+134,POST,/rest/api/3/dashboard,existing,resource_acl,up,1,,,,Tạo dashboard có ACL mới với selectors user/group/project; chọn existing gần nhất khi chủ thể hỗn hợp. Không lấy nested role.admin làm cờ user.

@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Công cụ gán nhãn</title>
+<style>
+:root{--bg:#f7f7f5;--panel:#fff;--text:#1c1917;--muted:#6b6b6b;--line:#dedcd8;--accent:#1d4ed8;--accent-text:#fff;--ok:#15803d;--warn:#c2410c;--err:#b91c1c;--err-bg:#fef2f2;--sel:#e8efff;--code:#f0efec}
+@media (prefers-color-scheme: dark){:root{--bg:#161618;--panel:#1f1f22;--text:#e8e6e3;--muted:#a3a3a3;--line:#3a3a3f;--accent:#7aa2ff;--accent-text:#0b1020;--ok:#4ade80;--warn:#fb923c;--err:#f87171;--err-bg:#2a1414;--sel:#1e2a44;--code:#2a2a2e}}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;display:flex;flex-direction:column;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{flex:none;background:var(--panel);border-bottom:1px solid var(--line);padding:8px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+header h1{font-size:16px;margin:0 8px 0 0}
+#fname{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--muted)}
+button,label.btn,a.btn{font:inherit;padding:5px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);cursor:pointer;text-decoration:none;display:inline-block}
+button.primary,label.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-text)}
+button:disabled,label.btn.disabled{opacity:.45;cursor:default;pointer-events:none}
+input[type=file]{display:none}
+#saved{font-size:12px;color:var(--muted)}
+#saved.bad{color:var(--err);font-weight:600}
+#progress{margin-left:auto;font-variant-numeric:tabular-nums}
+#msg{flex:none;padding:6px 16px;background:var(--sel);display:none}
+#msg.show{display:block}
+#msg.err{background:var(--err-bg);color:var(--err)}
+#layout{flex:1;min-height:0;display:grid;grid-template-columns:250px minmax(0,1fr)}
+#side{border-right:1px solid var(--line);background:var(--panel);overflow:auto;min-height:0}
+#side select{margin:8px;width:calc(100% - 16px);font:inherit;padding:4px}
+#list{list-style:none;margin:0;padding:0 0 16px}
+#list li{padding:3px 10px;cursor:pointer;display:flex;gap:6px;align-items:center;border-left:3px solid transparent;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden}
+#list li span.t{overflow:hidden;text-overflow:ellipsis}
+#list li.cur{background:var(--sel);border-left-color:var(--accent)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;border:1px solid var(--muted)}
+.dot.done{background:var(--ok);border-color:var(--ok)}
+.dot.bad{background:var(--err);border-color:var(--err)}
+.dot.part{background:var(--warn);border-color:var(--warn)}
+main{overflow:auto;min-height:0;padding:16px}
+#welcome{max-width:640px}
+#detail{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(330px,1fr);gap:16px;align-items:start}
+#detail>div:last-child{position:sticky;top:0;max-height:calc(100vh - 90px);overflow:auto}
+@media (max-width:1100px){#detail{grid-template-columns:minmax(0,1fr)}#detail>div:last-child{position:static;max-height:none;overflow:visible}}
+@media (max-width:760px){#layout{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}#side{max-height:30vh;border-right:0;border-bottom:1px solid var(--line)}main{padding:12px 16px}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:12px}
+.rowhead{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;margin-bottom:8px}
+.rowhead .n{color:var(--muted);font-variant-numeric:tabular-nums}
+.method{font-weight:700;font-family:ui-monospace,Menlo,Consolas,monospace}
+code,.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.path{font-size:15px;word-break:break-all}
+h3{font-size:13px;margin:12px 0 4px;color:var(--muted);font-weight:600;text-transform:none}
+.desc{white-space:pre-wrap;word-break:break-word;margin:0}
+.none{color:var(--muted);font-style:italic}
+table.fields{border-collapse:collapse;width:100%}
+table.fields th,table.fields td{border-bottom:1px solid var(--line);padding:3px 6px;text-align:left;vertical-align:top}
+table.fields th{font-size:12px;color:var(--muted);font-weight:600}
+table.fields td.cb{width:44px;text-align:center}
+table.fields td.k{overflow-wrap:anywhere;width:46%}
+table.fields td.e{word-break:break-word;color:var(--muted)}
+table.fields tr.selfrow td{background:var(--code)}
+fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 12px;padding:8px 12px 10px;background:var(--panel)}
+legend{font-weight:600;padding:0 4px}
+fieldset label.opt{display:flex;gap:6px;padding:2px 0;cursor:pointer;align-items:baseline}
+fieldset label.opt code{min-width:108px;flex:none}
+fieldset .note{font-size:12px;color:var(--muted);margin:6px 0 0}
+fieldset.off{opacity:.6}
+#orderIn{width:100%;font:13px ui-monospace,Menlo,Consolas,monospace;padding:5px}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+.chips button{padding:2px 8px;font:12px ui-monospace,Menlo,Consolas,monospace}
+textarea{width:100%;min-height:54px;font:inherit;padding:5px}
+#errs{border:1px solid var(--err);background:var(--err-bg);color:var(--err);border-radius:8px;padding:8px 12px;margin-bottom:12px}
+#errs ul{margin:4px 0 0;padding-left:18px}
+#okbox{border:1px solid var(--ok);color:var(--ok);border-radius:8px;padding:8px 12px;margin-bottom:12px}
+nav.go{display:flex;flex-wrap:wrap;gap:8px}
+.sum{font-size:13px;margin:2px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>Công cụ gán nhãn</h1>
+  <span id="fname"></span>
+  <label class="btn" for="srcIn">Mở file đợt</label>
+  <input type="file" id="srcIn" accept=".csv,text/csv">
+  <label class="btn disabled" id="resBtn" for="resIn">Nạp kết quả đã lưu</label>
+  <input type="file" id="resIn" accept=".csv,text/csv">
+  <button class="primary" id="expBtn" disabled>Xuất kết quả</button>
+  <a class="btn" href="HUONG-DAN.html" target="_blank" rel="noopener">Hướng dẫn</a>
+  <span id="saved"></span>
+  <span id="progress"></span>
+</header>
+<div id="msg"></div>
+<div id="layout">
+  <aside id="side">
+    <select id="filter" aria-label="Lọc dòng">
+      <option value="all">Tất cả dòng</option>
+      <option value="todo">Chưa xong</option>
+      <option value="bad">Có lỗi</option>
+      <option value="u">Có U = 1</option>
+      <option value="note">Có ghi chú</option>
+    </select>
+    <ul id="list"></ul>
+  </aside>
+  <main id="main">
+    <div id="welcome" class="card">
+      <p>Bấm <b>Mở file đợt</b> và chọn một file trong thư mục <code>du-lieu</code>. Chọn <code>dot-4.csv</code>.</p>
+      <p>Đọc <a href="HUONG-DAN.html" target="_blank" rel="noopener">HUONG-DAN.html</a> trước khi gán dòng đầu tiên.</p>
+      <p>Công cụ tự lưu trong trình duyệt. Cuối mỗi phiên bấm <b>Xuất kết quả</b> để có bản sao lưu trên máy.</p>
+    </div>
+    <div id="detail" hidden></div>
+  </main>
+</div>
+
+<script id="core">
+const CORE_A = ["existing", "self"];
+const CORE_B = ["role_set", "role_remove", "perm", "admin_flag", "member_role", "member_remove"];
+const CODES = {
+  A: [
+    ["existing", "Một tài khoản người dùng đã tồn tại, được chỉ định trong request (path, query hoặc body)"],
+    ["self", "Chính người gọi, ví dụ /me, hoặc /user/... không có mã người dùng"],
+    ["new", "Tài khoản tạo mới hoặc mời mới trong chính request"],
+    ["group", "Nhóm, team, đơn vị tổ chức, không chỉ định từng người"],
+    ["nonuser", "Client, app, API key, service, device"],
+    ["none", "Không tác động lên chủ thể nào ở trên, ví dụ tạo tài liệu, định nghĩa role"]
+  ],
+  B: [
+    ["role_set", "Đặt hoặc đổi vai trò của chủ thể"],
+    ["role_remove", "Gỡ một vai trò khỏi chủ thể"],
+    ["perm", "Cấp hoặc thu quyền, scope, cấp truy cập của chủ thể"],
+    ["admin_flag", "Đặt cờ admin, owner, superuser, staff"],
+    ["member_role", "Đổi vai trò hoặc cấp truy cập của một thành viên trong tổ chức, dự án, nhóm, repo, workspace"],
+    ["member_remove", "Gỡ một thành viên khỏi tổ chức, dự án, nhóm, repo, workspace"],
+    ["disable", "Khoá, mở khoá, kích hoạt, vô hiệu hoá tài khoản"],
+    ["delete_account", "Xoá tài khoản"],
+    ["role_def", "Định nghĩa hoặc sửa quyền của một role, nhóm quyền, policy"],
+    ["credential", "Tạo, sửa, thu hồi token, API key, mật khẩu, client, scope của chúng"],
+    ["resource_acl", "Chia sẻ hoặc ACL trên một tài nguyên cụ thể như file, tài liệu"],
+    ["other", "Mọi thứ còn lại"]
+  ],
+  C: [
+    ["down", "Request này có thể làm quyền của chủ thể giảm: gỡ, thu, tắt cờ, hoặc đặt một giá trị trong nhiều mức vai trò"],
+    ["up", "Request này chỉ có thể làm quyền tăng: cấp thêm, thăng cấp, thêm vào danh sách"],
+    ["unclear", "Không rõ chiều, hoặc operation không liên quan tới quyền"]
+  ]
+};
+const SRC_COLS = ["stt", "method", "path", "mo_ta", "schema", "truong"];
+const OUT_COLS = ["stt", "method", "path", "A", "B", "C", "U", "victim", "role", "order", "ghi_chu"];
+
+function parseCSV(text) {
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+  const rows = [];
+  let row = [], f = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { f += '"'; i++; } else q = false;
+      } else f += c;
+    } else if (c === '"') q = true;
+    else if (c === ",") { row.push(f); f = ""; }
+    else if (c === "\n") { row.push(f); rows.push(row); row = []; f = ""; }
+    else if (c !== "\r") f += c;
+  }
+  if (f !== "" || row.length) { row.push(f); rows.push(row); }
+  return rows;
+}
+
+function csvCell(v) {
+  v = v == null ? "" : String(v);
+  return /[",\r\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+}
+
+function toCSV(rows) {
+  return rows.map(r => r.map(csvCell).join(",")).join("\r\n") + "\r\n";
+}
+
+function readTable(text, need) {
+  const raw = parseCSV(text);
+  if (!raw.length) throw new Error("File rỗng.");
+  const head = raw[0];
+  const miss = need.filter(c => !head.includes(c));
+  if (miss.length) throw new Error("File thiếu cột: " + miss.join(", ") + ".");
+  const recs = [];
+  for (let i = 1; i < raw.length; i++) {
+    if (raw[i].length === 1 && raw[i][0] === "") continue;
+    if (raw[i].length !== head.length) throw new Error("Dòng " + i + " của file có " + raw[i].length + " cột, tiêu đề có " + head.length + ".");
+    const o = {};
+    head.forEach((h, j) => { o[h] = raw[i][j]; });
+    recs.push(o);
+  }
+  return recs;
+}
+
+function parseFields(cell) {
+  if (!cell) return [];
+  return cell.split("\n").filter(s => s.trim()).map(line => {
+    const m = line.match(/^([A-Za-z]+):(\S+) (\S+)(?: enum\[(.*)\])?$/);
+    if (!m) return { key: line, loc: "", name: line, type: "", enum: [], bad: true };
+    return { key: m[1] + ":" + m[2], loc: m[1], name: m[2], type: m[3], enum: m[4] ? m[4].split("|") : [] };
+  });
+}
+
+function blankLabel() {
+  return { A: "", B: "", C: "", U: "0", victim: [], role: [], order: "", ghi_chu: "" };
+}
+
+function isCore(l) {
+  return CORE_A.includes(l.A) && CORE_B.includes(l.B);
+}
+
+function enumOf(roleKeys, fields) {
+  const out = [];
+  for (const f of fields) if (roleKeys.includes(f.key)) for (const v of f.enum) if (!out.includes(v)) out.push(v);
+  return out;
+}
+
+function orderTokens(s) {
+  const t = s.split(/[<=]/).map(x => x.trim());
+  return t.some(x => !x) ? null : t;
+}
+
+function normOrder(s) {
+  return s.replace(/\s*([<=])\s*/g, "$1").trim();
+}
+
+function validate(l, fields) {
+  const e = [];
+  if (!l.A) e.push("Chưa chọn A.");
+  if (!l.B) e.push("Chưa chọn B.");
+  if (!l.C) e.push("Chưa chọn C.");
+  for (const k of ["A", "B", "C"]) if (l[k] && !CODES[k].some(c => c[0] === l[k])) e.push(k + " có mã không có trong phiếu: " + l[k]);
+  if (l.U !== "0" && l.U !== "1") e.push("U phải là 0 hoặc 1.");
+  if (!isCore(l)) {
+    if (l.victim.length || l.role.length || l.order) e.push("Ba cột thêm chỉ điền khi A là existing hoặc self và B là role_set, role_remove, perm, admin_flag, member_role hoặc member_remove.");
+    return e;
+  }
+  const keys = new Set(fields.map(f => f.key));
+  for (const v of l.victim) if (v !== "self" && !keys.has(v)) e.push("victim có trường không nằm trong danh sách trường: " + v);
+  for (const r of l.role) if (!keys.has(r)) e.push("role có trường không nằm trong danh sách trường: " + r);
+  const ev = enumOf(l.role, fields);
+  if (ev.length && !l.order) e.push("Trường role có enum: điền order từ quyền thấp tới quyền cao, hoặc unordered nếu không xếp được.");
+  if (!ev.length && l.order) e.push("order chỉ điền khi một trường role có enum.");
+  if (ev.length && l.order && l.order !== "unordered") {
+    const t = orderTokens(l.order);
+    if (t === null) e.push("order sai cú pháp: các giá trị ngăn cách bằng < hoặc =, không để trống giữa hai dấu.");
+    else {
+      const seen = new Set();
+      for (const x of t) {
+        if (!ev.includes(x)) e.push("order có giá trị không nằm trong enum của trường role: " + x);
+        if (seen.has(x)) e.push("order lặp giá trị: " + x);
+        seen.add(x);
+      }
+    }
+  }
+  return e;
+}
+
+function isEmptyLabel(l) {
+  return !l.A && !l.B && !l.C && l.U === "0" && !l.victim.length && !l.role.length && !l.order && !l.ghi_chu;
+}
+
+function statusOf(l, fields) {
+  if (!l || isEmptyLabel(l)) return "empty";
+  if (!l.A || !l.B || !l.C) return "part";
+  return validate(l, fields).length ? "bad" : "done";
+}
+
+function exportText(rows, labels) {
+  const out = [OUT_COLS];
+  for (const r of rows) {
+    const l = labels[r.stt] || blankLabel();
+    out.push([r.stt, r.method, r.path, l.A, l.B, l.C, l.U, l.victim.join("|"), l.role.join("|"), l.order, l.ghi_chu]);
+  }
+  return toCSV(out);
+}
+
+function importLabels(rows, text) {
+  const recs = readTable(text, OUT_COLS);
+  const byStt = new Map(rows.map(r => [r.stt, r]));
+  const labels = {};
+  for (const rec of recs) {
+    const r = byStt.get(rec.stt);
+    if (!r) throw new Error("Dòng " + rec.stt + " của file kết quả không có trong file đợt đang mở.");
+    if (r.method !== rec.method || r.path !== rec.path) throw new Error("Dòng " + rec.stt + " không khớp method hoặc path: file kết quả này không thuộc file đợt đang mở.");
+    const split = s => s ? s.split("|").filter(Boolean) : [];
+    labels[rec.stt] = { A: rec.A, B: rec.B, C: rec.C, U: rec.U || "0", victim: split(rec.victim), role: split(rec.role), order: rec.order, ghi_chu: rec.ghi_chu };
+  }
+  return labels;
+}
+</script>
+
+<script>
+const S = { name: "", rows: [], labels: {}, cur: 0, key: "", storageOK: true };
+const $ = id => document.getElementById(id);
+
+function h(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  if (attrs) for (const [k, v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k === "class") e.className = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else if (v === true) e.setAttribute(k, "");
+    else e.setAttribute(k, v);
+  }
+  for (const c of kids.flat()) {
+    if (c == null || c === false) continue;
+    e.append(c.nodeType ? c : document.createTextNode(String(c)));
+  }
+  return e;
+}
+
+function showMsg(text, isErr) {
+  const m = $("msg");
+  m.textContent = text;
+  m.className = "show" + (isErr ? " err" : "");
+}
+
+function hideMsg() { $("msg").className = ""; }
+
+function storageKey(name, rows) {
+  let x = 0;
+  const s = rows.map(r => r.stt + " " + r.method + " " + r.path).join("\n");
+  for (let i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) | 0;
+  return "gannhan-v1|" + name + "|" + rows.length + "|" + (x >>> 0).toString(16);
+}
+
+function save() {
+  try {
+    localStorage.setItem(S.key, JSON.stringify({ labels: S.labels, cur: S.cur, t: Date.now() }));
+    S.storageOK = true;
+    $("saved").textContent = "Đã lưu trong trình duyệt " + new Date().toLocaleTimeString("vi-VN");
+    $("saved").className = "";
+  } catch (err) {
+    S.storageOK = false;
+    $("saved").textContent = "Trình duyệt không lưu được. Bấm Xuất kết quả thường xuyên.";
+    $("saved").className = "bad";
+  }
+}
+
+function restore() {
+  try {
+    const v = localStorage.getItem(S.key);
+    return v ? JSON.parse(v) : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+function lab(i) {
+  const st = S.rows[i].stt;
+  if (!S.labels[st]) S.labels[st] = blankLabel();
+  return S.labels[st];
+}
+
+function counts() {
+  let done = 0, bad = 0;
+  for (const r of S.rows) {
+    const s = statusOf(S.labels[r.stt], r.fields);
+    if (s === "done") done++;
+    if (s === "bad") bad++;
+  }
+  return { done, bad };
+}
+
+function updateProgress() {
+  const c = counts();
+  $("progress").textContent = "Xong " + c.done + " / " + S.rows.length + (c.bad ? " · có lỗi " + c.bad : "");
+}
+
+function passFilter(r) {
+  const f = $("filter").value;
+  const l = S.labels[r.stt];
+  const s = statusOf(l, r.fields);
+  if (f === "todo") return s !== "done";
+  if (f === "bad") return s === "bad";
+  if (f === "u") return l && l.U === "1";
+  if (f === "note") return l && l.ghi_chu;
+  return true;
+}
+
+function renderList() {
+  const ul = $("list");
+  ul.textContent = "";
+  S.rows.forEach((r, i) => {
+    if (!passFilter(r)) return;
+    const li = h("li", { "data-i": i, class: i === S.cur ? "cur" : null, onclick: () => go(i) },
+      h("span", { class: "dot " + statusOf(S.labels[r.stt], r.fields) }),
+      h("span", { class: "t" }, r.stt + " · " + r.method + " " + r.path));
+    ul.append(li);
+  });
+}
+
+function updateListItem() {
+  const li = document.querySelector('#list li[data-i="' + S.cur + '"]');
+  if (li) li.firstChild.className = "dot " + statusOf(lab(S.cur), S.rows[S.cur].fields);
+}
+
+function setLabel(fn) {
+  const l = lab(S.cur);
+  fn(l);
+  if (!isCore(l)) { l.victim = []; l.role = []; l.order = ""; }
+  else if (!enumOf(l.role, S.rows[S.cur].fields).length) l.order = "";
+  save();
+  refresh();
+}
+
+function radioGroup(key, title, notes) {
+  const l = lab(S.cur);
+  return h("fieldset", null, h("legend", null, title),
+    CODES[key].map(([code, mean]) => h("label", { class: "opt" },
+      h("input", { type: "radio", name: "f" + key, value: code, checked: l[key] === code,
+        onchange: () => setLabel(x => { x[key] = code; }) }),
+      h("code", null, code), h("span", null, mean))),
+    (notes || []).map(n => h("p", { class: "note" }, n)));
+}
+
+function renderDetail() {
+  const r = S.rows[S.cur];
+  const l = lab(S.cur);
+  const d = $("detail");
+  d.textContent = "";
+  d.hidden = false;
+  $("welcome").hidden = true;
+
+  const ftable = h("table", { class: "fields" },
+    h("thead", null, h("tr", null, h("th", null, "victim"), h("th", null, "role"), h("th", null, "Trường"), h("th", null, "Kiểu"), h("th", null, "enum"))),
+    h("tbody", null,
+      h("tr", { class: "selfrow" },
+        h("td", { class: "cb" }, h("input", { type: "checkbox", "data-k": "self", "data-c": "victim", "aria-label": "victim self" })),
+        h("td", { class: "cb" }), h("td", { colspan: 3 }, h("code", null, "self"), " (chính người gọi)")),
+      r.fields.map(f => h("tr", null,
+        h("td", { class: "cb" }, h("input", { type: "checkbox", "data-k": f.key, "data-c": "victim", "aria-label": "victim " + f.key })),
+        h("td", { class: "cb" }, h("input", { type: "checkbox", "data-k": f.key, "data-c": "role", "aria-label": "role " + f.key })),
+        h("td", { class: "k" }, h("code", null, f.key)),
+        h("td", null, h("code", null, f.type)),
+        h("td", { class: "e" }, f.enum.join(" | "))))));
+  ftable.addEventListener("change", ev => {
+    const t = ev.target;
+    if (!t.dataset.c) return;
+    setLabel(x => {
+      const arr = x[t.dataset.c];
+      const i = arr.indexOf(t.dataset.k);
+      if (t.checked && i < 0) arr.push(t.dataset.k);
+      if (!t.checked && i >= 0) arr.splice(i, 1);
+    });
+  });
+
+  const left = h("div", null,
+    h("div", { class: "card" },
+      h("div", { class: "rowhead" }, h("span", { class: "n" }, "Dòng " + r.stt + " / " + S.rows.length),
+        h("span", { class: "method" }, r.method), h("code", { class: "path" }, r.path)),
+      h("h3", null, "Mô tả"),
+      r.mo_ta ? h("p", { class: "desc" }, r.mo_ta) : h("p", { class: "none" }, "(không có mô tả)"),
+      h("h3", null, "Schema của body"),
+      r.schema ? h("p", { class: "mono" }, r.schema) : h("p", { class: "none" }, "(không có)"),
+      h("h3", null, "Trường (" + r.fields.length + ")"),
+      h("p", { class: "note", id: "fhint" }),
+      ftable));
+
+  const orderIn = h("input", { id: "orderIn", type: "text", value: l.order, spellcheck: "false", autocomplete: "off",
+    oninput: ev => { lab(S.cur).order = ev.target.value.trim(); save(); refreshErrors(); updateListItem(); updateProgress(); },
+    onchange: ev => { const x = lab(S.cur); x.order = normOrder(ev.target.value); ev.target.value = x.order; save(); refreshErrors(); } });
+
+  const right = h("div", null,
+    radioGroup("A", "A. Chủ thể: request tác động lên ai", ["POST /users có trường vai trò là new. Nếu mô tả nói tạo hoặc cập nhật thì là existing."]),
+    radioGroup("B", "B. Hành động: chọn một mã cụ thể nhất", [
+      "Operation cập nhật hồ sơ chung mà danh sách trường có trường vai trò hoặc cờ admin thì chọn theo trường đó.",
+      "Đặt cấp truy cập của một user lên repo, dự án, workspace, tổ chức là member_role; lên file, tài liệu là resource_acl."]),
+    radioGroup("C", "C. Chiều tác động"),
+    h("fieldset", null, h("legend", null, "U"),
+      h("label", { class: "opt" }, h("input", { type: "checkbox", id: "uIn", checked: l.U === "1",
+        onchange: ev => setLabel(x => { x.U = ev.target.checked ? "1" : "0"; }) }),
+        h("span", null, "U = 1 khi chữ trong khối không đủ để chọn A, B hoặc C có căn cứ; vẫn điền mã gần nhất."))),
+    h("fieldset", { id: "extra" }, h("legend", null, "Ba cột thêm"),
+      h("p", { class: "note", id: "xhint" }),
+      h("p", { class: "sum" }, h("b", null, "victim: "), h("code", { id: "vSum" })),
+      h("p", { class: "sum" }, h("b", null, "role: "), h("code", { id: "rSum" })),
+      h("p", { class: "sum" }, h("b", null, "order")),
+      orderIn,
+      h("div", { class: "chips", id: "chips" }),
+      h("p", { class: "note" }, "victim: các trường chỉ tài khoản bị tác động. Ghi self nếu đối tượng là chính người gọi. Để trống nếu request không chỉ ra."),
+      h("p", { class: "note" }, "role: các trường mang giá trị vai trò, quyền hoặc cờ admin mới. Mảng quyền mà phần tử là object thì chọn trường mảng, không chọn trường con. Để trống nếu thao tác không mang giá trị."),
+      h("p", { class: "note" }, "order: các giá trị enum từ quyền thấp tới quyền cao, ngăn cách bằng <, ngang nhau ghi =; unordered nếu không xếp được. Bỏ qua giá trị không phải quyền; none vẫn là mức thấp nhất nếu nghĩa là không có quyền.")),
+    h("fieldset", null, h("legend", null, "Ghi chú (không bắt buộc)"),
+      h("textarea", { id: "noteIn", placeholder: "Ghi khi phiếu không nói tới trường hợp của dòng này, hoặc khi bật U.",
+        oninput: ev => { lab(S.cur).ghi_chu = ev.target.value; save(); updateListItem(); } }, l.ghi_chu)),
+    h("div", { id: "errs", hidden: true }),
+    h("div", { id: "okbox", hidden: true }, "Dòng này đã đủ."),
+    h("nav", { class: "go" },
+      h("button", { id: "prevBtn", onclick: () => go(S.cur - 1), disabled: S.cur === 0 }, "← Dòng trước"),
+      h("button", { id: "nextBtn", onclick: () => go(S.cur + 1), disabled: S.cur === S.rows.length - 1 }, "Dòng sau →"),
+      h("button", { id: "todoBtn", class: "primary", onclick: nextTodo }, "Dòng chưa xong tiếp theo")));
+
+  d.append(left, right);
+  refresh();
+}
+
+function refresh() {
+  const r = S.rows[S.cur];
+  const l = lab(S.cur);
+  const core = isCore(l);
+  document.querySelectorAll("#detail input[data-c]").forEach(cb => {
+    cb.disabled = !core;
+    cb.checked = l[cb.dataset.c].includes(cb.dataset.k);
+  });
+  $("extra").className = core ? "" : "off";
+  $("xhint").textContent = core
+    ? "Đủ điều kiện: tích victim và role trong bảng trường ở bên trái."
+    : "Chỉ điền khi A là existing hoặc self, và B là role_set, role_remove, perm, admin_flag, member_role hoặc member_remove. Các trường hợp khác để trống.";
+  $("fhint").textContent = core ? "Tích cột victim, role cho các trường phù hợp." : "Cột victim và role mở khi đủ điều kiện ba cột thêm.";
+  $("vSum").textContent = l.victim.join("|") || "(trống)";
+  $("rSum").textContent = l.role.join("|") || "(trống)";
+  const ev = core ? enumOf(l.role, r.fields) : [];
+  const oi = $("orderIn");
+  oi.disabled = !ev.length;
+  oi.placeholder = ev.length ? "ví dụ: " + ev.slice(0, 3).join("<") : "Mở khi một trường role có enum";
+  if (oi.value !== l.order) oi.value = l.order;
+  const chips = $("chips");
+  chips.textContent = "";
+  if (ev.length) {
+    const add = s => { const x = lab(S.cur); x.order = normOrder(x.order + s); save(); refresh(); };
+    for (const v of ev) chips.append(h("button", { type: "button", onclick: () => {
+      const x = lab(S.cur).order;
+      add(x === "" || /[<=]$/.test(x) ? v : "<" + v);
+    } }, v));
+    chips.append(h("button", { type: "button", title: "Giá trị kế tiếp ngang mức", onclick: () => add("=") }, "="));
+    chips.append(h("button", { type: "button", title: "Giá trị kế tiếp cao hơn", onclick: () => add("<") }, "<"));
+    chips.append(h("button", { type: "button", onclick: () => { lab(S.cur).order = "unordered"; save(); refresh(); } }, "unordered"));
+    chips.append(h("button", { type: "button", onclick: () => { lab(S.cur).order = ""; save(); refresh(); } }, "Xoá order"));
+  }
+  refreshErrors();
+  updateListItem();
+  updateProgress();
+}
+
+function refreshErrors() {
+  const r = S.rows[S.cur];
+  const l = lab(S.cur);
+  const st = statusOf(l, r.fields);
+  const errs = st === "empty" ? [] : validate(l, r.fields);
+  const box = $("errs");
+  box.hidden = !errs.length;
+  box.textContent = "";
+  if (errs.length) box.append(h("b", null, "Chưa xong:"), h("ul", null, errs.map(e => h("li", null, e))));
+  $("okbox").hidden = st !== "done";
+}
+
+function go(i) {
+  if (i < 0 || i >= S.rows.length) return;
+  S.cur = i;
+  save();
+  renderList();
+  renderDetail();
+  const li = document.querySelector('#list li[data-i="' + i + '"]');
+  if (li) li.scrollIntoView({ block: "nearest" });
+  $("main").scrollTop = 0;
+}
+
+function nextTodo() {
+  const n = S.rows.length;
+  for (let k = 1; k <= n; k++) {
+    const i = (S.cur + k) % n;
+    if (statusOf(S.labels[S.rows[i].stt], S.rows[i].fields) !== "done") return go(i);
+  }
+  showMsg("Mọi dòng đã xong. Bấm Xuất kết quả để tải file kết quả.", false);
+}
+
+function readFile(file) {
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result);
+    fr.onerror = () => rej(fr.error);
+    fr.readAsText(file, "utf-8");
+  });
+}
+
+async function openSource(file) {
+  try {
+    const recs = readTable(await readFile(file), SRC_COLS);
+    if (!recs.length) throw new Error("File không có dòng nào.");
+    S.rows = recs.map(o => ({ stt: o.stt, method: o.method, path: o.path, mo_ta: o.mo_ta, schema: o.schema, fields: parseFields(o.truong) }));
+    S.name = file.name;
+    S.key = storageKey(S.name, S.rows);
+    const old = restore();
+    S.labels = old ? old.labels : {};
+    S.cur = old && old.cur < S.rows.length ? old.cur : 0;
+    $("fname").textContent = S.name;
+    $("expBtn").disabled = false;
+    $("resBtn").className = "btn";
+    if (old) {
+      const c = counts();
+      showMsg("Đã mở lại phần đã làm của " + S.name + ": xong " + c.done + " / " + S.rows.length + " dòng.", false);
+    } else hideMsg();
+    renderList();
+    renderDetail();
+    save();
+  } catch (err) {
+    showMsg("Không mở được " + file.name + ": " + err.message, true);
+  }
+}
+
+async function openResult(file) {
+  try {
+    const labels = importLabels(S.rows, await readFile(file));
+    const has = Object.keys(S.labels).some(k => !isEmptyLabel(S.labels[k]));
+    if (has && !confirm("Nạp file kết quả sẽ thay toàn bộ nhãn đang có trong công cụ cho " + S.name + ". Tiếp tục?")) return;
+    S.labels = labels;
+    save();
+    renderList();
+    renderDetail();
+    const c = counts();
+    showMsg("Đã nạp " + file.name + ": xong " + c.done + " / " + S.rows.length + " dòng.", false);
+  } catch (err) {
+    showMsg("Không nạp được " + file.name + ": " + err.message, true);
+  }
+}
+
+function doExport() {
+  const c = counts();
+  const left = S.rows.length - c.done;
+  if (left && !confirm("Còn " + left + " dòng chưa xong hoặc có lỗi. Vẫn xuất file? (Dùng được làm bản sao lưu.)")) return;
+  const blob = new Blob([exportText(S.rows, S.labels)], { type: "text/csv;charset=utf-8" });
+  const a = h("a", { href: URL.createObjectURL(blob), download: "ket-qua-" + S.name.replace(/\.csv$/i, "") + ".csv" });
+  document.body.append(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  showMsg("Đã xuất " + a.download + ": xong " + c.done + " / " + S.rows.length + " dòng.", false);
+}
+
+$("srcIn").addEventListener("change", ev => { if (ev.target.files[0]) openSource(ev.target.files[0]); ev.target.value = ""; });
+$("resIn").addEventListener("change", ev => { if (ev.target.files[0]) openResult(ev.target.files[0]); ev.target.value = ""; });
+$("expBtn").addEventListener("click", doExport);
+$("filter").addEventListener("change", renderList);
+document.addEventListener("keydown", ev => {
+  if (!S.rows.length) return;
+  const t = ev.target.tagName;
+  if (t === "INPUT" || t === "TEXTAREA" || t === "SELECT") return;
+  if (ev.key === "ArrowRight") { ev.preventDefault(); go(S.cur + 1); }
+  if (ev.key === "ArrowLeft") { ev.preventDefault(); go(S.cur - 1); }
+});
+window.addEventListener("beforeunload", ev => {
+  if (S.rows.length && !S.storageOK) { ev.preventDefault(); ev.returnValue = ""; }
+});
+</script>
+</body>
+</html>

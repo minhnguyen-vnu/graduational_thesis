@@ -1,0 +1,104 @@
+Dưới đây là định nghĩa đầy đủ, chép nguyên văn từ nop-hoi-dong/huong-dan/phieu-cho-AI.md, bỏ phần U vì U đã bỏ.
+
+A. Chủ thể: request tác động lên ai
+
+┌──────────┬──────────────────────────────────────────────────────────────────────────────────────────┐
+│    Mã    │                                          Nghĩa                                           │
+├──────────┼──────────────────────────────────────────────────────────────────────────────────────────┤
+│ existing │ Một tài khoản người dùng đã tồn tại, được chỉ định trong request (path, query hoặc body) │
+├──────────┼──────────────────────────────────────────────────────────────────────────────────────────┤
+│ self     │ Chính người gọi, ví dụ /me, hoặc /user/... không có mã người dùng                        │
+├──────────┼──────────────────────────────────────────────────────────────────────────────────────────┤
+│ new      │ Tài khoản tạo mới hoặc mời mới trong chính request                                       │
+├──────────┼──────────────────────────────────────────────────────────────────────────────────────────┤
+│ group    │ Nhóm, team, đơn vị tổ chức, không chỉ định từng người                                    │
+├──────────┼──────────────────────────────────────────────────────────────────────────────────────────┤
+│ nonuser  │ Client, app, API key, service, device                                                    │
+├──────────┼──────────────────────────────────────────────────────────────────────────────────────────┤
+│ none     │ Không tác động lên chủ thể nào ở trên, ví dụ tạo tài liệu, định nghĩa role               │
+└──────────┴──────────────────────────────────────────────────────────────────────────────────────────┘
+
+POST /users có trường vai trò là new. Nếu mô tả nói tạo hoặc cập nhật thì là existing.
+
+B. Hành động: chọn một mã cụ thể nhất
+
+┌────────────────┬──────────────────────────────────────────────────────────────────────────────────────────────┐
+│       Mã       │                                            Nghĩa                                             │
+├────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ role_set       │ Đặt hoặc đổi vai trò của chủ thể                                                             │
+├────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ role_remove    │ Gỡ một vai trò khỏi chủ thể                                                                  │
+├────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ perm           │ Cấp hoặc thu quyền, scope, cấp truy cập của chủ thể                                          │
+├────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ admin_flag     │ Đặt cờ admin, owner, superuser, staff                                                        │
+├────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ member_role    │ Đổi vai trò hoặc cấp truy cập của một thành viên trong tổ chức, dự án, nhóm, repo, workspace │
+├────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ member_remove  │ Gỡ một thành viên khỏi tổ chức, dự án, nhóm, repo, workspace                                 │
+├────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ disable        │ Khoá, mở khoá, kích hoạt, vô hiệu hoá tài khoản                                              │
+├────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ delete_account │ Xoá tài khoản                                                                                │
+├────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ role_def       │ Định nghĩa hoặc sửa quyền của một role, nhóm quyền, policy                                   │
+├────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ credential     │ Tạo, sửa, thu hồi token, API key, mật khẩu, client, scope của chúng                          │
+├────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ resource_acl   │ Chia sẻ hoặc ACL trên một tài nguyên cụ thể như file, tài liệu                               │
+├────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ other          │ Mọi thứ còn lại                                                                              │
+└────────────────┴──────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Hai luật đi kèm:
+- Operation cập nhật hồ sơ chung mà danh sách trường có trường vai trò hoặc cờ admin thì chọn theo trường đó.
+- Đặt cấp truy cập của một user lên repo, dự án, workspace, tổ chức là member_role; lên file, tài liệu là resource_acl.
+
+C. Chiều tác động
+
+┌─────────┬──────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│   Mã    │                                                    Nghĩa                                                     │
+├─────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ down    │ Request này có thể làm quyền của chủ thể giảm: gỡ, thu, tắt cờ, hoặc đặt một giá trị trong nhiều mức vai trò │
+├─────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ up      │ Request này chỉ có thể làm quyền tăng: cấp thêm, thăng cấp, thêm vào danh sách                               │
+├─────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ unclear │ Không rõ chiều, hoặc operation không liên quan tới quyền                                                     │
+└─────────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Ba cột thêm
+
+Chỉ điền khi A là existing hoặc self, và B là role_set, role_remove, perm, admin_flag, member_role hoặc member_remove. Các trường hợp khác để trống.
+
+- victim: các trường chỉ tài khoản bị tác động, ghi đúng vị trí:tên như trong khối, ngăn cách bằng |. Ghi self nếu đối tượng là chính người gọi. Để trống nếu request không chỉ ra.
+- role: các trường mang giá trị vai trò, quyền hoặc cờ admin mới, ghi vị trí:tên, ngăn cách bằng |. Mảng quyền mà phần tử là object thì ghi trường mảng (body:roles), không ghi trường con. Để trống nếu thao tác không mang giá trị, ví dụ DELETE /orgs/{org}/admins/{user}.
+- order: nếu một trường role có enum: các giá trị từ quyền thấp tới quyền cao, ngăn cách bằng <, giá trị ngang nhau ghi chung bằng =; ghi unordered nếu không xếp được. Bỏ qua giá trị không phải quyền; none vẫn là mức thấp nhất nếu nghĩa là không có quyền. Để trống nếu không có enum.
+
+Ví dụ trong hướng dẫn
+
+┌───────────┬──────────┬───────────────┬─────────┬───────────────┬──────────────┬─────────────────────┐
+│  row_id   │    A     │       B       │    C    │    victim     │     role     │        order        │
+├───────────┼──────────┼───────────────┼─────────┼───────────────┼──────────────┼─────────────────────┤
+│ S900-0001 │ existing │ role_set      │ down    │ path:username │ body:role    │ viewer<editor<admin │
+├───────────┼──────────┼───────────────┼─────────┼───────────────┼──────────────┼─────────────────────┤
+│ S900-0002 │ none     │ role_def      │ unclear │               │              │                     │
+├───────────┼──────────┼───────────────┼─────────┼───────────────┼──────────────┼─────────────────────┤
+│ S900-0003 │ existing │ admin_flag    │ down    │ path:userId   │ body:isAdmin │                     │
+├───────────┼──────────┼───────────────┼─────────┼───────────────┼──────────────┼─────────────────────┤
+│ S900-0004 │ none     │ other         │ unclear │               │              │                     │
+├───────────┼──────────┼───────────────┼─────────┼───────────────┼──────────────┼─────────────────────┤
+│ S900-0005 │ existing │ role_remove   │ down    │ path:username │              │                     │
+├───────────┼──────────┼───────────────┼─────────┼───────────────┼──────────────┼─────────────────────┤
+│ S900-0006 │ existing │ perm          │ up      │ path:userId   │ body:scopes  │                     │
+├───────────┼──────────┼───────────────┼─────────┼───────────────┼──────────────┼─────────────────────┤
+│ S900-0007 │ existing │ member_remove │ down    │ path:username │              │                     │
+├───────────┼──────────┼───────────────┼─────────┼───────────────┼──────────────┼─────────────────────┤
+│ S900-0008 │ new      │ role_set      │ unclear │               │              │                     │
+├───────────┼──────────┼───────────────┼─────────┼───────────────┼──────────────┼─────────────────────┤
+│ S900-0009 │ existing │ disable       │ unclear │               │              │                     │
+└───────────┴──────────┴───────────────┴─────────┴───────────────┴──────────────┴─────────────────────┘
+
+- S900-0005 là DELETE /orgs/{org}/owners/{username}. path:org không chỉ ra tài khoản nên không ghi vào victim.
+- S900-0006 là POST /users/{userId}/scopes. Op này chỉ thêm quyền nên C là up.
+
+Thế nào là T (do ta định nghĩa, không nằm trong phiếu): A là existing hoặc self, B thuộc 6 mã role_set, role_remove, perm, admin_flag, member_role, member_remove, và C là down hoặc unclear.
