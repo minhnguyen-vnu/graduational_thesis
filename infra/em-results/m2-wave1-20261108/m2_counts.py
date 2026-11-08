@@ -8,12 +8,25 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 WAVE2 = os.path.join(BASE, "..", "m2-wave2-20261108")
 
 
-def wilson(k, n, z=1.959963984540054):
-    p = k / n
-    d = 1 + z * z / n
-    c = (p + z * z / (2 * n)) / d
-    h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
-    return max(0.0, c - h), min(1.0, c + h)
+def binom_cdf(k, n, p):
+    return sum(math.comb(n, i) * p ** i * (1 - p) ** (n - i) for i in range(k + 1))
+
+
+def bisect(pred):
+    lo, hi = 0.0, 1.0
+    for _ in range(100):
+        mid = (lo + hi) / 2
+        if pred(mid):
+            hi = mid
+        else:
+            lo = mid
+    return (lo + hi) / 2
+
+
+def clopper_pearson(k, n, alpha=0.05):
+    lo = 0.0 if k == 0 else bisect(lambda p: 1 - binom_cdf(k - 1, n, p) >= alpha / 2)
+    hi = 1.0 if k == n else bisect(lambda p: binom_cdf(k, n, p) <= alpha / 2)
+    return lo, hi
 
 
 def fisher_one_sided(a, n1, b, n2):
@@ -67,7 +80,7 @@ for name, v, f in targets:
                 raise SystemExit(f"{name} seed {r['seed']}: det970={r['det']}")
 
 print("## Detection and false positives")
-print("| Target | Arm | Runs | Runs with a performed triple | Triples | 970 raised | Wilson 95% |")
+print("| Target | Arm | Runs | Runs with a performed triple | Triples | 970 raised | Clopper-Pearson 95% |")
 print("|---|---|---|---|---|---|---|")
 for name, v, f in targets:
     for arm, side in (("vuln", v), ("fixed", f)):
@@ -77,8 +90,8 @@ for name, v, f in targets:
         det = sum(1 for r in side if r["det"] == "1")
         ci = ""
         if arm == "vuln":
-            lo, hi = wilson(det, n)
-            ci = f"[{round(lo * 100)}, {round(hi * 100)}]"
+            lo, hi = clopper_pearson(det, n)
+            ci = f"[{lo * 100:.1f}, {hi * 100:.1f}]"
         print(f"| {name} | {arm} | {n} | {withT}/{n} | {tri} | {det}/{n} | {ci} |")
 
 print()
@@ -120,5 +133,10 @@ for name, v, f in targets:
 fp_n = sum(len(f) for _, _, f in targets)
 fp_k = sum(1 for _, _, f in targets for r in f if r["det"] == "1")
 fixed_tri = sum(r["triples"] for _, _, f in targets for r in f)
+fixed_with = sum(1 for _, _, f in targets for r in f if r["triples"] > 0)
+fp_with = sum(1 for _, _, f in targets for r in f if r["triples"] > 0 and r["det"] == "1")
+fp_lo, fp_hi = clopper_pearson(fp_with, fixed_with)
 print()
 print(f"False positives: {fp_k} in {fp_n} fixed-target runs, over {fixed_tri} triples performed on patched code")
+print(f"False-positive rate over fixed runs with a triple: {fp_with}/{fixed_with}, "
+      f"Clopper-Pearson 95% [{fp_lo * 100:.1f}, {fp_hi * 100:.1f}]")

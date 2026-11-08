@@ -88,7 +88,7 @@ Ba lượt trên 519 dòng của `labelling-r2` (`rules-draft.md` §9):
 | L2 | một LLM khác model, mù, không thấy L1 | toàn bộ |
 | H | người | 44 dòng L1 khác L2 hoặc có `U`; toàn bộ 37 dòng cùng `R`; 40 trên 438 dòng cùng `N`, bốc bằng hạt giống `20260918` trước khi người nhìn dòng nào |
 
-Số liệu: `infra/analysis/lexicon-rules/labelling-r2/kappa-output-20260926.txt` (chạy lại `kappa_r2.py`).
+Số liệu: `infra/analysis/lexicon-rules/labelling-r2/kappa-output-20261108.txt` (chạy lại `kappa_r2.py`).
 
 | Đại lượng | Giá trị |
 |---|---|
@@ -96,7 +96,7 @@ Số liệu: `infra/analysis/lexicon-rules/labelling-r2/kappa-output-20260926.tx
 | Người–LLM trên tầng đồng thuận, nhãn độc lập của người, có trọng số | thô 0,889; `pe` 0,824; kappa 0,369 |
 | Người khác LLM, tầng cùng `R` | 20 trên 37 |
 | Người khác LLM, tầng cùng `N` | 3 trên 40 |
-| Tỉ lệ sai ước lượng của tầng đồng thuận | 0,111; Wilson 95% của tầng `N` quy về cả tầng: [0,024; 0,183] |
+| Tỉ lệ sai ước lượng của tầng đồng thuận | 0,111; Clopper–Pearson 95% của tầng `N` quy về cả tầng: [0,015; 0,188] |
 | Tầng lệch, 44 dòng | nhãn người theo L1 24, theo L2 11, khác cả hai 9 |
 
 Kappa có trọng số: mỗi dòng tầng `R` trọng số 1, mỗi dòng tầng `N` trọng số 438/40 (`sampling-plan.md` §1d).

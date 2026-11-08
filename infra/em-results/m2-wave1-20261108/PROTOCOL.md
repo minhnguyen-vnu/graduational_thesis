@@ -1,7 +1,7 @@
 # M2 model rerun campaign, 2026-11-08
 
 Chạy lại mọi target với mô hình M2 (Naive Bayes rút lại từ corpus gán nhãn lại). Kết quả và bảng số:
-`docs/results.md` §0–§1 (đếm: `m2_counts.py`, `m2-counts-final.out`). Thư mục: wave 1 ở đây, wave 2 ở
+`docs/results.md` §0–§1 (đếm: `m2_counts.py`, `m2-counts-cp.out`). Thư mục: wave 1 ở đây, wave 2 ở
 `../m2-wave2-20261108/`.
 
 ## Jar

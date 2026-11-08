@@ -17,23 +17,23 @@ Mỗi lượt chạy ghi lại mã trạng thái HTTP của các bộ ba đã th
 \section{Hiệu quả phát hiện và độ chính xác}
 \label{sec:eval_detection}
 
-Bảng~\ref{tab:detection_wilson} tổng hợp số lượt dựng được bộ ba và số lượt báo vi phạm trên từng biến thể. Cột cuối của bảng ghi khoảng tin cậy Wilson 95\% của tỷ lệ phát hiện trên biến thể có lỗ hổng \cite{wilson1927interval}. Khoảng Wilson phù hợp với mẫu nhỏ và luôn nằm trong đoạn [0; 1], kể cả khi tỷ lệ quan sát tiến sát 0 hoặc 1.
+Bảng~\ref{tab:detection} tổng hợp số lượt dựng được bộ ba và số lượt báo vi phạm trên từng biến thể. Cột cuối của bảng ghi khoảng tin cậy Clopper--Pearson 95\% của tỷ lệ phát hiện trên biến thể có lỗ hổng \cite{clopper1934use}. Khoảng này tính chính xác từ phân phối nhị thức, nên độ phủ đạt ít nhất 95\% kể cả với mẫu 5 lượt.
 
 \begin{table}[htbp]
   \centering
   \caption{Kết quả phát hiện và báo động giả theo lượt chạy}
-  \label{tab:detection_wilson}
+  \label{tab:detection}
   \begin{tabularx}{\textwidth}{@{}l l c c X@{}}
     \toprule
-    \textbf{Ứng dụng} & \textbf{Biến thể} & \textbf{Lượt có bộ ba} & \textbf{Lượt báo vi phạm} & \textbf{Wilson 95\% (\%)} \\
+    \textbf{Ứng dụng} & \textbf{Biến thể} & \textbf{Lượt có bộ ba} & \textbf{Lượt báo vi phạm} & \textbf{Clopper--Pearson 95\% (\%)} \\
     \midrule
-    reports-api     & có lỗ hổng & 19/20 & 19/20 & [76; 99] \\
+    reports-api     & có lỗ hổng & 19/20 & 19/20 & [75,1; 99,9] \\
     reports-api     & đã vá      & 19/20 & 0/20  & --- \\
-    vampi-seeded    & có lỗ hổng & 7/20  & 7/20  & [18; 57] \\
+    vampi-seeded    & có lỗ hổng & 7/20  & 7/20  & [15,4; 59,2] \\
     vampi-seeded    & đã vá      & 6/20  & 0/20  & --- \\
-    pyLoad          & có lỗ hổng & 5/5   & 5/5   & [57; 100] \\
+    pyLoad          & có lỗ hổng & 5/5   & 5/5   & [47,8; 100] \\
     pyLoad          & đã vá      & 5/5   & 0/5   & --- \\
-    artifact-keeper & có lỗ hổng & 5/5   & 5/5   & [57; 100] \\
+    artifact-keeper & có lỗ hổng & 5/5   & 5/5   & [47,8; 100] \\
     artifact-keeper & đã vá      & 0/3   & 0/3   & --- \\
     \bottomrule
   \end{tabularx}
@@ -61,7 +61,7 @@ Bảng~\ref{tab:fourcells} phân loại lượt đã thực hiện ít nhất m�
   \end{tabularx}
 \end{table}
 
-Xét riêng các lượt dựng được bộ ba, Oracle 970 báo vi phạm ở cả 36 lượt trên biến thể có lỗ hổng và không phát sinh cảnh báo nào trong 30 lượt trên biến thể đã vá. Khoảng tin cậy Wilson 95\% của tỷ lệ báo động giả này là [0; 11]\%. Mỗi lượt dựng được bộ ba có đúng một bộ ba, với chuỗi mã trạng thái \texttt{200/200/200} trên biến thể có lỗ hổng và \texttt{200/200/403} trên biến thể đã vá. Tỷ lệ phát hiện tính trên các lượt có bộ ba gần như là hệ quả của định nghĩa, vì tiêu chí hợp lệ của bộ ba dùng chính mã follow-up mà bộ phán quyết đọc. Phép đo độc lập là số báo động giả trên biến thể đã vá.
+Xét riêng các lượt dựng được bộ ba, Oracle 970 báo vi phạm ở cả 36 lượt trên biến thể có lỗ hổng và không phát sinh cảnh báo nào trong 30 lượt trên biến thể đã vá. Khoảng tin cậy Clopper--Pearson 95\% của tỷ lệ báo động giả này là [0; 11,6]\%. Mỗi lượt dựng được bộ ba có đúng một bộ ba, với chuỗi mã trạng thái \texttt{200/200/200} trên biến thể có lỗ hổng và \texttt{200/200/403} trên biến thể đã vá. Tỷ lệ phát hiện tính trên các lượt có bộ ba gần như là hệ quả của định nghĩa, vì tiêu chí hợp lệ của bộ ba dùng chính mã follow-up mà bộ phán quyết đọc. Phép đo độc lập là số báo động giả trên biến thể đã vá.
 
 Trên bản vá của artifact-keeper, cả 3 lượt đều không dựng được bộ ba. Ở 2 lượt, thao tác hạ quyền thành công nhưng token cũ nhận mã 401 ở bước follow-up; mã 401 nằm ngoài phán quyết (Bảng~\ref{tab:obs_status}), nên bộ ba bị hủy. Ở lượt còn lại, thao tác hạ quyền không lần nào trả mã \texttt{2xx}. Ba lượt này không có báo động giả, nhưng cũng không được tính là âm tính thật.
 

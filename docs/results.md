@@ -17,8 +17,9 @@ thesis.
   write ops), with the formula and code of M1 (`docs/naive-bayes.md`).
 - Runs, 2026-11-08: `m2-wave1-20261108/runs.csv` (reports-api, vampi-seeded, pyLoad; 90 runs) and
   `m2-wave2-20261108/` (artifact-keeper 8 runs). Counts: `m2-wave1-20261108/m2_counts.py`, output
-  `m2-counts-final.out`. Triples are counted from `Assembled` log lines; the `assembled` column of the artifact-keeper
-  CSVs counts each triple twice (it also matches the "proven by an attempt" line).
+  `m2-counts-cp.out` (`m2-counts-final.out` is the same count with Wilson intervals, superseded). Triples are
+  counted from `Assembled` log lines; the `assembled` column of the artifact-keeper CSVs counts each triple twice (it
+  also matches the "proven by an attempt" line).
 - Reseed before every run, `--useExperimentalOracles true`, `-Xmx2g`:
 
 | Target | Seeds | `--maxTime` | `--ratePerMinute` | `--extraPhaseBudgetPercentage` | Other |
@@ -38,16 +39,17 @@ thesis.
 
 | Target | Bug | Arm | Runs with a performed triple | 970 raised |
 |---|---|---|---|---|
-| reports-api | seeded | vulnerable | 19/20 | **19/20** [76, 99] |
+| reports-api | seeded | vulnerable | 19/20 | **19/20** [75.1, 99.9] |
 | reports-api | seeded | fixed | 19/20 | 0/20 |
-| vampi-seeded | seeded | vulnerable | 7/20 | **7/20** [18, 57] |
+| vampi-seeded | seeded | vulnerable | 7/20 | **7/20** [15.4, 59.2] |
 | vampi-seeded | seeded | fixed | 6/20 | 0/20 |
-| pyLoad | CVE-2026-41133 | vulnerable | 5/5 | **5/5** [57, 100] |
+| pyLoad | CVE-2026-41133 | vulnerable | 5/5 | **5/5** [47.8, 100] |
 | pyLoad | CVE-2026-41133 | fixed (ours) | 5/5 | 0/5 |
-| artifact-keeper | vendor bug #1821 | vulnerable `e56d3aa7e2` | 5/5 | **5/5** [57, 100] |
+| artifact-keeper | vendor bug #1821 | vulnerable `e56d3aa7e2` | 5/5 | **5/5** [47.8, 100] |
 | artifact-keeper | vendor bug #1821 | vendor patch `e64cc5c608` | 0/3 | 0/3 |
 
-Intervals are Wilson 95%. One performed triple per run with a triple.
+Intervals are Clopper–Pearson 95% (exact binomial). False-positive rate over the 30 fixed runs with a triple: 0/30,
+Clopper–Pearson [0, 11.6]%. One performed triple per run with a triple.
 
 - Vulnerable vs fixed, Fisher exact one-sided: reports-api p < 0.001, vampi-seeded p = 0.004, pyLoad p = 0.004,
   artifact-keeper p = 0.018.
@@ -66,7 +68,7 @@ Intervals are Wilson 95%. One performed triple per run with a triple.
 
 ### 1a. Four cells per target
 
-Same runs, `m2-counts-final.out`. The vulnerable target gives TP/FN, the fixed target FP/TN. TN counts only fixed
+Same runs, `m2-counts-cp.out`. The vulnerable target gives TP/FN, the fixed target FP/TN. TN counts only fixed
 runs with a performed triple (§2).
 
 | Target | TP | FN, triple, no 970 | FN, no triple | FP | TN | Fixed, no triple | Runs vulnerable/fixed |

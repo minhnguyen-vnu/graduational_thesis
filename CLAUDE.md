@@ -149,7 +149,7 @@ Mỗi loại nội dung nằm đúng một chỗ; phần còn lại theo bảng 
 | artifact-keeper | lỗi vendor #1821 | 5/5 | 0/3, bản vá của vendor |
 
 - 98 hàng, một jar: `m2-wave1-20261108/runs.csv` (90 hàng) và `m2-wave2-20261108/` (8 hàng artifact-keeper); đếm
-  bằng `m2-wave1-20261108/m2_counts.py` (`m2-counts-final.out`). Trên ba target đầu, M2 trùng P2f ở 90/90 ô 970.
+  bằng `m2-wave1-20261108/m2_counts.py` (`m2-counts-cp.out`). Trên ba target đầu, M2 trùng P2f ở 90/90 ô 970.
 - 0 FP trong 48 lượt bản đã vá, trên 30 bộ ba dựng được trên mã đã vá. TP 36, FN 14, FP 0, TN 30; mọi FN là lượt không
   dựng được bộ ba (`docs/results.md` §1a).
 - Bản vá của artifact-keeper trả 401 cho token cũ, mà 401 là INCONCLUSIVE: 3 lượt không báo nhầm và cũng không dựng

@@ -5,14 +5,27 @@ D = 'labelling-r2/'
 N_POP = None
 
 
-def wilson(k, n, z=1.96):
+def binom_cdf(k, n, p):
+    return sum(math.comb(n, i) * p ** i * (1 - p) ** (n - i) for i in range(k + 1))
+
+
+def bisect(pred):
+    lo, hi = 0.0, 1.0
+    for _ in range(100):
+        mid = (lo + hi) / 2
+        if pred(mid):
+            hi = mid
+        else:
+            lo = mid
+    return (lo + hi) / 2
+
+
+def clopper_pearson(k, n, alpha=0.05):
     if n == 0:
         return (0.0, 1.0)
-    p = k / n
-    d = 1 + z * z / n
-    c = p + z * z / (2 * n)
-    h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n))
-    return (max(0.0, (c - h) / d), min(1.0, (c + h) / d))
+    lo = 0.0 if k == 0 else bisect(lambda p: 1 - binom_cdf(k - 1, n, p) >= alpha / 2)
+    hi = 1.0 if k == n else bisect(lambda p: binom_cdf(k, n, p) <= alpha / 2)
+    return (lo, hi)
 
 
 def kappa_weighted(pairs):
@@ -60,11 +73,11 @@ for tag, H in (('nhan doc lap cua nguoi', human), ('sau phan xu', final)):
     po, pe, k, W = kappa_weighted(pairs)
     eR = sum(1 for r in audit_R if H[r['row_id']] != r['l1'])
     eN = sum(1 for r in audit_N if H[r['row_id']] != r['l1'])
-    lo, hi = wilson(eN, len(audit_N))
+    lo, hi = clopper_pearson(eN, len(audit_N))
     est = (eR + n_N * (eN / len(audit_N))) / (n_R + n_N)
     print('   kappa co trong so %.3f (tho %.3f, pe %.3f, trong so tong %.0f)' % (k, po, pe, W))
     print('   tang R: %d/%d lech | tang N: %d/%d lech' % (eR, len(audit_R), eN, len(audit_N)))
-    print('   ti le sai ca tang dong thuan %.4f | Wilson95 tang N [%.4f, %.4f] quy ve [%.4f, %.4f]'
+    print('   ti le sai ca tang dong thuan %.4f | ClopperPearson95 tang N [%.4f, %.4f] quy ve [%.4f, %.4f]'
           % (est, lo, hi, lo * n_N / (n_R + n_N), hi * n_N / (n_R + n_N)))
 
 print('== 3. Tang lech nhau, %d dong ==' % len(disag))

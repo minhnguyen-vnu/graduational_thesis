@@ -13,7 +13,7 @@ nằm trong commit nào. Self-test: mô hình trong jar có sha M2; `EMConfig` k
 
 Đo lại đầy đủ ngày 2026-11-08 thay cho cổng (`em-results/m2-wave1-20261108/`, `m2-wave2-20261108/`): mọi arm của
 reports-api, vampi-seeded, pyLoad (90 hàng), artifact-keeper (8) và bamf (10). Trùng P2f ở 90/90 ô 970, và ở 89/90 hàng
-về bộ ba và mã trạng thái. Đếm bằng `m2-wave1-20261108/m2_counts.py` (`m2-counts-final.out`). Số: `docs/results.md`.
+về bộ ba và mã trạng thái. Đếm bằng `m2-wave1-20261108/m2_counts.py` (`m2-counts-cp.out`). Số: `docs/results.md`.
 
 ## Jar dự phòng
 
