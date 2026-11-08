@@ -143,6 +143,9 @@ Mỗi sự kiện nằm ở một file: file này giữ luật và trỏ tới p
   chỉ đo được trên P2f và các jar trước.
 - Trên Tier-1, mã 403 của probe C4 đến từ `POST /reports`. Không viết rằng C4 thử lại guard ở đó.
 - Transition của pyLoad buộc `permission=1` và một giá trị `role` tìm sang trái; C4 xác nhận từng lần hạ quyền.
+- Mô hình M2 (rút lại từ corpus gán nhãn lại `nhan-hoc-cuoi.csv`, jar `evomaster-M2-917c57dd.jar`, dòng DC không
+  reset) chạy lại 2026-11-08 trên arm không reset: trùng số 970 ba tier ở trên và 0 FP; thêm artifact-keeper 5/5
+  (bản vá vendor `e64cc5c608` 0/3) và bamf 0/10. Không qua cổng 21 hàng (jar không reset). `docs/results.md` §5d.
 
 ## 5. Jar — sổ đầy đủ `infra/evomaster-ext/jars.md`
 
@@ -156,6 +159,10 @@ Mỗi sự kiện nằm ở một file: file này giữ luật và trỏ tới p
 - Một jar mới chỉ trích lại một con số sau khi qua cổng hồi quy, và khi cách dựng bộ ba đổi thì phải đo lại các arm bị
   ảnh hưởng. P2f qua cổng 21/21 hai lần (2026-10-15, `regression-check/archive-20261015-P2f-64ee8ffc/`; và 21 hàng
   cổng trong `p2f-full-20261015/gate.csv`). AF2 qua cổng 2026-10-02 và đo lại đầy đủ (`af2-full-remeasure-20261003/`).
+- `EvoMaster/evomaster-M2-917c57dd.jar` = jar DC (HEAD `9c4be5b1dc`, dòng SR không reset/không D1) thay
+  `stateful-authz-model.csv` bằng M2 (`m2-model-20261107/`, sha `b2deef150bf8`). Self-test: mô hình trong jar khớp
+  sha M2. Chạy lại không reset 2026-11-08 (`em-results/m2-wave1-20261108/`, `m2-wave2-20261108/`): `docs/results.md`
+  §5d. Chưa qua cổng 21 hàng (jar không reset); chưa trích làm số chính.
 - Jar đang phát triển: `EvoMaster/evomaster-SR-77465fe5.jar`, dựng 2026-10-27 từ `f73010103b` +
   `infra/evomaster-ext/wip/refactor-simplify-20261027.patch`. HEAD `1cd0d091f4` là refactor đó, khác bản vá đúng một
   dòng trống (`RestSecurityBuilder.kt:781`). Jar này:

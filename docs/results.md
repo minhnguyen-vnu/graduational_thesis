@@ -255,6 +255,42 @@ variant exists for any, so there is no 0-FP arm; each 970 is hand-audited. Folde
   field-identification weakness this chapter documents. Do not write a recall figure over this set: n is tiny, two of
   four did not run, and the auto FNs are deterministic, not sampled.
 
+## 5d. M2 model (relabelled corpus) — rerun on all targets (2026-11-08)
+
+Jar `evomaster-M2-917c57dd.jar` = jar DC (HEAD `9c4be5b1dc`, the SR refactor: no reset, no declared transition,
+no D1) with `stateful-authz-model.csv` replaced by M2 (sha256 `b2deef150bf8…`,
+`infra/analysis/lexicon-rules/m2-model-20261107/`). M2 is the Naive Bayes model rebuilt from the relabelled corpus
+`nop-hoi-dong/nhan-hoc-cuoi.csv` (209 T of 10,381 ops); M1 is the round-4 model carried in jar P2f. Self-test: the
+model inside the jar has the M2 sha. No 21-row gate was run: the jar is no-reset, so only the no-reset arms were
+measured, directly on the targets. `--statefulAuthzTwoCredentialJudgment` is dropped (the jar rejects it; judgment is
+C4 only). Flags otherwise as §0.
+
+| Target | Arm | M2 970 | Earlier jar 970 | Source |
+|---|---|---|---|---|
+| Tier-1 reports | vuln, no reset | 19/20 | P2f 19/20 | `m2-wave1-20261108/runs.csv` |
+| Tier-1 reports | fixed, no reset | 0/20 | P2f 0/20 | same |
+| Tier-2 vampi | vuln, no reset | 7/20 (7 triples) | P2f 7/20 | same |
+| Tier-2 vampi | fixed, no reset | 0/20 | P2f 0/20 | same |
+| Tier-2b pyLoad | vuln, no reset | 5/5 | P2f 5/5 | same |
+| Tier-2b pyLoad | fixed, no reset | 0/5 | P2f 0/5 | same |
+| artifact-keeper | vuln, no reset | 5/5 | AF2 5/5 | `m2-wave2-20261108/runs-ak-vuln.csv` |
+| artifact-keeper | vendor patch | 0/3 | AF2 0/3 | `m2-wave2-20261108/runs-ak-fixed.csv` |
+| bamf | auto, no reset | 0/10 | jar ER 5/10 | `m2-wave2-20261108/runs-bamf.csv` |
+
+- M2 gives the same no-reset 970 counts as P2f on the three benchmark tiers and 0 FP over the 45 fixed-target runs.
+  Every artifact-keeper 970 is the triple `PATCH /api/v1/users/{id}` 200/200/200.
+- artifact-keeper vendor patch `e64cc5c608` (adds migration `131_users_privileges_changed_at`): confirmed live by
+  hand before the fixed arm — the old token replayed after demotion returns 401
+  (`m2-wave2-20261108/logs/ak-fixed-*`). Each fixed seed assembled 0 triples, so 0 FP. The source was restored to the
+  vulnerable commit `e56d3aa7e2` after.
+- bamf (`PATCH /api/v1/users/{email}`): M2 performed 0 valid triples in 10 runs (2 VOID attempts per run, the
+  transition read 422 or 403, never 2xx); the jar-ER 5/10 is not reproduced. The dotted-`{email}` victim weakness
+  stands (`heldout-small-apps.md`).
+- Overnight-run deviations: wave 1 ran the 6 no-reset lanes in parallel; wave 2 ran bamf then artifact-keeper
+  serially under the one-heavy-job guard; each lane used its own working directory to isolate `process_data`; the
+  host low-power-slept at 1% battery (07:05), wedged Docker (force-restarted), and cost one artifact-keeper seed
+  (re-run). Not promoted; no number above is superseded.
+
 ## 6. Limitations
 
 - **The search destroys the triple's preconditions** in two ways. Demotion: the source returns 403, and black-box

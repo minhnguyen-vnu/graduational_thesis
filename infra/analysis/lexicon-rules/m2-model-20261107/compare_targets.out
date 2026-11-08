@@ -1,0 +1,62 @@
+== reports-api (6 op ghi), transition that: PUT /users/{username}/role
+  M1: qua guard 1, viable 1, transition that hang 1 trong viable
+      score 8.50 role body:role (enum) victim path:username reduced ['VIEWER', 'ADMIN']
+      viable #1 PUT /users/{username}/role                    8.50 role body:role
+  M2: qua guard 1, viable 1, transition that hang 1 trong viable
+      score 7.32 role body:role (enum) victim path:username reduced ['VIEWER', 'ADMIN']
+      viable #1 PUT /users/{username}/role                    7.32 role body:role
+  guard chi M1: []
+  guard chi M2: []
+== vampi-seeded (8 op ghi), transition that: PUT /users/v1/{username}/role
+  M1: qua guard 6, viable 1, transition that hang 1 trong viable
+      score 8.50 role body:role (enum) victim path:username reduced ['user', 'admin']
+      viable #1 PUT /users/v1/{username}/role                 8.50 role body:role
+  M2: qua guard 6, viable 1, transition that hang 1 trong viable
+      score 7.32 role body:role (enum) victim path:username reduced ['user', 'admin']
+      viable #1 PUT /users/v1/{username}/role                 7.32 role body:role
+  guard chi M1: []
+  guard chi M2: []
+== pyload (62 op ghi), transition that: POST /api/set_user_permission
+  M1: qua guard 4, viable 3, transition that hang 1 trong viable
+      score 5.61 role query:permission (num) victim query:user reduced ['1', '0', '2']
+      viable #1 POST /api/set_user_permission                 5.61 role query:permission
+      viable #2 POST /json/add_user                           2.84 role body:new_role
+      viable #3 POST /api/add_user                            1.69 role query:role
+  M2: qua guard 4, viable 3, transition that hang 1 trong viable
+      score 2.84 role query:permission (num) victim query:user reduced ['1', '0', '2']
+      viable #1 POST /api/set_user_permission                 2.84 role query:permission
+      viable #2 POST /json/add_user                           2.07 role body:new_role
+      viable #3 POST /api/add_user                            0.97 role query:role
+  guard chi M1: []
+  guard chi M2: []
+== artifact-keeper (216 op ghi), transition that: PATCH /api/v1/users/{id}
+  M1: qua guard 23, viable 7, transition that hang 4 trong viable
+      score 3.70 role body:is_admin (bool) victim path:id reduced ['false']
+      viable #1 PUT /api/v1/admin/sso/oidc/{id}               7.53 role body:auto_create_users
+      viable #2 POST /api/v1/admin/sso/oidc                   6.64 role body:auto_create_users
+      viable #3 POST /api/v1/users                            4.85 role body:is_admin
+      viable #4 PATCH /api/v1/users/{id}                      3.70 role body:is_admin
+      viable #5 POST /api/v1/admin/telemetry/settings         2.27 role body:scrub_level
+      viable #6 POST /api/v1/repositories                     2.15 role body:allow_anonymous_access
+  M2: qua guard 17, viable 5, transition that hang 4 trong viable
+      score 2.89 role body:is_admin (bool) victim path:id reduced ['false']
+      viable #1 PUT /api/v1/admin/sso/oidc/{id}               4.59 role body:auto_create_users
+      viable #2 POST /api/v1/admin/sso/oidc                   3.33 role body:auto_create_users
+      viable #3 POST /api/v1/users                            3.30 role body:is_admin
+      viable #4 PATCH /api/v1/users/{id}                      2.89 role body:is_admin
+      viable #5 POST /api/v1/repositories                     0.26 role body:allow_anonymous_access
+  guard chi M1: ['POST /api/v1/permissions', 'POST /api/v1/users/{id}/roles', 'POST /api/v1/users/{id}/tokens', 'PUT /api/v1/curation/rules/{id}', 'PUT /api/v1/permissions/{id}', 'PUT /api/v1/promotion-rules/{id}']
+  guard chi M2: []
+== bamf (50 op ghi), transition that: PATCH /api/v1/users/{email}
+  M1: qua guard 8, viable 3, transition that hang 1 trong viable
+      score 6.03 role body:roles (array) victim path:email reduced ['[]']
+      viable #1 PATCH /api/v1/users/{email}                   6.03 role body:roles
+      viable #2 PUT /api/v1/role-assignments                  3.96 role body:roles
+      viable #3 POST /api/v1/users                            3.80 role body:roles
+  M2: qua guard 8, viable 3, transition that hang 1 trong viable
+      score 6.51 role body:roles (array) victim path:email reduced ['[]']
+      viable #1 PATCH /api/v1/users/{email}                   6.51 role body:roles
+      viable #2 PUT /api/v1/role-assignments                  3.04 role body:roles
+      viable #3 POST /api/v1/users                            2.69 role body:roles
+  guard chi M1: []
+  guard chi M2: []
