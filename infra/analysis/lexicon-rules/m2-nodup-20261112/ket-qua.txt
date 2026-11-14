@@ -1,0 +1,36 @@
+PASS M2 sha256 bat dau b2deef150bf8
+mo hinh bo lap: m2-nodup-20261112/stateful-authz-model.csv, sha256 dcc77b59ed0f94ee
+PASS 8674 op thi, trung nhan-thi-cuoi
+PASS M2 cham lai bang script nay khop cham-thi/ket-qua-sau-soat-lai.txt: 117/153, 880 op diem > 0, 763 N
+
+Phan thi: 8674 op, 153 op T, 8521 op N; diem op = prior + tong trong so bang op; chon khi diem > 0
+                                             M2                                   bo lap
+Bat duoc: op T co diem > 0                   117/153 = 76.5%, CP 95% 68.9–82.9%   101/153 = 66.0%, CP 95% 57.9–73.5%
+So op diem > 0                               880                                  624
+Bao nham: op diem > 0 ma nhan cuoi N         763/880 = 86.7%, CP 95% 84.3–88.9%   523/624 = 83.8%, CP 95% 80.7–86.6%
+So spec co it nhat mot op diem > 0           86                                   77
+
+Ghep doi tren cung op, McNemar chinh xac hai phia
+  op T: chi M2 bat 16, chi bo lap bat 0, p = 3.052e-05
+  op N: chi M2 chon 244, chi bo lap chon 4, p = 6.914e-67
+
+Op T doi ket qua (id, method, path, diem M2 -> diem bo lap)
+  E050-N0006 POST /account/guests/{guestId} 0.733 -> -0.142
+  E068-N0178 PUT /user/{internal_user_id} 1.256 -> -1.418
+  E102-N0002 DELETE /mimic/access/del/{user} 0.737 -> -1.205
+  E103-N0028 PATCH /spaces/{id}/folders/{folderId}/persons/{memberId}/unactiveaccess 1.626 -> -0.458
+  E137-N0012 DELETE /buckets/{bucketID}/owners/{userID} 0.737 -> -1.205
+  E137-N0032 DELETE /dashboards/{dashboardID}/owners/{userID} 0.737 -> -1.205
+  E137-N0078 DELETE /scrapers/{scraperTargetID}/owners/{userID} 0.737 -> -1.205
+  E137-N0097 DELETE /tasks/{taskID}/owners/{userID} 0.737 -> -1.205
+  E137-N0109 DELETE /telegrafs/{telegrafID}/owners/{userID} 0.737 -> -1.205
+  E219-N0025 DELETE /nodes/{node_id}/contributors/{user_id}/ 0.737 -> -1.205
+  E318-N0022 POST /lists/members/destroy_all.json 0.286 -> -0.543
+  E330-N0010 DELETE /channels/{channel_id}/moderators/{user_id} 1.094 -> -1.205
+  E330-N0047 DELETE /me/groups/{group_id} 0.322 -> -0.701
+  E345-N0015 POST /groups/{GroupId}/leave 0.626 -> -0.398
+  E345-N0016 DELETE /groups/{GroupId}/participants 0.322 -> -0.701
+  E363-N0032 DELETE /chat/channels/{channelId}/members/me 0.284 -> -0.073
+
+Op co tham so path bi tinh lap o M2 (it nhat mot dac trung f: chi den tu tham so path)
+  3258/8674 op thi; trong do op T: 94/153

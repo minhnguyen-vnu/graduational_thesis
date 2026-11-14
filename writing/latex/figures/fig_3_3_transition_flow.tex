@@ -1,0 +1,20 @@
+\begin{tikzpicture}[
+  >=Stealth,
+  font=\small\linespread{1}\selectfont,
+  node distance=8mm and 7mm,
+  procbox/.style={rectangle, draw, rounded corners=2pt, fill=gray!10, align=center,
+                  text width=4.2cm, minimum height=1.5cm},
+  outbox/.style={rectangle, draw, rounded corners=2pt, align=left,
+                 text width=7.4cm, minimum height=1.5cm}
+]
+  \node[procbox] (spec) {\textbf{Đặc tả OpenAPI}\\các thao tác ghi};
+  \node[procbox, right=of spec] (tok) {\textbf{Tách đặc trưng}\\đường dẫn, tên trường\\và phương thức HTTP};
+  \node[procbox, right=of tok] (nb) {\textbf{Naive Bayes}\\$\mathrm{score}(op)$ bằng tổng\\trọng số logarit};
+  \node[procbox, below=of nb] (rank) {\textbf{Xếp hạng}\\giữ thao tác có\\$\mathrm{score}(op) > 0$};
+  \node[outbox, left=of rank] (out) {\textbf{Đầu vào cho bộ dựng}\\1. Thao tác hạ quyền theo thứ tự điểm\\2. Trường vai trò và giá trị hạ quyền\\3. Trường định danh tài khoản nạn nhân};
+
+  \draw[->] (spec) -- (tok);
+  \draw[->] (tok) -- (nb);
+  \draw[->] (nb) -- (rank);
+  \draw[->] (rank) -- (out);
+\end{tikzpicture}

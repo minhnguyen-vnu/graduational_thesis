@@ -2,7 +2,7 @@
 
 A minimal **Spring Boot 3 / Java 17** REST API with **one deliberately planted authorization bug
 (A1): privilege persists after a role downgrade.** It is the controlled ground-truth target for a
-thesis extending EvoMaster with a stateful authorization oracle. Numbers: `docs/results.md` §1 (jar M2).
+thesis extending EvoMaster with a stateful authorization oracle. Numbers: `docs/results.md` §1 (jar ND).
 The original build specification: `docs/archive/tier1-spring-boot-spec.md`.
 
 ## The planted bug (A1) in one sentence

@@ -7,17 +7,20 @@ thesis.
 
 ## 0. Provenance
 
-- Jar `evomaster-M2-917c57dd.jar` = HEAD `9c4be5b1dc` (branch `stateful-authz-oracle`, pushed) with
-  `stateful-authz-model.csv` replaced by model M2 (sha256 `b2deef150bf8…`,
-  `infra/analysis/lexicon-rules/m2-model-20261107/`). The source tree still holds M1. Each harness refuses a jar whose
-  sha16 is not `917c57ddafcc3d93`.
+- Jar `evomaster-ND-07ebf19f.jar` = HEAD `2c3f281f13` (branch `stateful-authz-oracle`, not pushed) plus
+  `infra/evomaster-ext/wip/nodup-tokens-20261113-tree.patch` (the `THESIS` comments and the ND change; the ND change
+  alone is `nodup-tokens-20261113.patch`, against the commented tree), not committed: `f:` op features come from query and body
+  fields only, `tokens` walks characters instead of a regex, and `stateful-authz-model.csv` is the no-duplication model
+  (sha256 `dcc77b59ed0f…`, `infra/analysis/lexicon-rules/m2-nodup-20261112/`). Each harness refuses a jar whose sha16 is
+  not `07ebf19f9682497e`.
 - The jar has no reset, no declared transition and no D1: `EMConfig.kt` equals v6.1.1, and judgment is the C4 re-login
   probe only.
-- M2 is the Naive Bayes model rebuilt from the relabelled corpus `nop-hoi-dong/nhan-hoc-cuoi.csv` (209 T of 10,381
-  write ops), with the formula and code of M1 (`docs/naive-bayes.md`).
-- Runs, 2026-11-08: `m2-wave1-20261108/runs.csv` (reports-api, vampi-seeded, pyLoad; 90 runs) and
-  `m2-wave2-20261108/` (artifact-keeper 8 runs). Counts: `m2-wave1-20261108/m2_counts.py`, output
-  `m2-counts-cp.out` (`m2-counts-final.out` is the same count with Wilson intervals, superseded). Triples are
+- The no-duplication model is M2 relearned with path parameters left out of `f:`: same corpus
+  (`nop-hoi-dong/nhan-hoc-cuoi.csv`, 209 T of 10,381 write ops), same formula; only the `op` table differs
+  (`docs/naive-bayes.md`).
+- Runs, 2026-11-13: `nd-wave1-20261113/runs.csv` (reports-api, vampi-seeded, pyLoad; 90 runs) and
+  `nd-wave2-20261113/` (artifact-keeper 8 runs), same protocol and harness as M2 apart from jar and labels. Counts:
+  `nd-wave1-20261113/nd_counts.py` (the M2 script with the wave-2 path changed), output `nd-counts-cp.out`. Triples are
   counted from `Assembled` log lines; the `assembled` column of the artifact-keeper CSVs counts each triple twice (it
   also matches the "proven by an attempt" line).
 - Reseed before every run, `--useExperimentalOracles true`, `-Xmx2g`:
@@ -29,9 +32,8 @@ thesis.
 | pyLoad | 1–5 per arm | 10m | 200 | 0.6 | `--endpointExclude "/api/kill,/api/restart"` |
 | artifact-keeper | 1–5 vulnerable, 1–3 vendor patch | 1200s | 600 | 0.25 | spec without `DELETE /users/{id}`; traffic proxy :8212 |
 
-- M2 equals P2f, the previous thesis jar, in 970 on all 90 rows of the three benchmark targets, and in triples and
-  statuses on 89 (vampi-seeded fixed seed 15: P2f performed one `200/200/403` triple, M2 none). P2f is the fallback
-  jar (`infra/evomaster-ext/jars.md`).
+- ND against M2, the previous thesis jar (`m2-wave1-20261108/`, `m2-wave2-20261108/`): equal in 970 on 96 of 98 rows
+  (§6). M2 is the fallback jar (`infra/evomaster-ext/jars.md`).
 - Each run records the triple it performed as `[source/transition/follow-up]` statuses, so construction (a triple
   was performed) and judgment (970 raised) are counted separately.
 
@@ -41,52 +43,69 @@ thesis.
 |---|---|---|---|---|
 | reports-api | seeded | vulnerable | 19/20 | **19/20** [75.1, 99.9] |
 | reports-api | seeded | fixed | 19/20 | 0/20 |
-| vampi-seeded | seeded | vulnerable | 7/20 | **7/20** [15.4, 59.2] |
+| vampi-seeded | seeded | vulnerable | 6/20 | **6/20** [11.9, 54.3] |
 | vampi-seeded | seeded | fixed | 6/20 | 0/20 |
 | pyLoad | CVE-2026-41133 | vulnerable | 5/5 | **5/5** [47.8, 100] |
 | pyLoad | CVE-2026-41133 | fixed (ours) | 5/5 | 0/5 |
-| artifact-keeper | vendor bug #1821 | vulnerable `e56d3aa7e2` | 5/5 | **5/5** [47.8, 100] |
+| artifact-keeper | vendor bug #1821 | vulnerable `e56d3aa7e2` | 4/5 | **4/5** [28.4, 99.5] |
 | artifact-keeper | vendor bug #1821 | vendor patch `e64cc5c608` | 0/3 | 0/3 |
 
 Intervals are Clopper–Pearson 95% (exact binomial). False-positive rate over the 30 fixed runs with a triple: 0/30,
 Clopper–Pearson [0, 11.6]%. One performed triple per run with a triple.
 
-- Vulnerable vs fixed, Fisher exact one-sided: reports-api p < 0.001, vampi-seeded p = 0.004, pyLoad p = 0.004,
-  artifact-keeper p = 0.018.
+- Vulnerable vs fixed, Fisher exact one-sided: reports-api p < 0.001, vampi-seeded p = 0.010, pyLoad p = 0.004,
+  artifact-keeper p = 0.071 (4/5 vs 0/3, not significant at 0.05).
 - **False positives: 0 in 48 fixed-target runs**, over **30 triples performed on patched code** (reports-api 19,
   vampi-seeded 6, pyLoad 5, artifact-keeper 0).
 - Every performed triple reads `200/200/200` on the vulnerable side and `200/200/403` on the fixed side.
-- **artifact-keeper vendor patch performs no triple.** In seeds 1 and 2 the demotion succeeds and the old token gets
-  401 (`codes 200/200/401`); 401 is INCONCLUSIVE, so the attempt is VOID. Seed 3 never gets a 2xx demotion (`200/400/200`,
-  `200/403/200`). The vendor fix revokes the token (401) where the oracle reads a denial only from 403. The arm shows
-  no false alarm and counts no TN.
-- vampi-seeded black-box recall is quoted as **30–35%**: 7/20 on M2, P2f, P2e and AF2; the jar-`R` audit re-run gave 6/20
-  (`audit-batch/runs.csv`), differing on seed 15, whose victim `name1` had been deleted during the search.
+- **C4 discards (artifact-keeper).** In all 8 runs, candidate 2 `POST /api/v1/admin/sso/oidc` gave `200/200/200`; the
+  victim's fresh login was not denied, so C4 discarded it. Vulnerable seed 3 also had candidate 4 `POST /api/v1/users`
+  discarded the same way. `Discarded an UNCONFIRMED`: 6 on the vulnerable commit (1, 1, 2, 1, 1), 3 on the vendor patch
+  (1 per run). 970 fired only on candidate 3 `PATCH /api/v1/users/{id}`. reports-api, vampi-seeded, pyLoad: 0 discards.
+  The transition of each discarded attempt is read from the traffic capture (`nd-wave2-20261113/traffic/`: source 2xx,
+  one 2xx write by the operator, follow-up 2xx with the source token). No arm without C4 was run: never write that the
+  vendor patch would otherwise have raised 970 (`nd-wave2-20261113/logs/ak-*-seed*.log`).
+- **artifact-keeper vendor patch performs no triple.** In all 3 seeds the demotion succeeds and the old token gets
+  401 (`codes 200/200/401`, once per run); 401 is INCONCLUSIVE, so the attempt is VOID. The vendor fix revokes the
+  token (401) where the oracle reads a denial only from 403. The arm shows no false alarm and counts no TN.
+- **artifact-keeper vulnerable seed 3 performs no triple.** Its source is `PUT /api/v1/admin/sso/ldap/{id}` with victim
+  `operator`; 5 attempts are VOID (transition `400` or `403`) and 2 are C4 discards. The other four seeds use source
+  `POST /api/v1/admin/analytics/snapshot`, as every M2 run did.
+- vampi-seeded black-box recall is **6/20** on ND, also 6/20 on the jar-`R` audit re-run
+  (`audit-batch/runs.csv`) and 7/20 on M2, P2f, P2e and AF2. Both 6/20 runs miss seed 15: on ND every attempt there has
+  source 401 (victim `name1`, 6 VOID); on `R` the victim had been deleted during the search.
 - Operator restores accepted (refused): reports-api 5 (0) vulnerable, 6 (0) fixed; vampi-seeded 5 (8), 5 (8);
-  pyLoad 5 (0), 5 (0); artifact-keeper one per run, except vendor-patch seed 3 (none).
+  pyLoad 5 (0), 5 (0); artifact-keeper vulnerable one per run except seed 3 (none), vendor patch 1 (1) per run.
 - Baseline arms (Şahin oracles, 970 disabled) are not false-positive opportunities and are not counted.
 
 ### 1a. Four cells per target
 
-Same runs, `m2-counts-cp.out`. The vulnerable target gives TP/FN, the fixed target FP/TN. TN counts only fixed
+Same runs, `nd-counts-cp.out`. The vulnerable target gives TP/FN, the fixed target FP/TN. TN counts only fixed
 runs with a performed triple (§2).
 
 | Target | TP | FN, triple, no 970 | FN, no triple | FP | TN | Fixed, no triple | Runs vulnerable/fixed |
 |---|---|---|---|---|---|---|---|
 | reports-api | 19 | 0 | 1 | 0 | 19 | 1 | 20/20 |
-| vampi-seeded | 7 | 0 | 13 | 0 | 6 | 14 | 20/20 |
+| vampi-seeded | 6 | 0 | 14 | 0 | 6 | 14 | 20/20 |
 | pyLoad | 5 | 0 | 0 | 0 | 5 | 0 | 5/5 |
-| artifact-keeper | 5 | 0 | 0 | 0 | 0 | 3 | 5/3 |
-| Total | 36 | 0 | 14 | 0 | 30 | 18 | 50/48 |
+| artifact-keeper | 4 | 0 | 1 | 0 | 0 | 3 | 5/3 |
+| Total | 34 | 0 | 16 | 0 | 30 | 18 | 50/48 |
 
 Every FN is a run with no performed triple; no performed triple on a vulnerable target missed 970. Per run,
 precision is 1.0 on every row; recall is TP over the vulnerable runs.
+
+FN by cause (logs of `nd-wave1-20261113/`, `nd-wave2-20261113/`):
+
+| Cause | Runs | Detail |
+|---|---|---|
+| Attempts made, every one VOID or discarded by C4 | 10 | reports-api 1 (one attempt recorded no status); vampi-seeded 8 (48 VOID: 37 source 401, 11 transition 401); artifact-keeper 1 (5 VOID, 2 C4) |
+| No attempt in the log | 6 | vampi-seeded seeds 2, 4, 6, 13, 14, 18; the default log level gives no reason |
 
 ## 2. How to read the numbers
 
 - The 0-FP count is the independent accuracy measurement. Judgment is restricted to the triples our builder
   constructed (commit `bf26b65322` onward), so the 0 false positives are over the 30 builder triples on patched code.
-- "Detection given a valid triple" (19/19, 7/7, 5/5, 5/5) is near-definitional: validity keys on the follow-up
+- "Detection given a valid triple" (19/19, 6/6, 5/5, 4/4) is near-definitional: validity keys on the follow-up
   status that judgment also uses. It is never quoted as accuracy. It shows only that the handler, re-deriving
   the triple on its own, never disagreed with the builder.
 - A VOID triple is evidence in neither direction. Counting one as a true negative inflates specificity.
@@ -95,13 +114,14 @@ precision is 1.0 on every row; recall is TP over the vulnerable runs.
 
 ## 3. Hand-audit and replay
 
-Not re-run on M2. Each line names its jar.
+Replay not re-run on ND. Each line names its jar.
 
 | | reports-api | vampi-seeded | pyLoad | artifact-keeper |
 |---|---|---|---|---|
-| 970 tests passing all four structural checks | 39/39 (AF2, P2f) | 20/20 (AF2, P2f) | not parseable | 5/5 (P2f) |
+| 970 tests passing all four structural checks, jar ND | 19/19 | 6/6 | not parseable | 4/4 |
+| Same check, earlier jars | 39/39 (AF2, P2f) | 20/20 (AF2, P2f) | not parseable | 5/5 (P2f) |
 | Replay of 970 tests from clean state, jar AF2 | 38/39 | 17/20 | 28/38 | not run |
-| Source | `af2-full-remeasure-20261003/audit970.out`, `replay.csv`; `p2f-full-20261015/audit970.out` | same | same | `artifactkeeper-machine-20261014/audit970-fixjar-vuln.out` |
+| Source | ND: `nd-wave1-20261113/audit970.out`; earlier: `af2-full-remeasure-20261003/audit970.out`, `replay.csv`; `p2f-full-20261015/audit970.out` | same | same | ND: `nd-wave2-20261113/audit970.out`; earlier: `artifactkeeper-machine-20261014/audit970-fixjar-vuln.out` |
 
 The AF2 and P2f sets include the reset arms of those jars.
 
@@ -123,16 +143,20 @@ The AF2 and P2f sets include the reset arms of those jars.
 
 ## 4. pyLoad — CVE-2026-41133
 
-- Real third-party bug: GHSA-66hx-chf7-3332, CWE-613, CVSS 8.8, `pyload-ng <= 0.5.0b3.dev97`, no upstream fix.
+- Real third-party bug: GHSA-66hx-chf7-3332, CWE-613, CVSS 8.8, `pyload-ng <= 0.5.0b3.dev97`.
+- Upstream fix from dev98 (commit `e95804fb`, 2026-04-13): clears a user's sessions on `/json/update_users`, password
+  change and deletion. Read from the PyPI wheels: in dev98–dev101 the core-API `set_user_permission`, reached by
+  `POST /api/set_user_permission` (the transition the tool uses), does not clear sessions; `develop` adds
+  `_invalidate_user_sessions`. The tool has not been run on dev98 or later.
   Setup and the five declared deviations: `docs/tier2b-pyload-target.md` §3.
-- Transition inferred, rank 1 of 3 viable ops under M2 (`m2-model-20261107/compare_targets.out`):
-  `POST /api/set_user_permission`. Every M2 triple: source `POST /json/status`, victim `pyload`, operator `alice`,
+- Transition inferred, rank 1 of 3 viable ops under ND (`m2-nodup-20261112/compare_targets_nodup.out`):
+  `POST /api/set_user_permission`. Every ND triple: source `POST /json/status`, victim `pyload`, operator `alice`,
   `200/200/200` on the vulnerable variant, `200/200/403` on the fixed one.
 - Each run performs its triple after one operator restore (`pyload` raises `alice`), identically on both variants.
 - **VOID attempts:** 20, 10 per variant, each `200/401/200` on `/json/status`: the transition answered 401
   (INCONCLUSIVE), so the triple is VOID and raises nothing.
 - **Transition values.** Each 970 test sends `user=pyload&permission=1` with a `role` value left by the search
-  (`role=373`, `282`, `883`, `488`, `946`, seeds 1–5), never `0`. pyLoad treats role `0` as admin and any other value
+  (`role=894`, `865`, `837`, `204`, `34`, seeds 1–5), never `0`. pyLoad treats role `0` as admin and any other value
   as not, so the demotion lands. The tool did not infer the role value; C4 confirmed the privilege was gone.
 - Restore ceiling: at least one privileged credential must survive. With every admin demoted, a fresh login
   cannot promote anyone (401).
@@ -147,20 +171,25 @@ The AF2 and P2f sets include the reset arms of those jars.
   `docs/artifact-keeper-target.md`.
 - Ours: the compose override and `protoc` in the dev image (build only), and the spec minus `DELETE /users/{id}`, so
   the fuzzer cannot delete the test accounts. Bug, fix, app code and the rest of the spec are the vendor's.
-- Transition inferred: `PATCH /api/v1/users/{id}` with `{"is_admin": false}`, rank 4 of 5 viable ops under M2
-  (`compare_targets.out`); the builder reaches it by trying every viable op. Every M2 triple: source
-  `POST /api/v1/admin/analytics/snapshot`, victim `victim`, operator `operator`, `200/200/200`.
-- No string of the app is in the builder, the oracle or the model (HEAD `9c4be5b1dc`), and its spec is excluded from
+- Transition inferred: `PATCH /api/v1/users/{id}` with `{"is_admin": false}`, rank 3 of 4 viable ops under ND
+  (`m2-nodup-20261112/compare_targets_nodup.out`; rank 4 of 5 under M2); the builder reaches it by trying every viable
+  op. Every ND triple (seeds 1, 2, 4, 5): source `POST /api/v1/admin/analytics/snapshot`, victim `victim`, operator
+  `operator`, `200/200/200`. Seed 3: §1.
+- No string of the app is in the builder, the oracle or the model (jar ND), and its spec is excluded from
   the training corpus (`infra/analysis/corpus/sample_specs_field.py:8–9`).
 - Development target: three general builder fixes were found by running it. Vulnerable-commit detection by jar:
   ER 0/1, AF 1/4 (boolean admin flag recognized), AF2 5/5 (nullable `is_admin` sent present), P2e 0/2 (`null` sent
-  again), P2f 5/5 (value set on the leaf gene), M2 5/5 (`artifactkeeper-machine-20261001/`,
-  `artifactkeeper-machine-20261014/`, `m2-wave2-20261108/`). Its numbers make no claim about recall on unseen apps.
+  again), P2f 5/5 (value set on the leaf gene), M2 5/5, ND 4/5 (`artifactkeeper-machine-20261001/`,
+  `artifactkeeper-machine-20261014/`, `m2-wave2-20261108/`, `nd-wave2-20261113/`). Its numbers make no claim about recall on unseen apps.
 
-## 6. Changing the model lost no detection
+## 6. Changing the model
 
+- M2 to ND: 96 of 98 rows equal in 970. Two rows lost, none gained: vampi-seeded vulnerable seed 15 and
+  artifact-keeper vulnerable seed 3, both runs with no performed triple on ND (§1). McNemar exact, 2 vs 0 discordant:
+  p = 0.5. 0 false positives on both jars. The M2 rows are equal on all 98 rows to the shorten-logic jar SLM2
+  (`slm2-wave1-20261112/`, `slm2-wave2-20261112/`), against which ND was run.
 - Lexicon (AF2) to M1 (P2e, P2f): every 970 cell of the three benchmark targets equal seed for seed
-  (`p2f-full-20261015/RESULTS.md`). M1 to M2: §0. artifact-keeper 5/5 on AF2, P2f and M2.
+  (`p2f-full-20261015/RESULTS.md`). M1 to M2: equal on all 90 benchmark rows; artifact-keeper 5/5 on AF2, P2f and M2.
 - Hand-written words to the lexicon (jar `L`): 0 of 30 paired rows changed (`lexicon-chain-20260921/`).
 
 ## 7. Limitations
@@ -169,10 +198,11 @@ The AF2 and P2f sets include the reset arms of those jars.
   aborts a test at its first failing create call. Deletion: VAmPI's generated tests call
   `DELETE /users/v1/{username}` 75× on `name1`, 17× `name2`, 10× `admin`, 6× `superadmin`. The operator restore
   reverses a demotion, never a deletion. Both cost recall, never precision.
-- **Transition inference** ranks write ops by Naive Bayes over path, field and verb tokens. M2 on the relabelled test
-  half (237 specs, 8,674 write ops, 153 T): 117 of 153 T ops score above zero (76.5%, Clopper–Pearson 68.9–82.9%);
-  763 of 880 positive-scored ops are labelled N, so a positive score selects a candidate and proves nothing
-  (`infra/analysis/lexicon-rules/relabel-20261101/PROTOCOL.md`, `cham-thi/ket-qua-sau-soat-lai.txt`). M1, vendor-wise
+- **Transition inference** ranks write ops by Naive Bayes over path, field and verb tokens. The no-duplication model on
+  the relabelled test half (237 specs, 8,674 write ops, 153 T): 101 of 153 T ops score above zero (66.0%,
+  Clopper–Pearson 57.9–73.5%); 523 of 624 positive-scored ops are labelled N, so a positive score selects a candidate
+  and proves nothing. Before the review of 44 disputed test ops: 100/149 (67.1%). M2 on the same half: 117/153, 763 of
+  880 (`infra/analysis/lexicon-rules/m2-nodup-20261112/ket-qua.txt`, `truoc-soat-lai.txt`). M1, vendor-wise
   cross-validation: the true op ranks first in 16–18 and within the first 4 in 21–25 of 47 test specs; those specs
   were looked at many times, so the figures are exploratory (`infra/evomaster-ext/wip/p2-design-20261012.md` §1).
   vampi-seeded's `/role` path was named by us.
@@ -212,6 +242,7 @@ The AF2 and P2f sets include the reset arms of those jars.
 | reproducible failing test | replayable from clean state in 55/59 (jar AF2) |
 | vampi-seeded shows transition inference generalizes | vampi-seeded's transition name is ours |
 | a benchmark the community lacks | two seeded apps, one CVE and one vendor-fixed bug |
-| vampi-seeded recall 35% | 30–35% |
+| vampi-seeded recall 35% (jar M2) | 6/20 (jar ND) |
 | the vendor patch gave 3 true negatives | the vendor patch gave no false alarm in 3 runs and no performed triple |
-| a single labeller, as a limitation; who the labeller is | "người gán" |
+| pyLoad and artifact-keeper used while the builder was developed | omit |
+| "người gán", "tác giả", who reviewed the labels | impersonal: "được soát tay", "viết riêng cho khóa luận" |

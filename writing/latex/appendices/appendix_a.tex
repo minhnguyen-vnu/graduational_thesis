@@ -3,12 +3,12 @@
 
 Bảng~\ref{tab:appendix_endpoints} liệt kê các endpoint tham gia bộ ba do công cụ dựng trên bốn ứng dụng mục tiêu mô tả ở Mục~\ref{sec:impl_benchmarks}.
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \caption{Các endpoint trong bộ ba do công cụ dựng trên bốn ứng dụng mục tiêu}
 \label{tab:appendix_endpoints}
 \small
-\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\begin{tabularx}{\textwidth}{@{}l l >{\raggedright\arraybackslash}X@{}}
 \toprule
 \textbf{Endpoint} & \textbf{Quyền} & \textbf{Vai trò trong kịch bản} \\
 \midrule
@@ -24,7 +24,7 @@ Bảng~\ref{tab:appendix_endpoints} liệt kê các endpoint tham gia bộ ba do
 \midrule
 \multicolumn{3}{@{}l}{\textit{pyLoad}} \\
 \texttt{POST /login} & Mọi tài khoản & Đăng nhập, tạo cookie phiên \\
-\texttt{POST /json/status} & Quản trị & Source và follow-up \\
+\texttt{POST /json/status} & Quyền \texttt{LIST} & Source và follow-up \\
 \texttt{POST /api/set\_user\_permission} & Quản trị & Chuyển trạng thái \\
 \midrule
 \multicolumn{3}{@{}l}{\textit{artifact-keeper}} \\
@@ -34,5 +34,3 @@ Bảng~\ref{tab:appendix_endpoints} liệt kê các endpoint tham gia bộ ba do
 \bottomrule
 \end{tabularx}
 \end{table}
-
-Trên pyLoad, nhóm đường dẫn \texttt{/json/*} từ chối bằng mã 403, còn nhóm \texttt{/api/*} trả mã 401. Vì MR-A1 chỉ coi 403 là lời từ chối, thao tác source hợp lệ chỉ đến từ nhóm \texttt{/json/*}. Phép kiểm tra HTTP thủ công trên pyLoad dùng source \texttt{POST} \path{/json/generate_apikey} và thao tác chuyển trạng thái \texttt{POST} \path{/json/update_users}.

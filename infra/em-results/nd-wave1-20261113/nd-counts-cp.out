@@ -1,0 +1,39 @@
+## Detection and false positives
+| Target | Arm | Runs | Runs with a performed triple | Triples | 970 raised | Clopper-Pearson 95% |
+|---|---|---|---|---|---|---|
+| reports-api | vuln | 20 | 19/20 | 19 | 19/20 | [75.1, 99.9] |
+| reports-api | fixed | 20 | 19/20 | 19 | 0/20 |  |
+| vampi-seeded | vuln | 20 | 6/20 | 6 | 6/20 | [11.9, 54.3] |
+| vampi-seeded | fixed | 20 | 6/20 | 6 | 0/20 |  |
+| pyLoad | vuln | 5 | 5/5 | 5 | 5/5 | [47.8, 100.0] |
+| pyLoad | fixed | 5 | 5/5 | 5 | 0/5 |  |
+| artifact-keeper | vuln | 5 | 4/5 | 4 | 4/5 | [28.4, 99.5] |
+| artifact-keeper | fixed | 3 | 0/3 | 0 | 0/3 |  |
+
+## Four cells per run
+| Target | TP | FN, triple, no 970 | FN, no triple | FP | TN | Fixed, no triple | Runs vuln/fixed |
+|---|---|---|---|---|---|---|---|
+| reports-api | 19 | 0 | 1 | 0 | 19 | 1 | 20/20 |
+| vampi-seeded | 6 | 0 | 14 | 0 | 6 | 14 | 20/20 |
+| pyLoad | 5 | 0 | 0 | 0 | 5 | 0 | 5/5 |
+| artifact-keeper | 4 | 0 | 1 | 0 | 0 | 3 | 5/3 |
+| Total | 34 | 0 | 16 | 0 | 30 | 18 | 50/48 |
+
+## Fisher exact, one-sided, 970 on vulnerable vs fixed
+reports-api: 19/20 vs 0/20, p = 0.000000
+vampi-seeded: 6/20 vs 0/20, p = 0.010098
+pyLoad: 5/5 vs 0/5, p = 0.003968
+artifact-keeper: 4/5 vs 0/3, p = 0.071429
+
+## Performed-triple statuses
+reports-api vuln: {'200/200/200': 19}
+reports-api fixed: {'200/200/403': 19}
+vampi-seeded vuln: {'200/200/200': 6}
+vampi-seeded fixed: {'200/200/403': 6}
+pyLoad vuln: {'200/200/200': 5}
+pyLoad fixed: {'200/200/403': 5}
+artifact-keeper vuln: {'200/200/200': 4}
+artifact-keeper fixed: {}
+
+False positives: 0 in 48 fixed-target runs, over 30 triples performed on patched code
+False-positive rate over fixed runs with a triple: 0/30, Clopper-Pearson 95% [0.0, 11.6]

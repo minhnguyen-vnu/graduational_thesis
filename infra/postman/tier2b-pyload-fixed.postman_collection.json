@@ -1,0 +1,537 @@
+{
+  "info": {
+    "name": "Tier-2b pyLoad CVE-2026-41133 (A1 stateful-authz) - FIXED",
+    "description": "FIXED variant: container pyload-fixed on :8091 (our patch for CVE-2026-41133). Clear the Postman cookie jar for localhost first.\n\nThird-party target. VULNERABLE on :8090 (default baseUrl), FIXED on :8091. Accounts seeded by seed_users.py: alice/alicepass (ADMIN victim), superadmin/superpass (ADMIN operator), pyload/pyload (pyLoad's own ADMIN). Auth is a SESSION COOKIE (pyload_session_8000), not a bearer token: POST /login form {username,password} returns Set-Cookie. The /json/* surface denies with 403; the /api/* surface denies with 401 (INCONCLUSIVE).\n\nCOOKIE REPLAY NOTE: the A1 bug is that alice's PRE-transition cookie keeps working after she is demoted. Postman's shared cookie jar would overwrite alice's cookie when superadmin logs in, hiding the bug. So the 'A1 bug demo' folder captures each login's Set-Cookie into a variable and sends it back as an explicit Cookie header. For a faithful replay, clear the Postman cookie jar for localhost (or turn the jar off) so only the explicit header is sent. On VULNERABLE the last call returns 200 (bug); on FIXED it returns 403.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8091"
+    },
+    {
+      "key": "aliceCookie",
+      "value": ""
+    },
+    {
+      "key": "superCookie",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Setup",
+      "item": [
+        {
+          "name": "POST /thesis/reset (reseed, injected)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/thesis/reset",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "thesis",
+                "reset"
+              ]
+            },
+            "description": "Unauthenticated reset endpoint injected for the thesis (deviation 4). Restores account roles. GET also works."
+          },
+          "protocolProfileBehavior": {
+            "disableCookies": true,
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "POST /login (alice, capture cookie)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var sc = pm.response.headers.get('Set-Cookie');",
+                  "if (sc) { var m = sc.match(/pyload_session_8000=[^;]+/); if (m) { pm.collectionVariables.set('aliceCookie', m[0]); } }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "alice"
+                },
+                {
+                  "key": "password",
+                  "value": "alicepass"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            },
+            "description": "Stores alice's session cookie into {{aliceCookie}}."
+          },
+          "protocolProfileBehavior": {
+            "disableCookies": true,
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "POST /login (superadmin, capture cookie)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var sc = pm.response.headers.get('Set-Cookie');",
+                  "if (sc) { var m = sc.match(/pyload_session_8000=[^;]+/); if (m) { pm.collectionVariables.set('superCookie', m[0]); } }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "superadmin"
+                },
+                {
+                  "key": "password",
+                  "value": "superpass"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "protocolProfileBehavior": {
+            "disableCookies": true,
+            "followRedirects": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Endpoints",
+      "item": [
+        {
+          "name": "POST /json/generate_apikey (source guard, admin-only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "{{aliceCookie}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":\"alice\",\"password\":\"alicepass\",\"name\":\"before\",\"expires\":null}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/json/generate_apikey",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "json",
+                "generate_apikey"
+              ]
+            },
+            "description": "Admin-only, non-consuming write (mints a new key each call, so repeatable). Denied -> 403. Uses alice's cookie."
+          },
+          "protocolProfileBehavior": {
+            "disableCookies": true,
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "POST /json/update_users (transition, operator)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "{{superCookie}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"update_data\": {\"superadmin|admin\": true, \"pyload|admin\": true}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/json/update_users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "json",
+                "update_users"
+              ]
+            },
+            "description": "Bulk desired-state write. Marks every OTHER admin as admin; any admin not listed (here alice) is reduced to role USER. Uses superadmin's cookie."
+          },
+          "protocolProfileBehavior": {
+            "disableCookies": true,
+            "followRedirects": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "others",
+      "description": "Endpoints khong nam tren duong tai hien loi A1; giu de tim hieu.",
+      "item": [
+        {
+          "name": "POST /api/set_user_permission (inferred transition)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "{{superCookie}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":\"alice\",\"role\":1,\"permission\":0}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/set_user_permission",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "set_user_permission"
+              ]
+            },
+            "description": "pyLoad's named-parameter role endpoint (the one the tool infers). role=1 demotes ADMIN->USER; permission=0 clears the whole Perms bitmask. Note /api/* denies with 401, not 403."
+          },
+          "protocolProfileBehavior": {
+            "disableCookies": true,
+            "followRedirects": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "A1 bug demo (970 triple)",
+      "description": "FIXED variant (http://localhost:8091). Run top to bottom. The last step must return 403.",
+      "item": [
+        {
+          "name": "1. POST /thesis/reset",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/thesis/reset",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "thesis",
+                "reset"
+              ]
+            }
+          },
+          "protocolProfileBehavior": {
+            "disableCookies": true,
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "2. login alice (capture pre-transition cookie)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var sc = pm.response.headers.get('Set-Cookie');",
+                  "if (sc) { var m = sc.match(/pyload_session_8000=[^;]+/); if (m) { pm.collectionVariables.set('aliceCookie', m[0]); } }",
+                  "pm.test('login 302', function () { pm.response.to.have.status(302); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "alice"
+                },
+                {
+                  "key": "password",
+                  "value": "alicepass"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "protocolProfileBehavior": {
+            "disableCookies": true,
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "3. source: generate_apikey with alice cookie (expect 200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('source ALLOWED 200', function () { pm.response.to.have.status(200); });",
+                  "if (pm.response.code === 200) { pm.test('200 body is JSON (HTML would mean the login page, not the API)', function () { pm.expect(pm.response.headers.get('Content-Type') || '').to.include('application/json'); }); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "{{aliceCookie}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":\"alice\",\"password\":\"alicepass\",\"name\":\"before\",\"expires\":null}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/json/generate_apikey",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "json",
+                "generate_apikey"
+              ]
+            }
+          },
+          "protocolProfileBehavior": {
+            "disableCookies": true,
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "4a. login superadmin (capture operator cookie)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var sc = pm.response.headers.get('Set-Cookie');",
+                  "if (sc) { var m = sc.match(/pyload_session_8000=[^;]+/); if (m) { pm.collectionVariables.set('superCookie', m[0]); } }",
+                  "pm.test('login 302', function () { pm.response.to.have.status(302); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "superadmin"
+                },
+                {
+                  "key": "password",
+                  "value": "superpass"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "protocolProfileBehavior": {
+            "disableCookies": true,
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "4b. transition: update_users with superadmin cookie (demote alice)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('transition 200', function () { pm.response.to.have.status(200); });",
+                  "if (pm.response.code === 200) { pm.test('200 body is JSON (HTML would mean the login page, not the API)', function () { pm.expect(pm.response.headers.get('Content-Type') || '').to.include('application/json'); }); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "{{superCookie}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"update_data\": {\"superadmin|admin\": true, \"pyload|admin\": true}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/json/update_users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "json",
+                "update_users"
+              ]
+            },
+            "description": "Pre-request logs superadmin in and captures the operator cookie; the main call demotes alice (she is absent from the admin list)."
+          },
+          "protocolProfileBehavior": {
+            "disableCookies": true,
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "5. follow-up: generate_apikey with STALE alice cookie (fixed: expect 403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('follow-up DENIED 403', function () { pm.response.to.have.status(403); });",
+                  "console.log('follow-up code = ' + pm.response.code + ' (expected 403 on FIXED; 200 would mean the patch is not active)');",
+                  "if (pm.response.code === 200) { pm.test('200 body is JSON (HTML would mean the login page, not the API)', function () { pm.expect(pm.response.headers.get('Content-Type') || '').to.include('application/json'); }); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "{{aliceCookie}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user\":\"alice\",\"password\":\"alicepass\",\"name\":\"after\",\"expires\":null}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/json/generate_apikey",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "json",
+                "generate_apikey"
+              ]
+            },
+            "description": "Replays alice's pre-transition cookie, no re-login. On VULNERABLE still 200; on FIXED 403."
+          },
+          "protocolProfileBehavior": {
+            "disableCookies": true,
+            "followRedirects": false
+          }
+        }
+      ]
+    }
+  ]
+}

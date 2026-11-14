@@ -9,7 +9,7 @@ Repo: `/Users/minhnguyen/IdeaProjects/EvoMaster`, branch `stateful-authz-oracle`
 
 ## Build
 
-Only after the user approved the code, and only when no batch is running.
+Only after the user approved the code.
 
 ```bash
 JAVA_HOME=$(/usr/libexec/java_home -v 17) mvn -f /Users/minhnguyen/IdeaProjects/EvoMaster/pom.xml \
@@ -30,25 +30,15 @@ JAVA_HOME=$(/usr/libexec/java_home -v 17) mvn -f /Users/minhnguyen/IdeaProjects/
 unzip -p <jar> 'org/evomaster/core/EMConfig*.class' | strings | grep -o "statefulAuthz[A-Za-z]*" | sort -u
 ```
 
-  Jar SR and later print nothing: their `EMConfig.kt` equals v6.1.1. Jar M2 differs from jar DC only in the model:
-  `unzip -p <jar> stateful-authz-model.csv | shasum -a 256` gives `b2deef150bf8…` for M2.
+  Jars from SR on print nothing: their `EMConfig.kt` equals v6.1.1. Tell them apart by the model:
+  `unzip -p <jar> stateful-authz-model.csv | shasum -a 256` gives `dcc77b59ed0f…` for ND and `b2deef150bf8…` for M2.
 
 | Jar | Commit | Use |
 |---|---|---|
-| `evomaster-M2-917c57dd.jar` | HEAD `9c4be5b1dc` + model M2 (`infra/analysis/lexicon-rules/m2-model-20261107/stateful-authz-model.csv`, not committed; the tree holds M1) | every current number from 2026-11-08 (`docs/results.md`); no reset, declared transition or D1 |
-| `evomaster-DC-a872a464.jar` | `9c4be5b1dc` (HEAD), built from `wip/redundant-code-20261103.patch` | redundant-code removal; gate 12/12 (`regression-check-DC-20261103/`); quotes nothing |
-| `evomaster-SR-77465fe5.jar` | `1cd0d091f4`, built from `wip/refactor-simplify-20261027.patch` (the commit adds one blank line, `RestSecurityBuilder.kt:781`) | refactor: no reset, declared transition or D1, C4 only; gate 12/12 (`regression-check-SR-20261027/`); quotes nothing |
-| `evomaster-P2f-64ee8ffc.jar` | `f73010103b` | fallback; quoted 2026-10-18 to 11-08; gate 21/21, full set `em-results/p2f-full-20261015/` |
-| `evomaster-P2e-6ae8277b.jar` | `a544c996ac` | provenance |
-| `evomaster-AF2-6b5606d4.jar` | `8d6cf8431f` | provenance; replay in `docs/results.md` §3 (`af2-full-remeasure-20261003/`) |
-| `evomaster-R-5bce137f.jar` | `007e5e09f9` | provenance |
-| `evomaster-B-06c70147.jar` | `8436f6dba6` | superseded pyLoad round |
-| `evomaster-frozen-769c16d.jar` | `6dd65f3706` | superseded reports-api and vampi-seeded rounds |
-| `evomaster-0e-bf26b653.jar` sha256 `7974e8031991e0af…` | source of `bf26b65322` (HEAD `6a43a852d0` + 0e patch) | gate 21/21 on 2026-09-13; no batch |
+| `evomaster-ND-07ebf19f.jar` | HEAD `2c3f281f13` + `wip/nodup-tokens-20261113-tree.patch` (not committed; `THESIS` comments plus the ND change, which alone is `nodup-tokens-20261113.patch` against the commented tree): `f:` without path params, `tokens` without regex, no-duplication model (`infra/analysis/lexicon-rules/m2-nodup-20261112/`) | every current number from 2026-11-13 (`docs/results.md`); no reset, declared transition or D1 |
+| `evomaster-M2-917c57dd.jar` | `9c4be5b1dc` + model M2 (`infra/analysis/lexicon-rules/m2-model-20261107/stateful-authz-model.csv`, not committed; the tree holds M1) | fallback; quoted 2026-11-08 to 11-13 |
 
-The filenames of `B`, `R`, `AF2`, `P2e`, `P2f`, `SR`, `DC` and `M2` carry the first 8 hex digits of the jar's sha256;
-`frozen` and `0e` carry commit hashes from before the 2026-09-01 history rewrite. The commit column is current. Every
-other jar: `infra/evomaster-ext/jars.md`.
+The filename carries the first 8 hex digits of the jar's sha256. Every other jar: `infra/evomaster-ext/jars.md`.
 
 ## Rollback rehearsal
 

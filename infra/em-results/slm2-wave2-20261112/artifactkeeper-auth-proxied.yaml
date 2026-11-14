@@ -1,0 +1,21 @@
+auth:
+  - name: viewer
+    loginEndpointAuth:
+      payloadRaw: '{"username":"viewer","password":"Thesis-Pass-1234"}'
+  - name: operator
+    loginEndpointAuth:
+      payloadRaw: '{"username":"admin","password":"Thesis-Pass-1234"}'
+  - name: victim
+    loginEndpointAuth:
+      payloadRaw: '{"username":"victim","password":"Thesis-Pass-1234"}'
+authTemplate:
+  loginEndpointAuth:
+    externalEndpointURL: http://localhost:8212/api/v1/auth/login
+    verb: POST
+    contentType: application/json
+    token:
+      extractFrom: body
+      extractSelector: /access_token
+      sendIn: header
+      sendName: Authorization
+      sendTemplate: "Bearer {token}"

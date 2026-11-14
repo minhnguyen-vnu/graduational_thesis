@@ -1,0 +1,998 @@
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/enterprise/ExperimentalFaultCategory.kt b/core/src/main/kotlin/org/evomaster/core/problem/enterprise/ExperimentalFaultCategory.kt
+index 394bd85924..60cfa49fb9 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/enterprise/ExperimentalFaultCategory.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/enterprise/ExperimentalFaultCategory.kt
+@@ -51,6 +51,7 @@ enum class ExperimentalFaultCategory(
+     HTTP_STATUS_NO_205_IF_CONTENT(964,"HTTP/REST-Design Violation: no-205-if-content","205WhenContent", "TODO"),
+     HTTP_STATUS_NO_426_IF_NO_UPGRADE(965,"HTTP/REST-Design Violation: no-426-if-no-upgrade","426MissingUpgrade", "TODO"),
+ 
++    // THESIS: Mã lỗi 970 của oracle phân quyền có trạng thái (MR-A1).
+     SECURITY_STATEFUL_AUTHORIZATION(970,
+         "Stateful Authorization: privilege persists after a permission-reducing transition",
+         "stillAllowedAfterPermissionRevoked",
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
+index daae87a8cd..0eb1bbf01e 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
+@@ -113,6 +113,7 @@ class RestSecurityOracle {
+         handleAnonymousWriteCheck(individual, actionResults, fv)
+         handleHiddenAccessible(individual, actionResults, fv)
+         handleSsrfFaults(individual, actionResults, fv)
++        // THESIS: Oracle 970, chạy cho mọi test SECURITY trong fitness.
+         handleStatefulAuthorization(individual, actionResults, fv)
+     }
+ 
+@@ -549,6 +550,9 @@ class RestSecurityOracle {
+         }
+     }
+ 
++    // THESIS: Oracle 970. Chỉ xét test do builder dựng (cờ statefulTripleUnderEvaluation bật).
++    // THESIS: Tìm source ghi 2xx, rồi một transition 2xx của tài khoản khác, rồi follow-up cùng op cùng auth với source vẫn 2xx:
++    // THESIS: gắn lỗi 970 vào follow-up. Vd PUT /docs/{id} (alice) 200, PUT /users/{username}/role (boss) 200, PUT /docs/{id} (alice) 200.
+     private fun handleStatefulAuthorization(
+         individual: RestIndividual,
+         actionResults: List<ActionResult>,
+@@ -561,6 +565,7 @@ class RestSecurityOracle {
+ 
+         val actions = individual.seeMainExecutableActions()
+ 
++        // THESIS: Kết quả HTTP của một call trong test; isAllowed = mã 2xx.
+         fun resultOf(a: RestCallAction): RestCallResult? =
+             actionResults.find { it.sourceLocalId == a.getLocalId() } as RestCallResult?
+ 
+@@ -569,6 +574,7 @@ class RestSecurityOracle {
+             return StatusGroup.G_2xx.isInGroup(code)
+         }
+ 
++        // THESIS: Source: call đã đăng nhập, 2xx, verb ghi, và không qua guard transition.
+         for (srcIndex in actions.indices) {
+             val source = actions[srcIndex]
+             if (source.auth is NoAuth
+@@ -578,6 +584,7 @@ class RestSecurityOracle {
+                 continue
+             }
+ 
++            // THESIS: Follow-up: call sau source, cùng op, cùng auth với source, và 2xx.
+             for (followUpIndex in (srcIndex + 1) until actions.size) {
+                 val followUp = actions[followUpIndex]
+ 
+@@ -586,6 +593,7 @@ class RestSecurityOracle {
+                     continue
+                 }
+ 
++                // THESIS: Giữa source và follow-up phải có một transition: auth khác source, 2xx, qua guard.
+                 var hasTransition = false
+                 for (tIndex in (srcIndex + 1) until followUpIndex) {
+                     val t = actions[tIndex]
+@@ -600,6 +608,7 @@ class RestSecurityOracle {
+                     continue
+                 }
+ 
++                // THESIS: Đủ ba điều kiện: ghi target 970 vào fitness, gắn lỗi vào follow-up, dừng ở bộ ba đầu tiên.
+                 val scenarioId = idMapper.handleLocalTarget(
+                     idMapper.getFaultDescriptiveId(
+                         ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION, followUp.getName()
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+index f15cba977d..688f4da1f4 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -71,20 +71,29 @@ class RestSecurityBuilder : TimeBoxedPhase {
+     companion object {
+         private val log: Logger = LoggerFactory.getLogger(RestSecurityBuilder::class.java)
+ 
++        // THESIS: File mô hình Naive Bayes trong jar (core/src/main/resources). Mỗi dòng: bảng,đặc trưng,trọng số.
+         private const val MODEL_RESOURCE = "/stateful-authz-model.csv"
+ 
++        // THESIS: Khoá giữ log-odds tiên nghiệm của bảng op, role, victim. Vd op,__prior__,-3.935.
+         private const val PRIOR = "__prior__"
+ 
++        // THESIS: Từ ngắn hơn 4 ký tự bị bỏ khi tách token (vd id, to).
+         private const val MIN_TOKEN_LENGTH = 4
+ 
++        // THESIS: Duyệt body sâu tối đa 3 tầng.
+         private const val MAX_FIELD_DEPTH = 3
+ 
++        // THESIS: Mỗi op lấy tối đa 80 trường.
+         private const val MAX_FIELDS = 80
+ 
++        // THESIS: Mỗi enum lấy tối đa 12 giá trị làm đặc trưng.
+         private const val MAX_ENUM_VALUES = 12
+ 
++        // THESIS: Tách camelCase, snake_case, path thành từ. Vd "APIKey" -> API, Key; "userRoleId" -> user, Role, Id.
+         private val TOKEN_PART = Regex("[A-Z]+(?![a-z])|[A-Z][a-z0-9]*|[a-z0-9]+")
+ 
++        // THESIS: Đọc stateful-authz-model.csv thành map bảng -> (đặc trưng -> trọng số).
++        // THESIS: Thiếu file hoặc thiếu bảng thì log warn: khi đó không op nào qua guard và 970 không bao giờ nổ.
+         private fun loadModel(): Map<String, Map<String, Double>> {
+             val stream = RestSecurityBuilder::class.java.getResourceAsStream(MODEL_RESOURCE)
+             if (stream == null) {
+@@ -93,6 +102,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 return emptyMap()
+             }
+             val model = mutableMapOf<String, MutableMap<String, Double>>()
++            // THESIS: Dòng "op,f:access,1.466" cho model["op"]["f:access"] = 1.466. Dòng sai định dạng (kể cả dòng tiêu đề) bị bỏ.
+             for (line in stream.bufferedReader().readLines()) {
+                 val row = line.trim().split(",")
+                 if (row.size != 3) {
+@@ -102,6 +112,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 val rows = model.getOrPut(row[0]) { mutableMapOf() }
+                 rows[row[1]] = weight
+             }
++            // THESIS: Kiểm bảng: op, role, victim phải có __prior__; low, high, lowstr, highstr phải khác rỗng.
+             val missing = mutableListOf<String>()
+             for (name in listOf("op", "role", "victim")) {
+                 if (model[name]?.containsKey(PRIOR) != true) {
+@@ -120,10 +131,14 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return model
+         }
+ 
++        // THESIS: Mô hình nạp một lần cho mỗi JVM.
+         private val MODEL = loadModel()
+ 
++        // THESIS: Một bảng của mô hình theo tên (op, role, victim, low, high, lowstr, highstr); không có thì map rỗng.
+         private fun table(name: String): Map<String, Double> = MODEL[name] ?: emptyMap()
+ 
++        // THESIS: Tách chuỗi thành tập từ viết thường, bỏ từ ngắn hơn minLength và từ toàn chữ số.
++        // THESIS: Vd "/users/{userId}/role" -> {users, user, role} ("id" bị bỏ vì ngắn).
+         fun tokens(text: String, minLength: Int = MIN_TOKEN_LENGTH): Set<String> {
+             val out = mutableSetOf<String>()
+             for (match in TOKEN_PART.findAll(text)) {
+@@ -136,6 +151,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return out
+         }
+ 
++        // THESIS: true nếu chuỗi chỉ gồm chữ số, vd "123".
+         private fun isDigitsOnly(s: String): Boolean {
+             for (c in s) {
+                 if (c !in '0'..'9') {
+@@ -145,12 +161,16 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return true
+         }
+ 
++        // THESIS: Một trường của op. loc = path, query hoặc body. name = đường dẫn trường, vd "user.roles[]".
++        // THESIS: gene = gene của tham số (có thể là OptionalGene bọc ngoài); value = gene giá trị sau khi bóc wrapper.
+         class SchemaField(val loc: String, val name: String, val gene: Gene, val value: Gene) {
++            // THESIS: "user.roles[]" cho leaf "roles", parents ["user"].
+             val leaf: String = name.split(".").last().replace("[]", "")
+             val parents: List<String> = name.split(".").dropLast(1).map { it.replace("[]", "") }
+             val enumValues: List<String>
+             val kind: String
+ 
++            // THESIS: Lấy giá trị enum (cả enum nằm trong mảng) và xếp trường vào một kind: bool, enum, num, array, object, str.
+             init {
+                 var enum: EnumGene<*>? = null
+                 if (value is EnumGene<*>) {
+@@ -178,8 +198,11 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 }
+             }
+ 
++            // THESIS: Khoá của trường trong op, vd "body:role", "path:username".
+             val key: String get() = "$loc:$name"
+ 
++            // THESIS: Đặc trưng Naive Bayes của trường: k:kind, l:loc, w:tên lá, n:từ của tên lá, a:từ của trường cha, e:từ của giá trị enum.
++            // THESIS: Vd body role enum [ADMIN, VIEWER] -> {k:enum, l:body, w:role, n:role, e:admin, e:viewer}.
+             fun features(): Set<String> {
+                 val fs = mutableSetOf("k:$kind", "l:$loc", "w:${leaf.lowercase()}")
+                 for (t in tokens(leaf)) {
+@@ -199,6 +222,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             }
+         }
+ 
++        // THESIS: Bóc các lớp wrapper (OptionalGene, NullableGene, ...) tới gene giá trị. Gặp ChoiceGene thì đi vào con cuối.
+         private fun valueGene(g: Gene): Gene {
+             var cur = g
+             while (cur is WrapperGene) {
+@@ -208,6 +232,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return cur
+         }
+ 
++        // THESIS: Mọi phương án của một gene: ChoiceGene (vd oneOf) cho mỗi con một phương án; wrapper thì bóc ra; gene thường là chính nó.
+         private fun alternatives(g: Gene): List<Gene> {
+             if (g is ChoiceGene<*>) {
+                 val out = mutableListOf<Gene>()
+@@ -222,6 +247,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return listOf(g)
+         }
+ 
++        // THESIS: Gộp trường con của mọi phương án ObjectGene; tên trùng thì giữ trường của phương án đầu.
+         private fun objectFields(g: Gene): List<Gene> {
+             val out = mutableListOf<Gene>()
+             val seenNames = mutableSetOf<String>()
+@@ -240,6 +266,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return out
+         }
+ 
++        // THESIS: Duyệt đệ quy body: thêm trường hiện tại, rồi đi vào trường con; mảng thì đi vào phần tử và thêm "[]" vào tên.
++        // THESIS: Vd {members: [{role}]} -> "members", "members[].role". Dừng ở độ sâu MAX_FIELD_DEPTH.
+         private fun walkBody(name: String, g: Gene, depth: Int, out: MutableList<SchemaField>) {
+             val v = valueGene(g)
+             out.add(SchemaField("body", name, g, v))
+@@ -253,6 +281,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             }
+         }
+ 
++        // THESIS: Danh sách trường của op theo thứ tự path, query, body; tối đa MAX_FIELDS.
++        // THESIS: Vd PUT /users/{username}/role body {role} -> [path:username, body:role].
+         fun schemaFields(a: RestCallAction): List<SchemaField> {
+             val out = mutableListOf<SchemaField>()
+             for (p in a.parameters) {
+@@ -269,6 +299,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 if (p !is BodyParam) {
+                     continue
+                 }
++                // THESIS: Body là mảng thì lấy trường của phần tử. Trường cấp một không có tiền tố tên.
+                 val root = valueGene(p.primaryGene())
+                 val top = if (root is ArrayGene<*>) objectFields(root.template) else objectFields(p.primaryGene())
+                 for (field in top) {
+@@ -278,6 +309,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return out.take(MAX_FIELDS)
+         }
+ 
++        // THESIS: Đặc trưng của op cho bảng op: v:verb, p:từ của path, f:từ của tên lá mọi trường.
++        // THESIS: Vd PUT /users/{username}/role body {role} -> {v:PUT, p:users, p:username, p:role, f:username, f:role}.
+         fun opFeatures(a: RestCallAction): Set<String> {
+             val fs = mutableSetOf("v:${a.verb.name}")
+             for (t in tokens(a.path.toString())) {
+@@ -291,6 +324,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return fs
+         }
+ 
++        // THESIS: Cộng trọng số của các đặc trưng có trong bảng; đặc trưng không có trong bảng được 0.
+         private fun evidence(name: String, features: Set<String>): Double {
+             val t = table(name)
+             var sum = 0.0
+@@ -300,15 +334,22 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return sum
+         }
+ 
++        // THESIS: Log-odds tiên nghiệm của bảng; bảng thiếu thì âm vô cực, mọi điểm của bảng đó thành âm.
+         private fun prior(name: String): Double = table(name)[PRIOR] ?: Double.NEGATIVE_INFINITY
+ 
++        // THESIS: Log-odds trường f là trường vai trò (name = "role") hoặc trường nạn nhân (name = "victim"). > 0 tức posterior > 0,5.
+         fun fieldScore(name: String, f: SchemaField): Double = prior(name) + evidence(name, f.features())
+ 
++        // THESIS: Cache evidence theo tên op: builder và oracle chấm cùng một op nhiều lần.
+         private val opEvidenceCache = java.util.concurrent.ConcurrentHashMap<String, Double>()
+ 
++        // THESIS: Evidence của bảng op cho một op, có cache.
++        // THESIS: Log-odds op là transition hạ quyền = prior op + evidence.
+         fun transitionScore(a: RestCallAction): Double =
+             prior("op") + opEvidenceCache.getOrPut(a.getName()) { evidence("op", opFeatures(a)) }
+ 
++        // THESIS: Điểm của một giá trị trong bảng low/high/lowstr/highstr: trọng số lớn nhất trong các khoá là chuỗi con của giá trị.
++        // THESIS: Vd valueScore("low", "VIEWER") = 0.333 (khoá viewer), valueScore("high", "ADMIN") = 0.771 (khoá admin). Không khớp khoá nào thì 0.
+         fun valueScore(name: String, value: String): Double {
+             val v = value.lowercase()
+             var best: Double? = null
+@@ -323,15 +364,21 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return best ?: 0.0
+         }
+ 
++        // THESIS: Các verb ghi. Transition và source của 970 đều phải dùng một trong các verb này.
+         val TRANSITION_VERBS =
+             listOf(HttpVerb.PUT, HttpVerb.PATCH, HttpVerb.POST, HttpVerb.DELETE)
+ 
++        // THESIS: Tối đa 20 bộ ba được chạy trong cả pha security.
+         private const val MAX_STATEFUL_TRIPLE_ATTEMPTS = 20
+ 
++        // THESIS: Transition ứng viên chưa được chứng minh chỉ được 5 lần thử, rồi sang ứng viên kế (ứng viên cuối không bị giới hạn này).
+         private const val MAX_UNPROVEN_CANDIDATE_ATTEMPTS = 5
+ 
++        // THESIS: Tối đa 3 lần gọi nâng quyền lại cho mỗi transition ứng viên.
+         private const val MAX_PRIVILEGE_RESTORES = 3
+ 
++        // THESIS: Guard của 970: op có verb ghi và transitionScore > 0 (posterior > 0,5) được coi là transition hạ quyền.
++        // THESIS: Builder gọi để chọn transition; oracle gọi để nhận transition và để loại transition khỏi vai source.
+         fun looksLikePermissionReducingTransition(a: RestCallAction): Boolean {
+             if (a.verb !in TRANSITION_VERBS) {
+                 return false
+@@ -424,6 +471,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         individualsInSolution = this.archive.extractSolution().individuals
+ 
+         if(!hasPhaseTimedOut()) {
++            // THESIS: Khâu dựng bộ ba 970, chạy trước các kiểm tra access-control có sẵn của EvoMaster.
+             addForStatefulAccessControl()
+         }
+ 
+@@ -585,45 +633,64 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         TODO("Not yet implemented")
+     }
+ 
++    // THESIS: Giá trị hạ quyền cho trường vai trò kiểu mảng: mảng rỗng (gỡ mọi vai trò).
+     private val emptyRoleList = "[]"
+ 
++    // THESIS: Giá trị hạ quyền thử cho trường vai trò kiểu số, theo thứ tự này (viết tay).
+     private val numericRoleCandidates = listOf("1", "0", "2")
+ 
++    // THESIS: Giá trị nâng quyền lại thử cho trường vai trò kiểu số, theo thứ tự này (viết tay).
+     private val elevatedNumericRoleCandidates = listOf("0", "1", "2")
+ 
++    // THESIS: Tài khoản đã bị transition hạ quyền (2xx) trong pha; không dùng lại làm nạn nhân hay operator.
+     private val privilegeReducedInPhase = mutableSetOf<String>()
+ 
++    // THESIS: Tập con của privilegeReducedInPhase: lần hạ quyền nằm trong bộ ba đã chứng minh transition. Giữ lại khi sang ứng viên kế.
+     private val privilegeReducedByProof = mutableSetOf<String>()
+ 
++    // THESIS: Cặp (transition, nạn nhân) không thử nữa: transition từ chối mọi lần thử, hoặc trả 404 sau khi đã được chứng minh.
+     private val refusedTransitionVictims = mutableSetOf<Pair<String, String>>()
+ 
++    // THESIS: Số bộ ba đã chạy trong cả pha (trần MAX_STATEFUL_TRIPLE_ATTEMPTS).
+     private var statefulTripleAttempts = 0
+ 
++    // THESIS: Số lần gọi nâng quyền lại của ứng viên hiện tại (trần MAX_PRIVILEGE_RESTORES).
+     private var privilegeRestoreAttempts = 0
+ 
++    // THESIS: Trạng thái của transition ứng viên đang thử: số lần thử, đã được chứng minh chưa, có phải ứng viên cuối không.
+     private var candidateAttempts = 0
+     private var candidateProven = false
+     private var candidateIsLast = true
+ 
++    // THESIS: Mã của source và transition ở lần thử gần nhất.
++    // THESIS: transitionNotFoundSeen bật khi transition chưa chứng minh trả 404 sau source 2xx; khi đó bỏ cả ứng viên.
+     private var lastSourceCode: Int? = null
+     private var lastTransitionCode: Int? = null
+     private var transitionNotFoundSeen = false
+ 
++    // THESIS: Bật khi transition từ chối nạn nhân hiện tại ít nhất một lần sau source 2xx.
+     private var victimRefused = false
+ 
++    // THESIS: Bật trong lúc fitness chạy một bộ ba do builder dựng. Oracle chỉ xét 970 khi cờ này bật.
+     var statefulTripleUnderEvaluation = false
+         private set
+ 
++    // THESIS: Kết quả một lượt thử: TRIPLE_BUILT = dựng xong bộ ba, STOP_VICTIM = bỏ nạn nhân này, NEXT = thử operator hoặc kế hoạch kế.
+     private enum class RoleAttempt { TRIPLE_BUILT, STOP_VICTIM, NEXT }
+ 
++    // THESIS: Ứng viên chưa chứng minh, không phải ứng viên cuối, đã dùng hết 5 lần thử.
+     private fun candidateCapReached(): Boolean =
+         !candidateProven && !candidateIsLast && candidateAttempts >= MAX_UNPROVEN_CANDIDATE_ATTEMPTS
+ 
++    // THESIS: Còn được chạy thêm bộ ba: chưa chạm trần 20 của pha và chưa chạm trần 5 của ứng viên.
+     private fun attemptAllowed(): Boolean =
+         statefulTripleAttempts < MAX_STATEFUL_TRIPLE_ATTEMPTS && !candidateCapReached()
+ 
++    // THESIS: Điểm vào của 970. Xếp hạng transition, lọc ứng viên dùng được, rồi với từng ứng viên duyệt source x nạn nhân để dựng bộ ba.
++    // THESIS: Dừng khi hết giờ pha hoặc hết 20 lần thử.
+     private fun addForStatefulAccessControl() {
+ 
++        // THESIS: Cần bật category 970 và có ít nhất 2 tài khoản trong file auth.
+         if (!config.isEnabledFaultCategory(ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION)) {
+             log.debug("Skipping experimental stateful-authorization security test as disabled in configuration")
+             return
+@@ -635,11 +702,13 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         log.debug("Stateful-authorization model tables: op ${table("op").size - 1}" +
+                 " role ${table("role").size - 1} victim ${table("victim").size - 1}" +
+                 " low ${table("low").size} high ${table("high").size}")
++        // THESIS: Bước 1: mọi op qua guard, xếp giảm dần theo transitionScore.
+         val ranked = rankPermissionReducingTransitions()
+         if (ranked.isEmpty()) {
+             log.debug("Skipping stateful-authorization: no permission-reducing transition endpoint found")
+             return
+         }
++        // THESIS: Bước 2: bỏ ứng viên có route có vẻ không tồn tại, và ứng viên không đề xuất được giá trị hạ quyền nào.
+         val viable = mutableListOf<RestCallAction>()
+         for (candidate in ranked) {
+             if (routeLooksMissing(candidate)) {
+@@ -664,6 +733,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return
+         }
+ 
++        // THESIS: Bước 3: thử lần lượt từng ứng viên. Đặt lại bộ đếm của ứng viên; chỉ giữ các lần hạ quyền đã chứng minh.
+         for (index in viable.indices) {
+             val transitionOp = viable[index]
+             log.debug("Stateful-authorization transition chosen: ${transitionOp.getName()}" +
+@@ -676,6 +746,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             privilegeRestoreAttempts = 0
+             privilegeReducedInPhase.retainAll(privilegeReducedByProof)
+ 
++            // THESIS: Bước 4: source = op ghi từng bị 403 trong archive. Dùng PUT/PATCH; chỉ khi không op PUT/PATCH nào có 2xx đã đăng nhập thì dùng POST.
+             var sources = guardedSources(listOf(HttpVerb.PUT, HttpVerb.PATCH), transitionOp)
+             if (!anyAuthenticatedSuccess(sources)) {
+                 sources = guardedSources(listOf(HttpVerb.POST), transitionOp)
+@@ -686,6 +757,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             }
+             log.debug("Stateful-authorization guarded source candidates: ${sources.size} $sourceNames")
+ 
++            // THESIS: Bước 5: với mỗi source, thử từng nạn nhân. Dựng được một bộ ba thì sang source kế.
+             var stopSources = false
+             for (op in sources) {
+                 if (hasPhaseTimedOut()) {
+@@ -716,6 +788,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                     if (buildStatefulAuthzTriple(victimSlice, transitionOp)) {
+                         break
+                     }
++                    // THESIS: Transition chưa chứng minh trả 404 sau source 2xx: bỏ mọi source còn lại của ứng viên này.
+                     if (transitionNotFoundSeen) {
+                         stopSources = true
+                         break
+@@ -745,6 +818,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         log.debug("Stateful-authorization: sources exhausted after $statefulTripleAttempts triple attempts")
+     }
+ 
++    // THESIS: Op có verb trong verbs, khác path với transition, và có ít nhất một lần 403 trong archive (dấu hiệu op bị chặn bởi quyền).
+     private fun guardedSources(verbs: List<HttpVerb>, transitionOp: RestCallAction): List<RestCallAction> {
+         val out = mutableListOf<RestCallAction>()
+         for (verb in verbs) {
+@@ -764,6 +838,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
++    // THESIS: true nếu một op trong danh sách có ít nhất một lần 2xx với tài khoản đã đăng nhập.
+     private fun anyAuthenticatedSuccess(ops: List<RestCallAction>): Boolean {
+         for (op in ops) {
+             val allowed = RestIndividualSelectorUtils.findIndividuals(
+@@ -777,6 +852,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return false
+     }
+ 
++    // THESIS: Ứng viên nạn nhân của source: test trong archive cắt tới call source 2xx đã đăng nhập. Tài khoản của call cuối là nạn nhân.
++    // THESIS: Mỗi tài khoản giữ lát ngắn nhất. Vd source PUT /docs/{id} -> victims [alice].
+     private fun victimSlicesOn(source: RestCallAction): List<RestIndividual> {
+         val slices = RestIndividualSelectorUtils.findAndSlice(
+             individualsInSolution, source.verb, source.path,
+@@ -795,6 +872,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
++    // THESIS: Operator = mọi tài khoản khác nạn nhân, chưa bị hạ quyền trong pha. Ai từng chạy transition 2xx thì đứng trước.
++    // THESIS: Vd nạn nhân alice -> [boss, bob].
+     private fun operatorsFor(
+         victimAuth: HttpWsAuthenticationInfo,
+         transitionDef: RestCallAction
+@@ -818,12 +897,15 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return ranTransition + others
+     }
+ 
++    // THESIS: Thử dựng bộ ba cho một nạn nhân trên một source. Lượt 1: mỗi operator thử mọi giá trị hạ quyền.
++    // THESIS: Lượt 2: mọi operator bị 401/403 thì nâng quyền operator lại rồi thử lại. true khi dựng xong bộ ba hợp lệ.
+     private fun buildStatefulAuthzTriple(
+         victimSlice: RestIndividual,
+         transitionDef: RestCallAction
+     ): Boolean {
+         val victimAuth = victimSlice.seeMainExecutableActions().last().auth
+ 
++        // THESIS: Bỏ cặp (transition, nạn nhân) đã bị từ chối, và nạn nhân đã bị hạ quyền trong pha.
+         val pair = transitionDef.getName() to victimAuth.name
+         if (refusedTransitionVictims.contains(pair)) {
+             log.debug("Stateful-authorization: ${transitionDef.getName()} already refused victim '${victimAuth.name}'")
+@@ -842,6 +924,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         }
+         log.debug("Stateful-authorization victim '${victimAuth.name}' operators $operatorNames")
+ 
++        // THESIS: Giá trị hạ quyền: lấy theo trường vai trò, bỏ giá trị cao mà nạn nhân đang giữ (đọc từ response GET trong archive).
++        // THESIS: Vd enum {VIEWER, EVOMASTER, ADMIN}, nạn nhân đang giữ ADMIN -> [VIEWER, EVOMASTER].
+         val field = roleField(transitionDef) ?: return false
+         val current = victimRoleValues(victimAuth, transitionDef, field)
+         val roleValues = reducedRoleValues(field, current)
+@@ -849,6 +933,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+ 
+         victimRefused = false
+ 
++        // THESIS: Lượt 1.
+         for (operator in operators) {
+             val outcome = tryReducedRoles(victimSlice, transitionDef, roleValues, operator, victimAuth)
+             if (outcome != RoleAttempt.NEXT) {
+@@ -856,6 +941,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             }
+         }
+ 
++        // THESIS: Lượt 2: lần thử cuối có source 2xx và transition 401/403, tức operator thiếu quyền chạy transition.
+         val src = lastSourceCode
+         val operatorsRefused = lastTransitionCode == 401 || lastTransitionCode == 403
+         if (operatorsRefused && src != null && StatusGroup.G_2xx.isInGroup(src)) {
+@@ -865,6 +951,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             }
+         }
+ 
++        // THESIS: Transition từ chối nạn nhân này: không thử lại cặp (transition, nạn nhân) trong pha.
+         if (victimRefused) {
+             refusedTransitionVictims.add(pair)
+             LoggingUtil.getInfoLogger().info(
+@@ -875,6 +962,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return false
+     }
+ 
++    // THESIS: Một operator thử lần lượt từng giá trị hạ quyền trên nạn nhân.
++    // THESIS: Dừng khi dựng xong bộ ba, khi phải bỏ nạn nhân, hoặc khi transition không từ chối chính giá trị (đổi giá trị cũng vô ích).
+     private fun tryReducedRoles(
+         victimSlice: RestIndividual,
+         transitionDef: RestCallAction,
+@@ -885,6 +974,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         for (reducedRole in roleValues) {
+             if (hasPhaseTimedOut() || !attemptAllowed()) return RoleAttempt.STOP_VICTIM
+ 
++            // THESIS: Bộ đếm không tăng: không dựng được call (không đặt được nạn nhân hoặc giá trị), thử giá trị kế.
+             val before = statefulTripleAttempts
+             if (executeStatefulAuthzTriple(victimSlice, transitionDef, reducedRole, operator)) {
+                 return RoleAttempt.TRIPLE_BUILT
+@@ -903,6 +993,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 || refusedTransitionVictims.contains(transitionDef.getName() to victimAuth.name)) {
+                 return RoleAttempt.STOP_VICTIM
+             }
++            // THESIS: Chỉ thử giá trị kế khi transition trả 4xx/5xx khác 401/403/404; còn lại chuyển sang operator kế.
+             if (!transitionRejectedRoleValue()) {
+                 return RoleAttempt.NEXT
+             }
+@@ -910,6 +1001,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return RoleAttempt.NEXT
+     }
+ 
++    // THESIS: Mọi operator bị từ chối (có thể vì một lượt trước đã hạ quyền họ): nạn nhân gọi transition để nâng quyền operator,
++    // THESIS: rồi operator thử hạ quyền nạn nhân lần nữa. Vd "Privilege-restore accepted for 'boss' by 'alice' with role 'ADMIN'".
+     private fun restoreOperatorsAndRetry(
+         victimSlice: RestIndividual,
+         transitionDef: RestCallAction,
+@@ -917,6 +1010,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         operators: List<HttpWsAuthenticationInfo>,
+         victimAuth: HttpWsAuthenticationInfo
+     ): RoleAttempt {
++        // THESIS: Lập kế hoạch nâng quyền cho từng operator; giá trị hạ quyền đầu tiên không được dùng làm giá trị nâng.
+         val exclude = roleValues.firstOrNull() ?: ""
+         val plans = mutableMapOf<String, List<List<Pair<String, String>>>>()
+         var anyPlan = false
+@@ -945,6 +1039,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                     return RoleAttempt.NEXT
+                 }
+ 
++                // THESIS: restorer = nạn nhân, target = operator. Nâng được (2xx) thì operator thử lại mọi giá trị hạ quyền.
+                 if (!restorePrivilege(transitionDef, victimAuth, operator, plan, victimSlice)) {
+                     continue
+                 }
+@@ -958,6 +1053,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return RoleAttempt.NEXT
+     }
+ 
++    // THESIS: Log warn khi lần thử không ghi được mã trạng thái nào; nạn nhân bị bỏ.
+     private fun noStatusRecorded(transitionDef: RestCallAction, victim: String, operator: String) {
+         LoggingUtil.getInfoLogger().warn(
+             "Stateful-authorization attempt on ${transitionDef.getName()} recorded no status code" +
+@@ -965,17 +1061,20 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         )
+     }
+ 
++    // THESIS: Source 2xx nhưng transition bị từ chối: 401, 403, hoặc từ chối giá trị.
+     private fun transitionRefusedAfterSource(): Boolean {
+         val src = lastSourceCode ?: return false
+         val code = lastTransitionCode ?: return false
+         return StatusGroup.G_2xx.isInGroup(src) && (code == 401 || code == 403 || transitionRejectedRoleValue())
+     }
+ 
++    // THESIS: Transition trả 4xx/5xx khác 401/403/404: coi như app từ chối giá trị vai trò vừa gửi (vd 400, 422).
+     private fun transitionRejectedRoleValue(): Boolean {
+         val code = lastTransitionCode ?: return false
+         return code in 400..599 && code !in setOf(401, 403, 404)
+     }
+ 
++    // THESIS: Mã HTTP của một call trong test đã chạy; null nếu không có kết quả.
+     private fun statusIn(ei: EvaluatedIndividual<RestIndividual>, a: RestCallAction): Int? {
+         val result = ei.seeResult(a.getLocalId())
+         if (result is RestCallResult) {
+@@ -984,21 +1083,26 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return null
+     }
+ 
++    // THESIS: Dựng và chạy một bộ ba: [lát của nạn nhân, kết thúc bằng source] + transition (operator hạ quyền nạn nhân)
++    // THESIS: + follow-up (source lặp lại với auth của nạn nhân). true khi bộ ba hợp lệ; khi đó test được đưa vào archive.
+     private fun executeStatefulAuthzTriple(
+         victimSlice: RestIndividual,
+         transitionDef: RestCallAction,
+         reducedRole: String,
+         operator: HttpWsAuthenticationInfo
+     ): Boolean {
++        // THESIS: base = bản sao lát của nạn nhân; call cuối là source.
+         val base = victimSlice.copy() as RestIndividual
+         val source = base.seeMainExecutableActions().last()
+         val victimAuth = source.auth
+ 
++        // THESIS: Transition: bản sao mới của op định nghĩa, gene khởi tạo ngẫu nhiên, chạy bằng tài khoản operator.
+         val transition = transitionDef.copy() as RestCallAction
+         transition.resetLocalIdRecursively()
+         transition.forceNewTaints()
+         transition.doInitialize(randomness)
+         transition.auth = operator
++        // THESIS: Trỏ transition vào nạn nhân, đặt trường vai trò thành giá trị hạ quyền, tắt các trường tuỳ chọn khác.
+         val targeted = setUserTargetToVictim(transition, victimAuth)
+         if (targeted == null) {
+             log.debug("Stateful-authorization: could not target victim '${victimAuth.name}' on ${transition.getName()}")
+@@ -1011,20 +1115,24 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         }
+         keepOnlyTargetFields(transition, targeted + reduced)
+         setUserNameFieldsToVictim(transition, victimAuth, targeted)
++        // THESIS: Gắn transition vào sau source.
+         base.addMainActionInEmptyEnterpriseGroup(action = transition)
+ 
++        // THESIS: Follow-up: bản sao của source, cùng auth của nạn nhân, path param gắn theo source để trỏ cùng tài nguyên.
+         val followUp = source.copy() as RestCallAction
+         followUp.resetLocalIdRecursively()
+         followUp.forceNewTaints()
+         followUp.bindBasedOn(source.path, source.parameters.filterIsInstance<PathParam>(), null)
+         base.addMainActionInEmptyEnterpriseGroup(action = followUp)
+ 
++        // THESIS: Gán id, đánh dấu SECURITY, sửa liên kết tài nguyên để test hợp lệ.
+         base.doInitializeLocalId()
+         base.modifySampleType(SampleType.SECURITY)
+         base.ensureFlattenedStructure()
+         base.fixResourceForwardLinks()
+         org.evomaster.core.Lazy.assert { base.verifyValidity(); true }
+ 
++        // THESIS: Chạy test trên SUT. Cờ bật để oracle trong fitness xét 970 cho test này.
+         statefulTripleUnderEvaluation = true
+         val ei = try {
+             fitness.computeWholeAchievedCoverageForPostProcessing(base)
+@@ -1038,6 +1146,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         statefulTripleAttempts++
+         candidateAttempts++
+ 
++        // THESIS: Đọc mã của ba call, vd 200/200/200.
+         val sourceCode = statusIn(ei, source)
+         val transitionCode = statusIn(ei, transition)
+         val followUpCode = statusIn(ei, followUp)
+@@ -1046,6 +1155,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         val sourceAllowed = sourceCode != null && StatusGroup.G_2xx.isInGroup(sourceCode)
+         val transitionAllowed = transitionCode != null && StatusGroup.G_2xx.isInGroup(transitionCode)
+ 
++        // THESIS: Transition 404 sau source 2xx: ứng viên đã chứng minh thì bỏ nạn nhân này; chưa chứng minh thì đánh dấu để bỏ cả ứng viên.
+         if (transitionCode == 404 && sourceAllowed) {
+             if (candidateProven) {
+                 refusedTransitionVictims.add(transitionDef.getName() to victimAuth.name)
+@@ -1059,10 +1169,12 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         }
+         val observed = "${sourceCode ?: "-"}/${transitionCode ?: "-"}/${followUpCode ?: "-"}"
+ 
++        // THESIS: Transition 2xx: nạn nhân đã bị hạ quyền, không dùng lại trong pha.
+         if (transitionAllowed) {
+             privilegeReducedInPhase.add(victimAuth.name)
+         }
+ 
++        // THESIS: VOID: source hoặc transition không 2xx, hoặc follow-up không có mã hay ra 401. Follow-up 401 sau hai bước 2xx được ghi REVOKED.
+         if (!sourceAllowed || !transitionAllowed || followUpCode == null || followUpCode == 401) {
+             val revoked = followUpCode == 401 && sourceAllowed && transitionAllowed
+             LoggingUtil.getInfoLogger().info(
+@@ -1073,6 +1185,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return false
+         }
+ 
++        // THESIS: Follow-up 2xx: chạy probe C4 để xác nhận quyền đã thật sự bị gỡ; không xác nhận được thì bỏ (UNCONFIRMED).
+         if (StatusGroup.G_2xx.isInGroup(followUpCode) && !reLoginProbeConfirmsPrivilegeRemoved(victimSlice)) {
+             LoggingUtil.getInfoLogger().info(
+                 "Discarded an UNCONFIRMED stateful-authorization (MR-A1) attempt on ${source.getName()}:" +
+@@ -1087,6 +1200,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 " (victim '${victimAuth.name}', operator '${operator.name}'," +
+                 " transition ${transition.getName()}, statuses $observed)"
+         )
++        // THESIS: Follow-up 403, hoặc 2xx đã qua C4: transition được chứng minh là hạ quyền thật.
+         if (followUpCode == 403 || StatusGroup.G_2xx.isInGroup(followUpCode)) {
+             if (!candidateProven) {
+                 LoggingUtil.getInfoLogger().info(
+@@ -1097,6 +1211,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             candidateProven = true
+             privilegeReducedByProof.add(victimAuth.name)
+         }
++        // THESIS: Oracle đã gắn lỗi 970 trong lúc chạy (follow-up 2xx): chỉ log. Mọi bộ ba hợp lệ đều vào archive, có lỗi hay không.
+         if (ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION in DetectedFaultUtils.getDetectedFaultCategories(ei)) {
+             LoggingUtil.getInfoLogger().info(
+                 "Constructed a stateful-authorization (MR-A1) test revealing privilege persistence" +
+@@ -1107,6 +1222,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return true
+     }
+ 
++    // THESIS: Mã của call cuối cùng có ghi mã trong test.
+     private fun lastRecordedStatus(individual: RestIndividual, ei: EvaluatedIndividual<RestIndividual>): Int? {
+         var last: Int? = null
+         for (a in individual.seeMainExecutableActions()) {
+@@ -1118,6 +1234,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return last
+     }
+ 
++    // THESIS: Probe C4: chạy lại lát của nạn nhân thành test mới (đăng nhập mới, sau khi đã hạ quyền). Source phải ra 403.
++    // THESIS: Đối chứng: cùng lát gửi không credential không được ra 403. true = quyền đã bị gỡ thật.
+     private fun reLoginProbeConfirmsPrivilegeRemoved(victimSlice: RestIndividual): Boolean {
+ 
+         val probe = victimSlice.copy() as RestIndividual
+@@ -1128,10 +1246,12 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         val lastObserved = lastRecordedStatus(probe, ei)
+             ?: return reLoginProbeInconclusive("no call of the replayed slice recorded a status code")
+ 
++        // THESIS: Đăng nhập lại mà source không ra 403: chưa thấy quyền bị gỡ.
+         if (lastObserved != 403) {
+             return false
+         }
+ 
++        // THESIS: Đối chứng ẩn danh: cùng lát, bỏ auth. Ẩn danh cũng 403 thì mã 403 ở trên không nói gì về quyền. Vd PUT /docs/{id} ẩn danh = 401.
+         val control = victimSlice.copy() as RestIndividual
+         control.modifySampleType(SampleType.SECURITY)
+         for (a in control.seeMainExecutableActions()) {
+@@ -1153,11 +1273,13 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return true
+     }
+ 
++    // THESIS: Log INCONCLUSIVE kèm lý do, trả false (bộ ba bị bỏ).
+     private fun reLoginProbeInconclusive(reason: String): Boolean {
+         LoggingUtil.getInfoLogger().info("Stateful-authorization re-login probe INCONCLUSIVE: $reason")
+         return false
+     }
+ 
++    // THESIS: Mọi op qua guard looksLikePermissionReducingTransition, xếp giảm dần theo transitionScore.
+     private fun rankPermissionReducingTransitions(): List<RestCallAction> {
+         val transitions = mutableListOf<RestCallAction>()
+         for (a in actionDefinitions) {
+@@ -1168,6 +1290,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return transitions.sortedByDescending { transitionScore(it) }
+     }
+ 
++    // THESIS: Trường có điểm cao nhất theo bảng model, điểm phải > 0; onPath = true chỉ xét path param, false chỉ xét trường ngoài path.
+     private fun bestField(a: RestCallAction, model: String, onPath: Boolean): SchemaField? {
+         var best: SchemaField? = null
+         var bestScore = 0.0
+@@ -1184,8 +1307,10 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return best
+     }
+ 
++    // THESIS: Trường vai trò của op: trường ngoài path có điểm role cao nhất, điểm phải > 0. Vd body:role.
+     private fun roleField(a: RestCallAction): SchemaField? = bestField(a, "role", false)
+ 
++    // THESIS: Trường chỉ định nạn nhân: trường str/num có điểm victim cao nhất, khác trường vai trò; không cần điểm dương. Vd path:username.
+     private fun victimField(a: RestCallAction): SchemaField? {
+         val role = roleField(a)
+         var best: SchemaField? = null
+@@ -1206,6 +1331,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return best
+     }
+ 
++    // THESIS: Các khoá của một bảng, xếp giảm dần theo trọng số. Vd lowstr -> [read, member, guest, ...].
+     private fun tableValues(name: String): List<String> {
+         val values = mutableListOf<String>()
+         for (entry in table(name).entries.sortedByDescending { it.value }) {
+@@ -1214,8 +1340,11 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return values
+     }
+ 
++    // THESIS: > 0: giá trị giống quyền thấp; < 0: giống quyền cao. Vd VIEWER 0.333, EVOMASTER 0.0, ADMIN -0.771.
+     private fun lowMinusHigh(value: String): Double = valueScore("low", value) - valueScore("high", value)
+ 
++    // THESIS: Giá trị hạ quyền theo kind của trường vai trò. enum: xếp theo lowMinusHigh giảm dần; bool: false (true nếu nạn nhân đang false);
++    // THESIS: array: "[]"; num: 1, 0, 2; str: bảng lowstr. Bỏ giá trị cao (lowMinusHigh <= 0) mà nạn nhân đang giữ.
+     private fun reducedRoleValues(field: SchemaField, current: List<String>): List<String> {
+         val raw = when (field.kind) {
+             "enum" -> field.enumValues.sortedByDescending { lowMinusHigh(it) }
+@@ -1247,11 +1376,13 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
++    // THESIS: Giá trị hạ quyền của op khi chưa biết nạn nhân. Rỗng tức op không dùng được làm transition.
+     private fun harvestReducedRoleCandidates(transition: RestCallAction): List<String> {
+         val field = roleField(transition) ?: return emptyList()
+         return reducedRoleValues(field, emptyList())
+     }
+ 
++    // THESIS: Mọi trường ngoài path có điểm role > 0: các trường sẽ được đặt lại khi nâng quyền.
+     private fun restoreFields(transition: RestCallAction): List<SchemaField> {
+         val out = mutableListOf<SchemaField>()
+         for (f in schemaFields(transition)) {
+@@ -1262,6 +1393,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
++    // THESIS: Giá trị nâng quyền cho một trường. Snapshot của tài khoản trong archive là giá trị cao thì dùng lại nó.
++    // THESIS: Không thì enum: giá trị cao (lowMinusHigh < 0); bool: true; num: 0, 1, 2; str: bảng highstr. Bỏ giá trị exclude.
+     private fun restoreValues(field: SchemaField, snapshot: String?, exclude: String): List<String> {
+         if (snapshot != null && lowMinusHigh(snapshot) <= 0.0) {
+             return if (snapshot == exclude) emptyList() else listOf(snapshot)
+@@ -1291,6 +1424,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
++    // THESIS: Kế hoạch nâng quyền: tối đa MAX_PRIVILEGE_RESTORES vòng; vòng j đặt mỗi trường vai trò thành giá trị thứ j của nó
++    // THESIS: (hết giá trị thì giữ giá trị cuối). Vd [[body:role -> ADMIN]].
+     private fun restorePlans(
+         transition: RestCallAction,
+         account: HttpWsAuthenticationInfo,
+@@ -1324,6 +1459,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return plans
+     }
+ 
++    // THESIS: restorer gọi transition để đặt lại trường vai trò của target theo plan, chạy sau lát của nạn nhân.
++    // THESIS: true khi 2xx; khi đó target lại dùng được trong pha và danh sách cặp bị từ chối được xoá.
+     private fun restorePrivilege(
+         transitionDef: RestCallAction,
+         restorer: HttpWsAuthenticationInfo,
+@@ -1383,6 +1520,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return accepted
+     }
+ 
++    // THESIS: Log lý do bỏ một lần nâng quyền, trả false.
+     private fun restoreSkipped(action: RestCallAction, target: String, reason: String): Boolean {
+         LoggingUtil.getInfoLogger().info(
+             "Stateful-authorization restore skipped for '$target' on ${action.getName()}: $reason"
+@@ -1390,8 +1528,11 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return false
+     }
+ 
++    // THESIS: Viết thường, chỉ giữ chữ và số. Vd "user_name" -> "username".
+     private fun normalize(s: String): String = s.lowercase().filter { it.isLetterOrDigit() }
+ 
++    // THESIS: Ghi giá trị chuỗi vào gene lá của trường, rồi bật mọi wrapper bên trên (bản sửa FN is_admin: null của jar P2f).
++    // THESIS: setFromStringValue, exception thành false.
+     private fun setField(f: SchemaField, value: String): Boolean {
+         val accepted = try { f.value.setFromStringValue(value) } catch (e: Exception) { false }
+         if (!accepted) return false
+@@ -1399,6 +1540,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return true
+     }
+ 
++    // THESIS: Đi ngược lên cha: bật OptionalGene/NullableGene, chọn đúng nhánh của ChoiceGene chứa gene này.
+     private fun activateAncestors(g: Gene) {
+         var child: Gene = g
+         var p = g.parent
+@@ -1413,6 +1555,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+     }
+ 
+     @Suppress("UNCHECKED_CAST")
++    // THESIS: Xoá mọi phần tử của trường mảng (giá trị hạ quyền "[]"). Mảng có minSize > 0 thì trả false.
+     private fun clearArray(f: SchemaField): Boolean {
+         val array = (f.value as? ArrayGene<Gene>) ?: return false
+         if ((array.minSize ?: 0) != 0) return false
+@@ -1423,6 +1566,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return true
+     }
+ 
++    // THESIS: Tên các khoá trong payload đăng nhập có giá trị bằng tên tài khoản. Vd {"username":"alice","password":"..."} -> {username}.
++    // THESIS: Đọc JSON trước; không được thì đọc dạng form a=b&c=d.
+     private fun loginKeys(victimAuth: HttpWsAuthenticationInfo): Set<String> {
+         val payload = victimAuth.endpointCallLogin?.call?.payload ?: return emptySet()
+         val name = victimAuth.name
+@@ -1449,6 +1594,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return keys
+     }
+ 
++    // THESIS: Khoá định danh đã chuẩn hoá: khoá đăng nhập + tên lá của trường nạn nhân.
+     private fun identityKeys(victimAuth: HttpWsAuthenticationInfo, victimLeaf: String): Set<String> {
+         val keys = mutableSetOf<String>()
+         for (k in loginKeys(victimAuth)) {
+@@ -1458,10 +1604,13 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return keys
+     }
+ 
++    // THESIS: Object JSON trong một response mô tả nạn nhân, kèm verb/path của call đã trả nó và số khoá định danh khớp tên nạn nhân.
+     private class ScoredObject(val verb: HttpVerb, val path: String, val node: JsonNode, val matches: Int)
+ 
++    // THESIS: Cache victimObjects theo (nạn nhân, tên lá trường nạn nhân, path transition).
+     private val victimObjectCache = mutableMapOf<String, List<ScoredObject>>()
+ 
++    // THESIS: findVictimObjects có cache.
+     private fun victimObjects(
+         victimAuth: HttpWsAuthenticationInfo,
+         victimLeaf: String,
+@@ -1471,6 +1620,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             findVictimObjects(victimAuth, victimLeaf, transition)
+         }
+ 
++    // THESIS: Quét mọi response 2xx trong archive, gom object JSON có khoá định danh mang tên nạn nhân, vd {"username":"alice","id":7}.
++    // THESIS: Xếp thứ tự bằng compareVictimObjects.
+     private fun findVictimObjects(
+         victimAuth: HttpWsAuthenticationInfo,
+         victimLeaf: String,
+@@ -1497,6 +1648,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return objects.sortedWith(Comparator { a, b -> compareVictimObjects(a, b, prefix) })
+     }
+ 
++    // THESIS: Ưu tiên object: path bắt đầu bằng tiền tố path của transition, rồi lấy từ GET, rồi khớp nhiều khoá hơn.
+     private fun compareVictimObjects(a: ScoredObject, b: ScoredObject, prefix: String): Int {
+         val aUnderPrefix = a.path.startsWith(prefix)
+         val bUnderPrefix = b.path.startsWith(prefix)
+@@ -1511,6 +1663,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return b.matches.compareTo(a.matches)
+     }
+ 
++    // THESIS: Đếm khoá định danh của object có giá trị bằng tên nạn nhân (không phân biệt hoa thường).
+     private fun matchingKeys(node: JsonNode, victimName: String, idKeys: Set<String>): Int {
+         var count = 0
+         for (entry in node.fields()) {
+@@ -1522,6 +1675,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return count
+     }
+ 
++    // THESIS: Duyệt đệ quy cây JSON, gom mọi object có ít nhất một khoá định danh khớp nạn nhân.
+     private fun collectVictimObjects(
+         node: JsonNode,
+         victimName: String,
+@@ -1536,6 +1690,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         }
+     }
+ 
++    // THESIS: Giá trị vô hướng đầu tiên của khoá normKey, duyệt object theo thứ tự ưu tiên.
+     private fun objectValue(objects: List<ScoredObject>, normKey: String): String? {
+         for (o in objects) {
+             var v: JsonNode? = null
+@@ -1550,14 +1705,17 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return null
+     }
+ 
++    // THESIS: Id của nạn nhân: khoá trùng tên lá, không có thì khoá id.
+     private fun victimId(objects: List<ScoredObject>, normLeaf: String): String? =
+         objectValue(objects, normLeaf) ?: objectValue(objects, "id")
+ 
++    // THESIS: Tên trường có từ id hoặc ids, vd userId.
+     private fun hasIdToken(leaf: String): Boolean {
+         val t = tokens(leaf, 1)
+         return "id" in t || "ids" in t
+     }
+ 
++    // THESIS: Chỉ giữ object lấy từ response của GET.
+     private fun victimGetObjects(victimAuth: HttpWsAuthenticationInfo, transition: RestCallAction): List<ScoredObject> {
+         val vfLeaf = victimField(transition)?.leaf ?: ""
+         val out = mutableListOf<ScoredObject>()
+@@ -1569,6 +1727,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
++    // THESIS: Giá trị hiện tại của tài khoản cho từng trường vai trò, đọc từ response GET trong archive. Vd {body:role -> ADMIN}.
+     private fun victimSnapshot(
+         victimAuth: HttpWsAuthenticationInfo,
+         transition: RestCallAction,
+@@ -1585,6 +1744,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return snapshot
+     }
+ 
++    // THESIS: Các giá trị vai trò nạn nhân đang giữ, đọc từ response GET trong archive (khoá mảng thì lấy từng phần tử).
+     private fun victimRoleValues(
+         victimAuth: HttpWsAuthenticationInfo,
+         transition: RestCallAction,
+@@ -1602,6 +1762,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
++    // THESIS: Giá trị vô hướng của mọi khoá mà tên lá trường vai trò bắt đầu bằng nó. Vd trường roles khớp khoá role và roles.
+     private fun scalarsForRoleKey(node: JsonNode, leaf: String): List<String> {
+         val out = mutableListOf<String>()
+         for (entry in node.fields()) {
+@@ -1621,6 +1782,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
++    // THESIS: Trỏ call vào nạn nhân: đặt trường nạn nhân (tên hoặc id lấy từ archive). Trường nạn nhân không ở path thì
++    // THESIS: đặt thêm id vào path param có điểm victim cao nhất (> 0). Trả các khoá đã đặt; null nếu không đặt được.
+     private fun setUserTargetToVictim(action: RestCallAction, victimAuth: HttpWsAuthenticationInfo): List<String>? {
+         val vf = victimField(action) ?: return null
+         val objects = victimObjects(victimAuth, vf.leaf, action)
+@@ -1638,6 +1801,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return set
+     }
+ 
++    // THESIS: Thử lần lượt: giá trị cùng khoá trong archive; trường số: id; tên có id: id rồi tên; còn lại: tên rồi id.
++    // THESIS: Dùng giá trị đầu tiên mà gene nhận.
+     private fun placeVictimValue(f: SchemaField, victimName: String, objects: List<ScoredObject>): Boolean {
+         val keyed = objectValue(objects, normalize(f.leaf))
+         val id = objectValue(objects, "id")
+@@ -1655,12 +1820,14 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return false
+     }
+ 
++    // THESIS: Đặt trường vai trò thành giá trị hạ quyền ("[]" thì xoá mảng). Trả khoá đã đặt; null nếu gene không nhận.
+     private fun setRoleFieldToReduced(action: RestCallAction, reducedRole: String): List<String>? {
+         val f = roleField(action) ?: return null
+         val ok = if (reducedRole == emptyRoleList) clearArray(f) else setField(f, reducedRole)
+         return if (ok) listOf(f.key) else null
+     }
+ 
++    // THESIS: Tắt mọi trường tuỳ chọn cấp một của body và query ngoài keep, để call chỉ đổi đúng các trường đã đặt.
+     private fun keepOnlyTargetFields(action: RestCallAction, keep: List<String>) {
+         val removed = mutableListOf<String>()
+         for (f in schemaFields(action)) {
+@@ -1675,6 +1842,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         log.debug("Stateful-authorization: removed optional fields $removed from ${action.getName()}")
+     }
+ 
++    // THESIS: Trường chuỗi trong body có tên trùng khoá đăng nhập (vd username) được đặt bằng tên nạn nhân.
+     private fun setUserNameFieldsToVictim(
+         action: RestCallAction,
+         victimAuth: HttpWsAuthenticationInfo,
+@@ -1695,6 +1863,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         }
+     }
+ 
++    // THESIS: Path kết thúc bằng {param}, path cha không có param và đã được gọi, mọi call đã đăng nhập trên hai path đều 404:
++    // THESIS: route có vẻ không tồn tại. Vd /users/{id} và /users đều chỉ ra 404.
+     private fun routeLooksMissing(candidate: RestCallAction): Boolean {
+         val path = candidate.path.toString()
+         if (!path.substringAfterLast("/").startsWith("{")) {

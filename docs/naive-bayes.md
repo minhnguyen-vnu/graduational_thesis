@@ -1,33 +1,35 @@
 # Mô hình Naive Bayes chọn transition và trường
 
-Mô hình hiện tại là M2 (jar `M2`, 2026-11-08): cùng công thức và cùng mã với M1 dưới đây, học lại từ corpus gán nhãn
-lại `nop-hoi-dong/nhan-hoc-cuoi.csv` (209 op T trên 10.381 op ghi). File: `infra/analysis/lexicon-rules/m2-model-20261107/`
-(`derive_m2.py`, `stateful-authz-model.csv`, sha256 `b2deef150bf8…`). Số đo của M2 trên nửa thi: `docs/results.md` §7.
-Phần còn lại của file tả M1, mô hình trong jar `P2e` và `P2f`.
+Mô hình hiện tại là mô hình bỏ lặp (jar `ND`, 2026-11-13). Nó là M2 học lại với một thay đổi: `f:` chỉ lấy từ tên
+trường query và body, vì tên tham số path đã nằm trong `p:` và trước đây bị cộng hai lần. Cùng công thức, cùng corpus
+`nop-hoi-dong/nhan-hoc-cuoi.csv` (209 op T trên 10.381 op ghi); chỉ bảng `op` khác M2. File:
+`infra/analysis/lexicon-rules/m2-nodup-20261112/` (`derive_nodup.py`, `stateful-authz-model.csv`, sha256
+`dcc77b59ed0f…`). M2 (`m2-model-20261107/`, sha256 `b2deef150bf8…`) học từ cùng corpus với công thức và mã của M1.
+Số đo trên nửa thi: `docs/results.md` §7. Phần còn lại của file tả M1, mô hình trong jar `P2e` và `P2f`.
 
 Builder chọn transition, trường vai trò, trường nạn nhân và giá trị quyền bằng mô hình Naive Bayes. M1 rút từ nhãn
 vòng 4 (10.381 op ghi, 230 API) và thay bộ từ vựng 53 + 45 từ của jar `L` tới `AF2` (`docs/lexicon.md`) cùng các danh
 sách viết tay. Kiểm chéo theo nhà cung cấp: op transition thật (op T) đứng đầu ở 16–18, trong 4 đầu ở 21–25 của 47 spec
-test. 47 spec này đã bị nhìn nhiều lần khi chọn mô hình, nên mọi số kiểm chéo là số thăm dò. Đổi cách chấm không mất
-phát hiện 970 nào (`docs/results.md` §6).
+test. 47 spec này đã bị nhìn nhiều lần khi chọn mô hình, nên mọi số kiểm chéo là số thăm dò. Đổi lexicon sang M1 và M1
+sang M2 không mất phát hiện 970 nào; M2 sang mô hình bỏ lặp mất 2 trong 98 hàng, p = 0,5 (`docs/results.md` §6).
 
 Thiết kế, mọi lựa chọn bị loại và số đo đầy đủ: `infra/evomaster-ext/wip/p2-design-20261012.md`.
 
 ## 1. Mô hình quyết định gì
 
-Pha security chạy sau search. `addForStatefulAccessControl` (`RestSecurityBuilder.kt:631`, HEAD `9c4be5b1dc`) gọi
+Pha security chạy sau search. `addForStatefulAccessControl` (`RestSecurityBuilder.kt:625`, commit `2c3f281f13`) gọi
 mô hình ở bốn chỗ:
 
 | Việc | Hàm | Bảng |
 |---|---|---|
-| Xếp hạng op ghi làm transition | `rankPermissionReducingTransitions` `:1175`, `transitionScore` `:316` | `op` |
-| Chọn trường vai trò trong transition | `roleField` `:1185` | `role` |
-| Chọn trường chỉ nạn nhân | `victimField` `:1201` | `victim` |
-| Chọn giá trị hạ quyền và nâng quyền | `harvestReducedRoleCandidates` `:1262`, `restoreValues` `:1277`, `valueScore` `:318` | `low`, `high`, `lowstr`, `highstr` |
+| Xếp hạng op ghi làm transition | `rankPermissionReducingTransitions` `:1161`, `transitionScore` `:309` | `op` |
+| Chọn trường vai trò trong transition | `roleField` `:1187` | `role` |
+| Chọn trường chỉ nạn nhân | `victimField` `:1189` | `victim` |
+| Chọn giá trị hạ quyền và nâng quyền | `harvestReducedRoleCandidates` `:1250`, `restoreValues` `:1265`, `valueScore` `:312` | `low`, `high`, `lowstr`, `highstr` |
 
-Oracle dùng cùng vị từ `looksLikePermissionReducingTransition` (`:341`): verb ghi và điểm op > 0, tức
+Oracle dùng cùng vị từ `looksLikePermissionReducingTransition` (`:335`): verb ghi và điểm op > 0, tức
 hậu nghiệm > 0,5. Oracle bỏ qua source mà vị từ này nhận (`RestSecurityOracle.kt:577`) và đòi lời gọi xen giữa mà
-vị từ này nhận (`:596`). Builder và oracle dùng một vị từ ở một ngưỡng, nên builder không dựng bộ ba mà oracle từ
+vị từ này nhận (`:594`). Builder và oracle dùng một vị từ ở một ngưỡng, nên builder không dựng bộ ba mà oracle từ
 chối.
 
 ## 2. Cách tính
@@ -35,8 +37,9 @@ chối.
 - Trọng số dấu hiệu `w(t) = ln((d_T + 1)/(N_T + 2)) − ln((d_N + 1)/(N_N + 2))`; tiên nghiệm `ln(N_T/N_N)`.
 - Điểm = tiên nghiệm + Σ w của dấu hiệu có mặt; điểm > 0 nghĩa là hậu nghiệm > 0,5.
 - Chỉ giữ dấu hiệu có mặt ở mục dương của ít nhất 2 nhà cung cấp.
-- Dấu hiệu của op: `p:` token path, `f:` token tên lá của tham số và trường thân, `v:` verb. Token: cắt ký tự không
-  chữ-số, tách camelCase, chữ thường, bỏ token toàn số và token dưới 4 ký tự.
+- Dấu hiệu của op: `p:` token path, `f:` token tên lá của tham số và trường thân, `v:` verb. Từ mô hình bỏ lặp, `f:`
+  bỏ tham số path. Token: cắt ký tự không chữ-số, tách camelCase, chữ thường, bỏ token toàn số và token dưới 4 ký tự.
+  Jar `ND` tách bằng vòng duyệt ký tự thay regex, cho cùng kết quả (`infra/evomaster-ext/wip/nodup-tokens-20261113.md`).
 
 Chạy tay trên pyLoad, trọng số lấy từ `stateful-authz-model.csv`:
 
@@ -75,10 +78,10 @@ sách viết tay 117; Naive Bayes so với RF p = 0,065–0,27.
 
 ## 4. Trên target
 
-- Hạng của transition thật trong các op dựng được bộ ba, như nhau dưới M1 và M2: 1 trên 1 ở reports-api và
-  vampi-seeded, 1 trên 3 ở pyLoad, 4 trên 7 (M1) và 4 trên 5 (M2) ở artifact-keeper
-  (`infra/analysis/lexicon-rules/m2-model-20261107/compare_targets.out`).
-- Số 970 và FP theo jar M2: `docs/results.md` §1.
+- Hạng của transition thật trong các op dựng được bộ ba: 1 trên 1 ở reports-api và vampi-seeded, 1 trên 3 ở pyLoad
+  dưới M1, M2 và mô hình bỏ lặp; ở artifact-keeper 4 trên 7 (M1), 4 trên 5 (M2), 3 trên 4 (bỏ lặp)
+  (`m2-model-20261107/compare_targets.out`, `m2-nodup-20261112/compare_targets_nodup.out`).
+- Số 970 và FP theo jar ND: `docs/results.md` §1.
 
 ## 5. File mô hình
 

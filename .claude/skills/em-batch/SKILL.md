@@ -23,7 +23,7 @@ runs at a time; switching commits needs the full reseed (it wipes the database v
 
 ```bash
 curl -s -X POST http://localhost:8080/reset >/dev/null
-JAVA_HOME=$(/usr/libexec/java_home -v 17) java -Xmx2g -jar /Users/minhnguyen/IdeaProjects/EvoMaster/evomaster-M2-917c57dd.jar \
+JAVA_HOME=$(/usr/libexec/java_home -v 17) java -Xmx2g -jar /Users/minhnguyen/IdeaProjects/EvoMaster/evomaster-ND-07ebf19f.jar \
   --blackBox true --bbSwaggerUrl http://localhost:8080/v3/api-docs --bbTargetUrl http://localhost:8080 \
   --configPath infra/em-config/reports-auth.yaml \
   --useExperimentalOracles true --extraPhaseBudgetPercentage 0.6 \
@@ -40,7 +40,7 @@ JAVA_HOME=$(/usr/libexec/java_home -v 17) java -Xmx2g -jar /Users/minhnguyen/Ide
 - 970 is experimental: without `--useExperimentalOracles true` it never fires.
 - The security phase gets `extraPhaseBudgetPercentage × maxTime`; below ~0.6 at 150 s construction starves.
 - `--security` requires `--minimize`.
-- Jar SR and later (M2 included) have no `statefulAuthz*` option and reject `--statefulAuthzResetEndpoint`,
+- Jar SR and later (M2 and ND included) have no `statefulAuthz*` option and reject `--statefulAuthzResetEndpoint`,
   `--statefulAuthzTransition` and `--statefulAuthzTwoCredentialJudgment` with `is not a recognized option`. Those
   exist only on P2f and earlier jars.
 - Builder diagnostics: `-Dlogback.configurationFile=infra/em-config/logback-builder-debug.xml`.
@@ -52,7 +52,7 @@ JAVA_HOME=$(/usr/libexec/java_home -v 17) java -Xmx2g -jar /Users/minhnguyen/Ide
 ## Batch
 
 1. Copy an existing harness into a **new** folder under `infra/em-results/`: `m2-wave1-20261108/m2_wave1.sh`
-   (reports-api, vampi-seeded, pyLoad; it starts six lanes in parallel, so run one lane at a time) or
+   (reports-api, vampi-seeded, pyLoad; it starts six lanes in parallel) or
    `m2-wave2-20261108/ak_vuln.sh`, `ak_fixed.sh` (artifact-keeper). Harnesses `rm -rf` their output.
 2. The harness checks the jar's sha256 before the first run.
 3. The harness text states what is measured, never the expected outcome.
@@ -72,7 +72,6 @@ JAVA_HOME=$(/usr/libexec/java_home -v 17) java -Xmx2g -jar /Users/minhnguyen/Ide
    check that the traffic line count grows.
 8. Keep the lid open. `caffeinate` prevents idle sleep only; a closed lid lets runs finish with wrong elapsed
    time and lower coverage.
-9. One heavy job at a time. The guard hook refuses `mvn`, `docker build`, `pytest` and a second run while a batch runs.
 
 Record per run: target, arm, seed, `det970` (970 in `report.json`), triples (count `Assembled` log lines only; the
 "proven by an attempt" line repeats each triple), VOID attempts, restores accepted and refused, triple statuses,

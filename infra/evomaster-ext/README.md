@@ -6,16 +6,19 @@ Results: `docs/results.md`. Build, jars, rollback: skill `evomaster-build`. Runn
 
 ## 1. What changed
 
-`git diff --stat v6.1.1..HEAD`: 15 commits, 4 files, +1798, 0 deletions, no comments. HEAD `9c4be5b1dc` (pushed).
-The thesis jar M2 is HEAD with model M2 in place of the model file below; the tree holds M1. Commit history, the jar
-each commit built, and its self-test: `jars.md`.
+`git diff --stat v6.1.1..HEAD`: 16 commits, 4 files, +1760, 0 deletions, no comments. HEAD `2c3f281f13` (not pushed).
+The thesis jar ND is HEAD plus `wip/nodup-tokens-20261113-tree.patch` (the user's `THESIS` comments and the ND change;
+the ND change alone is `wip/nodup-tokens-20261113.patch`, taken against the commented tree), not committed: in `RestSecurityBuilder.kt` (+32 −6
+code lines) `opFeatures` takes `f:` from query and body fields only and `tokens` walks characters instead of a regex,
+and the model file holds the no-duplication model (`lexicon-rules/m2-nodup-20261112/`). Commit history, the jar each
+commit built, and its self-test: `jars.md`.
 
 | File | + | Holds |
 |---|---|---|
 | `ExperimentalFaultCategory.kt` | 5 | `SECURITY_STATEFUL_AUTHORIZATION(970)` |
-| `RestSecurityOracle.kt` | 68 | judgment: `handleStatefulAuthorization()` |
-| `RestSecurityBuilder.kt` | 1464 | construction: `addForStatefulAccessControl()`, `buildStatefulAuthzTriple()`, `executeStatefulAuthzTriple()`, Naive Bayes scoring, operator restore, C4 probe |
-| `stateful-authz-model.csv` | 261 | Naive Bayes weights, tables `op`, `role`, `victim`, `low`, `high`, `lowstr`, `highstr` (M1 in the tree; M2 in jar M2, `lexicon-rules/m2-model-20261107/`) |
+| `RestSecurityOracle.kt` | 66 | judgment: `handleStatefulAuthorization()` |
+| `RestSecurityBuilder.kt` | 1428 | construction: `addForStatefulAccessControl()`, `buildStatefulAuthzTriple()`, `executeStatefulAuthzTriple()`, Naive Bayes scoring, operator restore, C4 probe |
+| `stateful-authz-model.csv` | 261 | Naive Bayes weights, tables `op`, `role`, `victim`, `low`, `high`, `lowstr`, `highstr` (M1 in HEAD; M2 in jar M2, `lexicon-rules/m2-model-20261107/`; the no-duplication model in jar ND) |
 
 `statefulTripleUnderEvaluation` is true only while `executeStatefulAuthzTriple` evaluates its own triple, and the
 handler returns unless it is true (commit `bf26b65322`).
@@ -25,7 +28,7 @@ Function notes, in Vietnamese: `docs/evomaster-study/03-ham-stateful-authz.md`.
 
 ## 2. Where it plugs in
 
-The MIO search core is untouched.
+The search algorithm is untouched (black-box default: SMARTS).
 
 - **Lifecycle.** `Main.kt` `phaseSecurity()` runs after the search (`if(!config.security) return`) and calls
   `RestSecurityBuilder.applySecurityPhase()`. The phase is time-boxed to `extraPhaseBudgetPercentage × maxTime`.
@@ -52,7 +55,7 @@ The MIO search core is untouched.
 2. **Source**: a guarded write some user was denied (403) and the victim was allowed (2xx). PUT/PATCH first;
    POST only when PUT/PATCH give no candidate.
 3. **Individual**: `[create?, source(victim), transition(operator → victim reduced), follow-up(victim, same token)]`.
-4. **Run and check performed**: VOID unless source 2xx, transition 2xx, follow-up conclusive. Retry over
+4. **Run and check performed**: VOID unless source 2xx, transition 2xx, follow-up has a status other than 401. Retry over
    victim × operator × value, up to `MAX_STATEFUL_TRIPLE_ATTEMPTS`.
 5. **Operator restore**: when every operator is refused while the victim's source succeeded, the victim's
    credential calls the transition upward on the operator (restorer = victim, target = operator), then the triple

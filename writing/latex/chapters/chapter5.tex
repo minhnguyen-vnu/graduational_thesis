@@ -5,145 +5,129 @@
 \begingroup
 \emergencystretch=3em
 
-Chương này đánh giá khả năng phát hiện vi phạm, mức báo động giả và khả năng nhận diện thao tác chuyển trạng thái của Oracle 970. Kết quả được so sánh với baseline, tức EvoMaster v6.1.1 chạy với các oracle phân quyền sẵn có, không kèm Oracle 970.
+Chương này đánh giá khả năng phát hiện vi phạm, mức báo động giả và khả năng nhận diện thao tác chuyển trạng thái của Oracle 970. Kết quả được so sánh với baseline, tức EvoMaster 6.1.1 chạy với các oracle phân quyền sẵn có, không kèm Oracle 970.
 
 \section{Thiết kế thực nghiệm}
 \label{sec:eval_design}
 
 Để đánh giá khả năng phát hiện vi phạm và mức báo động giả của Oracle 970, thực nghiệm dùng thiết kế cặp đối chứng trên hai biến thể của mỗi ứng dụng mục tiêu. Biến thể có lỗ hổng dùng để đo tỷ lệ phát hiện vi phạm phân quyền có trạng thái. Trên biến thể đã vá, mọi cảnh báo phát sinh đều được tính là báo động giả (false positive, FP). Tổng cộng 98 lượt chạy ở chế độ hộp đen được thực hiện theo thiết lập ở Mục~\ref{sec:impl_setup}, gồm 50 lượt trên biến thể có lỗ hổng và 48 lượt trên biến thể đã vá. Mọi lượt dùng cùng một bản đóng gói của công cụ.
 
-Mỗi lượt chạy ghi lại mã trạng thái HTTP của các bộ ba đã thực thi, nên số lượt dựng được bộ ba và số lượt báo vi phạm được thống kê riêng. Ngoài 98 lượt chạy trên các ứng dụng mục tiêu, khả năng xếp hạng thao tác chuyển trạng thái được đánh giá ngoại tuyến trên các tập đặc tả OpenAPI riêng (Mục~\ref{sec:eval_ranking}).
+Mỗi lượt chạy ghi lại mã trạng thái HTTP của các bộ ba đã thực thi, nên số lượt dựng được bộ ba và số lượt báo vi phạm được thống kê riêng. Ngoài 98 lượt chạy trên các ứng dụng mục tiêu, khả năng xếp hạng thao tác chuyển trạng thái được đánh giá ngoại tuyến trên một tập đặc tả OpenAPI riêng (Mục~\ref{sec:eval_ranking}).
 
 \section{Hiệu quả phát hiện và độ chính xác}
 \label{sec:eval_detection}
 
-Bảng~\ref{tab:detection} tổng hợp số lượt dựng được bộ ba và số lượt báo vi phạm trên từng biến thể. Cột cuối của bảng ghi khoảng tin cậy Clopper--Pearson 95\% của tỷ lệ phát hiện trên biến thể có lỗ hổng \cite{clopper1934use}. Khoảng này tính chính xác từ phân phối nhị thức, nên độ phủ đạt ít nhất 95\% kể cả với mẫu 5 lượt.
+Bảng~\ref{tab:detection} tổng hợp số lượt dựng được bộ ba và số lượt báo vi phạm trên từng biến thể. Cột cuối của bảng ghi khoảng tin cậy Clopper--Pearson 95\% của tỷ lệ phát hiện trên biến thể có lỗ hổng \cite{clopper1934use}. Khoảng này tính chính xác từ phân phối nhị thức, nên xác suất khoảng chứa tỷ lệ thật đạt ít nhất 95\% kể cả với mẫu 5 lượt.
 
 \begin{table}[htbp]
   \centering
   \caption{Kết quả phát hiện và báo động giả theo lượt chạy}
   \label{tab:detection}
-  \begin{tabularx}{\textwidth}{@{}l l c c X@{}}
+  \begin{tabularx}{\textwidth}{@{}l l c c >{\centering\arraybackslash}X@{}}
     \toprule
-    \textbf{Ứng dụng} & \textbf{Biến thể} & \textbf{Lượt có bộ ba} & \textbf{Lượt báo vi phạm} & \textbf{Clopper--Pearson 95\% (\%)} \\
+    \textbf{Ứng dụng} & \textbf{Biến thể} & \makecell[b]{\textbf{Lượt có}\\\textbf{bộ ba}} & \makecell[b]{\textbf{Lượt báo}\\\textbf{vi phạm}} & \makecell[b]{\textbf{Khoảng tin cậy}\\\textbf{95\% (\%)}} \\
     \midrule
     reports-api     & có lỗ hổng & 19/20 & 19/20 & [75,1; 99,9] \\
     reports-api     & đã vá      & 19/20 & 0/20  & --- \\
-    vampi-seeded    & có lỗ hổng & 7/20  & 7/20  & [15,4; 59,2] \\
+    vampi-seeded    & có lỗ hổng & 6/20  & 6/20  & [11,9; 54,3] \\
     vampi-seeded    & đã vá      & 6/20  & 0/20  & --- \\
     pyLoad          & có lỗ hổng & 5/5   & 5/5   & [47,8; 100] \\
     pyLoad          & đã vá      & 5/5   & 0/5   & --- \\
-    artifact-keeper & có lỗ hổng & 5/5   & 5/5   & [47,8; 100] \\
+    artifact-keeper & có lỗ hổng & 4/5   & 4/5   & [28,4; 99,5] \\
     artifact-keeper & đã vá      & 0/3   & 0/3   & --- \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-Tính chung 4 ứng dụng, Oracle 970 phát hiện vi phạm ở 36/50 lượt trên biến thể có lỗ hổng và không báo vi phạm ở lượt nào trong 48 lượt trên biến thể đã vá. Kiểm định chính xác Fisher một phía cho thấy tỷ lệ báo vi phạm khác nhau giữa 2 biến thể ở cả 4 ứng dụng ($p<0{,}001$ với reports-api, $p\approx0{,}0042$ với vampi-seeded, $p\approx0{,}0040$ với pyLoad, $p\approx0{,}018$ với artifact-keeper) \cite{fisher1922test}.
+Tính chung bốn ứng dụng, Oracle 970 phát hiện vi phạm ở 34/50 lượt trên biến thể có lỗ hổng và không báo vi phạm ở lượt nào trong 48 lượt trên biến thể đã vá. Kiểm định chính xác Fisher một phía cho thấy tỷ lệ báo vi phạm khác nhau giữa hai biến thể ở reports-api ($p<0{,}001$), vampi-seeded ($p\approx0{,}010$) và pyLoad ($p\approx0{,}0040$) \cite{fisher1922test}. Với artifact-keeper, $p\approx0{,}071$: 4/5 lượt so với 0/3 lượt chưa đủ để kết luận ở mức ý nghĩa 0,05.
 
-Bảng~\ref{tab:fourcells} phân loại lượt đã thực hiện ít nhất một bộ ba hợp lệ theo nhãn TP (phát hiện đúng), FN (bỏ sót), FP (báo động giả) và TN (âm tính thật). Lượt không dựng được bộ ba được đếm ở cột riêng; trên biến thể có lỗ hổng, đó là lần bỏ sót của quy trình đầu-cuối.
+Bảng~\ref{tab:fourcells} phân loại lượt chạy theo nhãn TP (phát hiện đúng), FN (bỏ sót), FP (báo động giả) và TN (âm tính thật). Trên biến thể đã vá, lượt không dựng được bộ ba không có phán quyết nào, nên được đếm ở cột riêng và không tính là TN.
 
 \begin{table}[htbp]
   \centering
   \caption{Phân loại kết quả theo lượt chạy}
   \label{tab:fourcells}
-  \begin{tabularx}{\textwidth}{@{}l *{6}{>{\centering\arraybackslash}X}@{}}
+  \begin{tabular}{@{}l *{4}{>{\centering\arraybackslash}p{1.5cm}} >{\centering\arraybackslash}p{2.9cm}@{}}
     \toprule
-    \textbf{Ứng dụng} & \textbf{TP} & \textbf{FN, có bộ ba} & \textbf{Có lỗ hổng, không bộ ba} & \textbf{FP} & \textbf{TN} & \textbf{Đã vá, không bộ ba} \\
+    & \multicolumn{2}{c}{\textbf{Biến thể có lỗ hổng}} & \multicolumn{3}{c}{\textbf{Biến thể đã vá}} \\
+    \cmidrule(lr){2-3}\cmidrule(l){4-6}
+    \textbf{Ứng dụng} & \textbf{TP} & \textbf{FN} & \textbf{FP} & \textbf{TN} & \makecell[b]{\textbf{Không dựng}\\\textbf{được bộ ba}} \\
     \midrule
-    reports-api     & 19 & 0 & 1  & 0 & 19 & 1 \\
-    vampi-seeded    & 7  & 0 & 13 & 0 & 6  & 14 \\
-    pyLoad          & 5  & 0 & 0  & 0 & 5  & 0 \\
-    artifact-keeper & 5  & 0 & 0  & 0 & 0  & 3 \\
+    reports-api     & 19 & 1  & 0 & 19 & 1 \\
+    vampi-seeded    & 6  & 14 & 0 & 6  & 14 \\
+    pyLoad          & 5  & 0  & 0 & 5  & 0 \\
+    artifact-keeper & 4  & 1  & 0 & 0  & 3 \\
     \midrule
-    Tổng            & 36 & 0 & 14 & 0 & 30 & 18 \\
+    Tổng            & 34 & 16 & 0 & 30 & 18 \\
     \bottomrule
-  \end{tabularx}
+  \end{tabular}
 \end{table}
 
-Xét riêng các lượt dựng được bộ ba, Oracle 970 báo vi phạm ở cả 36 lượt trên biến thể có lỗ hổng và không phát sinh cảnh báo nào trong 30 lượt trên biến thể đã vá. Khoảng tin cậy Clopper--Pearson 95\% của tỷ lệ báo động giả này là [0; 11,6]\%. Mỗi lượt dựng được bộ ba có đúng một bộ ba, với chuỗi mã trạng thái \texttt{200/200/200} trên biến thể có lỗ hổng và \texttt{200/200/403} trên biến thể đã vá. Tỷ lệ phát hiện tính trên các lượt có bộ ba gần như là hệ quả của định nghĩa, vì tiêu chí hợp lệ của bộ ba dùng chính mã follow-up mà bộ phán quyết đọc. Phép đo độc lập là số báo động giả trên biến thể đã vá.
+Xét riêng các lượt dựng được bộ ba, Oracle 970 báo vi phạm ở cả 34 lượt trên biến thể có lỗ hổng và không phát sinh cảnh báo nào trong 30 lượt trên biến thể đã vá. Khoảng tin cậy Clopper--Pearson 95\% của tỷ lệ báo động giả này là [0; 11,6]\%. Mỗi lượt dựng được bộ ba có đúng một bộ ba, với chuỗi mã trạng thái \texttt{200/200/200} trên biến thể có lỗ hổng và \texttt{200/200/403} trên biến thể đã vá. Tỷ lệ phát hiện tính trên các lượt có bộ ba gần như là hệ quả của định nghĩa, vì tiêu chí hợp lệ của bộ ba dùng chính mã follow-up mà bộ phán quyết đọc. Phép đo độc lập là số báo động giả trên biến thể đã vá.
 
-Trên bản vá của artifact-keeper, cả 3 lượt đều không dựng được bộ ba. Ở 2 lượt, thao tác hạ quyền thành công nhưng token cũ nhận mã 401 ở bước follow-up; mã 401 nằm ngoài phán quyết (Bảng~\ref{tab:obs_status}), nên bộ ba bị hủy. Ở lượt còn lại, thao tác hạ quyền không lần nào trả mã \texttt{2xx}. Ba lượt này không có báo động giả, nhưng cũng không được tính là âm tính thật.
+Trên bản vá của artifact-keeper, cả 3 lượt đều không dựng được bộ ba: thao tác hạ quyền thành công nhưng token cũ nhận mã 401 ở bước follow-up, mà mã 401 nằm ngoài phán quyết (Bảng~\ref{tab:obs_status}), nên bộ ba bị hủy. Ba lượt này không có báo động giả, nhưng cũng không được tính là âm tính thật.
 
-Toàn bộ 14 lượt bỏ sót đều không dựng được bộ ba hợp lệ để kích hoạt bộ phán quyết. Nguyên nhân của các lượt này được phân tích tại Mục~\ref{sec:eval_threats}.
+Toàn bộ 16 lượt bỏ sót đều không dựng được bộ ba hợp lệ để kích hoạt bộ phán quyết. Nguyên nhân của các lượt này được phân tích tại Mục~\ref{sec:eval_threats}.
 
 \section{Hiệu quả xếp hạng thao tác chuyển trạng thái}
 \label{sec:eval_ranking}
 
-Mô hình Naive Bayes đi kèm công cụ được chấm trên 237 bản đặc tả không tham gia huấn luyện, gồm 8.674 thao tác ghi. Trong 153 thao tác chuyển trạng thái của tập này, 117 thao tác (76,5\%; khoảng Clopper--Pearson 95\% là [68,9; 82,9]) có điểm dương \cite{clopper1934use}. Ngược lại, 763 trong 880 thao tác có điểm dương mang nhãn thông thường (86,7\%), nên điểm dương chỉ đủ để chọn ứng viên, chưa đủ để kết luận một thao tác hạ quyền. Người gán xem 368 thao tác bốc ngẫu nhiên trong số các thao tác mà hai lượt gán cùng gọi thông thường và không thấy thao tác chuyển trạng thái nào. Từ đó, số thao tác chuyển trạng thái bị sót trong 8.014 thao tác chưa ai xem không quá 80 (Clopper--Pearson 95\%); nếu cả 80 thao tác đó đều có điểm không dương, độ bắt được giảm xuống 50,2\%.
+Mô hình Naive Bayes đi kèm công cụ được chấm trên 237 bản đặc tả không tham gia huấn luyện, gồm 8.674 thao tác ghi. Trong 153 thao tác chuyển trạng thái của tập này, 101 thao tác (66,0\%; khoảng Clopper--Pearson 95\% là [57,9; 73,5]) có điểm dương. Trong 624 thao tác có điểm dương, 523 thao tác (83,8\%) mang nhãn thông thường, nên điểm dương chỉ đủ để chọn ứng viên, chưa đủ để kết luận một thao tác hạ quyền. Các tỷ lệ này tính theo nhãn hiện có: 8.130 thao tác mà hai lần gán cùng gọi thông thường chưa được soát tay, nên trong đó vẫn có thể còn thao tác chuyển trạng thái bị sót. Nhãn của tập này được gán theo quy trình tương tự tập học (Mục~\ref{sec:method_ranking}). Sau khi chấm, 44 thao tác mà hai lần gán bất đồng được soát lại, và 4 thao tác đổi sang nhãn chuyển trạng thái; trước lần soát này, tỷ lệ là 100/149 (67,1\%).
 
-Phép so sánh với bộ từ vựng dùng kiểm chứng chéo 5 phần (5-fold) phân theo nhà cung cấp, lặp lại 4 lần, trên 10.381 thao tác ghi của tập huấn luyện với nhãn của một vòng gán trước (199 thao tác chuyển trạng thái). Ở mỗi lần lặp, cả hai phương pháp được học lại trên phần huấn luyện. Kết quả được tổng hợp trên 47 bản đặc tả có thao tác chuyển trạng thái, gọi là thao tác đích. Một bộ lọc ứng viên dùng chung, giữ các thao tác xác định được trường vai trò và giá trị hạ quyền, giữ lại thao tác đích ở 21 đến 25 trong 47 bản đặc tả. Bảng~\ref{tab:transition_ranking} ghi kết quả của 4 lần lặp; các cột thứ hạng chỉ tính trên những bản đặc tả có thao tác đích qua bộ lọc.
-
-\begin{table}[htbp]
-  \centering
-  \caption{Kết quả xếp hạng thao tác đích trên 47 bản đặc tả}
-  \label{tab:transition_ranking}
-  \setlength{\tabcolsep}{3pt}
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}l cccc@{}}
-    \toprule
-    \makecell[l]{\textbf{Phương}\\\textbf{pháp}} & \makecell{\textbf{Qua}\\\textbf{bộ lọc}} & \makecell{\textbf{Hạng 1}} & \makecell{\textbf{Trong 4}\\\textbf{hạng đầu}} & \makecell{\textbf{Số ứng viên}\\\textbf{đứng trước}\\\textbf{(tối đa)}} \\
-    \midrule
-    Bộ từ vựng   & 22\,/\,21\,/\,22\,/\,25 & 18\,/\,19\,/\,19\,/\,20 & 22\,/\,21\,/\,22\,/\,23 & 2\,/\,2\,/\,2\,/\,76 \\
-    Naive Bayes  & 22\,/\,21\,/\,22\,/\,25 & 16\,/\,16\,/\,17\,/\,18 & 22\,/\,21\,/\,22\,/\,25 & 1\,/\,2\,/\,1\,/\,3 \\
-    \bottomrule
-  \end{tabular*}
-\end{table}
-
-Ở hạng 1, bộ từ vựng hơn Naive Bayes 2 đến 3 bản đặc tả ở cả 4 lần lặp. Ở 3 lần lặp đầu, cả hai phương pháp đưa mọi thao tác đích đã qua bộ lọc vào 4 hạng đầu; ở lần lặp thứ tư, Naive Bayes giữ được cả 25 bản, bộ từ vựng 23 bản. Khác biệt lớn nhất nằm ở trường hợp xấu nhất: bộ từ vựng có một lần để 76 ứng viên đứng trước thao tác đích (đặc tả netbox, Mục~\ref{subsec:method_naive_bayes}), còn Naive Bayes để nhiều nhất 3. Không chênh lệch nào giữa hai phương pháp đạt mức ý nghĩa $p<0{,}05$. Naive Bayes được chọn vì thao tác đích luôn nằm trong tầm thử của bộ dựng. Với trần 20 lần thử cho cả pha và 5 lần cho mỗi thao tác chuyển trạng thái chưa dựng được bộ ba (Mục~\ref{subsec:method_builder_algo}), bộ dựng thử tới ít nhất 4 ứng viên đầu nếu pha chưa hết thời gian.
-
-Trên đặc tả của các ứng dụng mục tiêu, mô hình đặt thao tác chuyển trạng thái ở hạng 1 trên reports-api, vampi-seeded và pyLoad. Trên artifact-keeper, thao tác này đứng hạng 4 trong 5 ứng viên qua bộ lọc; bộ dựng thử lần lượt các ứng viên và dựng được bộ ba trên ứng viên thứ tư ở cả 5 lượt chạy trên biến thể có lỗ hổng.
-
-Bộ từ vựng cũng được so với danh sách từ khóa cố định gồm 8 từ đường dẫn và 9 từ tham số của phiên bản đầu của bộ dựng. Trên 6 bản đặc tả có thao tác hạ quyền thuộc phần kiểm tra của tập ngữ liệu bộ từ vựng, danh sách cố định không chọn đúng thao tác này ở bản nào (0/6). Bộ từ vựng xếp thao tác này ở hạng 1 trên 4/6 bản và trong 8 hạng đầu trên cả 6 bản. Sáu bản đặc tả này đã được dùng trong lúc phát triển bộ từ vựng.
-
-\section{Nghiên cứu tình huống trên lỗi thật}
-\label{sec:eval_cases}
-
-pyLoad và artifact-keeper là hai ứng dụng mà lỗi, mã ứng dụng và phần lớn đặc tả không do tác giả viết.
-
-Trên pyLoad, công cụ tự nhận diện thao tác chuyển trạng thái \texttt{POST /api/set\_user\_permission} từ đặc tả, xếp hạng 1 trong 3 ứng viên qua bộ lọc. Ở cả 10 lượt chạy, bộ ba dùng source \texttt{POST /json/status}, nạn nhân là tài khoản \texttt{pyload} và tài khoản quản trị là \texttt{alice}; mỗi lượt cần một lần khôi phục quyền cho tài khoản quản trị trước khi dựng được bộ ba. Oracle 970 báo vi phạm ở 5/5 lượt trên biến thể có lỗ hổng và 0/5 lượt trên biến thể đã vá. Thao tác hạ quyền gửi \texttt{permission=1} cùng một giá trị \texttt{role} do pha tìm kiếm để lại, luôn khác 0, giá trị mà pyLoad dành cho quản trị viên. Công cụ không tự suy ra giá trị \texttt{role} này; bước đăng nhập lại xác nhận quyền đã mất ở từng lượt. Vì pyLoad xác thực bằng cookie phiên thay cho Bearer token, lỗ hổng được xác nhận thêm bằng kiểm tra HTTP thủ công trên cả 2 biến thể.
-
-Với artifact-keeper, công cụ tự chọn thao tác \texttt{PATCH /api/v1/users/\{id\}}, đặt trường \texttt{is\_admin} thành \texttt{false}, và dùng source \texttt{POST} \path{/api/v1/admin/analytics/snapshot}, một thao tác chỉ dành cho quản trị viên. Ở commit có lỗi, chuỗi mã của bộ ba là \texttt{200/200/200} và Oracle 970 báo vi phạm ở 5/5 lượt. Bản vá của nhà phát triển trả mã 401 cho token cũ, nên không lượt nào dựng được bộ ba (Mục~\ref{sec:eval_detection}). Với cùng công cụ và cùng cấu hình chạy, mã nguồn của nhà phát triển trước và sau khi sửa lỗi cho hai kết quả khác nhau ($p\approx0{,}018$), và phép đối chứng này không dựa vào một bản vá do tác giả viết.
-
-\section{Phân tích nguyên nhân bỏ sót và giới hạn}
-\label{sec:eval_threats}
-
-Toàn bộ 14 lượt bỏ sót trên biến thể có lỗ hổng được chia thành 2 nhóm. Nhóm thứ nhất gồm 8 lượt (1 trên reports-api và 7 trên vampi-seeded), trong đó bộ dựng đã thử dựng bộ ba nhưng mọi lần thử đều bị hủy theo các điều kiện ở Mục~\ref{subsec:method_void}. Ở nhóm thứ hai, gồm 6 lượt còn lại trên vampi-seeded, bộ dựng không thực hiện lần thử nào; nhật ký ở mức mặc định của EvoMaster không ghi lý do cụ thể.
-
-Pha tìm kiếm có thể làm thay đổi trạng thái ứng dụng trước khi bộ dựng chạy, qua đó làm giảm số bộ ba dựng được. Chẳng hạn, tài khoản nạn nhân có thể bị hạ quyền ngay trong pha này, làm source nhận mã 403, hoặc bị xóa, làm bước khôi phục quyền mất tác dụng. Trên vampi-seeded, các ca kiểm thử do pha tìm kiếm sinh ra gọi thao tác xóa tài khoản \texttt{DELETE /users/v1/\{username\}} nhiều lần trên chính các tài khoản kiểm thử. Các tác dụng phụ này làm giảm số lượt phát hiện; trên các bộ ba hợp lệ đã quan sát, chúng chưa gây ra phán quyết sai nào.
-
-Về mặt thống kê, quy mô mẫu còn nhỏ: 20 seed cho mỗi biến thể của reports-api và vampi-seeded, 5 seed cho mỗi biến thể của pyLoad, 5 seed cho biến thể có lỗi và 3 seed cho bản vá của artifact-keeper. Kiểm định Fisher giả định 2 mẫu độc lập, trong khi 2 biến thể dùng chung seed, nên các giá trị $p$ chủ yếu mang ý nghĩa tham khảo.
-
-Phán quyết dựa trên mã trạng thái HTTP có giới hạn riêng: mã \texttt{2xx} chưa chứng minh trạng thái dữ liệu nghiệp vụ sau thao tác, còn mã 403 không nêu nguyên nhân từ chối. Theo phân tích mã nguồn reports-api, mã 403 ở bước đăng nhập lại phần lớn đến từ lời gọi tạo báo cáo đứng trước source, vốn cũng dành cho quản trị viên. Mã này vẫn cho thấy token mới đã mất quyền ghi, dù lời gọi bị từ chối khác thao tác đang xét. Ngoài ra, mã từ chối được cố định là 403 và chưa cấu hình được. Bản vá của artifact-keeper từ chối token cũ bằng mã 401, nên công cụ không dựng được bộ ba nào trên bản vá này.
-
-Kết quả kiểm chứng chéo tại Mục~\ref{sec:eval_ranking} chỉ là đánh giá sơ bộ, do 47 bản đặc tả này đã được sử dụng qua nhiều vòng lựa chọn mô hình. Trong 10.381 thao tác ghi của tập huấn luyện, người gán xem 602 thao tác; 9.771 thao tác mà hai lượt gán của mô hình ngôn ngữ lớn cùng gọi thông thường chưa ai xem. Trên tập ngữ liệu của bộ từ vựng, ở phần hai lượt gán của mô hình cho cùng nhãn, hệ số kappa có trọng số so với nhãn do người gán độc lập chỉ đạt 0,369. Phép chấm trên 237 bản đặc tả không tham gia huấn luyện chỉ áp dụng cho mô hình Naive Bayes, chưa so sánh với bộ từ vựng. Nhãn của tập này do hai lượt gán của mô hình ngôn ngữ lớn tạo ra và chỉ được người gán xem lại một phần.
-
-Khả năng khái quát hóa bị giới hạn ở một lớp lỗ hổng phân quyền có trạng thái và một quan hệ MR-A1. Ba ứng dụng reports-api, vampi-seeded và artifact-keeper cùng đọc quyền cũ từ claim của JWT; ở artifact-keeper, đó là mã của nhà phát triển. pyLoad lưu vai trò trong phiên. Đường dẫn thao tác hạ quyền trên vampi-seeded được đặt khi gieo lỗi, vì vậy kết quả nhận diện trên ứng dụng này chưa đại diện cho đặc tả bên thứ ba. Tỷ lệ phát hiện 5/5 trên pyLoad đạt được trong môi trường thử nghiệm có các điều chỉnh tại Mục~\ref{subsec:impl_pyload} và với biến thể đã vá do tác giả viết, nên chưa áp dụng trực tiếp cho bản cài đặt mặc định của pyLoad. pyLoad và artifact-keeper cũng là ứng dụng dùng trong lúc phát triển bộ dựng (Mục~\ref{subsec:impl_artifactkeeper}), nên khóa luận không ước lượng tỷ lệ phát hiện trên ứng dụng chưa từng chạy.
-
-\section{Đối chứng với baseline và kiểm tra upstream}
-\label{sec:eval_baseline}
-
-Phép đối chứng đánh giá khả năng dựng và phán quyết chuỗi MR-A1 của baseline và của các phiên bản mới hơn của EvoMaster. Các oracle phân quyền của baseline thuộc nhóm oracle so sánh chéo tài khoản của Şahin và cộng sự, chỉ đối chiếu quyền giữa các tài khoản tại một thời điểm \cite{sahin2024bola}. Chuỗi hạ quyền rồi dùng lại token cũ theo MR-A1 vì thế nằm ngoài các kịch bản mà baseline phán quyết.
-
-Toàn bộ 20 lượt chạy baseline trên biến thể có lỗ hổng của vampi-seeded đều không sinh được bộ ba thao tác \texttt{[source/transition/follow-up]} dùng lại token cũ. Dù vậy, ở 17/20 lượt, baseline vẫn ghi nhận lỗi F209, là lỗi lộ dấu vết ngăn xếp (stack trace) trong phản hồi HTTP. Pha kiểm thử bảo mật của baseline vì vậy vẫn chạy trong các lượt đó, nên việc thiếu bộ ba không do pha này bị bỏ qua.
-
-Bản phát hành EvoMaster v6.2.0 được chạy với 1 seed trong thời lượng 180 giây trên biến thể có lỗ hổng của reports-api và vampi-seeded. Các lớp lỗi phát sinh được ghi trong Bảng~\ref{tab:upstream_check}.
+Bảng~\ref{tab:rank_targets} cho biết vị trí của thao tác chuyển trạng thái thật trên đặc tả của từng ứng dụng mục tiêu. Cột \emph{dùng được} đếm các thao tác có điểm dương mà bộ dựng đề xuất được giá trị hạ quyền. Mô hình đặt thao tác thật ở hạng 1 trên reports-api, vampi-seeded và pyLoad. Trên artifact-keeper, thao tác này đứng hạng 3 trong 4 ứng viên; bộ dựng thử lần lượt các ứng viên và dựng được bộ ba trên ứng viên thứ ba ở 4 trong 5 lượt chạy trên biến thể có lỗ hổng.
 
 \begin{table}[htbp]
   \centering
-  \caption{Các lớp lỗi EvoMaster v6.2.0 phát sinh trên biến thể có lỗ hổng}
-  \label{tab:upstream_check}
-  \begin{tabularx}{\textwidth}{@{}l c X@{}}
+  \caption{Hạng của thao tác chuyển trạng thái thật trên các ứng dụng mục tiêu}
+  \label{tab:rank_targets}
+  \small
+  \begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}X c c c c@{}}
     \toprule
-    \textbf{Ứng dụng} & \textbf{Số lỗi} & \textbf{Các lớp lỗi phát sinh} \\
+    Ứng dụng & Thao tác chuyển trạng thái & \makecell[b]{Thao tác\\ghi} & \makecell[b]{Điểm\\dương} & \makecell[b]{Dùng\\được} & Hạng \\
     \midrule
-    reports-api  & 17 & 109 (thiếu 401), 202 (sai schema 401), 305 (thông tin xác thực hợp lệ bị từ chối) \\
-    vampi-seeded & 23 & 100 (HTTP 500), 109 (thiếu 401), 200 và 201 (sai schema) \\
+    reports-api & \texttt{PUT /users/\{username\}/role} & 6 & 1 & 1 & 1 \\
+    vampi-seeded & \texttt{PUT /users/v1/\{username\}/role} & 8 & 5 & 1 & 1 \\
+    pyLoad & \texttt{POST /api/set\_user\_permission} & 62 & 4 & 3 & 1 \\
+    artifact-keeper & \texttt{PATCH /api/v1/users/\{id\}} & 216 & 14 & 4 & 3 \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-Ca kiểm thử do v6.2.0 sinh ra đều thiếu bước hạ quyền và bước dùng lại token cấp trước khi hạ quyền, nên chưa có chuỗi nào thỏa mãn MR-A1 trên cả 2 ứng dụng này. Lớp lỗi gần MR-A1 nhất là 305, phát hiện thông tin xác thực hợp lệ bị từ chối tại một thời điểm. MR-A1 xét chiều ngược lại, khi token cấp trước lúc thu hồi quyền vẫn được chấp nhận. Bản v6.2.0 và phần mở rộng dùng bảng mã lỗi riêng, nên mã lỗi của v6.2.0 không đối chiếu trực tiếp được với mã của phần mở rộng.
+\section{Nghiên cứu tình huống trên lỗi thật}
+\label{sec:eval_cases}
 
-Nhánh chính của EvoMaster upstream (commit \texttt{ab983ba338}, tháng 10 năm 2026) được chạy thêm với 20 seed trên biến thể có lỗ hổng của reports-api, qua một proxy ghi lại toàn bộ lưu lượng HTTP. Không lượt nào báo lỗi thuộc lớp MR-A1. Trong lưu lượng có 4 lời gọi dùng token cấp lúc tài khoản còn quyền quản trị, gửi sau khi tài khoản đã bị hạ quyền, và nhận mã 200. Không lời gọi nào trong số đó có source thành công bằng cùng token trước lần hạ quyền, không lời gọi nào bị gắn lỗi, và bộ ca kiểm thử xuất ra không giữ chuỗi nào như vậy.
+pyLoad và artifact-keeper là hai ứng dụng của bên thứ ba: lỗi và mã ứng dụng do nhà phát triển của chúng viết. Đặc tả của artifact-keeper là của nhà phát triển, trừ một endpoint bị bỏ; trên pyLoad, đặc tả nhóm \texttt{/json/*} được soạn thủ công cho khóa luận (Mục~\ref{subsec:impl_pyload}).
+
+Trên pyLoad, công cụ tự nhận diện thao tác chuyển trạng thái \texttt{POST /api/set\_user\_permission} từ đặc tả, xếp hạng 1 trong 3 ứng viên dùng được. Ở cả 10 lượt chạy, bộ ba dùng source \texttt{POST /json/status}, nạn nhân là tài khoản \texttt{pyload} và tài khoản quản trị là \texttt{alice}; mỗi lượt cần một lần khôi phục quyền cho tài khoản quản trị trước khi dựng được bộ ba. Oracle 970 báo vi phạm ở 5/5 lượt trên biến thể có lỗ hổng và 0/5 lượt trên biến thể đã vá. Thao tác hạ quyền gửi \texttt{permission=1} cùng một giá trị \texttt{role} do pha tìm kiếm để lại, luôn khác 0, giá trị mà pyLoad dành cho quản trị viên. Công cụ không tự suy ra giá trị \texttt{role} này; bước đăng nhập lại xác nhận quyền đã mất ở từng lượt. Lỗ hổng trên pyLoad còn được kiểm tra thủ công qua HTTP trên cả hai biến thể.
+
+Với artifact-keeper, công cụ tự chọn thao tác \texttt{PATCH /api/v1/users/\{id\}} và đặt trường \texttt{is\_admin} thành \texttt{false}. Ở 4 trong 5 lượt trên commit có lỗi, bộ ba dùng source \texttt{POST} \path{/api/v1/admin/analytics/snapshot}, một thao tác chỉ dành cho quản trị viên, với chuỗi mã \texttt{200/200/200}, và Oracle 970 báo vi phạm. Ở lượt còn lại, bộ dựng dùng source \texttt{PUT} \path{/api/v1/admin/sso/ldap/{id}}; mọi lần thử trên source này bị hủy hoặc bị bước đăng nhập lại loại, nên lượt đó không dựng được bộ ba. Bản vá của nhà phát triển trả mã 401 cho token cũ, nên không lượt nào dựng được bộ ba (Mục~\ref{sec:eval_detection}). Với cùng công cụ và cùng cấu hình chạy, mã nguồn của nhà phát triển trước và sau khi sửa lỗi cho 4/5 và 0/3 lượt báo vi phạm; với số lượt này, chênh lệch chưa đạt mức ý nghĩa 0,05 ($p\approx0{,}071$). Khác biệt ở đây đến từ việc bộ ba trên bản vá bị hủy vì mã 401; bản vá không được phán quyết bằng mã 403.
+
+Trên artifact-keeper, bước đăng nhập lại đã loại các bộ ba dựng trên thao tác không hạ quyền. Ở cả 8 lượt chạy, ứng viên thứ hai \texttt{POST} \path{/api/v1/admin/sso/oidc} cho chuỗi mã \texttt{200/200/200}. Token mới của nạn nhân vẫn được chấp nhận, tức thao tác này không hạ quyền nạn nhân, và bước đăng nhập lại loại lần thử đó. Ở lượt bản lỗi không dựng được bộ ba, bước này loại thêm một lần thử trên ứng viên thứ tư \texttt{POST /api/v1/users}, cũng với chuỗi \texttt{200/200/200}. Tổng cộng bước đăng nhập lại loại 6 lần thử trên bản lỗi và 3 lần thử trên bản vá. Chuỗi \texttt{200/200/200} đúng là mẫu mà bộ phán quyết báo vi phạm; khóa luận không chạy cấu hình bỏ bước đăng nhập lại. Trong 4 lượt trên bản lỗi có báo vi phạm, mọi vi phạm đều nằm ở ứng viên thứ ba, thao tác thật sự hạ quyền. Bước đăng nhập lại không loại lần thử nào trên ba ứng dụng còn lại.
+
+\section{Phân tích nguyên nhân bỏ sót và giới hạn}
+\label{sec:eval_threats}
+
+Toàn bộ 16 lượt bỏ sót trên biến thể có lỗ hổng được chia thành hai nhóm. Nhóm thứ nhất gồm 10 lượt (1 trên reports-api, 8 trên vampi-seeded và 1 trên artifact-keeper), trong đó bộ dựng đã thử dựng bộ ba nhưng mọi lần thử đều bị hủy theo các điều kiện ở Mục~\ref{subsec:method_void} hoặc bị bước đăng nhập lại loại. Ở nhóm thứ hai, gồm 6 lượt còn lại trên vampi-seeded, bộ dựng không thực hiện lần thử nào; nhật ký ở mức mặc định của EvoMaster không ghi lý do cụ thể.
+
+Ở 8 lượt bỏ sót thuộc nhóm thứ nhất trên vampi-seeded, bộ dựng có tổng cộng 48 lần thử bị hủy. Trong đó, 37 lần hủy vì source nhận mã 401, tức token của nạn nhân không được chấp nhận, và 11 lần hủy vì thao tác chuyển trạng thái nhận mã 401, tức token của tài khoản quản trị không được chấp nhận. Trên VAmPI, mã 401 cho biết token không hợp lệ. Điều này khớp với việc các ca kiểm thử của pha tìm kiếm xóa chính các tài khoản kiểm thử, trình bày ở đoạn dưới. Lượt bỏ sót trên reports-api có một lần thử không ghi được mã trạng thái nào. Lượt bỏ sót trên artifact-keeper có 5 lần thử bị hủy vì thao tác chuyển trạng thái nhận mã 400 hoặc 403, và 2 lần thử bị bước đăng nhập lại loại.
+
+Pha tìm kiếm có thể đổi trạng thái ứng dụng trước khi bộ dựng chạy và làm giảm số bộ ba dựng được. Chẳng hạn, tài khoản nạn nhân có thể bị hạ quyền ngay trong pha này, làm source nhận mã 403, hoặc bị xóa, làm bước khôi phục quyền mất tác dụng. Trên vampi-seeded, các ca kiểm thử do pha tìm kiếm sinh ra gọi thao tác xóa tài khoản \texttt{DELETE /users/v1/\{username\}} nhiều lần trên chính các tài khoản kiểm thử. Các tác dụng phụ này làm giảm số lượt phát hiện; trên các bộ ba hợp lệ đã quan sát, chúng chưa gây ra phán quyết sai nào.
+
+Về mặt thống kê, quy mô mẫu còn nhỏ: 20 seed cho mỗi biến thể của reports-api và vampi-seeded, 5 seed cho mỗi biến thể của pyLoad, 5 seed cho biến thể có lỗi và 3 seed cho bản vá của artifact-keeper. Kiểm định Fisher giả định hai mẫu độc lập, trong khi hai biến thể dùng chung seed, nên các giá trị $p$ chủ yếu mang ý nghĩa tham khảo.
+
+Phán quyết dựa trên mã trạng thái HTTP có giới hạn riêng: mã \texttt{2xx} chưa chứng minh trạng thái dữ liệu nghiệp vụ sau thao tác, còn mã 403 không nêu nguyên nhân từ chối. Trên reports-api, 17 trong 19 ca kiểm thử báo 970 có lời gọi tạo báo cáo đứng trước source. EvoMaster dừng chuỗi ở lời gọi tạo tài nguyên đầu tiên thất bại, nên ở các ca này, mã 403 của bước đăng nhập lại đến từ lời gọi tạo báo cáo, vốn cũng chỉ dành cho quản trị viên. Mã này vẫn cho thấy token mới đã mất quyền ghi, dù lời gọi bị từ chối khác thao tác đang xét. Ngoài ra, mã từ chối được cố định là 403 và chưa cấu hình được. Bản vá của artifact-keeper từ chối token cũ bằng mã 401, nên công cụ không dựng được bộ ba nào trên bản vá này.
+
+Nhãn dùng để học và chấm mô hình Naive Bayes do hai mô hình ngôn ngữ lớn gán và chỉ được soát tay một phần. Trong 10.381 thao tác ghi của tập huấn luyện, 9.771 thao tác mà hai lần gán cùng gọi thông thường chưa được soát tay.
+
+Khả năng khái quát hóa bị giới hạn ở một lớp lỗ hổng phân quyền có trạng thái và một quan hệ MR-A1. Ba ứng dụng reports-api, vampi-seeded và artifact-keeper cùng đọc quyền cũ từ claim của JWT; ở artifact-keeper, đó là mã của nhà phát triển. pyLoad lưu vai trò trong phiên. Đường dẫn thao tác hạ quyền trên reports-api và vampi-seeded được đặt khi xây dựng ứng dụng và gieo lỗi, nên kết quả nhận diện trên hai ứng dụng này chưa đại diện cho đặc tả bên thứ ba. Tỷ lệ phát hiện 5/5 trên pyLoad đạt được trong môi trường thử nghiệm có các điều chỉnh tại Mục~\ref{subsec:impl_pyload} và với biến thể đã vá viết riêng cho khóa luận, nên chưa áp dụng trực tiếp cho bản cài đặt mặc định của pyLoad.
+
+\section{Đối chứng với baseline và kiểm tra upstream}
+\label{sec:eval_baseline}
+
+Phép đối chứng kiểm tra baseline và nhánh chính EvoMaster upstream có dựng và phán quyết được chuỗi MR-A1 hay không. Các oracle phân quyền của baseline thuộc nhóm oracle so sánh chéo tài khoản của Şahin và cộng sự, chỉ đối chiếu quyền giữa các tài khoản tại một thời điểm. Chuỗi hạ quyền rồi dùng lại token cũ theo MR-A1 vì thế nằm ngoài các kịch bản mà baseline phán quyết.
+
+Toàn bộ 20 lượt chạy baseline trên biến thể có lỗ hổng của vampi-seeded đều không sinh được bộ ba thao tác dùng lại token cũ. Ở 17/20 lượt, baseline ghi nhận lỗi lộ dấu vết ngăn xếp (stack trace) trong phản hồi HTTP. Pha kiểm thử bảo mật của baseline vì vậy vẫn chạy trong các lượt đó, nên việc thiếu bộ ba không do pha này bị bỏ qua.
+
+Nhánh chính của EvoMaster upstream (commit \texttt{ab983ba338}) được chạy thêm với 20 seed trên biến thể có lỗ hổng của reports-api, qua một proxy ghi lại toàn bộ lưu lượng HTTP. Không lượt nào báo lỗi thuộc lớp MR-A1. Trong lưu lượng có 4 lời gọi dùng token cấp lúc tài khoản còn quyền quản trị, gửi sau khi tài khoản đã bị hạ quyền, và nhận mã 200. Không lời gọi nào trong số đó có source thành công bằng cùng token trước lần hạ quyền, không lời gọi nào bị gắn lỗi, và bộ ca kiểm thử xuất ra không giữ chuỗi nào như vậy.
 
 \endgroup

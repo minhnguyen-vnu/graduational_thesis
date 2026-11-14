@@ -3,19 +3,33 @@
 Sổ này giữ toàn bộ dòng đời các jar. `CLAUDE.md` §5 chỉ giữ jar đang trích số, jar dự phòng và dòng mã hiện tại.
 Luật: một jar mới chỉ trích lại số sau khi qua cổng hồi quy (12 hàng không reset, skill `regression-gate`) hoặc sau
 một lượt đo lại đầy đủ; khi cách dựng bộ ba đổi thì phải đo lại các arm bị ảnh hưởng.
+Tên file jar mang 8 chữ số hex đầu của sha256 của jar, trừ `frozen` và `0e`: hai jar này mang hash commit từ trước lần
+viết lại lịch sử ngày 2026-09-01.
 
 ## Jar đang trích số
 
-`EvoMaster/evomaster-M2-917c57dd.jar` (sha256 `917c57ddafcc3d93…`, `.sha256` cạnh jar) = HEAD `9c4be5b1dc` (jar DC)
-với `core/src/main/resources/stateful-authz-model.csv` thay bằng mô hình M2 (sha256 `b2deef150bf8…`,
-`infra/analysis/lexicon-rules/m2-model-20261107/`). Dựng 2026-11-08; cây mã trả lại M1 ngay sau khi dựng, nên M2 chưa
-nằm trong commit nào. Self-test: mô hình trong jar có sha M2; `EMConfig` không còn cờ `statefulAuthz*`.
+`EvoMaster/evomaster-ND-07ebf19f.jar` (sha256 `07ebf19f9682497e…3897`, `.sha256` cạnh jar) = HEAD `2c3f281f13` +
+`wip/nodup-tokens-20261113-tree.patch` (chưa commit; gồm comment `THESIS` và thay đổi ND): `f:` không lấy tham số
+path, `tokens` duyệt ký tự, mô hình bỏ lặp (sha256 `dcc77b59ed0f…`). Chi tiết ở "Dòng mã hiện tại".
 
-Đo lại đầy đủ ngày 2026-11-08 thay cho cổng (`em-results/m2-wave1-20261108/`, `m2-wave2-20261108/`): mọi arm của
-reports-api, vampi-seeded, pyLoad (90 hàng), artifact-keeper (8) và bamf (10). Trùng P2f ở 90/90 ô 970, và ở 89/90 hàng
-về bộ ba và mã trạng thái. Đếm bằng `m2-wave1-20261108/m2_counts.py` (`m2-counts-cp.out`). Số: `docs/results.md`.
+Đo lại đầy đủ ngày 2026-11-13 thay cho cổng (`em-results/nd-wave1-20261113/`, `nd-wave2-20261113/`, 98 hàng, cùng
+protocol và harness với SLM2 trừ jar và nhãn): reports-api 19/20 & 0/20, vampi-seeded 6/20 & 0/20, pyLoad 5/5 & 0/5,
+artifact-keeper 4/5 & 0/3. So với M2 (bằng SLM2 ở 98/98 ô 970): mất vampi-seeded seed 15 và artifact-keeper seed 3, cả
+hai là lượt không dựng được bộ ba; không hàng nào thêm; McNemar chính xác p = 0,5. Integrity sạch (0 det970 thiếu bộ
+ba, 0 FP, 0 ERR, máy không ngủ, không luật dừng nổ); audit 25 + 4 PASS, 0 FAIL. Đếm bằng
+`nd-wave1-20261113/nd_counts.py` (`nd-counts-cp.out`). Số: `docs/results.md`. Chọn ND làm jar trích số ngày
+2026-11-13 (user).
 
 ## Jar dự phòng
+
+`EvoMaster/evomaster-M2-917c57dd.jar` (sha256 `917c57ddafcc3d93…`, `.sha256` cạnh jar) = `9c4be5b1dc` (jar DC)
+với `core/src/main/resources/stateful-authz-model.csv` thay bằng mô hình M2 (sha256 `b2deef150bf8…`,
+`infra/analysis/lexicon-rules/m2-model-20261107/`). Jar trích số từ 2026-11-08 tới 2026-11-13. Dựng 2026-11-08; cây mã
+trả lại M1 ngay sau khi dựng, nên M2 chưa nằm trong commit nào. Self-test: mô hình trong jar có sha M2; `EMConfig` không
+còn cờ `statefulAuthz*`. Đo lại đầy đủ ngày 2026-11-08 thay cho cổng (`em-results/m2-wave1-20261108/`,
+`m2-wave2-20261108/`): mọi arm của reports-api, vampi-seeded, pyLoad (90 hàng), artifact-keeper (8) và bamf (10). Trùng
+P2f ở 90/90 ô 970, và ở 89/90 hàng về bộ ba và mã trạng thái. Đếm bằng `m2-wave1-20261108/m2_counts.py`
+(`m2-counts-cp.out`).
 
 `EvoMaster/evomaster-P2f-64ee8ffc.jar` = commit `f73010103b`. Jar trích số từ 2026-10-18 tới 2026-11-08, trên 180 hàng
 một jar `em-results/p2f-full-20261015/runs.csv`; cổng 21/21 hai lần. Còn reset, transition khai báo và D1 (sau cờ mặc
@@ -23,7 +37,45 @@ một jar `em-results/p2f-full-20261015/runs.csv`; cổng 21/21 hai lần. Còn 
 
 ## Dòng mã hiện tại
 
-`9c4be5b1dc` (HEAD, 2026-11-03, đã push) = `1cd0d091f4` + `wip/redundant-code-20261103.patch`; các dòng đổi của
+Cây mã chưa commit (2026-11-13) = HEAD `2c3f281f13` + `wip/nodup-tokens-20261113-tree.patch` (`git diff HEAD` trùng
+từng byte, 2026-11-14). Bản vá đó gồm comment `THESIS` của user và thay đổi ND; riêng thay đổi ND là
+`wip/nodup-tokens-20261113.patch`, tính trên cây đã có comment nên không áp thẳng lên HEAD.
+Hai thay đổi: `opFeatures` không lấy `f:` từ tham số path, mô hình học lại tương ứng
+(`analysis/lexicon-rules/m2-nodup-20261112/`, sha256 `dcc77b59ed0f…`, cây mã giữ model này); `tokens` duyệt từng
+ký tự thay regex, tương đương. Chi tiết, bằng chứng tương đương, diễn tập rollback: `wip/nodup-tokens-20261113.md`.
+Jar `EvoMaster/evomaster-ND-07ebf19f.jar` (sha256 `07ebf19f9682497e…3897`, sha16 `07ebf19f9682497e`, `.sha256` cạnh
+jar). Self-test `selftest/nodup-tokens-20261113.sh` so với SLM2: `em-results/nodup-tokens-selftest-20261113-002956/`
+90 PASS / 0 FAIL; kiểm bổ sung `compare-supplement-20261113.txt` (jar quên bỏ path sẽ lệch 18 chỗ). Review độc lập
+không chặn. Đo lại đầy đủ: mục "Jar đang trích số".
+
+`2c3f281f13` (HEAD, 2026-11-13, chưa push) = `9c4be5b1dc` + phần mã của `wip/shorten-logic-20261112.patch`, không kèm
+comment `THESIS`: 98 dòng đổi trùng phần mã của bản vá. Gộp logic lặp trong phần ta thêm, giữ vòng `for`, hành vi và log: 9 mục, −70/+33 dòng; dòng mã ta thêm trên v6.1.1
+(không tính dòng trống, dòng `THESIS`) từ 1.383 còn 1.346. Từng mục và lý do tương đương: `wip/shorten-logic-20261112.md`.
+Jar `EvoMaster/evomaster-SL-c01cb6d6.jar` (sha256 `c01cb6d6fc76c4af…`, `.sha256` cạnh jar), model M1 như DC; chỉ dùng
+cho self-test stub, không trích số.
+
+Jar `EvoMaster/evomaster-SLM2-b8b5cf1a.jar` (sha256 `b8b5cf1a…1682`, sha16 `b8b5cf1adb560c87`, `.sha256` cạnh jar) =
+cùng mã shorten-logic nhưng thay `stateful-authz-model.csv` bằng M2 (`b2deef150bf8…`), dựng 2026-11-12, M1 trả về cây
+ngay sau. Đợt đo lại đầy đủ 2026-11-12 trên cả bốn target (`em-results/slm2-wave1-20261112/`,
+`slm2-wave2-20261112/`, 98 hàng; PROTOCOL ở wave 1) tái lập khít số của jar M2: reports 19/20 & 0/20, vampi 7/20 &
+0/20, pyLoad 5/5 & 0/5, artifact-keeper 5/5 & 0/3. Integrity sạch (0 det970 thiếu triple, 0 FP, 0 ERR, máy không ngủ);
+audit `audit970.out` 31 PASS / 0 FAIL / 0 UNPARSED. Bản vá artifact-keeper xác nhận sống bằng tay (token cũ sau hạ
+quyền trả 401) trước khi đo FP; repo trả về commit lỗi `e56d3aa7` sạch. Đợt đầy đủ này thay cho cổng 12 hàng
+(CLAUDE.md §5), nên SLM2 trích số được. Mã shorten-logic vẫn chưa commit.
+
+Kiểm tra:
+- Diễn tập rollback trên `wip/shorten-logic-20261112-tree.patch`: áp lại trùng từng byte.
+- Self-test `selftest/shorten-logic-20261112.sh`, so với jar DC:
+  - `em-results/shorten-logic-selftest-20261112-120246/`: kiểm tĩnh đạt hết. Trên 30 mode stub, log stateful trùng từng
+    dòng với DC, 970 trùng, mọi mốc đường đi đều chạy tới (135/135). `query-role` theo `--maxEvaluations 300`: trùng.
+    Tập PASS/FAIL của `p2_checks.py`, `candidate_checks.py`, `setfield_checks.py` trùng tên với self-test DC. Bộ so sánh
+    trượt khi thay log của jar AF2 vào. Máy không ngủ.
+  - Mode `array-body` mới (`selftest/array_body_stub.py`, nhánh mảng của `walkBody`): theo `--maxTime 30s` hai lượt DC
+    đã khác nhau, vì builder đặt giá trị vào template của mảng chứ không vào phần tử, nên phần tử gửi đi là ngẫu nhiên.
+    Chạy lại theo `--maxEvaluations 300` (`em-results/shorten-logic-selftest-ab-evals-20261112-125644/`): ba lượt trùng
+    nhau, 4/4.
+
+`9c4be5b1dc` (2026-11-03, đã push) = `1cd0d091f4` + `wip/redundant-code-20261103.patch`; các dòng đổi của
 commit trùng bản vá. Jar `EvoMaster/evomaster-DC-a872a464.jar` (sha256 `a872a464…27f3`, `.sha256` cạnh jar), dựng từ
 bản vá ngày 2026-11-03. Xoá mã thừa trong phần ta thêm, giữ hành vi và log: −129/+64 dòng trên `RestSecurityBuilder.kt`
 và `RestSecurityOracle.kt`, cùng `stateful-authz-lexicon.csv` mà không code nào đọc. Từng thay đổi và lý do tương

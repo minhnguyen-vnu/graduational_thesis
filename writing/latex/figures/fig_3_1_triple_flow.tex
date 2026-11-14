@@ -1,37 +1,31 @@
-% Hình 3.1 (flowchart, thay sequence diagram fig_3_1_triple_sequence): trình tự bộ ba thao tác và kích hoạt Oracle 970.
-% Quy tắc nhánh theo Mục 3.3.3 và docs/metamorphic-authz-relations.md: 2xx = cho phép, 403 = từ chối, 401 = hủy.
 \begin{tikzpicture}[
   >=Stealth,
   font=\small\linespread{1}\selectfont,
-  node distance=6mm and 12mm,
+  node distance=5mm and 16mm,
   procbox/.style={rectangle, draw, rounded corners=2pt, fill=gray!10, align=center,
-                  text width=5.0cm, minimum height=0.9cm},
+                  text width=5.4cm, minimum height=0.9cm},
   decision/.style={diamond, draw, fill=gray!10, align=center, aspect=2.4, inner sep=1pt, font=\footnotesize},
   voidbox/.style={rectangle, draw, dashed, rounded corners=6pt, align=center, text width=1.9cm,
                   minimum height=0.7cm, font=\footnotesize},
-  passbox/.style={rectangle, draw, rounded corners=6pt, align=center, text width=3.2cm, minimum height=0.8cm},
+  passbox/.style={rectangle, draw, rounded corners=6pt, align=center, text width=2.4cm, minimum height=0.8cm},
   verdictbox/.style={rectangle, draw, very thick, rounded corners=6pt, align=center, text width=4.4cm, minimum height=0.8cm},
-  lbl/.style={font=\footnotesize}
+  lbl/.style={font=\footnotesize\linespread{1}\selectfont}
 ]
-  % Cột trái: bộ ba thao tác
   \node[procbox]  (src) {\textbf{Source:} nạn nhân gọi thao tác ghi bằng token $c_v$};
   \node[decision, below=of src] (d1) {2xx?};
   \node[procbox,  below=of d1]  (tr) {\textbf{Transition:} quản trị viên hạ quyền nạn nhân bằng token $c_o$};
   \node[decision, below=of tr]  (d2) {2xx?};
   \node[procbox,  below=of d2]  (fu) {\textbf{Follow-up:} nạn nhân gọi lại source bằng token cũ $c_v$};
-  \node[decision, below=of fu]  (d3) {Mã phản hồi?};
-  \node[passbox,  below=8mm of d3] (ok) {Phù hợp MR-A1\\(không vi phạm)};
+  \node[decision, below=9mm of fu]  (d3) {Mã phản hồi?};
+  \node[procbox,  below=of d3]  (rl) {\textbf{Đăng nhập lại:} chạy lại chuỗi lời gọi bằng token mới $c_v'$ (cần nhận 403) và không kèm xác thực (cần nhận mã khác 403)};
+  \node[decision, below=of rl]  (d4) {Đạt cả hai?};
+  \node[verdictbox, below=of d4] (vio) {\textbf{Oracle 970} báo vi phạm MR-A1};
 
-  % Nhánh hủy của cột trái
   \node[voidbox, right=of d1] (v1) {Hủy bộ ba};
   \node[voidbox, right=of d2] (v2) {Hủy bộ ba};
-  \node[voidbox, left=of d3]  (v3) {Hủy bộ ba};
-
-  % Cột phải: bước đăng nhập lại và phán quyết
-  \node[procbox, text width=4.4cm, right=10mm of d3] (rl) {\textbf{Đăng nhập lại:} chạy lại chuỗi lời gọi bằng token mới $c_v'$ (cần nhận 403) và không kèm xác thực (cần nhận mã khác 403)};
-  \node[decision, below=of rl]  (d4)  {Đạt cả hai?};
-  \node[verdictbox, below=of d4] (vio) {\textbf{Oracle 970} báo vi phạm MR-A1};
-  \node[voidbox, right=9mm of d4] (v4) {Hủy bộ ba};
+  \node[voidbox, left=22mm of d3]  (v3) {Hủy bộ ba};
+  \node[passbox, right=22mm of d3] (ok) {Không báo vi phạm};
+  \node[voidbox, right=of d4] (v4) {Hủy bộ ba};
 
   \draw[->] (src) -- (d1);
   \draw[->] (d1) -- node[lbl, right] {Có} (tr);
@@ -40,9 +34,9 @@
   \draw[->] (d2) -- node[lbl, right] {Có} (fu);
   \draw[->] (d2) -- node[lbl, above] {Không} (v2);
   \draw[->] (fu) -- (d3);
-  \draw[->] (d3) -- node[lbl, right] {403} (ok);
-  \draw[->] (d3) -- node[lbl, above] {401} (v3);
-  \draw[->] (d3) -- node[lbl, above] {2xx} (rl);
+  \draw[->] (d3) -- node[lbl, above=2pt, align=center] {401 hoặc\\không có mã} (v3);
+  \draw[->] (d3) -- node[lbl, above=2pt, align=center] {403 hoặc\\mã khác} (ok);
+  \draw[->] (d3) -- node[lbl, right] {2xx} (rl);
   \draw[->] (rl) -- (d4);
   \draw[->] (d4) -- node[lbl, right] {Có} (vio);
   \draw[->] (d4) -- node[lbl, above] {Không} (v4);

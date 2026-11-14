@@ -1,0 +1,29 @@
+\begin{tikzpicture}[
+  >=Stealth,
+  font=\small\linespread{1}\selectfont,
+  box/.style={rectangle, draw, rounded corners=2pt, fill=gray!10, align=center,
+              text width=3.0cm, minimum height=1.3cm},
+  ours/.style={box, very thick, fill=gray!30},
+  group/.style={draw, dashed, rounded corners=4pt, inner sep=6pt},
+  lbl/.style={font=\footnotesize}
+]
+  \node[box]  (store) at (0, 2.4)  {Kho lưu trữ\\ca kiểm thử};
+  \node[box]  (gen)   at (0, -2.4) {Bước sinh phản hồi 403 có sẵn};
+  \node[ours, text width=4.2cm] (nb)    at (5.0, 0)    {Trọng số Naive Bayes\\{\scriptsize\ttfamily stateful-authz-model.csv}};
+  \node[ours, text width=4.2cm] (build) at (5.0, -2.4) {Bộ dựng kịch bản MR-A1\\{\scriptsize\ttfamily RestSecurityBuilder.kt}};
+  \node[ours, text width=4.8cm] (code)  at (10.6, 0)   {Mã lỗi 970\\{\scriptsize\ttfamily ExperimentalFaultCategory.kt}};
+  \node[ours, text width=4.8cm] (judge) at (10.6, -2.4) {Bộ phán quyết\\{\scriptsize\ttfamily RestSecurityOracle.kt}};
+  \node[box, text width=4.8cm]  (out)   at (10.6, -4.8) {Lỗi 970 trong bộ ca kiểm thử xuất ra};
+
+  \begin{scope}[on background layer]
+    \node[group, fit=(gen) (build) (judge) (nb) (code)] (g) {};
+  \end{scope}
+  \node[lbl, font=\footnotesize\bfseries, anchor=south east, inner sep=2pt] at (g.north east) {Pha kiểm thử bảo mật};
+
+  \draw[->] (store) -- (gen);
+  \draw[->] (gen) -- (build);
+  \draw[->] (nb) -- node[lbl, right] {xếp hạng} (build);
+  \draw[->] (build) -- (judge);
+  \draw[->] (code) -- (judge);
+  \draw[->] (judge) -- (out);
+\end{tikzpicture}

@@ -1,7 +1,6 @@
 import json
 import os
 import re
-import subprocess
 import sys
 from collections import Counter
 
@@ -13,17 +12,6 @@ DATA_EXTENSIONS = (".csv", ".log", ".out", ".json")
 COMMENT_STYLES = {".kt": "slash", ".kts": "slash", ".java": "slash", ".py": "hash", ".sh": "hash"}
 PROVENANCE_MARKER = "THESIS"
 
-HEAVY = re.compile(
-    r"\bmvn\b(?!\s+(-v|-version|--version)\b)"
-    r"|\bdocker\s+(build|compose\s+up)\b"
-    r"|-jar\s+\S*evomaster\S*\.jar"
-    r"|em-venv/bin/evomaster\b"
-    r"|\bpytest\b"
-    r"|(em-results|pyload-cve)/\S+\.sh\b"
-)
-RUNNING = re.compile(r"java\b.*evomaster\S*\.jar|(em-results|pyload-cve)/\S+\.sh\b")
-JOB_EXECUTABLES = {"java", "bash", "sh", "zsh"}
-TOOL_WRAPPER_MARK = "shell-snapshots"
 REMOVE = re.compile(r"(^|\s)(rm|rmdir|unlink|trash)(\s|$)")
 SEGMENT_SPLIT = re.compile(r"&&|\|\||;|\||\n")
 OVERWRITE_TARGET = re.compile(r"(?<![>&0-9])>(?![>&])\s*([^\s;&|()]+)")
@@ -40,20 +28,6 @@ def deny(reason):
     sys.exit(0)
 
 
-def running_jobs():
-    listing = subprocess.run(["ps", "-axo", "pid=,command="], capture_output=True, text=True, check=True).stdout
-    own = {os.getpid(), os.getppid()}
-    jobs = []
-    for line in listing.splitlines():
-        pid, _, command = line.strip().partition(" ")
-        command = command.strip()
-        executable = os.path.basename(command.split(" ", 1)[0]) if command else ""
-        if (pid.isdigit() and int(pid) not in own and executable in JOB_EXECUTABLES
-                and TOOL_WRAPPER_MARK not in command and RUNNING.search(command)):
-            jobs.append(pid + " " + command[:120])
-    return jobs
-
-
 def resolve(path, cwd):
     expanded = os.path.expanduser(path.strip("'\""))
     return os.path.normpath(expanded if os.path.isabs(expanded) else os.path.join(cwd, expanded))
@@ -64,11 +38,6 @@ def is_recorded_data(path):
 
 
 def check_bash(command, cwd):
-    if HEAVY.search(command):
-        jobs = running_jobs()
-        if jobs:
-            deny("A measurement batch is running (" + "; ".join(jobs[:2]) + "). mvn, docker build, pytest, "
-                 "EvoMaster runs and harness scripts wait until it finishes: --maxTime is wall-clock.")
     for segment in SEGMENT_SPLIT.split(command):
         if REMOVE.search(segment) and any(fragment in segment for fragment in PROTECTED_FRAGMENTS):
             deny("Measurement data and backups are never deleted by the agent (infra/em-results, "

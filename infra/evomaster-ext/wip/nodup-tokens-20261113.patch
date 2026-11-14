@@ -1,0 +1,590 @@
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+index 688f4da1f4..59bf1a52d9 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -89,9 +89,6 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         // THESIS: Mỗi enum lấy tối đa 12 giá trị làm đặc trưng.
+         private const val MAX_ENUM_VALUES = 12
+ 
+-        // THESIS: Tách camelCase, snake_case, path thành từ. Vd "APIKey" -> API, Key; "userRoleId" -> user, Role, Id.
+-        private val TOKEN_PART = Regex("[A-Z]+(?![a-z])|[A-Z][a-z0-9]*|[a-z0-9]+")
+-
+         // THESIS: Đọc stateful-authz-model.csv thành map bảng -> (đặc trưng -> trọng số).
+         // THESIS: Thiếu file hoặc thiếu bảng thì log warn: khi đó không op nào qua guard và 970 không bao giờ nổ.
+         private fun loadModel(): Map<String, Map<String, Double>> {
+@@ -141,16 +138,41 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         // THESIS: Vd "/users/{userId}/role" -> {users, user, role} ("id" bị bỏ vì ngắn).
+         fun tokens(text: String, minLength: Int = MIN_TOKEN_LENGTH): Set<String> {
+             val out = mutableSetOf<String>()
+-            for (match in TOKEN_PART.findAll(text)) {
+-                val token = match.value.lowercase()
+-                if (token.length < minLength || isDigitsOnly(token)) {
++            var start = 0
++            while (start < text.length) {
++                val end = tokenEnd(text, start)
++                if (end == start) {
++                    start++
+                     continue
+                 }
+-                out.add(token)
++                val token = text.substring(start, end).lowercase()
++                if (token.length >= minLength && !isDigitsOnly(token)) {
++                    out.add(token)
++                }
++                start = end
+             }
+             return out
+         }
+ 
++        private fun tokenEnd(text: String, start: Int): Int {
++            var end = start
++            while (end < text.length && text[end] in 'A'..'Z') {
++                end++
++            }
++            val upper = end - start
++            val nextIsLower = end < text.length && text[end] in 'a'..'z'
++            if (upper >= 1 && !nextIsLower) {
++                return end
++            }
++            if (upper >= 2) {
++                return end - 1
++            }
++            while (end < text.length && (text[end] in 'a'..'z' || text[end] in '0'..'9')) {
++                end++
++            }
++            return end
++        }
++
+         // THESIS: true nếu chuỗi chỉ gồm chữ số, vd "123".
+         private fun isDigitsOnly(s: String): Boolean {
+             for (c in s) {
+@@ -309,14 +331,17 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return out.take(MAX_FIELDS)
+         }
+ 
+-        // THESIS: Đặc trưng của op cho bảng op: v:verb, p:từ của path, f:từ của tên lá mọi trường.
+-        // THESIS: Vd PUT /users/{username}/role body {role} -> {v:PUT, p:users, p:username, p:role, f:username, f:role}.
++        // THESIS: Đặc trưng của op cho bảng op: v:verb, p:từ của path, f:từ của tên lá các trường query và body.
++        // THESIS: Vd PUT /users/{username}/role body {role} -> {v:PUT, p:users, p:username, p:role, f:role}.
+         fun opFeatures(a: RestCallAction): Set<String> {
+             val fs = mutableSetOf("v:${a.verb.name}")
+             for (t in tokens(a.path.toString())) {
+                 fs.add("p:$t")
+             }
+             for (f in schemaFields(a)) {
++                if (f.loc == "path") {
++                    continue
++                }
+                 for (t in tokens(f.leaf)) {
+                     fs.add("f:$t")
+                 }
+diff --git a/core/src/main/resources/stateful-authz-model.csv b/core/src/main/resources/stateful-authz-model.csv
+index c7204403cb..61127c4e38 100644
+--- a/core/src/main/resources/stateful-authz-model.csv
++++ b/core/src/main/resources/stateful-authz-model.csv
+@@ -1,261 +1,251 @@
+ table,feature,weight
+-op,__prior__,-3.935071909737789
+-op,f:access,1.4663370687934267
+-op,f:account,0.17073480784279393
+-op,f:actions,2.405442478433754
+-op,f:active,0.9295359586241752
+-op,f:admin,2.9054368213631707
+-op,f:allowed,1.3995395878699113
+-op,f:application,1.2172180310759568
+-op,f:auth,0.3510516863843707
+-op,f:authentication,2.4589311633847397
+-op,f:before,1.877575388812911
+-op,f:block,0.6562426236244949
+-op,f:change,2.5671447480249725
+-op,f:client,0.6434176081485772
+-op,f:code,-1.5185914396605278
+-op,f:collaborator,5.0238805208462765
+-op,f:content,0.054067221270275745
+-op,f:count,-0.5319818237333025
+-op,f:create,1.298187093609624
+-op,f:created,-1.6878598742099031
+-op,f:creation,0.7215060451200142
+-op,f:custom,-0.9537386194396524
+-op,f:data,-0.6997045811061042
+-op,f:date,0.1005872369051688
+-op,f:delete,1.4644591339692274
+-op,f:deletion,0.7652329073328996
+-op,f:description,-0.5737474722509219
+-op,f:disabled,1.4238322804389556
+-op,f:display,-0.027576767770234323
+-op,f:email,1.2396908869280152
+-op,f:enable,1.2061681948893717
+-op,f:enabled,0.6241543090729937
+-op,f:expiry,1.4916548767777167
+-op,f:factor,2.4981518765380213
+-op,f:fields,-0.0778603217722722
+-op,f:first,1.6635051337043758
+-op,f:force,0.08581591958485646
+-op,f:from,-0.19376894263430522
+-op,f:full,1.696791111337843
+-op,f:group,0.9484639685096949
+-op,f:groups,1.7080429881352783
+-op,f:hours,1.8458266904983311
+-op,f:identity,0.5130210143294267
+-op,f:items,0.6202147110689138
+-op,f:joined,4.618415412738111
+-op,f:kind,0.10912699845330343
+-op,f:language,0.16989903679539786
+-op,f:last,0.123848218372697
+-op,f:level,1.7786873876607023
+-op,f:limit,0.08581591958485646
+-op,f:link,0.01993421490081726
+-op,f:local,1.173732919136218
+-op,f:location,0.5510995229039306
+-op,f:login,1.8303225039623654
+-op,f:managed,0.7236839044200272
+-op,f:manager,0.3806922676706641
+-op,f:media,0.9548537666084655
+-op,f:member,2.272345207804327
+-op,f:members,2.6931245508855346
+-op,f:membership,2.9601873361345796
+-op,f:method,0.2116961654738594
+-op,f:name,-0.1807890764304665
+-op,f:namespace,0.005773211911319631
+-op,f:next,1.3350010667323406
+-op,f:notes,0.7970467755780963
+-op,f:object,1.5343905320384423
+-op,f:organization,1.8123039984596874
+-op,f:other,2.0534660552765756
+-op,f:owner,0.2546093241777583
+-op,f:page,0.8807457944547439
+-op,f:password,1.1453534698463126
+-op,f:path,-0.7932306391169277
+-op,f:period,-0.03145495216788596
+-op,f:permission,2.072884141133677
+-op,f:permissions,2.1980472840876826
+-op,f:personal,2.478349249241841
+-op,f:phone,0.7591905928769371
+-op,f:photo,2.45893116338474
+-op,f:policy,-0.4935723756184309
+-op,f:pretty,-0.015234244571848077
+-op,f:principal,2.3992119286831173
+-op,f:product,0.6294313661738382
+-op,f:profile,0.5075415485648005
+-op,f:project,1.0920548881219507
+-op,f:provider,0.7640215201466027
+-op,f:public,0.7811159535059025
+-op,f:read,1.268511325463507
+-op,f:repo,-0.037923059824378935
+-op,f:required,1.5671132880293106
+-op,f:restricted,2.3848231912310185
+-op,f:role,2.119715440817776
+-op,f:roles,2.518354583855541
+-op,f:root,1.7852020686818957
+-op,f:scopes,2.367123614131617
+-op,f:self,0.3604414267342091
+-op,f:send,0.45953232937844035
+-op,f:server,0.228089975249536
+-op,f:site,-0.039618262807047167
+-op,f:slug,-0.8109302162163288
+-op,f:source,-0.35486409481437464
+-op,f:status,-1.0886948520107635
+-op,f:tags,-0.5406398864764168
+-op,f:team,1.7640372574898522
+-op,f:tenant,0.5970398703826021
+-op,f:time,-0.09011328623713277
+-op,f:timestamp,0.47301567971572744
+-op,f:token,0.18759861389479848
+-op,f:type,-0.47254227019697725
+-op,f:types,1.3173014896329391
+-op,f:until,2.015725727293728
+-op,f:updated,-1.3322271398496146
+-op,f:user,1.9775045144735302
+-op,f:userid,2.9136673204996875
+-op,f:username,1.7958162699236697
+-op,f:users,2.659601858846891
+-op,f:value,-0.7691330875378672
+-op,f:verified,1.9793580831228539
+-op,f:version,0.045424125114255975
+-op,f:views,3.136810871813897
+-op,f:website,1.7657839828247948
+-op,f:workspace,0.06453852113757153
+-op,f:zone,1.034896474282002
+-op,p:access,2.1007189401271207
+-op,p:admin,1.924964011057055
+-op,p:admins,4.484884020113589
+-op,p:application,2.2766096065907853
+-op,p:apps,-0.014925650216675468
+-op,p:collaborator,4.8415589640523224
+-op,p:collaborators,5.465713273125315
+-op,p:config,0.4062878148596276
+-op,p:email,1.3603188747166302
+-op,p:group,0.825175943299933
+-op,p:groups,0.8281834643638883
+-op,p:mappings,2.708872907853673
+-op,p:member,2.6190165787318125
+-op,p:members,3.1313163524962557
+-op,p:membership,3.3656524442427442
+-op,p:memberships,4.148411783492376
+-op,p:name,-0.1856056319951449
+-op,p:namespace,-0.0418740724710589
+-op,p:organization,1.9591553758053344
+-op,p:organizations,2.178971137026869
+-op,p:orgs,0.7265951146274849
+-op,p:owner,0.27244782787993316
+-op,p:permission,1.8458266904983311
+-op,p:permissions,2.4211908354018927
+-op,p:project,1.3375041969504586
+-op,p:projects,0.9782011306054565
+-op,p:remove,1.8252074032955954
+-op,p:repo,-0.12527370738554078
+-op,p:repos,-0.18560563199514446
+-op,p:rest,0.09662683568907182
+-op,p:role,3.1320375930612387
+-op,p:roles,1.3825420115013403
+-op,p:service,0.9808292530117262
+-op,p:slug,0.6294313661738373
+-op,p:team,2.292573457579799
+-op,p:teams,2.244734398060336
+-op,p:update,1.111857515418131
+-op,p:user,1.9966495802329143
+-op,p:username,2.598397291529077
+-op,p:users,2.367959385179013
+-op,p:workspace,0.43636527009690607
+-op,v:DELETE,0.16322280789665355
+-op,v:PATCH,0.4045798725144718
+-op,v:POST,-0.4647184404438617
+-op,v:PUT,0.424794378947857
+-role,__prior__,-1.938898043969857
+-role,e:admin,2.740579844399862
+-role,e:developer,3.539087540617633
+-role,e:guest,3.0282619168516423
+-role,e:manager,3.3159439893034235
+-role,e:member,3.875559777238846
+-role,e:only,2.845940360057688
+-role,e:read,2.622796808743479
+-role,e:write,1.9296496281835336
+-role,k:array,0.6818249413287474
+-role,k:bool,1.0044435326514258
+-role,k:enum,1.524184520075369
+-role,k:num,0.07075085611784981
+-role,k:object,-0.1497919134963026
+-role,k:str,-1.0187289489869877
+-role,l:body,0.20109088725138918
+-role,l:path,-0.8754916970939965
+-role,l:query,-0.8737107527230017
+-role,n:access,1.3542854832799711
+-role,n:admin,1.5813429339153169
+-role,n:create,2.845940360057688
+-role,n:delete,1.7065060768693239
+-role,n:group,-0.11804321518172234
+-role,n:level,3.3159439893034235
+-role,n:manager,1.1187194119672044
+-role,n:member,0.25567319461186155
+-role,n:name,-0.08525339235873153
+-role,n:organization,0.8310373395154231
+-role,n:owner,0.3715050101369832
+-role,n:permission,4.9253819017375235
+-role,n:permissions,2.3351147362916977
+-role,n:restricted,3.3159439893034235
+-role,n:role,2.7769474885707366
+-role,n:roles,4.494598985645069
+-role,n:type,1.5931773915623206
+-role,n:user,-0.47954519986877076
+-role,w:admin,3.875559777238846
+-role,w:id,0.25567319461186155
+-role,w:name,0.6639832548522571
+-role,w:permission,3.3159439893034235
+-role,w:permissions,3.7214090974115877
+-role,w:role,3.1083046245251795
+-role,w:role_id,3.539087540617633
+-role,w:roleid,3.3159439893034235
+-role,w:roles,3.875559777238846
+-role,w:type,1.9296496281835336
+-victim,__prior__,-1.8094277733613688
+-victim,k:array,-0.03907633352558948
+-victim,k:num,0.5356056527644777
+-victim,k:str,0.33364076334558074
+-victim,l:body,-0.8605941244343578
+-victim,l:path,1.4387491122745981
+-victim,l:query,-0.11311012995699121
+-victim,n:admin,1.646388477052842
+-victim,n:collaborator,2.7168298887542557
+-victim,n:email,0.5012561727498395
+-victim,n:member,2.252524280623158
+-victim,n:membership,2.3601549448155232
+-victim,n:name,-0.31242507683837895
+-victim,n:user,2.9290044086978915
+-victim,n:userid,2.206004264988265
+-victim,n:username,2.647837017267305
+-victim,n:users,2.1370113935013135
+-victim,w:collaborator,3.409977069314201
+-victim,w:id,0.9597559775140909
+-victim,w:member,3.409977069314201
+-victim,w:membershipid,3.409977069314201
+-victim,w:name,0.16293036747930412
+-victim,w:user,4.365488514341637
+-victim,w:user_id,4.891581610238417
+-victim,w:userid,3.227655512520246
+-victim,w:username,2.493686337440046
++op,__prior__,-3.885059874577199
++op,f:access,1.1947110631923534
++op,f:account,0.02984938898304268
++op,f:active,0.880000318352653
++op,f:admin,2.4248997096491816
++op,f:allowed,1.1544371640544133
++op,f:auth,0.3015160461128472
++op,f:authentication,2.4093955231132163
++op,f:before,1.8280397485413884
++op,f:block,0.2594238306275427
++op,f:change,2.6717597875807075
++op,f:client,0.45255630352571297
++op,f:company,0.7846901385483278
++op,f:count,-0.3554711530326542
++op,f:create,1.0663298965441461
++op,f:created,-1.7373955144814262
++op,f:creation,0.18685313779270762
++op,f:data,-0.7393879249346158
++op,f:date,0.15406331496971637
++op,f:delete,1.2486514533381006
++op,f:deletion,0.36717669192398894
++op,f:description,-1.3219748617421643
++op,f:disabled,1.374296640167433
++op,f:display,-0.6224885157384832
++op,f:email,1.2391413547865788
++op,f:enable,1.3218330706316923
++op,f:enabled,0.11971383495507926
++op,f:expiry,1.6421403703995492
++op,f:factor,2.643588910614011
++op,f:fields,-0.39396485779331814
++op,f:first,1.6139694934328532
++op,f:force,0.45255630352571297
++op,f:from,-0.0037672218159423565
++op,f:full,1.6472554710663196
++op,f:group,0.9036101839917863
++op,f:groupname,3.1825854113466985
++op,f:groups,1.004052967022632
++op,f:hours,2.0039304150050525
++op,f:invite,2.6970775955649975
++op,f:items,0.8030392772165245
++op,f:joined,4.568879772466589
++op,f:language,0.16827675221977234
++op,f:last,0.07431257810117398
++op,f:level,1.1157226518737229
++op,f:limit,0.036280279313333
++op,f:link,-0.3869472851346716
++op,f:local,1.1241972788646954
++op,f:location,0.6811494596074876
++op,f:login,1.710768876788646
++op,f:managed,0.3261152051262153
++op,f:manager,0.19402162727132
++op,f:media,1.134892567981443
++op,f:member,1.6945083559168657
++op,f:members,2.448616236266498
++op,f:method,0.19943191999956777
++op,f:mode,-0.016087706203983032
++op,f:name,-0.5069694902768758
++op,f:next,1.2854654264608172
++op,f:organization,1.2730429064622601
++op,f:other,2.126532737097385
++op,f:owner,0.0953380289569341
++op,f:page,0.8800003183526526
++op,f:password,1.0958178295747896
++op,f:permission,2.158081094832311
++op,f:permissions,1.9930013444728623
++op,f:personal,2.712581782100963
++op,f:phone,0.7217763131377586
++op,f:photo,2.4093955231132167
++op,f:policy,-0.4852406335694055
++op,f:pretty,-0.06476988484337065
++op,f:principal,1.8388506646456042
++op,f:profile,0.525828504632039
++op,f:provider,0.8900506542061546
++op,f:public,0.7577826856284036
++op,f:read,1.2189756851919844
++op,f:required,1.4189968190853395
++op,f:role,1.9250718400927327
++op,f:roles,1.9848822200343577
++op,f:scopes,2.3175879738600944
++op,f:self,-0.10394906199531695
++op,f:send,0.6409834178821532
++op,f:site,0.4580059082932779
++op,f:source,-0.39745526273308673
++op,f:status,-1.1298901603660676
++op,f:tags,-0.3355716218166349
++op,f:team,0.9225599327714487
++op,f:time,-0.39496336012290767
++op,f:timestamp,-0.14961909882850533
++op,f:token,0.12153367167206497
++op,f:type,-0.5116368871777335
++op,f:until,2.227073966319262
++op,f:updated,-1.3817627801211376
++op,f:user,1.6045890247474173
++op,f:userid,3.588050519454863
++op,f:username,1.1844895091208154
++op,f:users,2.0604426252683945
++op,f:value,-0.9979368471164545
++op,f:verified,2.1411315365185373
++op,f:version,-0.2753073139920019
++op,f:views,3.364906968140653
++op,f:visibility,1.1241972788646954
++op,f:website,1.7162483425532713
++op,p:account,0.46623640742979333
++op,p:actors,3.875732591906644
++op,p:admin,1.6611162718585555
++op,p:admins,4.4353483798420665
++op,p:application,1.6421403703995496
++op,p:apps,0.48852145221922827
++op,p:collaborator,4.792023323780798
++op,p:collaborators,5.054387588248289
++op,p:conversations,1.5566181969613875
++op,p:email,2.300196231148225
++op,p:group,1.4588794053636591
++op,p:groups,1.0815046945633813
++op,p:invitations,2.8949033388949172
++op,p:kick,5.262026953026534
++op,p:leave,1.9661900870222055
++op,p:mappings,2.3001962311482242
++op,p:member,2.9247563020445986
++op,p:members,3.1684007763547424
++op,p:membership,3.316116803971221
++op,p:memberships,4.406360842968814
++op,p:name,0.1785543349780121
++op,p:namespace,-0.27688087843943254
++op,p:organization,1.7356664284103727
++op,p:organizations,2.048881802867319
++op,p:orgs,1.2894734478583563
++op,p:owner,0.5192711040858802
++op,p:permissions,1.3302013203022085
++op,p:project,0.8312101541832209
++op,p:projects,0.479676609744907
++op,p:remove,2.1050265318764216
++op,p:repo,0.08149262213488129
++op,p:repos,0.10790993545258809
++op,p:rest,-0.06044087375378515
++op,p:role,2.755141396519759
++op,p:roles,0.7402383759774942
++op,p:selected,2.553976751924324
++op,p:service,0.5084367619201697
++op,p:slug,0.5798957259023148
++op,p:team,2.3117570535493006
++op,p:teams,1.9943609639889015
++op,p:update,1.3702066549159078
++op,p:user,2.035771020860711
++op,p:username,2.448616236266498
++op,p:users,2.134616855497344
++op,p:workspace,0.3868296298253826
++op,v:DELETE,0.6438976223959378
++op,v:PATCH,0.5027060872111848
++op,v:POST,-1.019077208756091
++op,v:PUT,0.24991127375984434
++role,__prior__,-2.0735118334961617
++role,e:admin,2.937255343795015
++role,e:developer,3.8535460756691706
++role,e:guest,3.1603988951092252
++role,e:manager,3.448080967561006
++role,e:member,4.259011183777335
++role,e:only,2.5726122302071057
++role,e:read,2.531790235686851
++role,e:write,1.8386430551269055
++role,k:array,0.5129733158234497
++role,k:bool,1.135707868200797
++role,k:enum,1.6022542770626749
++role,k:num,-0.3430773356733483
++role,k:object,0.5213415654939664
++role,k:str,-1.1218074042824457
++role,l:body,0.34231824840188013
++role,l:path,-1.7512050183808523
++role,l:query,-1.1703344451771058
++role,n:access,1.080957353429389
++role,n:admin,1.8947325217779487
++role,n:allowed,1.5509609826751247
++role,n:create,2.7549337870010606
++role,n:delete,1.5509609826751247
++role,n:group,-0.27358830937592105
++role,n:level,2.7549337870010606
++role,n:manager,1.2144887460539118
++role,n:member,0.5213415654939664
++role,n:name,-0.819282758792736
++role,n:organization,1.2144887460539118
++role,n:owner,0.11587645738580177
++role,n:permission,5.006225585607556
++role,n:permissions,4.007696755496429
++role,n:role,2.9780773383152703
++role,n:roles,4.259011183777335
++role,n:type,1.531158355378945
++role,n:user,-0.5031627510204215
++role,w:admin,3.8535460756691706
++role,w:id,0.16466662155523393
++role,w:name,0.3390200087000115
++role,w:permission,3.448080967561006
++role,w:permissions,4.007696755496429
++role,w:role,2.834976494674597
++role,w:roleid,3.448080967561006
++role,w:roles,3.6712245188752157
++role,w:type,1.609801482698058
++victim,__prior__,-1.5870792574615127
++victim,k:array,-0.1997235014533758
++victim,k:num,0.46110218841356
++victim,k:str,0.37776054031289275
++victim,l:body,-0.9778274044892864
++victim,l:path,1.293375418896575
++victim,l:query,0.2108567073215588
++victim,n:admin,1.6744427427430963
++victim,n:collaborator,2.4954232948129267
++victim,n:email,1.2606788318202367
++victim,n:member,2.3675899233030417
++victim,n:membership,2.2722797434987165
++victim,n:name,-0.7009796742032162
++victim,n:owner,0.2981987174767071
++victim,n:selected,3.188570475372872
++victim,n:user,2.8460801664260957
++victim,n:userid,2.9654269240586624
++victim,n:username,2.6438432999312
++victim,n:users,1.068306939172781
++victim,w:collaborator,3.188570475372872
++victim,w:email,0.5293104384400937
++victim,w:id,1.0510651327382745
++victim,w:member,2.6777448516068816
++victim,w:membershipid,3.3708920321668265
++victim,w:name,0.09752802201455602
++victim,w:user,3.450934739840363
++victim,w:user_id,4.469504320834936
++victim,w:userid,3.1885704753728716
++victim,w:username,2.461521743137245
++low,denied,0.3333333333333333
++low,disabled,0.3333333333333333
+ low,guest,0.5
+-low,member,0.5625
+-low,none,0.3333333333333333
+-low,only,0.3
++low,member,0.3333333333333333
++low,only,0.375
+ low,project,0.25
+-low,read,0.6818181818181818
+-low,user,0.3333333333333333
+-low,viewer,0.3333333333333333
+-high,admin,0.7714285714285715
+-high,full,0.3333333333333333
++low,read,0.7
++low,viewer,0.375
++low,waiting,0.3333333333333333
++high,accepted,0.3333333333333333
++high,admin,0.65625
++high,collaborator,0.3333333333333333
+ high,maintainer,0.375
+-high,manager,0.3333333333333333
+-high,member,0.125
+-high,moderator,0.375
++high,manager,0.375
++high,member,0.19999999999999998
++high,moderator,0.3333333333333333
++high,outside,0.3333333333333333
+ high,owner,0.3333333333333333
+ high,project,0.25
+-high,write,0.25
++high,write,0.2
+ lowstr,guest,0.5
+-lowstr,member,0.5625
+-lowstr,read,0.6818181818181818
+-highstr,admin,0.7714285714285715
++lowstr,member,0.3333333333333333
++lowstr,read,0.7
++highstr,admin,0.65625
++highstr,member,0.19999999999999998

@@ -5,8 +5,14 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8080" },
-    { "key": "token", "value": "" }
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
   ],
   "item": [
     {
@@ -17,7 +23,15 @@
           "request": {
             "method": "POST",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/reset", "host": ["{{baseUrl}}"], "path": ["reset"] },
+            "url": {
+              "raw": "{{baseUrl}}/reset",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reset"
+              ]
+            },
             "description": "Public. Reseeds users and reports 1..5 to the initial state. Expect 200."
           }
         },
@@ -37,12 +51,100 @@
           ],
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
-            "body": { "mode": "raw", "raw": "{\"username\":\"alice\",\"password\":\"alicepass\"}" },
-            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"alice\",\"password\":\"alicepass\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
             "description": "Stores the JWT into the collection variable {{token}}. Expect 200."
           }
-        },
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "DELETE /reports/1 (ADMIN)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "1"
+              ]
+            },
+            "description": "ADMIN 204, VIEWER 403 (authorize before existence: a demoted user deleting a missing id still gets 403)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "PUT /users/alice/role (transition)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"role\":\"VIEWER\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/alice/role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "alice",
+                "role"
+              ]
+            },
+            "description": "ADMIN only. role is ADMIN or VIEWER (uppercase; lowercase viewer returns 400). This is the permission-reducing transition."
+          }
+        }
+      ]
+    },
+    {
+      "name": "others",
+      "description": "Endpoints khong nam tren duong tai hien loi A1; giu de tim hieu.",
+      "item": [
         {
           "name": "POST /auth/login (superadmin ADMIN)",
           "event": [
@@ -59,9 +161,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
-            "body": { "mode": "raw", "raw": "{\"username\":\"superadmin\",\"password\":\"superpass\"}" },
-            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"superadmin\",\"password\":\"superpass\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
           }
         },
         {
@@ -80,31 +199,70 @@
           ],
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
-            "body": { "mode": "raw", "raw": "{\"username\":\"bob\",\"password\":\"bobpass\"}" },
-            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"bob\",\"password\":\"bobpass\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
           }
         },
         {
           "name": "GET /users/me",
           "request": {
             "method": "GET",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            },
             "description": "Returns the caller identity for the current {{token}}."
           }
-        }
-      ]
-    },
-    {
-      "name": "Reports",
-      "item": [
+        },
         {
           "name": "GET /reports",
           "request": {
             "method": "GET",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{baseUrl}}/reports", "host": ["{{baseUrl}}"], "path": ["reports"] },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports"
+              ]
+            },
             "description": "Any authenticated user. Expect 200."
           }
         },
@@ -112,17 +270,51 @@
           "name": "GET /reports/1",
           "request": {
             "method": "GET",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{baseUrl}}/reports/1", "host": ["{{baseUrl}}"], "path": ["reports", "1"] }
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "1"
+              ]
+            }
           }
         },
         {
           "name": "POST /reports (ADMIN)",
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "body": { "mode": "raw", "raw": "{\"title\":\"New report\",\"classification\":\"PUBLIC\"}" },
-            "url": { "raw": "{{baseUrl}}/reports", "host": ["{{baseUrl}}"], "path": ["reports"] },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\":\"New report\",\"classification\":\"PUBLIC\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports"
+              ]
+            },
             "description": "classification is PUBLIC or CONFIDENTIAL. ADMIN 201, VIEWER 403, invalid body 400."
           }
         },
@@ -130,33 +322,30 @@
           "name": "PUT /reports/1 (ADMIN)",
           "request": {
             "method": "PUT",
-            "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "body": { "mode": "raw", "raw": "{\"title\":\"Edited report\",\"classification\":\"CONFIDENTIAL\"}" },
-            "url": { "raw": "{{baseUrl}}/reports/1", "host": ["{{baseUrl}}"], "path": ["reports", "1"] }
-          }
-        },
-        {
-          "name": "DELETE /reports/1 (ADMIN)",
-          "request": {
-            "method": "DELETE",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{baseUrl}}/reports/1", "host": ["{{baseUrl}}"], "path": ["reports", "1"] },
-            "description": "ADMIN 204, VIEWER 403 (authorize before existence: a demoted user deleting a missing id still gets 403)."
-          }
-        }
-      ]
-    },
-    {
-      "name": "Users",
-      "item": [
-        {
-          "name": "PUT /users/alice/role (transition)",
-          "request": {
-            "method": "PUT",
-            "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "body": { "mode": "raw", "raw": "{\"role\":\"VIEWER\"}" },
-            "url": { "raw": "{{baseUrl}}/users/alice/role", "host": ["{{baseUrl}}"], "path": ["users", "alice", "role"] },
-            "description": "ADMIN only. role is ADMIN or VIEWER (uppercase; lowercase viewer returns 400). This is the permission-reducing transition."
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\":\"Edited report\",\"classification\":\"CONFIDENTIAL\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reports/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "1"
+              ]
+            }
           }
         }
       ]
@@ -170,7 +359,15 @@
           "request": {
             "method": "POST",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/reset", "host": ["{{baseUrl}}"], "path": ["reset"] }
+            "url": {
+              "raw": "{{baseUrl}}/reset",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reset"
+              ]
+            }
           }
         },
         {
@@ -190,9 +387,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
-            "body": { "mode": "raw", "raw": "{\"username\":\"alice\",\"password\":\"alicepass\"}" },
-            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"alice\",\"password\":\"alicepass\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
           }
         },
         {
@@ -202,14 +416,30 @@
               "listen": "test",
               "script": {
                 "type": "text/javascript",
-                "exec": [ "pm.test('source ALLOWED 204', function () { pm.response.to.have.status(204); });" ]
+                "exec": [
+                  "pm.test('source ALLOWED 204', function () { pm.response.to.have.status(204); });"
+                ]
               }
             }
           ],
           "request": {
             "method": "DELETE",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{baseUrl}}/reports/1", "host": ["{{baseUrl}}"], "path": ["reports", "1"] }
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "1"
+              ]
+            }
           }
         },
         {
@@ -219,15 +449,39 @@
               "listen": "test",
               "script": {
                 "type": "text/javascript",
-                "exec": [ "pm.test('transition 200', function () { pm.response.to.have.status(200); });" ]
+                "exec": [
+                  "pm.test('transition 200', function () { pm.response.to.have.status(200); });"
+                ]
               }
             }
           ],
           "request": {
             "method": "PUT",
-            "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "body": { "mode": "raw", "raw": "{\"role\":\"VIEWER\"}" },
-            "url": { "raw": "{{baseUrl}}/users/alice/role", "host": ["{{baseUrl}}"], "path": ["users", "alice", "role"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"role\":\"VIEWER\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/alice/role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "alice",
+                "role"
+              ]
+            }
           }
         },
         {
@@ -248,8 +502,22 @@
           ],
           "request": {
             "method": "DELETE",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{baseUrl}}/reports/2", "host": ["{{baseUrl}}"], "path": ["reports", "2"] },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "2"
+              ]
+            },
             "description": "Reuses alice's pre-transition token. On VULNERABLE this still deletes (204); on PATCHED it is denied (403)."
           }
         }

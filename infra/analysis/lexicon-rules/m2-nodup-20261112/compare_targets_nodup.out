@@ -1,0 +1,68 @@
+M2: m2-model-20261107/stateful-authz-model.csv sha256 b2deef150bf8
+bo-lap: m2-nodup-20261112/stateful-authz-model.csv sha256 dcc77b59ed0f
+
+== reports-api (6 op ghi), transition that: PUT /users/{username}/role
+   path params: ['username']; dac trung bo di: ['f:username']
+  M2: qua guard 1, viable 1, transition that hang 1 trong viable
+      score 7.32 role body:role (enum) victim path:username reduced ['VIEWER', 'ADMIN']
+      viable #1 PUT /users/{username}/role                    7.32 role body:role
+PASS reports-api: M2 tinh bang script nay trung compare_targets.out cua M2
+  bo-lap: qua guard 1, viable 1, transition that hang 1 trong viable
+      score 5.63 role body:role (enum) victim path:username reduced ['VIEWER', 'ADMIN']
+      viable #1 PUT /users/{username}/role                    5.63 role body:role
+  guard chi M2: []
+  guard chi bo-lap: []
+
+== vampi-seeded (8 op ghi), transition that: PUT /users/v1/{username}/role
+   path params: ['username']; dac trung bo di: ['f:username']
+  M2: qua guard 6, viable 1, transition that hang 1 trong viable
+      score 7.32 role body:role (enum) victim path:username reduced ['user', 'admin']
+      viable #1 PUT /users/v1/{username}/role                 7.32 role body:role
+PASS vampi-seeded: M2 tinh bang script nay trung compare_targets.out cua M2
+  bo-lap: qua guard 5, viable 1, transition that hang 1 trong viable
+      score 5.63 role body:role (enum) victim path:username reduced ['user', 'admin']
+      viable #1 PUT /users/v1/{username}/role                 5.63 role body:role
+  guard chi M2: ['POST /users/v1/login']
+  guard chi bo-lap: []
+
+== pyload (62 op ghi), transition that: POST /api/set_user_permission
+   path params: []; dac trung bo di: []
+  M2: qua guard 4, viable 3, transition that hang 1 trong viable
+      score 2.84 role query:permission (num) victim query:user reduced ['1', '0', '2']
+      viable #1 POST /api/set_user_permission                 2.84 role query:permission
+      viable #2 POST /json/add_user                           2.07 role body:new_role
+      viable #3 POST /api/add_user                            0.97 role query:role
+PASS pyload: M2 tinh bang script nay trung compare_targets.out cua M2
+  bo-lap: qua guard 4, viable 3, transition that hang 1 trong viable
+      score 2.82 role query:permission (num) victim query:user reduced ['1', '0', '2']
+      viable #1 POST /api/set_user_permission                 2.82 role query:permission
+      viable #2 POST /json/add_user                           1.76 role body:new_role
+      viable #3 POST /api/add_user                            0.66 role query:role
+  guard chi M2: []
+  guard chi bo-lap: []
+
+== artifact-keeper (216 op ghi), transition that: PATCH /api/v1/users/{id}
+   path params: ['id']; dac trung bo di: []
+  M2: qua guard 17, viable 5, transition that hang 4 trong viable
+      score 2.89 role body:is_admin (bool) victim path:id reduced ['false']
+      viable #1 PUT /api/v1/admin/sso/oidc/{id}               4.59 role body:auto_create_users
+      viable #2 POST /api/v1/admin/sso/oidc                   3.33 role body:auto_create_users
+      viable #3 POST /api/v1/users                            3.30 role body:is_admin
+      viable #4 PATCH /api/v1/users/{id}                      2.89 role body:is_admin
+      viable #5 POST /api/v1/repositories                     0.26 role body:allow_anonymous_access
+PASS artifact-keeper: M2 tinh bang script nay trung compare_targets.out cua M2
+  bo-lap: qua guard 14, viable 4, transition that hang 3 trong viable
+      score 2.17 role body:is_admin (bool) victim path:id reduced ['false']
+      viable #1 PUT /api/v1/admin/sso/oidc/{id}               4.54 role body:auto_create_users
+      viable #2 POST /api/v1/admin/sso/oidc                   3.27 role body:auto_create_users
+      viable #3 PATCH /api/v1/users/{id}                      2.17 role body:is_admin
+      viable #4 POST /api/v1/users                            2.05 role body:is_admin
+  guard chi M2: ['POST /api/v1/admin/sso/saml', 'POST /api/v1/repositories', 'POST /api/v1/repositories/{key}/members']
+  guard chi bo-lap: []
+
+Tom tat: diem op cua transition that, hang trong cac op dung duoc
+  reports-api      M2 7.32 hang 1 | bo lap 5.63 hang 1
+  vampi-seeded     M2 7.32 hang 1 | bo lap 5.63 hang 1
+  pyload           M2 2.84 hang 1 | bo lap 2.82 hang 1
+  artifact-keeper  M2 2.89 hang 4 | bo lap 2.17 hang 3
+ALL PASS

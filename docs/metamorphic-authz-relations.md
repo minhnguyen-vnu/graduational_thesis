@@ -1,7 +1,6 @@
 # Metamorphic Authorization Relations (MR-A)
 
-> Working spec for the thesis oracle. Written in English for now; the thesis chapter
-> will be the Vietnamese adaptation of this. Grounded throughout in the
+> Working spec for the thesis oracle; thesis chapter 3 is the Vietnamese version. Grounded throughout in the
 > `reports-api` app so every abstract line has a concrete example.
 > Companion: the runnable PoC at `infra/oracle-poc/temporal_oracle_poc.sh`.
 
@@ -71,7 +70,7 @@ That's the entire vocabulary. Everything below is built from these.
 |---|---|---|
 | ① | **Source test** — observe a baseline | alice (ADMIN) does `DELETE /reports/1` → **ALLOWED (204)** |
 | ② | **Transformation** — change one thing, on purpose | superadmin runs `PUT /users/alice/role {VIEWER}` → alice's permission is **reduced** |
-| ③ | **Follow-up test** — repeat the action after the change | **same token** as ①, `DELETE /reports/2` |
+| ③ | **Follow-up test** — repeat the action after the change | **same token** as ①, same request as ① |
 | ④ | **Relation** — the rule tying ① and ③ | ① ALLOWED **and** `DELETE` is admin-gated **and** ② removed that privilege ⇒ ③ **must be DENIED**. Still ALLOWED ⇒ **bug**. |
 
 ### 2.3 The formal statement (short)
@@ -125,8 +124,8 @@ key, across a change in time. Same family, orthogonal axis.
 
 ## 3. From relation to test procedure (the recipe the tool must produce)
 
-MR-A1 turns into a **`grant → transition → re-attempt` triple**. This is the operational
-form the generalized generator (future work) has to emit for any API:
+MR-A1 turns into a **`grant → transition → re-attempt` triple**. The builder emits it on any API where the model
+accepts a transition (§5.2):
 
 ```
 1. known state                    # p holds the HIGHER privilege, and >=2 resources
@@ -135,11 +134,11 @@ form the generalized generator (future work) has to emit for any API:
 3. do a with c       → expect ALLOWED    [① source: prove the action works while permitted]
 4. apply T (by someone still allowed to) → reduces p's permission   [② the transition]
 5. do a with c AGAIN → observe           [③ follow-up: SAME c, do NOT re-login;
-                                  #        act on a DIFFERENT seeded resource than step 3]
-6. verdict:  ALLOWED in step 3 AND DENIED   in step 5  → PASS (🟢)
-             ALLOWED in step 3 AND ALLOWED  in step 5  → BUG  (🔴)
-             any step yields 401 (INCONCLUSIVE)        → VOID: discard the triple, retry
-             step 3 not ALLOWED (guard/setup failed)   → VOID: the source never held
+                                  #        same resource and body as step 3]
+6. verdict:  step 3 or 4 not 2xx, or step 5 has no status or 401   → VOID: discard, try the next attempt
+             step 5 ALLOWED, re-login probe C4 (§5.6) not 403       → UNCONFIRMED: discard
+             step 5 ALLOWED, C4 confirms                            → BUG (970)
+             step 5 any other status (DENIED = 403)                 → PASS
 ```
 
 Steps 1–5 are **construction** (build the scenario). Step 6 is **judgment** (the oracle).
@@ -154,11 +153,11 @@ through the target's own API when needed, and constructs steps 2–5 from the ar
 MR-A1 is the instance where the "permission" being removed is a **role**. Swap what gets
 removed and you get the whole family — same shape, same oracle, different `T`:
 
-| ID | What is removed / reduced (`T`) | Concrete story | Priority |
+| ID | What is removed / reduced (`T`) | Concrete story | Status |
 |---|---|---|---|
-| **A1** | a **role / privilege level** (ADMIN → VIEWER) | demoted admin still deletes reports | **core target** |
-| **A2** | an **ownership** relation (owner → not owner) | after transferring a wallet to B, A can still withdraw | if time permits |
-| **A3** | an **entitlement's validity** (valid → expired) | premium expires, premium endpoint still returns 200 | if time permits |
+| **A1** | a **role / privilege level** (ADMIN → VIEWER) | demoted admin still deletes reports | demonstrated |
+| **A2** | an **ownership** relation (owner → not owner) | after transferring a wallet to B, A can still withdraw | defined, not demonstrated |
+| **A3** | an **entitlement's validity** (valid → expired) | premium expires, premium endpoint still returns 200 | defined, not demonstrated |
 
 **General schema (MR-A):**
 
@@ -172,9 +171,8 @@ is what makes the contribution a *class* of relations rather than one special ca
 > **A2/A3 are not free reskins — two structural differences to handle when we get there.**
 > (1) **Who triggers `T`:** in A1 a third party demotes `p` (superadmin → alice); in A2 the
 > subject transfers ownership *themselves*. (2) **Instance-uniformity breaks:** A1 authz is
-> role-uniform across resource instances, so the follow-up may use a *different* report
-> (§5.4); A2/A3 are **per-object / per-subscription**, so the follow-up must reuse the
-> **same** wallet or plan, and "already spent/consumed" noise must be handled another way.
+> role-uniform across resource instances; A2/A3 are **per-object / per-subscription**, and
+> "already spent/consumed" noise must be handled another way.
 > The *oracle* (part ④) is unchanged; only the *construction* differs.
 
 ---
@@ -190,16 +188,15 @@ to guess.
 - **DENIED = 403.** Refused on authorization grounds.
 - **401 = INCONCLUSIVE, never a verdict.** A 401 means the credential was not accepted as a
   login at all (typically the token expired mid-triple). It is neither ALLOWED nor DENIED:
-  the observation is void and the triple must be retried. This matters because our whole
+  the attempt is VOID and the builder tries the next one. This matters because our whole
   premise is a *still-valid* stale token — `reports-api` uses a 1 h TTL precisely so the
-  token outlives `T`; a shorter TTL (VAmPI's 60 s burned us once) would turn real bugs into
-  401s and silently drop them.
-- **We deliberately do not treat 404 as denial.** A 404 could mean "you may not, but I'm
-  hiding that" *or* "the resource isn't there" — ambiguous. We avoid the ambiguity by
-  relying on this app's verified ordering: **authorization is checked *before* resource
-  existence**, so a forbidden call returns **403, not a masking 404**. (Confirmed live for
-  `reports-api`; `CLAUDE.md` §3, `infra/analysis/denial-codes-2026-09-17.md`.) For a target that returns 404-as-denial, that must be
-  configured explicitly rather than assumed.
+  token outlives `T`; a shorter TTL (VAmPI's is 60 s) would turn real bugs into 401s and
+  silently drop them.
+- **404 is not a denial.** A 404 can mean "you may not, and I hide it" or "the resource is not there". A follow-up
+  that gets 404 completes the triple and never raises 970. In the 98 runs of jar ND no follow-up got 404; follow-ups
+  got 200, 401 or 403 (`infra/em-results/nd-wave1-20261113/logs/`, `nd-wave2-20261113/logs/`).
+- **The codes are fixed in the tool, not configurable.** A target that denies with another code gives no verdict:
+  artifact-keeper's vendor patch answers 401.
 
 ### 5.2 What is a "permission-reducing transition", and how we recognize one
 
@@ -219,7 +216,7 @@ after the C4 probe (§5.6) confirms that a fresh login of the victim is denied.
 
 ### 5.4 Why a violation is a **true** bug, not a false positive (the precision argument)
 
-We only raise a bug when **all three** hold:
+We only raise a bug when **all four** hold:
 
 1. We **observed** the action ALLOWED before the transition (step 3) — we did not assume it.
 2. `T` is a **known** permission reduction (§5.2), applied successfully.
@@ -227,29 +224,28 @@ We only raise a bug when **all three** hold:
    legitimately act on if permitted** (e.g. a real, existing report — so a `2xx` means "it
    worked", not "nothing to do"), and `a` is one the **post-transition privilege is not
    entitled to** (the §2.3 guard).
+4. The C4 re-login probe (§5.6) shows that a fresh login of the victim is denied.
 
 Under role-downgrade scoping, the API's own rule is unambiguous — *a VIEWER must not delete
 a report* — so a `2xx` follow-up is a genuine authorization violation, by the app's own
 contract. False-positive risks we neutralise:
 
 - **State pollution across runs** → the harness reseeds the target (`POST /reset`) before each run.
-- **"Already done" noise** (e.g. deleting a resource that was already gone) → the follow-up
-  acts on a **different, existing** resource than the source (`/reports/2`, not `/reports/1`).
-  This is valid **only because `reports-api` authorization is role-uniform across report
-  instances** (allowed to delete one report ⇒ allowed to delete any) — a load-bearing
-  assumption (V2 in §5.5). It does **not** hold for per-object authz like A2 (see §4).
+- **"Already done" noise** → the follow-up repeats the source on the same resource with the same
+  body. Sources are PUT/PATCH first, POST only as a fallback, never DELETE, so a repeat is still
+  meaningful (`addForStatefulAccessControl`, `guardedSources`, `RestSecurityBuilder.kt`).
 - **404 masking** → handled by §5.1.
 
 ### 5.5 Validity conditions (when a verdict is trustworthy)
 
-A 🔴/🟢 verdict is only meaningful when **all** of these hold; if any fails, the triple is
+A BUG or PASS verdict is only meaningful when **all** of these hold; if any fails, the triple is
 **VOID**, not a result:
 
 | | Condition | Enforced by |
 |---|---|---|
-| **V1** | the credential `c` stays valid (not expired) across `T` — no 401 | long TTL + retry on 401 (§5.1) |
-| **V2** | authorization is **role-uniform across resource instances** (so source and follow-up may target different ids) | property of `reports-api`; must be checked per target (§5.4) — **breaks for A2** |
-| **V3** | authorization is checked **before** resource existence, so denial is 403, not a masking 404 | verified for `reports-api` (§5.1) |
+| **V1** | the credential `c` stays valid (not expired) across `T` — no 401 | long TTL; a 401 makes the attempt VOID (§5.1) |
+| **V2** | repeating the source on the same resource is still meaningful (an update, not a consume) | PUT/PATCH sources first, never DELETE (§5.4) |
+| **V3** | the follow-up status is not a masking 404 | no follow-up got 404 in the 98 runs of jar ND (§5.1) |
 | **V4** | `T` actually **took effect** server-side (the role change returned 2xx *and* persisted) | assert the transition's own response |
 | **V5** | `a` is **gated by the removed privilege** (the §2.3 guard) — the post-`T` role is not entitled to `a` on its own | scoping `a` to an admin-only endpoint (§5.2) |
 
@@ -286,12 +282,11 @@ slice of the test is replayed with the fresh credential; then the same slice is 
 
 - It does **not** find *cross-user* bugs (BOLA/BFLA "wrong person now") — that's the Şahin
   axis; we are complementary, not a replacement.
-- **Recognizing** a permission-reducing transition automatically is heuristic; for the core
-  we rely on an explicit, scoped role-change endpoint rather than perfect inference.
-- The ALLOWED/DENIED reading assumes the target uses standard status codes (2xx / 403, with
-  401 read as inconclusive per §5.1); a non-standard API needs explicit configuration.
-- A1 is proven end-to-end; **A2 and A3 are defined here but demonstrated only if time
-  permits** — they exist to show the schema generalizes, not as committed deliverables.
+- The transition is recognized by a learned model (§5.2). A transition it scores at posterior ≤ 0.5 is never tried,
+  so a bug behind it is missed.
+- The ALLOWED/DENIED reading assumes standard status codes (2xx / 403, 401 inconclusive, §5.1); the codes are not
+  configurable.
+- A1 is demonstrated end-to-end; **A2 and A3 are defined here and not demonstrated.**
 
 ---
 

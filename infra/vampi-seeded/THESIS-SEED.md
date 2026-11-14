@@ -6,7 +6,7 @@ already-issued JWT.
 
 - **Upstream:** <https://github.com/erev0s/VAmPI> @ commit `f16052dce83f05847133ec98f01c5193a41de7d8`
   (vendored, not a submodule; upstream `.git` removed). Upstream licence: see `LICENSE`.
-- **Numbers:** `docs/results.md` §1 (jar M2). Running EvoMaster on it: skill `em-batch`.
+- **Numbers:** `docs/results.md` §1 (jar ND). Running EvoMaster on it: skill `em-batch`.
 - The seeded endpoints are named in VAmPI's idiom by us, so the transition name is ours (`docs/results.md` §9).
 - **Every seeded line is marked `THESIS SEED`** in the source — `git`-less diffing against a fresh upstream
   clone is therefore unnecessary; grep for the marker.

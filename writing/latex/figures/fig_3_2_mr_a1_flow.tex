@@ -1,0 +1,19 @@
+\begin{tikzpicture}[
+  >=Stealth,
+  font=\small\linespread{1}\selectfont,
+  state/.style={rectangle, draw, rounded corners=4pt, fill=gray!10, align=center,
+                text width=5.4cm, minimum height=1.3cm},
+  safe/.style={rectangle, draw, rounded corners=6pt, align=center, text width=4.6cm, minimum height=1.2cm},
+  vuln/.style={safe, very thick},
+  lbl/.style={font=\footnotesize, align=left}
+]
+  \node[state] (s0) at (0, 0)    {\textbf{Trạng thái $s$}\\vai trò quản trị, token $c$};
+  \node[state] (s1) at (0, -3.0) {\textbf{Trạng thái $s' = T(s)$}\\vai trò thấp hơn, vẫn dùng token $c$};
+  \node[safe] (ok)  at (-3.3, -6.0) {\textbf{Phù hợp MR-A1}\\follow-up nhận 403};
+  \node[vuln] (bad) at (3.3, -6.0)  {\textbf{Vi phạm MR-A1}\\follow-up nhận 2xx,\\Oracle 970 báo lỗi};
+
+  \draw[->] ([yshift=3mm]s0.east) -- ++(9mm, 0) |- node[lbl, pos=0.25, right] {source $a$\\nhận 2xx} ([yshift=-3mm]s0.east);
+  \draw[->] (s0) -- node[lbl, right] {transition $T$ hạ vai trò,\\token $c$ giữ nguyên} (s1);
+  \draw[->] (s1) -- node[lbl, above left] {403} (ok);
+  \draw[->] (s1) -- node[lbl, above right] {2xx} (bad);
+\end{tikzpicture}

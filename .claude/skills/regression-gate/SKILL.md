@@ -16,7 +16,7 @@ description: Run and interpret the 12-row EvoMaster regression gate. Use before 
 - The 21-row gate of P2f and earlier (`regression-check/regression_check.sh`) adds 9 reset rows; jars from SR on have
   no reset, so it no longer runs.
 - Passed: SR 12/12 on 2026-10-27 (`regression-check-SR-20261027/`), DC 12/12 on 2026-11-03
-  (`regression-check-DC-20261103/`). M2 ran no gate: it re-measured every arm of every target instead
+  (`regression-check-DC-20261103/`). M2 and ND ran no gate: each re-measured every arm of every target instead
   (`docs/results.md` §0).
 
 ## Reading it

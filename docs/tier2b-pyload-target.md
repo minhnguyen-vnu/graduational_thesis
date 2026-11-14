@@ -1,6 +1,6 @@
 # pyLoad CVE-2026-41133: a real, third-party stateful-authorization bug
 
-> Numbers: `docs/results.md` §1, §4 (jar M2). The other target with a bug we did not write:
+> Numbers: `docs/results.md` §1, §4 (jar ND). The other target with a bug we did not write:
 > `docs/artifact-keeper-target.md`.
 >
 > Setup facts: `/api/*` answers an authorization failure with **401** (INCONCLUSIVE), `/json/*` with **403**, so
@@ -32,10 +32,11 @@ because it means the seeded targets were designed around a mechanism that really
 So a demoted administrator keeps administrative power for the entire life of the session cookie.
 This is precisely MR-A1: a permission is removed, and an already-issued credential still carries it.
 
-**Upstream never fixed it.** The advisory claims a fix in `0.5.0b3.dev98`, but `is_authenticated` is
-byte-identical across `dev97`, `dev98`, `dev99`, `dev100`, `dev101` (newest on PyPI) **and** the
-`develop` branch. That is worth a sentence in the thesis on its own: an advisory declared this class
-of bug patched when it was not, which is an argument for an automated oracle rather than review.
+**Upstream fix.** dev98 (commit `e95804fb`, 2026-04-13) clears all of a user's sessions when
+`/json/update_users` changes that user, on password change and on deletion (`json_blueprint.py`).
+`is_authenticated` and `parse_permissions` are unchanged dev97–dev101; the fix lives elsewhere. Read from the PyPI
+wheels: the core-API `set_user_permission`, reached by `POST /api/set_user_permission`, does not clear sessions in
+dev98–dev101; `develop` adds `_invalidate_user_sessions`. The tool has not been run on dev98 or later.
 
 ## 3. Build, run, and the declared deviations
 
@@ -60,7 +61,7 @@ system under test or its specification; 5 only changes how the tool is invoked.
 | # | Where | Deviation | Why it is needed | Why it does not affect the result |
 |---|---|---|---|---|
 | 1 | SUT, **both** variants | `WTF_CSRF_METHODS = []` added to `BaseConfig` | The vulnerable path is session-authenticated and CSRF-guarded, so a non-browser client cannot reach it at all. `csrf.protect()` ignores `WTF_CSRF_ENABLED` (that flag is only read inside CSRFProtect's `before_request` hook) but does return early when the method is absent from `WTF_CSRF_METHODS`. | Anti-forgery is orthogonal to authorization, and it is applied to **both** variants, so it cancels out of the differential. The same endpoints are already reachable CSRF-free through the `X-API-Key` scheme. |
-| 2 | SUT, **fixed only** | The fixed variant is a control **we wrote** | Upstream published no working fix (see §2), so there is no patched build to diff against. | The patch is not invented: it applies to the session branches exactly the fresh-database read that the `X-API-Key` branch of `apikey_auth()` already performs. It is applied to *both* authorization paths (`parse_permissions` and `apikey_auth`) so the control does not depend on which surface a request uses. |
+| 2 | SUT, **fixed only** | The fixed variant is a control **we wrote** | The upstream fix (§2) revokes sessions instead of denying with 403, so it cannot serve as a 403 control. | The patch is not invented: it applies to the session branches exactly the fresh-database read that the `X-API-Key` branch of `apikey_auth()` already performs. It is applied to *both* authorization paths (`parse_permissions` and `apikey_auth`) so the control does not depend on which surface a request uses. |
 | 3 | Input (not the SUT) | The OpenAPI specification for `/json/*` is hand-written | pyLoad generates a specification for its `/api/*` RPC surface only; `/json/*` is real, authenticated and undocumented. | A specification is an **input** to black-box fuzzing, not part of the system under test. To avoid spoon-feeding, `infra/pyload-cve/openapi-json-routes.json` describes **all 20 routes / 23 operations**, not only the three the triple needs; a script cross-checks it against the blueprint in both directions. The `/api/*` half of the merged document is pyLoad's own generated specification, unmodified — 84 of the 104 merged paths. |
 | 4 | SUT, **both** variants | `POST\|GET /thesis/reset` injected into `json_blueprint.py` | Each run starts from a clean account state, and stock pyLoad has no HTTP endpoint that restores it. The two seeded targets have one — `reports-api`'s `POST /reset` (ours) and VAmPI's `GET /createdb` (**upstream VAmPI's own**). | It writes to the `users` table only and contains no authorization logic, so it cannot change any verdict; it is present in **both** variants, so it cancels out of the differential. It is unauthenticated, like the other two targets' reseed endpoints: a reseed requiring an admin session would be unusable after the search has demoted every administrator. It is called once before each run. |
 | 5 | Tool invocation | `--endpointExclude "/api/kill,/api/restart"` | pyLoad's RPC surface exposes process lifecycle as ordinary endpoints. `kill` sets `_do_exit` and `restart` sets `_do_restart`, so the fuzzer terminates the system under test within the first minute — and pyLoad's self-restart leaves the webserver dead, so the container stays "up" while answering nothing. Observed directly: the first attempted run ended in `Failed to connect API with TCP`. | `endpointExclude` is a **stock EvoMaster option**, not something added for this thesis, and its documented purpose is exactly this. Only the two endpoints that terminate the process are excluded — verified by reading their implementations; the similarly-named `restart_file`, `restart_package`, `pause_server` and `stop_all_downloads` only affect downloads and are left in. |
@@ -107,7 +108,7 @@ this target would have been unusable.
 
 ## 5. Result
 
-Numbers: `docs/results.md` §1, §4 (jar M2). The builder before the changes below missed this bug. Five builder changes
+Numbers: `docs/results.md` §1, §4 (jar ND). The builder before the changes below missed this bug. Five builder changes
 let the tool find it: role and victim binding on query parameters, ranked role values with numeric fallbacks, POST as
 a fallback source, the C4 re-login probe, and retries over operator and value. They were written while running this
 target, so pyLoad is a development target, like artifact-keeper. The full record of that work, with numbers from

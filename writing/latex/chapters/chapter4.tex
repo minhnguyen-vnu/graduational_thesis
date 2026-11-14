@@ -1,43 +1,70 @@
 \chapter{Cài đặt thực nghiệm và tích hợp hệ thống}
 \label{chap:impl}
 
-Chương này trình bày phương án cài đặt Oracle 970 trong EvoMaster và thiết lập môi trường thực nghiệm nhằm đánh giá quan hệ MR-A1 trên các ứng dụng có cơ chế thay đổi quyền.
+Chương này trình bày cách cài đặt Oracle 970 trong EvoMaster, bốn ứng dụng mục tiêu và thiết lập chạy thực nghiệm.
 
 \section{Tích hợp Oracle 970 vào mã nguồn EvoMaster}
 \label{sec:impl_evomaster}
 
-Phần mở rộng của Oracle 970 được phát triển bằng Kotlin trực tiếp trên mã nguồn EvoMaster phiên bản 6.1.1 \cite{arcuri2024evomastertool}, cùng ngôn ngữ với phần lõi của công cụ. EvoMaster được cấu hình chạy ở chế độ hộp đen, đọc tài liệu đặc tả OpenAPI và gửi các yêu cầu HTTP tới ứng dụng mục tiêu đang chạy. Các thành phần mở rộng được bổ sung vào quy trình kiểm thử mà vẫn giữ nguyên thuật toán tìm kiếm MIO (Many Independent Objective) của EvoMaster.
+Phần mở rộng của Oracle 970 được viết bằng Kotlin (ngôn ngữ của phần core EvoMaster), ngay trong mã nguồn EvoMaster 6.1.1 \cite{evomaster611}. Phần mã thêm vào nằm trong ba tệp Kotlin có sẵn của EvoMaster, cùng một tệp trọng số. EvoMaster chạy ở chế độ hộp đen: công cụ đọc đặc tả OpenAPI và gửi yêu cầu HTTP tới ứng dụng mục tiêu đang chạy. Pha tìm kiếm vẫn dùng SMARTS, thuật toán mặc định của chế độ hộp đen (Mục~\ref{sec:bg_sbst}). Mã nguồn của phần mở rộng nằm trên GitHub tại \url{https://github.com/minhnguyen-vnu/evomaster-stateful-authz}, nhánh \texttt{stateful-authz-oracle}.
 
-Hình~\ref{fig:evomaster_integration} mô tả ba thành phần của phần mở rộng và vị trí của chúng trong chu trình EvoMaster. Bộ cấu hình khai báo mã lỗi của Oracle 970 cùng các tùy chọn vận hành. Từ kho lưu trữ ca kiểm thử, bộ dựng kịch bản kiểm thử xếp hạng thao tác chuyển trạng thái rồi dựng kịch bản kiểm thử MR-A1. Bộ phán quyết nhận kịch bản này, đọc mã trạng thái HTTP của bộ ba thao tác và kết luận có vi phạm hay không. Công cụ đóng gói sẵn trọng số của mô hình Naive Bayes, nên các lượt chạy không phải huấn luyện lại.
+Trong EvoMaster, phần mở rộng chạy ở pha kiểm thử bảo mật, sau pha tìm kiếm và pha rút gọn ca kiểm thử (Hình~\ref{fig:evomaster_integration}). Bộ dựng kịch bản kiểm thử đọc các ca kiểm thử trong kho lưu trữ, dùng trọng số của mô hình Naive Bayes để xếp hạng thao tác chuyển trạng thái, rồi dựng kịch bản MR-A1. Trọng số nằm trong một tệp đóng gói cùng công cụ, nên các lượt chạy không phải huấn luyện lại mô hình. Bộ phán quyết đọc mã trạng thái HTTP của bộ ba thao tác và kết luận có vi phạm hay không. Mã lỗi 970 nằm trong nhóm oracle thử nghiệm của EvoMaster, nên Oracle 970 chỉ chạy khi nhóm này được bật.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.88\textwidth]{figures/fig_4_1_evomaster_integration.png}
-  \caption{Ba thành phần phần mở rộng trong chu trình EvoMaster}
+  \input{figures/fig_4_1_extension_flow}
+  \caption{Các thành phần của phần mở rộng trong pha kiểm thử bảo mật}
   \label{fig:evomaster_integration}
 \end{figure}
 
-Các thành phần trên chạy trong pha kiểm thử bảo mật của EvoMaster \cite{sahin2024bola}, sau pha tìm kiếm. Các bộ sinh ca kiểm thử bảo mật trong pha này dùng chung một quỹ thời gian, được tính theo tỷ lệ so với thời gian tìm kiếm. Khi hết thời gian phân bổ, các bộ sinh chạy sau cùng có thể bị bỏ qua, nên bộ dựng kịch bản MR-A1 được đặt ngay sau bước sinh phản hồi 403 có sẵn của EvoMaster. Vị trí này còn cho phép bộ dựng chọn thao tác gốc trong số các thao tác vừa bị từ chối ở bước đó.
+Các bộ sinh ca kiểm thử trong pha kiểm thử bảo mật dùng chung một quỹ thời gian, tính theo tỷ lệ của thời gian tìm kiếm. Vì bộ sinh xếp sau cùng có thể bị bỏ qua khi quỹ này cạn, bộ dựng kịch bản MR-A1 được đặt ngay sau bước sinh phản hồi 403 có sẵn của EvoMaster. Ở vị trí này, bộ dựng còn chọn được thao tác gốc trong số các thao tác vừa bị từ chối ở bước 403.
 
-\section{Xây dựng tập benchmark và ứng dụng mục tiêu}
+Mỗi kịch bản do bộ dựng tạo mang nhãn ca kiểm thử bảo mật, và EvoMaster thực thi kịch bản đó như mọi ca kiểm thử khác. Bộ dựng bật một cờ trước khi thực thi kịch bản của mình và tắt cờ ngay sau đó. Bộ phán quyết chỉ xét ca kiểm thử chạy trong lúc cờ bật; ca kiểm thử của pha tìm kiếm và của các oracle khác không bao giờ bị xét theo MR-A1.
+
+Bộ ba dùng nguyên cơ chế xác thực sẵn có của EvoMaster. EvoMaster đăng nhập mỗi tài khoản một lần ở đầu mỗi ca kiểm thử và dùng token đó cho mọi lời gọi trong ca. Đặt cả bộ ba vào một ca kiểm thử thì follow-up dùng lại token cũ. Bước đăng nhập lại chạy lại chuỗi lời gọi của nạn nhân trong một ca kiểm thử mới, và EvoMaster đăng nhập lại ở đầu ca đó.
+
+Ở chế độ hộp đen, EvoMaster xuất bộ ca kiểm thử dưới dạng mã Python. Hình~\ref{fig:test970} trích ca kiểm thử mà công cụ sinh cho kịch bản ở Bảng~\ref{tab:triple_example}. Lỗi 970 được ghi thành một dòng chú thích ngay trước follow-up, và ca kiểm thử khẳng định follow-up nhận mã 200.
+
+\begin{figure}[htbp]
+\makeatletter\let\lst@MakeCaption\@gobble\makeatother
+\begin{lstlisting}[language=Python, numbers=none, basicstyle=\scriptsize\ttfamily]
+def test_0_put_on_report_stillAllowedAfterPermissionRevoked(self):
+    ...
+    res_0 = requests.post(self.baseUrlOfSut + "/reports", ...)
+    ...
+    res_1 = requests.put(... "/reports/505" ..., headers=headers, data=body)
+    assert res_1.status_code == 200
+    ...
+    res_2 = requests.put(self.baseUrlOfSut + "/users/alice/role", ...)
+    assert res_2.status_code == 200
+    # Fault970. Stateful Authorization: privilege persists after a permission-reducing transition.
+    ...
+    res_3 = requests.put(... "/reports/505" ..., headers=headers, data=body)
+    assert res_3.status_code == 200
+\end{lstlisting}
+\caption{Trích ca kiểm thử 970 do công cụ sinh trên reports-api (rút gọn)}
+\label{fig:test970}
+\end{figure}
+
+\section{Ứng dụng mục tiêu}
 \label{sec:impl_benchmarks}
 
-Tập benchmark gồm bốn ứng dụng mục tiêu (Bảng~\ref{tab:benchmark_targets}). Hai ứng dụng mang lỗi gieo: một ứng dụng xây dựng riêng cho thực nghiệm và một bản fork. Hai ứng dụng mã nguồn mở mang lỗi thật: pyLoad với lỗ hổng đã công bố, và artifact-keeper với một lỗi mà nhà phát triển đã vá. Mỗi ứng dụng cần có thao tác hạ quyền qua REST API, thao tác ghi dành cho quản trị viên và lỗ hổng phân quyền có trạng thái. Các phiên bản VAmPI và crAPI đã khảo sát đều thiếu endpoint hạ quyền như vậy, nên hai ứng dụng đầu phải được xây dựng hoặc gieo lỗi riêng.
+Mỗi ứng dụng mục tiêu cần có thao tác hạ quyền qua REST API, thao tác ghi dành cho quản trị viên và lỗ hổng phân quyền có trạng thái. Thực nghiệm dùng bốn ứng dụng (Bảng~\ref{tab:benchmark_targets}): reports-api và vampi-seeded mang lỗi tự gieo, pyLoad và artifact-keeper là ứng dụng mã nguồn mở mang lỗi thật.
 
-Mỗi ứng dụng có hai biến thể: biến thể có lỗ hổng dùng để đo khả năng phát hiện, biến thể đã vá dùng để đo báo động giả. Bản vá của reports-api, vampi-seeded và pyLoad do tác giả viết; bản vá của artifact-keeper là bản vá của nhà phát triển.
+Mỗi ứng dụng có hai biến thể: biến thể có lỗ hổng dùng để đo khả năng phát hiện, biến thể đã vá dùng để đo báo động giả. Bản vá của reports-api, vampi-seeded và pyLoad được viết riêng cho khóa luận; bản vá của artifact-keeper là của nhà phát triển. Căn cứ để kỳ vọng ứng dụng từ chối sau khi hạ quyền là bản ghi CVE (pyLoad), bản vá của nhà phát triển (artifact-keeper) và biến thể đã vá (hai ứng dụng mang lỗi tự gieo).
 
 \begin{table}[htbp]
   \centering
   \caption{Các ứng dụng mục tiêu}
   \label{tab:benchmark_targets}
-  \begin{tabularx}{\textwidth}{@{}l l c >{\raggedright\arraybackslash}X c@{}}
+  \begin{tabularx}{\textwidth}{@{}l l c l >{\raggedright\arraybackslash}X@{}}
     \toprule
-    \textbf{Mục tiêu} & \textbf{Nền tảng} & \shortstack{\textbf{Số}\\\textbf{thao tác}} & \textbf{Nguồn lỗi} & \textbf{Xác thực} \\
+    \textbf{Ứng dụng} & \textbf{Nền tảng} & \makecell[b]{\textbf{Số}\\\textbf{thao tác}} & \textbf{Xác thực} & \textbf{Nguồn lỗi} \\
     \midrule
-    reports-api & Spring Boot 3 / Java 17 & 9 & Lỗi gieo có kiểm soát & JWT Bearer \\
-    vampi-seeded & Python / Flask & 16 & Lỗi gieo trên bản fork & JWT Bearer \\
-    pyLoad & Python / Flask & 107 & CVE-2026-41133 & Cookie phiên \\
-    artifact-keeper & Rust & 389 & Lỗi \#1821, nhà phát triển đã vá & JWT Bearer \\
+    reports-api & Spring Boot (Java) & 9 & JWT & Lỗi tự gieo \\
+    vampi-seeded & Flask (Python) & 16 & JWT & Lỗi tự gieo, fork của VAmPI \\
+    pyLoad & Flask (Python) & 105 & Cookie phiên & \mbox{CVE-2026-41133} \\
+    artifact-keeper & Rust & 389 & JWT & Lỗi \#1821 (đã vá) \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -45,35 +72,33 @@ Mỗi ứng dụng có hai biến thể: biến thể có lỗ hổng dùng đ�
 \subsection{Ứng dụng reports-api}
 \label{subsec:impl_reports}
 
-Ứng dụng reports-api là dịch vụ REST tối giản viết bằng Spring Boot 3 và Java 17, dùng để kiểm tra Oracle 970 trên các trường hợp đã biết trước kết quả. Máy chủ cấp token JWT khi đăng nhập \cite{rfc7519} và yêu cầu vai trò quản trị cho các thao tác ghi trên báo cáo cũng như thao tác hạ quyền \texttt{PUT /users/\{username\}/role}. Ở biến thể có lỗ hổng, máy chủ đọc vai trò từ claim (trường thông tin mang trong JWT) thay vì tra vai trò hiện tại trong cơ sở dữ liệu. Hệ quả là tài khoản đã bị hạ quyền vẫn ghi được dữ liệu bằng token cấp trước khi đổi vai trò. Hai biến thể chạy từ cùng một bản đóng gói và khác nhau ở giá trị cấu hình chọn nguồn đọc vai trò.
+reports-api là dịch vụ REST viết riêng cho thực nghiệm bằng Spring Boot 3 và Java 17. Trên ứng dụng này, kết quả mong đợi của Oracle 970 ở mỗi biến thể đã biết trước. Máy chủ cấp token JWT khi đăng nhập. Thao tác ghi trên báo cáo và thao tác hạ quyền \texttt{PUT /users/\{username\}/role} đòi vai trò quản trị. Ở biến thể có lỗ hổng, máy chủ đọc vai trò từ claim (trường thông tin mang trong JWT) thay vì tra vai trò hiện tại trong cơ sở dữ liệu. Với token cấp trước khi đổi vai trò, tài khoản đã bị hạ quyền vẫn ghi được dữ liệu. Hai biến thể chạy từ cùng một bản đóng gói và khác nhau ở giá trị cấu hình chọn nguồn đọc vai trò.
 
 \subsection{Ứng dụng vampi-seeded}
 \label{subsec:impl_vampi}
 
-Ứng dụng vampi-seeded kiểm tra Oracle 970 trên mã nguồn và quy ước đặt đường dẫn của một dự án bên thứ ba. Ứng dụng này là bản fork (bản sao tách nhánh) của dự án mã nguồn mở VAmPI, được bổ sung cơ chế phân quyền có lỗ hổng với thay đổi nhỏ nhất trên mã gốc. Các endpoint bổ sung theo quy ước đặt đường dẫn của VAmPI, gồm thao tác hạ quyền \texttt{PUT /users/v1/\{username\}/role} và thao tác ghi cập nhật dữ liệu sách. Do dự án gốc chưa có chức năng đổi vai trò, endpoint hạ quyền được định nghĩa mới. Cơ chế gieo lỗi ghi cờ quản trị vào claim của token khi đăng nhập, và một biến môi trường chọn giữa hai biến thể. Thời hạn token được nâng từ 60 lên 3600 giây để token không hết hạn giữa một bộ ba.
+vampi-seeded là bản fork (bản sao tách nhánh) của dự án mã nguồn mở VAmPI, dùng để thử Oracle 970 trên mã nguồn và quy ước đặt đường dẫn của một dự án bên thứ ba. VAmPI gốc không có chức năng đổi vai trò. Hai endpoint mới đặt tên theo quy ước đường dẫn của VAmPI: \texttt{PUT /users/v1/\{username\}/role} để hạ quyền và một thao tác ghi cập nhật dữ liệu sách dành cho quản trị viên. Phần gieo lỗi sửa sáu tệp của VAmPI. Lúc đăng nhập, ứng dụng ghi cờ quản trị vào claim của token; một biến môi trường chọn giữa hai biến thể. Thời hạn token được nâng từ 60 lên 3600 giây để token không hết hạn giữa một bộ ba.
 
 \subsection{Ứng dụng pyLoad}
 \label{subsec:impl_pyload}
 
-Khác với hai ứng dụng trên, pyLoad là trình quản lý tải viết bằng Python/Flask, mang lỗ hổng CVE-2026-41133 (GHSA-66hx-chf7-3332) do bên thứ ba công bố độc lập \cite{cve202641133}. Lỗ hổng này thuộc loại CWE-613, điểm CVSS 8,8, và bắt nguồn từ việc pyLoad sao chép vai trò vào phiên lúc đăng nhập \cite{cwe613}. Khi vai trò thay đổi, ứng dụng ghi vai trò mới vào cơ sở dữ liệu nhưng giữ nguyên phiên đã cấp.
+pyLoad là trình quản lý tải viết bằng Python/Flask, mang lỗ hổng \mbox{CVE-2026-41133} do bên thứ ba công bố độc lập \cite{cve202641133}. Bản ghi CVE xếp lỗ hổng vào CWE-613, mục mà MITRE đã ngừng dùng từ CWE 5.0; trong các mục MITRE gợi ý thay thế, CWE-1464 khớp với lỗi này \cite{cwe613, cwe1464}. pyLoad chép vai trò vào phiên lúc đăng nhập. Khi vai trò thay đổi, ứng dụng ghi vai trò mới vào cơ sở dữ liệu nhưng giữ nguyên phiên đã cấp.
 
-Thực nghiệm dùng pyLoad bản dev97, kèm một biến thể đã vá do tác giả xây dựng để đối chứng. Thông báo lỗ hổng ghi bản vá ở phiên bản dev98, song hàm kiểm tra xác thực vẫn giữ nguyên từ dev97 tới dev101 và trên nhánh phát triển tại thời điểm thực nghiệm. Biến thể đã vá tra lại vai trò hiện tại từ cơ sở dữ liệu ở cả hai nhánh kiểm tra phân quyền, thay vì hủy phiên.
+Thực nghiệm dùng pyLoad bản dev97, bản cuối cùng mà bản ghi CVE xếp vào diện bị ảnh hưởng. Nhà phát triển vá lỗi từ bản dev98 bằng cách xóa mọi phiên của một người dùng khi quyền của người đó đổi qua endpoint \texttt{/json/update\_users}, khi đổi mật khẩu hoặc khi xóa tài khoản. Khóa luận không dùng bản vá này làm đối chứng: bản vá thu hồi phiên thay vì từ chối thao tác bằng mã 403. Biến thể đã vá dùng trong thực nghiệm tra lại vai trò hiện tại từ cơ sở dữ liệu ở cả hai chỗ đọc vai trò từ phiên: phần kiểm tra quyền của nhóm endpoint \texttt{/json/*} và của nhóm \texttt{/api/*}.
 
-So với cấu hình mặc định, môi trường thử nghiệm trên pyLoad có các điều chỉnh thuộc ba phạm vi: tầng ứng dụng, dữ liệu đặc tả và cấu hình công cụ. Ở tầng ứng dụng, kiểm tra chống giả mạo yêu cầu liên trang (CSRF) được tắt trên cả hai biến thể, biến thể đã vá do tác giả viết, và một endpoint khôi phục dữ liệu tài khoản được bổ sung. Ứng dụng còn được tạo sẵn thêm tài khoản quản trị, vì MR-A1 cần một tài khoản nạn nhân và một tài khoản quản trị, trong khi bản cài đặt mặc định chỉ có một tài khoản. Về dữ liệu đầu vào, nhóm endpoint \texttt{/json/*} được bổ sung đặc tả OpenAPI soạn thảo thủ công. Khi khởi chạy công cụ, hai endpoint làm dừng tiến trình pyLoad bị loại khỏi phạm vi kiểm thử. Tệp chứa toàn bộ logic phân quyền của biến thể có lỗ hổng giữ nguyên mã upstream.
+So với cấu hình mặc định, môi trường thử nghiệm trên pyLoad có các điều chỉnh sau. Kiểm tra chống giả mạo yêu cầu liên trang (CSRF) bị tắt trên cả hai biến thể, và ứng dụng có thêm một endpoint khôi phục dữ liệu tài khoản. Bản cài đặt mặc định chỉ có một tài khoản, còn MR-A1 cần một tài khoản nạn nhân và một tài khoản quản trị, nên ứng dụng được tạo sẵn thêm một tài khoản quản trị. pyLoad chỉ sinh đặc tả OpenAPI cho nhóm endpoint \texttt{/api/*}; đặc tả của nhóm \texttt{/json/*} được soạn thủ công. Cấu hình công cụ loại khỏi phạm vi kiểm thử hai endpoint làm dừng tiến trình pyLoad. Tệp chứa toàn bộ logic phân quyền của biến thể có lỗ hổng giữ nguyên mã upstream.
 
 \subsection{Ứng dụng artifact-keeper}
 \label{subsec:impl_artifactkeeper}
 
-artifact-keeper là kho lưu trữ artifact phần mềm mã nguồn mở viết bằng Rust \cite{artifactkeeper1821}. Ở commit có lỗi (\texttt{e56d3aa7e2}), máy chủ ghi cờ \texttt{is\_admin} vào claim của JWT lúc đăng nhập và đọc lại cờ này từ claim mà không tra cơ sở dữ liệu. Quản trị viên bị hạ quyền vì vậy vẫn giữ quyền quản trị tới khi token hết hạn sau 30 phút. Nhà phát triển sửa lỗi này ở commit \texttt{e64cc5c608} (issue \#1821): token cấp trước lần thay đổi quyền bị từ chối với mã 401. Thao tác hạ quyền là \texttt{PATCH /api/v1/users/\{id\}} với trường \texttt{is\_admin} trong thân yêu cầu. Cả hai commit được kiểm tra thủ công qua HTTP trước khi chạy công cụ.
+artifact-keeper là máy chủ lưu trữ gói phần mềm (artifact registry) mã nguồn mở, viết bằng Rust \cite{artifactkeeper1821}. Ở commit có lỗi (\texttt{e56d3aa7e2}), máy chủ ghi cờ \texttt{is\_admin} vào claim của JWT lúc đăng nhập và đọc lại cờ này từ claim mà không tra cơ sở dữ liệu. Quản trị viên đã bị hạ quyền vẫn giữ quyền quản trị tới khi token hết hạn sau 30 phút. Nhà phát triển sửa lỗi này ở commit \texttt{e64cc5c608} (issue \#1821): token cấp trước lần thay đổi quyền bị từ chối với mã 401. Thao tác hạ quyền là \texttt{PATCH /api/v1/users/\{id\}} với trường \texttt{is\_admin} trong thân yêu cầu. Cả hai commit được kiểm tra thủ công qua HTTP trước khi chạy công cụ.
 
-Phần tác giả thay đổi chỉ gồm cấu hình dựng container và đặc tả OpenAPI. Endpoint \texttt{DELETE /users/\{id\}} được bỏ khỏi đặc tả để công cụ không xóa các tài khoản kiểm thử; mã ứng dụng, lỗi, bản vá và phần còn lại của đặc tả là của nhà phát triển. Mã nguồn của bộ dựng, bộ phán quyết và mô hình Naive Bayes không chứa chuỗi nào riêng của ứng dụng này, và đặc tả của nó không thuộc tập ngữ liệu huấn luyện.
-
-Một số sửa đổi chung của bộ dựng được viết trong lúc chạy công cụ trên pyLoad và artifact-keeper. Kết quả trên hai ứng dụng này vì vậy cho thấy công cụ phát hiện được hai lỗi thật, nhưng không dùng để ước lượng tỷ lệ phát hiện trên ứng dụng chưa từng chạy.
+Trên artifact-keeper, chỉ cấu hình dựng container và đặc tả OpenAPI được thay đổi. Endpoint \texttt{DELETE /users/\{id\}} được bỏ khỏi đặc tả để công cụ không xóa các tài khoản kiểm thử; mã ứng dụng, lỗi, bản vá và phần còn lại của đặc tả là của nhà phát triển. Mã nguồn của bộ dựng, bộ phán quyết và mô hình Naive Bayes không chứa chuỗi nào riêng của ứng dụng này, và đặc tả của artifact-keeper không thuộc tập ngữ liệu huấn luyện.
 
 \section{Thiết lập thực nghiệm}
 \label{sec:impl_setup}
 
-Mọi lượt chạy đánh giá đều bật các oracle thử nghiệm của EvoMaster, và dữ liệu của ứng dụng được khởi tạo lại trước mỗi lượt để các lượt độc lập với nhau. Bảng~\ref{tab:run_setup} ghi thời gian tìm kiếm, quỹ thời gian của pha kiểm thử bảo mật (tính theo tỷ lệ của thời gian tìm kiếm) và số seed của từng ứng dụng. EvoMaster chạy trước một ca kiểm thử cho mỗi thao tác với mỗi tài khoản, nên artifact-keeper, với 389 thao tác, được chạy với thời gian tìm kiếm dài hơn và tốc độ gửi yêu cầu cao hơn. Kết quả thực nghiệm và phân tích định lượng của các lượt chạy này được trình bày trong Chương~\ref{chap:eval}.
+Mọi lượt chạy đánh giá đều bật các oracle thử nghiệm của EvoMaster, và dữ liệu của ứng dụng được khởi tạo lại trước mỗi lượt để các lượt độc lập với nhau. EvoMaster chạy trước một ca kiểm thử cho mỗi thao tác với mỗi tài khoản, nên artifact-keeper (389 thao tác) chạy với thời gian tìm kiếm dài hơn và tốc độ gửi yêu cầu cao hơn các ứng dụng còn lại (Bảng~\ref{tab:run_setup}).
 
 \begin{table}[htbp]
   \centering
@@ -81,7 +106,7 @@ Mọi lượt chạy đánh giá đều bật các oracle thử nghiệm của E
   \label{tab:run_setup}
   \begin{tabularx}{\textwidth}{@{}l c c c >{\raggedright\arraybackslash}X@{}}
     \toprule
-    \textbf{Ứng dụng} & \shortstack{\textbf{Thời gian}\\\textbf{tìm kiếm}} & \shortstack{\textbf{Yêu cầu}\\\textbf{mỗi phút}} & \shortstack{\textbf{Quỹ pha}\\\textbf{bảo mật}} & \textbf{Seed mỗi biến thể} \\
+    \textbf{Ứng dụng} & \makecell[b]{\textbf{Thời gian}\\\textbf{tìm kiếm}} & \makecell[b]{\textbf{Yêu cầu}\\\textbf{mỗi phút}} & \makecell[b]{\textbf{Tỷ lệ thời gian}\\\textbf{pha bảo mật}} & \makecell[b]{\textbf{Seed mỗi}\\\textbf{biến thể}} \\
     \midrule
     reports-api     & 150 giây & 120 & 0,6  & 20 \\
     vampi-seeded    & 150 giây & 120 & 0,6  & 20 \\

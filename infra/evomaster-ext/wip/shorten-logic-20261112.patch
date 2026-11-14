@@ -1,0 +1,231 @@
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -274,14 +274,10 @@
+             if (depth >= MAX_FIELD_DEPTH) {
+                 return
+             }
+-            if (v is ArrayGene<*>) {
+-                for (child in objectFields(v.template)) {
+-                    walkBody("$name[].${child.name}", child, depth + 1, out)
+-                }
+-            } else {
+-                for (child in objectFields(g)) {
+-                    walkBody("$name.${child.name}", child, depth + 1, out)
+-                }
++            val container = if (v is ArrayGene<*>) v.template else g
++            val prefix = if (v is ArrayGene<*>) "$name[]" else name
++            for (child in objectFields(container)) {
++                walkBody("$prefix.${child.name}", child, depth + 1, out)
+             }
+         }
+ 
+@@ -348,11 +344,9 @@
+         private val opEvidenceCache = java.util.concurrent.ConcurrentHashMap<String, Double>()
+ 
+         // THESIS: Evidence của bảng op cho một op, có cache.
+-        fun transitionEvidence(a: RestCallAction): Double =
+-            opEvidenceCache.getOrPut(a.getName()) { evidence("op", opFeatures(a)) }
+-
+         // THESIS: Log-odds op là transition hạ quyền = prior op + evidence.
+-        fun transitionScore(a: RestCallAction): Double = prior("op") + transitionEvidence(a)
++        fun transitionScore(a: RestCallAction): Double =
++            prior("op") + opEvidenceCache.getOrPut(a.getName()) { evidence("op", opFeatures(a)) }
+ 
+         // THESIS: Điểm của một giá trị trong bảng low/high/lowstr/highstr: trọng số lớn nhất trong các khoá là chuỗi con của giá trị.
+         // THESIS: Vd valueScore("low", "VIEWER") = 0.333 (khoá viewer), valueScore("high", "ADMIN") = 0.771 (khoá admin). Không khớp khoá nào thì 0.
+@@ -942,11 +936,8 @@
+         // THESIS: Lượt 1.
+         for (operator in operators) {
+             val outcome = tryReducedRoles(victimSlice, transitionDef, roleValues, operator, victimAuth)
+-            if (outcome == RoleAttempt.TRIPLE_BUILT) {
+-                return true
+-            }
+-            if (outcome == RoleAttempt.STOP_VICTIM) {
+-                return false
++            if (outcome != RoleAttempt.NEXT) {
++                return outcome == RoleAttempt.TRIPLE_BUILT
+             }
+         }
+ 
+@@ -955,12 +946,9 @@
+         val operatorsRefused = lastTransitionCode == 401 || lastTransitionCode == 403
+         if (operatorsRefused && src != null && StatusGroup.G_2xx.isInGroup(src)) {
+             val outcome = restoreOperatorsAndRetry(victimSlice, transitionDef, roleValues, operators, victimAuth)
+-            if (outcome == RoleAttempt.TRIPLE_BUILT) {
+-                return true
++            if (outcome != RoleAttempt.NEXT) {
++                return outcome == RoleAttempt.TRIPLE_BUILT
+             }
+-            if (outcome == RoleAttempt.STOP_VICTIM) {
+-                return false
+-            }
+         }
+ 
+         // THESIS: Transition từ chối nạn nhân này: không thử lại cặp (transition, nạn nhân) trong pha.
+@@ -984,8 +972,7 @@
+         victimAuth: HttpWsAuthenticationInfo
+     ): RoleAttempt {
+         for (reducedRole in roleValues) {
+-            if (hasPhaseTimedOut()) return RoleAttempt.STOP_VICTIM
+-            if (!attemptAllowed()) return RoleAttempt.STOP_VICTIM
++            if (hasPhaseTimedOut() || !attemptAllowed()) return RoleAttempt.STOP_VICTIM
+ 
+             // THESIS: Bộ đếm không tăng: không dựng được call (không đặt được nạn nhân hoặc giá trị), thử giá trị kế.
+             val before = statefulTripleAttempts
+@@ -1043,8 +1030,7 @@
+ 
+         for (operator in operators) {
+             for (plan in plans.getValue(operator.name)) {
+-                if (hasPhaseTimedOut()) return RoleAttempt.STOP_VICTIM
+-                if (!attemptAllowed()) return RoleAttempt.STOP_VICTIM
++                if (hasPhaseTimedOut() || !attemptAllowed()) return RoleAttempt.STOP_VICTIM
+                 if (privilegeRestoreAttempts >= MAX_PRIVILEGE_RESTORES) {
+                     LoggingUtil.getInfoLogger().info(
+                         "Stateful-authorization restore budget of $MAX_PRIVILEGE_RESTORES spent on" +
+@@ -1304,15 +1290,15 @@
+         return transitions.sortedByDescending { transitionScore(it) }
+     }
+ 
+-    // THESIS: Trường vai trò của op: trường ngoài path có điểm role cao nhất, điểm phải > 0. Vd body:role.
+-    private fun roleField(a: RestCallAction): SchemaField? {
++    // THESIS: Trường có điểm cao nhất theo bảng model, điểm phải > 0; onPath = true chỉ xét path param, false chỉ xét trường ngoài path.
++    private fun bestField(a: RestCallAction, model: String, onPath: Boolean): SchemaField? {
+         var best: SchemaField? = null
+         var bestScore = 0.0
+         for (f in schemaFields(a)) {
+-            if (f.loc == "path") {
++            if ((f.loc == "path") != onPath) {
+                 continue
+             }
+-            val score = fieldScore("role", f)
++            val score = fieldScore(model, f)
+             if (score > bestScore) {
+                 best = f
+                 bestScore = score
+@@ -1321,6 +1307,9 @@
+         return best
+     }
+ 
++    // THESIS: Trường vai trò của op: trường ngoài path có điểm role cao nhất, điểm phải > 0. Vd body:role.
++    private fun roleField(a: RestCallAction): SchemaField? = bestField(a, "role", false)
++
+     // THESIS: Trường chỉ định nạn nhân: trường str/num có điểm victim cao nhất, khác trường vai trò; không cần điểm dương. Vd path:username.
+     private fun victimField(a: RestCallAction): SchemaField? {
+         val role = roleField(a)
+@@ -1543,8 +1532,10 @@
+     private fun normalize(s: String): String = s.lowercase().filter { it.isLetterOrDigit() }
+ 
+     // THESIS: Ghi giá trị chuỗi vào gene lá của trường, rồi bật mọi wrapper bên trên (bản sửa FN is_admin: null của jar P2f).
++    // THESIS: setFromStringValue, exception thành false.
+     private fun setField(f: SchemaField, value: String): Boolean {
+-        if (!trySetFromStringValue(f.value, value)) return false
++        val accepted = try { f.value.setFromStringValue(value) } catch (e: Exception) { false }
++        if (!accepted) return false
+         activateAncestors(f.value)
+         return true
+     }
+@@ -1624,16 +1615,10 @@
+         victimAuth: HttpWsAuthenticationInfo,
+         victimLeaf: String,
+         transition: RestCallAction
+-    ): List<ScoredObject> {
+-        val cacheKey = "${victimAuth.name}|$victimLeaf|${transition.path}"
+-        val cached = victimObjectCache[cacheKey]
+-        if (cached != null) {
+-            return cached
++    ): List<ScoredObject> =
++        victimObjectCache.getOrPut("${victimAuth.name}|$victimLeaf|${transition.path}") {
++            findVictimObjects(victimAuth, victimLeaf, transition)
+         }
+-        val objects = findVictimObjects(victimAuth, victimLeaf, transition)
+-        victimObjectCache[cacheKey] = objects
+-        return objects
+-    }
+ 
+     // THESIS: Quét mọi response 2xx trong archive, gom object JSON có khoá định danh mang tên nạn nhân, vd {"username":"alice","id":7}.
+     // THESIS: Xếp thứ tự bằng compareVictimObjects.
+@@ -1731,9 +1716,10 @@
+     }
+ 
+     // THESIS: Chỉ giữ object lấy từ response của GET.
+-    private fun getObjects(objects: List<ScoredObject>): List<ScoredObject> {
++    private fun victimGetObjects(victimAuth: HttpWsAuthenticationInfo, transition: RestCallAction): List<ScoredObject> {
++        val vfLeaf = victimField(transition)?.leaf ?: ""
+         val out = mutableListOf<ScoredObject>()
+-        for (o in objects) {
++        for (o in victimObjects(victimAuth, vfLeaf, transition)) {
+             if (o.verb == HttpVerb.GET) {
+                 out.add(o)
+             }
+@@ -1747,8 +1733,7 @@
+         transition: RestCallAction,
+         fields: List<SchemaField>
+     ): Map<String, String> {
+-        val vfLeaf = victimField(transition)?.leaf ?: ""
+-        val objects = getObjects(victimObjects(victimAuth, vfLeaf, transition))
++        val objects = victimGetObjects(victimAuth, transition)
+         val snapshot = mutableMapOf<String, String>()
+         for (f in fields) {
+             val v = objectValue(objects, normalize(f.leaf))
+@@ -1765,10 +1750,9 @@
+         transition: RestCallAction,
+         role: SchemaField
+     ): List<String> {
+-        val vfLeaf = victimField(transition)?.leaf ?: ""
+         val leaf = normalize(role.leaf)
+         val out = mutableListOf<String>()
+-        for (o in getObjects(victimObjects(victimAuth, vfLeaf, transition))) {
++        for (o in victimGetObjects(victimAuth, transition)) {
+             for (s in scalarsForRoleKey(o.node, leaf)) {
+                 if (s.isNotBlank() && s !in out) {
+                     out.add(s)
+@@ -1808,18 +1792,7 @@
+         }
+         val set = mutableListOf(vf.key)
+         if (vf.loc != "path") {
+-            var pathField: SchemaField? = null
+-            var pathScore = 0.0
+-            for (f in schemaFields(action)) {
+-                if (f.loc != "path") {
+-                    continue
+-                }
+-                val score = fieldScore("victim", f)
+-                if (score > pathScore) {
+-                    pathField = f
+-                    pathScore = score
+-                }
+-            }
++            val pathField = bestField(action, "victim", true)
+             if (pathField != null) {
+                 val id = victimId(objects, normalize(pathField.leaf))
+                 if (id != null && setField(pathField, id)) set.add(pathField.key)
+@@ -1920,14 +1893,6 @@
+         return calledParent && all404
+     }
+ 
+-    // THESIS: setFromStringValue, exception thành false.
+-    private fun trySetFromStringValue(g: Gene, value: String): Boolean =
+-        try {
+-            g.setFromStringValue(value)
+-        } catch (e: Exception) {
+-            false
+-        }
+-
+     private fun addForInjections() {
+ 
+         if (!config.isEnabledFaultCategory(DefinedFaultCategory.XSS)) {
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
+@@ -588,10 +588,8 @@
+             for (followUpIndex in (srcIndex + 1) until actions.size) {
+                 val followUp = actions[followUpIndex]
+ 
+-                if (followUp.getName() != source.getName() || followUp.auth.isDifferentFrom(source.auth)) {
+-                    continue
+-                }
+-                if (!isAllowed(followUp)) {
++                if (followUp.getName() != source.getName() || followUp.auth.isDifferentFrom(source.auth)
++                    || !isAllowed(followUp)) {
+                     continue
+                 }
+ 

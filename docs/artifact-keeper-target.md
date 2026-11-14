@@ -50,6 +50,7 @@ Logic app, lỗi, bản vá và phần còn lại của spec là của vendor. B
 
 ## 5. Chạy máy
 
-Bộ ba công cụ tự dựng, jar M2: source `POST /api/v1/admin/analytics/snapshot`, victim `victim`, operator `operator`,
-transition `PATCH /api/v1/users/{id}`. Bản lỗi `200/200/200`, 970 ở 5/5 lượt. Bản vá: token cũ nhận 401, bộ ba VOID,
+Bộ ba công cụ tự dựng, jar ND: source `POST /api/v1/admin/analytics/snapshot`, victim `victim`, operator `operator`,
+transition `PATCH /api/v1/users/{id}`. Bản lỗi `200/200/200`, 970 ở 4/5 lượt; seed 3 dùng source khác và không dựng
+được bộ ba. Bản vá: token cũ nhận 401, bộ ba VOID,
 0/3 báo vi phạm và 0 bộ ba (`docs/results.md` §1).
