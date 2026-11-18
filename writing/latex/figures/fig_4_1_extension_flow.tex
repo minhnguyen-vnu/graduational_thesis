@@ -1,29 +1,57 @@
 \begin{tikzpicture}[
   >=Stealth,
-  font=\small\linespread{1}\selectfont,
-  box/.style={rectangle, draw, rounded corners=2pt, fill=gray!10, align=center,
-              text width=3.0cm, minimum height=1.3cm},
-  ours/.style={box, very thick, fill=gray!30},
-  group/.style={draw, dashed, rounded corners=4pt, inner sep=6pt},
-  lbl/.style={font=\footnotesize}
+  font=\footnotesize\linespread{1}\selectfont,
+  up/.style={rectangle, draw, rounded corners=2pt, fill=gray!8, align=center,
+             text width=4.4cm, minimum height=1.0cm},
+  ours/.style={up, very thick, fill=gray!40},
+  group/.style={draw, dashed, rounded corners=4pt, inner sep=5pt},
+  lbl/.style={font=\scriptsize, align=center},
+  hook/.style={circle, draw, fill=white, font=\scriptsize\bfseries, inner sep=1pt, minimum size=4mm}
 ]
-  \node[box]  (store) at (0, 2.4)  {Kho lưu trữ\\ca kiểm thử};
-  \node[box]  (gen)   at (0, -2.4) {Bước sinh phản hồi 403 có sẵn};
-  \node[ours, text width=4.2cm] (nb)    at (5.0, 0)    {Trọng số Naive Bayes\\{\scriptsize\ttfamily stateful-authz-model.csv}};
-  \node[ours, text width=4.2cm] (build) at (5.0, -2.4) {Bộ dựng kịch bản MR-A1\\{\scriptsize\ttfamily RestSecurityBuilder.kt}};
-  \node[ours, text width=4.8cm] (code)  at (10.6, 0)   {Mã lỗi 970\\{\scriptsize\ttfamily ExperimentalFaultCategory.kt}};
-  \node[ours, text width=4.8cm] (judge) at (10.6, -2.4) {Bộ phán quyết\\{\scriptsize\ttfamily RestSecurityOracle.kt}};
-  \node[box, text width=4.8cm]  (out)   at (10.6, -4.8) {Lỗi 970 trong bộ ca kiểm thử xuất ra};
+  \node[up]   (arch) at (0, 1.85)   {Kho lưu trữ ca kiểm thử};
+  \node[up]   (s1) at (0, 0)        {Sinh phản hồi 403};
+  \node[ours] (s2) at (0, -1.4)     {Bộ dựng kịch bản MR-A1};
+  \node[up]   (s3) at (0, -2.8)     {Kiểm tra quyền giữa các tài khoản};
+  \node[up]   (s4) at (0, -4.0)     {Kiểm tra injection};
+  \node[up]   (s5) at (0, -5.2)     {Kiểm tra lộ thông tin};
+
+  \node[ours, text width=3.9cm] (model) at (5.6, -3.6) {Trọng số Naive Bayes};
+
+  \node[up]   (sut)   at (10.6, 0.45)  {Ứng dụng mục tiêu};
+  \node[up]   (eval)  at (10.6, -1.4)  {Bộ đánh giá ca kiểm thử};
+  \node[up]   (chk)   at (10.6, -3.6)  {Các kiểm tra có sẵn};
+  \node[ours] (judge) at (10.6, -4.9)  {Bộ phán quyết};
+  \node[ours] (code)  at (10.6, -7.1)  {Mã lỗi 970};
 
   \begin{scope}[on background layer]
-    \node[group, fit=(gen) (build) (judge) (nb) (code)] (g) {};
+    \node[group, fit=(s1) (s5)] (gsec) {};
+    \node[group, fit=(chk) (judge)] (gor) {};
   \end{scope}
-  \node[lbl, font=\footnotesize\bfseries, anchor=south east, inner sep=2pt] at (g.north east) {Pha kiểm thử bảo mật};
+  \node[lbl, font=\scriptsize\bfseries, anchor=north west, inner sep=2pt] at (gsec.south west) {Pha kiểm thử bảo mật};
+  \node[lbl, font=\scriptsize\bfseries, anchor=north west, inner sep=2pt] at (gor.south west) {Oracle bảo mật};
 
-  \draw[->] (store) -- (gen);
-  \draw[->] (gen) -- (build);
-  \draw[->] (nb) -- node[lbl, right] {xếp hạng} (build);
-  \draw[->] (build) -- (judge);
-  \draw[->] (code) -- (judge);
-  \draw[->] (judge) -- (out);
+  \draw[->] (s1) -- (s2);
+  \draw[->] (s2) -- (s3);
+  \draw[->] (s3) -- (s4);
+  \draw[->] (s4) -- (s5);
+
+  \draw[->] (arch) -- node[lbl, left] {đọc ca đã lưu} (s1);
+  \draw[->] ([yshift=3.5mm]s2.east) -- ++(0.55, 0) |- (arch.east);
+  \node[lbl, anchor=west] at (2.8, 1.3) {lưu ca bộ ba};
+  \draw[->] (model.north west) -- node[lbl, pos=0.5, sloped, above] {xếp hạng} (s2.south east);
+  \draw[->] ([yshift=-0.5mm]s2.east) -- node[lbl, above, pos=0.55] {ca bộ ba, ca khôi phục quyền,\\ca đăng nhập lại, ca ẩn danh} ([yshift=-0.5mm]eval.west);
+  \draw[->, dashed] ([yshift=-3.5mm]eval.west) -- node[lbl, below] {mã trạng thái} ([yshift=-3.5mm]s2.east);
+  \draw[<->] (sut) -- node[lbl, right] {HTTP} (eval);
+  \draw[->] ([xshift=1.3cm]eval.south) -- node[lbl, left] {ca bảo mật} ([xshift=1.3cm]gor.north);
+  \draw[->] ([xshift=1.3cm]code.north) -- ([xshift=1.3cm]judge.south);
+
+  \node[hook] at (s2.north west) {1};
+  \node[hook] at (judge.north west) {2};
+  \node[hook] at (code.north west) {3};
+  \node[hook] at (model.north east) {4};
+
+  \node[ours, text width=0.5cm, minimum height=0.35cm] (l1) at (2.5, -6.75) {};
+  \node[lbl, anchor=west] at (l1.east) {thành phần khóa luận thêm vào};
+  \node[up, text width=0.5cm, minimum height=0.35cm] (l2) at (2.5, -7.35) {};
+  \node[lbl, anchor=west] at (l2.east) {thành phần của EvoMaster};
 \end{tikzpicture}

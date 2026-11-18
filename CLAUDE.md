@@ -11,12 +11,12 @@ Mỗi sự kiện nằm ở một file: file này giữ luật và trỏ tới p
 
 - Oracle **970 `SECURITY_STATEFUL_AUTHORIZATION`**: một tài khoản vẫn vào được sau khi bị thu hẹp quyền, phát hiện bằng
   cách dùng lại thông tin đăng nhập cấp trước lúc đó.
-- Giai đoạn: viết luận văn. Số đo cuối: jar ND, chạy lại mọi target ngày 2026-11-13 (§4). Hạn: **cuối tháng 11 năm
+- Giai đoạn: viết luận văn. Số đo cuối: jar LF, chạy lại mọi target ngày 2026-11-18 (§4). Hạn: **cuối tháng 11 năm
   2026**. Bản nháp: `writing/KLTN_NguyenLeMinh.pdf`.
 - Luận văn viết bằng **tiếng Việt**. Trả lời theo ngôn ngữ của user.
 - Tác giả: kỹ sư phần mềm, ~2 năm fintech, Java/Spring Boot. Đọc được Kotlin, viết Kotlin chưa thoải mái.
 - Mã nguồn: `/Users/minhnguyen/IdeaProjects/EvoMaster`, nhánh `stateful-authz-oracle`, 16 commit trên `v6.1.1`, HEAD
-  `2c3f281f13` (chưa push); thay đổi của jar ND chưa commit (§5). Phán quyết dùng probe C4, luận văn gọi là bước đăng nhập lại. Chi tiết:
+  `2c3f281f13` (chưa push); thay đổi của jar LF chưa commit (§5). Phán quyết dùng probe C4, luận văn gọi là bước đăng nhập lại. Chi tiết:
   `infra/evomaster-ext/README.md`.
 - Thư mục luận văn là một git repo (nhánh `main`).
 - Đã dựng: quan hệ MR-A1, cách dựng bộ ba, phán quyết 970, và bốn target: hai lỗi gieo (`reports-api`,
@@ -125,7 +125,7 @@ Mỗi loại nội dung nằm đúng một chỗ; phần còn lại theo bảng 
 - **MR-A1.** Một thao tác ghi đòi hỏi đúng quyền bị gỡ, đã quan sát thấy ALLOWED, phải thành DENIED sau khi quyền đó bị
   gỡ, với cùng thông tin đăng nhập trước lúc gỡ. Quan hệ không phải là tính đơn điệu: quyền truy cập của tài khoản vừa
   bị hạ không bao giờ lớn lên.
-- ALLOWED = 2xx. DENIED = 403. 401 = INCONCLUSIVE. 404 không phải từ chối; trong 98 lượt của jar ND không follow-up nào nhận 404.
+- ALLOWED = 2xx. DENIED = 403. 401 = INCONCLUSIVE. 404 không phải từ chối; trong 98 lượt của jar LF không follow-up nào nhận 404.
 - **Guard.** Nguồn là một thao tác ghi bị chặn bởi quyền đã gỡ, và lời gọi xen giữa qua được
   `looksLikePermissionReducingTransition`. Không có guard thì `GET /reports` (viewer cũng được phép) đọc thành lỗi.
 - **Bộ ba** `source, transition, follow-up`. Follow-up dùng lại token trước lúc chuyển; đăng nhập mới sau lúc chuyển trả
@@ -138,35 +138,36 @@ Mỗi loại nội dung nằm đúng một chỗ; phần còn lại theo bảng 
 - Phạm vi: A1, hạ vai trò. A2 (chuyển quyền sở hữu) và A3 (hết hạn quyền) đã định nghĩa, chưa chứng minh.
   Lỗi chéo tài khoản (BOLA/BFLA) thuộc về baseline, Şahin et al. arXiv:2604.00702 (`docs/related-work.md`).
 
-## 4. Số hiện tại — jar ND, chạy 2026-11-13; chi tiết, nguồn và dè dặt trong `docs/results.md`
+## 4. Số hiện tại — jar LF, chạy 2026-11-18; chi tiết, nguồn và dè dặt trong `docs/results.md`
 
 | Target | Lỗi | 970 nổ, bản lỗi | FP, bản vá |
 |---|---|---|---|
-| `reports-api` | gieo | 19/20 | 0/20 |
-| `vampi-seeded` | gieo | 6/20 | 0/20 |
+| `reports-api` | gieo | 20/20 | 0/20 |
+| `vampi-seeded` | gieo | 7/20 | 0/20 |
 | pyLoad | CVE-2026-41133 | 5/5 | 0/5 |
-| artifact-keeper | lỗi vendor #1821 | 4/5 | 0/3, bản vá của vendor |
+| artifact-keeper | lỗi vendor #1821 | 5/5 | 0/3, bản vá của vendor |
 
-- 98 hàng, một jar: `nd-wave1-20261113/runs.csv` (90 hàng) và `nd-wave2-20261113/` (8 hàng artifact-keeper); đếm
-  bằng `nd-wave1-20261113/nd_counts.py` (`nd-counts-cp.out`).
-- 0 FP trong 48 lượt bản đã vá, trên 30 bộ ba dựng được trên mã đã vá. TP 34, FN 16, FP 0, TN 30; mọi FN là lượt không
-  dựng được bộ ba (`docs/results.md` §1a).
+- 98 hàng, một jar: `lf-wave1-20261118/runs.csv` (90 hàng) và `lf-wave2-20261118/` (8 hàng artifact-keeper); đếm
+  bằng `lf-wave1-20261118/lf_counts.py` (`lf-counts-cp.out`).
+- 0 FP trong 48 lượt bản đã vá, trên 49 bộ ba dựng được trên mã đã vá (31 lượt). TP 37, FN 13, FP 0, TN 31; mọi FN là
+  lượt không dựng được bộ ba, đều ở vampi-seeded (`docs/results.md` §1a).
+- So với jar ND: thêm 3 hàng, mất 0, McNemar p = 0,25. Không viết rằng lượt sửa logic làm tăng khả năng phát hiện.
 - Bản vá của artifact-keeper trả 401 cho token cũ, mà 401 là INCONCLUSIVE: 3 lượt không báo nhầm và cũng không dựng
   được bộ ba nào, nên không có TN.
 - "Phát hiện khi đã có một bộ ba hợp lệ" gần như là định nghĩa. Không bao giờ trích nó như độ chính xác.
 - Trên reports-api, mã 403 của probe C4 đến từ `POST /reports`. Không viết rằng C4 thử lại guard ở đó.
-- Transition của pyLoad buộc `permission=1` và một giá trị `role` tìm sang trái; C4 xác nhận từng lần hạ quyền.
+- Transition của pyLoad gửi `permission=1&role=1`; C4 xác nhận từng lần hạ quyền.
 - Transition của artifact-keeper là `PATCH /api/v1/users/{id}` với `{"is_admin": false}`, builder tự chọn từ spec.
 - Endpoint reseed của reports-api và pyLoad là của ta; của vampi-seeded là của VAmPI.
 
 ## 5. Jar — sổ đầy đủ `infra/evomaster-ext/jars.md`
 
-- Mọi con số hiện tại: `EvoMaster/evomaster-ND-07ebf19f.jar` = HEAD `2c3f281f13` cộng
-  `infra/evomaster-ext/wip/nodup-tokens-20261113-tree.patch`, gồm comment `THESIS` và thay đổi ND. Riêng thay đổi ND
-  là `nodup-tokens-20261113.patch`, tính trên cây đã có comment nên không áp thẳng lên HEAD: `f:` chỉ lấy từ trường
-  query và body, `tokens` duyệt từng ký tự thay regex, và mô hình bỏ lặp (sha256 `dcc77b59ed0f…`). Bản vá chưa
-  commit; cây trong commit còn M1.
-  `EMConfig.kt` trùng v6.1.1. ND không chạy cổng: nó đo lại đầy đủ mọi arm trên mọi target.
+- Mọi con số hiện tại: `EvoMaster/evomaster-LF-d559dc73.jar` = HEAD `2c3f281f13` cộng
+  `infra/evomaster-ext/wip/logic-fix-20261118-tree.patch`, gồm comment `THESIS`, thay đổi ND (`f:` chỉ lấy từ trường
+  query và body, `tokens` duyệt từng ký tự, mô hình bỏ lặp sha256 `dcc77b59ed0f…`) và sửa logic của builder và oracle
+  (`infra/evomaster-ext/wip/logic-fix-20261118.md`). Bản vá chưa commit; cây trong commit còn M1.
+  `EMConfig.kt` trùng v6.1.1. LF không chạy cổng: nó đo lại đầy đủ mọi arm trên mọi target.
+- Jar dự phòng: `EvoMaster/evomaster-ND-07ebf19f.jar`, cùng mô hình, chưa sửa logic.
 - Một jar mới chỉ trích lại số sau khi qua cổng 12 hàng (skill `regression-gate`) hoặc sau một lượt đo lại đầy đủ; khi
   cách dựng bộ ba đổi thì phải đo lại các arm bị ảnh hưởng.
 

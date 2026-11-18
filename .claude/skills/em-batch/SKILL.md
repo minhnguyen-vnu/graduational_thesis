@@ -23,7 +23,7 @@ runs at a time; switching commits needs the full reseed (it wipes the database v
 
 ```bash
 curl -s -X POST http://localhost:8080/reset >/dev/null
-JAVA_HOME=$(/usr/libexec/java_home -v 17) java -Xmx2g -jar /Users/minhnguyen/IdeaProjects/EvoMaster/evomaster-ND-07ebf19f.jar \
+JAVA_HOME=$(/usr/libexec/java_home -v 17) java -Xmx2g -jar /Users/minhnguyen/IdeaProjects/EvoMaster/evomaster-LF-d559dc73.jar \
   --blackBox true --bbSwaggerUrl http://localhost:8080/v3/api-docs --bbTargetUrl http://localhost:8080 \
   --configPath infra/em-config/reports-auth.yaml \
   --useExperimentalOracles true --extraPhaseBudgetPercentage 0.6 \
@@ -40,7 +40,7 @@ JAVA_HOME=$(/usr/libexec/java_home -v 17) java -Xmx2g -jar /Users/minhnguyen/Ide
 - 970 is experimental: without `--useExperimentalOracles true` it never fires.
 - The security phase gets `extraPhaseBudgetPercentage × maxTime`; below ~0.6 at 150 s construction starves.
 - `--security` requires `--minimize`.
-- Jar SR and later (M2 and ND included) have no `statefulAuthz*` option and reject `--statefulAuthzResetEndpoint`,
+- Jar SR and later (M2, ND and LF included) have no `statefulAuthz*` option and reject `--statefulAuthzResetEndpoint`,
   `--statefulAuthzTransition` and `--statefulAuthzTwoCredentialJudgment` with `is not a recognized option`. Those
   exist only on P2f and earlier jars.
 - Builder diagnostics: `-Dlogback.configurationFile=infra/em-config/logback-builder-debug.xml`.

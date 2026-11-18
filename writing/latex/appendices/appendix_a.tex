@@ -1,13 +1,14 @@
 \chapter{Danh mục endpoint của các ứng dụng mục tiêu}
 \label{chap:appendix_a}
 
-Bảng~\ref{tab:appendix_endpoints} liệt kê các endpoint tham gia bộ ba do công cụ dựng trên bốn ứng dụng mục tiêu mô tả ở Mục~\ref{sec:impl_benchmarks}.
+Với mỗi ứng dụng ở Mục~\ref{sec:impl_benchmarks}, Bảng~\ref{tab:appendix_endpoints} nêu endpoint đăng nhập và các endpoint mà công cụ dùng trong bộ ba.
 
 \begin{table}[H]
 \centering
-\caption{Các endpoint trong bộ ba do công cụ dựng trên bốn ứng dụng mục tiêu}
+\caption{Endpoint đăng nhập và endpoint của bộ ba trên bốn ứng dụng mục tiêu}
 \label{tab:appendix_endpoints}
-\small
+\footnotesize
+\setlength{\tabcolsep}{4pt}
 \begin{tabularx}{\textwidth}{@{}l l >{\raggedright\arraybackslash}X@{}}
 \toprule
 \textbf{Endpoint} & \textbf{Quyền} & \textbf{Vai trò trong kịch bản} \\
@@ -15,22 +16,25 @@ Bảng~\ref{tab:appendix_endpoints} liệt kê các endpoint tham gia bộ ba do
 \multicolumn{3}{@{}l}{\textit{reports-api}} \\
 \texttt{POST /auth/login} & Mọi tài khoản & Đăng nhập, cấp JWT chứa vai trò \\
 \texttt{PUT /reports/\{id\}} & Quản trị & Source và follow-up \\
-\texttt{PUT /users/\{u\}/role} & Quản trị & Chuyển trạng thái \\
+\texttt{POST /reports} & Quản trị & Source và follow-up \\
+\texttt{PUT /users/\{u\}/role} & Quản trị & Transition \\
 \midrule
 \multicolumn{3}{@{}l}{\textit{vampi-seeded}} \\
 \texttt{POST /users/v1/login} & Mọi tài khoản & Đăng nhập, cấp JWT chứa cờ quản trị \\
 \texttt{PUT /books/v1/\{t\}/secret} & Quản trị & Source và follow-up \\
-\texttt{PUT /users/v1/\{u\}/role} & Quản trị & Chuyển trạng thái \\
+\texttt{PUT /users/v1/\{u\}/role} & Quản trị & Transition \\
 \midrule
 \multicolumn{3}{@{}l}{\textit{pyLoad}} \\
 \texttt{POST /login} & Mọi tài khoản & Đăng nhập, tạo cookie phiên \\
 \texttt{POST /json/status} & Quyền \texttt{LIST} & Source và follow-up \\
-\texttt{POST /api/set\_user\_permission} & Quản trị & Chuyển trạng thái \\
+\texttt{POST /api/set\_user\_permission} & Quản trị & Transition \\
 \midrule
 \multicolumn{3}{@{}l}{\textit{artifact-keeper}} \\
 \texttt{POST /api/v1/auth/login} & Mọi tài khoản & Đăng nhập, cấp JWT chứa cờ \texttt{is\_admin} \\
 \texttt{POST /api/v1/admin/analytics/snapshot} & Quản trị & Source và follow-up \\
-\texttt{PATCH /api/v1/users/\{id\}} & Quản trị & Chuyển trạng thái \\
+\texttt{POST /api/v1/admin/backups} & Quản trị & Source và follow-up \\
+\texttt{POST /api/v1/admin/cleanup} & Quản trị & Source và follow-up \\
+\texttt{PATCH /api/v1/users/\{id\}} & Quản trị & Transition \\
 \bottomrule
 \end{tabularx}
 \end{table}

@@ -1,0 +1,180 @@
+* [34m
+ _____          ___  ___          _
+|  ___|         |  \/  |         | |
+| |____   _____ | .  . | __ _ ___| |_ ___ _ __
+|  __\ \ / / _ \| |\/| |/ _` / __| __/ _ \ '__|
+| |___\ V / (_) | |  | | (_| \__ \ ||  __/ |
+\____/ \_/ \___/\_|  |_/\__,_|___/\__\___|_|
+
+                    [0m
+* EvoMaster version: 6.1.1
+* Loading configuration file from: /Users/minhnguyen/IdeaProjects/graduational-thesis/infra/em-results/logic-fix-selftest-20261118-014908/auth-source-401.yaml
+* [31mWARNING: You are doing Black-Box testing, but you did not specify the 'problemType'. The system will default to RESTful API testing.[0m
+* [31mWARNING: You have not setup 'ratePerMinute'. If you are doing testing of a remote service which you do not own, you might want to put a rate-limiter to prevent EvoMaster from bombarding such service with HTTP requests. EvoMaster automatically honors 429 responses, and waits accordingly based on the returned Retry-After header. Still, you might also want to use 'ratePerMinute' if you are just testing EvoMaster out on some public APIs.[0m
+* [31mWARNING: [33mYou are modifying the value of some internal settings. In general, this is not recommended, especially if it is first time you use EvoMaster, unless you are an experienced user. Involved features: [bbSwaggerUrl, bbTargetUrl, extraPhaseBudgetPercentage, maxEvaluations, seed, stoppingCriterion, useExperimentalOracles]. Especially for beginners, you should only modify the 'important' settings:[0m[34m [base, blackBox, configPath, dtoForRequestPayload, endpointExclude, endpointFocus, endpointPrefix, endpointTagFilter, fieldsToSkipInAssertions, header0, header1, header2, maxTestsPerTestSuite, maxTime, outputFilePrefix, outputFileSuffix, outputFolder, outputFormat, overlay, overlayFileSuffixes, overlayLenient, overrideOpenAPIUrl, prematureStop, ratePerMinute, schema, sutControllerHost, sutControllerPort, testTimeout].[0m[33m For more information, see the documentation at:[0m[34m https://github.com/WebFuzzing/EvoMaster/blob/master/docs/options.md[0m[0m
+* Initializing...
+* There are 4 usable RESTful API endpoints defined in the schema configuration
+* [33m[WARNING] [0m[33mSome experimental settings have been activated. Those might not work as expected, or simply straight out crash. Furthermore, they might simply be incomplete features still under development. Activated experimental settings: [enableStaticFlakyInference][0m
+* Starting phase SEARCH
+* Starting to generate test cases
+[2K* Consumed search budget: 0.000%
+[2K* Covered targets: 0
+[2K* Time per test: 39.0ms (1.0 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 49.667%
+[2K* Covered targets: 42
+[2K* Time per test: 3.6ms (1.4 actions)
+[2K* Time since last improvement: 0s
+[1A[1A[1A[1A[2K* Consumed search budget: 49.667%
+[2K* Covered targets: 42
+[2K* Time per test: 3.4ms (1.1 actions)
+[2K* Time since last improvement: 0s
+* Evaluated tests: 245
+* Evaluated actions: 300
+* Needed budget: 45%
+* Passed time (seconds): 1
+* Execution time per test (ms): Avg=3.71 , min=1.00 , max=39.00
+* Execution time per action (ms): Avg=3.25 , min=1.00 , max=39.00
+* Computation overhead between tests (ms): Avg=0.46 , min=0.00 , max=4.00
+* Phase SEARCH lasted: 0h 0m 1s
+* Starting phase MINIMIZATION
+* Recomputing full coverage for 21 tests
+* No test to minimize
+* Phase MINIMIZATION lasted: 0h 0m 0s
+* Starting phase SECURITY
+01:50:24.747 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization model tables: op 150 role 44 victim 28 low 9 high 11
+01:50:24.759 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization transition candidate PUT:/users/{username}/role score 5.628297727558979 roleField body:role victimField path:username reducedRoleValues 4
+01:50:24.761 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization transition chosen: PUT:/users/{username}/role (candidate 1 of 1)
+01:50:24.761 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization reduced role values: [VIEWER, EDITOR, EVOMASTER, ADMIN]
+01:50:24.761 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization guarded source candidates: 1 [PUT:/docs/{id}]
+01:50:24.762 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization source PUT:/docs/{id} victims [bob]
+01:50:24.762 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization victim 'bob' operators [alice, boss, eve]
+01:50:24.763 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization victim 'bob' current roles [EDITOR], reduced role values [VIEWER, EVOMASTER, ADMIN]
+01:50:24.763 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization: removed optional fields [] from PUT:/users/{username}/role
+01:50:24.767 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.769 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.778 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.783 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Got 401 although having auth for 'bob' on endpoint: /docs/{id}
+* Discarded a VOID stateful-authorization (MR-A1) attempt on PUT:/docs/{id} (victim 'bob', operator 'alice', codes 401/409/401)
+01:50:24.787 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization: removed optional fields [] from PUT:/users/{username}/role
+01:50:24.792 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.794 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.801 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+* Discarded a VOID stateful-authorization (MR-A1) attempt on PUT:/docs/{id} (victim 'bob', operator 'alice', codes 401/409/401)
+01:50:24.816 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization: removed optional fields [] from PUT:/users/{username}/role
+01:50:24.820 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.827 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.836 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+* Discarded a VOID stateful-authorization (MR-A1) attempt on PUT:/docs/{id} (victim 'bob', operator 'alice', codes 401/409/401)
+01:50:24.845 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization: removed optional fields [] from PUT:/users/{username}/role
+01:50:24.846 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.848 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.850 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+* Discarded a VOID stateful-authorization (MR-A1) attempt on PUT:/docs/{id} (victim 'bob', operator 'boss', codes 401/409/401)
+01:50:24.852 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization: removed optional fields [] from PUT:/users/{username}/role
+01:50:24.854 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.855 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.857 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+* Discarded a VOID stateful-authorization (MR-A1) attempt on PUT:/docs/{id} (victim 'bob', operator 'boss', codes 401/409/401)
+01:50:24.859 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization: removed optional fields [] from PUT:/users/{username}/role
+01:50:24.861 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.862 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.864 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+* Discarded a VOID stateful-authorization (MR-A1) attempt on PUT:/docs/{id} (victim 'bob', operator 'boss', codes 401/409/401)
+01:50:24.866 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization: removed optional fields [] from PUT:/users/{username}/role
+01:50:24.868 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.869 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.872 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+* Discarded a VOID stateful-authorization (MR-A1) attempt on PUT:/docs/{id} (victim 'bob', operator 'eve', codes 401/403/401)
+01:50:24.874 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization transition PUT:/users/{username}/role exhausted its sources after 7 attempts, proven false
+01:50:24.874 [main] DEBUG o.e.c.p.r.s.RestSecurityBuilder - Stateful-authorization: sources exhausted after 7 triple attempts
+01:50:24.879 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.880 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.881 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.885 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.886 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.889 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Got 401 although having auth for 'bob' on endpoint: /users
+01:50:24.890 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.891 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.896 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.897 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.918 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.919 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.935 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.936 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.953 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.954 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.958 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.958 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.966 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.967 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.973 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.974 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.979 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.979 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.982 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.982 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.984 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.984 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.986 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.986 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.988 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.989 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.991 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.992 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.993 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.997 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:24.997 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:24.999 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.001 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.001 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.003 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.007 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.007 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.008 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.011 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.011 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.012 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.014 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.014 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.015 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.018 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.018 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.019 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.024 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.024 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.030 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.038 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.038 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.039 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.041 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.042 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.043 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.045 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.045 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.046 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.049 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.049 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.050 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.052 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.053 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.054 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.056 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.057 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.058 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.060 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.060 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.061 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.064 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - Auth request failed with status 401
+01:50:25.064 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+01:50:25.065 [main] WARN  o.e.c.problem.httpws.auth.AuthUtils - No auth token for bob
+* Phase SECURITY lasted: 0h 0m 0s
+* Starting phase WRITE_OUTPUT
+* Going to save 27 tests to /Users/minhnguyen/IdeaProjects/graduational-thesis/infra/em-results/logic-fix-selftest-20261118-014908/source-401-nd
+01:50:25.381 [main] WARN  o.e.c.o.service.HttpWsTestCaseWriter - Currently no assertions are generated for response type: text/html;charset=utf-8
+* Potential faults: 4
+* Successfully executed (HTTP code 2xx) 2 endpoints out of 4 (50%)
+* Phase WRITE_OUTPUT lasted: 0h 0m 0s
+* Fuzzing session has finished
+* EvoMaster process has completed successfully
+* Use [32m--help[0m and visit [34mhttps://www.evomaster.org[0m to learn more about available options

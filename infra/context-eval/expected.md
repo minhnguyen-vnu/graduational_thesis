@@ -4,9 +4,9 @@
 |---|---|---|
 | 1 | No: show the code and wait for the user's OK before writing or building | `CLAUDE.md` §2 |
 | 2 | No. Added code carries no comments; the guard hook refuses it | `CLAUDE.md` §2; `.claude/hooks/guard.py` |
-| 3 | `evomaster-ND-07ebf19f.jar` = HEAD `2c3f281f13` plus `wip/nodup-tokens-20261113-tree.patch` (`THESIS` comments and the ND change; the ND change alone, `nodup-tokens-20261113.patch`, is taken against the commented tree; not committed: `f:` without path params, `tokens` without regex, no-duplication model); runs 2026-11-13 in `nd-wave1-20261113/`, `nd-wave2-20261113/` | `CLAUDE.md` §5; `docs/results.md` §0 |
+| 3 | `evomaster-LF-d559dc73.jar` = HEAD `2c3f281f13` plus `wip/logic-fix-20261118-tree.patch` (`THESIS` comments, the ND change and the logic fix of builder and oracle; not committed; no-duplication model); runs 2026-11-18 in `lf-wave1-20261118/`, `lf-wave2-20261118/` | `CLAUDE.md` §5; `docs/results.md` §0 |
 | 4 | reports-api, vampi-seeded, pyLoad, artifact-keeper; pyLoad (CVE-2026-41133) and artifact-keeper (vendor bug #1821, vendor patch as control) | `CLAUDE.md` §1, §4 |
-| 5 | 0 FP in 48 fixed-target runs, over 30 triples performed on patched code. The vendor patch gives 0 TN: the old token gets 401 (INCONCLUSIVE), so no triple is performed | `CLAUDE.md` §4; `docs/results.md` §1 |
+| 5 | 0 FP in 48 fixed-target runs, over 49 triples performed on patched code. The vendor patch gives 0 TN: the old token gets 401 (INCONCLUSIVE), so no triple is performed | `CLAUDE.md` §4; `docs/results.md` §1 |
 | 6 | INCONCLUSIVE, never a verdict | `CLAUDE.md` §3 |
 | 7 | No | `CLAUDE.md` §3 |
 | 8 | Source not 2xx, transition not 2xx, or follow-up with no status or 401 | `CLAUDE.md` §3 |

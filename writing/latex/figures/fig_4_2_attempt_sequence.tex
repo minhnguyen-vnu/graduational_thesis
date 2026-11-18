@@ -1,0 +1,56 @@
+\begin{tikzpicture}[
+  >=Stealth,
+  font=\footnotesize\linespread{1}\selectfont,
+  head/.style={rectangle, draw, rounded corners=2pt, fill=gray!8, align=center,
+               minimum width=2.4cm, minimum height=0.9cm},
+  ours/.style={head, very thick, fill=gray!40},
+  msg/.style={font=\scriptsize, inner sep=1.5pt},
+  note/.style={font=\scriptsize, inner sep=2.5pt, draw, fill=gray!40, very thick, rounded corners=2pt, align=left},
+  ret/.style={->, dashed},
+  frm/.style={draw, rounded corners=3pt, inner sep=0pt},
+  tag/.style={font=\scriptsize\bfseries, anchor=north west, inner sep=2pt}
+]
+  \def\K{0}\def\B{3.3}\def\E{7.1}\def\A{12.6}
+
+  \node[head] (hk) at (\K, 0) {Kho lưu trữ\\ca kiểm thử};
+  \node[ours] (hb) at (\B, 0) {Bộ dựng\\kịch bản MR-A1};
+  \node[head] (he) at (\E, 0) {Bộ đánh giá\\và oracle bảo mật};
+  \node[head] (ha) at (\A, 0) {artifact-keeper\\bản có lỗi};
+  \foreach \x/\n in {\K/hk, \B/hb, \E/he, \A/ha} {
+    \draw[densely dotted] (\n.south) -- (\x, -14.5);
+  }
+
+  \draw[->] (\K, -1.0) -- node[msg, above] {đọc ca đã lưu} (\B, -1.0);
+  \draw[->] (\B, -1.7) -- node[msg, above] {ca 1: bộ ba} (\E, -1.7);
+
+  \draw[frm] (\E-1.0, -2.0) rectangle (\A+0.4, -7.15);
+  \node[tag] at (\E-1.0, -2.0) {ca 1};
+  \draw[->]  (\E, -2.55) -- node[msg, above] {đăng nhập \texttt{victim}, \texttt{operator}} (\A, -2.55);
+  \draw[ret] (\A, -2.95) -- node[msg, above] {200, 200; token T1, T2} (\E, -2.95);
+  \draw[->]  (\E, -3.55) -- node[msg, above] {source, T1} (\A, -3.55);
+  \draw[ret] (\A, -3.95) -- node[msg, above] {200} (\E, -3.95);
+  \draw[->]  (\E, -4.55) -- node[msg, above] {\texttt{PATCH}, \texttt{is\_admin = false}, T2} (\A, -4.55);
+  \draw[ret] (\A, -4.95) -- node[msg, above] {200} (\E, -4.95);
+  \draw[->]  (\E, -5.55) -- node[msg, above] {follow-up, T1} (\A, -5.55);
+  \draw[ret] (\A, -5.95) -- node[msg, above] {200} (\E, -5.95);
+  \node[note, anchor=west] at (\E+0.15, -6.62) {bộ phán quyết: 200/200/200,\\gắn lỗi 970 vào follow-up};
+  \draw[ret] (\E, -7.65) -- node[msg, above] {200/200/200} (\B, -7.65);
+
+  \draw[->] (\B, -8.2) -- node[msg, above] {ca 2: đăng nhập lại} (\E, -8.2);
+  \draw[frm] (\E-1.0, -8.5) rectangle (\A+0.4, -10.65);
+  \node[tag] at (\E-1.0, -8.5) {ca 2};
+  \draw[->]  (\E, -9.05) -- node[msg, above] {đăng nhập \texttt{victim}} (\A, -9.05);
+  \draw[ret] (\A, -9.45) -- node[msg, above] {200; token T3} (\E, -9.45);
+  \draw[->]  (\E, -10.05) -- node[msg, above] {source, T3} (\A, -10.05);
+  \draw[ret] (\A, -10.45) -- node[msg, above] {403} (\E, -10.45);
+  \draw[ret] (\E, -11.0) -- node[msg, above] {403} (\B, -11.0);
+
+  \draw[->] (\B, -11.7) -- node[msg, above] {ca 3: ẩn danh} (\E, -11.7);
+  \draw[frm] (\E-1.0, -12.0) rectangle (\A+0.4, -13.15);
+  \node[tag] at (\E-1.0, -12.0) {ca 3};
+  \draw[->]  (\E, -12.55) -- node[msg, above] {source, không kèm token} (\A, -12.55);
+  \draw[ret] (\A, -12.95) -- node[msg, above] {401} (\E, -12.95);
+  \draw[ret] (\E, -13.55) -- node[msg, above] {401} (\B, -13.55);
+
+  \draw[->] (\B, -14.2) -- node[msg, above] {lưu ca 1} (\K, -14.2);
+\end{tikzpicture}

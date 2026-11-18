@@ -8,19 +8,34 @@ viết lại lịch sử ngày 2026-09-01.
 
 ## Jar đang trích số
 
-`EvoMaster/evomaster-ND-07ebf19f.jar` (sha256 `07ebf19f9682497e…3897`, `.sha256` cạnh jar) = HEAD `2c3f281f13` +
-`wip/nodup-tokens-20261113-tree.patch` (chưa commit; gồm comment `THESIS` và thay đổi ND): `f:` không lấy tham số
-path, `tokens` duyệt ký tự, mô hình bỏ lặp (sha256 `dcc77b59ed0f…`). Chi tiết ở "Dòng mã hiện tại".
+`EvoMaster/evomaster-LF-d559dc73.jar` (sha256 `d559dc730701745e…ffc1`, sha16 `d559dc730701745e`, `.sha256` cạnh
+jar) = HEAD `2c3f281f13` + `wip/logic-fix-20261118-tree.patch` (chưa commit; gồm comment `THESIS`, thay đổi ND và sửa
+logic thiếu, sai và thừa của builder và oracle theo hai lượt review); cùng mô hình với ND (`dcc77b59ed0f…`). Chi tiết
+ở "Dòng mã hiện tại".
 
-Đo lại đầy đủ ngày 2026-11-13 thay cho cổng (`em-results/nd-wave1-20261113/`, `nd-wave2-20261113/`, 98 hàng, cùng
-protocol và harness với SLM2 trừ jar và nhãn): reports-api 19/20 & 0/20, vampi-seeded 6/20 & 0/20, pyLoad 5/5 & 0/5,
-artifact-keeper 4/5 & 0/3. So với M2 (bằng SLM2 ở 98/98 ô 970): mất vampi-seeded seed 15 và artifact-keeper seed 3, cả
-hai là lượt không dựng được bộ ba; không hàng nào thêm; McNemar chính xác p = 0,5. Integrity sạch (0 det970 thiếu bộ
-ba, 0 FP, 0 ERR, máy không ngủ, không luật dừng nổ); audit 25 + 4 PASS, 0 FAIL. Đếm bằng
-`nd-wave1-20261113/nd_counts.py` (`nd-counts-cp.out`). Số: `docs/results.md`. Chọn ND làm jar trích số ngày
-2026-11-13 (user).
+Đo lại đầy đủ ngày 2026-11-18 thay cho cổng, vì cách dựng bộ ba đổi (`em-results/lf-wave1-20261118/`,
+`lf-wave2-20261118/`, 98 hàng, cùng protocol và harness với ND trừ jar và nhãn): reports-api 20/20 & 0/20,
+vampi-seeded 7/20 & 0/20, pyLoad 5/5 & 0/5, artifact-keeper 5/5 & 0/3. So với ND: thêm reports-api seed 17,
+vampi-seeded seed 15 và artifact-keeper seed 3, cả ba là lượt ND không dựng được bộ ba; không hàng nào mất; McNemar
+chính xác p = 0,25. Integrity sạch (0 det970 thiếu bộ ba, 0 FP, 0 ERR, máy không ngủ, không luật dừng nổ); audit
+45 + 10 PASS, 0 FAIL. Đếm bằng `lf-wave1-20261118/lf_counts.py` (`lf-counts-cp.out`). Số: `docs/results.md`. Chọn LF
+làm jar trích số ngày 2026-11-18 (user).
 
 ## Jar dự phòng
+
+`EvoMaster/evomaster-ND-07ebf19f.jar` (sha256 `07ebf19f9682497e…3897`, sha16 `07ebf19f9682497e`, `.sha256` cạnh
+jar) = HEAD `2c3f281f13` + `wip/nodup-tokens-20261113-tree.patch` (chưa commit; gồm comment `THESIS` và thay đổi
+ND; riêng thay đổi ND là `wip/nodup-tokens-20261113.patch`, tính trên cây đã có comment nên không áp thẳng lên HEAD).
+Hai thay đổi: `opFeatures` không lấy `f:` từ tham số path, mô hình học lại tương ứng
+(`analysis/lexicon-rules/m2-nodup-20261112/`, sha256 `dcc77b59ed0f…`); `tokens` duyệt từng ký tự thay regex, tương
+đương. Chi tiết, bằng chứng tương đương, diễn tập rollback: `wip/nodup-tokens-20261113.md`. Self-test
+`selftest/nodup-tokens-20261113.sh` so với SLM2: `em-results/nodup-tokens-selftest-20261113-002956/` 90 PASS / 0 FAIL;
+kiểm bổ sung `compare-supplement-20261113.txt` (jar quên bỏ path sẽ lệch 18 chỗ). Review độc lập không chặn. Jar trích
+số từ 2026-11-13 tới 2026-11-18. Đo lại đầy đủ ngày 2026-11-13 thay cho cổng (`em-results/nd-wave1-20261113/`,
+`nd-wave2-20261113/`, 98 hàng, cùng protocol và harness với SLM2 trừ jar và nhãn): reports-api 19/20 & 0/20,
+vampi-seeded 6/20 & 0/20, pyLoad 5/5 & 0/5, artifact-keeper 4/5 & 0/3. So với M2 (bằng SLM2 ở 98/98 ô 970): mất
+vampi-seeded seed 15 và artifact-keeper seed 3, cả hai là lượt không dựng được bộ ba; không hàng nào thêm; McNemar
+chính xác p = 0,5. Audit 25 + 4 PASS, 0 FAIL. Đếm bằng `nd-wave1-20261113/nd_counts.py` (`nd-counts-cp.out`).
 
 `EvoMaster/evomaster-M2-917c57dd.jar` (sha256 `917c57ddafcc3d93…`, `.sha256` cạnh jar) = `9c4be5b1dc` (jar DC)
 với `core/src/main/resources/stateful-authz-model.csv` thay bằng mô hình M2 (sha256 `b2deef150bf8…`,
@@ -37,16 +52,13 @@ một jar `em-results/p2f-full-20261015/runs.csv`; cổng 21/21 hai lần. Còn 
 
 ## Dòng mã hiện tại
 
-Cây mã chưa commit (2026-11-13) = HEAD `2c3f281f13` + `wip/nodup-tokens-20261113-tree.patch` (`git diff HEAD` trùng
-từng byte, 2026-11-14). Bản vá đó gồm comment `THESIS` của user và thay đổi ND; riêng thay đổi ND là
-`wip/nodup-tokens-20261113.patch`, tính trên cây đã có comment nên không áp thẳng lên HEAD.
-Hai thay đổi: `opFeatures` không lấy `f:` từ tham số path, mô hình học lại tương ứng
-(`analysis/lexicon-rules/m2-nodup-20261112/`, sha256 `dcc77b59ed0f…`, cây mã giữ model này); `tokens` duyệt từng
-ký tự thay regex, tương đương. Chi tiết, bằng chứng tương đương, diễn tập rollback: `wip/nodup-tokens-20261113.md`.
-Jar `EvoMaster/evomaster-ND-07ebf19f.jar` (sha256 `07ebf19f9682497e…3897`, sha16 `07ebf19f9682497e`, `.sha256` cạnh
-jar). Self-test `selftest/nodup-tokens-20261113.sh` so với SLM2: `em-results/nodup-tokens-selftest-20261113-002956/`
-90 PASS / 0 FAIL; kiểm bổ sung `compare-supplement-20261113.txt` (jar quên bỏ path sẽ lệch 18 chỗ). Review độc lập
-không chặn. Đo lại đầy đủ: mục "Jar đang trích số".
+Cây mã chưa commit (2026-11-18) = HEAD `2c3f281f13` + `wip/logic-fix-20261118-tree.patch` (`git diff HEAD` trùng
+từng byte, 2026-11-18), tức mã của jar LF: 4 file (`RestSecurityBuilder.kt`, `RestSecurityOracle.kt`,
+`ExperimentalFaultCategory.kt`, `stateful-authz-model.csv`). Cây trước lượt sửa logic: `wip/pre-refactor-20261118.patch`
+(logic trùng jar ND, chỉ thêm comment `THESIS`). Từng mục sửa, self-test, review và diễn tập rollback:
+`wip/logic-fix-20261118.md`. Self-test `selftest/logic-fix-20261118.sh`: 48 PASS, 0 FAIL
+(`em-results/logic-fix-selftest-20261118-014908.out`). `evomaster-LF-1b897344.jar` là bản trước khi sửa theo review
+của agent; không dùng. Đo lại đầy đủ: mục "Jar đang trích số".
 
 `2c3f281f13` (HEAD, 2026-11-13, chưa push) = `9c4be5b1dc` + phần mã của `wip/shorten-logic-20261112.patch`, không kèm
 comment `THESIS`: 98 dòng đổi trùng phần mã của bản vá. Gộp logic lặp trong phần ta thêm, giữ vòng `for`, hành vi và log: 9 mục, −70/+33 dòng; dòng mã ta thêm trên v6.1.1

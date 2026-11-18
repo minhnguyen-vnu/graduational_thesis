@@ -6,26 +6,26 @@ Oracle 970 phát hiện được vi phạm MR-A1 trên cả bốn ứng dụng �
 \section{Tổng kết kết quả nghiên cứu}
 \label{sec:conclusion_summary}
 
-Khóa luận đã mở rộng EvoMaster bằng Oracle 970 để tự động kiểm tra lỗ hổng phân quyền có trạng thái thuộc quan hệ MR-A1. Phần mở rộng chạy trong pha kiểm thử bảo mật và không thay đổi thuật toán tìm kiếm. Các kết quả dưới đây được trình bày theo bốn đóng góp nêu ở Mục~\ref{sec:intro_contributions}.
+Các kết quả được trình bày theo bốn đóng góp nêu ở Mục~\ref{sec:intro_contributions}.
 
-Thứ nhất, quan hệ MR-A1 được cài đặt thông qua điều kiện tiền đề và bộ ba thao tác source, transition và follow-up. Mọi lượt bỏ sót trong thực nghiệm đều là lượt không dựng được bộ ba hợp lệ để phán quyết.
+Thứ nhất, Oracle 970 cài đặt quan hệ MR-A1 bằng điều kiện tiền đề và bộ ba thao tác [source/transition/follow-up]. Cả 13 lượt bỏ sót đều do thiếu bộ ba hợp lệ để phán quyết, tức nằm ở khâu dựng bộ ba.
 
-Thứ hai, mô hình Naive Bayes tự động nhận diện thao tác chuyển trạng thái từ đặc tả OpenAPI. Trên 237 bản đặc tả không tham gia huấn luyện, 101 trong 153 thao tác chuyển trạng thái có điểm dương; 523 trong 624 thao tác có điểm dương mang nhãn thông thường, nên điểm dương chỉ dùng để chọn ứng viên. Trên pyLoad và artifact-keeper, công cụ tự chọn thao tác hạ quyền từ đặc tả mà không cần khai báo thủ công.
+Thứ hai, mô hình Naive Bayes xếp hạng thao tác chuyển trạng thái từ đặc tả OpenAPI. Trên 237 bản đặc tả không tham gia huấn luyện, 101 trong 153 thao tác chuyển trạng thái có điểm dương. Trong 624 thao tác có điểm dương, 523 thao tác mang nhãn thông thường, nên điểm dương chỉ dùng để chọn ứng viên. Trên pyLoad và artifact-keeper, công cụ tự chọn thao tác hạ quyền từ đặc tả.
 
-Thứ ba, bước đăng nhập lại loại các bộ ba mà token mới vẫn được chấp nhận, nhằm tránh phán quyết trên những thao tác chuyển trạng thái chưa xác nhận là hạ quyền. Trên artifact-keeper, bước này loại 9 lần thử dựng trên hai thao tác không hạ quyền, dù chuỗi mã của chúng là \texttt{200/200/200}.
+Thứ ba, bước đăng nhập lại chỉ giữ các bộ ba mà token mới bị từ chối bằng mã 403. Do đó, phán quyết dựa trên những thao tác chuyển trạng thái đã được xác nhận là hạ quyền. Trong 98 lượt chạy, bước này xác nhận hạ quyền ở cả 60 bộ ba có follow-up \texttt{2xx} và chưa loại lần thử nào.
 
-Thứ tư, thực nghiệm gồm 98 lượt chạy trên bốn ứng dụng. Oracle 970 báo vi phạm ở 19/20 lượt với reports-api, 6/20 lượt với vampi-seeded, 5/5 lượt với pyLoad và 4/5 lượt với artifact-keeper. Trong 48 lượt trên biến thể đã vá, công cụ dựng được bộ ba ở 30 lượt và không báo động giả ở lượt nào. Lỗi trên pyLoad (\mbox{CVE-2026-41133}) và artifact-keeper nằm trong mã của nhà phát triển ứng dụng; trên biến thể đã vá của pyLoad, Oracle 970 báo vi phạm ở 0/5 lượt. Bản vá của nhà phát triển từ chối token cũ bằng mã 401, nên trong 3 lượt chạy trên bản vá này, công cụ không dựng được bộ ba nào và cũng không báo động giả.
+Thứ tư, trong 98 lượt chạy, Oracle 970 báo vi phạm ở 37/50 lượt trên biến thể có lỗ hổng: 20/20 với reports-api, 7/20 với vampi-seeded, 5/5 với pyLoad và 5/5 với artifact-keeper. Trong 48 lượt trên biến thể đã vá, công cụ dựng được bộ ba ở 31 lượt và không báo động giả ở lượt nào. Lỗi trên pyLoad (\mbox{CVE-2026-41133}) và artifact-keeper nằm trong mã của nhà phát triển ứng dụng. Trên biến thể đã vá của pyLoad, Oracle 970 báo vi phạm ở 0/5 lượt. Bản vá của artifact-keeper từ chối token cũ bằng mã 401, nên trong 3 lượt chạy trên bản vá này, công cụ không dựng được bộ ba nào.
 
 \section{Hạn chế hiện tại của đề tài}
 \label{sec:conclusion_limitations}
 
-Khóa luận chỉ kiểm chứng quan hệ MR-A1, tức trường hợp hạ vai trò; các quan hệ khác của cùng lớp lỗi được nêu ở Mục~\ref{sec:conclusion_future_work}. Mã từ chối được cố định là 403 và chưa cấu hình được, nên bản vá trả 401 như của artifact-keeper không được phán quyết. Các giới hạn còn lại, gồm quy mô mẫu nhỏ và phán quyết dựa trên mã trạng thái HTTP, được phân tích ở Mục~\ref{sec:eval_threats}.
+Khóa luận chỉ kiểm chứng quan hệ MR-A1, tức trường hợp hạ vai trò, và chưa kiểm chứng các quan hệ khác ở Mục~\ref{sec:conclusion_future_work}. Mã từ chối cố định ở 403 và chưa cho phép cấu hình, nên bản vá trả 401 như của artifact-keeper nằm ngoài phạm vi phán quyết. Các giới hạn còn lại gồm cỡ mẫu nhỏ và phán quyết dựa trên mã trạng thái HTTP (Mục~\ref{sec:eval_threats}).
 
 \section{Hướng phát triển trong tương lai}
 \label{sec:conclusion_future_work}
 
-Để nhận diện thao tác chuyển trạng thái trong các đặc tả đặt tên không theo quy ước, có thể dùng mô hình ngôn ngữ lớn (Large Language Model, LLM) đề xuất ứng viên. Naive Bayes hiện chỉ dựa vào các từ trong đường dẫn, tên trường và phương thức. LLM có thể khai thác mô tả trong đặc tả OpenAPI và ngữ cảnh thao tác để đề xuất ứng viên, trong khi phép phán quyết giữ nguyên.
+Để nhận diện thao tác chuyển trạng thái trong các đặc tả đặt tên không theo quy ước, có thể dùng mô hình ngôn ngữ lớn (Large Language Model, LLM) đề xuất ứng viên. Naive Bayes hiện dựa vào các từ trong đường dẫn, tên trường và phương thức. LLM có thể khai thác thêm mô tả trong đặc tả OpenAPI và ngữ cảnh thao tác, trong khi phép phán quyết giữ nguyên.
 
-Phần mở rộng cũng có thể nhận thêm các tín hiệu từ chối ngoài mã 403, như mã 401 khi phiên bị vô hiệu hóa, để đánh giá được những bản vá như của artifact-keeper. Ngoài ra, bộ dựng có thể chủ động tạo tài nguyên và tài khoản cần thiết trước khi chạy kịch bản kiểm thử MR-A1, thay vì chỉ dựa vào kho lưu trữ. Cải tiến này có thể giúp 6 trong 16 lượt bỏ sót, nơi bộ dựng không thực hiện lần thử nào; nguyên nhân của 6 lượt này chưa được xác định (Mục~\ref{sec:eval_threats}).
+Phần mở rộng cũng có thể nhận thêm các tín hiệu từ chối ngoài mã 403, như mã 401 khi phiên bị vô hiệu hóa, để đánh giá được những bản vá như của artifact-keeper. Bộ dựng có thể giảm phụ thuộc vào kho lưu trữ ca kiểm thử bằng cách chủ động tạo tài nguyên và tài khoản cần thiết. Các bước chuẩn bị diễn ra trước khi chạy kịch bản kiểm thử MR-A1. Ở 6 trong 13 lượt bỏ sót, bộ dựng không thử lần nào và nguyên nhân chưa xác định (Mục~\ref{sec:eval_threats}). Cần ghi thêm nhật ký chẩn đoán để xác định nguyên nhân trước khi chọn cải tiến cho 6 lượt đó.
 
 Ngoài MR-A1, nghiên cứu tiếp theo có thể xét các quan hệ khác của lớp phân quyền có trạng thái, như chuyển quyền sở hữu tài nguyên và quyền hết hạn theo thời gian. Mỗi quan hệ cần điều kiện tiền đề và cơ chế phán quyết riêng.

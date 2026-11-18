@@ -193,8 +193,8 @@ to guess.
   token outlives `T`; a shorter TTL (VAmPI's is 60 s) would turn real bugs into 401s and
   silently drop them.
 - **404 is not a denial.** A 404 can mean "you may not, and I hide it" or "the resource is not there". A follow-up
-  that gets 404 completes the triple and never raises 970. In the 98 runs of jar ND no follow-up got 404; follow-ups
-  got 200, 401 or 403 (`infra/em-results/nd-wave1-20261113/logs/`, `nd-wave2-20261113/logs/`).
+  that gets 404 completes the triple and never raises 970. In the 98 runs of jar LF no follow-up got 404; follow-ups
+  got 200, 201, 401 or 403, or recorded no status (`infra/em-results/lf-wave1-20261118/logs/`, `lf-wave2-20261118/logs/`).
 - **The codes are fixed in the tool, not configurable.** A target that denies with another code gives no verdict:
   artifact-keeper's vendor patch answers 401.
 
@@ -245,7 +245,7 @@ A BUG or PASS verdict is only meaningful when **all** of these hold; if any fail
 |---|---|---|
 | **V1** | the credential `c` stays valid (not expired) across `T` — no 401 | long TTL; a 401 makes the attempt VOID (§5.1) |
 | **V2** | repeating the source on the same resource is still meaningful (an update, not a consume) | PUT/PATCH sources first, never DELETE (§5.4) |
-| **V3** | the follow-up status is not a masking 404 | no follow-up got 404 in the 98 runs of jar ND (§5.1) |
+| **V3** | the follow-up status is not a masking 404 | no follow-up got 404 in the 98 runs of jar LF (§5.1) |
 | **V4** | `T` actually **took effect** server-side (the role change returned 2xx *and* persisted) | assert the transition's own response |
 | **V5** | `a` is **gated by the removed privilege** (the §2.3 guard) — the post-`T` role is not entitled to `a` on its own | scoping `a` to an admin-only endpoint (§5.2) |
 

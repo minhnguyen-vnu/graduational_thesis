@@ -1,6 +1,6 @@
 # Mô hình Naive Bayes chọn transition và trường
 
-Mô hình hiện tại là mô hình bỏ lặp (jar `ND`, 2026-11-13). Nó là M2 học lại với một thay đổi: `f:` chỉ lấy từ tên
+Mô hình hiện tại là mô hình bỏ lặp (jar `ND` từ 2026-11-13, jar `LF` từ 2026-11-18). Nó là M2 học lại với một thay đổi: `f:` chỉ lấy từ tên
 trường query và body, vì tên tham số path đã nằm trong `p:` và trước đây bị cộng hai lần. Cùng công thức, cùng corpus
 `nop-hoi-dong/nhan-hoc-cuoi.csv` (209 op T trên 10.381 op ghi); chỉ bảng `op` khác M2. File:
 `infra/analysis/lexicon-rules/m2-nodup-20261112/` (`derive_nodup.py`, `stateful-authz-model.csv`, sha256
@@ -81,7 +81,7 @@ sách viết tay 117; Naive Bayes so với RF p = 0,065–0,27.
 - Hạng của transition thật trong các op dựng được bộ ba: 1 trên 1 ở reports-api và vampi-seeded, 1 trên 3 ở pyLoad
   dưới M1, M2 và mô hình bỏ lặp; ở artifact-keeper 4 trên 7 (M1), 4 trên 5 (M2), 3 trên 4 (bỏ lặp)
   (`m2-model-20261107/compare_targets.out`, `m2-nodup-20261112/compare_targets_nodup.out`).
-- Số 970 và FP theo jar ND: `docs/results.md` §1.
+- Số 970 và FP theo jar LF: `docs/results.md` §1.
 
 ## 5. File mô hình
 

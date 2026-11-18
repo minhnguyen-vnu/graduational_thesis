@@ -13,12 +13,12 @@ code lines) `opFeatures` takes `f:` from query and body fields only and `tokens`
 and the model file holds the no-duplication model (`lexicon-rules/m2-nodup-20261112/`). Commit history, the jar each
 commit built, and its self-test: `jars.md`.
 
-| File | + | Holds |
+| File | + (HEAD `2c3f281f13`; LF tree, code lines without blanks and `THESIS` comments: 4, 42, 1306, 251) | Holds |
 |---|---|---|
 | `ExperimentalFaultCategory.kt` | 5 | `SECURITY_STATEFUL_AUTHORIZATION(970)` |
 | `RestSecurityOracle.kt` | 66 | judgment: `handleStatefulAuthorization()` |
 | `RestSecurityBuilder.kt` | 1428 | construction: `addForStatefulAccessControl()`, `buildStatefulAuthzTriple()`, `executeStatefulAuthzTriple()`, Naive Bayes scoring, operator restore, C4 probe |
-| `stateful-authz-model.csv` | 261 | Naive Bayes weights, tables `op`, `role`, `victim`, `low`, `high`, `lowstr`, `highstr` (M1 in HEAD; M2 in jar M2, `lexicon-rules/m2-model-20261107/`; the no-duplication model in jar ND) |
+| `stateful-authz-model.csv` | 261 | Naive Bayes weights, tables `op`, `role`, `victim`, `low`, `high`, `lowstr`, `highstr` (M1 in HEAD; M2 in jar M2, `lexicon-rules/m2-model-20261107/`; the no-duplication model in jars ND and LF) |
 
 `statefulTripleUnderEvaluation` is true only while `executeStatefulAuthzTriple` evaluates its own triple, and the
 handler returns unless it is true (commit `bf26b65322`).
@@ -49,11 +49,13 @@ The search algorithm is untouched (black-box default: SMARTS).
 1. **Transition**: a write op with Naive Bayes posterior > 0.5 (`transitionScore > 0`), e.g.
    `PUT /users/{username}/role`, ranked by score with ties in spec order; every such op is tried. The role
    field is the non-path field with the highest role score above zero. Reduced values follow the field kind:
-   enum values ranked by `valueScore(low) − valueScore(high)`, bool flipped, array `[]`, numbers `1, 0, 2`,
+   enum values with `valueScore(low) − valueScore(high) >= 0`, ranked by it, `EVOMASTER` dropped; bool `false`; array `[]`;
+   numbers `1, 0, 2`; every role field set to the first reduced value;
    strings from the model's `lowstr` table. A value equal to the victim's current role is skipped, unless the
    model scores that role low.
 2. **Source**: a guarded write some user was denied (403) and the victim was allowed (2xx). PUT/PATCH first;
-   POST only when PUT/PATCH give no candidate.
+   then POST. Ops that pass the transition rule (score > 0) are not sources. A non-2xx source drops the victim;
+   401 or 403 also locks the (transition, victim) pair. A 404 transition locks only that pair.
 3. **Individual**: `[create?, source(victim), transition(operator → victim reduced), follow-up(victim, same token)]`.
 4. **Run and check performed**: VOID unless source 2xx, transition 2xx, follow-up has a status other than 401. Retry over
    victim × operator × value, up to `MAX_STATEFUL_TRIPLE_ATTEMPTS`.
