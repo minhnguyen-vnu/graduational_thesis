@@ -30,12 +30,12 @@ Bộ dựng đọc các ca trong kho lưu trữ và dùng trọng số Naive Bay
 
 Trước khi gửi ca bộ ba, bộ dựng bật một cờ và tắt cờ khi lần đánh giá kết thúc; bộ phán quyết chỉ xét những ca được đánh giá trong lúc cờ đang bật. Vì vậy, phán quyết theo MR-A1 không áp dụng cho các ca của pha tìm kiếm hoặc các bước kiểm tra khác. Ca khôi phục quyền và hai ca của bước đăng nhập lại cũng nằm ngoài phạm vi phán quyết. Bộ dựng chỉ đưa ca bộ ba vào kho lưu trữ khi bộ ba không rơi vào điều kiện hủy nào ở Mục~\ref{subsec:method_void}. Tệp kết quả lấy ca từ kho lưu trữ, nên lỗi 970 của một bộ ba bị hủy không có trong tệp kết quả.
 
-Các bước của pha kiểm thử bảo mật dùng chung quỹ thời gian của pha, và mỗi bước chỉ bắt đầu khi pha còn thời gian, nên bước xếp sau có thể không chạy. Trong pha, bộ dựng chạy thứ hai, ngay sau bước sinh phản hồi 403 và trước các bước kiểm tra còn lại. Khi chọn source, bộ dựng xét cả các ca nhận 403 mà bước sinh phản hồi 403 vừa thêm vào kho lưu trữ.
+Các bước của pha kiểm thử bảo mật dùng chung quỹ thời gian của pha. Mỗi bước chỉ bắt đầu khi pha còn thời gian, nên bước xếp sau có thể không chạy. Trong pha, bộ dựng chạy thứ hai, ngay sau bước sinh phản hồi 403 và trước các bước kiểm tra còn lại. Khi chọn source, bộ dựng xét cả các ca nhận 403 mà bước sinh phản hồi 403 vừa thêm vào kho lưu trữ.
 
 \subsection{Kết quả kiểm thử và ca kiểm thử 970 trong tập kết quả}
 \label{subsec:impl_output}
 
-Ở chế độ quét hộp đen, kết quả của EvoMaster được sinh ra là mã nguồn Python, gồm ba tệp ca kiểm thử (Mục~\ref{sec:bg_sbst}), kèm tệp báo cáo \texttt{report.json} theo định dạng Web Fuzzing Commons (WFC) \cite{wfc060}. Hình~\ref{fig:report_json} trích tệp báo cáo của lượt chạy seed 2 trên biến thể có lỗ hổng của reports-api. Bảng~\ref{tab:report_fields} nêu ý nghĩa các trường theo lược đồ WFC 0.6.0, phiên bản mà EvoMaster 6.1.1 dùng.
+Ở chế độ hộp đen, EvoMaster ghi kết quả thành ba tệp mã Python chứa ca kiểm thử (Mục~\ref{sec:bg_sbst}) và một tệp báo cáo \texttt{report.json} theo định dạng Web Fuzzing Commons (WFC) \cite{wfc060}. Hình~\ref{fig:report_json} trích tệp báo cáo của lượt chạy seed 2 trên biến thể có lỗ hổng của reports-api. Bảng~\ref{tab:report_fields} nêu ý nghĩa các trường theo lược đồ WFC 0.6.0, phiên bản mà EvoMaster 6.1.1 dùng.
 
 \noindent\begin{minipage}{\linewidth}
 \begingroup
@@ -153,7 +153,7 @@ Bộ ba dựa vào cơ chế xác thực có sẵn của EvoMaster (Mục~\ref{s
   \label{fig:attempt_sequence}
 \end{figure}
 
-Hình~\ref{fig:attempt_sequence} minh họa lần thử đầu tiên dựng được bộ ba trên phiên bản có lỗi của artifact-keeper, ở lượt chạy seed 1. Nạn nhân là tài khoản \texttt{victim}, tài khoản quản trị là \texttt{operator} (tên đăng nhập \texttt{admin}). Source và follow-up là \texttt{POST} \path{/api/v1/admin/analytics/snapshot}, còn thao tác chuyển trạng thái là \texttt{PATCH /api/v1/users/\{id\}}, với \texttt{id} của nạn nhân. Lần thử gồm ba ca kiểm thử:
+Hình~\ref{fig:attempt_sequence} minh họa lần thử đầu tiên dựng được bộ ba trên biến thể có lỗ hổng của artifact-keeper, ở lượt chạy seed 1. Nạn nhân là tài khoản \texttt{victim}, tài khoản quản trị là \texttt{operator} (tên đăng nhập \texttt{admin}). Source và follow-up là \texttt{POST} \path{/api/v1/admin/analytics/snapshot}, còn thao tác chuyển trạng thái là \texttt{PATCH /api/v1/users/\{id\}}, với \texttt{id} của nạn nhân. Lần thử gồm ba ca kiểm thử:
 \begin{itemize}
   \item Ca 1 chứa bộ ba: source và follow-up dùng token T1 của nạn nhân, thao tác chuyển trạng thái dùng token T2 của tài khoản quản trị. Cả ba lời gọi nhận 200, và bộ phán quyết gắn lỗi 970 vào follow-up.
   \item Ca 2 là ca đăng nhập lại: source được gửi với token mới T3 của nạn nhân và nhận 403.
@@ -227,7 +227,7 @@ Trình quản lý tải pyLoad dùng Python/Flask và có lỗ hổng \mbox{CVE-
 
 Thực nghiệm dùng pyLoad bản dev97, bản cuối cùng mà bản ghi CVE xếp vào diện bị ảnh hưởng. Bản vá của nhà phát triển xóa mọi phiên của một người dùng khi quyền của người đó đổi qua endpoint \texttt{/json/update\_users}, khi đổi mật khẩu hoặc khi xóa tài khoản. Bản vá này thu hồi phiên thay vì từ chối thao tác bằng mã 403, nên khóa luận không dùng bản vá đó làm biến thể đã vá. Biến thể đã vá của khóa luận tra lại vai trò hiện tại từ cơ sở dữ liệu thay vì đọc từ phiên. Thay đổi nằm ở phần kiểm tra quyền của nhóm endpoint \texttt{/json/*} và của nhóm \texttt{/api/*}, hai chỗ pyLoad đọc vai trò từ phiên.
 
-Bảng~\ref{tab:scenario_pyload} là kịch bản dựng lỗi trên pyLoad, lấy từ ca kiểm thử do công cụ sinh ở seed 1 trên hai biến thể. Nạn nhân là \texttt{pyload}, tài khoản quản trị là \texttt{alice}, và hai tài khoản đăng nhập qua \texttt{POST /login} để nhận cookie phiên. Trước bộ ba, \texttt{pyload} nâng quyền \texttt{alice} trở lại bằng bước khôi phục quyền (Mục~\ref{subsec:method_void}).
+Bảng~\ref{tab:scenario_pyload} trình bày kịch bản dựng lỗi trên pyLoad, lấy từ ca kiểm thử do công cụ sinh ở seed 1 trên hai biến thể. Nạn nhân là \texttt{pyload}, tài khoản quản trị là \texttt{alice}, và hai tài khoản đăng nhập qua \texttt{POST /login} để nhận cookie phiên. Trước bộ ba, \texttt{pyload} nâng quyền \texttt{alice} trở lại bằng bước khôi phục quyền (Mục~\ref{subsec:method_void}).
 
 \begin{table}[H]
   \centering

@@ -58,7 +58,7 @@ Trong đó, điều kiện tiền đề $\mathit{Pre}(a, T)$ đúng khi thao tá
 
 Trong thuật ngữ kiểm thử biến hình, lần thực thi nguồn là yêu cầu $a$ gửi bằng $c$ ở trạng thái $s$. Phép biến đổi giữ nguyên yêu cầu và thông tin xác thực, chỉ đổi trạng thái của hệ thống bằng $T$. Lần thực thi tiếp theo gửi lại đúng yêu cầu đó bằng cùng $c$ ở trạng thái $s'$ và không đăng nhập lại. Lỗi cần tái hiện là phiên mở trước lúc hạ quyền vẫn giữ quyền đã bị thu hồi.
 
-Điều kiện tiền đề loại các thao tác không phụ thuộc vào quyền bị thu hồi để giảm báo động giả. Chẳng hạn, thao tác cập nhật hồ sơ cá nhân dùng chung cho nhiều vai trò, nên sau khi tài khoản bị hạ quyền, việc máy chủ tiếp tục chấp nhận thao tác cập nhật hồ sơ cá nhân vẫn phù hợp với quyền của tài khoản. Do chuẩn RBAC để ngỏ cách cập nhật quyền trên phiên đang hoạt động \cite{incits359draft}, yêu cầu từ chối ngay sau khi hạ quyền là chính sách riêng của từng hệ thống mục tiêu.
+Điều kiện tiền đề loại các thao tác không phụ thuộc vào quyền bị thu hồi để giảm báo động giả. Chẳng hạn, thao tác cập nhật hồ sơ cá nhân dùng chung cho nhiều vai trò. Sau khi tài khoản bị hạ quyền, máy chủ tiếp tục chấp nhận thao tác này, và hành vi đó vẫn phù hợp với quyền của tài khoản. Do chuẩn RBAC để ngỏ cách cập nhật quyền trên phiên đang hoạt động \cite{incits359draft}, yêu cầu từ chối ngay sau khi hạ quyền là chính sách riêng của từng hệ thống mục tiêu.
 
 Bảng~\ref{tab:temporal_vs_diff} đối chiếu MR-A1 với nhóm oracle so sánh chéo tài khoản (differential oracle) của Şahin và cộng sự \cite{sahin2024bola}, dùng để phát hiện lỗi BOLA và BFLA. Hình~\ref{fig:mr_a1_state_space} biểu diễn hai trạng thái phân quyền cùng nhánh an toàn và nhánh vi phạm.
 
@@ -139,7 +139,7 @@ Trong một số lần thử, mọi tài khoản quản trị đều bị từ c
 
 Trên pyLoad, ở mọi lượt chạy, các tài khoản quản trị đều bị từ chối khi hạ quyền nạn nhân \texttt{pyload}. Khi đó \texttt{pyload} nâng quyền \texttt{alice} trở lại, rồi \texttt{alice} hạ quyền \texttt{pyload} để dựng bộ ba. Bước khôi phục chỉ đảo được việc hạ quyền và không phục hồi được tài khoản đã bị xóa trong pha tìm kiếm.
 
-Khi follow-up nhận \texttt{2xx}, bộ dựng chạy thêm bước đăng nhập lại trước khi giữ bộ ba. Bước này kiểm tra transition có thực sự thu hồi quyền hay không, và quyền bị thu hồi có đúng là quyền mà source yêu cầu hay không, vì một endpoint có tên gợi ý hạ quyền vẫn có thể nâng quyền tùy giá trị vai trò gửi kèm.
+Khi follow-up nhận \texttt{2xx}, bộ dựng chạy thêm bước đăng nhập lại trước khi giữ bộ ba. Bước này kiểm tra transition có thu hồi quyền hay không, và quyền bị thu hồi có đúng là quyền mà source yêu cầu hay không. Một endpoint có tên gợi ý hạ quyền vẫn có thể nâng quyền, tùy giá trị vai trò gửi kèm.
 
 Ở bước đăng nhập lại, bộ dựng dùng token mới của tài khoản nạn nhân để chạy lại chuỗi lời gọi của nạn nhân trong ca kiểm thử gốc, gồm các lời gọi khởi tạo dữ liệu và thao tác source, rồi đọc mã trạng thái tại chính source. Mã 403 tại source cho thấy token mới không còn được phép gọi thao tác đó, còn nếu source nhận \texttt{2xx} hay một mã khác 403, bộ ba bị hủy. Mỗi lời gọi đứng trước source phải kết thúc trong cùng nhóm mã trạng thái (\texttt{2xx}, \texttt{4xx}, \ldots) như trong bộ ba. Nếu một lời gọi đổi nhóm mã, source chạy trên trạng thái khác với trong bộ ba và mã 403 có thể không đến từ vai trò, nên bộ ba bị hủy.
 
@@ -147,7 +147,7 @@ Khi source nhận mã 403, bộ dựng chạy lại cùng chuỗi một lần n�
 
 Với kịch bản ở Bảng~\ref{tab:triple_example} trên biến thể có lỗ hổng, bước đăng nhập lại gửi lại lời gọi 1 bằng token mới của \texttt{alice} và nhận 403 tại chính source. Khi source được gửi không kèm thông tin xác thực, reports-api trả 401, nên bộ ba được giữ và Oracle 970 báo vi phạm.
 
-Bước đăng nhập lại chạy sau follow-up để tránh vô hiệu hóa token cũ trên hệ thống giữ một phiên cho mỗi tài khoản, vì trên hệ thống đó, lần đăng nhập mới sẽ vô hiệu hóa token cũ mà follow-up cần. Token mới chỉ có được qua lần đăng nhập ở đầu ca kiểm thử, nên bước đăng nhập lại chạy trong một ca kiểm thử riêng.
+Bước đăng nhập lại chạy sau follow-up vì trên hệ thống giữ một phiên cho mỗi tài khoản, lần đăng nhập mới sẽ vô hiệu hóa token cũ mà follow-up cần. Token mới chỉ có được qua lần đăng nhập ở đầu ca kiểm thử, nên bước đăng nhập lại chạy trong một ca kiểm thử riêng.
 
 Công cụ hộp đen không quan sát trực tiếp được điều kiện tiền đề $\mathit{Pre}(a, T)$, vì quy tắc phân quyền nằm trong logic nội bộ của ứng dụng. Bộ dựng ước lượng điều kiện này bằng dấu hiệu HTTP ở hai thời điểm: khi chọn source và ở bước đăng nhập lại. Ở thời điểm thứ hai, bộ dựng chỉ so nhóm mã của các lời gọi đứng trước source, nên không nhận ra một lời gọi giữ nguyên nhóm mã nhưng để lại trạng thái khác. Một cảnh báo của Oracle 970 là vi phạm MR-A1 khi mã 403 phản ánh quyết định phân quyền và phiên mới mang quyền hiện hành. Nếu token mới vẫn mang quyền cũ, bước đăng nhập lại có thể loại nhầm một bộ ba chứa lỗ hổng.
 
@@ -236,7 +236,7 @@ Hai mô hình ngôn ngữ lớn gán nhãn khởi đầu, mỗi mô hình một 
 
 Mô hình dùng trong công cụ được học từ toàn bộ tập này, gọi là tập huấn luyện, và được chấm trên một tập đánh giá gồm các bản đặc tả khác (Mục~\ref{sec:eval_ranking}). Ngoài bảng trọng số dùng để xếp hạng thao tác, mô hình còn có các bảng trọng số riêng để chọn trường vai trò và trường định danh tài khoản nạn nhân.
 
-Giá trị hạ quyền phụ thuộc kiểu của trường vai trò (Bảng~\ref{tab:role_values}), trong đó chỉ trường kiểu liệt kê và kiểu chuỗi dùng mô hình. Bộ dựng loại hai loại ứng viên: ứng viên không có giá trị hạ quyền đề xuất (chẳng hạn khi không tìm thấy trường vai trò) và ứng viên không có trường định danh tài khoản nạn nhân. Khi thao tác có nhiều trường vai trò, bộ dựng đặt mọi trường về giá trị hạ quyền đầu tiên.
+Giá trị hạ quyền phụ thuộc kiểu của trường vai trò (Bảng~\ref{tab:role_values}), trong đó chỉ trường kiểu liệt kê và kiểu chuỗi dùng mô hình. Bộ dựng loại ứng viên nếu không có giá trị hạ quyền được đề xuất, chẳng hạn khi không tìm thấy trường vai trò, hoặc nếu thiếu trường định danh tài khoản nạn nhân. Khi thao tác có nhiều trường vai trò, bộ dựng đặt mọi trường về giá trị hạ quyền đầu tiên.
 
 \begin{table}[htbp]
   \centering

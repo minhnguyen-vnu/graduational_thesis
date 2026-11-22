@@ -5,7 +5,7 @@
 \begingroup
 \emergencystretch=3em
 
-Chương này đánh giá khả năng phát hiện vi phạm, mức báo động giả và khả năng nhận diện thao tác chuyển trạng thái của Oracle 970. Kết quả được so sánh với baseline, tức EvoMaster 6.1.1 chạy với các oracle phân quyền sẵn có, không kèm Oracle 970.
+Chương này đánh giá năm vấn đề: số lượt Oracle 970 phát hiện vi phạm trên biến thể có lỗ hổng và số lượt báo động giả trên biến thể đã vá, khả năng tự nhận diện thao tác chuyển trạng thái từ đặc tả, khả năng phát hiện lỗi thật do nhà phát triển khác viết, nguyên nhân của các lượt bỏ sót, và kết quả của EvoMaster khi không kèm Oracle 970 trên cùng lớp lỗi. Kết quả được so sánh với baseline, tức EvoMaster 6.1.1 chạy với các oracle phân quyền sẵn có, không kèm Oracle 970.
 
 \section{Thiết kế thực nghiệm}
 \label{sec:eval_design}
@@ -83,6 +83,8 @@ Trên bản vá của artifact-keeper, thao tác hạ quyền thành công ở c
 
 Trong 100 lượt chạy, bước đăng nhập lại được áp dụng cho 59 bộ ba có cả ba mã \texttt{2xx}, tất cả thuộc biến thể có lỗ hổng. Bước này giữ 35 bộ ba và hủy 24 bộ ba, cả 24 đều trên reports-api với source \texttt{PUT /reports/\{id\}}, vì một lời gọi đứng trước source đổi nhóm mã trạng thái khi chạy lại bằng token mới.
 
+Trên bốn ứng dụng đã đo, Oracle 970 phát hiện vi phạm ở 28/50 lượt trên biến thể có lỗ hổng mà không báo động giả ở lượt nào trên biến thể đã vá, và toàn bộ phần bỏ sót nằm ở bước dựng bộ ba.
+
 \section{Hiệu quả xếp hạng thao tác chuyển trạng thái}
 \label{sec:eval_ranking}
 
@@ -107,6 +109,8 @@ Bảng~\ref{tab:rank_targets} cho biết vị trí của thao tác chuyển tr�
   \end{tabularx}
 \end{table}
 
+Người dùng không phải khai báo thao tác hạ quyền: mô hình xếp thao tác thật ở hạng 1 với ba ứng dụng và hạng 3 với artifact-keeper, sau đó bộ dựng tự chọn được thao tác này khi chạy trên cả bốn ứng dụng.
+
 \section{Nghiên cứu tình huống trên lỗi thật}
 \label{sec:eval_cases}
 
@@ -117,6 +121,9 @@ Trên pyLoad, công cụ tự nhận diện thao tác chuyển trạng thái \te
 Thao tác hạ quyền chuyển nạn nhân từ quản trị viên xuống người dùng thường, và bước đăng nhập lại xác nhận nạn nhân đã mất quyền ở cả 5 lượt trên biến thể có lỗ hổng. Ngoài các lượt chạy công cụ, lỗ hổng trên pyLoad được kiểm tra thủ công qua HTTP trên biến thể có lỗ hổng và biến thể đã vá.
 
 Với artifact-keeper, công cụ tự chọn thao tác \texttt{PATCH /api/v1/users/\{id\}} và đặt cờ quản trị trong thân yêu cầu thành \texttt{false}. Ở cả 5 lượt trên biến thể có lỗ hổng, bộ dựng giữ 2 bộ ba với chuỗi mã \texttt{200/200/200}, và Oracle 970 báo vi phạm. Bộ ba thứ nhất dùng source \texttt{POST} \path{/api/v1/admin/analytics/snapshot}, một thao tác chỉ dành cho quản trị viên, với nạn nhân \texttt{victim} và tài khoản quản trị \texttt{operator}. Bộ ba thứ hai dùng source \texttt{POST} \path{/api/v1/admin/backups} (ở một lượt là \path{/api/v1/admin/cleanup}) với nạn nhân \texttt{operator}. Ở bộ ba này, \texttt{viewer} là tài khoản quản trị hạ quyền \texttt{operator}. Trước đó, \texttt{operator} đã nâng quyền \texttt{viewer} bằng chính thao tác \texttt{PATCH} này, với cờ quản trị đặt thành \texttt{true}. Với cùng công cụ và cùng cấu hình chạy, Oracle 970 báo vi phạm ở 5/5 lượt trên mã nguồn của nhà phát triển trước khi sửa lỗi và ở 0/5 lượt sau khi sửa ($p\approx0{,}004$). Chênh lệch này đến từ việc bộ ba trên bản vá bị hủy vì token cũ nhận mã 401 (Mục~\ref{sec:eval_detection}).
+
+Ngoài các lỗi tự gieo, trên hai lỗi do nhà phát triển khác viết, Oracle 970 báo vi phạm ở 10/10 lượt trên mã có lỗi và không báo động giả ở lượt nào trên mã đã vá, trong đó bản vá của artifact-keeper do chính nhà phát triển viết.
+
 \section{Phân tích nguyên nhân bỏ sót và giới hạn}
 \label{sec:eval_threats}
 
@@ -134,6 +141,8 @@ Nhãn dùng để học và chấm mô hình Naive Bayes do hai mô hình ngôn 
 
 Khả năng khái quát hóa bị giới hạn ở một lớp lỗ hổng phân quyền có trạng thái và một quan hệ MR-A1. Tỷ lệ 28/50 mô tả các lượt chạy trên bốn ứng dụng đã chọn và chưa ước lượng tỷ lệ phát hiện trên ứng dụng khác. Ba ứng dụng reports-api, vampi-seeded và artifact-keeper đọc quyền cũ từ claim của JWT, trong đó artifact-keeper dùng mã của nhà phát triển, còn trình quản lý tải pyLoad đọc vai trò từ phiên phía máy chủ. Kết quả nhận diện trên reports-api và vampi-seeded chưa đại diện cho đặc tả bên thứ ba, vì đường dẫn thao tác hạ quyền ở đây được đặt khi xây dựng và gieo lỗi. Kết quả 5/5 và 0/5 trên pyLoad đạt được trong môi trường thử nghiệm có các điều chỉnh tại Mục~\ref{subsec:impl_pyload}, với biến thể đã vá viết riêng cho khóa luận. Do đó, hai kết quả 5/5 và 0/5 chưa áp dụng trực tiếp cho bản cài đặt mặc định của pyLoad.
 
+Không lượt bỏ sót nào đến từ việc bộ phán quyết đọc sai một bộ ba hợp lệ, nên muốn tăng tỷ lệ phát hiện thì cần tăng số bộ ba dựng được trên reports-api và vampi-seeded.
+
 \section{Đối chứng với baseline và kiểm tra upstream}
 \label{sec:eval_baseline}
 
@@ -142,5 +151,7 @@ Phép đối chứng kiểm tra baseline và bản upstream có dựng và phán
 Toàn bộ 20 lượt chạy baseline trên biến thể có lỗ hổng của vampi-seeded đều không sinh được bộ ba thao tác dùng lại token cũ. Ở 17/20 lượt, baseline ghi nhận lỗi lộ dấu vết ngăn xếp (stack trace) trong phản hồi HTTP. EvoMaster chỉ gắn lỗi đó cho ca kiểm thử do pha kiểm thử bảo mật tạo ra, nên ở các lượt đó, pha này đã chạy mà vẫn không dựng được bộ ba nào.
 
 Bản upstream được chạy thêm với 20 seed trên biến thể có lỗ hổng của reports-api, qua một proxy ghi lại toàn bộ lưu lượng HTTP. Không lượt chạy nào trong 20 lượt báo lỗi thuộc lớp MR-A1. Lưu lượng ghi được có 4 lời gọi dùng token cấp lúc tài khoản còn quyền quản trị. Cả 4 lời gọi đều nhận mã 200 dù được gửi sau khi tài khoản bị hạ quyền, nhưng không lời gọi nào có một source thành công bằng cùng token trước lần hạ quyền. Bản upstream không gắn lỗi cho lời gọi nào trong số đó, và tệp kết quả cũng không chứa các lời gọi này.
+
+Trong 40 lượt đối chứng, EvoMaster không kèm Oracle 970 không báo lỗi lớp \mbox{MR-A1} ở lượt nào, kể cả khi lưu lượng có lời gọi dùng token cũ nhận mã 200. Trên hai ứng dụng này, lỗi chỉ được báo khi có Oracle 970, ở 12/20 lượt với reports-api và 6/20 lượt với vampi-seeded.
 
 \endgroup
