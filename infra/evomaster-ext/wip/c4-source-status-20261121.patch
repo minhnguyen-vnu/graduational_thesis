@@ -1,0 +1,256 @@
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -770,11 +770,13 @@
+     // THESIS: chưa chứng minh trả 2xx thì dùng lại được, vì chưa có bằng chứng quyền của nó đã đổi.
+     private val privilegeReducedByProof = mutableSetOf<String>()
+ 
+-    // THESIS: Cặp (tên transition, tên nạn nhân) không thử nữa trong pha. Thêm khi transition từ chối mọi lần thử trên nạn nhân
+-    // THESIS: (buildStatefulAuthzTriple), hoặc khi transition trả 404 cho nạn nhân sau source 2xx (executeStatefulAuthzTriple).
++    // THESIS: Cặp (tên transition, tên nạn nhân) không thử nữa trong pha. Thêm vì một trong ba lý do:
++    // THESIS: transition từ chối mọi lần thử trên nạn nhân (buildStatefulAuthzTriple, qua victimRefused);
++    // THESIS: source trả 401/403 cho nạn nhân, tức nạn nhân không còn làm được source (tryReducedRoles);
++    // THESIS: transition trả 404 cho nạn nhân sau source 2xx (executeStatefulAuthzTriple).
+     // THESIS: Xoá hết khi một lần nâng quyền thành công (restorePrivilege), vì quyền của operator đã đổi.
+     // THESIS: Kotlin: Pair<String, String> là bộ đôi giá trị; "a to b" tạo Pair(a, b).
+-    private val refusedTransitionVictims = mutableSetOf<Pair<String, String>>()
++    private val skippedTransitionVictims = mutableSetOf<Pair<String, String>>()
+ 
+     // THESIS: Số bộ ba đã chạy trên SUT trong cả pha; tăng trong executeStatefulAuthzTriple sau khi fitness chạy xong.
+     // THESIS: Trần MAX_STATEFUL_TRIPLE_ATTEMPTS = 20.
+@@ -798,7 +800,7 @@
+     private var lastTransitionCode: Int? = null
+ 
+     // THESIS: Bật khi transition từ chối nạn nhân hiện tại ít nhất một lần sau source 2xx (401, 403, hoặc 4xx/5xx từ chối giá trị).
+-    // THESIS: Đặt lại ở đầu buildStatefulAuthzTriple. Cuối hàm đó mà vẫn bật thì cặp vào refusedTransitionVictims.
++    // THESIS: Đặt lại ở đầu buildStatefulAuthzTriple. Cuối hàm đó mà vẫn bật thì cặp vào skippedTransitionVictims.
+     private var victimRefused = false
+ 
+     // THESIS: Bật trong lúc fitness chạy bộ ba do executeStatefulAuthzTriple dựng, tắt ngay sau (finally).
+@@ -1041,7 +1043,7 @@
+ 
+         // THESIS: Bỏ nạn nhân nếu cặp (transition, nạn nhân) đã bị từ chối, hoặc nạn nhân đã bị hạ quyền trong pha.
+         val pair = transitionDef.getName() to victimAuth.name
+-        if (refusedTransitionVictims.contains(pair)) {
++        if (skippedTransitionVictims.contains(pair)) {
+             log.debug("Stateful-authorization: ${transitionDef.getName()} already refused victim '${victimAuth.name}'")
+             return false
+         }
+@@ -1091,9 +1093,9 @@
+         }
+ 
+         // THESIS: Transition đã từ chối nạn nhân ít nhất một lần và không lần nào dựng được bộ ba:
+-        // THESIS: ghi cặp vào refusedTransitionVictims để không thử lại trong pha.
++        // THESIS: ghi cặp vào skippedTransitionVictims để không thử lại trong pha.
+         if (victimRefused) {
+-            refusedTransitionVictims.add(pair)
++            skippedTransitionVictims.add(pair)
+             LoggingUtil.getInfoLogger().info(
+                 "Stateful-authorization: ${transitionDef.getName()} refused or rejected every attempt on victim" +
+                     " '${victimAuth.name}'; that victim is skipped for this transition"
+@@ -1136,24 +1138,27 @@
+                 return RoleAttempt.STOP_VICTIM
+             }
+             if (!StatusGroup.G_2xx.isInGroup(src)) {
+-                if (src == 401 || src == 403) refusedTransitionVictims.add(transitionDef.getName() to victimAuth.name)
++                if (src == 401 || src == 403) skippedTransitionVictims.add(transitionDef.getName() to victimAuth.name)
+                 return RoleAttempt.STOP_VICTIM
+             }
+-            // THESIS: Ghi nhận transition đã từ chối nạn nhân này (source đã 2xx ở trên): 401, 403, hoặc từ chối giá trị.
+-            val code = lastTransitionCode
+-            if (code == 401 || code == 403 || transitionRejectedRoleValue()) {
+-                victimRefused = true
+-            }
+-            // THESIS: Transition 2xx mà không ra bộ ba (VOID hoặc UNCONFIRMED): đổi operator cũng ra cùng kết quả, bỏ nạn nhân.
+-            // THESIS: Cặp vừa vào danh sách từ chối (transition trả 404): bỏ nạn nhân.
+-            if ((code != null && StatusGroup.G_2xx.isInGroup(code))
+-                || refusedTransitionVictims.contains(transitionDef.getName() to victimAuth.name)) {
++            // THESIS: Rẽ nhánh theo mã transition (source đã 2xx ở trên). Không có mã: sang operator kế.
++            // THESIS: 2xx mà không ra bộ ba (VOID hoặc UNCONFIRMED): đổi operator cũng ra cùng kết quả, bỏ nạn nhân.
++            // THESIS: 404: executeStatefulAuthzTriple đã đưa cặp vào skippedTransitionVictims, bỏ nạn nhân.
++            // THESIS: 401/403: operator không đủ quyền; ghi nhận từ chối, sang operator kế.
++            // THESIS: 4xx/5xx khác: app từ chối giá trị vai trò vừa gửi, vd reports-api 400 {"error":"invalid role"};
++            // THESIS: ghi nhận từ chối, thử giá trị kế với cùng operator. Mã khác (vd 3xx): sang operator kế.
++            val code = lastTransitionCode ?: return RoleAttempt.NEXT
++            if (StatusGroup.G_2xx.isInGroup(code) || code == 404) {
+                 return RoleAttempt.STOP_VICTIM
+             }
+-            // THESIS: Transition không từ chối giá trị (vd 401, 403): sang operator kế.
+-            if (!transitionRejectedRoleValue()) {
++            if (code == 401 || code == 403) {
++                victimRefused = true
+                 return RoleAttempt.NEXT
+             }
++            if (code < 400 || code > 599) {
++                return RoleAttempt.NEXT
++            }
++            victimRefused = true
+         }
+         return RoleAttempt.NEXT
+     }
+@@ -1226,13 +1231,6 @@
+             "Stateful-authorization attempt on ${transitionDef.getName()} recorded no status code" +
+                 " (victim '$victim', operator '$operator'); trying the next victim or source"
+         )
+-    }
+-
+-    // THESIS: true khi transition trả 4xx/5xx khác 401/403/404: coi như app từ chối giá trị vai trò vừa gửi.
+-    // THESIS: Vd reports-api trả 400 {"error":"invalid role"} cho giá trị ngoài enum. 404 xử lý riêng ở executeStatefulAuthzTriple.
+-    private fun transitionRejectedRoleValue(): Boolean {
+-        val code = lastTransitionCode ?: return false
+-        return code in 400..599 && code !in setOf(401, 403, 404)
+     }
+ 
+     // THESIS: statusIn: mã HTTP của call a trong test đã chạy ei, tìm theo localId; null nếu call không có kết quả HTTP.
+@@ -1341,7 +1339,7 @@
+         // THESIS: nạn nhân khác vẫn thử. Ứng viên có route không tồn tại tốn tối đa một 404 cho mỗi nạn nhân (và trần 5 bộ ba
+         // THESIS: nếu không phải ứng viên cuối).
+         if (transitionCode == 404 && sourceAllowed) {
+-            refusedTransitionVictims.add(transitionDef.getName() to victimAuth.name)
++            skippedTransitionVictims.add(transitionDef.getName() to victimAuth.name)
+             LoggingUtil.getInfoLogger().info(
+                 "Stateful-authorization: transition ${transitionDef.getName()} returned 404 for victim" +
+                     " '${victimAuth.name}'; that victim is skipped for this transition"
+@@ -1377,7 +1375,7 @@
+         // THESIS: C4 trả null (INCONCLUSIVE): không biết quyền đã đổi chưa, nạn nhân vẫn bị khoá.
+         // THESIS: Follow-up mã khác (403, 404, 400, ...) không chạy C4.
+         if (StatusGroup.G_2xx.isInGroup(followUpCode)) {
+-            val confirmed = reLoginProbeConfirmsPrivilegeRemoved(victimSlice, victimAuth.name)
++            val confirmed = reLoginProbeConfirmsPrivilegeRemoved(victimSlice, ei)
+             if (confirmed != true) {
+                 if (confirmed == false) {
+                     privilegeReducedInPhase.remove(victimAuth.name)
+@@ -1421,38 +1419,42 @@
+         return true
+     }
+ 
+-    // THESIS: lastVictimStatus: mã của call cuối có mã, trong số các call mà lát gốc gửi bằng tài khoản nạn nhân.
+-    // THESIS: run là bản chạy lại của lát (cùng thứ tự call); call của tài khoản khác trong lát bị bỏ qua.
+-    // THESIS: Ai gọi: probe C4, cho lần đăng nhập lại và lần đối chứng ẩn danh. Vd C4 trên reports-api: 403 của POST /reports (alice).
+-    private fun lastVictimStatus(
+-        victimSlice: RestIndividual,
++    // THESIS: callsBeforeSourceMatchTriple: true khi mọi call trước call cuối (source) của run có mã cùng nhóm (2xx, 4xx, ...)
++    // THESIS: với chính call đó trong bộ ba (tripleEi). Tra được vì lát chép bằng copy() giữ localId, và bộ ba cũng chép từ lát.
++    // THESIS: Call không có mã ở run hoặc ở bộ ba (vd chuỗi dừng vì call tạo bị từ chối) tính là trượt.
++    // THESIS: Vd reports-api: POST /reports 201 trong bộ ba, 403 với token mới: trượt. Seed 11: DELETE 404 trong bộ ba, 403 với
++    // THESIS: token mới: cùng nhóm 4xx, đạt. Ai gọi: probe C4, cho lần đăng nhập lại và lần đối chứng ẩn danh.
++    private fun callsBeforeSourceMatchTriple(
+         run: RestIndividual,
+         ei: EvaluatedIndividual<RestIndividual>,
+-        victim: String
+-    ): Int? {
+-        val original = victimSlice.seeMainExecutableActions()
+-        val replayed = run.seeMainExecutableActions()
+-        var last: Int? = null
+-        for (i in replayed.indices) {
+-            if (original[i].auth.name != victim) continue
+-            val code = statusIn(ei, replayed[i]) ?: continue
+-            last = code
++        tripleEi: EvaluatedIndividual<RestIndividual>
++    ): Boolean {
++        val actions = run.seeMainExecutableActions()
++        for (i in 0 until actions.size - 1) {
++            val code = statusIn(ei, actions[i]) ?: return false
++            val original = statusIn(tripleEi, actions[i]) ?: return false
++            if (code / 100 != original / 100) {
++                return false
++            }
+         }
+-        return last
++        return true
+     }
+ 
+     // THESIS: Probe C4, chạy khi follow-up 2xx (lỗi tiềm năng). Trả true khi quyền đã thật sự bị gỡ khỏi nạn nhân;
+-    // THESIS: false khi đăng nhập lại vẫn 2xx (quyền còn nguyên); null khi INCONCLUSIVE.
++    // THESIS: false khi đăng nhập lại source vẫn 2xx (quyền còn nguyên); null khi INCONCLUSIVE.
+     // THESIS: Bước 1: chạy lại lát của nạn nhân thành một test mới. Test mới đăng nhập lại ở đầu, nên lát chạy với token
+-    // THESIS: cấp sau transition.
+-    // THESIS: Bước 2: call cuối có mã của nạn nhân phải ra 403. Mã đó có thể đến từ call trước source; trên reports-api là
+-    // THESIS: POST /reports.
+-    // THESIS: Bước 3: đối chứng: cùng lát gửi không credential. Ẩn danh cũng 403 thì 403 ở bước 2 không phụ thuộc người gọi:
+-    // THESIS: INCONCLUSIVE.
+-    // THESIS: Vd reports-api seed 1, jar ND: đăng nhập lại alice (giờ là VIEWER) ra 403; ẩn danh "PUT:/reports/{id}=401";
+-    // THESIS: kết quả true, 970 được giữ.
++    // THESIS: cấp sau transition. Mọi call trước source phải ra cùng nhóm mã như trong bộ ba (tripleEi), để trạng thái source
++    // THESIS: cần giống lúc chạy bộ ba; source phải có mã.
++    // THESIS: Vd reports-api: lát [POST /reports, PUT /reports/{id}], POST 201 trong bộ ba, 403 với token VIEWER: INCONCLUSIVE.
++    // THESIS: Bước 2: chỉ đọc mã của source. 2xx: false. Khác 403: INCONCLUSIVE.
++    // THESIS: Bước 3: đối chứng: cùng lát, các call trước giữ auth như bước 1, chỉ source gửi không credential.
++    // THESIS: Các call trước phải khớp bộ ba như bước 1; source ẩn danh không có mã hoặc cũng 403: INCONCLUSIVE.
++    // THESIS: Vd reports-api, lát [PUT /reports/1]: đăng nhập lại alice (giờ là VIEWER) ra 403; ẩn danh 401; kết quả true.
+     // THESIS: Probe chạy khi statefulTripleUnderEvaluation tắt, nên oracle không xét 970 trên test của probe.
+-    private fun reLoginProbeConfirmsPrivilegeRemoved(victimSlice: RestIndividual, victim: String): Boolean? {
++    private fun reLoginProbeConfirmsPrivilegeRemoved(
++        victimSlice: RestIndividual,
++        tripleEi: EvaluatedIndividual<RestIndividual>
++    ): Boolean? {
+ 
+         // THESIS: Bản sao lát, đánh dấu SECURITY, chạy trên SUT. Fitness không chạy được thì INCONCLUSIVE.
+         // THESIS: Kotlin: "?: return reLoginProbeInconclusive(...)" khi vế trái null thì log lý do và trả null.
+@@ -1460,40 +1462,38 @@
+         probe.modifySampleType(SampleType.SECURITY)
+         val ei = fitness.computeWholeAchievedCoverageForPostProcessing(probe)
+             ?: return reLoginProbeInconclusive("the probe could not be evaluated")
+-
+-        // THESIS: Không call nào của nạn nhân có mã: INCONCLUSIVE.
+-        val lastObserved = lastVictimStatus(victimSlice, probe, ei, victim)
+-            ?: return reLoginProbeInconclusive("no call of the replayed slice recorded a status code")
++        if (!callsBeforeSourceMatchTriple(probe, ei, tripleEi)) {
++            return reLoginProbeInconclusive("a call before the source of the replayed slice changed status group")
++        }
++        val sourceCode = statusIn(ei, probe.seeMainExecutableActions().last())
++            ?: return reLoginProbeInconclusive("the source of the replayed slice recorded no status code")
+ 
+-        // THESIS: Đăng nhập lại mà mã cuối vẫn 2xx: quyền còn nguyên, trả false. Mã khác 403: INCONCLUSIVE.
+-        if (StatusGroup.G_2xx.isInGroup(lastObserved)) {
++        if (StatusGroup.G_2xx.isInGroup(sourceCode)) {
+             return false
+         }
+-        if (lastObserved != 403) {
+-            return reLoginProbeInconclusive("re-logging the victim in ended in $lastObserved")
++        if (sourceCode != 403) {
++            return reLoginProbeInconclusive("re-logging the victim in ended in $sourceCode on the source")
+         }
+ 
+-        // THESIS: Đối chứng ẩn danh: cùng lát, mọi call đổi auth thành HttpWsNoAuth (không gửi header xác thực).
+-        // THESIS: Vd reports-api: ẩn danh ra 401.
++        // THESIS: Đối chứng ẩn danh: chỉ source đổi auth thành HttpWsNoAuth (không gửi header xác thực).
+         val control = victimSlice.copy() as RestIndividual
+         control.modifySampleType(SampleType.SECURITY)
+-        for (a in control.seeMainExecutableActions()) {
+-            a.auth = HttpWsNoAuth()
+-        }
+-        // THESIS: Chạy lát ẩn danh trên SUT, log mã cuối ("anonymous control").
++        control.seeMainExecutableActions().last().auth = HttpWsNoAuth()
+         val cei = fitness.computeWholeAchievedCoverageForPostProcessing(control)
+-            ?: return reLoginProbeInconclusive("the replayed slice sent without credentials could not be evaluated")
+-        val anonymousCode = lastVictimStatus(victimSlice, control, cei, victim)
++            ?: return reLoginProbeInconclusive("the anonymous control could not be evaluated")
++        if (!callsBeforeSourceMatchTriple(control, cei, tripleEi)) {
++            return reLoginProbeInconclusive("a call before the source of the anonymous control changed status group")
++        }
++        val anonymousCode = statusIn(cei, control.seeMainExecutableActions().last())
+         LoggingUtil.getInfoLogger().info(
+             "Stateful-authorization anonymous control: ${control.seeMainExecutableActions().last().getName()}" +
+                 "=${anonymousCode ?: "-"}"
+         )
+-        // THESIS: Ẩn danh không có mã, hoặc ẩn danh cũng 403: INCONCLUSIVE. Còn lại: quyền đã bị gỡ, trả true.
+-        if (anonymousCode == null) {
+-            return reLoginProbeInconclusive("no call of the replayed slice sent without credentials recorded a status code")
++        if (anonymousCode == null) {
++            return reLoginProbeInconclusive("the source sent without credentials recorded no status code")
+         }
+         if (anonymousCode == 403) {
+-            return reLoginProbeInconclusive("the replayed slice sent without credentials also ended in 403")
++            return reLoginProbeInconclusive("the source sent without credentials also ended in 403")
+         }
+         return true
+     }
+@@ -1792,7 +1792,7 @@
+         if (accepted) {
+             privilegeReducedInPhase.remove(target.name)
+             privilegeReducedByProof.remove(target.name)
+-            refusedTransitionVictims.clear()
++            skippedTransitionVictims.clear()
+         }
+         return accepted
+     }

@@ -1,0 +1,69 @@
+exercises RestSecurityBuilder.kt callsBeforeSourceMatchTriple :1427,1435,1436 C4 probe :1465,1468 C4 control :1481,1484,1487 tryReducedRoles :1150,1151,1158
+jar-new f3412dc87f1083a3  jar-ref d559dc730701745e
+PASS  no-comments    0 non-THESIS comment lines added over HEAD
+PASS  no-prints      0 added
+PASS  model-same     stateful-authz-model.csv dcc77b59ed0f94ee in both jars
+PASS  jar-has-change callsBeforeSourceMatchTriple: new jar 1, ref jar 0
+PASS  jar-has-change skippedTransitionVictims: new jar 1, ref jar 0
+PASS  jar-has-change lastVictimStatus: new jar 0, ref jar 1
+PASS  jar-has-change transitionRejectedRoleValue: new jar 0, ref jar 1
+PASS  jar-has-change refusedTransitionVictims: new jar 0, ref jar 1
+ran len1 cs=0 lf=0
+ran chain cs=0 lf=0
+ran prior-noncreate cs=0 lf=0
+ran anon-prefix cs=0 lf=0
+ran source-200 cs=0 lf=0
+ran op-refused cs=0 lf=0
+ran value-reject cs=0 lf=0
+ran prior-harmless cs=0 lf=0
+PASS  len1-ran                           exit cs 0 lf 0, requests cs 404 lf 404
+PASS  chain-ran                          exit cs 0 lf 0, requests cs 494 lf 484
+PASS  prior-noncreate-ran                exit cs 0 lf 0, requests cs 637 lf 641
+PASS  anon-prefix-ran                    exit cs 0 lf 0, requests cs 526 lf 525
+PASS  source-200-ran                     exit cs 0 lf 0, requests cs 505 lf 505
+PASS  op-refused-ran                     exit cs 0 lf 0, requests cs 342 lf 342
+PASS  value-reject-ran                   exit cs 0 lf 0, requests cs 407 lf 407
+PASS  prior-harmless-ran                 exit cs 0 lf 0, requests cs 634 lf 634
+PASS  len1-constructed                   Constructed on PUT:/docs/{id}: cs 1 lf 1
+PASS  len1-anonymous-401                 anonymous control codes cs ['401'] lf ['401']
+PASS  len1-no-prior-inconclusive         cs lines 're-login probe INCONCLUSIVE: a call befo': 0
+PASS  chain-lf-constructed               ref jar Constructed on PUT:/docs/{id}: 1 (403 read from POST /docs)
+PASS  chain-cs-not-constructed           new jar Constructed on PUT:/docs/{id}: 0
+PASS  chain-cs-inconclusive-prior        new jar: prior-call INCONCLUSIVE 2, UNCONFIRMED on PUT:/docs/{id} 2
+PASS  chain-cs-probe-stops-at-post       after each triple on /docs the re-login sends POST /docs 403 and no PUT /docs: 2 of 2 (victims ['boss', 'alice'])
+PASS  prior-noncreate-lf-constructed     ref jar Constructed on PUT:/files/{id}: 1 (403 from missing check-out)
+PASS  prior-noncreate-cs-not-constructed new jar Constructed on PUT:/files/{id}: 0
+PASS  prior-noncreate-cs-inconclusive    new jar: prior-call INCONCLUSIVE 1, UNCONFIRMED on PUT:/files/{id} 1
+PASS  prior-noncreate-lf-hole-b-present  re-login: POST /checkout 403, then the source PUT /files still sent and 403: 1 triples
+PASS  prior-noncreate-cs-hole-b-present  re-login: POST /checkout 403, then the source PUT /files still sent and 403: 1 triples
+PASS  anon-prefix-cs-source-anonymous    new jar anonymous control ['401'], Constructed 1
+PASS  anon-prefix-lf-all-anonymous       ref jar anonymous control ['400'] (400 = anonymous POST /drafts)
+PASS  anon-prefix-cs-prefix-with-token   new jar: POST /drafts with a token then PUT /drafts anonymous: 1 pairs
+PASS  source-200-unconfirmed             UNCONFIRMED on PUT:/docs/{id}: cs 3 lf 3
+PASS  source-200-victim-unlocked         new jar: 'already reduced' lines 0; victims UNCONFIRMED on both sources ['alice', 'bob', 'boss']
+PASS  source-200-false-not-null          new jar INCONCLUSIVE lines 0, Constructed 0
+PASS  op-refused-403-branch              VOID attempts with transition 403: cs 1 lf 1
+PASS  op-refused-next-operator           Constructed after switching operator: cs 1 lf 1
+PASS  op-refused-same-decisions          16 builder lines, identical
+PASS  value-reject-400-branch            VOID attempts with transition 400: cs 1 lf 1
+PASS  value-reject-next-value            Constructed after the rejected value: cs 1 lf 1
+PASS  value-reject-same-decisions        16 builder lines, identical
+PASS  prior-harmless-probe-prefix        re-login sends DELETE /docs 404 (404 in the triple too), then the source PUT /docs 403: 1 of 1
+PASS  prior-harmless-cs-constructed      new jar Constructed on PUT:/docs/{id} 1, prior-call INCONCLUSIVE 0
+PASS  prior-harmless-cs-anonymous-401    new jar anonymous control ['401']
+PASS  logicfix-behaviour  logic-fix-20261118.sh behaviour checks on the new jar: 33 PASS, 0 FAIL (exit 0)
+PASS  compare-bool-victim            33 builder lines identical to the jar LF run
+PASS  compare-c4-intact              32 builder lines identical to the jar LF run
+PASS  compare-enum-lower             14 builder lines identical to the jar LF run
+PASS  compare-first-404              19 builder lines identical to the jar LF run
+PASS  compare-login-name             14 builder lines identical to the jar LF run
+PASS  compare-nested-role            14 builder lines identical to the jar LF run
+PASS  compare-no-path-id             22 builder lines identical to the jar LF run
+PASS  compare-num-enum               14 builder lines identical to the jar LF run
+PASS  compare-post-source            20 builder lines identical to the jar LF run
+PASS  compare-query-username         14 builder lines identical to the jar LF run
+PASS  compare-source-401             11 builder lines identical to the jar LF run
+PASS  compare-two-role-fields        14 builder lines identical to the jar LF run
+PASS  no-sleep       0 'Entering Sleep' in pmset log since 2026-11-21 17:09:56
+output /Users/minhnguyen/IdeaProjects/graduational-thesis/infra/em-results/c4-source-status-selftest-20261121-170956
+exit=0

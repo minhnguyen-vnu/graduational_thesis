@@ -1,0 +1,383 @@
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -446,7 +446,7 @@
+         // THESIS: Ai gọi: looksLikePermissionReducingTransition, rankPermissionReducingTransitions, log debug.
+         fun transitionScore(a: RestCallAction): Double = prior("op") + evidence("op", opFeatures(a))
+ 
+-        // THESIS: valueScore: điểm của một giá trị vai trò trong bảng low, high, lowstr hoặc highstr.
++        // THESIS: valueScore: điểm của một giá trị vai trò trong bảng low hoặc high.
+         // THESIS: Duyệt mọi khoá của bảng; khoá là chuỗi con của giá trị (so viết thường) thì xét trọng số; lấy trọng số lớn nhất.
+         // THESIS: Không khớp khoá nào: 0. So chuỗi con nên "superadmin" cũng khớp khoá admin.
+         // THESIS: Vd valueScore("low", "VIEWER") = 0.375 (khoá viewer); valueScore("high", "ADMIN") = 0.656 (khoá admin);
+@@ -480,7 +480,7 @@
+         private const val MAX_UNPROVEN_CANDIDATE_ATTEMPTS = 5
+ 
+         // THESIS: Trần số lời gọi nâng quyền (restorePrivilege chạy trên SUT) cho mỗi ứng viên transition,
+-        // THESIS: và số kế hoạch tối đa của restorePlans. Đếm ở privilegeRestoreAttempts.
++        // THESIS: tính trên mọi nạn nhân và operator. Đếm ở privilegeRestoreAttempts.
+         private const val MAX_PRIVILEGE_RESTORES = 3
+ 
+         // THESIS: Guard của 970: op có verb ghi và transitionScore > 0 (posterior > 0,5) được coi là transition hạ quyền.
+@@ -754,13 +754,9 @@
+     // THESIS: Giá trị hạ quyền thử lần lượt cho trường vai trò kiểu số (kind "num"). Viết tay, chưa học từ dữ liệu.
+     private val numericRoleCandidates = listOf("1", "0", "2")
+ 
+-    // THESIS: Giá trị nâng quyền thử lần lượt cho trường vai trò kiểu số, dùng trong restoreValues. Viết tay.
+-    private val elevatedNumericRoleCandidates = listOf("0", "1", "2")
+-
+     // THESIS: Tên các tài khoản đã bị một transition 2xx hạ quyền trong pha. Không chọn làm nạn nhân (buildStatefulAuthzTriple)
+     // THESIS: hay operator (operatorsFor) nữa, vì quyền của chúng đã khác lúc đầu.
+-    // THESIS: Thêm ở executeStatefulAuthzTriple khi transition 2xx; bỏ ra khi C4 thấy quyền còn nguyên, hoặc khi
+-    // THESIS: restorePrivilege nâng lại được.
++    // THESIS: Thêm ở executeStatefulAuthzTriple khi transition 2xx; bỏ ra khi C4 thấy quyền còn nguyên.
+     // THESIS: Vd sau bộ ba của reports-api seed 1: {alice}. Kotlin: mutableSetOf tạo tập sửa được (LinkedHashSet).
+     private val privilegeReducedInPhase = mutableSetOf<String>()
+ 
+@@ -795,7 +791,8 @@
+     // THESIS: Mã của source và transition ở bộ ba gần nhất; null khi call không có mã.
+     // THESIS: tryReducedRoles và buildStatefulAuthzTriple đọc hai biến này để quyết định bước kế.
+     // THESIS: Vd pyLoad seed 1, jar ND: codes 200/401/200, lastSourceCode = 200, lastTransitionCode = 401.
+-    // THESIS: Đặt về null ở đầu buildStatefulAuthzTriple, nên không mang mã của nạn nhân trước sang nạn nhân sau.
++    // THESIS: lastTransitionCode đặt về null ở đầu buildStatefulAuthzTriple, nên không mang mã của nạn nhân trước sang nạn nhân sau.
++    // THESIS: lastSourceCode chỉ được đọc sau một bộ ba đã chạy, và bộ ba đó luôn gán nó.
+     private var lastSourceCode: Int? = null
+     private var lastTransitionCode: Int? = null
+ 
+@@ -813,7 +810,7 @@
+     // THESIS: TRIPLE_BUILT: đã dựng xong một bộ ba hợp lệ; buildStatefulAuthzTriple trả true và vòng nạn nhân sang source kế.
+     // THESIS: STOP_VICTIM: dừng với nạn nhân này (hết giờ, hết lượt, source không có mã hoặc không 2xx, transition 2xx mà
+     // THESIS: không ra bộ ba, hoặc cặp đã bị từ chối).
+-    // THESIS: NEXT: lượt này không ra bộ ba; thử operator hoặc kế hoạch nâng quyền kế.
++    // THESIS: NEXT: lượt này không ra bộ ba; thử operator kế.
+     private enum class RoleAttempt { TRIPLE_BUILT, STOP_VICTIM, NEXT }
+ 
+     // THESIS: true khi ứng viên chưa chứng minh, không phải ứng viên cuối, đã chạy đủ 5 bộ ba.
+@@ -855,7 +852,8 @@
+             return
+         }
+         // THESIS: Bước 2: bỏ ứng viên không đề xuất được giá trị hạ quyền nào (harvestReducedRoleCandidates rỗng,
+-        // THESIS: vd op không có trường vai trò).
++        // THESIS: vd op không có trường vai trò), và ứng viên không có trường chỉ định nạn nhân (victimField null): call của nó
++        // THESIS: không trỏ được vào nạn nhân nên không bao giờ dựng được bộ ba. Vd artifact-keeper POST /api/v1/admin/sso/oidc.
+         val viable = mutableListOf<RestCallAction>()
+         for (candidate in ranked) {
+             val values = harvestReducedRoleCandidates(candidate)
+@@ -864,7 +862,7 @@
+                     " roleField ${roleField(candidate)?.key}" +
+                     " victimField ${victimField(candidate)?.key}" +
+                     " reducedRoleValues $values")
+-            if (values.isNotEmpty()) {
++            if (values.isNotEmpty() && victimField(candidate) != null) {
+                 viable.add(candidate)
+             }
+         }
+@@ -886,10 +884,10 @@
+             privilegeRestoreAttempts = 0
+             privilegeReducedInPhase.retainAll(privilegeReducedByProof)
+ 
+-            // THESIS: Bước 4: source là op ghi từng nhận 403 trong archive, khác path với transition, không qua guard (guardedSources).
++            // THESIS: Bước 4: source là op ghi từng nhận 403 trong archive, không qua guard (guardedSources).
+             // THESIS: Thứ tự: mọi PUT, rồi PATCH, rồi POST.
+             // THESIS: Vd artifact-keeper: PATCH /api/v1/admin/sso/saml/{id}/toggle trước, POST /api/v1/admin/analytics/snapshot sau.
+-            val sources = guardedSources(listOf(HttpVerb.PUT, HttpVerb.PATCH, HttpVerb.POST), transitionOp)
++            val sources = guardedSources(listOf(HttpVerb.PUT, HttpVerb.PATCH, HttpVerb.POST))
+             val sourceNames = mutableListOf<String>()
+             for (op in sources) {
+                 sourceNames.add("${op.verb}:${op.path}")
+@@ -946,18 +944,18 @@
+         log.debug("Stateful-authorization: sources exhausted after $statefulTripleAttempts triple attempts")
+     }
+ 
+-    // THESIS: guardedSources: các op trong spec có verb thuộc verbs, khác path với transition, không qua guard, và có ít nhất
+-    // THESIS: một test trong archive nhận 403 trên op đó. 403 cho thấy op có kiểm quyền, nên gỡ quyền có thể đổi kết quả của nó.
+-    // THESIS: Op qua guard bị loại vì oracle không nhận nó làm source (RestSecurityOracle.handleStatefulAuthorization).
++    // THESIS: guardedSources: các op trong spec có verb thuộc verbs, không qua guard, và có ít nhất một test trong archive
++    // THESIS: nhận 403 trên op đó. 403 cho thấy op có kiểm quyền, nên gỡ quyền có thể đổi kết quả của nó.
++    // THESIS: Op qua guard bị loại vì oracle không nhận nó làm source (RestSecurityOracle.handleStatefulAuthorization);
++    // THESIS: transition qua guard nên không bao giờ là source của chính nó.
+     // THESIS: RestIndividualSelectorUtils là tiện ích của upstream: getAllActionDefinitions lọc op theo verb;
+     // THESIS: findIndividuals tìm test trong archive theo verb, path, mã.
+     // THESIS: Vd reports-api, verbs [PUT, PATCH, POST]: [PUT /reports/{id}], cộng POST /reports nếu archive có 403 cho nó.
+-    private fun guardedSources(verbs: List<HttpVerb>, transitionOp: RestCallAction): List<RestCallAction> {
++    private fun guardedSources(verbs: List<HttpVerb>): List<RestCallAction> {
+         val out = mutableListOf<RestCallAction>()
+         for (verb in verbs) {
+             for (op in RestIndividualSelectorUtils.getAllActionDefinitions(actionDefinitions, verb)) {
+-                // THESIS: So path: mọi verb trên path của transition đều bị loại.
+-                if (op.path == transitionOp.path || looksLikePermissionReducingTransition(op)) {
++                if (looksLikePermissionReducingTransition(op)) {
+                     continue
+                 }
+                 // THESIS: Các test trong archive có call op này nhận 403.
+@@ -1070,9 +1068,9 @@
+         val roleValues = reducedRoleValues(field, current)
+         log.debug("Stateful-authorization victim '${victimAuth.name}' current roles $current, reduced role values $roleValues")
+ 
+-        // THESIS: Đặt lại cờ từ chối và mã của lần thử trước cho nạn nhân này.
++        // THESIS: Đặt lại cờ từ chối và mã transition của lần thử trước cho nạn nhân này. lastSourceCode không cần đặt lại:
++        // THESIS: tryReducedRoles chỉ đọc nó sau một bộ ba đã chạy, và executeStatefulAuthzTriple luôn gán nó khi đếm bộ ba.
+         victimRefused = false
+-        lastSourceCode = null
+         lastTransitionCode = null
+ 
+         // THESIS: Lượt 1. Kết quả khác NEXT (dựng xong, hoặc phải dừng) thì trả ngay; true chỉ khi TRIPLE_BUILT.
+@@ -1164,9 +1162,10 @@
+     }
+ 
+     // THESIS: restoreOperatorsAndRetry: lượt 2 của buildStatefulAuthzTriple. Chạy khi lần thử cuối của lượt 1 có transition
+-    // THESIS: 401/403, có thể vì một bộ ba trước đã hạ quyền operator.
+-    // THESIS: Nạn nhân (còn quyền) gọi transition để nâng quyền operator (restorePrivilege), rồi operator thử hạ quyền nạn nhân
+-    // THESIS: lần nữa (tryReducedRoles).
++    // THESIS: 401/403: operator thiếu quyền gọi transition, vì seed hoặc vì pha search đã đổi quyền của nó. Pha 970 không bao giờ
++    // THESIS: hạ quyền operator (operatorsFor bỏ tài khoản trong privilegeReducedInPhase).
++    // THESIS: Nạn nhân gọi transition để cấp quyền cao cho operator (restorePrivilege), rồi operator thử hạ quyền nạn nhân
++    // THESIS: lần nữa (tryReducedRoles). Nạn nhân có source 2xx chưa chắc có quyền gọi transition; khi đó lời nâng bị từ chối.
+     // THESIS: Vd pyLoad seed 1, jar ND: "Privilege-restore accepted for 'alice' by 'pyload' with role '0,0'
+     // THESIS: on POST:/api/set_user_permission -> 200", rồi bộ ba 200/200/200 với operator alice.
+     private fun restoreOperatorsAndRetry(
+@@ -1176,51 +1175,39 @@
+         operators: List<HttpWsAuthenticationInfo>,
+         victimAuth: HttpWsAuthenticationInfo
+     ): RoleAttempt {
+-        // THESIS: Lập kế hoạch nâng quyền cho từng operator (restorePlans); giá trị hạ quyền đầu tiên bị loại khỏi giá trị nâng.
+-        // THESIS: plans: map tên operator ra danh sách kế hoạch; mỗi kế hoạch là danh sách cặp (khoá trường, giá trị).
+-        // THESIS: Kotlin: firstOrNull trả phần tử đầu, hoặc null khi danh sách rỗng.
+-        val exclude = roleValues.firstOrNull() ?: ""
+-        val plans = mutableMapOf<String, List<List<Pair<String, String>>>>()
+-        var anyPlan = false
+-        for (operator in operators) {
+-            val operatorPlans = restorePlans(transitionDef, operator, exclude)
+-            plans[operator.name] = operatorPlans
+-            if (operatorPlans.isNotEmpty()) {
+-                anyPlan = true
+-            }
+-        }
+-        // THESIS: Không operator nào có kế hoạch: log info; vòng dưới khi đó không chạy lần nào và hàm trả NEXT.
+-        if (!anyPlan) {
++        // THESIS: Kế hoạch nâng quyền chỉ phụ thuộc transition (restorePlan), nên giống nhau cho mọi operator.
++        // THESIS: Kế hoạch rỗng (không trường nào có giá trị nâng): log info, trả NEXT.
++        val plan = restorePlan(transitionDef)
++        if (plan.isEmpty()) {
+             LoggingUtil.getInfoLogger().info(
+                 "Stateful-authorization restore unavailable on ${transitionDef.getName()}:" +
+                     " no elevated role value for the operators of victim '${victimAuth.name}'"
+             )
++            return RoleAttempt.NEXT
+         }
+ 
+-        // THESIS: Thử từng kế hoạch của từng operator. Dừng khi hết giờ, hết lượt, hoặc đã chạy MAX_PRIVILEGE_RESTORES (3) lời gọi
+-        // THESIS: nâng quyền cho ứng viên. Kotlin: getValue trả giá trị của khoá, ném exception nếu khoá không có.
++        // THESIS: Một lời nâng quyền cho mỗi operator. Dừng khi hết giờ, hết lượt, hoặc đã chạy MAX_PRIVILEGE_RESTORES (3) lời gọi
++        // THESIS: nâng quyền cho ứng viên.
+         for (operator in operators) {
+-            for (plan in plans.getValue(operator.name)) {
+-                if (hasPhaseTimedOut() || !attemptAllowed()) return RoleAttempt.STOP_VICTIM
+-                if (privilegeRestoreAttempts >= MAX_PRIVILEGE_RESTORES) {
+-                    LoggingUtil.getInfoLogger().info(
+-                        "Stateful-authorization restore budget of $MAX_PRIVILEGE_RESTORES spent on" +
+-                            " ${transitionDef.getName()}"
+-                    )
+-                    return RoleAttempt.NEXT
+-                }
+-
+-                // THESIS: restorer = nạn nhân, target = operator. Nâng không được (không 2xx, hoặc không dựng được call): thử kế hoạch kế.
+-                if (!restorePrivilege(transitionDef, victimAuth, operator, plan, victimSlice)) {
+-                    continue
+-                }
++            if (hasPhaseTimedOut() || !attemptAllowed()) return RoleAttempt.STOP_VICTIM
++            if (privilegeRestoreAttempts >= MAX_PRIVILEGE_RESTORES) {
++                LoggingUtil.getInfoLogger().info(
++                    "Stateful-authorization restore budget of $MAX_PRIVILEGE_RESTORES spent on" +
++                        " ${transitionDef.getName()}"
++                )
++                return RoleAttempt.NEXT
++            }
+ 
+-                // THESIS: Nâng được: operator thử lại mọi giá trị hạ quyền. NEXT thì thử kế hoạch hoặc operator kế.
+-                val outcome = tryReducedRoles(victimSlice, transitionDef, roleValues, operator, victimAuth)
+-                if (outcome == RoleAttempt.TRIPLE_BUILT || outcome == RoleAttempt.STOP_VICTIM) {
+-                    return outcome
+-                }
++            // THESIS: restorer = nạn nhân, target = operator. Nâng không được (không 2xx, hoặc không dựng được call): sang operator kế.
++            if (!restorePrivilege(transitionDef, victimAuth, operator, plan, victimSlice)) {
++                continue
+             }
++
++            // THESIS: Nâng được: operator thử lại mọi giá trị hạ quyền. NEXT thì sang operator kế.
++            val outcome = tryReducedRoles(victimSlice, transitionDef, roleValues, operator, victimAuth)
++            if (outcome == RoleAttempt.TRIPLE_BUILT || outcome == RoleAttempt.STOP_VICTIM) {
++                return outcome
++            }
+         }
+         return RoleAttempt.NEXT
+     }
+@@ -1566,8 +1553,8 @@
+     }
+ 
+     // THESIS: tableValues: các khoá của một bảng, xếp giảm dần theo trọng số.
+-    // THESIS: Vd tableValues("lowstr") = [read, guest, member]; tableValues("highstr") = [admin, member].
+-    // THESIS: Ai gọi: reducedRoleValues (trường vai trò kiểu chuỗi), restoreValues.
++    // THESIS: Vd tableValues("lowstr") = [read, guest, member]. Bảng highstr chỉ còn được loadModel kiểm có mặt.
++    // THESIS: Ai gọi: reducedRoleValues (trường vai trò kiểu chuỗi).
+     private fun tableValues(name: String): List<String> {
+         val values = mutableListOf<String>()
+         for (entry in table(name).entries.sortedByDescending { it.value }) {
+@@ -1636,7 +1623,7 @@
+     }
+ 
+     // THESIS: restoreFields: mọi trường ngoài path có điểm role > 0. Khi hạ quyền (setRoleFieldToReduced) và khi nâng quyền
+-    // THESIS: (restorePlans), đặt tất cả các trường này, vì một op có thể mang nhiều trường quyền (vd pyLoad: permission và role).
++    // THESIS: (restorePlan), đặt tất cả các trường này, vì một op có thể mang nhiều trường quyền (vd pyLoad: permission và role).
+     private fun restoreFields(transition: RestCallAction): List<SchemaField> {
+         val out = mutableListOf<SchemaField>()
+         for (f in schemaFields(transition)) {
+@@ -1647,86 +1634,44 @@
+         return out
+     }
+ 
+-    // THESIS: restoreValues: danh sách giá trị nâng quyền cho một trường.
+-    // THESIS: snapshot là giá trị tài khoản đang giữ, đọc từ archive. snapshot là giá trị cao (lowMinusHigh < 0): dùng đúng nó,
+-    // THESIS: trừ khi trùng exclude. Điểm 0 (vd true, false, số, EVOMASTER) không cho biết giá trị cao hay thấp: theo kind bên dưới.
+-    private fun restoreValues(field: SchemaField, snapshot: String?, exclude: String): List<String> {
+-        if (snapshot != null && lowMinusHigh(snapshot) < 0.0) {
+-            return if (snapshot == exclude) emptyList() else listOf(snapshot)
+-        }
+-        // THESIS: Không có snapshot cao thì theo kind: enum: các giá trị cao (lowMinusHigh < 0), không có thì mọi giá trị xếp tăng dần;
+-        // THESIS: bool: true; num: 0, 1, 2 (viết tay); str: các khoá của bảng highstr.
+-        // THESIS: Vd enum {ADMIN, VIEWER, EVOMASTER}: [ADMIN]; EVOMASTER có lowMinusHigh = 0 nên không vào.
+-        // THESIS: Kotlin: "if (...) high else ranked" là biểu thức if; giá trị của nó là giá trị của nhánh enum.
+-        val raw = when (field.kind) {
++    // THESIS: restoreValue: giá trị nâng quyền cho một trường, theo kind; null khi không có.
++    // THESIS: enum: giá trị có lowMinusHigh âm nhất (cao nhất); hoà thì lấy giá trị đứng trước trong enum; không có giá trị âm: null.
++    // THESIS: bool: true; num: 0 (viết tay); kind khác (gồm str): null.
++    // THESIS: Vd enum {ADMIN, VIEWER, EVOMASTER}: ADMIN; EVOMASTER có lowMinusHigh = 0 nên không được chọn.
++    private fun restoreValue(field: SchemaField): String? {
++        return when (field.kind) {
+             "enum" -> {
+-                val ranked = field.enumValues.sortedBy { lowMinusHigh(it) }
+-                val high = mutableListOf<String>()
+-                for (v in ranked) {
+-                    if (lowMinusHigh(v) < 0.0) {
+-                        high.add(v)
++                var best: String? = null
++                for (v in field.enumValues) {
++                    if (lowMinusHigh(v) < 0.0 && (best == null || lowMinusHigh(v) < lowMinusHigh(best))) {
++                        best = v
+                     }
+                 }
+-                if (high.isNotEmpty()) high else ranked
++                best
+             }
+-            "bool" -> listOf("true")
+-            "num" -> elevatedNumericRoleCandidates
+-            "str" -> tableValues("highstr")
+-            else -> emptyList()
++            "bool" -> "true"
++            "num" -> "0"
++            else -> null
+         }
+-        // THESIS: Bỏ giá trị exclude và giá trị trùng.
+-        val out = mutableListOf<String>()
+-        for (v in raw) {
+-            if (v != exclude && v !in out) {
+-                out.add(v)
+-            }
+-        }
+-        return out
+     }
+ 
+-    // THESIS: restorePlans: các kế hoạch nâng quyền cho tài khoản account trên transition.
+-    // THESIS: Mỗi kế hoạch là danh sách cặp (khoá trường, giá trị); một kế hoạch là một lời gọi nâng quyền.
+-    // THESIS: Ai gọi: restoreOperatorsAndRetry.
+-    private fun restorePlans(
+-        transition: RestCallAction,
+-        account: HttpWsAuthenticationInfo,
+-        exclude: String
+-    ): List<List<Pair<String, String>>> {
+-        val fields = restoreFields(transition)
+-        val snapshot = victimSnapshot(account, transition, fields)
+-        val perField = mutableListOf<Pair<String, List<String>>>()
+-        for (f in fields) {
+-            val values = restoreValues(f, snapshot[f.key], exclude)
+-            if (values.isNotEmpty()) {
+-                perField.add(f.key to values)
+-            }
+-        }
+-        // THESIS: Số kế hoạch = min(số giá trị của trường dài nhất, MAX_PRIVILEGE_RESTORES). Kế hoạch j đặt mỗi trường thành giá trị
+-        // THESIS: thứ j của nó; trường hết giá trị thì giữ giá trị cuối.
+-        // THESIS: Vd reports-api: [[body:role = ADMIN]]. Vd hai trường a [x, y], b [z]: [[a = x, b = z], [a = y, b = z]].
+-        var longest = 0
+-        for (entry in perField) {
+-            if (entry.second.size > longest) {
+-                longest = entry.second.size
+-            }
+-        }
+-        val rounds = minOf(longest, MAX_PRIVILEGE_RESTORES)
+-        val plans = mutableListOf<List<Pair<String, String>>>()
+-        for (j in 0 until rounds) {
+-            val plan = mutableListOf<Pair<String, String>>()
+-            for (entry in perField) {
+-                val values = entry.second
+-                plan.add(entry.first to values[minOf(j, values.size - 1)])
+-            }
+-            plans.add(plan)
++    // THESIS: restorePlan: kế hoạch nâng quyền trên transition: danh sách cặp (khoá trường, giá trị), mỗi trường vai trò
++    // THESIS: (restoreFields) có giá trị nâng một cặp. Một kế hoạch là một lời gọi nâng quyền.
++    // THESIS: Vd reports-api: [body:role = ADMIN]. Vd pyLoad: [query:permission = 0, query:role = 0].
++    // THESIS: Ai gọi: restoreOperatorsAndRetry.
++    private fun restorePlan(transition: RestCallAction): List<Pair<String, String>> {
++        val plan = mutableListOf<Pair<String, String>>()
++        for (f in restoreFields(transition)) {
++            val v = restoreValue(f) ?: continue
++            plan.add(f.key to v)
+         }
+-        return plans
++        return plan
+     }
+ 
+     // THESIS: restorePrivilege: restorer gọi transition để đặt các trường vai trò của target theo plan.
+     // THESIS: Ai gọi: restoreOperatorsAndRetry, với restorer = nạn nhân, target = operator.
+     // THESIS: Test = lát của nạn nhân + call nâng quyền.
+-    // THESIS: Trả true khi call 2xx; khi đó target được dùng lại trong pha và danh sách cặp bị từ chối được xoá.
++    // THESIS: Trả true khi call 2xx; khi đó danh sách cặp bị từ chối được xoá.
+     // THESIS: Vd pyLoad seed 1, jar ND: restorer pyload, target alice, plan '0,0' trên POST /api/set_user_permission, 200.
+     private fun restorePrivilege(
+         transitionDef: RestCallAction,
+@@ -1788,10 +1733,8 @@
+             "Privilege-restore ${if (accepted) "accepted" else "refused"} for \'${target.name}\'" +
+                 " by \'${restorer.name}\' with role \'${planValues.joinToString(",")}\' on ${action.getName()} -> ${code ?: "-"}"
+         )
+-        // THESIS: Nâng được: target hết bị coi là đã hạ quyền; mọi cặp bị từ chối được xoá vì quyền của operator đã đổi.
++        // THESIS: Nâng được: mọi cặp bị từ chối được xoá vì quyền của operator đã đổi.
+         if (accepted) {
+-            privilegeReducedInPhase.remove(target.name)
+-            privilegeReducedByProof.remove(target.name)
+             skippedTransitionVictims.clear()
+         }
+         return accepted
+@@ -2090,25 +2033,6 @@
+         return out
+     }
+ 
+-    // THESIS: victimSnapshot: giá trị hiện tại của tài khoản cho từng trường trong fields, đọc từ response GET trong archive;
+-    // THESIS: map khoá trường ra giá trị. Vd {body:role = ADMIN}.
+-    // THESIS: Ai gọi: restorePlans, để giá trị cao tài khoản từng giữ được dùng lại khi nâng quyền.
+-    private fun victimSnapshot(
+-        victimAuth: HttpWsAuthenticationInfo,
+-        transition: RestCallAction,
+-        fields: List<SchemaField>
+-    ): Map<String, String> {
+-        val objects = victimGetObjects(victimAuth, transition)
+-        val snapshot = mutableMapOf<String, String>()
+-        for (f in fields) {
+-            val v = objectValue(objects, normalize(f.leaf))
+-            if (v != null) {
+-                snapshot[f.key] = v
+-            }
+-        }
+-        return snapshot
+-    }
+-
+     // THESIS: victimRoleValues: các giá trị vai trò nạn nhân đang giữ, đọc từ response GET; khoá mảng (vd roles: [ADMIN, USER])
+     // THESIS: cho từng phần tử. Bỏ chuỗi rỗng và giá trị trùng.
+     // THESIS: Ai gọi: buildStatefulAuthzTriple, để reducedRoleValues bỏ giá trị cao nạn nhân đang giữ.

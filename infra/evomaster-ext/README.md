@@ -7,18 +7,18 @@ Results: `docs/results.md`. Build, jars, rollback: skill `evomaster-build`. Runn
 ## 1. What changed
 
 `git diff --stat v6.1.1..HEAD`: 16 commits, 4 files, +1760, 0 deletions, no comments. HEAD `2c3f281f13` (not pushed).
-The thesis jar ND is HEAD plus `wip/nodup-tokens-20261113-tree.patch` (the user's `THESIS` comments and the ND change;
-the ND change alone is `wip/nodup-tokens-20261113.patch`, taken against the commented tree), not committed: in `RestSecurityBuilder.kt` (+32 −6
-code lines) `opFeatures` takes `f:` from query and body fields only and `tokens` walks characters instead of a regex,
-and the model file holds the no-duplication model (`lexicon-rules/m2-nodup-20261112/`). Commit history, the jar each
-commit built, and its self-test: `jars.md`.
+The thesis jar TR2 is HEAD plus `wip/trim-restore-20261121-tree.patch`, not committed. It stacks three changes on
+HEAD: the logic fix of jar LF with the user's `THESIS` comments and the ND change (`wip/logic-fix-20261118.md`), the
+C4 change (`wip/c4-source-status-20261121.md`) and the code cleanup (`wip/trim-restore-20261121.patch`). The model file
+holds the no-duplication model (`lexicon-rules/m2-nodup-20261112/`). Commit history, the jar each commit built, and its
+self-test: `jars.md`.
 
-| File | + (HEAD `2c3f281f13`; LF tree, code lines without blanks and `THESIS` comments: 4, 42, 1306, 251) | Holds |
+| File | + (HEAD `2c3f281f13`; TR2 tree, code lines without blanks and `THESIS` comments: 4, 42, 1244, 251) | Holds |
 |---|---|---|
 | `ExperimentalFaultCategory.kt` | 5 | `SECURITY_STATEFUL_AUTHORIZATION(970)` |
 | `RestSecurityOracle.kt` | 66 | judgment: `handleStatefulAuthorization()` |
 | `RestSecurityBuilder.kt` | 1428 | construction: `addForStatefulAccessControl()`, `buildStatefulAuthzTriple()`, `executeStatefulAuthzTriple()`, Naive Bayes scoring, operator restore, C4 probe |
-| `stateful-authz-model.csv` | 261 | Naive Bayes weights, tables `op`, `role`, `victim`, `low`, `high`, `lowstr`, `highstr` (M1 in HEAD; M2 in jar M2, `lexicon-rules/m2-model-20261107/`; the no-duplication model in jars ND and LF) |
+| `stateful-authz-model.csv` | 261 | Naive Bayes weights, tables `op`, `role`, `victim`, `low`, `high`, `lowstr`, `highstr` (M1 in HEAD; M2 in jar M2, `lexicon-rules/m2-model-20261107/`; the no-duplication model in jars ND, LF and TR2) |
 
 `statefulTripleUnderEvaluation` is true only while `executeStatefulAuthzTriple` evaluates its own triple, and the
 handler returns unless it is true (commit `bf26b65322`).
@@ -52,7 +52,7 @@ The search algorithm is untouched (black-box default: SMARTS).
    enum values with `valueScore(low) − valueScore(high) >= 0`, ranked by it, `EVOMASTER` dropped; bool `false`; array `[]`;
    numbers `1, 0, 2`; every role field set to the first reduced value;
    strings from the model's `lowstr` table. A value equal to the victim's current role is skipped, unless the
-   model scores that role low.
+   model scores that role low. A candidate without a victim field is dropped (jar TR2).
 2. **Source**: a guarded write some user was denied (403) and the victim was allowed (2xx). PUT/PATCH first;
    then POST. Ops that pass the transition rule (score > 0) are not sources. A non-2xx source drops the victim;
    401 or 403 also locks the (transition, victim) pair. A 404 transition locks only that pair.
@@ -61,12 +61,14 @@ The search algorithm is untouched (black-box default: SMARTS).
    victim × operator × value, up to `MAX_STATEFUL_TRIPLE_ATTEMPTS`.
 5. **Operator restore**: when every operator is refused while the victim's source succeeded, the victim's
    credential calls the transition upward on the operator (restorer = victim, target = operator), then the triple
-   is retried; at most `MAX_PRIVILEGE_RESTORES = 3`. The upward value is the operator's observed role unless the
-   model scores it low; otherwise the enum values the model scores `high > low`, bool `true`,
-   numbers `0, 1, 2`, strings from `highstr`. Repairs a lost authorization, never a deleted account.
-6. **C4 re-login probe** (`reLoginProbeConfirmsPrivilegeRemoved`): only on a would-be fault; the victim logs in
-   again and replays its slice. The fault is kept when the slice's last recorded status is 403 and the same slice
-   sent without credentials does not also end in 403; otherwise it is UNCONFIRMED.
+   is retried; one restore per operator, at most `MAX_PRIVILEGE_RESTORES = 3` per transition candidate. Every role
+   field gets one upward value: the enum value with the lowest `valueScore(low) − valueScore(high)` below zero, bool
+   `true`, number `0` (hand-written); a string or an enum with no such value gets none. With no value for any field
+   the builder logs `restore unavailable` and moves on. Repairs a lost authorization, never a deleted account.
+6. **C4 re-login probe** (`reLoginProbeConfirmsPrivilegeRemoved`): only when the follow-up is 2xx; the victim logs
+   in again and replays its slice. Every call before the source must end in the same status group as in the triple
+   (`callsBeforeSourceMatchTriple`). The fault is kept when the source itself gets 403 and the same slice with the
+   source sent without credentials gets a status other than 403; otherwise it is UNCONFIRMED.
 
 Log lines: `Assembled … statuses A/B/C`, `Discarded a VOID … codes A/B/C`, `Discarded an UNCONFIRMED …`, and
 `… proven by an attempt with statuses A/B/C` once per transition op (count triples from `Assembled` only). The

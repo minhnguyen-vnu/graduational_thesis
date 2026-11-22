@@ -1,0 +1,67 @@
+TR2 full remeasure analysis (4 target, 100 hàng) — jar TR2-3beccb00, chạy 2026-11-21/22
+Wave 1 sạch (90 hàng, 00:46), wave 2 ak sạch (10 hàng: 5 vuln 04:00 + 5 fixed 07:17). 0 ERR, 0 sleep, 0 tiến trình sót.
+
+== det970 (bản lỗi / bản vá) — TR2 vs CS2 vs LF ==
+target     TR2 vuln  CS2 vuln  LF vuln   TR2 FP  CS2 FP  LF FP
+reports    12/20     12/20     20/20     0/20    0/20    0/20
+vampi       6/20      7/20      7/20     0/20    0/20    0/20
+pyLoad      5/5       5/5       5/5      0/5     0/5     0/5
+artifact-k  5/5       (3/3*)    5/5      0/5     (—*)    0/3
+* CS2 wave2 chưa xong (user dừng CS2): chỉ vuln seed 1–3, không fixed. So ghép CS2 ở ak chỉ seed 1–3.
+
+== Bốn ô / hàng (tr2_counts.py, tr2-counts.out) ==
+target     TP  FN(có bộ ba, !970)  FN(không bộ ba)  FP  TN  fixed-không-bộ-ba
+reports    12  0                   8                0   20  0
+vampi       6  0                   14               0   6   14
+pyLoad      5  0                   0                0   5   0
+artifact-k  5  0                   0                0   0   5
+TOTAL      28  0                   22               0   31  19
+TN_old = 31 (mọi bộ ba Assembled trên bản vá). TN_403 = 31 (mọi follow-up bản vá đều 403; ak không dựng được bộ ba
+vì token cũ trả 401 → VOID, nên ak không góp TN). FP = 0 trên 49 bộ ba bản vá; 0/31 lượt bản vá có bộ ba, CP95 [0,11.2].
+Fisher một phía vuln vs fixed: reports p=0.000023, vampi p=0.0101, pyLoad p=0.003968, ak p=0.003968.
+
+== McNemar chính xác, TR2 vs CS2 (ghép theo seed) ==
+reports:  12 vs 12, b(mất)=0 c(thêm)=0, p=1.0 (trùng từng seed)
+vampi:     6 vs 7,  b=1 c=0, p=1.0 — mất seed 15
+pyLoad:    5 vs 5,  b=0 c=0, p=1.0 (trùng từng seed)
+ak-vuln:   seed 1–3 ghép được (3 vs 3, đều 1), b=0 c=0; seed 4–5 và arm fixed không có đối chứng CS2.
+Gộp 93 cặp ghép được (90 wave1 + 3 ak-vuln): b=1 c=0, McNemar p=1.0.
+=> trim-restore giữ nguyên kết quả đo so với CS2, trừ đúng 1 hàng (vampi seed 15), không có ý nghĩa thống kê.
+
+== vampi seed 15: cơ chế hàng mất ==
+CS2: Assembled bộ ba trên PUT:/books/v1/{book_title}/secret, operator 'superadmin', codes 200/200/200 → det970=1.
+TR2: cùng source nhưng operator 'admin', codes 401/403/401 → source !2xx → Discarded VOID, không bộ ba → det970=0.
+Cả 6 hàng vampi det970=1 của TR2 vẫn dùng transition PUT:/users/v1/{username}/role (không đổi). Thay đổi là lượt 2
+chỉ còn một lời nâng cho mỗi operator (trim-restore): seed 15 rơi vào 'admin' (VOID) thay vì 'superadmin' (hợp lệ).
+(Trái kỳ vọng "vampi không đổi" của phiên 54; vẫn không đáng kể, p=1.0.)
+
+== C4 log theo target/arm ==
+target/arm    Disc_UNCONFIRMED  INCONCLUSIVE  anon_control  already_reduced
+reports/vuln        24               24            14            0
+reports/fixed        0                0             0            0
+vampi/vuln           0                0             6            0
+vampi/fixed          0                0             0            0
+pyload/vuln          0                0             5            0
+pyload/fixed         0                0             0            0
+ak/vuln              0                0            10          275 (debug)
+ak/fixed             0                0             0          133 (debug)
+INCONCLUSIVE (toàn bộ 24, reports/vuln): "a call before the source of the replayed slice changed status group".
+=> hiệu ứng C4 (từ CS2) dồn vào reports/vuln: 24 lát → 24 UNCONFIRMED → reports 20→12. Giống hệt CS2. vampi/pyLoad/ak
+không có UNCONFIRMED. (already_reduced ở ak chỉ là log debug của builder, ak chạy mức debug.)
+
+== audit970 (audit970.out) ==
+TOTAL 30 PASS / 5 FAIL / 0 UNPARSED / 43 silent.
+PASS: reports 14 + vampi 6 + ak 10 (2/seed) = 30 test 970 emit được. 5 FAIL đều pyLoad/vuln (cred "None", cookie phiên
+không parse được — như LF/CS2; det970 5/5 lấy từ report.json + C4 trong lượt). 43 silent = arm vá + test không-970.
+
+== Integrity ==
+0 det970=1 thiếu bộ ba (TP=28 đều có bộ ba; 22 FN đều không bộ ba). 0 FP trên 50 lượt bản vá. 0 ERR, 0 máy ngủ
+(sleep=0 mọi hàng). Mọi arm lỗi: cả ba tài khoản đăng nhập; ak evaluated 1506–1603 (>389). Sạch.
+
+== Lệch luật / sự cố ==
+1. Wave 1 chạy song song 6 làn; wave 2 nối tiếp. Bỏ cờ D1 (jar không có). Không qua cổng 12 hàng (đo thẳng, so CS2/LF).
+2. ak_fixed 5 seed (user nâng 3→5). Harness ak không tự dừng khi arm vá det970=1; luật FP bảo đảm bằng kiểm tay bản vá
+   ([F] token cũ=401, logs/patched-handcheck.txt) + watcher. 0 FP xảy ra.
+3. Dựng lại 6 container wave-1 từ image (không tái dùng container CS2) để pyLoad khởi đầu sạch. Dọn 1 proxy seed4 sót
+   của CS2 trước khi chạy.
+4. Bộ nền CS2 ở ak chưa đủ (CS2 wave2 user dừng): ak chỉ ghép được 3 seed vuln; arm fixed so LF (0/3).

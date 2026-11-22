@@ -1,0 +1,2665 @@
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/enterprise/ExperimentalFaultCategory.kt b/core/src/main/kotlin/org/evomaster/core/problem/enterprise/ExperimentalFaultCategory.kt
+index 394bd85924..07572ba1f3 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/enterprise/ExperimentalFaultCategory.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/enterprise/ExperimentalFaultCategory.kt
+@@ -51,6 +51,13 @@ enum class ExperimentalFaultCategory(
+     HTTP_STATUS_NO_205_IF_CONTENT(964,"HTTP/REST-Design Violation: no-205-if-content","205WhenContent", "TODO"),
+     HTTP_STATUS_NO_426_IF_NO_UPGRADE(965,"HTTP/REST-Design Violation: no-426-if-no-upgrade","426MissingUpgrade", "TODO"),
+ 
++    // THESIS: Mã lỗi 970 của oracle phân quyền có trạng thái (quan hệ MR-A1).
++    // THESIS: Bốn tham số theo constructor của enum: code = 970, descriptiveName = tên hiển thị,
++    // THESIS: testCaseLabel = nhãn ghép vào tên test sinh ra, fullDescription = mô tả đầy đủ.
++    // THESIS: Vd reports-api seed 1, jar ND: test tên test_0_put_on_report_stillAllowedAfterPermissionRevoked
++    // THESIS: trong EvoMaster_faults_Test.py, call bị gắn lỗi mang dòng "# Fault970. Stateful Authorization: ...".
++    // THESIS: Ai dùng: RestSecurityOracle.handleStatefulAuthorization gắn lỗi này; RestSecurityBuilder chỉ dựng bộ ba
++    // THESIS: khi category này được bật (config.isEnabledFaultCategory).
+     SECURITY_STATEFUL_AUTHORIZATION(970,
+         "Stateful Authorization: privilege persists after a permission-reducing transition",
+         "stillAllowedAfterPermissionRevoked",
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
+index daae87a8cd..c9d503736f 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt
+@@ -113,6 +113,9 @@ class RestSecurityOracle {
+         handleAnonymousWriteCheck(individual, actionResults, fv)
+         handleHiddenAccessible(individual, actionResults, fv)
+         handleSsrfFaults(individual, actionResults, fv)
++        // THESIS: Oracle 970. analyzeSecurityProperties gọi lần lượt mọi handleXxx sau khi fitness chạy xong một test trên SUT.
++        // THESIS: Fitness chỉ gọi analyzeSecurityProperties khi bật --security và test có sampleType == SECURITY
++        // THESIS: (AbstractRestFitness), nên test của pha search không bao giờ tới đây.
+         handleStatefulAuthorization(individual, actionResults, fv)
+     }
+ 
+@@ -549,69 +552,93 @@ class RestSecurityOracle {
+         }
+     }
+ 
++    // THESIS: Oracle 970 (MR-A1): báo lỗi khi một thao tác ghi đã 2xx vẫn 2xx với cùng token sau khi tài khoản bị hạ quyền.
++    // THESIS: Ai gọi: analyzeSecurityProperties ở trên, mỗi lần fitness chạy xong một test SECURITY.
++    // THESIS: Builder luôn đặt bộ ba ở ba call cuối của test (RestSecurityBuilder.executeStatefulAuthzTriple), nên hàm chỉ xét
++    // THESIS: ba call đó; call trong lát phía trước không bao giờ được đọc thành bộ ba:
++    // THESIS: - source (call thứ ba từ cuối): 2xx, của một tài khoản đã đăng nhập, bản thân không qua guard;
++    // THESIS: - transition (call kế cuối): 2xx, của một tài khoản khác, qua guard looksLikePermissionReducingTransition;
++    // THESIS: - follow-up (call cuối): cùng op, cùng tài khoản với source, vẫn 2xx.
++    // THESIS: Đủ ba điều kiện thì gắn lỗi 970 vào follow-up.
++    // THESIS: Vd reports-api seed 1, jar ND (EvoMaster_faults_Test.py):
++    // THESIS: 1 POST /reports (alice) 201; 2 PUT /reports/{id} (alice) 200 = source;
++    // THESIS: 3 PUT /users/alice/role {"role":"VIEWER"} (superadmin) 200 = transition;
++    // THESIS: 4 PUT /reports/{id} (alice, token lấy ở đầu test) 200 = follow-up, gắn lỗi 970.
++    // THESIS: Bản vá của reports-api cho cùng bộ ba 200/200/403: follow-up không 2xx, hàm không gắn gì.
++    // THESIS: Oracle không đăng nhập lại. Test sinh ra đăng nhập các tài khoản nó dùng ở đầu test, nên follow-up mang token
++    // THESIS: cấp trước transition.
++    // THESIS: Lỗi gắn ở đây chưa phải kết quả cuối. Sau khi test chạy xong, builder chạy probe C4; C4 không xác nhận thì test
++    // THESIS: không vào archive và lỗi mất theo (RestSecurityBuilder.executeStatefulAuthzTriple).
+     private fun handleStatefulAuthorization(
+         individual: RestIndividual,
+         actionResults: List<ActionResult>,
+         fv: FitnessValue
+     ) {
+ 
++        // THESIS: Cờ chỉ bật trong lúc builder chạy bộ ba của chính nó (executeStatefulAuthzTriple).
++        // THESIS: Test SECURITY của oracle khác (vd 206), test probe C4 và test nâng quyền chạy khi cờ tắt, nên không bị xét 970.
+         if (!restSecurityBuilder.statefulTripleUnderEvaluation) {
+             return
+         }
+ 
++        // THESIS: Các call HTTP của test theo thứ tự chạy. Vd ví dụ trên: [POST /reports, PUT /reports/{id},
++        // THESIS: PUT /users/{username}/role, PUT /reports/{id}].
+         val actions = individual.seeMainExecutableActions()
++        if (actions.size < 3) {
++            return
++        }
+ 
++        // THESIS: Kotlin: hàm cục bộ, khai báo trong thân hàm và chỉ dùng được trong hàm này.
++        // THESIS: resultOf: kết quả HTTP của một call, ghép qua localId (id riêng của call trong test); không có thì null.
++        // THESIS: Kotlin: find trả phần tử đầu tiên thoả điều kiện, hoặc null; "as RestCallResult?" ép sang kiểu cho phép null.
+         fun resultOf(a: RestCallAction): RestCallResult? =
+             actionResults.find { it.sourceLocalId == a.getLocalId() } as RestCallResult?
+ 
++        // THESIS: isAllowed: true khi mã trạng thái thuộc nhóm 2xx, tức ALLOWED của MR-A1.
++        // THESIS: Kotlin: "?." chỉ gọi tiếp khi vế trái khác null; "?: return false" thoát hàm với false khi vế trái null
++        // THESIS: (call không có kết quả hoặc không có mã).
+         fun isAllowed(a: RestCallAction): Boolean {
+             val code = resultOf(a)?.getStatusCode() ?: return false
+             return StatusGroup.G_2xx.isInGroup(code)
+         }
+ 
+-        for (srcIndex in actions.indices) {
+-            val source = actions[srcIndex]
+-            if (source.auth is NoAuth
+-                || !isAllowed(source)
+-                || source.verb !in RestSecurityBuilder.TRANSITION_VERBS
+-                || RestSecurityBuilder.looksLikePermissionReducingTransition(source)) {
+-                continue
+-            }
+-
+-            for (followUpIndex in (srcIndex + 1) until actions.size) {
+-                val followUp = actions[followUpIndex]
+-
+-                if (followUp.getName() != source.getName() || followUp.auth.isDifferentFrom(source.auth)
+-                    || !isAllowed(followUp)) {
+-                    continue
+-                }
+-
+-                var hasTransition = false
+-                for (tIndex in (srcIndex + 1) until followUpIndex) {
+-                    val t = actions[tIndex]
+-                    if (t.auth.isDifferentFrom(source.auth)
+-                        && isAllowed(t)
+-                        && RestSecurityBuilder.looksLikePermissionReducingTransition(t)) {
+-                        hasTransition = true
+-                        break
+-                    }
+-                }
+-                if (!hasTransition) {
+-                    continue
+-                }
++        val followUpIndex = actions.size - 1
++        val source = actions[followUpIndex - 2]
++        val t = actions[followUpIndex - 1]
++        val followUp = actions[followUpIndex]
+ 
+-                val scenarioId = idMapper.handleLocalTarget(
+-                    idMapper.getFaultDescriptiveId(
+-                        ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION, followUp.getName()
+-                    )
+-                )
+-                fv.updateTarget(scenarioId, 1.0, followUpIndex)
+-                resultOf(followUp)!!.addFault(
+-                    DetectedFault(ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION, followUp.getName(), null)
+-                )
+-                return
+-            }
++        // THESIS: Source: bỏ nếu ẩn danh (NoAuth), không 2xx, hoặc chính nó qua guard. Vế cuối giữ định nghĩa source của MR-A1
++        // THESIS: (thao tác bị chặn bởi quyền, bản thân không phải transition) và khớp guardedSources của builder.
++        // THESIS: Vd transitionScore, mô hình trong jar ND: PUT /users/{username}/role = 5.628 > 0 nên không làm source;
++        // THESIS: PUT /reports/{id} = -3.635 nên làm source được.
++        if (source.auth is NoAuth || !isAllowed(source) || RestSecurityBuilder.looksLikePermissionReducingTransition(source)) {
++            return
+         }
++        // THESIS: Transition: tài khoản khác source, 2xx, qua guard. Vd PUT /users/alice/role của superadmin: điểm 5.628 > 0.
++        // THESIS: isDifferentFrom so tên tài khoản (AuthenticationInfo). Cùng tài khoản trong một test là cùng token.
++        if (!t.auth.isDifferentFrom(source.auth) || !isAllowed(t) || !RestSecurityBuilder.looksLikePermissionReducingTransition(t)) {
++            return
++        }
++        // THESIS: Follow-up: cùng tên op (verb và path, vd "PUT:/reports/{id}"), cùng tài khoản với source, và 2xx.
++        if (followUp.getName() != source.getName() || followUp.auth.isDifferentFrom(source.auth) || !isAllowed(followUp)) {
++            return
++        }
++
++        // THESIS: Đủ ba điều kiện.
++        // THESIS: getFaultDescriptiveId tạo khoá chuỗi gồm tiền tố lỗi, nhãn của category 970 và tên op follow-up;
++        // THESIS: handleLocalTarget đổi khoá đó thành số id của một target (mục tiêu mà archive theo dõi).
++        // THESIS: updateTarget(id, 1.0, followUpIndex) ghi target đó đạt hẳn (1.0) tại call follow-up; archive giữ test nhờ target này.
++        val scenarioId = idMapper.handleLocalTarget(
++            idMapper.getFaultDescriptiveId(
++                ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION, followUp.getName()
++            )
++        )
++        fv.updateTarget(scenarioId, 1.0, followUpIndex)
++        // THESIS: Gắn DetectedFault 970 vào kết quả của follow-up. Test sinh ra in "# Fault970. ..." ngay trước call này.
++        // THESIS: Kotlin: "!!" khẳng định giá trị khác null, null thì ném exception. isAllowed(followUp) đã cần có kết quả.
++        resultOf(followUp)!!.addFault(
++            DetectedFault(ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION, followUp.getName(), null)
++        )
+     }
+ 
+ 
+diff --git a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+index f15cba977d..69f944c1b6 100644
+--- a/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
++++ b/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt
+@@ -71,37 +71,64 @@ class RestSecurityBuilder : TimeBoxedPhase {
+     companion object {
+         private val log: Logger = LoggerFactory.getLogger(RestSecurityBuilder::class.java)
+ 
++        // THESIS: Kotlin: companion object giống phần static của lớp Java. Hàm và hằng trong đó gọi bằng
++        // THESIS: RestSecurityBuilder.tên mà không cần đối tượng; oracle gọi looksLikePermissionReducingTransition
++        // THESIS: theo cách này.
++        // THESIS: Phần ta thêm vào companion: hằng số, nạp mô hình Naive Bayes, tách token, liệt kê trường của op, chấm điểm.
++        // THESIS: MODEL_RESOURCE: file mô hình nằm trong jar (core/src/main/resources/stateful-authz-model.csv).
++        // THESIS: Mỗi dòng: bảng,đặc trưng,trọng số. Vd "op,p:role,2.755141396519759".
++        // THESIS: Kotlin: const val là hằng biết lúc biên dịch, như static final của Java.
+         private const val MODEL_RESOURCE = "/stateful-authz-model.csv"
+ 
++        // THESIS: Khoá đặc biệt trong bảng op, role, victim: log-odds tiên nghiệm ln(N_T / N_N), với N_T, N_N là số mẫu
++        // THESIS: nhãn T và nhãn N trong corpus (docs/naive-bayes.md).
++        // THESIS: Vd op,__prior__,-3.885 = ln(209 / 10172): 209 op T trên 10.381 op ghi; chưa nhìn đặc trưng nào thì
++        // THESIS: posterior của một op là khoảng 2%.
+         private const val PRIOR = "__prior__"
+ 
++        // THESIS: tokens bỏ từ ngắn hơn 4 ký tự. Vd "/users/{userId}/role": "id" dài 2 nên bị bỏ.
++        // THESIS: Riêng hasIdToken gọi tokens(leaf, 1) để giữ "id".
+         private const val MIN_TOKEN_LENGTH = 4
+ 
++        // THESIS: walkBody đi xuống body tối đa 3 tầng, trường cấp một là tầng 1.
++        // THESIS: Vd body {a: {b: {c: {d}}}} cho a, a.b, a.b.c; không có a.b.c.d.
+         private const val MAX_FIELD_DEPTH = 3
+ 
++        // THESIS: schemaFields giữ tối đa 80 trường đầu của một op, theo thứ tự path, query, body.
+         private const val MAX_FIELDS = 80
+ 
++        // THESIS: SchemaField.features chỉ lấy token từ 12 giá trị enum đầu của trường.
+         private const val MAX_ENUM_VALUES = 12
+ 
+-        private val TOKEN_PART = Regex("[A-Z]+(?![a-z])|[A-Z][a-z0-9]*|[a-z0-9]+")
+-
++        // THESIS: loadModel: đọc file mô hình thành map hai tầng: tên bảng, rồi đặc trưng, ra trọng số.
++        // THESIS: Vd model["op"]["p:role"] = 2.755, model["low"]["viewer"] = 0.375.
++        // THESIS: Ai gọi: chỉ dòng "private val MODEL = loadModel()" bên dưới, một lần khi JVM nạp lớp.
++        // THESIS: Thiếu file hoặc thiếu bảng thì log warn (mức EvoMaster luôn in): khi đó không op nào qua guard, 970 không bao giờ nổ.
+         private fun loadModel(): Map<String, Map<String, Double>> {
++            // THESIS: getResourceAsStream tìm file trong classpath (trong jar); không thấy thì trả null.
+             val stream = RestSecurityBuilder::class.java.getResourceAsStream(MODEL_RESOURCE)
+             if (stream == null) {
+                 log.warn("Stateful-authorization model $MODEL_RESOURCE is missing from the classpath:" +
+                         " no transition can be inferred and oracle 970 will never be raised")
+                 return emptyMap()
+             }
++            // THESIS: Kotlin: mutableMapOf tạo map sửa được (LinkedHashMap, giữ thứ tự chèn, tức thứ tự dòng trong file).
+             val model = mutableMapOf<String, MutableMap<String, Double>>()
++            // THESIS: Mỗi dòng tách theo dấu phẩy, phải đúng 3 phần, phần thứ ba phải đọc được thành số.
++            // THESIS: Dòng tiêu đề "table,feature,weight" có phần thứ ba "weight" không phải số nên bị bỏ.
++            // THESIS: Kotlin: toDoubleOrNull trả null khi chuỗi không phải số; "?: continue" khi đó sang dòng kế.
+             for (line in stream.bufferedReader().readLines()) {
+                 val row = line.trim().split(",")
+                 if (row.size != 3) {
+                     continue
+                 }
+                 val weight = row[2].toDoubleOrNull() ?: continue
++                // THESIS: Kotlin: getOrPut lấy map con của bảng row[0]; chưa có thì tạo map rỗng, cất vào model, rồi trả nó.
+                 val rows = model.getOrPut(row[0]) { mutableMapOf() }
+                 rows[row[1]] = weight
+             }
++            // THESIS: Kiểm đủ bảng: op, role, victim phải có khoá __prior__; low, high, lowstr, highstr phải có ít nhất một dòng.
++            // THESIS: Kotlin: "model[name]?.containsKey(PRIOR) != true" đúng cả khi không có bảng (vế trái null) lẫn khi bảng thiếu khoá.
+             val missing = mutableListOf<String>()
+             for (name in listOf("op", "role", "victim")) {
+                 if (model[name]?.containsKey(PRIOR) != true) {
+@@ -120,22 +147,69 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return model
+         }
+ 
++        // THESIS: MODEL: mô hình đã nạp. Khởi tạo một lần khi JVM nạp lớp RestSecurityBuilder; mọi lần chấm điểm đọc map này.
+         private val MODEL = loadModel()
+ 
++        // THESIS: table(name): một bảng của mô hình theo tên; tên không có thì map rỗng.
++        // THESIS: Kotlin: "?:" (Elvis) lấy vế phải khi vế trái null. "= ..." sau khai báo hàm là thân hàm một biểu thức.
+         private fun table(name: String): Map<String, Double> = MODEL[name] ?: emptyMap()
+ 
++        // THESIS: tokens: tách chuỗi thành tập từ viết thường. Ranh giới từ là ký tự không phải chữ hay số (/ { } _ - .),
++        // THESIS: và chỗ đổi hoa thường kiểu camelCase. Bỏ từ ngắn hơn minLength và từ toàn chữ số.
++        // THESIS: Ai gọi: opFeatures (path và tên trường), SchemaField.features, hasIdToken (minLength = 1).
++        // THESIS: Vd tokens("/users/{userId}/role") = {users, user, role}; tokens("user_name") = {user, name};
++        // THESIS: tokens("isAdmin") = {admin}; tokens("HTTPServer") = {http, server}.
++        // THESIS: Kotlin: "minLength: Int = MIN_TOKEN_LENGTH" là tham số có giá trị mặc định; tokens(x) dùng minLength = 4.
+         fun tokens(text: String, minLength: Int = MIN_TOKEN_LENGTH): Set<String> {
+             val out = mutableSetOf<String>()
+-            for (match in TOKEN_PART.findAll(text)) {
+-                val token = match.value.lowercase()
+-                if (token.length < minLength || isDigitsOnly(token)) {
++            var start = 0
++            while (start < text.length) {
++                // THESIS: tokenEnd cho vị trí ngay sau từ bắt đầu tại start; end == start nghĩa là ký tự tại start là dấu ngăn, bỏ qua nó.
++                // THESIS: Vd "/users/{userId}/role": start 0 là "/", end = 0, start lên 1; start 1 cho end = 6, từ "users".
++                val end = tokenEnd(text, start)
++                if (end == start) {
++                    start++
+                     continue
+                 }
+-                out.add(token)
++                // THESIS: Kotlin: substring(start, end) lấy các ký tự từ start tới end - 1.
++                val token = text.substring(start, end).lowercase()
++                if (token.length >= minLength && !isDigitsOnly(token)) {
++                    out.add(token)
++                }
++                start = end
+             }
+             return out
+         }
+ 
++        // THESIS: tokenEnd: vị trí ngay sau từ bắt đầu tại start. Ba trường hợp:
++        // THESIS: 1) dãy chữ hoa không có chữ thường theo sau là một từ: "PUT", "ADMIN", "HTTP" trong "HTTP/1.1";
++        // THESIS: 2) dãy từ 2 chữ hoa trở lên có chữ thường theo sau: chữ hoa cuối mở từ mới, vd "HTTPServer" cho "HTTP";
++        // THESIS: 3) còn lại (0 hoặc 1 chữ hoa rồi chữ thường): lấy tiếp chữ thường và chữ số, vd "userId" cho "user", rồi "Id".
++        // THESIS: Ký tự không phải chữ Latin hay số không vào nhánh nào và trả end == start.
++        private fun tokenEnd(text: String, start: Int): Int {
++            var end = start
++            // THESIS: Đếm dãy chữ hoa tại start. Kotlin: 'A'..'Z' là khoảng ký tự; "c in 'A'..'Z'" kiểm c nằm trong khoảng.
++            while (end < text.length && text[end] in 'A'..'Z') {
++                end++
++            }
++            val upper = end - start
++            val nextIsLower = end < text.length && text[end] in 'a'..'z'
++            // THESIS: Trường hợp 1.
++            if (upper >= 1 && !nextIsLower) {
++                return end
++            }
++            // THESIS: Trường hợp 2: lùi một ký tự để chữ hoa cuối thuộc từ sau.
++            if (upper >= 2) {
++                return end - 1
++            }
++            // THESIS: Trường hợp 3: lấy tiếp chữ thường a-z và chữ số 0-9.
++            while (end < text.length && (text[end] in 'a'..'z' || text[end] in '0'..'9')) {
++                end++
++            }
++            return end
++        }
++
++        // THESIS: isDigitsOnly: true nếu mọi ký tự là chữ số 0-9, vd "123", "2026". tokens bỏ các từ như vậy.
+         private fun isDigitsOnly(s: String): Boolean {
+             for (c in s) {
+                 if (c !in '0'..'9') {
+@@ -145,12 +219,23 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return true
+         }
+ 
++        // THESIS: SchemaField: một trường của op. Dùng để chấm điểm trường vai trò và trường nạn nhân, và để ghi giá trị vào call.
++        // THESIS: Gene là cách EvoMaster biểu diễn một giá trị trong test; mỗi tham số của op là một cây gene.
++        // THESIS: loc: "path", "query" hoặc "body". name: đường dẫn trường trong body, mảng thêm "[]". Vd "role", "user.roles[]".
++        // THESIS: gene: gene của trường như EvoMaster dựng từ spec, có thể còn lớp bọc OptionalGene (trường không bắt buộc).
++        // THESIS: value: gene giữ giá trị, sau khi valueGene bóc các lớp bọc; setField ghi vào gene này.
++        // THESIS: Kotlin: "class SchemaField(val loc: String, ...)" khai báo luôn bốn thuộc tính chỉ đọc qua constructor.
+         class SchemaField(val loc: String, val name: String, val gene: Gene, val value: Gene) {
++            // THESIS: leaf: phần sau dấu chấm cuối, bỏ "[]". parents: các phần trước đó. Vd "user.roles[]" cho leaf "roles", parents ["user"].
+             val leaf: String = name.split(".").last().replace("[]", "")
+             val parents: List<String> = name.split(".").dropLast(1).map { it.replace("[]", "") }
++            // THESIS: enumValues và kind được gán trong init bên dưới. Kotlin cho khai báo val trước rồi gán đúng một lần trong init.
+             val enumValues: List<String>
+             val kind: String
+ 
++            // THESIS: Kotlin: init chạy khi tạo đối tượng, như thân constructor của Java.
++            // THESIS: Bước 1: tìm EnumGene: chính value, hoặc template của mảng (mảng các enum, vd roles: [ADMIN, USER]).
++            // THESIS: template là gene mẫu EvoMaster dùng để sinh từng phần tử của mảng.
+             init {
+                 var enum: EnumGene<*>? = null
+                 if (value is EnumGene<*>) {
+@@ -161,6 +246,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                         enum = inner
+                     }
+                 }
++                // THESIS: Bước 2: lấy tên các giá trị enum. Vd body:role của reports-api: ADMIN, VIEWER và EVOMASTER
++                // THESIS: (giá trị EvoMaster tự chèn vào enum chuỗi).
+                 val names = mutableListOf<String>()
+                 if (enum != null) {
+                     for (v in enum.values) {
+@@ -168,6 +255,9 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                     }
+                 }
+                 enumValues = names
++                // THESIS: Bước 3: xếp loại theo thứ tự kiểm: bool, enum, num, array, object, còn lại str.
++                // THESIS: Mảng các enum ra "enum" vì enumValues được kiểm trước array.
++                // THESIS: Kotlin: when không đối số chạy nhánh đầu tiên có điều kiện đúng, như chuỗi if/else if; "is" kiểm kiểu như instanceof.
+                 kind = when {
+                     value is BooleanGene -> "bool"
+                     enumValues.isNotEmpty() -> "enum"
+@@ -178,8 +268,14 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 }
+             }
+ 
++            // THESIS: key: "loc:name", duy nhất trong một op. Vd "body:role", "path:username".
++            // THESIS: Kotlin: "get() =" tính lại mỗi lần đọc; "$loc" chèn giá trị biến vào chuỗi.
+             val key: String get() = "$loc:$name"
+ 
++            // THESIS: features: tập đặc trưng của trường cho bảng role và victim. Tiền tố cho biết loại đặc trưng:
++            // THESIS: k: kind, l: loc, w: tên lá viết thường, n: từng từ của tên lá, a: từ của trường cha, e: từ của giá trị enum.
++            // THESIS: Vd body:role của reports-api = {k:enum, l:body, w:role, n:role, e:admin, e:viewer, e:evomaster}.
++            // THESIS: Ai gọi: fieldScore.
+             fun features(): Set<String> {
+                 val fs = mutableSetOf("k:$kind", "l:$loc", "w:${leaf.lowercase()}")
+                 for (t in tokens(leaf)) {
+@@ -199,6 +295,10 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             }
+         }
+ 
++        // THESIS: valueGene: bóc các lớp bọc (WrapperGene: OptionalGene, NullableGene, ChoiceGene, ...) tới gene giữ giá trị.
++        // THESIS: Lớp bọc thường có một con: đi vào con đầu. ChoiceGene có một con cho mỗi phương án: đi vào con cuối.
++        // THESIS: Không còn con thì dừng ở lớp hiện tại. Vd OptionalGene(EnumGene role) = EnumGene role.
++        // THESIS: Kotlin: "cur is WrapperGene" vừa kiểm kiểu vừa tự ép kiểu cur trong khối (smart cast).
+         private fun valueGene(g: Gene): Gene {
+             var cur = g
+             while (cur is WrapperGene) {
+@@ -208,6 +308,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return cur
+         }
+ 
++        // THESIS: alternatives: mọi phương án gene có thể mang. ChoiceGene (vd schema oneOf): gộp phương án của từng con, đệ quy.
++        // THESIS: Lớp bọc khác: bóc lấy con đầu. Gene thường: chỉ chính nó. Ai gọi: objectFields.
+         private fun alternatives(g: Gene): List<Gene> {
+             if (g is ChoiceGene<*>) {
+                 val out = mutableListOf<Gene>()
+@@ -222,6 +324,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return listOf(g)
+         }
+ 
++        // THESIS: objectFields: trường con của mọi phương án là ObjectGene, theo thứ tự gặp; tên trùng chỉ giữ lần đầu.
++        // THESIS: Vd body oneOf [{role}, {role, reason}] = [role, reason]. Ai gọi: walkBody, schemaFields.
+         private fun objectFields(g: Gene): List<Gene> {
+             val out = mutableListOf<Gene>()
+             val seenNames = mutableSetOf<String>()
+@@ -240,12 +344,17 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return out
+         }
+ 
++        // THESIS: walkBody: duyệt đệ quy body, thêm mỗi trường vào out theo thứ tự cha trước con.
++        // THESIS: name: đường dẫn tới trường; g: gene của trường; depth: tầng hiện tại, trường cấp một là 1.
++        // THESIS: Vd body {members: [{role}]}: thêm "members" (tầng 1), rồi "members[].role" (tầng 2).
+         private fun walkBody(name: String, g: Gene, depth: Int, out: MutableList<SchemaField>) {
+             val v = valueGene(g)
+             out.add(SchemaField("body", name, g, v))
++            // THESIS: Tới tầng MAX_FIELD_DEPTH (3) thì không đi xuống nữa; trường hiện tại đã được thêm ở dòng trên.
+             if (depth >= MAX_FIELD_DEPTH) {
+                 return
+             }
++            // THESIS: Trường là mảng: đi vào template của phần tử và thêm "[]" vào tên. Không phải mảng: đi vào chính trường.
+             val container = if (v is ArrayGene<*>) v.template else g
+             val prefix = if (v is ArrayGene<*>) "$name[]" else name
+             for (child in objectFields(container)) {
+@@ -253,8 +362,13 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             }
+         }
+ 
++        // THESIS: schemaFields: mọi trường của op theo thứ tự path, query, body; giữ tối đa MAX_FIELDS (80).
++        // THESIS: a.parameters là các tham số EvoMaster dựng từ spec cho op; primaryGene() là gene gốc của tham số.
++        // THESIS: Vd PUT /users/{username}/role của reports-api = [path:username, body:role].
++        // THESIS: Ai gọi: opFeatures, bestField, victimField, restoreFields, restorePrivilege, trimToTargetFields.
+         fun schemaFields(a: RestCallAction): List<SchemaField> {
+             val out = mutableListOf<SchemaField>()
++            // THESIS: Ba vòng riêng giữ thứ tự path, query, body bất kể thứ tự tham số trong spec.
+             for (p in a.parameters) {
+                 if (p is PathParam) {
+                     out.add(SchemaField("path", p.name, p.primaryGene(), valueGene(p.primaryGene())))
+@@ -269,21 +383,31 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 if (p !is BodyParam) {
+                     continue
+                 }
++                // THESIS: Body là mảng (vd [{...}]) thì lấy trường của template phần tử. Trường cấp một ghi tên trơn, không tiền tố.
+                 val root = valueGene(p.primaryGene())
+                 val top = if (root is ArrayGene<*>) objectFields(root.template) else objectFields(p.primaryGene())
+                 for (field in top) {
+                     walkBody(field.name, field, 1, out)
+                 }
+             }
++            // THESIS: Kotlin: take(n) lấy tối đa n phần tử đầu.
+             return out.take(MAX_FIELDS)
+         }
+ 
++        // THESIS: opFeatures: tập đặc trưng của op cho bảng op. v: verb; p: từng từ của path; f: từng từ của tên lá mọi trường
++        // THESIS: query và body (kể cả trường lồng trong body).
++        // THESIS: Vd PUT /users/{username}/role = {v:PUT, p:users, p:username, p:role, f:role}.
++        // THESIS: Ai gọi: transitionScore.
+         fun opFeatures(a: RestCallAction): Set<String> {
+             val fs = mutableSetOf("v:${a.verb.name}")
+             for (t in tokens(a.path.toString())) {
+                 fs.add("p:$t")
+             }
+             for (f in schemaFields(a)) {
++                // THESIS: Trường path không cho f:, vì tên path param đã nằm trong path và đã có ở p:. Vd {username} đã cho p:username.
++                if (f.loc == "path") {
++                    continue
++                }
+                 for (t in tokens(f.leaf)) {
+                     fs.add("f:$t")
+                 }
+@@ -291,6 +415,11 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return fs
+         }
+ 
++        // THESIS: evidence: tổng trọng số của các đặc trưng có trong bảng name; đặc trưng không có trong bảng góp 0.
++        // THESIS: Trọng số w(t) = ln((d_T + 1)/(N_T + 2)) - ln((d_N + 1)/(N_N + 2)), với d là số mẫu mang đặc trưng t
++        // THESIS: trong mỗi lớp (docs/naive-bayes.md).
++        // THESIS: Vd evidence("op", PUT /users/{username}/role) = 0.250 + 2.135 + 2.449 + 2.755 + 1.925 = 9.514
++        // THESIS: (v:PUT, p:users, p:username, p:role, f:role).
+         private fun evidence(name: String, features: Set<String>): Double {
+             val t = table(name)
+             var sum = 0.0
+@@ -300,18 +429,32 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return sum
+         }
+ 
++        // THESIS: prior: log-odds tiên nghiệm của bảng. Bảng thiếu khoá __prior__ thì âm vô cực: mọi điểm của bảng thành âm vô cực
++        // THESIS: và không gì qua ngưỡng 0.
+         private fun prior(name: String): Double = table(name)[PRIOR] ?: Double.NEGATIVE_INFINITY
+ 
++        // THESIS: fieldScore: log-odds hậu nghiệm rằng trường f thuộc lớp T của bảng name: "role" là trường vai trò,
++        // THESIS: "victim" là trường chỉ định nạn nhân. Điểm > 0 tương đương posterior > 0,5.
++        // THESIS: Vd fieldScore("role", body:role) = -2.074 + 1.602 + 0.342 + 2.835 + 2.978 + 2.937 = 8.621
++        // THESIS: (prior, k:enum, l:body, w:role, n:role, e:admin; e:viewer và e:evomaster không có trong bảng).
++        // THESIS: Vd fieldScore("victim", path:username) = -1.587 + 0.378 + 1.293 + 2.462 + 2.644 = 5.189.
+         fun fieldScore(name: String, f: SchemaField): Double = prior(name) + evidence(name, f.features())
+ 
+-        private val opEvidenceCache = java.util.concurrent.ConcurrentHashMap<String, Double>()
+-
+-        fun transitionScore(a: RestCallAction): Double =
+-            prior("op") + opEvidenceCache.getOrPut(a.getName()) { evidence("op", opFeatures(a)) }
+-
++        // THESIS: transitionScore: log-odds rằng op là transition hạ quyền = prior op + evidence op.
++        // THESIS: Vd PUT /users/{username}/role = -3.885 + 9.514 = 5.628, posterior khoảng 0,996.
++        // THESIS: Vd PUT /reports/{id} = -3.885 + 0.250 = -3.635 (p:reports không có trong bảng).
++        // THESIS: Ai gọi: looksLikePermissionReducingTransition, rankPermissionReducingTransitions, log debug.
++        fun transitionScore(a: RestCallAction): Double = prior("op") + evidence("op", opFeatures(a))
++
++        // THESIS: valueScore: điểm của một giá trị vai trò trong bảng low hoặc high.
++        // THESIS: Duyệt mọi khoá của bảng; khoá là chuỗi con của giá trị (so viết thường) thì xét trọng số; lấy trọng số lớn nhất.
++        // THESIS: Không khớp khoá nào: 0. So chuỗi con nên "superadmin" cũng khớp khoá admin.
++        // THESIS: Vd valueScore("low", "VIEWER") = 0.375 (khoá viewer); valueScore("high", "ADMIN") = 0.656 (khoá admin);
++        // THESIS: valueScore("high", "VIEWER") = 0. Ai gọi: lowMinusHigh.
+         fun valueScore(name: String, value: String): Double {
+             val v = value.lowercase()
+             var best: Double? = null
++            // THESIS: Kotlin: "for ((key, weight) in map)" tách mỗi phần tử của map thành khoá và giá trị. best == null: chưa khớp khoá nào.
+             for ((key, weight) in table(name)) {
+                 if (!v.contains(key)) {
+                     continue
+@@ -323,15 +466,30 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return best ?: 0.0
+         }
+ 
++        // THESIS: Bốn verb ghi. Guard đòi transition dùng một trong bốn verb; builder chỉ dựng source PUT, PATCH, POST.
++        // THESIS: GET không bao giờ là transition hay source. Kotlin: listOf tạo danh sách không sửa được.
+         val TRANSITION_VERBS =
+             listOf(HttpVerb.PUT, HttpVerb.PATCH, HttpVerb.POST, HttpVerb.DELETE)
+ 
++        // THESIS: Trần số bộ ba chạy trên SUT trong cả pha security, mọi ứng viên cộng lại. Đếm ở statefulTripleAttempts.
++        // THESIS: Lần thử không dựng được call (không đặt được nạn nhân hay giá trị) không chạy trên SUT và không tính.
+         private const val MAX_STATEFUL_TRIPLE_ATTEMPTS = 20
+ 
++        // THESIS: Ứng viên transition chưa được chứng minh được tối đa 5 bộ ba rồi nhường ứng viên kế.
++        // THESIS: Ứng viên cuối danh sách và ứng viên đã được chứng minh không bị giới hạn này. Kiểm ở candidateCapReached.
+         private const val MAX_UNPROVEN_CANDIDATE_ATTEMPTS = 5
+ 
++        // THESIS: Trần số lời gọi nâng quyền (restorePrivilege chạy trên SUT) cho mỗi ứng viên transition,
++        // THESIS: tính trên mọi nạn nhân và operator. Đếm ở privilegeRestoreAttempts.
+         private const val MAX_PRIVILEGE_RESTORES = 3
+ 
++        // THESIS: Guard của 970: op có verb ghi và transitionScore > 0 (posterior > 0,5) được coi là transition hạ quyền.
++        // THESIS: Ai gọi: builder (rankPermissionReducingTransitions, để chọn ứng viên); oracle (để nhận transition,
++        // THESIS: và để loại op này khỏi vai source).
++        // THESIS: Builder và oracle dùng cùng hàm, cùng ngưỡng, nên transition của bộ ba builder dựng luôn được oracle nhận ra.
++        // THESIS: Vd reports-api, mô hình trong jar ND: PUT /users/{username}/role = 5.628, qua guard;
++        // THESIS: PUT /reports/{id} = -3.635, DELETE /reports/{id} = -3.241, POST /reports = -4.904, không qua.
++        // THESIS: Kotlin: "a.verb !in TRANSITION_VERBS" nghĩa là !TRANSITION_VERBS.contains(a.verb).
+         fun looksLikePermissionReducingTransition(a: RestCallAction): Boolean {
+             if (a.verb !in TRANSITION_VERBS) {
+                 return false
+@@ -424,6 +582,10 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         individualsInSolution = this.archive.extractSolution().individuals
+ 
+         if(!hasPhaseTimedOut()) {
++            // THESIS: Khâu 970 của ta. applySecurityPhase là pha security, chạy sau search khi bật --security (Main.phaseSecurity).
++            // THESIS: Chạy sau expandWithForbidden: test 403 upstream vừa thêm đã có trong individualsInSolution (dòng recompute ở trên),
++            // THESIS: builder dùng chúng để tìm source.
++            // THESIS: Chạy trước addForAccessControl, addForInjections, addForInfoLeakage của upstream, chung ngân sách thời gian của pha.
+             addForStatefulAccessControl()
+         }
+ 
+@@ -585,45 +747,92 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         TODO("Not yet implemented")
+     }
+ 
++    // THESIS: Giá trị hạ quyền cho trường vai trò kiểu mảng (kind "array"): "[]" là gỡ mọi vai trò.
++    // THESIS: setRoleFieldToReduced gặp chuỗi này thì gọi clearArray thay vì setField.
+     private val emptyRoleList = "[]"
+ 
++    // THESIS: Giá trị hạ quyền thử lần lượt cho trường vai trò kiểu số (kind "num"). Viết tay, chưa học từ dữ liệu.
+     private val numericRoleCandidates = listOf("1", "0", "2")
+ 
+-    private val elevatedNumericRoleCandidates = listOf("0", "1", "2")
+-
++    // THESIS: Tên các tài khoản đã bị một transition 2xx hạ quyền trong pha. Không chọn làm nạn nhân (buildStatefulAuthzTriple)
++    // THESIS: hay operator (operatorsFor) nữa, vì quyền của chúng đã khác lúc đầu.
++    // THESIS: Thêm ở executeStatefulAuthzTriple khi transition 2xx; bỏ ra khi C4 thấy quyền còn nguyên.
++    // THESIS: Vd sau bộ ba của reports-api seed 1: {alice}. Kotlin: mutableSetOf tạo tập sửa được (LinkedHashSet).
+     private val privilegeReducedInPhase = mutableSetOf<String>()
+ 
++    // THESIS: Tập con của privilegeReducedInPhase: tài khoản bị hạ trong một bộ ba đã chứng minh transition
++    // THESIS: (follow-up 403, hoặc follow-up 2xx đã qua C4).
++    // THESIS: Khi sang ứng viên kế, privilegeReducedInPhase chỉ giữ các tài khoản này (retainAll): tài khoản mà một ứng viên
++    // THESIS: chưa chứng minh trả 2xx thì dùng lại được, vì chưa có bằng chứng quyền của nó đã đổi.
+     private val privilegeReducedByProof = mutableSetOf<String>()
+ 
+-    private val refusedTransitionVictims = mutableSetOf<Pair<String, String>>()
++    // THESIS: Cặp (tên transition, tên nạn nhân) không thử nữa trong pha. Thêm vì một trong ba lý do:
++    // THESIS: transition từ chối mọi lần thử trên nạn nhân (buildStatefulAuthzTriple, qua victimRefused);
++    // THESIS: source trả 401/403 cho nạn nhân, tức nạn nhân không còn làm được source (tryReducedRoles);
++    // THESIS: transition trả 404 cho nạn nhân sau source 2xx (executeStatefulAuthzTriple).
++    // THESIS: Xoá hết khi một lần nâng quyền thành công (restorePrivilege), vì quyền của operator đã đổi.
++    // THESIS: Kotlin: Pair<String, String> là bộ đôi giá trị; "a to b" tạo Pair(a, b).
++    private val skippedTransitionVictims = mutableSetOf<Pair<String, String>>()
+ 
++    // THESIS: Số bộ ba đã chạy trên SUT trong cả pha; tăng trong executeStatefulAuthzTriple sau khi fitness chạy xong.
++    // THESIS: Trần MAX_STATEFUL_TRIPLE_ATTEMPTS = 20.
+     private var statefulTripleAttempts = 0
+ 
++    // THESIS: Số lời gọi nâng quyền đã chạy cho ứng viên hiện tại; về 0 khi sang ứng viên kế. Trần MAX_PRIVILEGE_RESTORES = 3.
+     private var privilegeRestoreAttempts = 0
+ 
++    // THESIS: Trạng thái của ứng viên transition đang thử, đặt lại ở đầu mỗi ứng viên (addForStatefulAccessControl bước 3).
++    // THESIS: candidateAttempts: số bộ ba đã chạy với ứng viên này. candidateProven: đã có bộ ba chứng minh nó hạ quyền thật chưa.
++    // THESIS: candidateIsLast: ứng viên cuối danh sách.
+     private var candidateAttempts = 0
+     private var candidateProven = false
+     private var candidateIsLast = true
+ 
++    // THESIS: Mã của source và transition ở bộ ba gần nhất; null khi call không có mã.
++    // THESIS: tryReducedRoles và buildStatefulAuthzTriple đọc hai biến này để quyết định bước kế.
++    // THESIS: Vd pyLoad seed 1, jar ND: codes 200/401/200, lastSourceCode = 200, lastTransitionCode = 401.
++    // THESIS: lastTransitionCode đặt về null ở đầu buildStatefulAuthzTriple, nên không mang mã của nạn nhân trước sang nạn nhân sau.
++    // THESIS: lastSourceCode chỉ được đọc sau một bộ ba đã chạy, và bộ ba đó luôn gán nó.
+     private var lastSourceCode: Int? = null
+     private var lastTransitionCode: Int? = null
+-    private var transitionNotFoundSeen = false
+ 
++    // THESIS: Bật khi transition từ chối nạn nhân hiện tại ít nhất một lần sau source 2xx (401, 403, hoặc 4xx/5xx từ chối giá trị).
++    // THESIS: Đặt lại ở đầu buildStatefulAuthzTriple. Cuối hàm đó mà vẫn bật thì cặp vào skippedTransitionVictims.
+     private var victimRefused = false
+ 
++    // THESIS: Bật trong lúc fitness chạy bộ ba do executeStatefulAuthzTriple dựng, tắt ngay sau (finally).
++    // THESIS: handleStatefulAuthorization của oracle chỉ xét 970 khi cờ này bật.
++    // THESIS: Kotlin: "private set": bên ngoài đọc được (oracle đọc), chỉ lớp này gán được.
+     var statefulTripleUnderEvaluation = false
+         private set
+ 
++    // THESIS: Kết quả của tryReducedRoles và restoreOperatorsAndRetry:
++    // THESIS: TRIPLE_BUILT: đã dựng xong một bộ ba hợp lệ; buildStatefulAuthzTriple trả true và vòng nạn nhân sang source kế.
++    // THESIS: STOP_VICTIM: dừng với nạn nhân này (hết giờ, hết lượt, source không có mã hoặc không 2xx, transition 2xx mà
++    // THESIS: không ra bộ ba, hoặc cặp đã bị từ chối).
++    // THESIS: NEXT: lượt này không ra bộ ba; thử operator kế.
+     private enum class RoleAttempt { TRIPLE_BUILT, STOP_VICTIM, NEXT }
+ 
++    // THESIS: true khi ứng viên chưa chứng minh, không phải ứng viên cuối, đã chạy đủ 5 bộ ba.
+     private fun candidateCapReached(): Boolean =
+         !candidateProven && !candidateIsLast && candidateAttempts >= MAX_UNPROVEN_CANDIDATE_ATTEMPTS
+ 
++    // THESIS: true khi còn được chạy thêm bộ ba: chưa chạm trần 20 của pha và chưa chạm trần 5 của ứng viên chưa chứng minh.
+     private fun attemptAllowed(): Boolean =
+         statefulTripleAttempts < MAX_STATEFUL_TRIPLE_ATTEMPTS && !candidateCapReached()
+ 
++    // THESIS: Điểm vào của khâu 970, gọi một lần trong applySecurityPhase. Dựng bộ ba (source, transition, follow-up)
++    // THESIS: từ các test đã có trong archive.
++    // THESIS: Bước 1: xếp hạng op qua guard. Bước 2: lọc ứng viên dùng được. Bước 3: thử từng ứng viên.
++    // THESIS: Bước 4: tìm source cho ứng viên. Bước 5: với mỗi source, thử từng nạn nhân (buildStatefulAuthzTriple).
++    // THESIS: Dừng khi hết giờ pha, hết 20 bộ ba, hoặc đi hết mọi ứng viên.
++    // THESIS: Vd reports-api: ứng viên duy nhất là PUT /users/{username}/role; source PUT /reports/{id};
++    // THESIS: seed 1 dựng bộ ba với nạn nhân alice, operator superadmin.
++    // THESIS: LoggingUtil.getInfoLogger() in ra console của EvoMaster (dòng bắt đầu bằng "* " trong log chạy);
++    // THESIS: log.debug chỉ hiện khi bật mức debug cho RestSecurityBuilder.
+     private fun addForStatefulAccessControl() {
+ 
++        // THESIS: Cần category 970 đang bật, và file auth có ít nhất 2 tài khoản (một nạn nhân, một operator).
+         if (!config.isEnabledFaultCategory(ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION)) {
+             log.debug("Skipping experimental stateful-authorization security test as disabled in configuration")
+             return
+@@ -632,29 +841,28 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return
+         }
+ 
++        // THESIS: Log debug cỡ các bảng mô hình; bảng op, role, victim trừ dòng __prior__.
+         log.debug("Stateful-authorization model tables: op ${table("op").size - 1}" +
+                 " role ${table("role").size - 1} victim ${table("victim").size - 1}" +
+                 " low ${table("low").size} high ${table("high").size}")
++        // THESIS: Bước 1: mọi op qua guard, xếp giảm dần theo transitionScore. Không op nào qua guard thì dừng.
+         val ranked = rankPermissionReducingTransitions()
+         if (ranked.isEmpty()) {
+             log.debug("Skipping stateful-authorization: no permission-reducing transition endpoint found")
+             return
+         }
++        // THESIS: Bước 2: bỏ ứng viên không đề xuất được giá trị hạ quyền nào (harvestReducedRoleCandidates rỗng,
++        // THESIS: vd op không có trường vai trò), và ứng viên không có trường chỉ định nạn nhân (victimField null): call của nó
++        // THESIS: không trỏ được vào nạn nhân nên không bao giờ dựng được bộ ba. Vd artifact-keeper POST /api/v1/admin/sso/oidc.
+         val viable = mutableListOf<RestCallAction>()
+         for (candidate in ranked) {
+-            if (routeLooksMissing(candidate)) {
+-                log.debug("Stateful-authorization transition candidate ${candidate.getName()}" +
+-                        " skipped: every call on its path and parent path returned 404")
+-                continue
+-            }
+             val values = harvestReducedRoleCandidates(candidate)
+-            val roleField = roleField(candidate)
+             log.debug("Stateful-authorization transition candidate ${candidate.getName()}" +
+                     " score ${transitionScore(candidate)}" +
+-                    " roleField ${roleField?.key}" +
++                    " roleField ${roleField(candidate)?.key}" +
+                     " victimField ${victimField(candidate)?.key}" +
+-                    " reducedRoleValues ${values.size}")
+-            if (values.isNotEmpty()) {
++                    " reducedRoleValues $values")
++            if (values.isNotEmpty() && victimField(candidate) != null) {
+                 viable.add(candidate)
+             }
+         }
+@@ -664,35 +872,38 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return
+         }
+ 
++        // THESIS: Bước 3: thử lần lượt từng ứng viên, điểm cao trước.
+         for (index in viable.indices) {
+             val transitionOp = viable[index]
+             log.debug("Stateful-authorization transition chosen: ${transitionOp.getName()}" +
+                     " (candidate ${index + 1} of ${viable.size})")
+-            log.debug("Stateful-authorization reduced role values: ${harvestReducedRoleCandidates(transitionOp)}")
+-            transitionNotFoundSeen = false
++            // THESIS: Đặt lại trạng thái của ứng viên. retainAll: privilegeReducedInPhase chỉ giữ tài khoản bị hạ trong bộ ba đã chứng minh.
+             candidateAttempts = 0
+             candidateProven = false
+             candidateIsLast = index == viable.lastIndex
+             privilegeRestoreAttempts = 0
+             privilegeReducedInPhase.retainAll(privilegeReducedByProof)
+ 
+-            var sources = guardedSources(listOf(HttpVerb.PUT, HttpVerb.PATCH), transitionOp)
+-            if (!anyAuthenticatedSuccess(sources)) {
+-                sources = guardedSources(listOf(HttpVerb.POST), transitionOp)
+-            }
++            // THESIS: Bước 4: source là op ghi từng nhận 403 trong archive, không qua guard (guardedSources).
++            // THESIS: Thứ tự: mọi PUT, rồi PATCH, rồi POST.
++            // THESIS: Vd artifact-keeper: PATCH /api/v1/admin/sso/saml/{id}/toggle trước, POST /api/v1/admin/analytics/snapshot sau.
++            val sources = guardedSources(listOf(HttpVerb.PUT, HttpVerb.PATCH, HttpVerb.POST))
+             val sourceNames = mutableListOf<String>()
+             for (op in sources) {
+                 sourceNames.add("${op.verb}:${op.path}")
+             }
+             log.debug("Stateful-authorization guarded source candidates: ${sources.size} $sourceNames")
+ 
+-            var stopSources = false
+-            for (op in sources) {
++            // THESIS: Bước 5: với mỗi source, lấy các lát nạn nhân (victimSlicesOn) rồi thử từng nạn nhân.
++            // THESIS: Dựng được một bộ ba thì sang source kế (break). Hết lượt thì bỏ mọi source còn lại (break@sources).
++            sources@ for (op in sources) {
+                 if (hasPhaseTimedOut()) {
+                     log.debug("Stateful-authorization: phase timed out before source ${op.verb}:${op.path}")
+                     return
+                 }
+ 
++                // THESIS: Mỗi tài khoản từng chạy source 2xx có một lát. Vd source PUT /reports/{id}: lát của alice
++                // THESIS: = [POST /reports, PUT /reports/{id}].
+                 val victimCandidates = victimSlicesOn(op)
+                 val victimNames = mutableListOf<String>()
+                 for (slice in victimCandidates) {
+@@ -701,30 +912,21 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 log.debug("Stateful-authorization source ${op.verb}:${op.path} victims $victimNames")
+ 
+                 for (victimSlice in victimCandidates) {
++                    // THESIS: Kiểm trước mỗi nạn nhân: hết giờ pha thì dừng hẳn; hết 20 bộ ba hoặc hết lượt ứng viên thì bỏ source còn lại.
+                     if (hasPhaseTimedOut()) {
+                         log.debug("Stateful-authorization: phase timed out on source ${op.verb}:${op.path}")
+                         return
+                     }
+-                    if (statefulTripleAttempts >= MAX_STATEFUL_TRIPLE_ATTEMPTS) {
+-                        log.debug("Stateful-authorization: attempt cap $MAX_STATEFUL_TRIPLE_ATTEMPTS reached")
+-                        return
+-                    }
+-                    if (candidateCapReached()) {
+-                        stopSources = true
+-                        break
++                    if (!attemptAllowed()) {
++                        break@sources
+                     }
++                    // THESIS: true: đã dựng xong một bộ ba trên source này, sang source kế.
+                     if (buildStatefulAuthzTriple(victimSlice, transitionOp)) {
+                         break
+                     }
+-                    if (transitionNotFoundSeen) {
+-                        stopSources = true
+-                        break
+-                    }
+-                }
+-                if (stopSources) {
+-                    break
+                 }
+             }
++            // THESIS: Hết source của ứng viên này: dừng hẳn nếu đã đủ 20 bộ ba; không thì log lý do rồi sang ứng viên kế.
+             if (statefulTripleAttempts >= MAX_STATEFUL_TRIPLE_ATTEMPTS) {
+                 log.debug("Stateful-authorization: attempt cap $MAX_STATEFUL_TRIPLE_ATTEMPTS reached")
+                 return
+@@ -734,9 +936,6 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                     "Stateful-authorization transition ${transitionOp.getName()} not proven after" +
+                         " $candidateAttempts attempts; trying the next candidate"
+                 )
+-            } else if (transitionNotFoundSeen) {
+-                log.debug("Stateful-authorization transition ${transitionOp.getName()} returned 404 after a 2xx source;" +
+-                        " trying the next candidate")
+             } else {
+                 log.debug("Stateful-authorization transition ${transitionOp.getName()} exhausted its sources after" +
+                         " $candidateAttempts attempts, proven $candidateProven")
+@@ -745,13 +944,21 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         log.debug("Stateful-authorization: sources exhausted after $statefulTripleAttempts triple attempts")
+     }
+ 
+-    private fun guardedSources(verbs: List<HttpVerb>, transitionOp: RestCallAction): List<RestCallAction> {
++    // THESIS: guardedSources: các op trong spec có verb thuộc verbs, không qua guard, và có ít nhất một test trong archive
++    // THESIS: nhận 403 trên op đó. 403 cho thấy op có kiểm quyền, nên gỡ quyền có thể đổi kết quả của nó.
++    // THESIS: Op qua guard bị loại vì oracle không nhận nó làm source (RestSecurityOracle.handleStatefulAuthorization);
++    // THESIS: transition qua guard nên không bao giờ là source của chính nó.
++    // THESIS: RestIndividualSelectorUtils là tiện ích của upstream: getAllActionDefinitions lọc op theo verb;
++    // THESIS: findIndividuals tìm test trong archive theo verb, path, mã.
++    // THESIS: Vd reports-api, verbs [PUT, PATCH, POST]: [PUT /reports/{id}], cộng POST /reports nếu archive có 403 cho nó.
++    private fun guardedSources(verbs: List<HttpVerb>): List<RestCallAction> {
+         val out = mutableListOf<RestCallAction>()
+         for (verb in verbs) {
+             for (op in RestIndividualSelectorUtils.getAllActionDefinitions(actionDefinitions, verb)) {
+-                if (op.path == transitionOp.path) {
++                if (looksLikePermissionReducingTransition(op)) {
+                     continue
+                 }
++                // THESIS: Các test trong archive có call op này nhận 403.
+                 val denied = RestIndividualSelectorUtils.findIndividuals(
+                     individualsInSolution, verb, op.path, status = 403
+                 )
+@@ -764,24 +971,18 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
+-    private fun anyAuthenticatedSuccess(ops: List<RestCallAction>): Boolean {
+-        for (op in ops) {
+-            val allowed = RestIndividualSelectorUtils.findIndividuals(
+-                individualsInSolution, op.verb, op.path,
+-                statusGroup = StatusGroup.G_2xx, authenticated = true
+-            )
+-            if (allowed.isNotEmpty()) {
+-                return true
+-            }
+-        }
+-        return false
+-    }
+-
++    // THESIS: victimSlicesOn: ứng viên nạn nhân cho một source. findAndSlice tìm các test trong archive có call source 2xx
++    // THESIS: của tài khoản đã đăng nhập, rồi cắt bỏ mọi call sau call đó (lát).
++    // THESIS: Lát giữ các call dựng trạng thái trước source, vd POST /reports tạo báo cáo rồi PUT /reports/{id} sửa nó.
++    // THESIS: Tài khoản của call cuối là nạn nhân. Lát xếp theo số call tăng dần; mỗi tài khoản chỉ giữ lát ngắn nhất.
++    // THESIS: Vd reports-api seed 1: lát của alice = [POST /reports 201, PUT /reports/{id} 200].
++    // THESIS: Kotlin: sortedBy { it.size() } trả danh sách mới đã xếp; "it" là tên mặc định của tham số duy nhất trong lambda.
+     private fun victimSlicesOn(source: RestCallAction): List<RestIndividual> {
+         val slices = RestIndividualSelectorUtils.findAndSlice(
+             individualsInSolution, source.verb, source.path,
+             statusGroup = StatusGroup.G_2xx, authenticated = true
+         ).sortedBy { it.size() }
++        // THESIS: seenUsers: tài khoản đã có lát. Lát đến sau của cùng tài khoản dài hơn hoặc bằng nên bị bỏ.
+         val out = mutableListOf<RestIndividual>()
+         val seenUsers = mutableSetOf<String>()
+         for (slice in slices) {
+@@ -795,16 +996,22 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
++    // THESIS: operatorsFor: các tài khoản có thể chạy transition lên nạn nhân (operator). Lấy mọi tài khoản khác nạn nhân
++    // THESIS: trong file auth, theo thứ tự trong file; bỏ tài khoản đã bị hạ quyền trong pha.
++    // THESIS: Tài khoản từng chạy transition 2xx trong archive đứng trước.
++    // THESIS: Vd reports-api, nạn nhân alice: [superadmin, bob]; bob là VIEWER. Log seed 1 cho operator 'superadmin'.
+     private fun operatorsFor(
+         victimAuth: HttpWsAuthenticationInfo,
+         transitionDef: RestCallAction
+     ): List<HttpWsAuthenticationInfo> {
+         val ranTransition = mutableListOf<HttpWsAuthenticationInfo>()
+         val others = mutableListOf<HttpWsAuthenticationInfo>()
++        // THESIS: Kotlin: "HttpWsAuthenticationInfo::class.java" là Class của Java, như HttpWsAuthenticationInfo.class.
+         for (o in authSettings.getAllOthers(victimAuth.name, HttpWsAuthenticationInfo::class.java)) {
+             if (privilegeReducedInPhase.contains(o.name)) {
+                 continue
+             }
++            // THESIS: Test trong archive mà tài khoản o chạy transition và nhận 2xx.
+             val allowed = RestIndividualSelectorUtils.findIndividuals(
+                 individualsInSolution, transitionDef.verb, transitionDef.path,
+                 statusGroup = StatusGroup.G_2xx, authenticatedWith = o.name
+@@ -815,17 +1022,26 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 others.add(o)
+             }
+         }
++        // THESIS: Kotlin: "+" giữa hai danh sách tạo danh sách mới nối hai danh sách.
+         return ranTransition + others
+     }
+ 
++    // THESIS: buildStatefulAuthzTriple: thử dựng bộ ba cho một nạn nhân trên một source; true khi dựng xong một bộ ba hợp lệ.
++    // THESIS: Lượt 1: lần lượt từng operator thử mọi giá trị hạ quyền (tryReducedRoles).
++    // THESIS: Lượt 2: lần thử cuối của lượt 1 có source 2xx và transition 401/403 (operator thiếu quyền chạy transition):
++    // THESIS: nạn nhân nâng quyền operator, rồi operator thử lại (restoreOperatorsAndRetry).
++    // THESIS: Vd pyLoad seed 1, jar ND: alice rồi superadmin đều nhận 200/401/200 ở lượt 1 (VOID); lượt 2: pyload nâng quyền
++    // THESIS: alice ("Privilege-restore accepted for 'alice' by 'pyload'"), alice thử lại được 200/200/200.
+     private fun buildStatefulAuthzTriple(
+         victimSlice: RestIndividual,
+         transitionDef: RestCallAction
+     ): Boolean {
++        // THESIS: Nạn nhân là tài khoản của call cuối trong lát, tức call source.
+         val victimAuth = victimSlice.seeMainExecutableActions().last().auth
+ 
++        // THESIS: Bỏ nạn nhân nếu cặp (transition, nạn nhân) đã bị từ chối, hoặc nạn nhân đã bị hạ quyền trong pha.
+         val pair = transitionDef.getName() to victimAuth.name
+-        if (refusedTransitionVictims.contains(pair)) {
++        if (skippedTransitionVictims.contains(pair)) {
+             log.debug("Stateful-authorization: ${transitionDef.getName()} already refused victim '${victimAuth.name}'")
+             return false
+         }
+@@ -835,6 +1051,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return false
+         }
+ 
++        // THESIS: Operator cho nạn nhân này; tên của họ chỉ để log debug.
+         val operators = operatorsFor(victimAuth, transitionDef)
+         val operatorNames = mutableListOf<String>()
+         for (o in operators) {
+@@ -842,13 +1059,21 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         }
+         log.debug("Stateful-authorization victim '${victimAuth.name}' operators $operatorNames")
+ 
++        // THESIS: Giá trị hạ quyền: trường vai trò của transition (roleField); giá trị nạn nhân đang giữ, đọc từ response GET
++        // THESIS: trong archive (victimRoleValues); reducedRoleValues xếp giá trị hạ quyền và bỏ giá trị cao nạn nhân đang giữ.
++        // THESIS: Vd reports-api, enum role {ADMIN, VIEWER, EVOMASTER}: [VIEWER]. Seed 1 gửi role=VIEWER.
++        // THESIS: Ứng viên đã qua bước 2 nên luôn có trường vai trò; "?: return false" chỉ để Kotlin nhận field khác null.
+         val field = roleField(transitionDef) ?: return false
+         val current = victimRoleValues(victimAuth, transitionDef, field)
+         val roleValues = reducedRoleValues(field, current)
+         log.debug("Stateful-authorization victim '${victimAuth.name}' current roles $current, reduced role values $roleValues")
+ 
++        // THESIS: Đặt lại cờ từ chối và mã transition của lần thử trước cho nạn nhân này. lastSourceCode không cần đặt lại:
++        // THESIS: tryReducedRoles chỉ đọc nó sau một bộ ba đã chạy, và executeStatefulAuthzTriple luôn gán nó khi đếm bộ ba.
+         victimRefused = false
++        lastTransitionCode = null
+ 
++        // THESIS: Lượt 1. Kết quả khác NEXT (dựng xong, hoặc phải dừng) thì trả ngay; true chỉ khi TRIPLE_BUILT.
+         for (operator in operators) {
+             val outcome = tryReducedRoles(victimSlice, transitionDef, roleValues, operator, victimAuth)
+             if (outcome != RoleAttempt.NEXT) {
+@@ -856,17 +1081,19 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             }
+         }
+ 
+-        val src = lastSourceCode
+-        val operatorsRefused = lastTransitionCode == 401 || lastTransitionCode == 403
+-        if (operatorsRefused && src != null && StatusGroup.G_2xx.isInGroup(src)) {
++        // THESIS: Lượt 2 chỉ chạy khi lần thử cuối của lượt 1 có transition 401/403. Source khi đó luôn 2xx: tryReducedRoles đã
++        // THESIS: dừng nạn nhân khi source không 2xx.
++        if (lastTransitionCode == 401 || lastTransitionCode == 403) {
+             val outcome = restoreOperatorsAndRetry(victimSlice, transitionDef, roleValues, operators, victimAuth)
+             if (outcome != RoleAttempt.NEXT) {
+                 return outcome == RoleAttempt.TRIPLE_BUILT
+             }
+         }
+ 
++        // THESIS: Transition đã từ chối nạn nhân ít nhất một lần và không lần nào dựng được bộ ba:
++        // THESIS: ghi cặp vào skippedTransitionVictims để không thử lại trong pha.
+         if (victimRefused) {
+-            refusedTransitionVictims.add(pair)
++            skippedTransitionVictims.add(pair)
+             LoggingUtil.getInfoLogger().info(
+                 "Stateful-authorization: ${transitionDef.getName()} refused or rejected every attempt on victim" +
+                     " '${victimAuth.name}'; that victim is skipped for this transition"
+@@ -875,6 +1102,11 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return false
+     }
+ 
++    // THESIS: tryReducedRoles: một operator thử lần lượt từng giá trị hạ quyền trên nạn nhân; mỗi giá trị là một bộ ba
++    // THESIS: (executeStatefulAuthzTriple). Trả TRIPLE_BUILT khi dựng xong; STOP_VICTIM khi phải bỏ nạn nhân;
++    // THESIS: NEXT khi nên đổi operator.
++    // THESIS: Chỉ sang giá trị kế khi transition từ chối chính giá trị (4xx/5xx khác 401/403/404), vd app trả
++    // THESIS: 400 {"error":"invalid role"} cho một giá trị nó không nhận. Mã khác thì đổi giá trị không giúp gì.
+     private fun tryReducedRoles(
+         victimSlice: RestIndividual,
+         transitionDef: RestCallAction,
+@@ -883,8 +1115,11 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         victimAuth: HttpWsAuthenticationInfo
+     ): RoleAttempt {
+         for (reducedRole in roleValues) {
++            // THESIS: Hết giờ pha, hoặc hết lượt (attemptAllowed false): bỏ nạn nhân.
+             if (hasPhaseTimedOut() || !attemptAllowed()) return RoleAttempt.STOP_VICTIM
+ 
++            // THESIS: before: số bộ ba trước lần thử. Số không tăng nghĩa là bộ ba không chạy trên SUT
++            // THESIS: (không đặt được nạn nhân hay giá trị vào call): thử giá trị kế.
+             val before = statefulTripleAttempts
+             if (executeStatefulAuthzTriple(victimSlice, transitionDef, reducedRole, operator)) {
+                 return RoleAttempt.TRIPLE_BUILT
+@@ -892,24 +1127,47 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             if (statefulTripleAttempts == before) {
+                 continue
+             }
+-            if (lastSourceCode == null) {
++            // THESIS: Source không có mã: không đọc được gì từ lần thử, log warn rồi bỏ nạn nhân.
++            // THESIS: Source không 2xx (vd vampi: 401 khi search đã đổi mật khẩu nạn nhân): đổi operator hay giá trị không cứu được,
++            // THESIS: bỏ nạn nhân. 401/403: nạn nhân không còn làm được source, khoá cặp để các source sau không thử lại.
++            val src = lastSourceCode
++            if (src == null) {
+                 noStatusRecorded(transitionDef, victimAuth.name, operator.name)
+                 return RoleAttempt.STOP_VICTIM
+             }
+-            if (transitionRefusedAfterSource()) {
+-                victimRefused = true
++            if (!StatusGroup.G_2xx.isInGroup(src)) {
++                if (src == 401 || src == 403) skippedTransitionVictims.add(transitionDef.getName() to victimAuth.name)
++                return RoleAttempt.STOP_VICTIM
+             }
+-            if (privilegeReducedInPhase.contains(victimAuth.name)
+-                || refusedTransitionVictims.contains(transitionDef.getName() to victimAuth.name)) {
++            // THESIS: Rẽ nhánh theo mã transition (source đã 2xx ở trên). Không có mã: sang operator kế.
++            // THESIS: 2xx mà không ra bộ ba (VOID hoặc UNCONFIRMED): đổi operator cũng ra cùng kết quả, bỏ nạn nhân.
++            // THESIS: 404: executeStatefulAuthzTriple đã đưa cặp vào skippedTransitionVictims, bỏ nạn nhân.
++            // THESIS: 401/403: operator không đủ quyền; ghi nhận từ chối, sang operator kế.
++            // THESIS: 4xx/5xx khác: app từ chối giá trị vai trò vừa gửi, vd reports-api 400 {"error":"invalid role"};
++            // THESIS: ghi nhận từ chối, thử giá trị kế với cùng operator. Mã khác (vd 3xx): sang operator kế.
++            val code = lastTransitionCode ?: return RoleAttempt.NEXT
++            if (StatusGroup.G_2xx.isInGroup(code) || code == 404) {
+                 return RoleAttempt.STOP_VICTIM
+             }
+-            if (!transitionRejectedRoleValue()) {
++            if (code == 401 || code == 403) {
++                victimRefused = true
++                return RoleAttempt.NEXT
++            }
++            if (code < 400 || code > 599) {
+                 return RoleAttempt.NEXT
+             }
++            victimRefused = true
+         }
+         return RoleAttempt.NEXT
+     }
+ 
++    // THESIS: restoreOperatorsAndRetry: lượt 2 của buildStatefulAuthzTriple. Chạy khi lần thử cuối của lượt 1 có transition
++    // THESIS: 401/403: operator thiếu quyền gọi transition, vì seed hoặc vì pha search đã đổi quyền của nó. Pha 970 không bao giờ
++    // THESIS: hạ quyền operator (operatorsFor bỏ tài khoản trong privilegeReducedInPhase).
++    // THESIS: Nạn nhân gọi transition để cấp quyền cao cho operator (restorePrivilege), rồi operator thử hạ quyền nạn nhân
++    // THESIS: lần nữa (tryReducedRoles). Nạn nhân có source 2xx chưa chắc có quyền gọi transition; khi đó lời nâng bị từ chối.
++    // THESIS: Vd pyLoad seed 1, jar ND: "Privilege-restore accepted for 'alice' by 'pyload' with role '0,0'
++    // THESIS: on POST:/api/set_user_permission -> 200", rồi bộ ba 200/200/200 với operator alice.
+     private fun restoreOperatorsAndRetry(
+         victimSlice: RestIndividual,
+         transitionDef: RestCallAction,
+@@ -917,47 +1175,44 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         operators: List<HttpWsAuthenticationInfo>,
+         victimAuth: HttpWsAuthenticationInfo
+     ): RoleAttempt {
+-        val exclude = roleValues.firstOrNull() ?: ""
+-        val plans = mutableMapOf<String, List<List<Pair<String, String>>>>()
+-        var anyPlan = false
+-        for (operator in operators) {
+-            val operatorPlans = restorePlans(transitionDef, operator, exclude)
+-            plans[operator.name] = operatorPlans
+-            if (operatorPlans.isNotEmpty()) {
+-                anyPlan = true
+-            }
+-        }
+-        if (!anyPlan) {
++        // THESIS: Kế hoạch nâng quyền chỉ phụ thuộc transition (restorePlan), nên giống nhau cho mọi operator.
++        // THESIS: Kế hoạch rỗng (không trường nào có giá trị nâng): log info, trả NEXT.
++        val plan = restorePlan(transitionDef)
++        if (plan.isEmpty()) {
+             LoggingUtil.getInfoLogger().info(
+                 "Stateful-authorization restore unavailable on ${transitionDef.getName()}:" +
+                     " no elevated role value for the operators of victim '${victimAuth.name}'"
+             )
++            return RoleAttempt.NEXT
+         }
+ 
++        // THESIS: Một lời nâng quyền cho mỗi operator. Dừng khi hết giờ, hết lượt, hoặc đã chạy MAX_PRIVILEGE_RESTORES (3) lời gọi
++        // THESIS: nâng quyền cho ứng viên.
+         for (operator in operators) {
+-            for (plan in plans.getValue(operator.name)) {
+-                if (hasPhaseTimedOut() || !attemptAllowed()) return RoleAttempt.STOP_VICTIM
+-                if (privilegeRestoreAttempts >= MAX_PRIVILEGE_RESTORES) {
+-                    LoggingUtil.getInfoLogger().info(
+-                        "Stateful-authorization restore budget of $MAX_PRIVILEGE_RESTORES spent on" +
+-                            " ${transitionDef.getName()}"
+-                    )
+-                    return RoleAttempt.NEXT
+-                }
++            if (hasPhaseTimedOut() || !attemptAllowed()) return RoleAttempt.STOP_VICTIM
++            if (privilegeRestoreAttempts >= MAX_PRIVILEGE_RESTORES) {
++                LoggingUtil.getInfoLogger().info(
++                    "Stateful-authorization restore budget of $MAX_PRIVILEGE_RESTORES spent on" +
++                        " ${transitionDef.getName()}"
++                )
++                return RoleAttempt.NEXT
++            }
+ 
+-                if (!restorePrivilege(transitionDef, victimAuth, operator, plan, victimSlice)) {
+-                    continue
+-                }
++            // THESIS: restorer = nạn nhân, target = operator. Nâng không được (không 2xx, hoặc không dựng được call): sang operator kế.
++            if (!restorePrivilege(transitionDef, victimAuth, operator, plan, victimSlice)) {
++                continue
++            }
+ 
+-                val outcome = tryReducedRoles(victimSlice, transitionDef, roleValues, operator, victimAuth)
+-                if (outcome == RoleAttempt.TRIPLE_BUILT || outcome == RoleAttempt.STOP_VICTIM) {
+-                    return outcome
+-                }
++            // THESIS: Nâng được: operator thử lại mọi giá trị hạ quyền. NEXT thì sang operator kế.
++            val outcome = tryReducedRoles(victimSlice, transitionDef, roleValues, operator, victimAuth)
++            if (outcome == RoleAttempt.TRIPLE_BUILT || outcome == RoleAttempt.STOP_VICTIM) {
++                return outcome
+             }
+         }
+         return RoleAttempt.NEXT
+     }
+ 
++    // THESIS: Log warn (mức EvoMaster luôn in) khi bộ ba đã chạy mà source không có mã; nạn nhân bị bỏ.
+     private fun noStatusRecorded(transitionDef: RestCallAction, victim: String, operator: String) {
+         LoggingUtil.getInfoLogger().warn(
+             "Stateful-authorization attempt on ${transitionDef.getName()} recorded no status code" +
+@@ -965,17 +1220,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         )
+     }
+ 
+-    private fun transitionRefusedAfterSource(): Boolean {
+-        val src = lastSourceCode ?: return false
+-        val code = lastTransitionCode ?: return false
+-        return StatusGroup.G_2xx.isInGroup(src) && (code == 401 || code == 403 || transitionRejectedRoleValue())
+-    }
+-
+-    private fun transitionRejectedRoleValue(): Boolean {
+-        val code = lastTransitionCode ?: return false
+-        return code in 400..599 && code !in setOf(401, 403, 404)
+-    }
+-
++    // THESIS: statusIn: mã HTTP của call a trong test đã chạy ei, tìm theo localId; null nếu call không có kết quả HTTP.
++    // THESIS: Kotlin: "result is RestCallResult" kiểm kiểu và smart cast, nên gọi được getStatusCode().
+     private fun statusIn(ei: EvaluatedIndividual<RestIndividual>, a: RestCallAction): Int? {
+         val result = ei.seeResult(a.getLocalId())
+         if (result is RestCallResult) {
+@@ -984,60 +1230,90 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return null
+     }
+ 
++    // THESIS: executeStatefulAuthzTriple: dựng một bộ ba thành test mới, chạy trên SUT, đọc kết quả.
++    // THESIS: Ai gọi: tryReducedRoles, mỗi giá trị hạ quyền một lần.
++    // THESIS: Test = [lát của nạn nhân, kết thúc bằng source] + transition (operator đặt vai trò nạn nhân thành reducedRole)
++    // THESIS: + follow-up (source lặp lại với cùng token của nạn nhân).
++    // THESIS: Vd reports-api seed 1, jar ND, test_0_put_on_report_stillAllowedAfterPermissionRevoked:
++    // THESIS: POST /reports (alice) 201, PUT /reports/{id} (alice) 200, PUT /users/alice/role {"role":"VIEWER"} (superadmin) 200,
++    // THESIS: PUT /reports/{id} (alice) 200.
++    // THESIS: Trả true khi bộ ba hợp lệ: source 2xx, transition 2xx, follow-up có mã khác 401, và follow-up 2xx thì C4 xác nhận.
++    // THESIS: Khi đó test vào archive.
++    // THESIS: Trả false mà statefulTripleAttempts không tăng: bộ ba không chạy (không trỏ được vào nạn nhân, không đặt được
++    // THESIS: giá trị, hoặc fitness không chạy được test).
+     private fun executeStatefulAuthzTriple(
+         victimSlice: RestIndividual,
+         transitionDef: RestCallAction,
+         reducedRole: String,
+         operator: HttpWsAuthenticationInfo
+     ): Boolean {
++        // THESIS: base: bản sao lát của nạn nhân, để không sửa test gốc trong archive. Call cuối là source; tài khoản của nó là nạn nhân.
+         val base = victimSlice.copy() as RestIndividual
+         val source = base.seeMainExecutableActions().last()
+         val victimAuth = source.auth
+ 
++        // THESIS: Transition: bản sao mới của op định nghĩa trong spec. resetLocalIdRecursively xoá id cũ để test gán id mới;
++        // THESIS: forceNewTaints làm mới các giá trị taint để không trùng call khác; doInitialize khởi tạo gene ngẫu nhiên.
++        // THESIS: auth = operator: call chạy bằng token của operator, vd superadmin.
+         val transition = transitionDef.copy() as RestCallAction
+         transition.resetLocalIdRecursively()
+         transition.forceNewTaints()
+         transition.doInitialize(randomness)
+         transition.auth = operator
++        // THESIS: Trỏ transition vào nạn nhân (setUserTargetToVictim), vd path username = alice. Không được thì bỏ, bộ đếm không tăng.
+         val targeted = setUserTargetToVictim(transition, victimAuth)
+         if (targeted == null) {
+             log.debug("Stateful-authorization: could not target victim '${victimAuth.name}' on ${transition.getName()}")
+             return false
+         }
+-        val reduced = setRoleFieldToReduced(transition, reducedRole)
++        // THESIS: Đặt trường vai trò thành reducedRole (setRoleFieldToReduced), vd body role = VIEWER.
++        val reduced = setRoleFieldToReduced(transition, reducedRole, targeted)
+         if (reduced == null) {
+             log.debug("Stateful-authorization: could not set reduced role '$reducedRole' on ${transition.getName()}")
+             return false
+         }
+-        keepOnlyTargetFields(transition, targeted + reduced)
+-        setUserNameFieldsToVictim(transition, victimAuth, targeted)
++        // THESIS: Trường tên đăng nhập đặt thành tên nạn nhân; tắt các trường tuỳ chọn khác để call chỉ đổi vai trò.
++        trimToTargetFields(transition, targeted + reduced, victimAuth)
++        // THESIS: Gắn transition vào cuối test, sau source, trong một nhóm call mới (hàm upstream).
+         base.addMainActionInEmptyEnterpriseGroup(action = transition)
+ 
++        // THESIS: Follow-up: bản sao của source, giữ auth của nạn nhân, tức token lấy ở đầu test, trước transition.
++        // THESIS: bindBasedOn gắn path param của follow-up theo source để hai call trỏ cùng tài nguyên, vd cùng {id} báo cáo vừa tạo.
++        // THESIS: Kotlin: filterIsInstance<PathParam>() chỉ giữ phần tử có kiểu PathParam.
+         val followUp = source.copy() as RestCallAction
+         followUp.resetLocalIdRecursively()
+         followUp.forceNewTaints()
+         followUp.bindBasedOn(source.path, source.parameters.filterIsInstance<PathParam>(), null)
+         base.addMainActionInEmptyEnterpriseGroup(action = followUp)
+ 
++        // THESIS: Hoàn thiện test như upstream làm trong pha security: gán localId cho mọi call; đánh dấu SECURITY (oracle chỉ chạy
++        // THESIS: trên test SECURITY); ensureFlattenedStructure, fixResourceForwardLinks chuẩn hoá cấu trúc và liên kết tài nguyên.
++        // THESIS: Lazy.assert chỉ chạy verifyValidity khi JVM bật assertion (-ea).
+         base.doInitializeLocalId()
+         base.modifySampleType(SampleType.SECURITY)
+         base.ensureFlattenedStructure()
+         base.fixResourceForwardLinks()
+         org.evomaster.core.Lazy.assert { base.verifyValidity(); true }
+ 
++        // THESIS: Chạy test trên SUT: computeWholeAchievedCoverageForPostProcessing gửi HTTP thật rồi chạy mọi oracle trong fitness.
++        // THESIS: Cờ bật để handleStatefulAuthorization xét 970 cho test này; finally tắt cờ kể cả khi có exception.
++        // THESIS: Kotlin: try là biểu thức, ei nhận giá trị của khối try.
+         statefulTripleUnderEvaluation = true
+         val ei = try {
+             fitness.computeWholeAchievedCoverageForPostProcessing(base)
+         } finally {
+             statefulTripleUnderEvaluation = false
+         }
++        // THESIS: Fitness không chạy được test: log warn, trả false, bộ đếm không tăng.
+         if (ei == null) {
+             log.warn("Failed to evaluate constructed stateful-authorization individual")
+             return false
+         }
++        // THESIS: Bộ ba đã chạy trên SUT: tăng bộ đếm của pha và của ứng viên.
+         statefulTripleAttempts++
+         candidateAttempts++
+ 
++        // THESIS: Đọc mã của ba call. Vd reports-api seed 1: 200/200/200 ở bản lỗi, 200/200/403 ở bản vá.
+         val sourceCode = statusIn(ei, source)
+         val transitionCode = statusIn(ei, transition)
+         val followUpCode = statusIn(ei, followUp)
+@@ -1046,23 +1322,30 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         val sourceAllowed = sourceCode != null && StatusGroup.G_2xx.isInGroup(sourceCode)
+         val transitionAllowed = transitionCode != null && StatusGroup.G_2xx.isInGroup(transitionCode)
+ 
++        // THESIS: Transition 404 sau source 2xx: transition không tìm thấy nạn nhân này; bỏ cặp (transition, nạn nhân),
++        // THESIS: nạn nhân khác vẫn thử. Ứng viên có route không tồn tại tốn tối đa một 404 cho mỗi nạn nhân (và trần 5 bộ ba
++        // THESIS: nếu không phải ứng viên cuối).
+         if (transitionCode == 404 && sourceAllowed) {
+-            if (candidateProven) {
+-                refusedTransitionVictims.add(transitionDef.getName() to victimAuth.name)
+-                LoggingUtil.getInfoLogger().info(
+-                    "Stateful-authorization: proven transition ${transitionDef.getName()} returned 404 for victim" +
+-                        " '${victimAuth.name}'; that victim is skipped for this transition"
+-                )
+-            } else {
+-                transitionNotFoundSeen = true
+-            }
++            skippedTransitionVictims.add(transitionDef.getName() to victimAuth.name)
++            LoggingUtil.getInfoLogger().info(
++                "Stateful-authorization: transition ${transitionDef.getName()} returned 404 for victim" +
++                    " '${victimAuth.name}'; that victim is skipped for this transition"
++            )
+         }
++        // THESIS: Chuỗi mã cho log, "-" khi call không có mã. Vd "200/401/200".
+         val observed = "${sourceCode ?: "-"}/${transitionCode ?: "-"}/${followUpCode ?: "-"}"
+ 
++        // THESIS: Transition 2xx: nạn nhân đã bị hạ quyền, không dùng lại cho ứng viên này, kể cả khi bộ ba sau đó VOID
++        // THESIS: (retainAll ở đầu ứng viên kế nhả nạn nhân nếu bộ ba không chứng minh).
++        // THESIS: Ngoại lệ: C4 thấy quyền còn nguyên thì gỡ nạn nhân khỏi tập này (bên dưới).
+         if (transitionAllowed) {
+             privilegeReducedInPhase.add(victimAuth.name)
+         }
+ 
++        // THESIS: VOID: source hoặc transition không 2xx, hoặc follow-up không có mã, hoặc follow-up 401 (INCONCLUSIVE).
++        // THESIS: Bộ ba VOID không là bằng chứng cho chiều nào và bị bỏ. Vd pyLoad seed 1: 200/401/200 (transition 401).
++        // THESIS: Follow-up 401 sau source 2xx và transition 2xx ghi thêm REVOKED: token cũ bị từ chối sau transition.
++        // THESIS: Vd artifact-keeper bản vá của vendor, jar ND: codes 200/200/401 REVOKED.
+         if (!sourceAllowed || !transitionAllowed || followUpCode == null || followUpCode == 401) {
+             val revoked = followUpCode == 401 && sourceAllowed && transitionAllowed
+             LoggingUtil.getInfoLogger().info(
+@@ -1073,20 +1356,33 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             return false
+         }
+ 
+-        if (StatusGroup.G_2xx.isInGroup(followUpCode) && !reLoginProbeConfirmsPrivilegeRemoved(victimSlice)) {
+-            LoggingUtil.getInfoLogger().info(
+-                "Discarded an UNCONFIRMED stateful-authorization (MR-A1) attempt on ${source.getName()}:" +
+-                    " re-logging the victim in did not show the privilege removed" +
+-                    " (victim '${victimAuth.name}', operator '${operator.name}', codes $observed)"
+-            )
+-            return false
++        // THESIS: Follow-up 2xx là lỗi tiềm năng: chạy probe C4 để xác nhận quyền đã thật sự bị gỡ.
++        // THESIS: C4 không xác nhận: bỏ bộ ba (UNCONFIRMED); test không vào archive và lỗi 970 oracle vừa gắn mất theo.
++        // THESIS: C4 trả false (đăng nhập lại vẫn 2xx): transition không hạ được quyền, nạn nhân dùng lại được ở source khác.
++        // THESIS: C4 trả null (INCONCLUSIVE): không biết quyền đã đổi chưa, nạn nhân vẫn bị khoá.
++        // THESIS: Follow-up mã khác (403, 404, 400, ...) không chạy C4.
++        if (StatusGroup.G_2xx.isInGroup(followUpCode)) {
++            val confirmed = reLoginProbeConfirmsPrivilegeRemoved(victimSlice, ei)
++            if (confirmed != true) {
++                if (confirmed == false) {
++                    privilegeReducedInPhase.remove(victimAuth.name)
++                }
++                LoggingUtil.getInfoLogger().info(
++                    "Discarded an UNCONFIRMED stateful-authorization (MR-A1) attempt on ${source.getName()}:" +
++                        " re-logging the victim in did not show the privilege removed" +
++                        " (victim '${victimAuth.name}', operator '${operator.name}', codes $observed)"
++                )
++                return false
++            }
+         }
+ 
++        // THESIS: Bộ ba hợp lệ: follow-up 2xx đã qua C4 (lỗi), follow-up 403 (bản vá giữ đúng), hoặc follow-up mã khác như 404, 400.
+         LoggingUtil.getInfoLogger().info(
+             "Assembled a stateful-authorization (MR-A1) triple on ${source.getName()}" +
+                 " (victim '${victimAuth.name}', operator '${operator.name}'," +
+                 " transition ${transition.getName()}, statuses $observed)"
+         )
++        // THESIS: Follow-up 403, hoặc 2xx đã qua C4: transition được chứng minh hạ quyền thật. Follow-up mã khác không chứng minh.
+         if (followUpCode == 403 || StatusGroup.G_2xx.isInGroup(followUpCode)) {
+             if (!candidateProven) {
+                 LoggingUtil.getInfoLogger().info(
+@@ -1097,67 +1393,106 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             candidateProven = true
+             privilegeReducedByProof.add(victimAuth.name)
+         }
++        // THESIS: Oracle đã gắn lỗi 970 trong lúc chạy (follow-up 2xx): chỉ log. Vd log seed 1: "Constructed a stateful-authorization
++        // THESIS: (MR-A1) test revealing privilege persistence after a role downgrade on PUT:/reports/{id} (victim 'alice')".
+         if (ExperimentalFaultCategory.SECURITY_STATEFUL_AUTHORIZATION in DetectedFaultUtils.getDetectedFaultCategories(ei)) {
+             LoggingUtil.getInfoLogger().info(
+                 "Constructed a stateful-authorization (MR-A1) test revealing privilege persistence" +
+                     " after a role downgrade on ${source.getName()} (victim '${victimAuth.name}')"
+             )
+         }
++        // THESIS: Mọi bộ ba hợp lệ đều đưa vào archive, có lỗi hay không; archive giữ test nếu nó đạt target mới hoặc tốt hơn.
+         archive.addIfNeeded(ei)
+         return true
+     }
+ 
+-    private fun lastRecordedStatus(individual: RestIndividual, ei: EvaluatedIndividual<RestIndividual>): Int? {
+-        var last: Int? = null
+-        for (a in individual.seeMainExecutableActions()) {
+-            val code = statusIn(ei, a)
+-            if (code != null) {
+-                last = code
++    // THESIS: callsBeforeSourceMatchTriple: true khi mọi call trước call cuối (source) của run có mã cùng nhóm (2xx, 4xx, ...)
++    // THESIS: với chính call đó trong bộ ba (tripleEi). Tra được vì lát chép bằng copy() giữ localId, và bộ ba cũng chép từ lát.
++    // THESIS: Call không có mã ở run hoặc ở bộ ba (vd chuỗi dừng vì call tạo bị từ chối) tính là trượt.
++    // THESIS: Vd reports-api: POST /reports 201 trong bộ ba, 403 với token mới: trượt. Seed 11: DELETE 404 trong bộ ba, 403 với
++    // THESIS: token mới: cùng nhóm 4xx, đạt. Ai gọi: probe C4, cho lần đăng nhập lại và lần đối chứng ẩn danh.
++    private fun callsBeforeSourceMatchTriple(
++        run: RestIndividual,
++        ei: EvaluatedIndividual<RestIndividual>,
++        tripleEi: EvaluatedIndividual<RestIndividual>
++    ): Boolean {
++        val actions = run.seeMainExecutableActions()
++        for (i in 0 until actions.size - 1) {
++            val code = statusIn(ei, actions[i]) ?: return false
++            val original = statusIn(tripleEi, actions[i]) ?: return false
++            if (code / 100 != original / 100) {
++                return false
+             }
+         }
+-        return last
++        return true
+     }
+ 
+-    private fun reLoginProbeConfirmsPrivilegeRemoved(victimSlice: RestIndividual): Boolean {
++    // THESIS: Probe C4, chạy khi follow-up 2xx (lỗi tiềm năng). Trả true khi quyền đã thật sự bị gỡ khỏi nạn nhân;
++    // THESIS: false khi đăng nhập lại source vẫn 2xx (quyền còn nguyên); null khi INCONCLUSIVE.
++    // THESIS: Bước 1: chạy lại lát của nạn nhân thành một test mới. Test mới đăng nhập lại ở đầu, nên lát chạy với token
++    // THESIS: cấp sau transition. Mọi call trước source phải ra cùng nhóm mã như trong bộ ba (tripleEi), để trạng thái source
++    // THESIS: cần giống lúc chạy bộ ba; source phải có mã.
++    // THESIS: Vd reports-api: lát [POST /reports, PUT /reports/{id}], POST 201 trong bộ ba, 403 với token VIEWER: INCONCLUSIVE.
++    // THESIS: Bước 2: chỉ đọc mã của source. 2xx: false. Khác 403: INCONCLUSIVE.
++    // THESIS: Bước 3: đối chứng: cùng lát, các call trước giữ auth như bước 1, chỉ source gửi không credential.
++    // THESIS: Các call trước phải khớp bộ ba như bước 1; source ẩn danh không có mã hoặc cũng 403: INCONCLUSIVE.
++    // THESIS: Vd reports-api, lát [PUT /reports/1]: đăng nhập lại alice (giờ là VIEWER) ra 403; ẩn danh 401; kết quả true.
++    // THESIS: Probe chạy khi statefulTripleUnderEvaluation tắt, nên oracle không xét 970 trên test của probe.
++    private fun reLoginProbeConfirmsPrivilegeRemoved(
++        victimSlice: RestIndividual,
++        tripleEi: EvaluatedIndividual<RestIndividual>
++    ): Boolean? {
+ 
++        // THESIS: Bản sao lát, đánh dấu SECURITY, chạy trên SUT. Fitness không chạy được thì INCONCLUSIVE.
++        // THESIS: Kotlin: "?: return reLoginProbeInconclusive(...)" khi vế trái null thì log lý do và trả null.
+         val probe = victimSlice.copy() as RestIndividual
+         probe.modifySampleType(SampleType.SECURITY)
+         val ei = fitness.computeWholeAchievedCoverageForPostProcessing(probe)
+             ?: return reLoginProbeInconclusive("the probe could not be evaluated")
++        if (!callsBeforeSourceMatchTriple(probe, ei, tripleEi)) {
++            return reLoginProbeInconclusive("a call before the source of the replayed slice changed status group")
++        }
++        val sourceCode = statusIn(ei, probe.seeMainExecutableActions().last())
++            ?: return reLoginProbeInconclusive("the source of the replayed slice recorded no status code")
+ 
+-        val lastObserved = lastRecordedStatus(probe, ei)
+-            ?: return reLoginProbeInconclusive("no call of the replayed slice recorded a status code")
+-
+-        if (lastObserved != 403) {
++        if (StatusGroup.G_2xx.isInGroup(sourceCode)) {
+             return false
+         }
++        if (sourceCode != 403) {
++            return reLoginProbeInconclusive("re-logging the victim in ended in $sourceCode on the source")
++        }
+ 
++        // THESIS: Đối chứng ẩn danh: chỉ source đổi auth thành HttpWsNoAuth (không gửi header xác thực).
+         val control = victimSlice.copy() as RestIndividual
+         control.modifySampleType(SampleType.SECURITY)
+-        for (a in control.seeMainExecutableActions()) {
+-            a.auth = HttpWsNoAuth()
+-        }
++        control.seeMainExecutableActions().last().auth = HttpWsNoAuth()
+         val cei = fitness.computeWholeAchievedCoverageForPostProcessing(control)
+-            ?: return reLoginProbeInconclusive("the replayed slice sent without credentials could not be evaluated")
+-        val anonymousCode = lastRecordedStatus(control, cei)
++            ?: return reLoginProbeInconclusive("the anonymous control could not be evaluated")
++        if (!callsBeforeSourceMatchTriple(control, cei, tripleEi)) {
++            return reLoginProbeInconclusive("a call before the source of the anonymous control changed status group")
++        }
++        val anonymousCode = statusIn(cei, control.seeMainExecutableActions().last())
+         LoggingUtil.getInfoLogger().info(
+             "Stateful-authorization anonymous control: ${control.seeMainExecutableActions().last().getName()}" +
+                 "=${anonymousCode ?: "-"}"
+         )
+         if (anonymousCode == null) {
+-            return reLoginProbeInconclusive("no call of the replayed slice sent without credentials recorded a status code")
++            return reLoginProbeInconclusive("the source sent without credentials recorded no status code")
+         }
+         if (anonymousCode == 403) {
+-            return reLoginProbeInconclusive("the replayed slice sent without credentials also ended in 403")
++            return reLoginProbeInconclusive("the source sent without credentials also ended in 403")
+         }
+         return true
+     }
+ 
+-    private fun reLoginProbeInconclusive(reason: String): Boolean {
++    // THESIS: Log info "re-login probe INCONCLUSIVE: <lý do>" rồi trả null; hàm gọi bỏ bộ ba với nhãn UNCONFIRMED.
++    private fun reLoginProbeInconclusive(reason: String): Boolean? {
+         LoggingUtil.getInfoLogger().info("Stateful-authorization re-login probe INCONCLUSIVE: $reason")
+-        return false
++        return null
+     }
+ 
++    // THESIS: rankPermissionReducingTransitions: mọi op trong spec (actionDefinitions) qua guard, xếp giảm dần theo transitionScore.
++    // THESIS: Vd reports-api: [PUT /users/{username}/role]. Kotlin: sortedByDescending trả danh sách mới, điểm cao đứng đầu.
+     private fun rankPermissionReducingTransitions(): List<RestCallAction> {
+         val transitions = mutableListOf<RestCallAction>()
+         for (a in actionDefinitions) {
+@@ -1168,6 +1503,10 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return transitions.sortedByDescending { transitionScore(it) }
+     }
+ 
++    // THESIS: bestField: trường của op có fieldScore cao nhất theo bảng model ("role" hoặc "victim"); điểm phải > 0,
++    // THESIS: không có thì null. onPath = true: chỉ xét path param; false: chỉ xét trường query và body.
++    // THESIS: Hoà điểm thì giữ trường gặp trước theo thứ tự schemaFields.
++    // THESIS: Ai gọi: roleField (model "role", ngoài path), setUserTargetToVictim (model "victim", trên path).
+     private fun bestField(a: RestCallAction, model: String, onPath: Boolean): SchemaField? {
+         var best: SchemaField? = null
+         var bestScore = 0.0
+@@ -1184,8 +1523,15 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return best
+     }
+ 
++    // THESIS: roleField: trường vai trò của op: trường ngoài path có điểm role cao nhất, điểm > 0.
++    // THESIS: Vd PUT /users/{username}/role: body:role, điểm 8.621.
++    // THESIS: Ai gọi: buildStatefulAuthzTriple, harvestReducedRoleCandidates, setRoleFieldToReduced, victimField, log.
+     private fun roleField(a: RestCallAction): SchemaField? = bestField(a, "role", false)
+ 
++    // THESIS: victimField: trường chỉ định nạn nhân. Chỉ xét trường kind str hoặc num, khác trường vai trò, cả path lẫn ngoài path.
++    // THESIS: Lấy điểm victim cao nhất, điểm phải > 0 như bestField; không có thì null và op không dựng được bộ ba.
++    // THESIS: Vd PUT /users/{username}/role: path:username, điểm 5.189. Vd artifact-keeper POST /api/v1/admin/sso/oidc:
++    // THESIS: body:client_id điểm -2.187, nên null.
+     private fun victimField(a: RestCallAction): SchemaField? {
+         val role = roleField(a)
+         var best: SchemaField? = null
+@@ -1198,7 +1544,7 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 continue
+             }
+             val score = fieldScore("victim", f)
+-            if (best == null || score > bestScore) {
++            if (score > bestScore) {
+                 best = f
+                 bestScore = score
+             }
+@@ -1206,6 +1552,9 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return best
+     }
+ 
++    // THESIS: tableValues: các khoá của một bảng, xếp giảm dần theo trọng số.
++    // THESIS: Vd tableValues("lowstr") = [read, guest, member]. Bảng highstr chỉ còn được loadModel kiểm có mặt.
++    // THESIS: Ai gọi: reducedRoleValues (trường vai trò kiểu chuỗi).
+     private fun tableValues(name: String): List<String> {
+         val values = mutableListOf<String>()
+         for (entry in table(name).entries.sortedByDescending { it.value }) {
+@@ -1214,23 +1563,42 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return values
+     }
+ 
++    // THESIS: lowMinusHigh: valueScore low trừ valueScore high. > 0: giá trị giống quyền thấp; < 0: giống quyền cao; 0: không rõ.
++    // THESIS: Vd VIEWER = 0.375 - 0 = 0.375; ADMIN = 0 - 0.656 = -0.656; EVOMASTER = 0; member = 0.333 - 0.200 = 0.133.
+     private fun lowMinusHigh(value: String): Double = valueScore("low", value) - valueScore("high", value)
+ 
++    // THESIS: reducedRoleValues: danh sách giá trị hạ quyền sẽ thử, theo kind của trường vai trò:
++    // THESIS: enum: giá trị enum có lowMinusHigh >= 0, xếp giảm dần; bỏ giá trị cao (< 0) và EVOMASTER (giá trị ngoài schema
++    // THESIS: mà upstream thêm vào enum chuỗi); bool: "false"; array: "[]" (gỡ hết); num: 1, 0, 2 (viết tay);
++    // THESIS: str: các khoá của bảng lowstr; kind khác: rỗng.
++    // THESIS: Sau đó bỏ giá trị (lowMinusHigh <= 0) mà nạn nhân đang giữ: gửi lại đúng giá trị đó không hạ quyền.
++    // THESIS: Vd enum {ADMIN, VIEWER, EVOMASTER}: [VIEWER]. Vd vampi {EVOMASTER, admin, user}: [user].
++    // THESIS: Vd bool, nạn nhân đang giữ false: [] (nạn nhân không có quyền để gỡ).
+     private fun reducedRoleValues(field: SchemaField, current: List<String>): List<String> {
+         val raw = when (field.kind) {
+-            "enum" -> field.enumValues.sortedByDescending { lowMinusHigh(it) }
+-            "bool" -> if (current.firstOrNull()?.lowercase() == "false") listOf("true") else listOf("false")
++            "enum" -> {
++                val low = mutableListOf<String>()
++                for (v in field.enumValues) {
++                    if (v != "EVOMASTER" && lowMinusHigh(v) >= 0.0) {
++                        low.add(v)
++                    }
++                }
++                low.sortedByDescending { lowMinusHigh(it) }
++            }
++            "bool" -> listOf("false")
+             "array" -> listOf(emptyRoleList)
+             "num" -> numericRoleCandidates
+             "str" -> tableValues("lowstr")
+             else -> emptyList()
+         }
++        // THESIS: held: các giá trị nạn nhân đang giữ có lowMinusHigh <= 0.
+         val held = mutableListOf<String>()
+         for (c in current) {
+             if (lowMinusHigh(c) <= 0.0) {
+                 held.add(c)
+             }
+         }
++        // THESIS: Giữ thứ tự của raw; bỏ giá trị trùng held (không phân biệt hoa thường) và giá trị đã có trong out.
+         val out = mutableListOf<String>()
+         for (v in raw) {
+             var alreadyHeld = false
+@@ -1247,11 +1615,15 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
++    // THESIS: Giá trị hạ quyền của op khi chưa biết nạn nhân (current rỗng). Ai gọi: addForStatefulAccessControl bước 2, và log.
++    // THESIS: Rỗng khi op không có trường vai trò, hoặc trường vai trò có kind object: op bị loại khỏi ứng viên.
+     private fun harvestReducedRoleCandidates(transition: RestCallAction): List<String> {
+         val field = roleField(transition) ?: return emptyList()
+         return reducedRoleValues(field, emptyList())
+     }
+ 
++    // THESIS: restoreFields: mọi trường ngoài path có điểm role > 0. Khi hạ quyền (setRoleFieldToReduced) và khi nâng quyền
++    // THESIS: (restorePlan), đặt tất cả các trường này, vì một op có thể mang nhiều trường quyền (vd pyLoad: permission và role).
+     private fun restoreFields(transition: RestCallAction): List<SchemaField> {
+         val out = mutableListOf<SchemaField>()
+         for (f in schemaFields(transition)) {
+@@ -1262,68 +1634,45 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
+-    private fun restoreValues(field: SchemaField, snapshot: String?, exclude: String): List<String> {
+-        if (snapshot != null && lowMinusHigh(snapshot) <= 0.0) {
+-            return if (snapshot == exclude) emptyList() else listOf(snapshot)
+-        }
+-        val raw = when (field.kind) {
++    // THESIS: restoreValue: giá trị nâng quyền cho một trường, theo kind; null khi không có.
++    // THESIS: enum: giá trị có lowMinusHigh âm nhất (cao nhất); hoà thì lấy giá trị đứng trước trong enum; không có giá trị âm: null.
++    // THESIS: bool: true; num: 0 (viết tay); kind khác (gồm str): null.
++    // THESIS: Vd enum {ADMIN, VIEWER, EVOMASTER}: ADMIN; EVOMASTER có lowMinusHigh = 0 nên không được chọn.
++    private fun restoreValue(field: SchemaField): String? {
++        return when (field.kind) {
+             "enum" -> {
+-                val ranked = field.enumValues.sortedBy { lowMinusHigh(it) }
+-                val high = mutableListOf<String>()
+-                for (v in ranked) {
+-                    if (lowMinusHigh(v) < 0.0) {
+-                        high.add(v)
++                var best: String? = null
++                for (v in field.enumValues) {
++                    if (lowMinusHigh(v) < 0.0 && (best == null || lowMinusHigh(v) < lowMinusHigh(best))) {
++                        best = v
+                     }
+                 }
+-                if (high.isNotEmpty()) high else ranked
++                best
+             }
+-            "bool" -> listOf("true")
+-            "num" -> elevatedNumericRoleCandidates
+-            "str" -> tableValues("highstr")
+-            else -> emptyList()
++            "bool" -> "true"
++            "num" -> "0"
++            else -> null
+         }
+-        val out = mutableListOf<String>()
+-        for (v in raw) {
+-            if (v != exclude && v !in out) {
+-                out.add(v)
+-            }
+-        }
+-        return out
+     }
+ 
+-    private fun restorePlans(
+-        transition: RestCallAction,
+-        account: HttpWsAuthenticationInfo,
+-        exclude: String
+-    ): List<List<Pair<String, String>>> {
+-        val fields = restoreFields(transition)
+-        val snapshot = victimSnapshot(account, transition, fields)
+-        val perField = mutableListOf<Pair<String, List<String>>>()
+-        for (f in fields) {
+-            val values = restoreValues(f, snapshot[f.key], exclude)
+-            if (values.isNotEmpty()) {
+-                perField.add(f.key to values)
+-            }
+-        }
+-        var longest = 0
+-        for (entry in perField) {
+-            if (entry.second.size > longest) {
+-                longest = entry.second.size
+-            }
+-        }
+-        val rounds = minOf(longest, MAX_PRIVILEGE_RESTORES)
+-        val plans = mutableListOf<List<Pair<String, String>>>()
+-        for (j in 0 until rounds) {
+-            val plan = mutableListOf<Pair<String, String>>()
+-            for (entry in perField) {
+-                val values = entry.second
+-                plan.add(entry.first to values[minOf(j, values.size - 1)])
+-            }
+-            plans.add(plan)
++    // THESIS: restorePlan: kế hoạch nâng quyền trên transition: danh sách cặp (khoá trường, giá trị), mỗi trường vai trò
++    // THESIS: (restoreFields) có giá trị nâng một cặp. Một kế hoạch là một lời gọi nâng quyền.
++    // THESIS: Vd reports-api: [body:role = ADMIN]. Vd pyLoad: [query:permission = 0, query:role = 0].
++    // THESIS: Ai gọi: restoreOperatorsAndRetry.
++    private fun restorePlan(transition: RestCallAction): List<Pair<String, String>> {
++        val plan = mutableListOf<Pair<String, String>>()
++        for (f in restoreFields(transition)) {
++            val v = restoreValue(f) ?: continue
++            plan.add(f.key to v)
+         }
+-        return plans
++        return plan
+     }
+ 
++    // THESIS: restorePrivilege: restorer gọi transition để đặt các trường vai trò của target theo plan.
++    // THESIS: Ai gọi: restoreOperatorsAndRetry, với restorer = nạn nhân, target = operator.
++    // THESIS: Test = lát của nạn nhân + call nâng quyền.
++    // THESIS: Trả true khi call 2xx; khi đó danh sách cặp bị từ chối được xoá.
++    // THESIS: Vd pyLoad seed 1, jar ND: restorer pyload, target alice, plan '0,0' trên POST /api/set_user_permission, 200.
+     private fun restorePrivilege(
+         transitionDef: RestCallAction,
+         restorer: HttpWsAuthenticationInfo,
+@@ -1332,6 +1681,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         victimSlice: RestIndividual
+     ): Boolean {
+ 
++        // THESIS: Dựng call như transition trong executeStatefulAuthzTriple: bản sao op, id mới, gene ngẫu nhiên, token của restorer.
++        // THESIS: Trỏ call vào target; không được thì bỏ (restoreSkipped trả false).
+         val action = transitionDef.copy() as RestCallAction
+         action.resetLocalIdRecursively()
+         action.forceNewTaints()
+@@ -1339,10 +1690,12 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         action.auth = restorer
+         val targeted = setUserTargetToVictim(action, target)
+             ?: return restoreSkipped(action, target.name, "the account could not be placed in the call")
++        // THESIS: byKey: map khoá trường ra SchemaField của call mới, để tìm trường theo khoá trong plan.
+         val byKey = mutableMapOf<String, SchemaField>()
+         for (f in schemaFields(action)) {
+             byKey[f.key] = f
+         }
++        // THESIS: Ghi từng giá trị của plan. setKeys giữ khoá đã ghi được; planValues giữ mọi giá trị để log.
+         val setKeys = mutableListOf<String>()
+         val planValues = mutableListOf<String>()
+         for (entry in plan) {
+@@ -1352,12 +1705,14 @@ class RestSecurityBuilder : TimeBoxedPhase {
+                 setKeys.add(entry.first)
+             }
+         }
++        // THESIS: Không trường nào nhận giá trị: bỏ.
+         if (setKeys.isEmpty()) {
+             return restoreSkipped(action, target.name, "no role field accepted the restore values $planValues")
+         }
+-        keepOnlyTargetFields(action, targeted + setKeys)
+-        setUserNameFieldsToVictim(action, target, targeted)
++        // THESIS: Như transition: trường tên đăng nhập đặt thành tên của target; tắt trường tuỳ chọn khác.
++        trimToTargetFields(action, targeted + setKeys, target)
+ 
++        // THESIS: Test = bản sao lát của nạn nhân + call nâng quyền, hoàn thiện như executeStatefulAuthzTriple.
+         val base = victimSlice.copy() as RestIndividual
+         base.addMainActionInEmptyEnterpriseGroup(action = action)
+         base.doInitializeLocalId()
+@@ -1365,24 +1720,27 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         base.ensureFlattenedStructure()
+         base.fixResourceForwardLinks()
+ 
++        // THESIS: Chạy trên SUT khi cờ statefulTripleUnderEvaluation tắt, nên oracle không xét 970.
++        // THESIS: Fitness không chạy được thì bỏ; privilegeRestoreAttempts chỉ tăng khi test đã chạy.
+         val ei = fitness.computeWholeAchievedCoverageForPostProcessing(base)
+             ?: return restoreSkipped(action, target.name, "the call could not be evaluated")
+         privilegeRestoreAttempts++
+ 
++        // THESIS: Đọc mã của call nâng quyền rồi log "Privilege-restore accepted/refused ...".
+         val code = statusIn(ei, action)
+         val accepted = code != null && StatusGroup.G_2xx.isInGroup(code)
+         LoggingUtil.getInfoLogger().info(
+             "Privilege-restore ${if (accepted) "accepted" else "refused"} for \'${target.name}\'" +
+                 " by \'${restorer.name}\' with role \'${planValues.joinToString(",")}\' on ${action.getName()} -> ${code ?: "-"}"
+         )
++        // THESIS: Nâng được: mọi cặp bị từ chối được xoá vì quyền của operator đã đổi.
+         if (accepted) {
+-            privilegeReducedInPhase.remove(target.name)
+-            privilegeReducedByProof.remove(target.name)
+-            refusedTransitionVictims.clear()
++            skippedTransitionVictims.clear()
+         }
+         return accepted
+     }
+ 
++    // THESIS: Log info lý do bỏ một lần nâng quyền chưa chạy trên SUT, trả false.
+     private fun restoreSkipped(action: RestCallAction, target: String, reason: String): Boolean {
+         LoggingUtil.getInfoLogger().info(
+             "Stateful-authorization restore skipped for '$target' on ${action.getName()}: $reason"
+@@ -1390,28 +1748,57 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return false
+     }
+ 
++    // THESIS: normalize: viết thường, chỉ giữ chữ và số; dùng để so tên khoá JSON với tên trường.
++    // THESIS: Vd "user_name" = "username", "User-Id" = "userid". Kotlin: filter { it.isLetterOrDigit() } giữ ký tự thoả điều kiện.
+     private fun normalize(s: String): String = s.lowercase().filter { it.isLetterOrDigit() }
+ 
++    // THESIS: setField: ghi giá trị chuỗi vào gene giá trị của trường (f.value) bằng setFromStringValue của upstream.
++    // THESIS: Gene không nhận, hoặc ném exception, thì false.
++    // THESIS: Ghi được thì bật mọi lớp bọc bên trên (activateAncestors). Nếu không, giá trị không được gửi: OptionalGene đang tắt
++    // THESIS: làm mất trường, NullableGene đang tắt gửi null (vd is_admin: null).
++    // THESIS: Enum số (EnumGene<Int>): setFromStringValue so Int với String nên luôn sai; khi đó tìm giá trị có toString() bằng
++    // THESIS: value rồi gán index. Vd enum access_level [10, 20, 30], value "20": index 1.
++    // THESIS: Ai gọi: placeVictimValue, setRoleValue, restorePrivilege, setUserTargetToVictim, trimToTargetFields.
++    // THESIS: Kotlin: try là biểu thức; nhánh catch trả false.
+     private fun setField(f: SchemaField, value: String): Boolean {
+-        val accepted = try { f.value.setFromStringValue(value) } catch (e: Exception) { false }
++        val g = f.value
++        var accepted = try { g.setFromStringValue(value) } catch (e: Exception) { false }
++        if (!accepted && g is EnumGene<*>) {
++            for (i in g.values.indices) {
++                if (g.values[i].toString() == value) {
++                    g.index = i
++                    accepted = true
++                    break
++                }
++            }
++        }
+         if (!accepted) return false
+-        activateAncestors(f.value)
++        activateAncestors(g)
+         return true
+     }
+ 
++    // THESIS: activateAncestors: đi ngược từ gene lên các cha. SelectableWrapperGene (OptionalGene, NullableGene): bật isActive.
++    // THESIS: ChoiceGene: chọn nhánh chứa gene con vừa đi qua. Dừng khi cha không còn là Gene (tới tham số).
++    // THESIS: Kotlin: "when (p) { is A -> ... }" chọn nhánh theo kiểu của p.
+     private fun activateAncestors(g: Gene) {
+         var child: Gene = g
+         var p = g.parent
+         while (p is Gene) {
+             when (p) {
+                 is SelectableWrapperGene -> p.isActive = true
+-                is ChoiceGene<*> -> p.selectActiveGene(p.getViewOfChildren().indexOf(child))
++                is ChoiceGene<*> -> {
++                    val i = p.getViewOfChildren().indexOf(child)
++                    if (i >= 0) p.selectActiveGene(i)
++                }
+             }
+             child = p
+             p = p.parent
+         }
+     }
+ 
++    // THESIS: clearArray: xoá mọi phần tử của trường mảng, dùng cho giá trị hạ quyền "[]". Mảng có minSize > 0 thì trả false.
++    // THESIS: Kotlin: "as? ArrayGene<Gene>" ép kiểu an toàn, sai kiểu thì null; @Suppress("UNCHECKED_CAST") tắt cảnh báo
++    // THESIS: của phép ép kiểu generic đó.
+     @Suppress("UNCHECKED_CAST")
+     private fun clearArray(f: SchemaField): Boolean {
+         val array = (f.value as? ArrayGene<Gene>) ?: return false
+@@ -1423,32 +1810,84 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return true
+     }
+ 
+-    private fun loginKeys(victimAuth: HttpWsAuthenticationInfo): Set<String> {
+-        val payload = victimAuth.endpointCallLogin?.call?.payload ?: return emptySet()
+-        val name = victimAuth.name
+-        val keys = mutableSetOf<String>()
++    // THESIS: payloadPairs: các cặp (khoá, giá trị chuỗi) trong payload đăng nhập của tài khoản (file auth).
++    // THESIS: Vd {"username":"alice","password":"alicepass"} cho [(username, alice), (password, alicepass)].
++    // THESIS: Đọc payload như JSON object trước; không phải JSON object thì đọc dạng form a=b&c=d (giải mã URL).
++    // THESIS: Kotlin: "?.call?.payload" là chuỗi gọi an toàn, một mắt null thì cả biểu thức null.
++    private fun payloadPairs(a: HttpWsAuthenticationInfo): List<Pair<String, String>> {
++        val payload = a.endpointCallLogin?.call?.payload ?: return emptyList()
++        val out = mutableListOf<Pair<String, String>>()
++        // THESIS: catch rỗng: payload không đọc được thành JSON thì sang đọc dạng form ở dưới.
+         try {
+             val node = ObjectMapper().readTree(payload)
+             if (node.isObject) {
+                 for (entry in node.fields()) {
+-                    if (entry.value.isTextual && entry.value.asText() == name) {
+-                        keys.add(entry.key)
+-                    }
++                    if (entry.value.isTextual) out.add(entry.key to entry.value.asText())
+                 }
+-                if (keys.isNotEmpty()) return keys
++                return out
+             }
+         } catch (e: Exception) {
+         }
++        // THESIS: Dạng form: tách theo "&", mỗi cặp tách theo "=" đầu tiên (limit = 2).
+         for (pair in payload.split("&")) {
+             val kv = pair.split("=", limit = 2)
+             if (kv.size == 2) {
+                 val v = try { java.net.URLDecoder.decode(kv[1], "UTF-8") } catch (e: Exception) { kv[1] }
+-                if (v == name) keys.add(kv[0])
++                out.add(kv[0] to v)
+             }
+         }
++        return out
++    }
++
++    // THESIS: Cache loginName theo tên tài khoản; individualsInSolution không đổi trong khâu 970.
++    private val loginNameCache = mutableMapOf<String, String>()
++
++    // THESIS: loginName: tên đăng nhập của tài khoản, dùng thay tên tài khoản khi tìm và trỏ vào nạn nhân.
++    // THESIS: Payload có giá trị bằng tên tài khoản: tên tài khoản. Không có: giá trị đầu tiên của payload mà một response 2xx
++    // THESIS: trong archive có object mang cùng khoá, cùng giá trị. Không tìm được: tên tài khoản.
++    // THESIS: Vd artifact-keeper: tài khoản operator có payload {"username":"admin",...}; GET /api/v1/auth/me trả
++    // THESIS: {"username":"admin",...}, nên loginName = admin.
++    private fun loginName(a: HttpWsAuthenticationInfo): String = loginNameCache.getOrPut(a.name) { findLoginName(a) }
++
++    private fun findLoginName(a: HttpWsAuthenticationInfo): String {
++        val pairs = payloadPairs(a)
++        for (p in pairs) {
++            if (p.second == a.name) return a.name
++        }
++        for (p in pairs) {
++            if (seenInResponses(p.first, p.second)) return p.second
++        }
++        return a.name
++    }
++
++    // THESIS: seenInResponses: true khi một response 2xx trong archive có object JSON mang khoá key (so sau normalize)
++    // THESIS: với giá trị value (không phân biệt hoa thường).
++    private fun seenInResponses(key: String, value: String): Boolean {
++        val keys = setOf(normalize(key))
++        for (ea in RestIndividualSelectorUtils.findEvaluatedActions(individualsInSolution, statusGroup = StatusGroup.G_2xx)) {
++            val body = (ea.result as RestCallResult).getBody() ?: continue
++            if (!body.contains(value)) continue
++            val node = try { ObjectMapper().readTree(body) } catch (e: Exception) { continue }
++            val found = mutableListOf<JsonNode>()
++            collectVictimObjects(node, value, keys, found)
++            if (found.isNotEmpty()) return true
++        }
++        return false
++    }
++
++    // THESIS: loginKeys: tên các khoá trong payload đăng nhập có giá trị bằng loginName.
++    // THESIS: Vd {"username":"alice","password":"alicepass"} cho {username}. Ai gọi: identityKeys.
++    private fun loginKeys(a: HttpWsAuthenticationInfo): Set<String> {
++        val login = loginName(a)
++        val keys = mutableSetOf<String>()
++        for (p in payloadPairs(a)) {
++            if (p.second == login) keys.add(p.first)
++        }
+         return keys
+     }
+ 
++    // THESIS: identityKeys: tên khoá dùng để nhận ra nạn nhân trong JSON, đã normalize: khoá đăng nhập + tên lá trường nạn nhân.
++    // THESIS: Vd nạn nhân alice, trường path:username: {username}.
+     private fun identityKeys(victimAuth: HttpWsAuthenticationInfo, victimLeaf: String): Set<String> {
+         val keys = mutableSetOf<String>()
+         for (k in loginKeys(victimAuth)) {
+@@ -1458,10 +1897,16 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return keys
+     }
+ 
++    // THESIS: ScoredObject: một object JSON trong response có nhắc tới nạn nhân, kèm verb và path của call đã trả nó,
++    // THESIS: và matches = số khoá định danh mang tên nạn nhân.
++    // THESIS: Vd GET /users/me của reports-api trả {"username":"alice","role":"ADMIN"}: verb GET, path /users/me, matches 1.
+     private class ScoredObject(val verb: HttpVerb, val path: String, val node: JsonNode, val matches: Int)
+ 
++    // THESIS: Cache kết quả findVictimObjects theo khoá "nạn nhân|tên lá trường nạn nhân|path transition".
++    // THESIS: individualsInSolution không đổi trong khâu 970 nên kết quả không đổi.
+     private val victimObjectCache = mutableMapOf<String, List<ScoredObject>>()
+ 
++    // THESIS: victimObjects: findVictimObjects có cache.
+     private fun victimObjects(
+         victimAuth: HttpWsAuthenticationInfo,
+         victimLeaf: String,
+@@ -1471,13 +1916,17 @@ class RestSecurityBuilder : TimeBoxedPhase {
+             findVictimObjects(victimAuth, victimLeaf, transition)
+         }
+ 
++    // THESIS: findVictimObjects: quét mọi response 2xx trong individualsInSolution, gom các object JSON có ít nhất một khoá
++    // THESIS: định danh mang tên đăng nhập của nạn nhân (loginName). Kết quả xếp theo compareVictimObjects. Ai gọi: victimObjects.
+     private fun findVictimObjects(
+         victimAuth: HttpWsAuthenticationInfo,
+         victimLeaf: String,
+         transition: RestCallAction
+     ): List<ScoredObject> {
+         val idKeys = identityKeys(victimAuth, victimLeaf)
++        val login = loginName(victimAuth)
+         val mapper = ObjectMapper()
++        // THESIS: prefix: phần path của transition trước "{" đầu tiên. Vd /users/{username}/role cho "/users/".
+         val prefix = transition.path.toString().substringBefore("{")
+         val objects = mutableListOf<ScoredObject>()
+         for (ea in RestIndividualSelectorUtils.findEvaluatedActions(
+@@ -1485,18 +1934,22 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         )) {
+             val action = ea.action as RestCallAction
+             val result = ea.result as RestCallResult
++            // THESIS: Lọc nhanh: body không chứa tên nạn nhân thì bỏ trước khi đọc JSON; body không phải JSON thì bỏ.
+             val body = result.getBody() ?: continue
+-            if (!body.contains(victimAuth.name)) continue
++            if (!body.contains(login)) continue
+             val node = try { mapper.readTree(body) } catch (e: Exception) { continue }
+             val found = mutableListOf<JsonNode>()
+-            collectVictimObjects(node, victimAuth.name, idKeys, found)
++            collectVictimObjects(node, login, idKeys, found)
+             for (o in found) {
+-                objects.add(ScoredObject(action.verb, action.path.toString(), o, matchingKeys(o, victimAuth.name, idKeys)))
++                objects.add(ScoredObject(action.verb, action.path.toString(), o, matchingKeys(o, login, idKeys)))
+             }
+         }
++        // THESIS: Kotlin: sortedWith(Comparator) xếp theo hàm so sánh tự viết.
+         return objects.sortedWith(Comparator { a, b -> compareVictimObjects(a, b, prefix) })
+     }
+ 
++    // THESIS: Thứ tự ưu tiên: path bắt đầu bằng prefix của transition đứng trước; rồi object lấy từ GET; rồi object khớp
++    // THESIS: nhiều khoá hơn. Trả âm khi a đứng trước b, dương khi b đứng trước a (quy ước Comparator của Java).
+     private fun compareVictimObjects(a: ScoredObject, b: ScoredObject, prefix: String): Int {
+         val aUnderPrefix = a.path.startsWith(prefix)
+         val bUnderPrefix = b.path.startsWith(prefix)
+@@ -1511,6 +1964,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return b.matches.compareTo(a.matches)
+     }
+ 
++    // THESIS: matchingKeys: đếm khoá của object vừa là khoá định danh (sau normalize) vừa mang giá trị chuỗi bằng tên nạn nhân,
++    // THESIS: không phân biệt hoa thường. Vd {"username":"alice","owner":"alice"} với idKeys {username}: 1.
+     private fun matchingKeys(node: JsonNode, victimName: String, idKeys: Set<String>): Int {
+         var count = 0
+         for (entry in node.fields()) {
+@@ -1522,6 +1977,9 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return count
+     }
+ 
++    // THESIS: collectVictimObjects: duyệt đệ quy cây JSON (object và mảng), gom mọi object có matchingKeys > 0.
++    // THESIS: Vd [{"username":"alice"}, {"username":"bob"}] gom object đầu.
++    // THESIS: Kotlin: "for (child in node)" duyệt con của JsonNode: giá trị của object, phần tử của mảng.
+     private fun collectVictimObjects(
+         node: JsonNode,
+         victimName: String,
+@@ -1536,6 +1994,8 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         }
+     }
+ 
++    // THESIS: objectValue: giá trị vô hướng (chuỗi, số, bool) đầu tiên của khoá có tên normalize bằng normKey, duyệt object
++    // THESIS: theo thứ tự ưu tiên; null nếu không có. Vd objectValue(objs, "role") = "ADMIN" với object của GET /users/me.
+     private fun objectValue(objects: List<ScoredObject>, normKey: String): String? {
+         for (o in objects) {
+             var v: JsonNode? = null
+@@ -1550,14 +2010,18 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return null
+     }
+ 
++    // THESIS: victimId: id của nạn nhân: giá trị của khoá trùng tên lá (vd username, userid); không có thì khoá id.
+     private fun victimId(objects: List<ScoredObject>, normLeaf: String): String? =
+         objectValue(objects, normLeaf) ?: objectValue(objects, "id")
+ 
++    // THESIS: hasIdToken: true nếu tên trường có từ "id" hoặc "ids". Gọi tokens với minLength 1 để giữ "id".
++    // THESIS: Vd userId: true; username: false. Token id là quy tắc viết tay.
+     private fun hasIdToken(leaf: String): Boolean {
+         val t = tokens(leaf, 1)
+         return "id" in t || "ids" in t
+     }
+ 
++    // THESIS: victimGetObjects: các object nạn nhân chỉ lấy từ response của GET.
+     private fun victimGetObjects(victimAuth: HttpWsAuthenticationInfo, transition: RestCallAction): List<ScoredObject> {
+         val vfLeaf = victimField(transition)?.leaf ?: ""
+         val out = mutableListOf<ScoredObject>()
+@@ -1569,22 +2033,9 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
+-    private fun victimSnapshot(
+-        victimAuth: HttpWsAuthenticationInfo,
+-        transition: RestCallAction,
+-        fields: List<SchemaField>
+-    ): Map<String, String> {
+-        val objects = victimGetObjects(victimAuth, transition)
+-        val snapshot = mutableMapOf<String, String>()
+-        for (f in fields) {
+-            val v = objectValue(objects, normalize(f.leaf))
+-            if (v != null) {
+-                snapshot[f.key] = v
+-            }
+-        }
+-        return snapshot
+-    }
+-
++    // THESIS: victimRoleValues: các giá trị vai trò nạn nhân đang giữ, đọc từ response GET; khoá mảng (vd roles: [ADMIN, USER])
++    // THESIS: cho từng phần tử. Bỏ chuỗi rỗng và giá trị trùng.
++    // THESIS: Ai gọi: buildStatefulAuthzTriple, để reducedRoleValues bỏ giá trị cao nạn nhân đang giữ.
+     private fun victimRoleValues(
+         victimAuth: HttpWsAuthenticationInfo,
+         transition: RestCallAction,
+@@ -1602,11 +2053,14 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
++    // THESIS: scalarsForRoleKey: giá trị vô hướng của mọi khoá mà tên lá trường vai trò (đã normalize) bắt đầu bằng tên khoá.
++    // THESIS: Vd trường roles khớp khoá role và roles. Giá trị là mảng thì lấy từng phần tử vô hướng.
++    // THESIS: Khoá rỗng sau normalize (vd "_") bị bỏ, vì chuỗi nào cũng bắt đầu bằng chuỗi rỗng.
+     private fun scalarsForRoleKey(node: JsonNode, leaf: String): List<String> {
+         val out = mutableListOf<String>()
+         for (entry in node.fields()) {
+             val nk = normalize(entry.key)
+-            if (!leaf.startsWith(nk)) {
++            if (nk.isEmpty() || !leaf.startsWith(nk)) {
+                 continue
+             }
+             val v = entry.value
+@@ -1621,26 +2075,39 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return out
+     }
+ 
++    // THESIS: setUserTargetToVictim: trỏ call vào nạn nhân: đặt trường nạn nhân (victimField) thành tên đăng nhập hoặc id của
++    // THESIS: nạn nhân lấy từ archive (placeVictimValue).
++    // THESIS: Trả danh sách khoá đã đặt; null nếu không đặt được trường nạn nhân, hoặc op có path param nạn nhân mà không đặt được id.
++    // THESIS: Vd PUT /users/{username}/role, nạn nhân alice: [path:username], URL thành /users/alice/role.
++    // THESIS: Ai gọi: executeStatefulAuthzTriple (nạn nhân), restorePrivilege (target).
++    // THESIS: Kotlin: mutableListOf(vf.key) tạo danh sách sửa được có sẵn một phần tử.
+     private fun setUserTargetToVictim(action: RestCallAction, victimAuth: HttpWsAuthenticationInfo): List<String>? {
+         val vf = victimField(action) ?: return null
+         val objects = victimObjects(victimAuth, vf.leaf, action)
+-        if (!placeVictimValue(vf, victimAuth.name, objects)) {
++        if (!placeVictimValue(vf, loginName(victimAuth), objects)) {
+             return null
+         }
+         val set = mutableListOf(vf.key)
++        // THESIS: Trường nạn nhân không ở path: đặt thêm id vào path param có điểm victim cao nhất (> 0), vd /users/{id}
++        // THESIS: với body {username}. Không có id thì bỏ: path id ngẫu nhiên có thể trỏ vào tài khoản khác.
+         if (vf.loc != "path") {
+             val pathField = bestField(action, "victim", true)
+             if (pathField != null) {
+                 val id = victimId(objects, normalize(pathField.leaf))
+-                if (id != null && setField(pathField, id)) set.add(pathField.key)
++                if (id == null || !setField(pathField, id)) return null
++                set.add(pathField.key)
+             }
+         }
+         return set
+     }
+ 
++    // THESIS: placeVictimValue: chọn giá trị cho trường nạn nhân rồi thử ghi theo thứ tự; dùng giá trị đầu tiên gene nhận.
+     private fun placeVictimValue(f: SchemaField, victimName: String, objects: List<ScoredObject>): Boolean {
+         val keyed = objectValue(objects, normalize(f.leaf))
+         val id = objectValue(objects, "id")
++        // THESIS: 1) object nạn nhân có khoá trùng tên lá: chỉ giá trị đó; 2) trường số: id; 3) tên trường có từ id: id rồi tên;
++        // THESIS: 4) còn lại: tên rồi id. Vd reports-api path:username: object {"username":"alice",...} cho [alice].
++        // THESIS: Kotlin: listOfNotNull bỏ phần tử null, vd listOfNotNull(null, "alice") = [alice].
+         val candidates = when {
+             keyed != null -> listOf(keyed)
+             f.kind == "num" -> listOfNotNull(id)
+@@ -1655,72 +2122,60 @@ class RestSecurityBuilder : TimeBoxedPhase {
+         return false
+     }
+ 
+-    private fun setRoleFieldToReduced(action: RestCallAction, reducedRole: String): List<String>? {
++    // THESIS: setRoleValue: "[]" thì xoá mảng (clearArray), còn lại setField.
++    private fun setRoleValue(f: SchemaField, value: String): Boolean =
++        if (value == emptyRoleList) clearArray(f) else setField(f, value)
++
++    // THESIS: setRoleFieldToReduced: đặt trường vai trò thành reducedRole, rồi đặt mọi trường quyền khác (restoreFields, trừ trường
++    // THESIS: đã trỏ vào nạn nhân) thành giá trị hạ quyền đầu tiên của nó, để không trường quyền nào giữ giá trị ngẫu nhiên.
++    // THESIS: Trả các khoá đã ghi; null khi không có trường vai trò hoặc gene không nhận reducedRole.
++    // THESIS: Vd reports-api: body role = VIEWER cho [body:role].
++    // THESIS: Vd pyLoad POST /api/set_user_permission: permission = 1, role = 1 cho [query:permission, query:role].
++    private fun setRoleFieldToReduced(action: RestCallAction, reducedRole: String, targeted: List<String>): List<String>? {
+         val f = roleField(action) ?: return null
+-        val ok = if (reducedRole == emptyRoleList) clearArray(f) else setField(f, reducedRole)
+-        return if (ok) listOf(f.key) else null
++        if (!setRoleValue(f, reducedRole)) return null
++        val set = mutableListOf(f.key)
++        for (other in restoreFields(action)) {
++            if (other.key == f.key || other.key in targeted) continue
++            val v = reducedRoleValues(other, emptyList()).firstOrNull() ?: continue
++            if (setRoleValue(other, v)) set.add(other.key)
++        }
++        return set
+     }
+ 
+-    private fun keepOnlyTargetFields(action: RestCallAction, keep: List<String>) {
++    // THESIS: trimToTargetFields: dọn call sau khi đã đặt các trường đích (keep), để call chỉ đổi các trường đó.
++    // THESIS: Lượt 1: trường chuỗi ở query hoặc body, ngoài keep, có tên trùng khoá đăng nhập (sau normalize, vd username),
++    // THESIS: được ghi tên đăng nhập của account và thêm vào keep.
++    // THESIS: Lượt 2: tắt mọi OptionalGene đang bật của trường query và trường body cấp một, trừ trường trong keep và trường
++    // THESIS: cha của một trường trong keep (vd body:user khi keep có body:user.role). Trường bắt buộc không có OptionalGene
++    // THESIS: nên vẫn được gửi.
++    // THESIS: Vd body {email, password, role} với keep [body:role]: tắt email và password nếu chúng không bắt buộc.
++    // THESIS: Ai gọi: executeStatefulAuthzTriple (account = nạn nhân), restorePrivilege (account = target).
++    private fun trimToTargetFields(action: RestCallAction, keep: List<String>, account: HttpWsAuthenticationInfo) {
++        val fields = schemaFields(action)
++        val login = loginName(account)
++        val loginKeys = identityKeys(account, "")
++        val kept = keep.toMutableList()
++        for (f in fields) {
++            if (f.loc == "path" || f.kind != "str" || f.key in kept || normalize(f.leaf) !in loginKeys) continue
++            if (setField(f, login)) kept.add(f.key)
++        }
+         val removed = mutableListOf<String>()
+-        for (f in schemaFields(action)) {
+-            if (f.key in keep) continue
++        for (f in fields) {
++            var inKeep = false
++            for (k in kept) {
++                if (k == f.key || k.startsWith(f.key + ".") || k.startsWith(f.key + "[]")) inKeep = true
++            }
++            if (inKeep) continue
+             val gene = f.gene
++            // THESIS: Trường body cấp một: tên không có dấu chấm.
+             val topLevelBody = f.loc == "body" && "." !in f.name
+             if ((topLevelBody || f.loc == "query") && gene is OptionalGene && gene.isActive) {
+                 gene.isActive = false
+                 removed.add(f.name)
+             }
+         }
+-        log.debug("Stateful-authorization: removed optional fields $removed from ${action.getName()}")
+-    }
+-
+-    private fun setUserNameFieldsToVictim(
+-        action: RestCallAction,
+-        victimAuth: HttpWsAuthenticationInfo,
+-        targeted: List<String>
+-    ) {
+-        val idKeys = identityKeys(victimAuth, "")
+-        val set = mutableListOf<String>()
+-        for (f in schemaFields(action)) {
+-            if (f.loc != "body" || f.kind != "str" || f.key in targeted || normalize(f.leaf) !in idKeys) {
+-                continue
+-            }
+-            if (setField(f, victimAuth.name)) {
+-                set.add(f.name)
+-            }
+-        }
+-        if (set.isNotEmpty()) {
+-            log.debug("Stateful-authorization: set user-name fields $set to '${victimAuth.name}' on ${action.getName()}")
+-        }
+-    }
+-
+-    private fun routeLooksMissing(candidate: RestCallAction): Boolean {
+-        val path = candidate.path.toString()
+-        if (!path.substringAfterLast("/").startsWith("{")) {
+-            return false
+-        }
+-        val parent = path.substringBeforeLast("/")
+-        if (parent.contains("{")) {
+-            return false
+-        }
+-        var calledParent = false
+-        var all404 = true
+-        for (ea in RestIndividualSelectorUtils.findEvaluatedActions(individualsInSolution, authenticated = true)) {
+-            val action = ea.action as RestCallAction
+-            val p = action.path.toString()
+-            if (p != path && p != parent) {
+-                continue
+-            }
+-            if (p == parent) {
+-                calledParent = true
+-            }
+-            val code = (ea.result as RestCallResult).getStatusCode()
+-            if (code != 404) {
+-                all404 = false
+-            }
+-        }
+-        return calledParent && all404
++        log.debug("Stateful-authorization: kept $kept, removed optional fields $removed from ${action.getName()}")
+     }
+ 
+     private fun addForInjections() {
+diff --git a/core/src/main/resources/stateful-authz-model.csv b/core/src/main/resources/stateful-authz-model.csv
+index c7204403cb..61127c4e38 100644
+--- a/core/src/main/resources/stateful-authz-model.csv
++++ b/core/src/main/resources/stateful-authz-model.csv
+@@ -1,261 +1,251 @@
+ table,feature,weight
+-op,__prior__,-3.935071909737789
+-op,f:access,1.4663370687934267
+-op,f:account,0.17073480784279393
+-op,f:actions,2.405442478433754
+-op,f:active,0.9295359586241752
+-op,f:admin,2.9054368213631707
+-op,f:allowed,1.3995395878699113
+-op,f:application,1.2172180310759568
+-op,f:auth,0.3510516863843707
+-op,f:authentication,2.4589311633847397
+-op,f:before,1.877575388812911
+-op,f:block,0.6562426236244949
+-op,f:change,2.5671447480249725
+-op,f:client,0.6434176081485772
+-op,f:code,-1.5185914396605278
+-op,f:collaborator,5.0238805208462765
+-op,f:content,0.054067221270275745
+-op,f:count,-0.5319818237333025
+-op,f:create,1.298187093609624
+-op,f:created,-1.6878598742099031
+-op,f:creation,0.7215060451200142
+-op,f:custom,-0.9537386194396524
+-op,f:data,-0.6997045811061042
+-op,f:date,0.1005872369051688
+-op,f:delete,1.4644591339692274
+-op,f:deletion,0.7652329073328996
+-op,f:description,-0.5737474722509219
+-op,f:disabled,1.4238322804389556
+-op,f:display,-0.027576767770234323
+-op,f:email,1.2396908869280152
+-op,f:enable,1.2061681948893717
+-op,f:enabled,0.6241543090729937
+-op,f:expiry,1.4916548767777167
+-op,f:factor,2.4981518765380213
+-op,f:fields,-0.0778603217722722
+-op,f:first,1.6635051337043758
+-op,f:force,0.08581591958485646
+-op,f:from,-0.19376894263430522
+-op,f:full,1.696791111337843
+-op,f:group,0.9484639685096949
+-op,f:groups,1.7080429881352783
+-op,f:hours,1.8458266904983311
+-op,f:identity,0.5130210143294267
+-op,f:items,0.6202147110689138
+-op,f:joined,4.618415412738111
+-op,f:kind,0.10912699845330343
+-op,f:language,0.16989903679539786
+-op,f:last,0.123848218372697
+-op,f:level,1.7786873876607023
+-op,f:limit,0.08581591958485646
+-op,f:link,0.01993421490081726
+-op,f:local,1.173732919136218
+-op,f:location,0.5510995229039306
+-op,f:login,1.8303225039623654
+-op,f:managed,0.7236839044200272
+-op,f:manager,0.3806922676706641
+-op,f:media,0.9548537666084655
+-op,f:member,2.272345207804327
+-op,f:members,2.6931245508855346
+-op,f:membership,2.9601873361345796
+-op,f:method,0.2116961654738594
+-op,f:name,-0.1807890764304665
+-op,f:namespace,0.005773211911319631
+-op,f:next,1.3350010667323406
+-op,f:notes,0.7970467755780963
+-op,f:object,1.5343905320384423
+-op,f:organization,1.8123039984596874
+-op,f:other,2.0534660552765756
+-op,f:owner,0.2546093241777583
+-op,f:page,0.8807457944547439
+-op,f:password,1.1453534698463126
+-op,f:path,-0.7932306391169277
+-op,f:period,-0.03145495216788596
+-op,f:permission,2.072884141133677
+-op,f:permissions,2.1980472840876826
+-op,f:personal,2.478349249241841
+-op,f:phone,0.7591905928769371
+-op,f:photo,2.45893116338474
+-op,f:policy,-0.4935723756184309
+-op,f:pretty,-0.015234244571848077
+-op,f:principal,2.3992119286831173
+-op,f:product,0.6294313661738382
+-op,f:profile,0.5075415485648005
+-op,f:project,1.0920548881219507
+-op,f:provider,0.7640215201466027
+-op,f:public,0.7811159535059025
+-op,f:read,1.268511325463507
+-op,f:repo,-0.037923059824378935
+-op,f:required,1.5671132880293106
+-op,f:restricted,2.3848231912310185
+-op,f:role,2.119715440817776
+-op,f:roles,2.518354583855541
+-op,f:root,1.7852020686818957
+-op,f:scopes,2.367123614131617
+-op,f:self,0.3604414267342091
+-op,f:send,0.45953232937844035
+-op,f:server,0.228089975249536
+-op,f:site,-0.039618262807047167
+-op,f:slug,-0.8109302162163288
+-op,f:source,-0.35486409481437464
+-op,f:status,-1.0886948520107635
+-op,f:tags,-0.5406398864764168
+-op,f:team,1.7640372574898522
+-op,f:tenant,0.5970398703826021
+-op,f:time,-0.09011328623713277
+-op,f:timestamp,0.47301567971572744
+-op,f:token,0.18759861389479848
+-op,f:type,-0.47254227019697725
+-op,f:types,1.3173014896329391
+-op,f:until,2.015725727293728
+-op,f:updated,-1.3322271398496146
+-op,f:user,1.9775045144735302
+-op,f:userid,2.9136673204996875
+-op,f:username,1.7958162699236697
+-op,f:users,2.659601858846891
+-op,f:value,-0.7691330875378672
+-op,f:verified,1.9793580831228539
+-op,f:version,0.045424125114255975
+-op,f:views,3.136810871813897
+-op,f:website,1.7657839828247948
+-op,f:workspace,0.06453852113757153
+-op,f:zone,1.034896474282002
+-op,p:access,2.1007189401271207
+-op,p:admin,1.924964011057055
+-op,p:admins,4.484884020113589
+-op,p:application,2.2766096065907853
+-op,p:apps,-0.014925650216675468
+-op,p:collaborator,4.8415589640523224
+-op,p:collaborators,5.465713273125315
+-op,p:config,0.4062878148596276
+-op,p:email,1.3603188747166302
+-op,p:group,0.825175943299933
+-op,p:groups,0.8281834643638883
+-op,p:mappings,2.708872907853673
+-op,p:member,2.6190165787318125
+-op,p:members,3.1313163524962557
+-op,p:membership,3.3656524442427442
+-op,p:memberships,4.148411783492376
+-op,p:name,-0.1856056319951449
+-op,p:namespace,-0.0418740724710589
+-op,p:organization,1.9591553758053344
+-op,p:organizations,2.178971137026869
+-op,p:orgs,0.7265951146274849
+-op,p:owner,0.27244782787993316
+-op,p:permission,1.8458266904983311
+-op,p:permissions,2.4211908354018927
+-op,p:project,1.3375041969504586
+-op,p:projects,0.9782011306054565
+-op,p:remove,1.8252074032955954
+-op,p:repo,-0.12527370738554078
+-op,p:repos,-0.18560563199514446
+-op,p:rest,0.09662683568907182
+-op,p:role,3.1320375930612387
+-op,p:roles,1.3825420115013403
+-op,p:service,0.9808292530117262
+-op,p:slug,0.6294313661738373
+-op,p:team,2.292573457579799
+-op,p:teams,2.244734398060336
+-op,p:update,1.111857515418131
+-op,p:user,1.9966495802329143
+-op,p:username,2.598397291529077
+-op,p:users,2.367959385179013
+-op,p:workspace,0.43636527009690607
+-op,v:DELETE,0.16322280789665355
+-op,v:PATCH,0.4045798725144718
+-op,v:POST,-0.4647184404438617
+-op,v:PUT,0.424794378947857
+-role,__prior__,-1.938898043969857
+-role,e:admin,2.740579844399862
+-role,e:developer,3.539087540617633
+-role,e:guest,3.0282619168516423
+-role,e:manager,3.3159439893034235
+-role,e:member,3.875559777238846
+-role,e:only,2.845940360057688
+-role,e:read,2.622796808743479
+-role,e:write,1.9296496281835336
+-role,k:array,0.6818249413287474
+-role,k:bool,1.0044435326514258
+-role,k:enum,1.524184520075369
+-role,k:num,0.07075085611784981
+-role,k:object,-0.1497919134963026
+-role,k:str,-1.0187289489869877
+-role,l:body,0.20109088725138918
+-role,l:path,-0.8754916970939965
+-role,l:query,-0.8737107527230017
+-role,n:access,1.3542854832799711
+-role,n:admin,1.5813429339153169
+-role,n:create,2.845940360057688
+-role,n:delete,1.7065060768693239
+-role,n:group,-0.11804321518172234
+-role,n:level,3.3159439893034235
+-role,n:manager,1.1187194119672044
+-role,n:member,0.25567319461186155
+-role,n:name,-0.08525339235873153
+-role,n:organization,0.8310373395154231
+-role,n:owner,0.3715050101369832
+-role,n:permission,4.9253819017375235
+-role,n:permissions,2.3351147362916977
+-role,n:restricted,3.3159439893034235
+-role,n:role,2.7769474885707366
+-role,n:roles,4.494598985645069
+-role,n:type,1.5931773915623206
+-role,n:user,-0.47954519986877076
+-role,w:admin,3.875559777238846
+-role,w:id,0.25567319461186155
+-role,w:name,0.6639832548522571
+-role,w:permission,3.3159439893034235
+-role,w:permissions,3.7214090974115877
+-role,w:role,3.1083046245251795
+-role,w:role_id,3.539087540617633
+-role,w:roleid,3.3159439893034235
+-role,w:roles,3.875559777238846
+-role,w:type,1.9296496281835336
+-victim,__prior__,-1.8094277733613688
+-victim,k:array,-0.03907633352558948
+-victim,k:num,0.5356056527644777
+-victim,k:str,0.33364076334558074
+-victim,l:body,-0.8605941244343578
+-victim,l:path,1.4387491122745981
+-victim,l:query,-0.11311012995699121
+-victim,n:admin,1.646388477052842
+-victim,n:collaborator,2.7168298887542557
+-victim,n:email,0.5012561727498395
+-victim,n:member,2.252524280623158
+-victim,n:membership,2.3601549448155232
+-victim,n:name,-0.31242507683837895
+-victim,n:user,2.9290044086978915
+-victim,n:userid,2.206004264988265
+-victim,n:username,2.647837017267305
+-victim,n:users,2.1370113935013135
+-victim,w:collaborator,3.409977069314201
+-victim,w:id,0.9597559775140909
+-victim,w:member,3.409977069314201
+-victim,w:membershipid,3.409977069314201
+-victim,w:name,0.16293036747930412
+-victim,w:user,4.365488514341637
+-victim,w:user_id,4.891581610238417
+-victim,w:userid,3.227655512520246
+-victim,w:username,2.493686337440046
++op,__prior__,-3.885059874577199
++op,f:access,1.1947110631923534
++op,f:account,0.02984938898304268
++op,f:active,0.880000318352653
++op,f:admin,2.4248997096491816
++op,f:allowed,1.1544371640544133
++op,f:auth,0.3015160461128472
++op,f:authentication,2.4093955231132163
++op,f:before,1.8280397485413884
++op,f:block,0.2594238306275427
++op,f:change,2.6717597875807075
++op,f:client,0.45255630352571297
++op,f:company,0.7846901385483278
++op,f:count,-0.3554711530326542
++op,f:create,1.0663298965441461
++op,f:created,-1.7373955144814262
++op,f:creation,0.18685313779270762
++op,f:data,-0.7393879249346158
++op,f:date,0.15406331496971637
++op,f:delete,1.2486514533381006
++op,f:deletion,0.36717669192398894
++op,f:description,-1.3219748617421643
++op,f:disabled,1.374296640167433
++op,f:display,-0.6224885157384832
++op,f:email,1.2391413547865788
++op,f:enable,1.3218330706316923
++op,f:enabled,0.11971383495507926
++op,f:expiry,1.6421403703995492
++op,f:factor,2.643588910614011
++op,f:fields,-0.39396485779331814
++op,f:first,1.6139694934328532
++op,f:force,0.45255630352571297
++op,f:from,-0.0037672218159423565
++op,f:full,1.6472554710663196
++op,f:group,0.9036101839917863
++op,f:groupname,3.1825854113466985
++op,f:groups,1.004052967022632
++op,f:hours,2.0039304150050525
++op,f:invite,2.6970775955649975
++op,f:items,0.8030392772165245
++op,f:joined,4.568879772466589
++op,f:language,0.16827675221977234
++op,f:last,0.07431257810117398
++op,f:level,1.1157226518737229
++op,f:limit,0.036280279313333
++op,f:link,-0.3869472851346716
++op,f:local,1.1241972788646954
++op,f:location,0.6811494596074876
++op,f:login,1.710768876788646
++op,f:managed,0.3261152051262153
++op,f:manager,0.19402162727132
++op,f:media,1.134892567981443
++op,f:member,1.6945083559168657
++op,f:members,2.448616236266498
++op,f:method,0.19943191999956777
++op,f:mode,-0.016087706203983032
++op,f:name,-0.5069694902768758
++op,f:next,1.2854654264608172
++op,f:organization,1.2730429064622601
++op,f:other,2.126532737097385
++op,f:owner,0.0953380289569341
++op,f:page,0.8800003183526526
++op,f:password,1.0958178295747896
++op,f:permission,2.158081094832311
++op,f:permissions,1.9930013444728623
++op,f:personal,2.712581782100963
++op,f:phone,0.7217763131377586
++op,f:photo,2.4093955231132167
++op,f:policy,-0.4852406335694055
++op,f:pretty,-0.06476988484337065
++op,f:principal,1.8388506646456042
++op,f:profile,0.525828504632039
++op,f:provider,0.8900506542061546
++op,f:public,0.7577826856284036
++op,f:read,1.2189756851919844
++op,f:required,1.4189968190853395
++op,f:role,1.9250718400927327
++op,f:roles,1.9848822200343577
++op,f:scopes,2.3175879738600944
++op,f:self,-0.10394906199531695
++op,f:send,0.6409834178821532
++op,f:site,0.4580059082932779
++op,f:source,-0.39745526273308673
++op,f:status,-1.1298901603660676
++op,f:tags,-0.3355716218166349
++op,f:team,0.9225599327714487
++op,f:time,-0.39496336012290767
++op,f:timestamp,-0.14961909882850533
++op,f:token,0.12153367167206497
++op,f:type,-0.5116368871777335
++op,f:until,2.227073966319262
++op,f:updated,-1.3817627801211376
++op,f:user,1.6045890247474173
++op,f:userid,3.588050519454863
++op,f:username,1.1844895091208154
++op,f:users,2.0604426252683945
++op,f:value,-0.9979368471164545
++op,f:verified,2.1411315365185373
++op,f:version,-0.2753073139920019
++op,f:views,3.364906968140653
++op,f:visibility,1.1241972788646954
++op,f:website,1.7162483425532713
++op,p:account,0.46623640742979333
++op,p:actors,3.875732591906644
++op,p:admin,1.6611162718585555
++op,p:admins,4.4353483798420665
++op,p:application,1.6421403703995496
++op,p:apps,0.48852145221922827
++op,p:collaborator,4.792023323780798
++op,p:collaborators,5.054387588248289
++op,p:conversations,1.5566181969613875
++op,p:email,2.300196231148225
++op,p:group,1.4588794053636591
++op,p:groups,1.0815046945633813
++op,p:invitations,2.8949033388949172
++op,p:kick,5.262026953026534
++op,p:leave,1.9661900870222055
++op,p:mappings,2.3001962311482242
++op,p:member,2.9247563020445986
++op,p:members,3.1684007763547424
++op,p:membership,3.316116803971221
++op,p:memberships,4.406360842968814
++op,p:name,0.1785543349780121
++op,p:namespace,-0.27688087843943254
++op,p:organization,1.7356664284103727
++op,p:organizations,2.048881802867319
++op,p:orgs,1.2894734478583563
++op,p:owner,0.5192711040858802
++op,p:permissions,1.3302013203022085
++op,p:project,0.8312101541832209
++op,p:projects,0.479676609744907
++op,p:remove,2.1050265318764216
++op,p:repo,0.08149262213488129
++op,p:repos,0.10790993545258809
++op,p:rest,-0.06044087375378515
++op,p:role,2.755141396519759
++op,p:roles,0.7402383759774942
++op,p:selected,2.553976751924324
++op,p:service,0.5084367619201697
++op,p:slug,0.5798957259023148
++op,p:team,2.3117570535493006
++op,p:teams,1.9943609639889015
++op,p:update,1.3702066549159078
++op,p:user,2.035771020860711
++op,p:username,2.448616236266498
++op,p:users,2.134616855497344
++op,p:workspace,0.3868296298253826
++op,v:DELETE,0.6438976223959378
++op,v:PATCH,0.5027060872111848
++op,v:POST,-1.019077208756091
++op,v:PUT,0.24991127375984434
++role,__prior__,-2.0735118334961617
++role,e:admin,2.937255343795015
++role,e:developer,3.8535460756691706
++role,e:guest,3.1603988951092252
++role,e:manager,3.448080967561006
++role,e:member,4.259011183777335
++role,e:only,2.5726122302071057
++role,e:read,2.531790235686851
++role,e:write,1.8386430551269055
++role,k:array,0.5129733158234497
++role,k:bool,1.135707868200797
++role,k:enum,1.6022542770626749
++role,k:num,-0.3430773356733483
++role,k:object,0.5213415654939664
++role,k:str,-1.1218074042824457
++role,l:body,0.34231824840188013
++role,l:path,-1.7512050183808523
++role,l:query,-1.1703344451771058
++role,n:access,1.080957353429389
++role,n:admin,1.8947325217779487
++role,n:allowed,1.5509609826751247
++role,n:create,2.7549337870010606
++role,n:delete,1.5509609826751247
++role,n:group,-0.27358830937592105
++role,n:level,2.7549337870010606
++role,n:manager,1.2144887460539118
++role,n:member,0.5213415654939664
++role,n:name,-0.819282758792736
++role,n:organization,1.2144887460539118
++role,n:owner,0.11587645738580177
++role,n:permission,5.006225585607556
++role,n:permissions,4.007696755496429
++role,n:role,2.9780773383152703
++role,n:roles,4.259011183777335
++role,n:type,1.531158355378945
++role,n:user,-0.5031627510204215
++role,w:admin,3.8535460756691706
++role,w:id,0.16466662155523393
++role,w:name,0.3390200087000115
++role,w:permission,3.448080967561006
++role,w:permissions,4.007696755496429
++role,w:role,2.834976494674597
++role,w:roleid,3.448080967561006
++role,w:roles,3.6712245188752157
++role,w:type,1.609801482698058
++victim,__prior__,-1.5870792574615127
++victim,k:array,-0.1997235014533758
++victim,k:num,0.46110218841356
++victim,k:str,0.37776054031289275
++victim,l:body,-0.9778274044892864
++victim,l:path,1.293375418896575
++victim,l:query,0.2108567073215588
++victim,n:admin,1.6744427427430963
++victim,n:collaborator,2.4954232948129267
++victim,n:email,1.2606788318202367
++victim,n:member,2.3675899233030417
++victim,n:membership,2.2722797434987165
++victim,n:name,-0.7009796742032162
++victim,n:owner,0.2981987174767071
++victim,n:selected,3.188570475372872
++victim,n:user,2.8460801664260957
++victim,n:userid,2.9654269240586624
++victim,n:username,2.6438432999312
++victim,n:users,1.068306939172781
++victim,w:collaborator,3.188570475372872
++victim,w:email,0.5293104384400937
++victim,w:id,1.0510651327382745
++victim,w:member,2.6777448516068816
++victim,w:membershipid,3.3708920321668265
++victim,w:name,0.09752802201455602
++victim,w:user,3.450934739840363
++victim,w:user_id,4.469504320834936
++victim,w:userid,3.1885704753728716
++victim,w:username,2.461521743137245
++low,denied,0.3333333333333333
++low,disabled,0.3333333333333333
+ low,guest,0.5
+-low,member,0.5625
+-low,none,0.3333333333333333
+-low,only,0.3
++low,member,0.3333333333333333
++low,only,0.375
+ low,project,0.25
+-low,read,0.6818181818181818
+-low,user,0.3333333333333333
+-low,viewer,0.3333333333333333
+-high,admin,0.7714285714285715
+-high,full,0.3333333333333333
++low,read,0.7
++low,viewer,0.375
++low,waiting,0.3333333333333333
++high,accepted,0.3333333333333333
++high,admin,0.65625
++high,collaborator,0.3333333333333333
+ high,maintainer,0.375
+-high,manager,0.3333333333333333
+-high,member,0.125
+-high,moderator,0.375
++high,manager,0.375
++high,member,0.19999999999999998
++high,moderator,0.3333333333333333
++high,outside,0.3333333333333333
+ high,owner,0.3333333333333333
+ high,project,0.25
+-high,write,0.25
++high,write,0.2
+ lowstr,guest,0.5
+-lowstr,member,0.5625
+-lowstr,read,0.6818181818181818
+-highstr,admin,0.7714285714285715
++lowstr,member,0.3333333333333333
++lowstr,read,0.7
++highstr,admin,0.65625
++highstr,member,0.19999999999999998

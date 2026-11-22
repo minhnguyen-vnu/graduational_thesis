@@ -193,8 +193,8 @@ to guess.
   token outlives `T`; a shorter TTL (VAmPI's is 60 s) would turn real bugs into 401s and
   silently drop them.
 - **404 is not a denial.** A 404 can mean "you may not, and I hide it" or "the resource is not there". A follow-up
-  that gets 404 completes the triple and never raises 970. In the 98 runs of jar LF no follow-up got 404; follow-ups
-  got 200, 201, 401 or 403, or recorded no status (`infra/em-results/lf-wave1-20261118/logs/`, `lf-wave2-20261118/logs/`).
+  that gets 404 completes the triple and never raises 970. In the 100 runs of jar TR2 no follow-up got 404; follow-ups
+  got 200, 201, 401 or 403, or recorded no status (`infra/em-results/tr2-wave1-20261121/logs/`, `tr2-wave2-20261121/logs/`).
 - **The codes are fixed in the tool, not configurable.** A target that denies with another code gives no verdict:
   artifact-keeper's vendor patch answers 401.
 
@@ -245,7 +245,7 @@ A BUG or PASS verdict is only meaningful when **all** of these hold; if any fail
 |---|---|---|
 | **V1** | the credential `c` stays valid (not expired) across `T` — no 401 | long TTL; a 401 makes the attempt VOID (§5.1) |
 | **V2** | repeating the source on the same resource is still meaningful (an update, not a consume) | PUT/PATCH sources first, never DELETE (§5.4) |
-| **V3** | the follow-up status is not a masking 404 | no follow-up got 404 in the 98 runs of jar LF (§5.1) |
+| **V3** | the follow-up status is not a masking 404 | no follow-up got 404 in the 100 runs of jar TR2 (§5.1) |
 | **V4** | `T` actually **took effect** server-side (the role change returned 2xx *and* persisted) | assert the transition's own response |
 | **V5** | `a` is **gated by the removed privilege** (the §2.3 guard) — the post-`T` role is not entitled to `a` on its own | scoping `a` to an admin-only endpoint (§5.2) |
 
@@ -254,11 +254,13 @@ the ones most likely to bite on a real, unfamiliar target.
 
 ### 5.6 The C4 re-login probe
 
-C4 runs only on a would-be fault: the old credential was still allowed after `T`. The victim logs in again and its
-slice of the test is replayed with the fresh credential; then the same slice is sent without credentials
-(`reLoginProbeConfirmsPrivilegeRemoved`, `RestSecurityBuilder.kt`).
+C4 runs only on a would-be fault: the follow-up is 2xx, so the old credential was still allowed after `T`. The victim
+logs in again and its slice of the test is replayed with the fresh credential; then the same slice is replayed with
+only the source sent without credentials (`reLoginProbeConfirmsPrivilegeRemoved`, `RestSecurityBuilder.kt`, jar TR2).
+In both replays every call before the source must end in the same status group (2xx, 4xx, ...) as in the triple;
+otherwise the result is UNCONFIRMED.
 
-| Fresh login, last recorded status of the slice | Same slice without credentials | Result |
+| Fresh login, status of the source | Source without credentials | Result |
 |---|---|---|
 | 403 | a status other than 403 | 970 kept |
 | 403 | 403, or no status | UNCONFIRMED |
@@ -268,8 +270,11 @@ slice of the test is replayed with the fresh credential; then the same slice is 
   is gone; the old one shows whether it is still honoured. Neither result alone raises 970.
 - The follow-up runs before the re-login. On a target that allows one session per user, a re-login first could kill
   the old credential and turn the follow-up into a 401.
-- The 403 can come from an earlier call in the slice than the guarded write. On reports-api it comes from
-  `POST /reports` (`CLAUDE.md` §4).
+- The 403 is read from the source only. A call before the source that changes status group under the fresh
+  credential makes the result UNCONFIRMED: on reports-api 24 attempts with source `PUT /reports/{id}` were discarded
+  this way; the log does not name the call (`docs/results.md` §1). Jar LF read the last status of a call the victim
+  sent, so its 403 could come from an earlier call such as `POST /reports`.
+- The status-group check does not see a call that keeps its group but leaves different state.
 - The anonymous replay removes a 403 that does not depend on who calls.
 - The re-login needs no change to authentication: EvoMaster logs every user in at the start of each test
   (`AuthUtils.getTokens()`), so the probe is a second individual.

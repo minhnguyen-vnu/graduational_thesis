@@ -3,8 +3,8 @@ import os
 import sys
 import time
 
-PROJECT = os.environ.get("CLAUDE_PROJECT_DIR", "/Users/minhnguyen/IdeaProjects/graduational-thesis")
-LOG = os.path.join(PROJECT, ".claude", "logs", "instructions-loaded.jsonl")
+CLAUDE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOG = os.path.join(CLAUDE_DIR, "logs", "instructions-loaded.jsonl")
 
 
 def main():

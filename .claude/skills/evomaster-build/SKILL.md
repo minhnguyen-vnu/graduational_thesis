@@ -31,12 +31,12 @@ unzip -p <jar> 'org/evomaster/core/EMConfig*.class' | strings | grep -o "statefu
 ```
 
   Jars from SR on print nothing: their `EMConfig.kt` equals v6.1.1. Tell them apart by the model:
-  `unzip -p <jar> stateful-authz-model.csv | shasum -a 256` gives `dcc77b59ed0f…` for ND and LF and `b2deef150bf8…` for M2; ND and LF differ in code only, so tell them apart by the jar's sha256.
+  `unzip -p <jar> stateful-authz-model.csv | shasum -a 256` gives `dcc77b59ed0f…` for ND, LF and TR2 and `b2deef150bf8…` for M2; ND, LF and TR2 differ in code only, so tell them apart by the jar's sha256.
 
 | Jar | Commit | Use |
 |---|---|---|
-| `evomaster-LF-d559dc73.jar` | HEAD `2c3f281f13` + `wip/logic-fix-20261118-tree.patch` (not committed; `THESIS` comments, the ND change and the logic fix of builder and oracle, `wip/logic-fix-20261118.md`); model as ND | every current number from 2026-11-18 (`docs/results.md`); no reset, declared transition or D1 |
-| `evomaster-ND-07ebf19f.jar` | HEAD `2c3f281f13` + `wip/nodup-tokens-20261113-tree.patch` (not committed; `THESIS` comments plus the ND change, which alone is `nodup-tokens-20261113.patch` against the commented tree): `f:` without path params, `tokens` without regex, no-duplication model (`infra/analysis/lexicon-rules/m2-nodup-20261112/`) | fallback; quoted 2026-11-13 to 11-18 |
+| `evomaster-TR2-3beccb00.jar` | HEAD `2c3f281f13` + `wip/trim-restore-20261121-tree.patch` (not committed; the LF tree plus the C4 change `wip/c4-source-status-20261121.md` and the code cleanup `wip/trim-restore-20261121.patch`); model as ND | every current number from 2026-11-22 (`docs/results.md`); no reset, declared transition or D1 |
+| `evomaster-LF-d559dc73.jar` | HEAD `2c3f281f13` + `wip/logic-fix-20261118-tree.patch` (not committed; `THESIS` comments, the ND change and the logic fix of builder and oracle, `wip/logic-fix-20261118.md`); model as ND | fallback; quoted 2026-11-18 to 11-22 |
 
 The filename carries the first 8 hex digits of the jar's sha256. Every other jar: `infra/evomaster-ext/jars.md`.
 

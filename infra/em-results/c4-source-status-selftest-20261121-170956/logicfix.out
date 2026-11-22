@@ -1,0 +1,63 @@
+exercises RestSecurityBuilder.kt guardedSources :892,960 loginName :1909,1915 reducedRoleValues :1595,1601 victimField :1559 setRoleFieldToReduced :2214 trimToTargetFields :2243,2237 404 : C4 :,1381 RestSecurityOracle.kt anchored :606
+jar-new f3412dc87f1083a3  jar-ref 07ebf19f9682497e
+PASS  gone      [private fun routeLooksMissing(]  HEAD 1, tree 0
+PASS  gone      [private fun keepOnlyTargetFields(]  HEAD 1, tree 0
+PASS  gone      [private fun setUserNameFieldsToVictim(]  HEAD 1, tree 0
+PASS  gone      [private fun anyAuthenticatedSuccess(]  HEAD 1, tree 0
+PASS  gone      [private fun lastRecordedStatus(]  HEAD 1, tree 0
+PASS  gone      [transitionNotFoundSeen]  HEAD 5, tree 0
+PASS  gone      [opEvidenceCache]  HEAD 2, tree 0
+PASS  gone      [stopSources]  HEAD 4, tree 0
+PASS  gone      [if (best == null || score > bestScore)]  HEAD 1, tree 0
+PASS  gone      [for (srcIndex in actions.indices)]  HEAD 1, tree 0
+PASS  gone      [for (tIndex in]  HEAD 1, tree 0
+PASS  no-comments    0 non-THESIS comment lines added over HEAD
+PASS  no-prints      0 added
+PASS  model-same     stateful-authz-model.csv dcc77b59ed0f94ee in both jars
+PASS  jar-has-change new jar: trimToTargetFields 1, routeLooksMissing 0; ref jar: trimToTargetFields 0, routeLooksMissing 1
+ran post-source nd=0 lf=0
+ran login-name nd=0 lf=0
+ran enum-lower nd=0 lf=0
+ran two-role-fields nd=0 lf=0
+ran bool-victim nd=0 lf=0
+ran first-404 nd=0 lf=0
+ran query-username nd=0 lf=0
+ran nested-role nd=0 lf=0
+ran num-enum nd=0 lf=0
+ran c4-intact nd=0 lf=0
+ran no-path-id nd=0 lf=0
+ran source-401 nd=0 lf=0
+PASS  post-source-ran  both jars exit 0, requests nd 500 lf 505
+PASS  post-source-sources  lf ['guarded source candidates: 2 [PUT:/docs/{id}, POST:/notes]'] | nd ['guarded source candidates: 1 [PUT:/docs/{id}]']
+PASS  post-source-970  Fault970 lines lf 1 nd 0; lf ['# Fault970. Stateful Authorization: privilege persists after a permission-reducing transition.']
+PASS  post-source-c4-ran  lf log has anonymous control on POST:/notes: True
+PASS  login-name-ran  both jars exit 0, requests nd 372 lf 366
+PASS  login-name-target  lf armed ['PUT /users/bob/role by boss -> 200'] | nd calls on /users/opr/role ['PUT /users/opr/role by boss -> 404']
+PASS  login-name-970  Fault970 lines lf 1 nd 0
+PASS  enum-lower-ran  both jars exit 0, requests nd 405 lf 402
+PASS  enum-lower-values  armed role values nd ['EVOMASTER', 'user'] lf ['user']
+PASS  enum-lower-no-high  nd ['me reducedRoleValues 3'] | lf ['e reducedRoleValues [user]']
+PASS  enum-lower-970-kept  Fault970 lines lf 1 nd 1
+PASS  two-role-fields-ran  both jars exit 0, requests nd 400 lf 400
+PASS  two-role-fields-second-field  armed (permission, role) nd [('1', '238')] lf [('1', '1')]
+PASS  bool-victim-ran  both jars exit 0, requests nd 517 lf 485
+PASS  bool-victim-victim-score  nd ['candidate PUT:/admin/role score 3.158737211179404 roleField body:role victimField body:client_id'] | lf ['candidate PUT:/admin/role score 3.158737211179404 roleField body:role victimField null']
+PASS  bool-victim-bool-reduce  nd ['current roles [false], reduced role values [true]'] | lf ['current roles [false], reduced role values []']
+PASS  bool-victim-guard-source  nd ['guarded source candidates: 2 [PUT:/docs/{id}, PUT:/admin/role]'] | lf ['guarded source candidates: 1 [PUT:/docs/{id}]']
+PASS  bool-victim-no-elevating-transition  armed PATCH with is_admin=true: nd 2 lf 0
+PASS  first-404-ran  both jars exit 0, requests nd 417 lf 401
+PASS  first-404-skip-victim  Fault970 lines lf 1 nd 0; armed nd ['/users/bob/role->404', '/users/bob/role->404', '/users/bob/role->404', '/users/bob/role->404'] lf ['/users/bob/role->404', '/users/boss/role->200']
+PASS  query-username-ran  both jars exit 0, requests nd 459 lf 417
+PASS  query-username-login-field  armed (path, query username, code) nd [('/users/bob/role', 'Ftn9Zjp5KNkNn', 400), ('/users/bob/role', 'p4togRvxWXb', 400), ('/users/bob/role', 'tM7iKW7SJRmpL', 400)] lf [('/users/bob/role', 'bob', 200)]; Fault970 lf 1 nd 0
+PASS  nested-role-ran  both jars exit 0, requests nd 433 lf 412
+PASS  nested-role-keep-parent  armed (settings.role, code) nd [(None, 400), (None, 400), (None, 400)] lf [('VIEWER', 200)]; Fault970 lf 1 nd 0
+PASS  num-enum-ran  both jars exit 0, requests nd 393 lf 402
+PASS  num-enum-set  nd 'could not set reduced role 10': True; lf armed access_level [10]; Fault970 lf 1 nd 0
+PASS  c4-intact-ran  both jars exit 0, requests nd 499 lf 507
+PASS  c4-intact-unlock  UNCONFIRMED nd 2 lf 6; 'already reduced in this phase' nd 2 lf 0
+PASS  no-path-id-ran  both jars exit 0, requests nd 357 lf 342
+PASS  no-path-id-skip  builder PUT /users/{id} calls nd ['/users/230->404', '/users/590->404', '/users/77->403'] lf []; lf 'could not target victim': True
+PASS  source-401-ran  both jars exit 0, requests nd 352 lf 334
+PASS  source-401-stop  VOID attempts with source 401 on victim bob: nd 7 lf 1
+PASS  no-sleep       0 'Entering Sleep' in pmset log since 2026-11-21 17:10:47
+output /Users/minhnguyen/IdeaProjects/graduational-thesis/infra/em-results/c4-source-status-selftest-20261121-170956/logicfix

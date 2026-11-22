@@ -8,10 +8,50 @@ viết lại lịch sử ngày 2026-09-01.
 
 ## Jar đang trích số
 
+`EvoMaster/evomaster-TR2-3beccb00.jar` (sha16 `3beccb0086b6983a`, `.sha256` cạnh jar) = HEAD `2c3f281f13` +
+`wip/trim-restore-20261121-tree.patch` (chưa commit) = cây CS2 + `wip/trim-restore-20261121.patch`; cùng mô hình.
+Gỡ mã thừa ở lượt 2 và bước chọn source (R1–R6, R10, R11 trong `wip/audit-970-54-20261121.md` và
+`wip/audit-970-e7-20261121.md`); R12: mỗi trường vai trò một giá trị nâng (enum: giá trị cao nhất, bool `true`, số `0`),
+một kế hoạch, một lời nâng cho mỗi operator; cộng S2: bỏ ứng viên transition không có `victimField`. Trên 4 target chỉ
+S2 đổi hành vi, ở artifact-keeper (`POST /api/v1/admin/sso/oidc`) và pyLoad. Self-test
+`em-results/trim-restore-selftest-20261121-222605.out` 63 PASS / 0 FAIL: log builder của 20 ca cũ trùng jar CS2,
+trừ khối ứng viên bị S2 bỏ. Các ca stub mới chạy seed 2, chọn sau khi quét seed 1–8 để mọi ca vào lượt 2.
+`evomaster-TR-62e87c79.jar` và `evomaster-TR-12fbaa41.jar` (chưa có R12) đã bị thay, không dùng. Sau khi dựng TR2,
+ba comment `THESIS` được sửa, số dòng giữ nguyên; bản dựng lại từ cây hiện tại có 9 file `RestSecurityBuilder*.class`
+trùng từng byte với TR2, nên TR2 vẫn là jar của cây này.
+
+Đo lại đầy đủ ngày 2026-11-21 tới 22 thay cho cổng, vì cách dựng bộ ba và C4 đổi (`em-results/tr2-wave1-20261121/`,
+`tr2-wave2-20261121/`, 100 hàng, cùng harness với CS2 và LF trừ jar và nhãn; artifact-keeper bản vá 5 seed):
+reports-api 12/20 & 0/20, vampi-seeded 6/20 & 0/20, pyLoad 5/5 & 0/5, artifact-keeper 5/5 & 0/5. So với CS2: 1 trong 93
+hàng ghép khác (vampi-seeded seed 15, mất; `tr2-wave1-20261121/CORRECTION-vampi-seed15.md`), McNemar chính xác p = 1,0.
+So với LF: mất 8 hàng reports-api (mất từ CS2, p = 0,008) và vampi-seeded seed 15; thêm 0; p = 0,004. Integrity sạch
+(0 det970 thiếu bộ ba, 0 FP, 0 ERR, máy không ngủ, không luật dừng nổ); audit 30 PASS, 5 FAIL đều là pyLoad (cookie
+phiên, parser không đọc được). Đếm bằng `tr2-wave1-20261121/tr2_counts.py` (`tr2-counts.out`), chi tiết từng seed
+`tr2_details.py` (`tr2-details.out`). Số: `docs/results.md`. Chọn TR2 làm jar trích số ngày 2026-11-22 (user).
+
+## Jar ứng viên, không trích số
+
+`EvoMaster/evomaster-CS2-f3412dc8.jar` (sha256 `f3412dc87f1083a3…c9c0`, sha16 `f3412dc87f1083a3`, `.sha256` cạnh jar)
+= HEAD `2c3f281f13` + `wip/c4-source-status-20261121-tree.patch` (chưa commit) = cây LF + `wip/c4-source-status-20261121.patch`;
+cùng mô hình với LF. Probe C4 chỉ kết luận trên mã của source; mỗi call trước source phải ra cùng nhóm mã như trong bộ
+ba; đối chứng ẩn danh chỉ bỏ credential ở source; đổi tên `refusedTransitionVictims` thành `skippedTransitionVictims`;
+gom các nhánh theo mã transition trong `tryReducedRoles`. Chi tiết: `wip/c4-source-status-20261121.md`. Self-test
+`em-results/c4-source-status-selftest-20261121-170956.out` 57 PASS / 0 FAIL. Đo wave 1 đủ 90 hàng
+(`em-results/cs2-wave1-20261121/`, `cs2-wave1-analysis.out`): reports-api 12/20 & 0/20, vampi-seeded 7/20 & 0/20,
+pyLoad 5/5 & 0/5; so với LF mất 8 hàng reports-api, McNemar p = 0,008. Lượt artifact-keeper dừng sau vuln seed 1–3
+(`em-results/cs2-wave2-20261121/`). Không trích số; chỉ dùng để ghép đôi với TR2.
+
+`EvoMaster/evomaster-CS-b187061e.jar`: bản trước CS2, đòi mọi call trước source phải 2xx; bị thay sau review ngày
+2026-11-21. Self-test `em-results/c4-source-status-selftest-20261121-084336.out`. Không đo.
+
+## Jar dự phòng
+
 `EvoMaster/evomaster-LF-d559dc73.jar` (sha256 `d559dc730701745e…ffc1`, sha16 `d559dc730701745e`, `.sha256` cạnh
 jar) = HEAD `2c3f281f13` + `wip/logic-fix-20261118-tree.patch` (chưa commit; gồm comment `THESIS`, thay đổi ND và sửa
-logic thiếu, sai và thừa của builder và oracle theo hai lượt review); cùng mô hình với ND (`dcc77b59ed0f…`). Chi tiết
-ở "Dòng mã hiện tại".
+logic thiếu, sai và thừa của builder và oracle theo hai lượt review); cùng mô hình với ND (`dcc77b59ed0f…`). Chi tiết:
+`wip/logic-fix-20261118.md`; self-test `selftest/logic-fix-20261118.sh` 48 PASS, 0 FAIL
+(`em-results/logic-fix-selftest-20261118-014908.out`). Cây trước lượt sửa logic: `wip/pre-refactor-20261118.patch`.
+`evomaster-LF-1b897344.jar` là bản trước khi sửa theo review của agent; không dùng.
 
 Đo lại đầy đủ ngày 2026-11-18 thay cho cổng, vì cách dựng bộ ba đổi (`em-results/lf-wave1-20261118/`,
 `lf-wave2-20261118/`, 98 hàng, cùng protocol và harness với ND trừ jar và nhãn): reports-api 20/20 & 0/20,
@@ -19,9 +59,7 @@ vampi-seeded 7/20 & 0/20, pyLoad 5/5 & 0/5, artifact-keeper 5/5 & 0/3. So với 
 vampi-seeded seed 15 và artifact-keeper seed 3, cả ba là lượt ND không dựng được bộ ba; không hàng nào mất; McNemar
 chính xác p = 0,25. Integrity sạch (0 det970 thiếu bộ ba, 0 FP, 0 ERR, máy không ngủ, không luật dừng nổ); audit
 45 + 10 PASS, 0 FAIL. Đếm bằng `lf-wave1-20261118/lf_counts.py` (`lf-counts-cp.out`). Số: `docs/results.md`. Chọn LF
-làm jar trích số ngày 2026-11-18 (user).
-
-## Jar dự phòng
+làm jar trích số ngày 2026-11-18 (user); jar trích số từ 2026-11-18 tới 2026-11-22.
 
 `EvoMaster/evomaster-ND-07ebf19f.jar` (sha256 `07ebf19f9682497e…3897`, sha16 `07ebf19f9682497e`, `.sha256` cạnh
 jar) = HEAD `2c3f281f13` + `wip/nodup-tokens-20261113-tree.patch` (chưa commit; gồm comment `THESIS` và thay đổi
@@ -52,13 +90,11 @@ một jar `em-results/p2f-full-20261015/runs.csv`; cổng 21/21 hai lần. Còn 
 
 ## Dòng mã hiện tại
 
-Cây mã chưa commit (2026-11-18) = HEAD `2c3f281f13` + `wip/logic-fix-20261118-tree.patch` (`git diff HEAD` trùng
-từng byte, 2026-11-18), tức mã của jar LF: 4 file (`RestSecurityBuilder.kt`, `RestSecurityOracle.kt`,
-`ExperimentalFaultCategory.kt`, `stateful-authz-model.csv`). Cây trước lượt sửa logic: `wip/pre-refactor-20261118.patch`
-(logic trùng jar ND, chỉ thêm comment `THESIS`). Từng mục sửa, self-test, review và diễn tập rollback:
-`wip/logic-fix-20261118.md`. Self-test `selftest/logic-fix-20261118.sh`: 48 PASS, 0 FAIL
-(`em-results/logic-fix-selftest-20261118-014908.out`). `evomaster-LF-1b897344.jar` là bản trước khi sửa theo review
-của agent; không dùng. Đo lại đầy đủ: mục "Jar đang trích số".
+Cây mã chưa commit = HEAD `2c3f281f13` + `wip/trim-restore-20261121-tree.patch` (`git diff HEAD` trùng từng byte,
+2026-11-22, sha16 `f94f7cb8a94f4c53`), tức mã của jar TR2: 4 file (`RestSecurityBuilder.kt`, `RestSecurityOracle.kt`,
+`ExperimentalFaultCategory.kt`, `stateful-authz-model.csv`). Thứ tự các lớp: cây LF (`wip/logic-fix-20261118-tree.patch`),
+cộng C4 (`wip/c4-source-status-20261121.patch`, ra cây CS2), cộng đợt gỡ mã (`wip/trim-restore-20261121.patch`).
+Diễn tập rollback từ cây CS2 sang cây TR2 và ngược lại: trùng từng byte.
 
 `2c3f281f13` (HEAD, 2026-11-13, chưa push) = `9c4be5b1dc` + phần mã của `wip/shorten-logic-20261112.patch`, không kèm
 comment `THESIS`: 98 dòng đổi trùng phần mã của bản vá. Gộp logic lặp trong phần ta thêm, giữ vòng `for`, hành vi và log: 9 mục, −70/+33 dòng; dòng mã ta thêm trên v6.1.1

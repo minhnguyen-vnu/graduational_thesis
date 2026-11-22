@@ -1,6 +1,6 @@
 # pyLoad CVE-2026-41133: a real, third-party stateful-authorization bug
 
-> Numbers: `docs/results.md` §1, §4 (jar LF). The other target with a bug we did not write:
+> Numbers: `docs/results.md` §1, §4 (jar TR2). The other target with a bug we did not write:
 > `docs/artifact-keeper-target.md`.
 >
 > Setup facts: `/api/*` answers an authorization failure with **401** (INCONCLUSIVE), `/json/*` with **403**, so
@@ -108,7 +108,7 @@ this target would have been unusable.
 
 ## 5. Result
 
-Numbers: `docs/results.md` §1, §4 (jar LF). The builder before the changes below missed this bug. Five builder changes
+Numbers: `docs/results.md` §1, §4 (jar TR2). The builder before the changes below missed this bug. Five builder changes
 let the tool find it: role and victim binding on query parameters, ranked role values with numeric fallbacks, POST as
 a fallback source, the C4 re-login probe, and retries over operator and value. They were written while running this
 target, so pyLoad is a development target, like artifact-keeper. The full record of that work, with numbers from

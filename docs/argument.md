@@ -3,22 +3,22 @@
 Mỗi khẳng định của luận văn một mục: con số, đối chứng, trường hợp không do ta viết, giới hạn. Số trích từ file
 nguồn ghi bên cạnh; con số nào không có nguồn thì không vào luận văn.
 
-Jar chính: `LF` (`evomaster-LF-d559dc73.jar`, mọi số ở `docs/results.md`, chạy 2026-11-18). Hàng nào mang số của jar
+Jar chính: `TR2` (`evomaster-TR2-3beccb00.jar`, mọi số ở `docs/results.md`, chạy 2026-11-21). Hàng nào mang số của jar
 khác thì ghi tên jar ở đầu hàng.
 
 ## K1. Khi dựng được bộ ba hợp lệ, oracle phán đúng
 
 | | |
 |---|---|
-| Con số, jar `LF` | Mọi lượt dựng được bộ ba trên bản lỗi đều ra 970 (20/20, 7/7, 5/5, 5/5); 0 FP trong 48 lượt bản đã vá, trên 49 bộ ba thực hiện trên mã đã vá (`docs/results.md` §1, §1a) |
+| Con số, jar `TR2` | Mọi lượt dựng được bộ ba trên bản lỗi đều ra 970 (12/12, 6/6, 5/5, 5/5); 0 FP trong 50 lượt bản đã vá, trên 49 bộ ba thực hiện trên mã đã vá (`docs/results.md` §1, §1a) |
 | Đối chứng | Mỗi target có bản đã vá chỉ khác đúng chỗ lỗi; bộ ba trên bản đã vá đọc `200/200/403` hoặc `201/200/403`. Bản vá của artifact-keeper là của vendor |
-| Giới hạn | Bản vá của artifact-keeper trả 401 cho token cũ, nên 3 lượt không dựng được bộ ba: không báo nhầm, cũng không có TN. "Phát hiện khi có bộ ba hợp lệ" gần như định nghĩa, không trích làm độ chính xác (`docs/results.md` §2) |
+| Giới hạn | Bản vá của artifact-keeper trả 401 cho token cũ, nên 5 lượt không dựng được bộ ba: không báo nhầm, cũng không có TN. C4 chỉ chạy khi follow-up 2xx, nên không góp vào số 0 FP. "Phát hiện khi có bộ ba hợp lệ" gần như định nghĩa, không trích làm độ chính xác (`docs/results.md` §2) |
 
 ## K2. Oracle bắt được lỗi thật
 
 | | |
 |---|---|
-| Con số, jar `LF` | pyLoad CVE-2026-41133: bản lỗi 5/5, bản vá 0/5, Fisher một phía p = 0,004. artifact-keeper, lỗi vendor #1821: bản lỗi 5/5, bản vá của vendor 0/3, p = 0,018 (`docs/results.md` §1) |
+| Con số, jar `TR2` | pyLoad CVE-2026-41133: bản lỗi 5/5, bản vá 0/5, Fisher một phía p = 0,004. artifact-keeper, lỗi vendor #1821: bản lỗi 5/5, bản vá của vendor 0/5, p = 0,004 (`docs/results.md` §1) |
 | Đối chứng | pyLoad: bản vá do ta viết. artifact-keeper: bản vá của vendor `e64cc5c608` |
 | Không do ta viết | pyLoad: lỗi của pyLoad, upstream chưa vá; bản đối chứng, endpoint reseed và spec `/json/*` là của ta (`docs/tier2b-pyload-target.md` §3). artifact-keeper: lỗi, bản vá, mã app và spec là của vendor; ta chỉ bỏ `DELETE /users/{id}` khỏi spec và chỉnh cách dựng container (`docs/artifact-keeper-target.md` §2) |
 | Giới hạn | Một CVE và một lỗi vendor; mã và mô hình không chứa chuỗi nào của app (`docs/results.md` §5); số của hai target không nói gì về recall trên app lạ. |
@@ -27,7 +27,7 @@ khác thì ghi tên jar ở đầu hàng.
 
 | | |
 |---|---|
-| Con số, mô hình bỏ lặp (jar `ND`, `LF`) | Trên nửa thi của corpus gán nhãn lại (237 spec, 8.674 op ghi, 153 op T): 101 op T có điểm dương (66,0%, Clopper–Pearson 57,9–73,5%); 523 trong 624 op điểm dương mang nhãn N (`docs/results.md` §7). Trên target, xếp từ spec tĩnh: op T hạng 1 ở reports-api, vampi-seeded, pyLoad; hạng 3 trong 4 op khả dụng ở artifact-keeper (`lexicon-rules/m2-nodup-20261112/compare_targets_nodup.out`) |
+| Con số, mô hình bỏ lặp (jar `ND`, `LF`, `TR2`) | Trên nửa thi của corpus gán nhãn lại (237 spec, 8.674 op ghi, 153 op T): 101 op T có điểm dương (66,0%, Clopper–Pearson 57,9–73,5%); 523 trong 624 op điểm dương mang nhãn N (`docs/results.md` §7). Trên target, xếp từ spec tĩnh: op T hạng 1 ở reports-api, vampi-seeded, pyLoad; hạng 3 trong 4 op khả dụng ở artifact-keeper (`lexicon-rules/m2-nodup-20261112/compare_targets_nodup.out`) |
 | Con số, mô hình `M1` (jar `P2e`, `P2f`) | Kiểm chéo theo nhà cung cấp 5 phần × 4 lần lặp: op T đứng đầu ở 16–18, trong 4 đầu ở 21–25 của 47 spec test (`infra/evomaster-ext/wip/p2-design-20261012.md` §1) |
 | Con số, bộ từ vựng (jar `L` tới `AF2`) | Endpoint `R` hạng 1 ở 4 trong 6 spec test, top-8 ở 6 (`docs/lexicon.md` §7). Bộ từ viết tay trước jar `L` (8 từ path + 9 từ param, `firstOrNull`): 0 trong 6 |
 | Đối chứng | Từ vựng (AF2) sang M1 (P2f) trùng từng seed ở mọi ô 970; M1 sang M2 trùng 90/90 hàng; M2 sang mô hình bỏ lặp mất 2 trong 98 hàng (vampi-seeded seed 15, artifact-keeper seed 3, cả hai không dựng được bộ ba), không thêm hàng nào, McNemar p = 0,5. Sửa logic (ND sang LF, cùng mô hình) thêm 3 hàng, không mất hàng nào, McNemar p = 0,25 (`docs/results.md` §6) |
@@ -38,8 +38,9 @@ khác thì ghi tên jar ở đầu hàng.
 
 | | |
 |---|---|
-| Con số, jar `LF` | Mọi FN là lượt không dựng được bộ ba; 0 FN có bộ ba; cả 13 FN ở vampi-seeded (`docs/results.md` §1a). vampi-seeded 7/20 |
-| Giới hạn | Giới hạn nằm ở bước search dựng bộ ba. Search phá điều kiện tiền đề: hạ quyền làm source 403, xoá tài khoản nạn nhân (`docs/results.md` §7) |
+| Con số, jar `TR2` | Mọi FN là lượt không dựng được bộ ba; 0 FN có bộ ba. 22 FN: 14 ở vampi-seeded (8 lượt mọi lần thử VOID, 6 lượt không có lần thử), 8 ở reports-api (C4 bỏ mọi lần thử không VOID) (`docs/results.md` §1a). reports-api 12/20, vampi-seeded 6/20 |
+| Đối chứng | Thay đổi C4 (jar LF sang CS2) mất đúng 8 hàng reports-api đó, không thêm hàng nào, McNemar p = 0,008 (`docs/results.md` §6) |
+| Giới hạn | Search phá điều kiện tiền đề: hạ quyền làm source 403, xoá tài khoản nạn nhân. C4 bỏ bộ ba khi một call trước source đổi nhóm mã (`docs/results.md` §7) |
 
 ## Ranh giới phải viết
 
@@ -57,4 +58,4 @@ khác thì ghi tên jar ở đầu hàng.
 | artifact-keeper có phải cài cắm? | Mã app, lỗi, bản vá là của vendor; mã công cụ không chứa chuỗi nào của app; spec của app không thuộc corpus học |
 | Mô hình có quá khớp? | Mô hình bỏ lặp đo trên nửa thi chưa dùng để học (K3); số kiểm chéo của M1 là thăm dò |
 | Vì sao vampi-seeded thấp? | K4 |
-| 0 FP có ý nghĩa không? | 48 lượt, trên 30 bộ ba thực hiện trên mã đã vá (K1) |
+| 0 FP có ý nghĩa không? | 50 lượt bản đã vá, 49 bộ ba thực hiện trên mã đã vá trong 31 lượt; 0/31, Clopper–Pearson [0; 11,2]% (K1) |
