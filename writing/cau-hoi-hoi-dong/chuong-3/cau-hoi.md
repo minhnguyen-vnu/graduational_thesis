@@ -2,8 +2,8 @@
 
 Đoạn đầu mỗi câu là câu trả lời nói trong khoảng 30 giây. Phần sau dùng khi bị hỏi tiếp. Dòng `Nguồn` để tự tra lại.
 `B:` là `EvoMaster/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt`, `O:` là
-`.../problem/rest/oracle/RestSecurityOracle.kt`, repo `/Users/minhnguyen/IdeaProjects/EvoMaster`, HEAD `9c4be5b1dc`.
-Mã được trỏ bằng tên hàm, vì cây làm việc còn các dòng `// THESIS` chưa commit nên số dòng lệch với HEAD.
+`.../problem/rest/oracle/RestSecurityOracle.kt`, repo `/Users/minhnguyen/IdeaProjects/EvoMaster`, viết theo mã ở commit `18e283c245`.
+Mã được trỏ bằng tên hàm, vì số dòng đổi giữa các bản mã sau đó.
 
 Ví dụ dùng xuyên chương: reports-api bản lỗi, seed 1, jar M2. Test:
 `infra/em-results/m2-wave1-20261108/tests/t1-vuln-seed1/EvoMaster_faults_Test.py`; log:

@@ -6,7 +6,7 @@ Chạy lại mọi target với mô hình M2 (Naive Bayes rút lại từ corpus
 
 ## Jar
 
-`EvoMaster/evomaster-M2-917c57dd.jar` = jar DC (HEAD `9c4be5b1dc`, dòng SR: không reset, không transition khai báo,
+`EvoMaster/evomaster-M2-917c57dd.jar` = jar DC (HEAD `18e283c245`, dòng SR: không reset, không transition khai báo,
 không D1) thay `core/src/main/resources/stateful-authz-model.csv` bằng M2 (`m2-model-20261107/
 stateful-authz-model.csv`, sha256 `b2deef150bf8…`). Dựng 2026-11-08; M1 khôi phục về cây mã ngay sau khi dựng.
 Self-test: mô hình trong jar có sha M2; `EMConfig` không còn cờ `statefulAuthz*` (jar không reset).

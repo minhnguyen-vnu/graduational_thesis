@@ -19,10 +19,9 @@ Soát toàn bộ ngày 2026-11-10; các lỗi tìm được và phần mở rộ
 |---|---|---|
 | 1 | Viết phần baseline sau khi chạy lại: mở đầu chương 5 gọi baseline là "EvoMaster v6.1.1", trong khi số ở mục 5.6 (vampi-seeded 0/20 lượt dựng được bộ ba, 17/20 lượt có F209) lấy từ batch cũ `infra/em-results/tier2-trials/`. Không ghi ngày hay jar vào khóa luận. | `chapters/chapter5.tex:8`, phần baseline |
 | 2 | Viết kết quả pyLoad dev101 sau khi chạy. Câu về bản vá upstream đã sửa theo mã nguồn: nhà phát triển vá từ dev98 bằng cách xóa phiên, khóa luận không dùng bản vá đó làm đối chứng. | `chapters/chapter4.tex`, phần pyLoad |
-| 3 | Commit mô hình M2 vào nhánh EvoMaster để GitHub khớp với số đo (HEAD còn M1). Chờ đồng ý. | repo EvoMaster |
-| 4 | Chú thích trong `infra/pyload-cve/Dockerfile` và `patch_pyload.py` còn ghi upstream chưa vá. | `infra/pyload-cve/` |
-| 5 | Chạy bộ kiểm ngữ cảnh `infra/context-eval/questions.md`, vì `docs/results.md` và `docs/metamorphic-authz-relations.md` đã đổi. | |
-| 6 | Tùy chọn: bảng điều kiện hợp lệ của bộ ba viết lại theo mã, đặt ở mục 3.2. | `chapters/chapter3.tex` |
+| 3 | Chú thích trong `infra/pyload-cve/Dockerfile` và `patch_pyload.py` còn ghi upstream chưa vá. | `infra/pyload-cve/` |
+| 4 | Chạy bộ kiểm ngữ cảnh `infra/context-eval/questions.md`, vì `docs/results.md` và `docs/metamorphic-authz-relations.md` đã đổi. | |
+| 5 | Tùy chọn: bảng điều kiện hợp lệ của bộ ba viết lại theo mã, đặt ở mục 3.2. | `chapters/chapter3.tex` |
 
 Nguồn của đoạn BACScan ở mục 2.4 là phần tóm tắt bài báo, đọc qua Semantic Scholar vì trang ACM chặn tải tự động; đoạn
 GraphQLer dựa trên phần tóm tắt arXiv.

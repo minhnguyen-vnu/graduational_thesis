@@ -35,8 +35,8 @@ unzip -p <jar> 'org/evomaster/core/EMConfig*.class' | strings | grep -o "statefu
 
 | Jar | Commit | Use |
 |---|---|---|
-| `evomaster-TR2-3beccb00.jar` | HEAD `2c3f281f13` + `wip/trim-restore-20261121-tree.patch` (not committed; the LF tree plus the C4 change `wip/c4-source-status-20261121.md` and the code cleanup `wip/trim-restore-20261121.patch`); model as ND | every current number from 2026-11-22 (`docs/results.md`); no reset, declared transition or D1 |
-| `evomaster-LF-d559dc73.jar` | HEAD `2c3f281f13` + `wip/logic-fix-20261118-tree.patch` (not committed; `THESIS` comments, the ND change and the logic fix of builder and oracle, `wip/logic-fix-20261118.md`); model as ND | fallback; quoted 2026-11-18 to 11-22 |
+| `evomaster-TR2-3beccb00.jar` | `9e779c15dd` + `wip/trim-restore-20261121-tree.patch` (same code as HEAD `a44d91f478`, which drops the `THESIS` comments; the LF tree plus the C4 change `wip/c4-source-status-20261121.md` and the code cleanup `wip/trim-restore-20261121.patch`); model as ND | every current number from 2026-11-22 (`docs/results.md`); no reset, declared transition or D1 |
+| `evomaster-LF-d559dc73.jar` | `9e779c15dd` + `wip/logic-fix-20261118-tree.patch` (not committed; `THESIS` comments, the ND change and the logic fix of builder and oracle, `wip/logic-fix-20261118.md`); model as ND | fallback; quoted 2026-11-18 to 11-22 |
 
 The filename carries the first 8 hex digits of the jar's sha256. Every other jar: `infra/evomaster-ext/jars.md`.
 

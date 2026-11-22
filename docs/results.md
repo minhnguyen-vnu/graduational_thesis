@@ -7,8 +7,9 @@ thesis.
 
 ## 0. Provenance
 
-- Jar `evomaster-TR2-3beccb00.jar` = HEAD `2c3f281f13` (branch `stateful-authz-oracle`, not pushed) plus
-  `infra/evomaster-ext/wip/trim-restore-20261121-tree.patch`, not committed. That tree is the LF tree plus two changes:
+- Jar `evomaster-TR2-3beccb00.jar` = `9e779c15dd` (branch `stateful-authz-oracle`) plus
+  `infra/evomaster-ext/wip/trim-restore-20261121-tree.patch`. The same code without the `THESIS` comments is commit
+  `a44d91f478` (HEAD, pushed). That tree is the LF tree plus two changes:
   - C4 change (`wip/c4-source-status-20261121.md`): the re-login probe judges on the source's own status, and every
     call before the source must end in the same status group (2xx, 4xx, ...) as in the triple; otherwise
     INCONCLUSIVE and the triple is discarded as UNCONFIRMED.
@@ -120,7 +121,7 @@ FN by cause (`tr2-details.out`):
 ## 2. How to read the numbers
 
 - The 0-FP count is the independent accuracy measurement. Judgment is restricted to the triples our builder
-  constructed (commit `bf26b65322` onward), so the 0 false positives are over the 49 builder triples on patched code.
+  constructed (commit `9021b67cf5` onward), so the 0 false positives are over the 49 builder triples on patched code.
 - "Detection given a valid triple" (runs 12/12, 6/6, 5/5, 5/5) is near-definitional: validity keys on the follow-up
   status that judgment also uses. It is never quoted as accuracy. It shows only that the handler, re-deriving
   the triple on its own, never disagreed with the builder.

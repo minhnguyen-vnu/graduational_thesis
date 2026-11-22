@@ -1,6 +1,6 @@
 # Hand-audit of the Tier-1 / Tier-2 evaluation — 2026-09-01/02
 
-Jar `evomaster-R-5bce137f.jar` (commit `007e5e09f9`). 160 runs, 8 arms × 20 seeds, flags copied
+Jar `evomaster-R-5bce137f.jar` (commit `41f1a15e7a`). 160 runs, 8 arms × 20 seeds, flags copied
 verbatim from `restore-remeasure/remeasure.sh` and `restore-reset-remeasure/reset_remeasure.sh`;
 the **only** changed variable is that the generated tests are kept instead of `rm -rf`-ed.
 

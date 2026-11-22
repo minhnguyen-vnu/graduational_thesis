@@ -21,7 +21,7 @@ Ghi lại nền móng dưới điểm yếu "bộ từ vựng tự chọn" (`CLA
 Chuỗi chấm điểm `transitionHay(a) :120` = `path + " " + name + " " + bodyFieldNames` → đã gấp tên trường thân vào
 (biến thể V1 của `field-gate-20260923/`). `transitionScore :108` = `max(transitionPathScore(hay), cờ-admin 0.6)`.
 Dùng thật ở `:139` (`looksLikePermissionReducingTransition`), `:525` (chẩn đoán), `:948`/`:950` (lọc + sắp ứng
-viên). Committed `a5f3ff0ba5`, cây làm việc sạch trên file này.
+viên). Committed `71cc9df5c4`, cây làm việc sạch trên file này.
 
 ## 2. Nhóm chấm điểm: rút từ corpus + đo held-out (A, B đã khoá)
 
@@ -89,4 +89,4 @@ grep -riE 'is_admin|isadmin|superuser|is_staff|superadmin' ../corpus/ops-full ..
 ```
 
 Builder: `core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt`
-`:97 :99 :102 :104 :108 :120 :139 :414 :417`, commit `a5f3ff0ba5`.
+`:97 :99 :102 :104 :108 :120 :139 :414 :417`, commit `71cc9df5c4`.

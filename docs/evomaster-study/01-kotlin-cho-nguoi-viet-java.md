@@ -1,8 +1,8 @@
 # Kotlin cho người viết Java: đủ để đọc mã EvoMaster
 
-Mục tiêu: đọc được mã ta thêm vào EvoMaster và mã upstream quanh nó. Mọi ví dụ "mã ta" lấy từ commit `f73010103b`
+Mục tiêu: đọc được mã ta thêm vào EvoMaster và mã upstream quanh nó. Mọi ví dụ "mã ta" lấy từ commit `c9c8e9b4ef`
 (jar P2f), nơi ta đã thêm 1.825 dòng vào 6 file, 1.349 dòng nằm ở `RestSecurityBuilder.kt`. Số dòng là số dòng ở commit
-đó. HEAD `1cd0d091f4` đã gỡ reset, transition khai báo và D1, nên ví dụ về ba phần này chỉ đúng tới P2f.
+đó. Commit `f92c4b5cb7` (jar SR) đã gỡ reset, transition khai báo và D1, nên ví dụ về ba phần này chỉ đúng tới P2f.
 
 | Viết tắt | File |
 |---|---|

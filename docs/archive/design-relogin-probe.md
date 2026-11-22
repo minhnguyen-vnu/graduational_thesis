@@ -1,7 +1,7 @@
 # Thiết kế: Đầu dò đăng nhập lại (re-login probe)
 
 > **Trạng thái: đã hiện thực (probe C4).** Thiết kế viết ngày 23/08/2026.
-> Từ commit `1cd0d091f4`, mã không còn transition khai báo, reset và D1; các mục nhắc tới chúng chỉ đúng với P2f và các
+> Từ commit `f92c4b5cb7`, mã không còn transition khai báo, reset và D1; các mục nhắc tới chúng chỉ đúng với P2f và các
 > jar trước. Phán quyết hiện tại chỉ dùng probe C4.
 
 ---

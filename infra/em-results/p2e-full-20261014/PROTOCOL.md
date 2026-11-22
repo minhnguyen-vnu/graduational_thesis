@@ -2,7 +2,7 @@
 
 Chưa chạy. User chọn tạm dùng bộ gộp `p2e-continue-20261013/` (2026-10-14); lượt này để sau.
 
-Jar `EvoMaster/evomaster-P2e-6ae8277b.jar` = commit `a544c996ac`; harness dừng nếu sha256 khác `6ae8277bef229574`.
+Jar `EvoMaster/evomaster-P2e-6ae8277b.jar` = commit `96ba79866b`; harness dừng nếu sha256 khác `6ae8277bef229574`.
 
 Mục đích: số §4 và phán quyết cổng hồi quy trên một jar. 180 hàng, cùng arm, seed và cờ với
 `af2-full-remeasure-20261003/`: hàm `t1`, `t2`, `t2b` của `p2e_full.sh` trùng từng byte `af2_full_remeasure.sh`.

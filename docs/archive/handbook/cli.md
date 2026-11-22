@@ -233,8 +233,8 @@ Lệnh cho Tier-2 và pyLoad nằm cuối file tái hiện của từng target.
 
 ### 7.3 Cờ luận văn thêm
 
-Chỉ có trong P2f và các jar trước (`EMConfig.kt:3044–3077` ở commit `f73010103b`), không có trong EvoMaster upstream.
-Jar SR và HEAD `1cd0d091f4` đã gỡ cả ba cờ và báo `is not a recognized option`.
+Chỉ có trong P2f và các jar trước (`EMConfig.kt:3044–3077` ở commit `c9c8e9b4ef`), không có trong EvoMaster upstream.
+Jar SR và HEAD `f92c4b5cb7` đã gỡ cả ba cờ và báo `is not a recognized option`.
 
 | Cờ | Mặc định | Làm gì |
 |---|---|---|

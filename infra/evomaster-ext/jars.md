@@ -8,8 +8,8 @@ viết lại lịch sử ngày 2026-09-01.
 
 ## Jar đang trích số
 
-`EvoMaster/evomaster-TR2-3beccb00.jar` (sha16 `3beccb0086b6983a`, `.sha256` cạnh jar) = HEAD `2c3f281f13` +
-`wip/trim-restore-20261121-tree.patch` (chưa commit) = cây CS2 + `wip/trim-restore-20261121.patch`; cùng mô hình.
+`EvoMaster/evomaster-TR2-3beccb00.jar` (sha16 `3beccb0086b6983a`, `.sha256` cạnh jar) = `9e779c15dd` +
+`wip/trim-restore-20261121-tree.patch` = cây CS2 + `wip/trim-restore-20261121.patch`; cùng mô hình.
 Gỡ mã thừa ở lượt 2 và bước chọn source (R1–R6, R10, R11 trong `wip/audit-970-54-20261121.md` và
 `wip/audit-970-e7-20261121.md`); R12: mỗi trường vai trò một giá trị nâng (enum: giá trị cao nhất, bool `true`, số `0`),
 một kế hoạch, một lời nâng cho mỗi operator; cộng S2: bỏ ứng viên transition không có `victimField`. Trên 4 target chỉ
@@ -17,8 +17,8 @@ S2 đổi hành vi, ở artifact-keeper (`POST /api/v1/admin/sso/oidc`) và pyLo
 `em-results/trim-restore-selftest-20261121-222605.out` 63 PASS / 0 FAIL: log builder của 20 ca cũ trùng jar CS2,
 trừ khối ứng viên bị S2 bỏ. Các ca stub mới chạy seed 2, chọn sau khi quét seed 1–8 để mọi ca vào lượt 2.
 `evomaster-TR-62e87c79.jar` và `evomaster-TR-12fbaa41.jar` (chưa có R12) đã bị thay, không dùng. Sau khi dựng TR2,
-ba comment `THESIS` được sửa, số dòng giữ nguyên; bản dựng lại từ cây hiện tại có 9 file `RestSecurityBuilder*.class`
-trùng từng byte với TR2, nên TR2 vẫn là jar của cây này.
+ba comment `THESIS` được sửa, số dòng giữ nguyên; bản dựng lại từ cây đã sửa comment có 9 file
+`RestSecurityBuilder*.class` trùng từng byte với TR2. Mã của TR2 nằm trong commit `a44d91f478` (mục Dòng mã hiện tại).
 
 Đo lại đầy đủ ngày 2026-11-21 tới 22 thay cho cổng, vì cách dựng bộ ba và C4 đổi (`em-results/tr2-wave1-20261121/`,
 `tr2-wave2-20261121/`, 100 hàng, cùng harness với CS2 và LF trừ jar và nhãn; artifact-keeper bản vá 5 seed):
@@ -32,7 +32,7 @@ phiên, parser không đọc được). Đếm bằng `tr2-wave1-20261121/tr2_co
 ## Jar ứng viên, không trích số
 
 `EvoMaster/evomaster-CS2-f3412dc8.jar` (sha256 `f3412dc87f1083a3…c9c0`, sha16 `f3412dc87f1083a3`, `.sha256` cạnh jar)
-= HEAD `2c3f281f13` + `wip/c4-source-status-20261121-tree.patch` (chưa commit) = cây LF + `wip/c4-source-status-20261121.patch`;
+= `9e779c15dd` + `wip/c4-source-status-20261121-tree.patch` (chưa commit) = cây LF + `wip/c4-source-status-20261121.patch`;
 cùng mô hình với LF. Probe C4 chỉ kết luận trên mã của source; mỗi call trước source phải ra cùng nhóm mã như trong bộ
 ba; đối chứng ẩn danh chỉ bỏ credential ở source; đổi tên `refusedTransitionVictims` thành `skippedTransitionVictims`;
 gom các nhánh theo mã transition trong `tryReducedRoles`. Chi tiết: `wip/c4-source-status-20261121.md`. Self-test
@@ -47,7 +47,7 @@ pyLoad 5/5 & 0/5; so với LF mất 8 hàng reports-api, McNemar p = 0,008. Lư�
 ## Jar dự phòng
 
 `EvoMaster/evomaster-LF-d559dc73.jar` (sha256 `d559dc730701745e…ffc1`, sha16 `d559dc730701745e`, `.sha256` cạnh
-jar) = HEAD `2c3f281f13` + `wip/logic-fix-20261118-tree.patch` (chưa commit; gồm comment `THESIS`, thay đổi ND và sửa
+jar) = `9e779c15dd` + `wip/logic-fix-20261118-tree.patch` (chưa commit; gồm comment `THESIS`, thay đổi ND và sửa
 logic thiếu, sai và thừa của builder và oracle theo hai lượt review); cùng mô hình với ND (`dcc77b59ed0f…`). Chi tiết:
 `wip/logic-fix-20261118.md`; self-test `selftest/logic-fix-20261118.sh` 48 PASS, 0 FAIL
 (`em-results/logic-fix-selftest-20261118-014908.out`). Cây trước lượt sửa logic: `wip/pre-refactor-20261118.patch`.
@@ -62,8 +62,8 @@ chính xác p = 0,25. Integrity sạch (0 det970 thiếu bộ ba, 0 FP, 0 ERR, m
 làm jar trích số ngày 2026-11-18 (user); jar trích số từ 2026-11-18 tới 2026-11-22.
 
 `EvoMaster/evomaster-ND-07ebf19f.jar` (sha256 `07ebf19f9682497e…3897`, sha16 `07ebf19f9682497e`, `.sha256` cạnh
-jar) = HEAD `2c3f281f13` + `wip/nodup-tokens-20261113-tree.patch` (chưa commit; gồm comment `THESIS` và thay đổi
-ND; riêng thay đổi ND là `wip/nodup-tokens-20261113.patch`, tính trên cây đã có comment nên không áp thẳng lên HEAD).
+jar) = `9e779c15dd` + `wip/nodup-tokens-20261113-tree.patch` (chưa commit; gồm comment `THESIS` và thay đổi
+ND; riêng thay đổi ND là `wip/nodup-tokens-20261113.patch`, tính trên cây đã có comment nên không áp thẳng lên `9e779c15dd`).
 Hai thay đổi: `opFeatures` không lấy `f:` từ tham số path, mô hình học lại tương ứng
 (`analysis/lexicon-rules/m2-nodup-20261112/`, sha256 `dcc77b59ed0f…`); `tokens` duyệt từng ký tự thay regex, tương
 đương. Chi tiết, bằng chứng tương đương, diễn tập rollback: `wip/nodup-tokens-20261113.md`. Self-test
@@ -75,7 +75,7 @@ vampi-seeded 6/20 & 0/20, pyLoad 5/5 & 0/5, artifact-keeper 4/5 & 0/3. So với 
 vampi-seeded seed 15 và artifact-keeper seed 3, cả hai là lượt không dựng được bộ ba; không hàng nào thêm; McNemar
 chính xác p = 0,5. Audit 25 + 4 PASS, 0 FAIL. Đếm bằng `nd-wave1-20261113/nd_counts.py` (`nd-counts-cp.out`).
 
-`EvoMaster/evomaster-M2-917c57dd.jar` (sha256 `917c57ddafcc3d93…`, `.sha256` cạnh jar) = `9c4be5b1dc` (jar DC)
+`EvoMaster/evomaster-M2-917c57dd.jar` (sha256 `917c57ddafcc3d93…`, `.sha256` cạnh jar) = `18e283c245` (jar DC)
 với `core/src/main/resources/stateful-authz-model.csv` thay bằng mô hình M2 (sha256 `b2deef150bf8…`,
 `infra/analysis/lexicon-rules/m2-model-20261107/`). Jar trích số từ 2026-11-08 tới 2026-11-13. Dựng 2026-11-08; cây mã
 trả lại M1 ngay sau khi dựng, nên M2 chưa nằm trong commit nào. Self-test: mô hình trong jar có sha M2; `EMConfig` không
@@ -84,19 +84,53 @@ còn cờ `statefulAuthz*`. Đo lại đầy đủ ngày 2026-11-08 thay cho c�
 P2f ở 90/90 ô 970, và ở 89/90 hàng về bộ ba và mã trạng thái. Đếm bằng `m2-wave1-20261108/m2_counts.py`
 (`m2-counts-cp.out`).
 
-`EvoMaster/evomaster-P2f-64ee8ffc.jar` = commit `f73010103b`. Jar trích số từ 2026-10-18 tới 2026-11-08, trên 180 hàng
+`EvoMaster/evomaster-P2f-64ee8ffc.jar` = commit `c9c8e9b4ef`. Jar trích số từ 2026-10-18 tới 2026-11-08, trên 180 hàng
 một jar `em-results/p2f-full-20261015/runs.csv`; cổng 21/21 hai lần. Còn reset, transition khai báo và D1 (sau cờ mặc
 định tắt). Chi tiết: mục P2f bên dưới.
 
 ## Dòng mã hiện tại
 
-Cây mã chưa commit = HEAD `2c3f281f13` + `wip/trim-restore-20261121-tree.patch` (`git diff HEAD` trùng từng byte,
-2026-11-22, sha16 `f94f7cb8a94f4c53`), tức mã của jar TR2: 4 file (`RestSecurityBuilder.kt`, `RestSecurityOracle.kt`,
-`ExperimentalFaultCategory.kt`, `stateful-authz-model.csv`). Thứ tự các lớp: cây LF (`wip/logic-fix-20261118-tree.patch`),
-cộng C4 (`wip/c4-source-status-20261121.patch`, ra cây CS2), cộng đợt gỡ mã (`wip/trim-restore-20261121.patch`).
-Diễn tập rollback từ cây CS2 sang cây TR2 và ngược lại: trùng từng byte.
+`a44d91f478` (HEAD, 2026-11-22 09:08, đã push lên `origin/stateful-authz-oracle`), `fix: correct stateful-authz
+triple construction and C4 verdict`: 3 file (`RestSecurityBuilder.kt`, `RestSecurityOracle.kt`,
+`stateful-authz-model.csv`), +525/−596 trên `9e779c15dd`. Cây của commit = `9e779c15dd` +
+`wip/trim-restore-20261121-tree.patch` bỏ đúng 550 dòng comment `THESIS`: diff giữa hai cây gồm 550 dòng xoá, dòng nào
+cũng chứa `THESIS`, 0 dòng thêm (kiểm 2026-11-22). `ExperimentalFaultCategory.kt` vì thế trùng `9e779c15dd`, vì bản vá
+chỉ thêm comment vào file này. Mô hình sha256 `dcc77b59ed0f…`, trùng `m2-nodup-20261112/stateful-authz-model.csv`.
+Mã là mã jar TR2; số dòng khác cây TR2 (vd vị từ guard trong `RestSecurityOracle.kt`: `:614`, `:619` ở cây TR2, `:580`,
+`:583` ở HEAD). Chưa dựng jar từ HEAD. Cây làm việc sạch trừ các file `.sha256` chưa track. Thứ tự các lớp của cây TR2:
+cây LF (`wip/logic-fix-20261118-tree.patch`), cộng C4 (`wip/c4-source-status-20261121.patch`, ra cây CS2), cộng đợt
+gỡ mã (`wip/trim-restore-20261121.patch`). Diễn tập rollback từ cây CS2 sang cây TR2 và ngược lại: trùng từng byte.
 
-`2c3f281f13` (HEAD, 2026-11-13, chưa push) = `9c4be5b1dc` + phần mã của `wip/shorten-logic-20261112.patch`, không kèm
+### Viết lại commit message, 2026-11-22
+
+`git filter-branch --msg-filter 'head -n 1' -- v6.1.1..stateful-authz-oracle`: mỗi commit chỉ giữ dòng tiêu đề, rồi
+force-push lên `origin`. Kiểm từng cặp: cây, tác giả, committer và ngày trùng; message mới là đúng dòng tiêu đề cũ.
+Đã xoá ở local và trên `origin` mọi ref trỏ vào lịch sử cũ (`refs/original/…`, tag `pre-msg-rewrite`, tag
+`thesis-oracle-v1`); hash cũ chỉ còn tra qua bảng dưới. Hash trong các doc và trong 15 file của `infra/em-results/`
+(12 `.md`, 3 `.out`; ba file `.out` do user sửa tay vì hook chặn agent) đã đổi sang hash mới (user quyết, 2026-11-22). Tên jar `evomaster-D1-634850be.jar` và `evomaster-0e-bf26b653.jar`
+giữ hash cũ.
+
+| Cũ | Mới | Tiêu đề |
+|---|---|---|
+| `c99bba76dc` | `d907d6e77c` | feat: stateful/temporal authorization oracle (fault 970) |
+| `9caec259e2` | `b6e85003dd` | fix: require a real transition before reporting fault 970 |
+| `1518646ec7` | `419a49be0a` | feat: retry MR-A1 triple construction over candidate victims and operators |
+| `6dd65f3706` | `ab29df353b` | feat: optional SUT state reset before each MR-A1 triple attempt |
+| `8436f6dba6` | `5db485c018` | feat: widen MR-A1 construction to APIs outside the seeded targets' shape |
+| `007e5e09f9` | `41f1a15e7a` | feat: rebuild a lost triple precondition through the target's own API |
+| `6a43a852d0` | `d15a0eb405` | refactor: bind the stateful-authz transition to a non-null local |
+| `bf26b65322` | `9021b67cf5` | fix: judge fault 970 only on triples the stateful-authz builder constructed |
+| `634850be3a` | `ab4905c3d8` | feat: judge a stateful-authz triple with a freshly issued victim credential |
+| `a5f3ff0ba5` | `71cc9df5c4` | feat: broaden MR-A1 triple construction across real-world API shapes |
+| `8d6cf8431f` | `9ef4c68cb4` | feat: broaden MR-A1 triple construction across real-world API shapes |
+| `a544c996ac` | `96ba79866b` | feat: swap stateful-authz word lists for a trained model |
+| `f73010103b` | `c9c8e9b4ef` | fix: set nullable fields on the leaf gene in stateful-authz builder |
+| `1cd0d091f4` | `f92c4b5cb7` | chore: add SR refactor patch |
+| `9c4be5b1dc` | `18e283c245` | refactor: remove redundant code in stateful-authz builder and oracle |
+| `2c3f281f13` | `9e779c15dd` | refactor: merge duplicated logic in stateful-authz builder and oracle |
+| `9231dc6717` | `a44d91f478` | fix: correct stateful-authz triple construction and C4 verdict |
+
+`9e779c15dd` (2026-11-13, đã push) = `18e283c245` + phần mã của `wip/shorten-logic-20261112.patch`, không kèm
 comment `THESIS`: 98 dòng đổi trùng phần mã của bản vá. Gộp logic lặp trong phần ta thêm, giữ vòng `for`, hành vi và log: 9 mục, −70/+33 dòng; dòng mã ta thêm trên v6.1.1
 (không tính dòng trống, dòng `THESIS`) từ 1.383 còn 1.346. Từng mục và lý do tương đương: `wip/shorten-logic-20261112.md`.
 Jar `EvoMaster/evomaster-SL-c01cb6d6.jar` (sha256 `c01cb6d6fc76c4af…`, `.sha256` cạnh jar), model M1 như DC; chỉ dùng
@@ -109,7 +143,7 @@ ngay sau. Đợt đo lại đầy đủ 2026-11-12 trên cả bốn target (`em-
 0/20, pyLoad 5/5 & 0/5, artifact-keeper 5/5 & 0/3. Integrity sạch (0 det970 thiếu triple, 0 FP, 0 ERR, máy không ngủ);
 audit `audit970.out` 31 PASS / 0 FAIL / 0 UNPARSED. Bản vá artifact-keeper xác nhận sống bằng tay (token cũ sau hạ
 quyền trả 401) trước khi đo FP; repo trả về commit lỗi `e56d3aa7` sạch. Đợt đầy đủ này thay cho cổng 12 hàng
-(CLAUDE.md §5), nên SLM2 trích số được. Mã shorten-logic vẫn chưa commit.
+(CLAUDE.md §5), nên SLM2 trích số được. Mã shorten-logic được commit ngày 2026-11-13 thành `9e779c15dd`.
 
 Kiểm tra:
 - Diễn tập rollback trên `wip/shorten-logic-20261112-tree.patch`: áp lại trùng từng byte.
@@ -123,7 +157,7 @@ Kiểm tra:
     Chạy lại theo `--maxEvaluations 300` (`em-results/shorten-logic-selftest-ab-evals-20261112-125644/`): ba lượt trùng
     nhau, 4/4.
 
-`9c4be5b1dc` (2026-11-03, đã push) = `1cd0d091f4` + `wip/redundant-code-20261103.patch`; các dòng đổi của
+`18e283c245` (2026-11-03, đã push) = `f92c4b5cb7` + `wip/redundant-code-20261103.patch`; các dòng đổi của
 commit trùng bản vá. Jar `EvoMaster/evomaster-DC-a872a464.jar` (sha256 `a872a464…27f3`, `.sha256` cạnh jar), dựng từ
 bản vá ngày 2026-11-03. Xoá mã thừa trong phần ta thêm, giữ hành vi và log: −129/+64 dòng trên `RestSecurityBuilder.kt`
 và `RestSecurityOracle.kt`, cùng `stateful-authz-lexicon.csv` mà không code nào đọc. Từng thay đổi và lý do tương
@@ -140,7 +174,7 @@ Kiểm tra:
   sót (đã xoá); duyệt bản cuối.
 - Cổng 12/12 hàng không reset MATCH ngày 2026-11-03 (`em-results/regression-check-DC-20261103/`, 1 h 01, máy không ngủ).
 
-`1cd0d091f4` (2026-10-29, đã push) = commit `f73010103b` + refactor `wip/refactor-simplify-20261027.patch`, khác bản vá
+`f92c4b5cb7` (2026-10-29, đã push) = commit `c9c8e9b4ef` + refactor `wip/refactor-simplify-20261027.patch`, khác bản vá
 đúng một dòng trống ở `RestSecurityBuilder.kt:781`. Jar `EvoMaster/evomaster-SR-77465fe5.jar` (sha256 `77465fe5…af18`),
 dựng từ bản vá ngày 2026-10-27. Diễn tập rollback đạt.
 
@@ -166,7 +200,7 @@ Tương đương với P2f:
   của map.
 - Tương đương chỉ chắc khi điểm hữu hạn. Ba chỗ NaN hoặc số 0 có dấu cho kết quả khác P2f: `valueScore` dùng `>` thay
   `maxOfOrNull`; `reducedRoleValues` xếp NaN vào nhóm `rest` thay vì lọc bỏ; `victimField` chọn khác khi hai trường
-  cùng điểm NaN. Mô hình ở `f73010103b` có mọi trọng số hữu hạn và `valueScore` trả 0.0 khi không khớp, nên cả ba
+  cùng điểm NaN. Mô hình ở `c9c8e9b4ef` có mọi trọng số hữu hạn và `valueScore` trả 0.0 khi không khớp, nên cả ba
   không xảy ra.
 
 Bốn self-test cũ truyền cờ đã gỡ nên chỉ chạy trên jar cũ: `p2-stateful-authz.sh`, `setfield-leaf-activate-20261015.sh`,
@@ -177,7 +211,7 @@ mode `cap20` của `candidate-iteration.sh` và `d1-two-credential-judgment.sh`.
 
 ## Jar trích số 2026-10-14 tới 2026-10-18, giữ làm nguồn gốc
 
-`EvoMaster/evomaster-P2e-6ae8277b.jar` = commit `a544c996ac`, trích số trên bộ gộp
+`EvoMaster/evomaster-P2e-6ae8277b.jar` = commit `96ba79866b`, trích số trên bộ gộp
 `em-results/p2e-continue-20261013/merged.csv` (71 hàng P2e, 109 hàng P2d). Lệch luật đã khai: bảng trộn jar, cổng chạy
 trên P2d (21/21, `p2d-night-20261012/gate/`); 2 hàng cổng chạy qua đoạn mã P2e đổi (vampi seed 3 không reset) chạy lại
 trên P2e vẫn khớp (`gate-predict.out`). Dựng, self-test và
@@ -185,7 +219,7 @@ bộ gộp: mục P2e bên dưới.
 
 ## Jar trích số tới 2026-10-14, giữ làm nguồn gốc
 
-`EvoMaster/evomaster-AF2-6b5606d4.jar` = commit `8d6cf8431f` (nhánh `stateful-authz-oracle`) = jar `ER` + nhận
+`EvoMaster/evomaster-AF2-6b5606d4.jar` = commit `9ef4c68cb4` (nhánh `stateful-authz-oracle`) = jar `ER` + nhận
 transition lật cờ admin kiểu boolean (`is_admin`, `is_superuser`, `is_staff`...). `transitionScore` cộng điểm cho
 trường cờ admin, `harvestReducedRoleCandidates` lấy `false`, và `setAdminFlagActive` ép wrapper nullable của
 `is_admin` về present+false. Jar `AF-422f912b` chỉ có phần nhận-diện; setter chưa ép wrapper nên `is_admin` serialize
@@ -204,7 +238,7 @@ trích số từ 2026-10-04 tới 2026-10-14.
 ## Chuỗi P1–P2f, mới nhất trước
 
 `EvoMaster/evomaster-P2f-64ee8ffc.jar` (sha256 `64ee8ffc…`, `.sha256` cạnh jar) = jar P2e + bản vá
-`wip/setfield-leaf-activate-20261015.patch`, dựng 2026-10-15; commit `f73010103b` (2026-10-18, đã push) mang đúng các
+`wip/setfield-leaf-activate-20261015.patch`, dựng 2026-10-15; commit `c9c8e9b4ef` (2026-10-18, đã push) mang đúng các
 dòng đổi của bản vá (2 dòng `RestSecurityBuilder.kt:1360-1361`: `setField` neo cả `trySetFromStringValue`
 và `activateAncestors` vào lá `f.value` thay vì `f.gene`, nên trường nullable/optional serialize present+value thay vì
 `null`). P2 thay hàm `setAdminFlagActive` của AF2 bằng `setField` chung làm trượt điểm bật wrapper → `is_admin`
@@ -222,8 +256,8 @@ giá trị các ô không đổi. User promote thành jar luận văn ngày 2026
 trong bộ ba gửi `{"is_admin": false}`; jar P2e gửi `null` ở 2/4. Chỉ kiểm tra thân PATCH tách được hai jar: stub có reset,
 nên P2e thử lại và vẫn nổ 970.
 
-`EvoMaster/evomaster-P2e-6ae8277b.jar` (sha256 `6ae8277b…`, `.sha256` cạnh jar) = commit `a544c996ac` (2026-10-14;
-`git diff 8d6cf8431f a544c996ac -- core/src/main/kotlin` trùng từng byte bản vá cả cây) = jar P2d + 4 dòng trong
+`EvoMaster/evomaster-P2e-6ae8277b.jar` (sha256 `6ae8277b…`, `.sha256` cạnh jar) = commit `96ba79866b` (2026-10-14;
+`git diff 9ef4c68cb4 96ba79866b -- core/src/main/kotlin` trùng từng byte bản vá cả cây) = jar P2d + 4 dòng trong
 `RestSecurityBuilder.kt:1265–1269` (`wip/p2e-increment-over-p2d-20261013.diff`; cả cây
 `wip/p2e-restore-high-20261013.patch`, diễn tập rollback 2026-10-13 trùng từng byte; model CSV `9a7a7749…`, trùng bản
 trong jar). Giá trị nâng quyền của trường enum chỉ gồm các giá trị mô hình chấm `high > low`. AF2 chỉ nâng bằng giá trị
@@ -252,7 +286,7 @@ arm reports vuln không reset, 16/20, trượt seeds 10/13/16/17; AF2 19/20 trư
 (`em-results/p2c-full-remeasure-20261012/STOPPED.md`). Interleave seeds 10/13/16: AF2 9/9, P2c 0/9. Thay bằng P2d.
 Không dùng.
 
-`EvoMaster/evomaster-P2b-93db089f.jar` (sha256 `93db089f…`, `.sha256` cạnh jar) = commit `8d6cf8431f` + bản vá chưa
+`EvoMaster/evomaster-P2b-93db089f.jar` (sha256 `93db089f…`, `.sha256` cạnh jar) = commit `9ef4c68cb4` + bản vá chưa
 commit `wip/p2-nb-20261012.patch` (gồm P1, chỉ `RestSecurityBuilder.kt`) + tài nguyên mới
 `core/src/main/resources/stateful-authz-model.csv`. P2: thay max-lexicon + cờ admin + mọi danh sách viết tay bằng Naive
 Bayes mức op (nhóm A) và mức trường (B1 vai trò, B3 nạn nhân), giá trị theo kiểu (B2), đọc phản hồi theo khoá danh tính
@@ -275,7 +309,7 @@ bằng Design 1 — gộp vị từ về posterior > 0,5 (điểm đầy đủ >
 cột `statuses` đếm bộ ba hai lần vì dòng log "proven by an attempt" của P1/P2, bỏ dòng này trước khi trích. Giữ làm
 mốc lỗi, không dùng.
 
-`EvoMaster/evomaster-P1-80024675.jar` (sha256 `80024675…`, `.sha256` cạnh jar) = commit `8d6cf8431f` + bản vá chưa
+`EvoMaster/evomaster-P1-80024675.jar` (sha256 `80024675…`, `.sha256` cạnh jar) = commit `9ef4c68cb4` + bản vá chưa
 commit `wip/candidate-iteration-20261011.patch` (P1, chỉ `RestSecurityBuilder.kt`): duyệt mọi op khả dụng thay vì dừng
 ở op đầu; bỏ giới hạn 8 op đầu (α); trần tổng 20; trần 5 cho op chưa chứng minh, trừ op cuối; dấu nạn nhân của op chưa
 chứng minh bị xoá khi sang op kế; cặp (op, nạn nhân) bị từ chối thì bỏ qua ở các source sau; ngân sách khôi phục 3 lần
@@ -290,7 +324,7 @@ Không trích số từ jar này.
 
 ## Chuỗi trước đó, mới nhất trước
 
-`evomaster-R-5bce137f.jar` = commit `007e5e09f9`. Jar trích số cũ tới 2026-10-04; AF2 tái lập toàn bộ §4 từng seed.
+`evomaster-R-5bce137f.jar` = commit `41f1a15e7a`. Jar trích số cũ tới 2026-10-04; AF2 tái lập toàn bộ §4 từng seed.
 Giữ làm nguồn gốc.
 
 `evomaster-ER-06b48c30.jar` = jar `LP` + tham số path `email` của user thành nhóm thứ hai
@@ -344,19 +378,19 @@ local-harvest 6/7 với `content-type-is-a-value` trượt theo thiết kế; c�
 fixed: 0 trên 50 hàng ghép đôi đổi về 970 so với jar `L` và so với `evomaster-FH-2ec4b921.jar` (field-gate + local-harvest,
 cũng 0/50: `em-results/field-harvest-chain-20260923/`). `em-results/rolefield-chain-20260924/RESULTS.md`.
 
-`evomaster-L-5b3d5442.jar` = `core/target/evomaster.jar` dựng 2026-09-21 22:20: commit `634850be3a` + bản sửa mã từ chối
+`evomaster-L-5b3d5442.jar` = `core/target/evomaster.jar` dựng 2026-09-21 22:20: commit `ab4905c3d8` + bản sửa mã từ chối
 chưa commit + bản vá xếp hạng chưa commit + `core/src/main/resources/stateful-authz-lexicon.csv`. Self-test 14/14,
 cổng 21/21, seeds 1–10 trên ba target và 20 lượt arm fixed, 0 phát hiện mất so với các hàng D1
 (`em-results/lexicon-chain-20260921/`, `docs/results.md` §6).
 
-`evomaster-prelexicon-2c343573.jar` (sha256 `2c343573…`) = commit `634850be3a` + bản sửa mã từ chối chưa commit
+`evomaster-prelexicon-2c343573.jar` (sha256 `2c343573…`) = commit `ab4905c3d8` + bản sửa mã từ chối chưa commit
 (`wip/d1-denial-codes-20260917.patch`): D1 sau một cờ mặc định tắt, và trong nhánh hai credential thì 403 một mình là
 từ chối với mọi verb. Cổng 21/21 (2026-09-18, 23:27–01:14, `em-results/regression-check/observed.csv`); self-test 14/14
 (`em-results/d1-selftest-20260917-231617/`). Seeds 1–10 trên ba target, cả hai arm (`em-results/d1-seeds1-10/`,
 `em-results/d1-pyload-seeds1-10/`): cờ không đổi phát hiện nào (Tier-1 10/10, Tier-2 3/10, pyLoad 10/10 ở cả hai arm,
 ghép đôi từng seed) và mỗi phát hiện trong 23 phát hiện mang một dòng probe, tất cả `=403`.
 
-`evomaster-D1-634850be.jar` (sha256 `0c4205ce…`, commit `634850be3a`), cổng 21/21 (2026-09-17). Vẫn tính mọi PUT khác 2xx
+`evomaster-D1-634850be.jar` (sha256 `0c4205ce…`, commit `ab4905c3d8`), cổng 21/21 (2026-09-17). Vẫn tính mọi PUT khác 2xx
 là từ chối.
 
-`evomaster-0e-bf26b653.jar` (sha256 `7974e803…`, nguồn `bf26b65322`), cổng 21/21 (2026-09-13).
+`evomaster-0e-bf26b653.jar` (sha256 `7974e803…`, nguồn `9021b67cf5`), cổng 21/21 (2026-09-13).

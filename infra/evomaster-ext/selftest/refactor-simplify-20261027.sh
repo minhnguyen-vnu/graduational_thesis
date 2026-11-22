@@ -59,7 +59,7 @@ if [ $STATIC = 1 ]; then
   refs=$(grep -rnE "$REMOVED" $SRC | wc -l | tr -d ' ')
   refs_head=$(git -C $EM grep -nE "$REMOVED" HEAD -- core/src/main/kotlin | wc -l | tr -d ' ')
   if [ $refs = 0 ] && [ $refs_head -gt 0 ]; then
-    pass "no-removed-symbols         0 references in the working tree, $refs_head at HEAD f73010103b"
+    pass "no-removed-symbols         0 references in the working tree, $refs_head at HEAD c9c8e9b4ef"
   else
     fail "no-removed-symbols" "$refs references left: $(grep -rnoE "$REMOVED" $SRC | head -3 | tr '\n' ' ')"
   fi

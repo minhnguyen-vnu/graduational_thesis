@@ -5,7 +5,7 @@ trên mã đã gộp. Thư mục: wave 1 ở đây, wave 2 ở `../slm2-wave2-20
 
 ## Jar
 
-`EvoMaster/evomaster-SLM2-b8b5cf1a.jar` = HEAD `9c4be5b1dc` + thay đổi shorten-logic (chưa commit, giữ comment
+`EvoMaster/evomaster-SLM2-b8b5cf1a.jar` = HEAD `18e283c245` + thay đổi shorten-logic (chưa commit, giữ comment
 `THESIS`) + `stateful-authz-model.csv` thay bằng M2 (sha256 `b2deef150bf8…`). Dựng 2026-11-12; M1 khôi phục về cây mã
 ngay sau khi dựng. sha16 jar `b8b5cf1adb560c87`.
 Khác jar M2 (`917c57dd`) đúng ở phần mã: M2 = cùng model nhưng mã HEAD chưa gộp (jar DC); SLM2 = cùng model, mã đã gộp.

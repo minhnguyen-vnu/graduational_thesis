@@ -1,4 +1,4 @@
-# Gộp logic lặp trên HEAD `9c4be5b1dc`, 2026-11-12
+# Gộp logic lặp trên HEAD `18e283c245`, 2026-11-12
 
 Yêu cầu của user: cắt phần mã có thể cắt mà không đổi logic, giữ vòng `for`, không đổi sang stream, giữ mọi comment
 `THESIS` trong cây. Danh sách 9 mục đến từ hai lượt soát độc lập (phiên chính và một agent `thesis-debater-high`).

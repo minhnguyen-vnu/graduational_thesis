@@ -1,4 +1,4 @@
-# Xoá mã thừa trên HEAD `1cd0d091f4`, 2026-11-03
+# Xoá mã thừa trên HEAD `f92c4b5cb7`, 2026-11-03
 
 Yêu cầu của user: xoá dòng và logic thừa trong phần ta thêm vào, giữ vòng `for`, không gộp lại lambda. Hành vi và log
 stateful giữ nguyên. Mọi dòng dưới đây nằm trong `git diff HEAD` của repo EvoMaster, chưa commit.
@@ -55,7 +55,7 @@ Ký hiệu: `B` = `RestSecurityBuilder.kt`, `O` = `RestSecurityOracle.kt`. Tên 
 
 ## Khác
 
-- Xoá `core/src/main/resources/stateful-authz-lexicon.csv`: không code nào đọc từ `a544c996ac`; bản gốc còn ở
+- Xoá `core/src/main/resources/stateful-authz-lexicon.csv`: không code nào đọc từ `96ba79866b`; bản gốc còn ở
   `infra/analysis/lexicon-rules/lexicon-20260921-audited/`.
 - Xoá import `Param`, `data` của `ScoredObject`.
 - Hai self-test cũ `candidate-iteration.sh:21` và `field-gate.sh:78` đọc lexicon từ jar đang kiểm, nên không chạy được trên

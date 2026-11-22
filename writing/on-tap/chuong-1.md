@@ -318,7 +318,7 @@ bài toán oracle (oracle problem). Kiểm thử biến hình (mục 5) là mộ
 Şahin và cộng sự thêm vào EvoMaster 9 oracle bảo mật, chạy trong một pha sau pha tìm kiếm. Các oracle phân quyền trong số
 đó xét từng yêu cầu ở một thời điểm và so các tài khoản hoặc các phương thức với nhau.
 
-Ví dụ: oracle 306 báo lỗi khi cùng một tài khoản, trên cùng một tài nguyên, bị từ chối `PUT` (403) nhưng lại `DELETE`
+Ví dụ: oracle mã 206 (`SECURITY_WRONG_AUTHORIZATION`, đánh số của EvoMaster 6.1.1) báo lỗi khi cùng một tài khoản, trên cùng một tài nguyên, bị từ chối `PUT` (403) nhưng lại `DELETE`
 được (`2xx`). Tình huống đó mâu thuẫn ở ngay một thời điểm. Lỗi của khóa luận không mâu thuẫn ở thời điểm nào: trước khi hạ
 quyền, 200 là đúng; sau khi hạ quyền, chỉ có một yêu cầu bằng token cũ. Muốn thấy lỗi phải nhớ rằng lần trước được phép và
 giữa hai lần đã có một lần hạ quyền, điều các oracle hiện có không làm. Khóa luận coi các oracle này là baseline.

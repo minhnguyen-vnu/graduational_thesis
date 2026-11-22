@@ -1,6 +1,6 @@
 # P2f full §4 re-measure — kết quả (ghi 2026-10-16 14:10, sau FULL DONE 13:56)
 
-Jar `evomaster-P2f-64ee8ffc.jar` (sha256 first-16 `64ee8ffc78a9aad7`), commit `a544c996ac` + fix
+Jar `evomaster-P2f-64ee8ffc.jar` (sha256 first-16 `64ee8ffc78a9aad7`), commit `96ba79866b` + fix
 setField leaf-activate (`infra/evomaster-ext/wip/setfield-leaf-activate-20261015.patch`). Một jar duy nhất,
 không trộn jar. 180 hàng = 21 hàng cổng (PHASE1) + §4 arms (PHASE2).
 

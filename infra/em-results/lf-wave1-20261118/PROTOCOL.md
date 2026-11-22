@@ -7,14 +7,14 @@ Thư mục: wave 1 ở đây, wave 2 ở `../lf-wave2-20261118/`. Phiên `gradua
 
 ## Jar
 
-`EvoMaster/evomaster-LF-d559dc73.jar` = HEAD `2c3f281f13` + bản vá chưa commit
+`EvoMaster/evomaster-LF-d559dc73.jar` = HEAD `9e779c15dd` + bản vá chưa commit
 `infra/evomaster-ext/wip/logic-fix-20261118-tree.patch` (4 file: RestSecurityBuilder.kt, RestSecurityOracle.kt,
 ExperimentalFaultCategory.kt, stateful-authz-model.csv). Model trong jar = m2-nodup (sha16 `dcc77b59ed0f94ee`,
 giống ND). sha256 jar `d559dc730701745eebe5233e24733299b6fd8d50d62715caacfa3b8d5603ffc1`, sha16 WANT `d559dc730701745e`.
 Mỗi harness chặn nếu sha16 khác WANT.
 
 Kiểm trước đợt (phiên này): sha256 jar khớp file `.sha256` cạnh jar; model trong jar `dcc77b59ed0f94ee` khớp
-`infra/analysis/lexicon-rules/m2-nodup-20261112/stateful-authz-model.csv`; cây mã EvoMaster = HEAD `2c3f281f13` +
+`infra/analysis/lexicon-rules/m2-nodup-20261112/stateful-authz-model.csv`; cây mã EvoMaster = HEAD `9e779c15dd` +
 4 file sửa (uncommitted) trùng `logic-fix-20261118-tree.patch`. Self-test `selftest/logic-fix-20261118.sh`:
 48 PASS / 0 FAIL exit 0 (`../logic-fix-selftest-20261118-014908.out`). Review độc lập agent Opus 5.5 (xhigh):
 không có lỗi mã mức chặn (không crash/vòng lặp/đường FP mới cho 970) — `logic-fix-20261118.md` mục "Review của agent".

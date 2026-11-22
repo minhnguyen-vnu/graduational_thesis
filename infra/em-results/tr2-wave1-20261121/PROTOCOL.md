@@ -10,7 +10,7 @@ docs khi có số. Chạy theo đúng PROTOCOL/harness đợt CS2 (`../cs2-wave1
 sha16 WANT `3beccb0086b6983a`; khớp file `.sha256` cạnh jar. Model trong jar (`stateful-authz-model.csv`) sha256
 `dcc77b59ed0f94ee…`, trùng m2-nodup (LF/CS2) — đã kiểm `unzip -p … | shasum`. Harness chặn nếu sha16 jar khác WANT.
 
-Cây = HEAD `2c3f281f13` + `infra/evomaster-ext/wip/trim-restore-20261121-tree.patch` = cây CS2 +
+Cây = HEAD `9e779c15dd` + `infra/evomaster-ext/wip/trim-restore-20261121-tree.patch` = cây CS2 +
 `wip/trim-restore-20261121.patch` (sổ jar mục "Jar ứng viên"). Self-test
 `../trim-restore-selftest-20261121-222605.out`: 63 PASS / 0 FAIL. Phiên e7 đã soát mã. Không sửa cây mã EvoMaster,
 không dựng jar.

@@ -12,7 +12,7 @@ cú pháp đơn giản.
 - Jar `EvoMaster/evomaster-CS2-f3412dc8.jar` (sha256 `f3412dc87f1083a3…c9c0`, `.sha256` cạnh jar), mô hình như LF.
   Bản trước, `evomaster-CS-b187061e.jar` (luật mọi call trước phải 2xx), bị thay.
 - Bản vá so với cây LF: `wip/c4-source-status-20261121.patch` (một file, `RestSecurityBuilder.kt`); cả cây so với HEAD
-  `2c3f281f13`: `wip/c4-source-status-20261121-tree.patch`. Diễn tập rollback trên cây LF và trên cây CS: đạt.
+  `9e779c15dd`: `wip/c4-source-status-20261121-tree.patch`. Diễn tập rollback trên cây LF và trên cây CS: đạt.
 - Self-test `selftest/c4-source-status-20261121.sh` (stub `c4src_stub.py`, kiểm `c4src_checks.py`, so dòng builder
   `c4src_compare.py`). Mỗi mode chạy jar CS và jar LF; mode `op-refused` kiểm nhánh transition 403 rồi đổi operator.
   Phần hồi quy chạy lại `logic-fix-20261118.sh` trên jar CS và so từng dòng quyết định của builder với lượt LF đã lưu

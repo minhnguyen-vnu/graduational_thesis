@@ -17,7 +17,7 @@ Thiết kế, mọi lựa chọn bị loại và số đo đầy đủ: `infra/e
 
 ## 1. Mô hình quyết định gì
 
-Pha security chạy sau search. `addForStatefulAccessControl` (`RestSecurityBuilder.kt:625`, commit `2c3f281f13`) gọi
+Pha security chạy sau search. `addForStatefulAccessControl` (`RestSecurityBuilder.kt:625`, commit `9e779c15dd`) gọi
 mô hình ở bốn chỗ:
 
 | Việc | Hàm | Bảng |

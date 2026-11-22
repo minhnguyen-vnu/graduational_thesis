@@ -231,7 +231,7 @@ Chạy EvoMaster, seeds 1–10, cờ D1 tắt:
 - Chỉ danh sách từ path được đo trên held-out. Danh sách tham số (45 từ) và danh sách trường quyền (list-3, 23 từ)
   rút theo cùng luật nhưng corpus không có nhãn mức trường, nên không đo được.
 - Tới `AF2`, builder không dùng list-3 để nhận diện trường; nó dùng ba danh sách viết tay (`RestSecurityBuilder.kt:104`
-  cờ admin, `:414` tham số nạn nhân, `:417` trường quyền, số dòng ở `8d6cf8431f`). `P2e` thay chúng bằng bảng `role`
+  cờ admin, `:414` tham số nạn nhân, `:417` trường quyền, số dòng ở `9ef4c68cb4`). `P2e` thay chúng bằng bảng `role`
   và `victim` của mô hình (`docs/naive-bayes.md` §1). Ba danh sách này không rút được từ corpus hiện có: token
   cờ-admin (`is_admin`, `is_staff`…) vắng mặt (chỉ có `admin` ở 1 nhà cung cấp, rớt cổng provider≥2); list-3 quá
   chung nên dùng để chấm điểm làm tụt hạng (ablation V2, `field-gate-20260923/RESULTS.md` §4: test top-1 0,667→0,333);

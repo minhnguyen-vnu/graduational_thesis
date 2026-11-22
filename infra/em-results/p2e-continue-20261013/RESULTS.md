@@ -45,8 +45,8 @@ trùng P2d (bước 3). Lượt đầy đủ trên riêng P2e chạy sau; harnes
 
 ## Soát tay (2026-10-14)
 
-Cả hai chênh lệch với AF2 đến từ trần số lần thử dựng bộ ba: `MAX_STATEFUL_TRIPLE_ATTEMPTS` là 8 ở `8d6cf8431f`
-(dòng 126), 20 ở `a544c996ac` (dòng 233, P1). Không chênh lệch nào đổi det970.
+Cả hai chênh lệch với AF2 đến từ trần số lần thử dựng bộ ba: `MAX_STATEFUL_TRIPLE_ATTEMPTS` là 8 ở `9ef4c68cb4`
+(dòng 126), 20 ở `96ba79866b` (dòng 233, P1). Không chênh lệch nào đổi det970.
 
 **Vampi fixed không reset seed 19, VOID 9 so với 8.** Cả hai jar thử cùng source `PUT /books/v1/{book_title}/secret`
 với 3 nạn nhân (`superadmin`, `name1`, `admin`) × 3 operator, cùng thứ tự; 8 dòng VOID đầu trùng nhau từng dòng.

@@ -20,10 +20,10 @@ Thêm nhánh reset: gấp đôi.
 Jar đóng băng ngày 09-30. Ứng viên: `TT-129a7a56` nếu seeds 11–20 sạch (`em-results/transitiontrim-chain-20260927c/`).
 Mọi con số tháng 10 ghi tên jar; bảng không trộn jar.
 
-Cập nhật 2026-10-04: jar trích số đã chốt là `AF2-6b5606d4` (commit `8d6cf8431f`), tái lập jar `R` từng seed
+Cập nhật 2026-10-04: jar trích số đã chốt là `AF2-6b5606d4` (commit `9ef4c68cb4`), tái lập jar `R` từng seed
 (`af2-full-remeasure-20261003/`). Bảng §3 giữ nhãn jar của bản nháp 09-27.
 
-Cập nhật 2026-10-31: HEAD `1cd0d091f4` (jar SR) đã gỡ reset, transition khai báo và D1. Nhánh B2, B3 và mọi arm dùng cờ
+Cập nhật 2026-10-31: HEAD `f92c4b5cb7` (jar SR) đã gỡ reset, transition khai báo và D1. Nhánh B2, B3 và mọi arm dùng cờ
 D1 chỉ chạy được trên P2f và các jar trước.
 
 ## 3. Các nhánh

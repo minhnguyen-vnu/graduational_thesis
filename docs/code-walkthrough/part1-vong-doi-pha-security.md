@@ -78,7 +78,7 @@ không bao giờ chạy. Run này là ví dụ ngược lại đang xảy ra th�
 đói ngân sách** — timeout báo ở giây 360, pha kéo 6m10s, `report.json` không có fault 209 nào.
 
 **c. Đây là toàn bộ phần ta sửa trong hàm này: 4 dòng.**
-`git diff v6.1.1..HEAD` trên file này, hunk `@@ -137,6 +197,10 @@`:
+`git diff v6.1.1 41f1a15e7a` trên file này, hunk `@@ -137,6 +197,10 @@`:
 
 ```
 +        if(!hasPhaseTimedOut()) {

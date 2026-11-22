@@ -2,8 +2,8 @@
 
 Mã: `EvoMaster/core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt` (gọi tắt **B**) và
 `.../rest/oracle/RestSecurityOracle.kt` (gọi tắt **O**). Số dòng là của jar SR (`evomaster-SR-77465fe5.jar`, bản vá
-`infra/evomaster-ext/wip/refactor-simplify-20261027.patch`). HEAD `9c4be5b1dc` (nền của jar M2) xoá thêm mã thừa, giữ
-hành vi và log, nên số dòng ở đây lệch HEAD và vài nhánh nhắc ở đây đã gộp hoặc bỏ
+`infra/evomaster-ext/wip/refactor-simplify-20261027.patch`). Commit `18e283c245` (nền của jar M2) xoá thêm mã thừa, giữ
+hành vi và log; các bản sau còn đổi logic (jar LF, TR2). Số dòng ở đây lệch mã hiện tại và vài nhánh nhắc ở đây đã gộp hoặc bỏ
 (`infra/evomaster-ext/wip/redundant-code-20261103.md`).
 
 Mỗi mục gồm: **Làm gì**, **Ai gọi**, **Vào và ra**, **Ví dụ**. Ví dụ chạy tay lấy từ lượt self-test thật

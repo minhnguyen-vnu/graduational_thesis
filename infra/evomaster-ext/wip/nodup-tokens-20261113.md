@@ -1,4 +1,4 @@
-# Mô hình bỏ lặp và `tokens` không regex, trên HEAD `2c3f281f13`, 2026-11-13
+# Mô hình bỏ lặp và `tokens` không regex, trên HEAD `9e779c15dd`, 2026-11-13
 
 Hai thay đổi, một jar. User duyệt mã ngày 2026-11-12 trước khi viết. Chưa commit.
 
@@ -35,12 +35,12 @@ thống nhất; hai dòng `THESIS` của `opFeatures` sửa theo nội dung mớ
 ## Bản vá
 
 - `nodup-tokens-20261113.patch`: chỉ phần đổi, so với cây có comment `THESIS` (mã + model).
-- `nodup-tokens-20261113-tree.patch`: cả cây so với HEAD `2c3f281f13`. Diễn tập rollback: áp lại trùng từng byte.
+- `nodup-tokens-20261113-tree.patch`: cả cây so với HEAD `9e779c15dd`. Diễn tập rollback: áp lại trùng từng byte.
 - `thesis-comments-pre-nodup-20261113.patch`: cây trước thay đổi (chỉ comment `THESIS`), cũng đã diễn tập.
 
 ## Commit trước thay đổi
 
-Shorten-logic commit thành `2c3f281f13` (`refactor: merge duplicated logic in stateful-authz builder and oracle`), chỉ
+Shorten-logic commit thành `9e779c15dd` (`refactor: merge duplicated logic in stateful-authz builder and oracle`), chỉ
 phần mã: 98 dòng đổi trùng phần mã của `shorten-logic-20261112.patch`; comment `THESIS` để ngoài commit như mọi commit
 trước. Chưa push.
 

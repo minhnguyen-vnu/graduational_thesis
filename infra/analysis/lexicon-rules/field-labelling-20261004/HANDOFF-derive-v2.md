@@ -138,7 +138,7 @@ nhãn phần mới → viết lại `derive` → đo một lần trên test mớ
 - Mã thêm vào **không comment**. Self-test cho mỗi thay đổi code đặt trong `infra/evomaster-ext/selftest/`, không nằm
   trong cây EvoMaster.
 - Một chênh lệch ghép đôi chỉ thành phát hiện khi có kiểm định + p-value (đã có `mcnemar.py`).
-- Mỗi con số nêu jar của nó; jar hiện tại = `evomaster-AF2-6b5606d4.jar` (commit `8d6cf8431f`).
+- Mỗi con số nêu jar của nó; jar hiện tại = `evomaster-AF2-6b5606d4.jar` (commit `9ef4c68cb4`).
 
 ## 8. Điểm yếu hội đồng sẽ đâm (phải viết thành hạn chế)
 

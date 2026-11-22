@@ -15,8 +15,8 @@ Mỗi sự kiện nằm ở một file: file này giữ luật và trỏ tới p
   2026**. Bản nháp: `writing/KLTN_NguyenLeMinh.pdf`.
 - Luận văn viết bằng **tiếng Việt**. Trả lời theo ngôn ngữ của user.
 - Tác giả: kỹ sư phần mềm, ~2 năm fintech, Java/Spring Boot. Đọc được Kotlin, viết Kotlin chưa thoải mái.
-- Mã nguồn: `/Users/minhnguyen/IdeaProjects/EvoMaster`, nhánh `stateful-authz-oracle`, 16 commit trên `v6.1.1`, HEAD
-  `2c3f281f13` (chưa push); thay đổi của jar TR2 chưa commit (§5). Phán quyết dùng probe C4, luận văn gọi là bước đăng nhập lại. Chi tiết:
+- Mã nguồn: `/Users/minhnguyen/IdeaProjects/EvoMaster`, nhánh `stateful-authz-oracle`, 17 commit trên `v6.1.1`, HEAD
+  `a44d91f478` (đã push), mang mã của jar TR2 (§5). Phán quyết dùng probe C4, luận văn gọi là bước đăng nhập lại. Chi tiết:
   `infra/evomaster-ext/README.md`.
 - Thư mục luận văn là một git repo (nhánh `main`).
 - Đã dựng: quan hệ MR-A1, cách dựng bộ ba, phán quyết 970, và bốn target: hai lỗi gieo (`reports-api`,
@@ -167,11 +167,12 @@ Mỗi loại nội dung nằm đúng một chỗ; phần còn lại theo bảng 
 
 ## 5. Jar — sổ đầy đủ `infra/evomaster-ext/jars.md`
 
-- Mọi con số hiện tại: `EvoMaster/evomaster-TR2-3beccb00.jar` = HEAD `2c3f281f13` cộng
-  `infra/evomaster-ext/wip/trim-restore-20261121-tree.patch` (`git diff HEAD` trùng từng byte). Đó là mã của jar LF
-  (comment `THESIS`, thay đổi ND, sửa logic `wip/logic-fix-20261118.md`) cộng thay đổi C4
-  (`wip/c4-source-status-20261121.md`) và đợt gỡ mã thừa (`wip/audit-970-54-20261121.md`). Bản vá chưa commit; cây
-  trong commit còn M1. `EMConfig.kt` trùng v6.1.1. TR2 không chạy cổng: nó đo lại đầy đủ mọi arm trên mọi target.
+- Mọi con số hiện tại: `EvoMaster/evomaster-TR2-3beccb00.jar`, dựng từ `9e779c15dd` cộng
+  `infra/evomaster-ext/wip/trim-restore-20261121-tree.patch`: mã của jar LF (thay đổi ND, sửa logic
+  `wip/logic-fix-20261118.md`) cộng thay đổi C4 (`wip/c4-source-status-20261121.md`) và đợt gỡ mã thừa
+  (`wip/audit-970-54-20261121.md`), mô hình M2 bỏ lặp. HEAD `a44d91f478` là cây đó bỏ 550 dòng comment `THESIS`, không
+  đổi dòng mã nào, nên số dòng ở HEAD khác cây TR2; chưa dựng jar từ HEAD. `EMConfig.kt` trùng v6.1.1. TR2 không chạy
+  cổng: nó đo lại đầy đủ mọi arm trên mọi target.
 - Jar dự phòng: `EvoMaster/evomaster-LF-d559dc73.jar`, cùng mô hình, chưa có thay đổi C4 và đợt gỡ mã.
 - Một jar mới chỉ trích lại số sau khi qua cổng 12 hàng (skill `regression-gate`) hoặc sau một lượt đo lại đầy đủ; khi
   cách dựng bộ ba đổi thì phải đo lại các arm bị ảnh hưởng.
@@ -186,7 +187,7 @@ nạn nhân và giá trị quyền (`docs/naive-bayes.md`). Mô hình bỏ lặp
 209 op T trên 10.381 op ghi; quy trình `infra/analysis/lexicon-rules/relabel-20261101/PROTOCOL.md`, mô hình
 `m2-nodup-20261112/`). Trên nửa thi (237 spec, 8.674 op ghi, 153 op T): 101 op T có điểm dương (66,0%,
 Clopper–Pearson 57,9–73,5%), 523 trong 624 op điểm dương mang nhãn N. Còn viết tay: `1, 0, 2` cho trường số khi hạ quyền, `0` khi nâng operator, token `id`. Cổng posterior > 0,5 cũng chặn phán quyết
-(`RestSecurityOracle.kt:577`, `:594`).
+(`RestSecurityOracle.kt:580`, `:583` ở HEAD).
 
 **Chỉ bốn target.** Luận văn chỉ dùng bốn target ở §4. App khác đã thử không vào luận văn.
 

@@ -5,7 +5,7 @@ Viết 2026-10-11, trước lượt chạy. User quyết (2026-10-11): làm P1 t
 
 ## Jar
 
-Jar P1 (đặt tên và sha256 ghi ở `progress.log` lúc chạy): commit `8d6cf8431f` cộng bản vá
+Jar P1 (đặt tên và sha256 ghi ở `progress.log` lúc chạy): commit `9ef4c68cb4` cộng bản vá
 `infra/evomaster-ext/wip/candidate-iteration-20261011.patch` (duyệt nhiều op, trần 20, trần 5 cho op chưa chứng minh,
 α, S1, S2, S3, log mới). Self-test: `infra/evomaster-ext/selftest/candidate-iteration.sh`.
 

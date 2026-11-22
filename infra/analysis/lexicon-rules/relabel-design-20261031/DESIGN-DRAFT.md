@@ -10,7 +10,7 @@ nhớ, phải mở tài liệu gốc trước khi vào luận văn. Hạ tầng 
 - Một người gán, từ 12 giờ trở lên. Không có phép đo giữa hai người. Văn bản chỉ dùng vai `người gán`, không nêu tên.
 - Chỉ dùng model Anthropic. Đây là một hạn chế phải viết.
 - Gán lại đúng một lần.
-- Đo trên mã mới nhất: jar SR, HEAD `1cd0d091f4`.
+- Đo trên mã mới nhất: jar SR, HEAD `f92c4b5cb7`.
 
 ## 2. Ai làm gì
 
@@ -101,7 +101,7 @@ Kiểm chất lượng duy nhất: 16 dòng biết đáp án trộn trong test.
 
 ## 6. Hai mô hình
 
-- Jar nền: SR, HEAD `1cd0d091f4`. M2 đo trên các hàng không reset; cột có reset giữ làm số lịch sử trên P2f.
+- Jar nền: SR, HEAD `f92c4b5cb7`. M2 đo trên các hàng không reset; cột có reset giữ làm số lịch sử trên P2f.
 - M1: mô hình P2f, giữ nguyên làm phương án lùi.
 - M2: công thức Naive Bayes cũ, ngưỡng ≥ 2 nhà cung cấp cũ, chỉ đổi nhãn. Mỗi arm một biến.
 - Hash của M1, M2 commit trước khi mở test. Cả hai cùng lên test.

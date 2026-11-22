@@ -6,7 +6,7 @@ ngủ), chạy theo đúng PROTOCOL đợt SLM2 (`../slm2-wave1-20261112/`).
 
 ## Jar
 
-`EvoMaster/evomaster-ND-07ebf19f.jar` = HEAD `2c3f281f13` (shorten-logic đã commit, chỉ phần mã) + bản vá chưa commit
+`EvoMaster/evomaster-ND-07ebf19f.jar` = HEAD `9e779c15dd` (shorten-logic đã commit, chỉ phần mã) + bản vá chưa commit
 `infra/evomaster-ext/wip/nodup-tokens-20261113.patch` + `stateful-authz-model.csv` thay bằng m2-nodup
 (`infra/analysis/lexicon-rules/m2-nodup-20261112/stateful-authz-model.csv`, sha256 `dcc77b59ed0f…`).
 sha256 jar `07ebf19f9682497e8a9a637e99d66e63e15bf72db4c6f985f92bb656af143897`, sha16 `07ebf19f9682497e`.

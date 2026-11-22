@@ -8,8 +8,8 @@ Mọi đoạn code trong file này lấy nguyên văn từ hai file thật:
 - `B` = `core/src/main/kotlin/org/evomaster/core/problem/rest/service/RestSecurityBuilder.kt`
 - `O` = `core/src/main/kotlin/org/evomaster/core/problem/rest/oracle/RestSecurityOracle.kt`
 
-Repo `/Users/minhnguyen/IdeaProjects/EvoMaster`, branch `stateful-authz-oracle`, HEAD `007e5e09f9`.
-Số dòng là số dòng của HEAD này.
+Repo `/Users/minhnguyen/IdeaProjects/EvoMaster`, branch `stateful-authz-oracle`, commit `41f1a15e7a` (jar R).
+Số dòng là số dòng của commit này.
 
 ---
 

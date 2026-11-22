@@ -6,22 +6,24 @@ Results: `docs/results.md`. Build, jars, rollback: skill `evomaster-build`. Runn
 
 ## 1. What changed
 
-`git diff --stat v6.1.1..HEAD`: 16 commits, 4 files, +1760, 0 deletions, no comments. HEAD `2c3f281f13` (not pushed).
-The thesis jar TR2 is HEAD plus `wip/trim-restore-20261121-tree.patch`, not committed. It stacks three changes on
-HEAD: the logic fix of jar LF with the user's `THESIS` comments and the ND change (`wip/logic-fix-20261118.md`), the
-C4 change (`wip/c4-source-status-20261121.md`) and the code cleanup (`wip/trim-restore-20261121.patch`). The model file
-holds the no-duplication model (`lexicon-rules/m2-nodup-20261112/`). Commit history, the jar each commit built, and its
+`git diff --stat v6.1.1..HEAD`: 17 commits, 4 files, +1689, 0 deletions, no comments. HEAD `a44d91f478`, pushed to
+`origin`. HEAD holds the code of the thesis jar TR2 without the user's `THESIS` comments. TR2 was built from
+`9e779c15dd` plus `wip/trim-restore-20261121-tree.patch`, which carries those comments, so line numbers differ between
+HEAD and the TR2 tree. That tree stacks three changes on `9e779c15dd`: the logic fix of jar LF with the ND change
+(`wip/logic-fix-20261118.md`), the C4 change (`wip/c4-source-status-20261121.md`) and the code cleanup
+(`wip/trim-restore-20261121.patch`). The model file holds the no-duplication model (`lexicon-rules/m2-nodup-20261112/`).
+Commit history, the old-to-new hash table of the 2026-11-22 message rewrite, the jar each commit built, and its
 self-test: `jars.md`.
 
-| File | + (HEAD `2c3f281f13`; TR2 tree, code lines without blanks and `THESIS` comments: 4, 42, 1244, 251) | Holds |
+| File | + (HEAD `a44d91f478`; code lines without blanks: 4, 42, 1244, 251) | Holds |
 |---|---|---|
 | `ExperimentalFaultCategory.kt` | 5 | `SECURITY_STATEFUL_AUTHORIZATION(970)` |
-| `RestSecurityOracle.kt` | 66 | judgment: `handleStatefulAuthorization()` |
-| `RestSecurityBuilder.kt` | 1428 | construction: `addForStatefulAccessControl()`, `buildStatefulAuthzTriple()`, `executeStatefulAuthzTriple()`, Naive Bayes scoring, operator restore, C4 probe |
-| `stateful-authz-model.csv` | 261 | Naive Bayes weights, tables `op`, `role`, `victim`, `low`, `high`, `lowstr`, `highstr` (M1 in HEAD; M2 in jar M2, `lexicon-rules/m2-model-20261107/`; the no-duplication model in jars ND, LF and TR2) |
+| `RestSecurityOracle.kt` | 50 | judgment: `handleStatefulAuthorization()` |
+| `RestSecurityBuilder.kt` | 1383 | construction: `addForStatefulAccessControl()`, `buildStatefulAuthzTriple()`, `executeStatefulAuthzTriple()`, Naive Bayes scoring, operator restore, C4 probe |
+| `stateful-authz-model.csv` | 251 | Naive Bayes weights, tables `op`, `role`, `victim`, `low`, `high`, `lowstr`, `highstr` (the no-duplication model in HEAD and in jars ND, LF and TR2; M1 up to `9e779c15dd`; M2 in jar M2, `lexicon-rules/m2-model-20261107/`) |
 
 `statefulTripleUnderEvaluation` is true only while `executeStatefulAuthzTriple` evaluates its own triple, and the
-handler returns unless it is true (commit `bf26b65322`).
+handler returns unless it is true (commit `9021b67cf5`).
 
 The `.patch` files directly in this folder predate a history rewrite and do not apply to the current tree.
 Function notes, in Vietnamese: `docs/evomaster-study/03-ham-stateful-authz.md`.

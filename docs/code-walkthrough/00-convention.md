@@ -35,5 +35,5 @@ giải thích trong file part tương ứng.
 
 ## Nguồn code
 
-- `/Users/minhnguyen/IdeaProjects/EvoMaster`, branch `stateful-authz-oracle`, HEAD `007e5e09f9`.
-- Số dòng trong các file part là số dòng của HEAD hiện tại. Nếu code đổi, số dòng phải đo lại.
+- `/Users/minhnguyen/IdeaProjects/EvoMaster`, branch `stateful-authz-oracle`, commit `41f1a15e7a` (jar R).
+- Số dòng trong các file part là số dòng của commit này. Xem bằng `git show 41f1a15e7a:<file>`.

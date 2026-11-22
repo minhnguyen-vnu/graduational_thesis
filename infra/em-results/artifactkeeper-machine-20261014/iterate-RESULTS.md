@@ -16,7 +16,7 @@ score 3.70). Transition thật bị loại KHÔNG phải do luật chuyển-ứn
 - `:782`/`:788` loại victim đã đánh dấu khỏi phần còn lại của pha (kể cả vai trò operator). Victim `operator` chỉ còn
   operator `viewer` (không admin) → 403. Hết victim → sang ứng viên 5.
 
-## Lỗi mã (P2e, commit a544c996ac)
+## Lỗi mã (P2e, commit 96ba79866b)
 
 `setField` (`RestSecurityBuilder.kt:1359-1363`) ghi giá trị qua `f.gene` rồi `activateAncestors(f.gene)` — chỉ bật các
 wrapper TRÊN `f.gene`. `NullableGene` nằm giữa `f.gene` và lá không được bật: `NullableGene.unsafeSetFromStringValue`

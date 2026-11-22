@@ -579,7 +579,7 @@ Assert sinh từ phản hồi thật lúc chạy. Comment `# Fault970. …` đ�
 
 ## 8. Mã của ta nằm ở đâu
 
-`git diff --stat v6.1.1..HEAD`: 6 file, 1.825 dòng thêm, 0 dòng xoá ở file upstream.
+`git diff --stat v6.1.1 c9c8e9b4ef` (jar P2f): 6 file, 1.825 dòng thêm, 0 dòng xoá ở file upstream.
 
 | File (dưới `core/src/main/`) | Dòng thêm | Nội dung | Nối vào upstream ở |
 |---|---|---|---|

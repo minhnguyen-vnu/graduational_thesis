@@ -212,7 +212,7 @@ file trọng số:
 - Khi demo: số liệu của khóa luận dùng `EvoMaster/evomaster-M2-917c57dd.jar`. File trọng số trong cây mã vẫn là mô hình
   M1, nên dựng lại từ mã sẽ ra jar khác jar đã đo.
 
-Nguồn: `git diff --stat v6.1.1 9c4be5b1dc -- core/src/main` trong repo EvoMaster; `CLAUDE.md` §5.
+Nguồn: `git diff --stat v6.1.1 18e283c245 -- core/src/main` trong repo EvoMaster; `CLAUDE.md` §5.
 
 ### 1.18 MR-A1 khác gì cách so hai tài khoản của các oracle có sẵn?
 
