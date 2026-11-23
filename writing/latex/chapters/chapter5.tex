@@ -5,14 +5,14 @@
 \begingroup
 \emergencystretch=3em
 
-Chương này đánh giá năm vấn đề: số lượt Oracle 970 phát hiện vi phạm trên biến thể có lỗ hổng và số lượt báo động giả trên biến thể đã vá, khả năng tự nhận diện thao tác chuyển trạng thái từ đặc tả, khả năng phát hiện lỗi thật do nhà phát triển khác viết, nguyên nhân của các lượt bỏ sót, và kết quả của EvoMaster khi không kèm Oracle 970 trên cùng lớp lỗi. Kết quả được so sánh với baseline, tức EvoMaster 6.1.1 chạy với các oracle phân quyền sẵn có, không kèm Oracle 970.
+Chương này đánh giá năm vấn đề: số lượt Oracle 970 phát hiện vi phạm trên biến thể có lỗ hổng và số lượt báo động giả trên biến thể đã vá, khả năng tự nhận diện thao tác chuyển trạng thái từ đặc tả, khả năng phát hiện lỗi thật do nhà phát triển khác viết, nguyên nhân của các lượt bỏ sót, và kết quả của EvoMaster khi không kèm Oracle 970 trên cùng lớp lỗi. Kết quả được so sánh với baseline là nhánh chính của EvoMaster upstream, bản có sẵn các oracle phân quyền và không có Oracle 970.
 
 \section{Thiết kế thực nghiệm}
 \label{sec:eval_design}
 
 Thực nghiệm dùng thiết kế cặp đối chứng trên hai biến thể của mỗi ứng dụng mục tiêu. Biến thể có lỗ hổng dùng để đo tỷ lệ phát hiện vi phạm phân quyền có trạng thái, còn trên biến thể đã vá, mọi cảnh báo phát sinh đều được tính là báo động giả (false positive, FP). Tổng cộng có 100 lượt chạy ở chế độ hộp đen theo thiết lập ở Mục~\ref{sec:impl_setup}, gồm 50 lượt trên biến thể có lỗ hổng và 50 lượt trên biến thể đã vá, tất cả dùng cùng một bản đóng gói của công cụ.
 
-Mỗi lượt chạy ghi lại mã trạng thái HTTP của các bộ ba đã thực thi, nên số lượt có bộ ba và số lượt báo vi phạm được thống kê riêng. Ngoài 100 lượt chạy trên các ứng dụng mục tiêu, khả năng xếp hạng thao tác chuyển trạng thái được đo ngoại tuyến trên tập đánh giá (Mục~\ref{sec:eval_ranking}).
+Mỗi lượt chạy ghi lại mã trạng thái HTTP của các bộ ba đã thực thi, nên số lượt có bộ ba và số lượt báo vi phạm được thống kê riêng. Ngoài 100 lượt chạy trên các ứng dụng mục tiêu, khả năng xếp hạng thao tác chuyển trạng thái được đo bằng cách so điểm của mô hình với nhãn của tập đánh giá (Mục~\ref{sec:eval_ranking}).
 
 \section{Hiệu quả phát hiện và độ chính xác}
 \label{sec:eval_detection}
@@ -75,9 +75,6 @@ Trong các lượt có bộ ba, Oracle 970 báo vi phạm ở cả 28 lượt tr
     \item \texttt{200/200/200} hoặc \texttt{201/200/201} trên biến thể có lỗ hổng;
     \item \texttt{200/200/403} hoặc \texttt{201/200/403} trên biến thể đã vá.
 \end{itemize}
-Ở mỗi lượt có bộ ba, số bộ ba là 1 trên vampi-seeded và pyLoad, 2 trên biến thể có lỗ hổng của artifact-keeper. Trên biến thể đã vá của reports-api, mỗi lượt có 2 bộ ba, một với source \texttt{PUT /reports/\{id\}} và một với source \texttt{POST /reports}, trừ seed 16 và 17 chỉ có 1 bộ ba. Trên biến thể có lỗ hổng, 10 lượt chỉ có bộ ba với source \texttt{POST /reports}, còn seed 2 và 11 có cả hai bộ ba. Mã 201 thuộc các bộ ba có source \texttt{POST /reports}.
-
-Tiêu chí hợp lệ của bộ ba dùng chính mã follow-up mà bộ phán quyết đọc. Do đó, tỷ lệ phát hiện tính trên các lượt có bộ ba gần như là hệ quả của định nghĩa, còn số báo động giả trên biến thể đã vá là phép đo không phụ thuộc vào định nghĩa đó. Cả 22 lượt bỏ sót đều thiếu bộ ba hợp lệ để phán quyết (Mục~\ref{sec:eval_threats}).
 
 Trên bản vá của artifact-keeper, thao tác hạ quyền thành công ở cả 5 lượt, sau đó token cũ nhận mã 401 ở bước follow-up. Mã 401 nằm ngoài phán quyết (Bảng~\ref{tab:obs_status}), nên bộ ba bị hủy. Cả 5 lượt không phát sinh báo động giả và được đếm ở cột \emph{Thiếu bộ ba} của Bảng~\ref{tab:fourcells}.
 
@@ -88,7 +85,7 @@ Trên bốn ứng dụng đã đo, Oracle 970 phát hiện vi phạm ở 28/50 l
 \section{Hiệu quả xếp hạng thao tác chuyển trạng thái}
 \label{sec:eval_ranking}
 
-Mô hình Naive Bayes đi kèm công cụ được chấm trên tập đánh giá gồm 237 bản đặc tả không tham gia huấn luyện, với 8.674 thao tác ghi. Nhãn của tập đánh giá được gán theo quy trình tương tự tập huấn luyện (Mục~\ref{sec:method_ranking}). Tập đánh giá có 153 thao tác chuyển trạng thái, trong đó 101 thao tác có điểm dương. Tỷ lệ tương ứng là 66,0\%, với khoảng Clopper--Pearson 95\% là [57,9; 73,5]. Trong 624 thao tác có điểm dương, 523 thao tác (83,8\%) mang nhãn thông thường. Vì vậy, điểm dương chỉ dùng để chọn ứng viên và chưa xác nhận thao tác có hạ quyền hay không. Các tỷ lệ trên tính theo nhãn hiện có, với giới hạn nêu ở Mục~\ref{sec:eval_threats}. Sau khi chấm, 44 thao tác mà hai lượt gán bất đồng được soát lại và 4 thao tác đổi sang nhãn chuyển trạng thái. Trước lần soát lại, tỷ lệ là 100/149 (67,1\%).
+Mô hình Naive Bayes đi kèm công cụ được chấm trên tập đánh giá gồm 237 bản đặc tả không tham gia huấn luyện, với 8.674 thao tác ghi. Nhãn của tập đánh giá được gán theo quy trình tương tự tập huấn luyện (Mục~\ref{sec:method_ranking}). Tập đánh giá có 153 thao tác chuyển trạng thái, trong đó 101 thao tác có điểm dương. Tỷ lệ tương ứng là 66,0\%, với khoảng Clopper--Pearson 95\% là [57,9; 73,5]. Trong 624 thao tác có điểm dương, 523 thao tác (83,8\%) mang nhãn thông thường. Vì vậy, điểm dương chỉ dùng để chọn ứng viên và chưa xác nhận thao tác có hạ quyền hay không. Các tỷ lệ trên tính theo nhãn hiện có, với giới hạn nêu ở Mục~\ref{sec:eval_threats}.
 
 Bảng~\ref{tab:rank_targets} cho biết vị trí của thao tác chuyển trạng thái thật trên đặc tả của từng ứng dụng mục tiêu. Cột \emph{dùng được} đếm các thao tác có điểm dương mà bộ dựng đề xuất được giá trị hạ quyền. Khi chạy, bộ dựng còn loại các ứng viên không có trường định danh tài khoản nạn nhân, nên trên artifact-keeper, ứng viên \texttt{POST} \path{/api/v1/admin/sso/oidc}, xếp trên \texttt{PATCH}, bị loại, chỉ còn lại 3 ứng viên. Ứng viên thứ nhất, \texttt{PUT} \path{/api/v1/admin/sso/oidc/{id}}, nhận mã 404 với từng nạn nhân, nên bộ ba của ứng viên này bị hủy và bộ dựng không thử lại cặp thao tác và nạn nhân tương ứng (Bảng~\ref{tab:retry_rules}). Cả 5 lượt chạy trên biến thể có lỗ hổng đều dựng được bộ ba trên ứng viên thứ hai là \texttt{PATCH}.
 
@@ -143,15 +140,37 @@ Khả năng khái quát hóa bị giới hạn ở một lớp lỗ hổng phân
 
 Không lượt bỏ sót nào đến từ việc bộ phán quyết đọc sai một bộ ba hợp lệ, nên muốn tăng tỷ lệ phát hiện thì cần tăng số bộ ba dựng được trên reports-api và vampi-seeded.
 
-\section{Đối chứng với baseline và kiểm tra upstream}
+\section{Đối chứng với EvoMaster upstream}
 \label{sec:eval_baseline}
 
-Phép đối chứng kiểm tra baseline và bản upstream có dựng và phán quyết được chuỗi MR-A1 hay không. Mục này thống kê riêng các lượt chạy đối chứng, nằm ngoài 100 lượt của Mục~\ref{sec:eval_design}. Các oracle phân quyền của baseline thuộc nhóm oracle so sánh chéo tài khoản của Şahin và cộng sự \cite{sahin2024bola}, chỉ đối chiếu quyền giữa các tài khoản tại một thời điểm. Do đó, chuỗi hạ quyền rồi dùng lại token cũ theo MR-A1 nằm ngoài các kịch bản mà baseline phán quyết.
+Baseline của khóa luận là nhánh chính của EvoMaster upstream tại commit \texttt{dd063b4f9f}. Bản này có sẵn các oracle phân quyền của Şahin và cộng sự \cite{sahin2024bola} và không có Oracle 970. Các oracle đó đối chiếu quyền giữa các tài khoản tại cùng một thời điểm, nên không phán quyết chuỗi hạ quyền rồi dùng lại token cũ của MR-A1. Baseline được chạy 20 seed trên biến thể có lỗ hổng của reports-api và 20 seed trên biến thể có lỗ hổng của vampi-seeded, với cấu hình giống 100 lượt ở Mục~\ref{sec:eval_design} và chỉ khác bản đóng gói của công cụ. Các lượt này nằm ngoài 100 lượt đó.
 
-Toàn bộ 20 lượt chạy baseline trên biến thể có lỗ hổng của vampi-seeded đều không sinh được bộ ba thao tác dùng lại token cũ. Ở 17/20 lượt, baseline ghi nhận lỗi lộ dấu vết ngăn xếp (stack trace) trong phản hồi HTTP. EvoMaster chỉ gắn lỗi đó cho ca kiểm thử do pha kiểm thử bảo mật tạo ra, nên ở các lượt đó, pha này đã chạy mà vẫn không dựng được bộ ba nào.
+Bảng~\ref{tab:upstream_faults} đếm số lượt có từng mã lỗi mà baseline báo. Trên reports-api, 286 trong 1.182 ca kiểm thử xuất ra mang ít nhất một lỗi. Trên vampi-seeded, con số này là 929 trong 2.188 ca. Mã 305 trên reports-api đều nằm ở \texttt{POST /auth/login}, còn trên vampi-seeded nằm ở \texttt{DELETE} \path{/users/v1/{username}}. Không mã nào trong bảng báo quyền còn sót lại sau lần hạ quyền.
 
-Bản upstream được chạy thêm với 20 seed trên biến thể có lỗ hổng của reports-api, qua một proxy ghi lại toàn bộ lưu lượng HTTP. Không lượt chạy nào trong 20 lượt báo lỗi thuộc lớp MR-A1. Lưu lượng ghi được có 4 lời gọi dùng token cấp lúc tài khoản còn quyền quản trị. Cả 4 lời gọi đều nhận mã 200 dù được gửi sau khi tài khoản bị hạ quyền, nhưng không lời gọi nào có một source thành công bằng cùng token trước lần hạ quyền. Bản upstream không gắn lỗi cho lời gọi nào trong số đó, và tệp kết quả cũng không chứa các lời gọi này.
+\begin{table}[htbp]
+  \centering
+  \caption{Số lượt baseline báo từng mã lỗi trên biến thể có lỗ hổng}
+  \label{tab:upstream_faults}
+  \begin{tabularx}{\textwidth}{@{}c >{\raggedright\arraybackslash}X c c@{}}
+    \toprule
+    \textbf{Mã} & \textbf{Điều kiện báo lỗi} & \textbf{reports-api} & \textbf{vampi-seeded} \\
+    \midrule
+    100 & phản hồi mã 500 & 0/20 & 20/20 \\
+    109 & mã 401 không kèm header \texttt{WWW-Authenticate} & 20/20 & 20/20 \\
+    200 & phản hồi lệch lược đồ trong đặc tả & 0/20 & 20/20 \\
+    201 & header \texttt{Allow} không hợp lệ & 0/20 & 20/20 \\
+    202 & mã 401 khi đặc tả không khai báo cơ chế xác thực & 20/20 & 0/20 \\
+    301 & phản hồi chứa mã XSS & 5/20 & 0/20 \\
+    305 & yêu cầu có xác thực bị coi là chưa xác thực & 15/20 & 4/20 \\
+    309 & phản hồi lộ stack trace & 0/20 & 20/20 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
 
-Trong 40 lượt đối chứng, EvoMaster không kèm Oracle 970 không báo lỗi lớp \mbox{MR-A1} ở lượt nào, kể cả khi lưu lượng có lời gọi dùng token cũ nhận mã 200. Trên hai ứng dụng này, lỗi chỉ được báo khi có Oracle 970, ở 12/20 lượt với reports-api và 6/20 lượt với vampi-seeded.
+Baseline có gửi thao tác hạ quyền. Trong các ca kiểm thử xuất ra, lời gọi đặt vai trò \texttt{VIEWER} cho một tài khoản và nhận mã 2xx xuất hiện 31 lần ở 16/20 lượt trên reports-api. Trên vampi-seeded, lời gọi đặt vai trò \texttt{user} và nhận mã 2xx xuất hiện 13 lần ở 9/20 lượt. Sau lần hạ quyền, không ca nào có lời gọi của tài khoản bị hạ nhận mã 2xx, nên không ca nào chứa đủ bộ ba.
+
+Ở seed 11 trên reports-api, ca \texttt{test\_25} chỉ có một lời gọi: \texttt{superadmin} gửi \texttt{PUT /users/alice/role} với vai trò \texttt{VIEWER} và nhận mã 200. Tài khoản \texttt{alice} không gửi thêm yêu cầu nào trong ca này. EvoMaster xếp ca này vào nhóm ca thành công và không gắn lỗi nào. Cũng ở seed 11, trong 100 lượt của Mục~\ref{sec:eval_detection}, Oracle 970 dựng bộ ba trên đúng cặp tài khoản này. Tài khoản \texttt{alice} gọi \texttt{PUT /reports/\{id\}} và nhận 200, \texttt{superadmin} hạ \texttt{alice} xuống \texttt{VIEWER} và nhận 200, rồi \texttt{alice} dùng lại token cấp trước lần hạ quyền để gọi \texttt{PUT /reports/\{id\}} lần nữa và vẫn nhận 200. Oracle 970 báo vi phạm từ chuỗi \texttt{200/200/200} đó. Baseline đã gửi đúng thao tác chuyển trạng thái nhưng thiếu source trước nó và follow-up bằng token cũ sau nó.
+
+Với cùng cấu hình, Oracle 970 báo lỗi lớp \mbox{MR-A1} ở 12/20 lượt trên reports-api và 6/20 lượt trên vampi-seeded (Bảng~\ref{tab:detection}), còn baseline không báo ở lượt nào trên cả hai ứng dụng.
 
 \endgroup

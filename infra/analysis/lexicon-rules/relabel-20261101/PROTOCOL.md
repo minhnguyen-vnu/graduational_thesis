@@ -148,11 +148,11 @@ Quyết định của user:
 
 | Phần | File | Op soát | Chọn | Op | T |
 |---|---|---|---|---|---|
-| Học | `nop-hoi-dong/nhan-hoc-cuoi.csv` (`b00e4a1623f73079…`) | 66 | người 14, hai AI 35, Opus 17 | 10.381 | 209 |
+| Học | `nop-hoi-dong/nhan-hoc-cuoi.csv` (`f79178d0bd92d2cf…`) | 66 | người 14, hai AI 35, Opus 17 | 10.381 | 209 |
 | Thi | `nop-hoi-dong/nhan-thi-cuoi.csv` (`bc716bb8194e57b5…`) | 53, rồi 44 | người 6, hai AI 20, Opus 25, Sonnet 2; lần sau đổi 4 | 8.674 | 153 |
 
 - Dựng bằng `build_nhan_hoc_cuoi.py` (17 kiểm tra), `build_nhan_thi_cuoi.py` (15 kiểm tra); lựa chọn ở
-  `review-lech-hoc/review-66.csv`, `review-lech-thi/review-thi.csv`. 8 op ví dụ trong hướng dẫn ghi nguồn `hai_AI`.
+  `review-lech-hoc/review-66.csv`, `review-lech-thi/review-thi.csv`. 8 op ví dụ trong hướng dẫn ghi nguồn `nguoi` (sửa 2026-11-22, trước đó `hai_AI`).
 - Phần học: 0/371 op ngẫu nhiên hai AI cùng N là T; số op T sót trong 9.771 op chưa xem 0–97.
 - M2: `../m2-model-20261107/stateful-authz-model.csv` (`b2deef150bf88837…`), cùng công thức và mã với M1. So offline với
   M1 trên 5 target (`../m2-model-20261107/compare_targets.out`): transition giữ hạng, trường role, victim và giá trị hạ;

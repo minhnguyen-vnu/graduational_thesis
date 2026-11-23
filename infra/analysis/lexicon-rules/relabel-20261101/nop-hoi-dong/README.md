@@ -34,13 +34,13 @@ Phần học:
 
 | `nhom` | Op | Người gán xem |
 |---|---|---|
-| `hai_AI_cung_T` | 173 | 30 (`cung_T`, đợt 3) + 135 (`cung_T_con_lai`, đợt 4) |
+| `hai_AI_cung_T` | 173 | Hết: 30 (`cung_T`, đợt 3) + 135 (`cung_T_con_lai`, đợt 4) + 8 ví dụ trong hướng dẫn |
 | `cung_T_lech_truong` | 25 | Hết (`lech`, đợt 3) |
 | `lech_T` | 41 | Hết (`lech`, đợt 3) |
 | `hai_AI_cung_N` | 10.142 | 371 ngẫu nhiên (`N_ngau_nhien_hoc`, đợt 4) |
 
-- `hai_AI_cung_T`: hai lượt cùng gọi T và cùng `victim`, `role`, `order`. 8 op còn lại là ví dụ có lời giải trong hướng
-  dẫn nên không đưa người gán.
+- `hai_AI_cung_T`: hai lượt cùng gọi T và cùng `victim`, `role`, `order`. 8 op còn lại là ví dụ trong hướng
+  dẫn: người gán đã xem cùng lời giải nên không đưa lên phiếu; nhãn cuối trùng lời giải.
 - `cung_T_lech_truong`: hai lượt cùng gọi T, lệch `victim`, `role` hoặc `order`.
 - `lech_T`: một lượt gọi T, lượt kia không.
 
@@ -48,8 +48,8 @@ Nhãn học cuối (`nhan-hoc-cuoi.csv`, dựng bằng `../build_nhan_hoc_cuoi.p
 
 | `nguon` | Op | T | Luật |
 |---|---|---|---|
-| `nguoi` | 550 | 154 | Người đã xem: 536 op khớp ít nhất một AI, và 14 op trong 66 op lệch chốt theo người |
-| `hai_AI` | 43 | 41 | 35 op trong 66 op lệch chốt theo hai AI, và 8 op ví dụ trong hướng dẫn (hai AI cùng T, người chưa xem) |
+| `nguoi` | 558 | 162 | Người đã xem: 536 op khớp ít nhất một AI, 14 op trong 66 op lệch chốt theo người, và 8 op ví dụ trong hướng dẫn |
+| `hai_AI` | 35 | 33 | 35 op trong 66 op lệch chốt theo hai AI |
 | `opus` | 17 | 14 | Op trong 66 op lệch chốt theo lượt Opus |
 | `AI_chua_xem` | 9.771 | 0 | Chưa xem: op hai AI cùng N ngoài 371 op ngẫu nhiên |
 | Cộng | 10.381 | 209 | |
@@ -57,7 +57,7 @@ Nhãn học cuối (`nhan-hoc-cuoi.csv`, dựng bằng `../build_nhan_hoc_cuoi.p
 - Lệch nghĩa là khác T/N, hoặc cùng T nhưng khác `victim`, `role`, `order`. 66 op lệch được xem lại và chốt ngày
   2026-11-07; lựa chọn ở cột `chon` của `review-66-lech.csv`.
 - T = 1 khi A, B, C thoả định nghĩa T ở trên. Op N để trống `victim`, `role`, `order`.
-- Op `AI_chua_xem` và op `hai_AI` ghi A, B, C theo lượt Sonnet. Hai lượt cùng T/N, và op T cùng `victim`, `role`, `order`.
+- Op `AI_chua_xem`, op `hai_AI` và 8 op ví dụ ghi A, B, C theo lượt Sonnet; ở 8 op ví dụ, giá trị này trùng lời giải. Hai lượt cùng T/N, và op T cùng `victim`, `role`, `order`.
 
 Phần thi:
 

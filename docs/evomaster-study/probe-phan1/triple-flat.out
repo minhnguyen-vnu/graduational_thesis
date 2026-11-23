@@ -1,0 +1,46 @@
+victimSlice sampleType=SMART
+   children: EnterpriseActionGroup(ACTION_COMPONENT_9) 
+victimSlice seeMainExecutableActions = [ACTION_COMPONENT_2 POST:/reports auth=superadmin] 
+958 base = victimSlice.copy()
+   base==victimSlice? false
+   base seeMainExecutableActions = [ACTION_COMPONENT_2 POST:/reports auth=superadmin] 
+959 source = base.seeMainExecutableActions().last()
+   source=POST:/reports localId=ACTION_COMPONENT_2 body={"title":"8nI4Cb1ZO", "classification":"PUBLIC"}
+960 victimAuth = source.auth
+   victimAuth.name=superadmin
+962 transition = transitionDef.copy()
+   transition=PUT:/users/{username}/role localId=NONE_LOCAL_ID initialized=false auth=NoAuth
+963 transition.resetLocalIdRecursively()
+   localId=NONE_LOCAL_ID
+965 transition.doInitialize(randomness)
+   initialized=true resolvedPath=/users/H4n7Qd86zLbDN/role body={"role":"ADMIN"}
+966 transition.auth = operator
+   auth=bob
+967-977 (setUserTargetToVictim, setRoleFieldToReduced) -> resolvedPath=/users/superadmin/role body={"role":"VIEWER"}
+978 base.addMainActionInEmptyEnterpriseGroup(action = transition)
+   children: EnterpriseActionGroup(ACTION_COMPONENT_9) EnterpriseActionGroup(ACTION_COMPONENT_10) 
+   base seeMainExecutableActions = [ACTION_COMPONENT_2 POST:/reports auth=superadmin] [ACTION_COMPONENT_11 PUT:/users/{username}/role auth=bob] 
+980 followUp = source.copy()
+   followUp localId=ACTION_COMPONENT_2 (source ACTION_COMPONENT_2) same object? false auth=superadmin auth same object as source? true body={"title":"8nI4Cb1ZO", "classification":"PUBLIC"}
+981 followUp.resetLocalIdRecursively()
+   localId=NONE_LOCAL_ID
+984 base.addMainActionInEmptyEnterpriseGroup(action = followUp)
+   children: EnterpriseActionGroup(ACTION_COMPONENT_9) EnterpriseActionGroup(ACTION_COMPONENT_10) EnterpriseActionGroup(ACTION_COMPONENT_19) 
+   base seeMainExecutableActions = [ACTION_COMPONENT_2 POST:/reports auth=superadmin] [ACTION_COMPONENT_11 PUT:/users/{username}/role auth=bob] [ACTION_COMPONENT_20 POST:/reports auth=superadmin] 
+986 base.doInitializeLocalId()
+   children: EnterpriseActionGroup(ACTION_COMPONENT_9) EnterpriseActionGroup(ACTION_COMPONENT_10) EnterpriseActionGroup(ACTION_COMPONENT_19) 
+   base seeMainExecutableActions = [ACTION_COMPONENT_2 POST:/reports auth=superadmin] [ACTION_COMPONENT_11 PUT:/users/{username}/role auth=bob] [ACTION_COMPONENT_20 POST:/reports auth=superadmin] 
+987 base.modifySampleType(SampleType.SECURITY)  before=SMART
+   after=SECURITY
+988 base.ensureFlattenedStructure()
+   returned false
+   children: EnterpriseActionGroup(ACTION_COMPONENT_9) EnterpriseActionGroup(ACTION_COMPONENT_10) EnterpriseActionGroup(ACTION_COMPONENT_19) 
+   base seeMainExecutableActions = [ACTION_COMPONENT_2 POST:/reports auth=superadmin] [ACTION_COMPONENT_11 PUT:/users/{username}/role auth=bob] [ACTION_COMPONENT_20 POST:/reports auth=superadmin] 
+victimSlice unchanged: 
+   children: EnterpriseActionGroup(ACTION_COMPONENT_9) 
+   victimSlice seeMainExecutableActions = [ACTION_COMPONENT_2 POST:/reports auth=superadmin] 
+statusIn(ei, POST:/reports ACTION_COMPONENT_2): result class=RestCallResult is RestCallResult=true -> 201
+statusIn(ei, PUT:/users/{username}/role ACTION_COMPONENT_11): result class=RestCallResult is RestCallResult=true -> 200
+statusIn(ei, POST:/reports ACTION_COMPONENT_20): result class=RestCallResult is RestCallResult=true -> 201
+plain ActionResult is RestCallResult? false
+RestCallResult without setStatusCode -> getStatusCode()=null

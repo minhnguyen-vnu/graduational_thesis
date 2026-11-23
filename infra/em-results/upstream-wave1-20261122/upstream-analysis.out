@@ -1,0 +1,36 @@
+Baseline upstream EvoMaster — wave1 analysis (reports-api vuln, vampi-seeded vuln), 2026-11-22/23
+jar evomaster-upstream-master-b6307c2d (WebFuzzing/EvoMaster master, commit dd063b4f9f, 6.2.1-SNAPSHOT)
+40 hàng (reports 20 + vampi 20). Bắt đầu 23:36:15, xong 01:29:57. 0 ERR, 0 STOPPED, 0 máy ngủ.
+
+== Toàn vẹn ==
+40 hàng runs.csv = 40 run-log = 40 report.json; 40 log có "EvoMaster process has completed successfully".
+Mọi det970=0 (jar upstream không có oracle 970 SECURITY_STATEFUL_AUTHORIZATION). assembled/void/restore=0, statuses=NA
+(upstream không in log builder của luận văn).
+
+== Bảng fault theo target (mỗi mã fault = số seed /20 có mã đó) — jar b6307c2d ==
+
+reports-api (vuln, :8080), n=20:
+  code  seeds/20  id
+   109      20    HTTP_STATUS_NO_401_IF_NO_WWW_AUTHENTICATE
+   202      20    SCHEMA_STATUS_NO_401_IF_NO_AUTH
+   305      15    SECURITY_NOT_RECOGNIZED_AUTHENTICATED
+   301       5    SECURITY_XSS_INJECTION
+
+vampi-seeded (vuln, :5002), n=20:
+  code  seeds/20  id
+   100      20    HTTP_STATUS_500
+   109      20    HTTP_STATUS_NO_401_IF_NO_WWW_AUTHENTICATE
+   200      20    SCHEMA_INVALID_RESPONSE
+   201      20    SCHEMA_INVALID_ALLOW
+   309      20    SECURITY_LEAKED_STACK_TRACES
+   305       4    SECURITY_NOT_RECOGNIZED_AUTHENTICATED
+
+== Quan sát ==
+Không target nào có mã 970. Lỗi gieo của luận văn là phục hồi quyền (MR-A1: token cấp trước vẫn ghi được sau khi hạ
+quyền) — upstream master không có oracle cho quan hệ này, nên 0/20 ở cả hai target. Mã bảo mật upstream phát hiện là
+305 (SECURITY_NOT_RECOGNIZED_AUTHENTICATED: một call không auth được chấp nhận ở nơi đáng lẽ đòi auth), 301
+(SECURITY_XSS_INJECTION), 309 (SECURITY_LEAKED_STACK_TRACES) — khác quan hệ với 970.
+
+== Lệch luật / sự cố ==
+Không có. 0 STOPPED trong logs/*.log. Chạy song song 2 lane (reports :8080, vampi :5002), mỗi lane 20 seed tuần tự.
+Cờ y hệt tr2-wave1 (thân java t1/t2 diff IDENTICAL, chỉ khác $JAR và $BASE — xem PROTOCOL.md).

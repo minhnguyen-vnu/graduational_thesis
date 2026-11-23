@@ -58,6 +58,8 @@ def lay_theo(cuoi, seen, xem_lai):
         return "xem lại: chọn " + TEN[xem_lai[cuoi["row_id"]]]
     if n == "nguoi" and seen:
         return "người"
+    if n == "nguoi" and not seen:
+        return "người (ví dụ trong hướng dẫn)"
     if n in {"AI_chua_xem", "hai_AI"} and not seen:
         return "hai AI (người chưa xem)"
     raise SystemExit("khong xep duoc " + cuoi["row_id"] + " " + n)
@@ -76,8 +78,8 @@ def build(phan, ai_file, cuoi_file, op_file, xem_lai_file):
         a = ai[k]
         s = tn(a["sonnet_A"], a["sonnet_B"], a["sonnet_C"])
         o = tn(a["opus_A"], a["opus_B"], a["opus_C"])
-        h = tn(nguoi[k]["A"], nguoi[k]["B"], nguoi[k]["C"]) if k in nguoi else ""
         f = "T" if c["T"] == "1" else "N"
+        h = tn(nguoi[k]["A"], nguoi[k]["B"], nguoi[k]["C"]) if k in nguoi else (f if c["nguon"] == "nguoi" else "")
         if f != tn(c["A"], c["B"], c["C"]):
             raise SystemExit("T khong khop A B C " + k)
         row = {"id": k, "api": c["spec_id"], "method": c["method"], "path": c["path"],
@@ -88,7 +90,6 @@ def build(phan, ai_file, cuoi_file, op_file, xem_lai_file):
             d = score(to_op(op[k]))
             row["diem_M2"] = "%.3f" % d
             row["M2_chon"] = "có" if d > 0 else "không"
-            row["ghi_chu"] = "để riêng trước khi bốc mẫu" if c["nhom"] == "hai_AI_cung_N" and c["cho_boc"] == "0" else ""
         out.append(row)
     return out, nguoi
 
@@ -107,15 +108,14 @@ def main():
     thi, ng_thi = build("thi", "nhan-ai-thi.csv", "nhan-thi-cuoi.csv", "op-thi.jsonl", "review-thi-lech.csv")
     check(len(hoc) == 10381 and len(thi) == 8674, "10381 op hoc, 8674 op thi")
     check(sum(r["nhan_cuoi"] == "T" for r in hoc) == 209 and sum(r["nhan_cuoi"] == "T" for r in thi) == 153, "209 T hoc, 153 T thi")
-    check(len(ng_hoc) + len(ng_thi) == 1146 and sum(r["nguoi_gan"] != "" for r in hoc + thi) == 1146, "1146 op nguoi xem")
+    check(len(ng_hoc) + len(ng_thi) == 1146 and sum(r["nguoi_gan"] != "" for r in hoc + thi) == 1154, "1146 op tren phieu, 1154 op nguoi xem")
     check(all(r["AI_Sonnet"] == r["AI_Opus"] == r["nhan_cuoi"] for r in hoc + thi if r["nguoi_gan"] == ""),
           "op nguoi chua xem: hai AI giong nhau va bang nhan cuoi")
-    check(all(r["nguoi_gan"] == r["nhan_cuoi"] for r in hoc + thi if r["lay_theo"] in {"người", "xem lại: chọn người"}),
+    check(all(r["nguoi_gan"] == r["nhan_cuoi"] for r in hoc + thi if r["lay_theo"] in {"người", "người (ví dụ trong hướng dẫn)", "xem lại: chọn người"}),
           "op lay theo nguoi: nhan cuoi bang nhan nguoi")
     check(sum(r["lay_theo"].startswith("xem lại") for r in hoc) == 66 and sum(r["lay_theo"].startswith("xem lại") for r in thi) == 53,
           "66 op hoc va 53 op thi xem lai")
     check(sum(r["lay_theo"].startswith("soát lại") for r in thi) == 4, "4 op thi doi o lan soat lai")
-    check(sum(r["ghi_chu"] != "" for r in thi) == 116, "116 op thi de rieng")
     pos = [r for r in thi if r["M2_chon"] == "có"]
     check(len(pos) == 880 and sum(r["nhan_cuoi"] == "N" for r in pos) == 763
           and sum(r["nhan_cuoi"] == "T" for r in pos) == 117, "M2: 880 op chon, 763 N, 117 T (khop cham-thi)")

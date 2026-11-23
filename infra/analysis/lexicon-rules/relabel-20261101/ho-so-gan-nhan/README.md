@@ -10,7 +10,7 @@ phần thi dùng để chấm M2.
 |---|---|---|
 | API | 230 | 237 |
 | Op ghi | 10.381 | 8.674 |
-| Op người gán xem | 602 | 544 |
+| Op người gán xem | 610 | 544 |
 | Op T theo nhãn cuối | 209 | 153 |
 
 M2 trên phần thi:
@@ -23,7 +23,7 @@ Nhãn AI so với nhãn cuối, phần thi:
 - Người gán xem hết 176 op có ít nhất một AI gọi T; 153 op trong số đó là T. Cả 132 op hai AI cùng gọi T đều là T.
   Trong 44 op một AI gọi T, AI kia gọi N, có 21 op là T.
 - Trong 368 op hai AI cùng gọi N, bốc ngẫu nhiên cho người gán xem, không op nào là T. Từ mẫu này, số op T còn sót trong
-  8.014 op chưa xem nằm trong khoảng 0–80 (khoảng tin cậy 95%).
+  8.130 op chưa xem nằm trong khoảng 0–81 (khoảng tin cậy 95%).
 
 `kiem-tra.py` tính lại mọi số trên từ hai bảng nhãn và ghi ra `ket-qua.txt`.
 
@@ -33,8 +33,9 @@ Nhãn AI so với nhãn cuối, phần thi:
    học một API, chọn theo tên công ty trước khi mở spec: 365 API, trong đó 237 API có op ghi.
 2. Hai AI gán cả 19.055 op theo cùng một phiếu (`phieu/phieu-cho-AI.md`): Claude Sonnet 5.5 và Claude Opus 5.5. Mỗi AI
    chạy một lượt riêng, không dùng tool, không thấy nhãn của AI kia.
-3. Người gán xem 1.146 op theo `phieu/huong-dan-nguoi-gan.html`, không thấy nhãn AI.
-   - Học: 66 op hai AI gán lệch nhau, 165 op hai AI cùng gọi T, 371 op hai AI cùng gọi N bốc ngẫu nhiên.
+3. Người gán xem 1.154 op: 1.146 op trên phiếu theo `phieu/huong-dan-nguoi-gan.html`, không thấy nhãn AI, và 8 op ví
+   dụ trong hướng dẫn, xem cùng lời giải.
+   - Học: 66 op hai AI gán lệch nhau, 173 op hai AI cùng gọi T, 371 op hai AI cùng gọi N bốc ngẫu nhiên.
    - Thi: 176 op có ít nhất một AI gọi T, 368 op hai AI cùng gọi N bốc ngẫu nhiên.
 4. Chốt nhãn cuối (cột `lay_theo`):
    - op người gán chưa xem: lấy nhãn hai AI, vì ở mọi op này hai AI gán giống nhau;
@@ -51,9 +52,8 @@ cũng tính là khác, nên có op ba nhãn đều là T vẫn phải xem lại.
 
 - Sau khi chấm M2, 44 op phần thi mà một AI gọi T, AI kia gọi N được xem lại lần nữa. 4 op đổi từ N sang T (`lay_theo`
   bắt đầu bằng "soát lại sau khi chấm M2"). Trước lần này phần thi có 149 op T và M2 bắt được 116.
-- 8 op phần học hai AI cùng gọi T mà người gán chưa xem là ví dụ có lời giải trong hướng dẫn.
-- 116 op phần thi có `ghi_chu` được để riêng trước khi bốc mẫu ngẫu nhiên, vì là các ứng viên đứng đầu của mô hình cũ
-  P2f. Phép suy 0–80 op sót tính trên 8.014 op còn lại.
+- 8 op phần học hai AI cùng gọi T là ví dụ có lời giải trong hướng dẫn. Người gán xem chúng cùng lời giải, không gán lại
+  trên phiếu; `nguoi_gan` ghi theo lời giải, `lay_theo` là "người (ví dụ trong hướng dẫn)".
 
 ## File
 
@@ -78,6 +78,5 @@ cũng tính là khác, nên có op ba nhãn đều là T vẫn phải xem lại.
 | `nhan_cuoi` | Nhãn dùng để học hoặc chấm |
 | `lay_theo` | Nhãn cuối lấy theo đâu (bước 4) |
 | `diem_M2`, `M2_chon` | Chỉ có ở phần thi: điểm M2; "có" khi điểm lớn hơn 0 |
-| `ghi_chu` | Chỉ có ở phần thi: đánh dấu 116 op để riêng |
 
 Hai bảng nhãn dựng bằng `../build_ho_so.py` từ `../nop-hoi-dong/`.

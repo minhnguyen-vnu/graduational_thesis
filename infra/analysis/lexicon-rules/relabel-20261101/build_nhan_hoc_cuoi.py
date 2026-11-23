@@ -67,7 +67,7 @@ def main():
         elif k in hum:
             src, p, nguon = hum[k], "", "nguoi"
         elif a["nhom"] == "hai_AI_cung_T":
-            src, p, nguon = a, "sonnet_", "hai_AI"
+            src, p, nguon = a, "sonnet_", "nguoi"
         else:
             src, p, nguon = a, "sonnet_", "AI_chua_xem"
         t = is_t(src, p)
@@ -80,15 +80,15 @@ def main():
     unseen = [r for r in rows if r["row_id"] not in hum]
     check(all(ai[r["row_id"]]["nhom"] in {"hai_AI_cung_N", "hai_AI_cung_T"} for r in unseen), "op chua xem chi thuoc hai nhom hai AI cung y")
     vidu = [r for r in unseen if ai[r["row_id"]]["nhom"] == "hai_AI_cung_T"]
-    check(len(vidu) == 8 and all(r["nguon"] == "hai_AI" and r["T"] == "1" for r in vidu), "8 op vi du ghi hai_AI, deu T")
-    check(Counter(r["nguon"] for r in rows)["hai_AI"] == 43, "hai_AI = 35 op review + 8 op vi du")
+    check(len(vidu) == 8 and all(r["nguon"] == "nguoi" and r["T"] == "1" for r in vidu), "8 op vi du ghi nguoi, deu T")
+    check(Counter(r["nguon"] for r in rows)["hai_AI"] == 35, "hai_AI = 35 op review")
     check(all(is_t(ai[r["row_id"]], "sonnet_") == is_t(ai[r["row_id"]], "opus_")
               and (not is_t(ai[r["row_id"]], "sonnet_") or same_fields(ai[r["row_id"]], "sonnet_", ai[r["row_id"]], "opus_"))
               for r in unseen),
           "op chua xem: Sonnet va Opus cung T/N, op T cung truong")
     check(Counter(r["nguon"] for r in rows)["AI_chua_xem"] == 9771, "9771 op AI_chua_xem, deu hai AI cung N")
     check(all(r["T"] == "0" for r in rows if r["nguon"] == "AI_chua_xem"), "op AI_chua_xem deu N")
-    seen_ok = [r for r in rows if r["nguon"] == "nguoi" and r["row_id"] not in rv]
+    seen_ok = [r for r in rows if r["nguon"] == "nguoi" and r["row_id"] in hum and r["row_id"] not in rv]
     check(len(seen_ok) == 536 and all(r["T"] == ("1" if is_t(hum[r["row_id"]]) else "0") for r in seen_ok),
           "536 op nguoi da xem ngoai review lay theo nguoi")
     check(all(r["victim"] == r["role"] == r["order"] == "" for r in rows if r["T"] == "0"), "op N khong mang victim, role, order")

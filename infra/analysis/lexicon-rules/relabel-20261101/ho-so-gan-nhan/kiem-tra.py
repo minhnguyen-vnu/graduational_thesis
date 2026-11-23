@@ -74,7 +74,7 @@ for ten, f in (("hai AI cùng gọi T", lambda r: r["AI_Sonnet"] == r["AI_Opus"]
     say("     %-28s %d/%d" % (ten, sum(r["nhan_cuoi"] == "T" for r in g), len(g)))
 say("   Thi, op T ngoài nhóm trên: %d" % sum(r["nhan_cuoi"] == "T" for r in thi if r not in mot_ai_T))
 say("   Thi, mẫu ngẫu nhiên op hai AI cùng N, người xem: " + mau_ngau_nhien(
-    thi, [r for r in thi if r["nguoi_gan"] == "" and hai_ai_N(r) and r["ghi_chu"] == ""]))
+    thi, [r for r in thi if r["nguoi_gan"] == "" and hai_ai_N(r)]))
 say("   Học, mẫu ngẫu nhiên op hai AI cùng N, người xem: " + mau_ngau_nhien(
     hoc, [r for r in hoc if r["nguoi_gan"] == "" and hai_ai_N(r)]))
 

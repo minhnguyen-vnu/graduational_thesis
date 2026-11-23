@@ -1,0 +1,91 @@
+* There are 9 usable RESTful API endpoints defined in the schema configuration
+cluster keys = [PUT:/users/{username}/role, GET:/reports/{id}, PUT:/reports/{id}, DELETE:/reports/{id}, POST:/reset, GET:/reports, POST:/reports, POST:/auth/login, GET:/users/me]
+=== template POST:/reports (chua initialize)
+RestCallAction
+    BodyParam name=body
+        ObjectGene name=body value={"title":"foo", "classification":"CONFIDENTIAL"}
+            StringGene name=title value="foo"
+            EnumGene name=classification value="CONFIDENTIAL"
+        EnumGene name=CONTENT_TYPE value="application/json"
+        CustomMutationRateGene name=sendUnquoteJsonStringWrapper value=false
+            BooleanGene name=sendUnquoteJsonString value=false
+=== template PUT:/users/{username}/role (chua initialize)
+RestCallAction
+    PathParam name=username
+        CustomMutationRateGene name=username value="foo"
+            StringGene name=username value="foo"
+    BodyParam name=body
+        ObjectGene name=body value={"role":"ADMIN"}
+            EnumGene name=role value="ADMIN"
+        EnumGene name=CONTENT_TYPE value="application/json"
+        CustomMutationRateGene name=sendUnquoteJsonStringWrapper value=false
+            BooleanGene name=sendUnquoteJsonString value=false
+=== a1 sau doInitialize(random seed 42)
+RestCallAction
+    BodyParam name=body
+        ObjectGene name=body value={"title":"sgTqPBwBBSF_", "classification":"CONFIDENTIAL"}
+            StringGene name=title value="sgTqPBwBBSF_"
+            EnumGene name=classification value="CONFIDENTIAL"
+        EnumGene name=CONTENT_TYPE value="application/json"
+        CustomMutationRateGene name=sendUnquoteJsonStringWrapper value=false
+            BooleanGene name=sendUnquoteJsonString value=false
+set POST:/reports title=8nI4Cb1ZO ok=true gene=StringGene
+set POST:/reports classification=PUBLIC ok=true gene=EnumGene
+set PUT:/users/{username}/role username=superadmin ok=true gene=StringGene
+set PUT:/users/{username}/role role=VIEWER ok=true gene=EnumGene
+set POST:/reports title=8nI4Cb1ZO ok=true gene=StringGene
+set POST:/reports classification=PUBLIC ok=true gene=EnumGene
+=== RestIndividual
+RestIndividual
+    RestResourceCalls localId=ACTION_COMPONENT_1
+        EnterpriseActionGroup localId=ACTION_COMPONENT_9
+            RestCallAction localId=ACTION_COMPONENT_2
+                BodyParam name=body
+                    ObjectGene name=body value={"title":"8nI4Cb1ZO", "classification":"PUBLIC"} localId=GENE_3
+                        StringGene name=title value="8nI4Cb1ZO" localId=GENE_4
+                        EnumGene name=classification value="PUBLIC" localId=GENE_5
+                    EnumGene name=CONTENT_TYPE value="application/json" localId=GENE_6
+                    CustomMutationRateGene name=sendUnquoteJsonStringWrapper value=false localId=GENE_7
+                        BooleanGene name=sendUnquoteJsonString value=false localId=GENE_8
+    RestResourceCalls localId=ACTION_COMPONENT_10
+        EnterpriseActionGroup localId=ACTION_COMPONENT_19
+            RestCallAction localId=ACTION_COMPONENT_11
+                PathParam name=username
+                    CustomMutationRateGene name=username value="superadmin" localId=GENE_12
+                        StringGene name=username value="superadmin" localId=GENE_13
+                BodyParam name=body
+                    ObjectGene name=body value={"role":"VIEWER"} localId=GENE_14
+                        EnumGene name=role value="VIEWER" localId=GENE_15
+                    EnumGene name=CONTENT_TYPE value="application/json" localId=GENE_16
+                    CustomMutationRateGene name=sendUnquoteJsonStringWrapper value=true localId=GENE_17
+                        BooleanGene name=sendUnquoteJsonString value=true localId=GENE_18
+    RestResourceCalls localId=ACTION_COMPONENT_20
+        EnterpriseActionGroup localId=ACTION_COMPONENT_28
+            RestCallAction localId=ACTION_COMPONENT_21
+                BodyParam name=body
+                    ObjectGene name=body value={"title":"8nI4Cb1ZO", "classification":"PUBLIC"} localId=GENE_22
+                        StringGene name=title value="8nI4Cb1ZO" localId=GENE_23
+                        EnumGene name=classification value="PUBLIC" localId=GENE_24
+                    EnumGene name=CONTENT_TYPE value="application/json" localId=GENE_25
+                    CustomMutationRateGene name=sendUnquoteJsonStringWrapper value=false localId=GENE_26
+                        BooleanGene name=sendUnquoteJsonString value=false localId=GENE_27
+=== seeMainExecutableActions
+ACTION_COMPONENT_2 | getName()=POST:/reports | verb=POST | path=/reports | resolvedPath()=/reports | auth.name=superadmin | parameters=[BodyParam(body)] | toString=POST /reports , auth=superadmin
+    BodyParam primaryGene=ObjectGene raw={"title":"8nI4Cb1ZO", "classification":"PUBLIC"} | JSON={"title":"8nI4Cb1ZO", "classification":"PUBLIC"}
+ACTION_COMPONENT_11 | getName()=PUT:/users/{username}/role | verb=PUT | path=/users/{username}/role | resolvedPath()=/users/superadmin/role | auth.name=bob | parameters=[PathParam(username), BodyParam(body)] | toString=PUT /users/superadmin/role , auth=bob
+    PathParam primaryGene=CustomMutationRateGene raw=superadmin | JSON="superadmin"
+    BodyParam primaryGene=ObjectGene raw={"role":"VIEWER"} | JSON={"role":"VIEWER"}
+ACTION_COMPONENT_21 | getName()=POST:/reports | verb=POST | path=/reports | resolvedPath()=/reports | auth.name=superadmin | parameters=[BodyParam(body)] | toString=POST /reports , auth=superadmin
+    BodyParam primaryGene=ObjectGene raw={"title":"8nI4Cb1ZO", "classification":"PUBLIC"} | JSON={"title":"8nI4Cb1ZO", "classification":"PUBLIC"}
+size()=3 seeAllActions().size=3
+=== EvaluatedIndividual
+seeResult(ACTION_COMPONENT_2) -> sourceLocalId=ACTION_COMPONENT_2 getStatusCode()=201 getBody()={"title":"8nI4Cb1ZO","owner":"superadmin","classification":"PUBLIC"} stopping=false
+seeResult(ACTION_COMPONENT_11) -> sourceLocalId=ACTION_COMPONENT_11 getStatusCode()=200 getBody()=null stopping=false
+seeResult(ACTION_COMPONENT_21) -> sourceLocalId=ACTION_COMPONENT_21 getStatusCode()=201 getBody()=null stopping=false
+evaluatedMainActions: POST:/reports -> 201
+evaluatedMainActions: PUT:/users/{username}/role -> 200
+evaluatedMainActions: POST:/reports -> 201
+seeResult("ACTION_COMPONENT_99") -> null
+=== copy
+copy same object? false ; first action same object? false ; localId copy=ACTION_COMPONENT_2
+after resetLocalIdRecursively: NONE_LOCAL_ID ; original still ACTION_COMPONENT_2
