@@ -1,0 +1,51 @@
+* [31mThere are 1 validation errors and warnings when parsing the schema. It is strongly recommended to fix these issues to enable EvoMaster to achieve better results. Errors/warnings:[0m
+* [33m0: attribute paths.'/api/v1/quarantine/{artifact_id}/reject'(post).operationId is repeated[0m
+21:17:43.755 [main] WARN  o.e.c.p.r.b.RestActionBuilderV3 - No type/format information provided for 'artifact_metadata'. Defaulting to 'string'
+21:17:43.756 [main] WARN  o.e.c.p.r.b.RestActionBuilderV3 - No type/format information provided for 'artifact_metadata_properties'. Defaulting to 'string'
+21:17:43.756 [main] WARN  o.e.c.p.r.b.RestActionBuilderV3 - No type/format information provided for 'package_metadata'. Defaulting to 'string'
+=== cay cua PATCH:/api/v1/users/{id} sau doInitialize
+RestCallAction
+    PathParam name=id
+        CustomMutationRateGene name=id
+            StringGene name=id raw=sgTqPBwBBSF_
+    BodyParam name=body
+        ObjectGene name=body
+            OptionalGene name=display_name isActive=true
+                NullableGene name=display_name isActive=true
+                    StringGene name=display_name raw=X6NEDx
+            OptionalGene name=email isActive=false
+                NullableGene name=email isActive=true
+                    StringGene name=email raw=P36G44
+            OptionalGene name=is_active isActive=false
+                NullableGene name=is_active isActive=true
+                    BooleanGene name=is_active raw=false
+            OptionalGene name=is_admin isActive=true
+                NullableGene name=is_admin isActive=true
+                    BooleanGene name=is_admin raw=false
+        EnumGene name=CONTENT_TYPE values=[application/json] index=0 raw=application/json
+        CustomMutationRateGene name=sendUnquoteJsonStringWrapper
+            BooleanGene name=sendUnquoteJsonString raw=true
+=== schemaFields
+path:id                      gene=CustomMutationRateGene   value=StringGene   kind=str    leaf=id             role= -4.782 victim=  1.135
+body:display_name            gene=OptionalGene             value=StringGene   kind=str    leaf=display_name   role= -3.672 victim= -2.888
+body:email                   gene=OptionalGene             value=StringGene   kind=str    leaf=email          role= -2.853 victim= -0.397
+body:is_active               gene=OptionalGene             value=BooleanGene  kind=bool   leaf=is_active      role= -0.595 victim= -2.565
+body:is_admin                gene=OptionalGene             value=BooleanGene  kind=bool   leaf=is_admin       role=  1.299 victim= -0.890
+features path:id = [k:str, l:path, w:id]
+features body:display_name = [k:str, l:body, n:display, n:name, w:display_name]
+features body:email = [k:str, l:body, n:email, w:email]
+features body:is_active = [k:bool, l:body, n:active, w:is_active]
+features body:is_admin = [k:bool, l:body, n:admin, w:is_admin]
+transitionScore=2.167 looksLikePermissionReducingTransition=true
+roleField=body:is_admin victimField=path:id
+reducedRoleValues=[false]
+=== truoc setField
+probe tat 2 SelectableWrapperGene tren duong len cua truong vai tro
+chain: BooleanGene(is_admin) <- NullableGene(is_admin)[isActive=false] <- OptionalGene(is_admin)[isActive=false] <- ObjectGene(body) <- BodyParam
+body:  {"display_name":"X6NEDx"}
+=== setField(body:is_admin, false) -> true
+chain: BooleanGene(is_admin) <- NullableGene(is_admin)[isActive=true] <- OptionalGene(is_admin)[isActive=true] <- ObjectGene(body) <- BodyParam
+body:  {"display_name":"X6NEDx", "is_admin":false}
+value raw=false
+=== probe tat NullableGene(is_admin), OptionalGene van bat
+body:  {"display_name":"X6NEDx", "is_admin":null}

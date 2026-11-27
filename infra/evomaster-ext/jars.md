@@ -28,6 +28,9 @@ So với LF: mất 8 hàng reports-api (mất từ CS2, p = 0,008) và vampi-see
 (0 det970 thiếu bộ ba, 0 FP, 0 ERR, máy không ngủ, không luật dừng nổ); audit 30 PASS, 5 FAIL đều là pyLoad (cookie
 phiên, parser không đọc được). Đếm bằng `tr2-wave1-20261121/tr2_counts.py` (`tr2-counts.out`), chi tiết từng seed
 `tr2_details.py` (`tr2-details.out`). Số: `docs/results.md`. Chọn TR2 làm jar trích số ngày 2026-11-22 (user).
+Số của luận văn lấy từ `em-results/tr2-final-20261126/` (user, 2026-11-26): 90 hàng reports-api, vampi-seeded, pyLoad
+của lượt chạy lại cùng jar, cùng cờ, thêm log debug (`tr2dbg-wave1-20261126/`), cộng 10 hàng artifact-keeper ở trên.
+vampi-seeded 7/20; so với LF mất 8, p = 0,008; so với CS2 0 trong 93 hàng khác.
 
 ## Jar ứng viên, không trích số
 

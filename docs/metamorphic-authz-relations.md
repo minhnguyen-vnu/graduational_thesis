@@ -194,7 +194,7 @@ to guess.
   silently drop them.
 - **404 is not a denial.** A 404 can mean "you may not, and I hide it" or "the resource is not there". A follow-up
   that gets 404 completes the triple and never raises 970. In the 100 runs of jar TR2 no follow-up got 404; follow-ups
-  got 200, 201, 401 or 403, or recorded no status (`infra/em-results/tr2-wave1-20261121/logs/`, `tr2-wave2-20261121/logs/`).
+  got 200, 201, 401 or 403, or recorded no status (`infra/em-results/tr2-final-20261126/logs/`).
 - **The codes are fixed in the tool, not configurable.** A target that denies with another code gives no verdict:
   artifact-keeper's vendor patch answers 401.
 

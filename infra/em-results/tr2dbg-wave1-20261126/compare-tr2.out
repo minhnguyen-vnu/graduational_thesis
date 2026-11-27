@@ -1,0 +1,75 @@
+rows TR2 90 new 90 same keys True
+
+== 970 per arm
+tier1   vuln        TR2 12/20  new 12/20
+tier1   fixed       TR2 0/20  new 0/20
+tier2   ours-vuln   TR2 6/20  new 7/20
+tier2   ours-fixed  TR2 0/20  new 0/20
+tier2b  vuln        TR2 5/5  new 5/5
+tier2b  fixed       TR2 0/5  new 0/5
+
+== rows that differ from TR2, per column
+det970       1
+    tier2 ours-vuln seed 15: TR2 0  new 1
+assembled    2
+    tier2 ours-fixed seed 15: TR2 0  new 1
+    tier2 ours-vuln seed 15: TR2 0  new 1
+void_count   0
+restores_ok  0
+restores_no  2
+    tier2 ours-fixed seed 5: TR2 1  new 2
+    tier2 ours-vuln seed 5: TR2 1  new 2
+statuses     2
+    tier2 ours-fixed seed 15: TR2 NA  new 200/200/403
+    tier2 ours-vuln seed 15: TR2 NA  new 200/200/200
+faults       4
+    tier2 ours-fixed seed 15: TR2 100|101|205|209  new 100|101|209
+    tier2 ours-fixed seed 19: TR2 100|101  new 100|101|209
+    tier2 ours-vuln seed 15: TR2 100|101|205|209  new 100|101|209|970
+    tier2 ours-vuln seed 19: TR2 100|101  new 100|101|209
+
+== debug trail of missed vulnerable runs (new batch)
+-- tier1 vuln
+seed  1 TR2 970=0 void=1 | new 970=0 void=1 attempts=['3'] sources=['2'] victims=[('PUT:/reports/{id}', '[alice, superadmin]'), ('POST:/reports', '[alice, superadmin]')] inconclusive=['a call before the source of the replayed slice changed status group']
+seed  3 TR2 970=0 void=1 | new 970=0 void=1 attempts=['3'] sources=['2'] victims=[('PUT:/reports/{id}', '[alice, superadmin]'), ('POST:/reports', '[superadmin, alice]')] inconclusive=['a call before the source of the replayed slice changed status group']
+seed  4 TR2 970=0 void=3 | new 970=0 void=3 attempts=['5'] sources=['2'] victims=[('PUT:/reports/{id}', '[superadmin, alice]'), ('POST:/reports', '[superadmin, alice]')] inconclusive=['a call before the source of the replayed slice changed status group']
+seed  7 TR2 970=0 void=1 | new 970=0 void=1 attempts=['3'] sources=['2'] victims=[('PUT:/reports/{id}', '[superadmin, alice]'), ('POST:/reports', '[superadmin, alice]')] inconclusive=['a call before the source of the replayed slice changed status group']
+seed 13 TR2 970=0 void=1 | new 970=0 void=1 attempts=['3'] sources=['2'] victims=[('PUT:/reports/{id}', '[superadmin, alice]'), ('POST:/reports', '[superadmin, alice]')] inconclusive=['a call before the source of the replayed slice changed status group']
+seed 14 TR2 970=0 void=0 | new 970=0 void=0 attempts=['2'] sources=['2'] victims=[('PUT:/reports/{id}', '[alice, superadmin]'), ('POST:/reports', '[superadmin, alice]')] inconclusive=['a call before the source of the replayed slice changed status group']
+seed 16 TR2 970=0 void=2 | new 970=0 void=2 attempts=['3'] sources=['2'] victims=[('PUT:/reports/{id}', '[superadmin, alice]'), ('POST:/reports', '[superadmin, alice]')] inconclusive=['a call before the source of the replayed slice changed status group']
+seed 19 TR2 970=0 void=1 | new 970=0 void=1 attempts=['3'] sources=['2'] victims=[('PUT:/reports/{id}', '[superadmin, alice]'), ('POST:/reports', '[superadmin, alice]')] inconclusive=['a call before the source of the replayed slice changed status group']
+-- tier2 ours-vuln
+seed  2 TR2 970=0 void=0 | new 970=0 void=0 attempts=['0'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[]')] inconclusive=[]
+seed  3 TR2 970=0 void=5 | new 970=0 void=5 attempts=['5'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[superadmin, admin]')] inconclusive=[]
+seed  4 TR2 970=0 void=0 | new 970=0 void=0 attempts=['0'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[]')] inconclusive=[]
+seed  6 TR2 970=0 void=0 | new 970=0 void=0 attempts=['0'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[]')] inconclusive=[]
+seed  7 TR2 970=0 void=5 | new 970=0 void=5 attempts=['5'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[admin, superadmin]')] inconclusive=[]
+seed  8 TR2 970=0 void=1 | new 970=0 void=1 attempts=['1'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[superadmin]')] inconclusive=[]
+seed  9 TR2 970=0 void=4 | new 970=0 void=4 attempts=['4'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[superadmin, admin]')] inconclusive=[]
+seed 12 TR2 970=0 void=1 | new 970=0 void=1 attempts=['1'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[admin]')] inconclusive=[]
+seed 13 TR2 970=0 void=0 | new 970=0 void=0 attempts=['0'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[]')] inconclusive=[]
+seed 14 TR2 970=0 void=0 | new 970=0 void=0 attempts=['0'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[]')] inconclusive=[]
+seed 15 TR2 970=0 void=1 | new 970=1 void=1 attempts=['2'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[name1]')] inconclusive=[]
+seed 16 TR2 970=0 void=1 | new 970=0 void=1 attempts=['1'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[admin]')] inconclusive=[]
+seed 18 TR2 970=0 void=0 | new 970=0 void=0 attempts=['0'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[]')] inconclusive=[]
+seed 19 TR2 970=0 void=3 | new 970=0 void=3 attempts=['3'] sources=['1'] victims=[('PUT:/books/v1/{book_title}/secret', '[superadmin, name1, admin]')] inconclusive=[]
+
+== transition ranking printed by the builder (seed 1, vulnerable)
+-- tier1 vuln
+   transition candidate PUT:/users/{username}/role score 5.628297727558979 roleField body:role victimField path:username reducedRoleValues [VIEWER]
+   transition chosen: PUT:/users/{username}/role (candidate 1 of 1)
+-- tier2 ours-vuln
+   transition candidate PUT:/users/v1/{username}/role score 5.628297727558979 roleField body:role victimField path:username reducedRoleValues [user]
+   transition candidate PUT:/users/v1/{username}/email score 4.487422076881292 roleField null victimField path:username reducedRoleValues []
+   transition candidate PUT:/users/v1/{username}/password score 2.043902320521277 roleField null victimField path:username reducedRoleValues []
+   transition candidate DELETE:/users/v1/{username} score 1.34207083958258 roleField null victimField path:username reducedRoleValues []
+   transition candidate POST:/users/v1/register score 0.7499284656462377 roleField null victimField body:username reducedRoleValues []
+   transition chosen: PUT:/users/v1/{username}/role (candidate 1 of 1)
+-- tier2b vuln
+   transition candidate POST:/api/set_user_permission score 2.8193758971998824 roleField query:permission victimField query:user reducedRoleValues [1, 0, 2]
+   transition candidate POST:/json/add_user score 1.75711263194236 roleField body:new_role victimField body:new_user reducedRoleValues [on]
+   transition candidate POST:/api/remove_user score 0.8412494941512598 roleField null victimField query:user reducedRoleValues []
+   transition candidate POST:/api/add_user score 0.6612948023675704 roleField query:role victimField query:user reducedRoleValues [1, 0, 2]
+   transition chosen: POST:/api/set_user_permission (candidate 1 of 3)
+   transition chosen: POST:/json/add_user (candidate 2 of 3)
+   transition chosen: POST:/api/add_user (candidate 3 of 3)

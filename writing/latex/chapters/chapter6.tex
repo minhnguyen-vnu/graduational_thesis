@@ -8,13 +8,13 @@ Oracle 970 phát hiện được vi phạm MR-A1 trên cả bốn ứng dụng �
 
 Các kết quả được trình bày theo bốn đóng góp nêu ở Mục~\ref{sec:intro_contributions}.
 
-Thứ nhất, Oracle 970 cài đặt quan hệ MR-A1 bằng điều kiện tiền đề và bộ ba thao tác source, transition và follow-up. Cả 22 lượt bỏ sót đều do bộ dựng không tạo được bộ ba hợp lệ để phán quyết.
+Thứ nhất, Oracle 970 cài đặt quan hệ MR-A1 bằng điều kiện tiền đề và bộ ba thao tác source, transition và follow-up. Cả 21 lượt bỏ sót đều do bộ dựng không tạo được bộ ba hợp lệ để phán quyết.
 
 Thứ hai, mô hình Naive Bayes xếp hạng thao tác chuyển trạng thái từ đặc tả OpenAPI. Trên 237 bản đặc tả không tham gia huấn luyện, 101 trong 153 thao tác chuyển trạng thái có điểm dương. Trong 624 thao tác có điểm dương, 523 thao tác mang nhãn thông thường, nên điểm dương chỉ dùng để chọn ứng viên. Trên pyLoad và artifact-keeper, công cụ tự chọn thao tác hạ quyền từ đặc tả.
 
-Thứ ba, bước đăng nhập lại chỉ giữ các bộ ba mà token mới bị từ chối bằng mã 403 tại chính source, nên mọi cảnh báo của Oracle 970 dựa trên những thao tác chuyển trạng thái đã được xác nhận là hạ quyền. Trong 100 lượt chạy, bước này giữ 35 trong 59 bộ ba có cả ba mã \texttt{2xx}, và cả 24 bộ ba bị hủy đều thuộc reports-api.
+Thứ ba, bước đăng nhập lại chỉ giữ các bộ ba mà token mới bị từ chối bằng mã 403 tại chính source, nên mọi cảnh báo của Oracle 970 dựa trên những thao tác chuyển trạng thái đã được xác nhận là hạ quyền. Trong 100 lượt chạy, bước này giữ 36 trong 60 bộ ba có cả ba mã \texttt{2xx}, và cả 24 bộ ba bị hủy đều thuộc reports-api.
 
-Thứ tư, trong 100 lượt chạy, Oracle 970 báo vi phạm ở 28/50 lượt trên biến thể có lỗ hổng: 12/20 với reports-api, 6/20 với vampi-seeded, 5/5 với pyLoad và 5/5 với artifact-keeper. Trong 50 lượt trên biến thể đã vá, công cụ dựng được bộ ba ở 31 lượt và không báo động giả ở lượt nào. Lỗi trên pyLoad (\mbox{CVE-2026-41133}) và artifact-keeper nằm trong mã của nhà phát triển ứng dụng. Trên biến thể đã vá của pyLoad, Oracle 970 báo vi phạm ở 0/5 lượt, còn bản vá của artifact-keeper từ chối token cũ bằng mã 401, nên trong 5 lượt chạy trên bản vá này, công cụ không dựng được bộ ba nào.
+Thứ tư, trong 100 lượt chạy, Oracle 970 báo vi phạm ở 29/50 lượt trên biến thể có lỗ hổng, gồm 12/20 với reports-api, 7/20 với vampi-seeded, 5/5 với pyLoad và 5/5 với artifact-keeper. Trong 50 lượt trên biến thể đã vá, công cụ dựng được bộ ba ở 32 lượt và không báo động giả ở lượt nào. Lỗi trên pyLoad và artifact-keeper nằm trong mã của nhà phát triển ứng dụng. Trên biến thể đã vá của pyLoad, Oracle 970 báo vi phạm ở 0/5 lượt, còn bản vá của artifact-keeper từ chối token cũ bằng mã 401, nên trong 5 lượt chạy trên bản vá này, công cụ không dựng được bộ ba nào.
 
 \section{Hạn chế hiện tại của đề tài}
 \label{sec:conclusion_limitations}
@@ -26,6 +26,6 @@ Khóa luận chỉ kiểm chứng quan hệ MR-A1, tức trường hợp hạ va
 
 Để nhận diện thao tác chuyển trạng thái trong các đặc tả đặt tên không theo quy ước, có thể dùng mô hình ngôn ngữ lớn (Large Language Model, LLM) đề xuất ứng viên. Naive Bayes hiện dựa vào các từ trong đường dẫn, tên trường và phương thức, còn LLM có thể khai thác thêm mô tả trong đặc tả OpenAPI và ngữ cảnh thao tác, trong khi phép phán quyết giữ nguyên.
 
-Phần mở rộng cũng có thể nhận thêm các tín hiệu từ chối ngoài mã 403, như mã 401 khi phiên bị vô hiệu hóa, để đánh giá được những bản vá như của artifact-keeper. Bộ dựng có thể giảm phụ thuộc vào kho lưu trữ ca kiểm thử bằng cách tự tạo tài nguyên và tài khoản cần thiết ngay trước khi chạy kịch bản kiểm thử MR-A1. Ở 6 trong 22 lượt bỏ sót, bộ dựng không thử lần nào mà nhật ký không ghi lý do (Mục~\ref{sec:eval_threats}), nên cần ghi thêm nhật ký chẩn đoán cho các lượt này.
+Phần mở rộng cũng có thể nhận thêm các tín hiệu từ chối ngoài mã 403, như mã 401 khi phiên bị vô hiệu hóa, để đánh giá được những bản vá như của artifact-keeper. Bộ dựng có thể giảm phụ thuộc vào kho lưu trữ ca kiểm thử bằng cách tự tạo tài nguyên và tài khoản cần thiết ngay trước khi chạy kịch bản kiểm thử MR-A1.
 
 Ngoài MR-A1, nghiên cứu tiếp theo có thể xét các quan hệ khác của lớp phân quyền có trạng thái, như chuyển quyền sở hữu tài nguyên và quyền hết hạn theo thời gian. Mỗi quan hệ cần điều kiện tiền đề và cơ chế phán quyết riêng.

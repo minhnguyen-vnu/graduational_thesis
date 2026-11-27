@@ -22,10 +22,11 @@ thesis.
 - The no-duplication model is M2 relearned with path parameters left out of `f:`: same corpus
   (`nop-hoi-dong/nhan-hoc-cuoi.csv`, 209 T of 10,381 write ops), same formula; only the `op` table differs
   (`docs/naive-bayes.md`).
-- Runs, 2026-11-21 to 22: `tr2-wave1-20261121/runs.csv` (reports-api, vampi-seeded, pyLoad; 90 runs) and
-  `tr2-wave2-20261121/` (artifact-keeper, 10 runs), same harness as jars CS2 and LF apart from jar and labels.
-  Counts: `tr2-wave1-20261121/tr2_counts.py` (`tr2-counts.out`). Per-seed triples, discards, restores and the
-  paired comparisons: `tr2_details.py` (`tr2-details.out`). Triples are counted from `Assembled` log lines.
+- Runs: `tr2-final-20261126/`, 100 runs (`runs.csv`: reports-api, vampi-seeded, pyLoad; `runs-ak-*.csv`:
+  artifact-keeper), builder debug log on every run (`infra/em-config/logback-builder-debug.xml`). Same harness flags as
+  jars CS2 and LF apart from jar, labels and that log config. Source folder of each file: its `PROTOCOL.md`.
+  Counts: `tr2_counts.py` (`tr2-counts.out`). Per-seed triples, discards, restores and the paired comparisons:
+  `tr2_details.py` (`tr2-details.out`). Triples are counted from `Assembled` log lines.
 - Reseed before every run, `--useExperimentalOracles true`, `-Xmx2g`:
 
 | Target | Seeds | `--maxTime` | `--ratePerMinute` | `--extraPhaseBudgetPercentage` | Other |
@@ -35,7 +36,7 @@ thesis.
 | pyLoad | 1–5 per arm | 10m | 200 | 0.6 | `--endpointExclude "/api/kill,/api/restart"` |
 | artifact-keeper | 1–5 per arm | 1200s | 600 | 0.25 | spec without `DELETE /users/{id}`; traffic proxy :8212 |
 
-- TR2 against LF, the previous thesis jar: equal in 970 on 89 of 98 rows (§6). LF is the fallback jar
+- TR2 against LF, the previous thesis jar: equal in 970 on 90 of 98 rows (§6). LF is the fallback jar
   (`infra/evomaster-ext/jars.md`).
 - Each run records the triple it performed as `[source/transition/follow-up]` statuses, so construction (a triple
   was performed) and judgment (970 raised) are counted separately.
@@ -46,20 +47,20 @@ thesis.
 |---|---|---|---|---|
 | reports-api | seeded | vulnerable | 12/20 | **12/20** [36.1, 80.9] |
 | reports-api | seeded | fixed | 20/20 | 0/20 |
-| vampi-seeded | seeded | vulnerable | 6/20 | **6/20** [11.9, 54.3] |
-| vampi-seeded | seeded | fixed | 6/20 | 0/20 |
+| vampi-seeded | seeded | vulnerable | 7/20 | **7/20** [15.4, 59.2] |
+| vampi-seeded | seeded | fixed | 7/20 | 0/20 |
 | pyLoad | CVE-2026-41133 | vulnerable | 5/5 | **5/5** [47.8, 100] |
 | pyLoad | CVE-2026-41133 | fixed (ours) | 5/5 | 0/5 |
 | artifact-keeper | vendor bug #1821 | vulnerable `e56d3aa7e2` | 5/5 | **5/5** [47.8, 100] |
 | artifact-keeper | vendor bug #1821 | vendor patch `e64cc5c608` | 0/5 | 0/5 |
 
-Intervals are Clopper–Pearson 95% (exact binomial). False-positive rate over the 31 fixed runs with a triple: 0/31,
-Clopper–Pearson [0, 11.2]%.
+Intervals are Clopper–Pearson 95% (exact binomial). False-positive rate over the 32 fixed runs with a triple: 0/32,
+Clopper–Pearson [0, 10.9]%.
 
-- Vulnerable vs fixed, Fisher exact one-sided: reports-api p < 0.001, vampi-seeded p = 0.010, pyLoad p = 0.004,
+- Vulnerable vs fixed, Fisher exact one-sided: reports-api p < 0.001, vampi-seeded p = 0.004, pyLoad p = 0.004,
   artifact-keeper p = 0.004.
-- **False positives: 0 in 50 fixed-target runs**, over **49 triples performed on patched code** in 31 runs
-  (reports-api 38, vampi-seeded 6, pyLoad 5, artifact-keeper 0).
+- **False positives: 0 in 50 fixed-target runs**, over **50 triples performed on patched code** in 32 runs
+  (reports-api 38, vampi-seeded 7, pyLoad 5, artifact-keeper 0).
 - Triples per run: reports-api vulnerable 2 in seeds 2 and 11, 1 in the other 10 runs with a triple; reports-api fixed
   2 (seeds 16 and 17: 1); artifact-keeper vulnerable 2; vampi-seeded and pyLoad 1. Performed triples read
   `200/200/200` or `201/200/201` on the vulnerable side and `200/200/403` or `201/200/403` on the fixed side; `201` is
@@ -83,13 +84,11 @@ Clopper–Pearson [0, 11.2]%.
   401 (`codes 200/200/401`, twice per run, logged `REVOKED`); 401 is INCONCLUSIVE, so the attempt is VOID. The vendor
   fix revokes the token (401) where the oracle reads a denial only from 403. The arm shows no false alarm and counts
   no TN.
-- vampi-seeded black-box recall is **6/20** on TR2; 7/20 on CS2 and LF; 6/20 on ND and on the jar-`R` audit re-run
-  (`audit-batch/runs.csv`); 7/20 on M2, P2f, P2e and AF2. TR2 seed 15 has no triple: its first attempt (victim
-  `name1`, operator `admin`) had source 401, where on CS2 the same attempt had source 200 and the next operator
-  completed a triple. Neither run reached the operator restore, and the search had diverged before the security phase
-  (covered targets 12 on CS2, 24 on TR2 at the same point of the budget):
-  `tr2-wave1-20261121/CORRECTION-vampi-seed15.md`. The mechanism stated in `tr2-analysis.out` is wrong; do not quote it.
-- Operator restores accepted (refused): reports-api 21 (0) vulnerable, 23 (0) fixed; vampi-seeded 5 (8), 5 (8);
+- vampi-seeded black-box recall is **7/20** on TR2, CS2 and LF; 6/20 on ND and on the jar-`R` audit re-run
+  (`audit-batch/runs.csv`); 7/20 on M2, P2f, P2e and AF2. The vampi-seeded row that moves is seed 15: the search
+  budget is wall clock, so two runs of one jar can diverge before the security phase. A TR2 run of seed 15 without a
+  triple: `tr2-wave1-20261121/CORRECTION-vampi-seed15.md` (the mechanism in that folder's `tr2-analysis.out` is wrong).
+- Operator restores accepted (refused): reports-api 21 (0) vulnerable, 23 (0) fixed; vampi-seeded 5 (9), 5 (9);
   pyLoad 5 (0), 5 (0); artifact-keeper 1 (0) per run on both commits.
 - Baseline arms (Şahin oracles, 970 disabled) are not false-positive opportunities and are not counted.
 
@@ -102,27 +101,30 @@ follow-ups gives the same TN.
 | Target | TP | FN, triple, no 970 | FN, no triple | FP | TN | Fixed, no triple | Runs vulnerable/fixed |
 |---|---|---|---|---|---|---|---|
 | reports-api | 12 | 0 | 8 | 0 | 20 | 0 | 20/20 |
-| vampi-seeded | 6 | 0 | 14 | 0 | 6 | 14 | 20/20 |
+| vampi-seeded | 7 | 0 | 13 | 0 | 7 | 13 | 20/20 |
 | pyLoad | 5 | 0 | 0 | 0 | 5 | 0 | 5/5 |
 | artifact-keeper | 5 | 0 | 0 | 0 | 0 | 5 | 5/5 |
-| Total | 28 | 0 | 22 | 0 | 31 | 19 | 50/50 |
+| Total | 29 | 0 | 21 | 0 | 32 | 18 | 50/50 |
 
 Every FN is a run with no performed triple; no performed triple on a vulnerable target missed 970. Per run,
 precision is 1.0 on every row; recall is TP over the vulnerable runs.
 
-FN by cause (`tr2-details.out`):
+FN by cause (`tr2-details.out`, `vampi-missed-void.out`):
 
 | Target | Cause | Runs | Detail |
 |---|---|---|---|
 | reports-api | Every non-VOID attempt discarded by C4 | 8 | seeds 1, 3, 4, 7, 13, 14, 16, 19; 15 discards |
-| vampi-seeded | Attempts made, every one VOID | 8 | seeds 3, 7, 8, 9, 12, 15, 16, 19; 21 VOID: 10 source 401, 11 transition 401 |
-| vampi-seeded | No attempt in the log | 6 | seeds 2, 4, 6, 13, 14, 18; the default log level gives no reason |
+| vampi-seeded | Attempts made, every one VOID | 7 | seeds 3, 7, 8, 9, 12, 16, 19; 20 VOID: 9 source 401, 11 transition 401 |
+| vampi-seeded | No attempt | 6 | seeds 2, 4, 6, 13, 14, 18; only guarded source `PUT /books/v1/{book_title}/secret`, `victims []` |
+
+`victims []` is a debug line of the builder: no test kept after the search calls that source with a logged-in account
+and gets 2xx (`victimSlicesOn`, `RestSecurityBuilder.kt:760` at HEAD). EvoMaster's default log level prints no reason.
 
 ## 2. How to read the numbers
 
 - The 0-FP count is the independent accuracy measurement. Judgment is restricted to the triples our builder
-  constructed (commit `9021b67cf5` onward), so the 0 false positives are over the 49 builder triples on patched code.
-- "Detection given a valid triple" (runs 12/12, 6/6, 5/5, 5/5) is near-definitional: validity keys on the follow-up
+  constructed (commit `9021b67cf5` onward), so the 0 false positives are over the 50 builder triples on patched code.
+- "Detection given a valid triple" (runs 12/12, 7/7, 5/5, 5/5) is near-definitional: validity keys on the follow-up
   status that judgment also uses. It is never quoted as accuracy. It shows only that the handler, re-deriving
   the triple on its own, never disagreed with the builder.
 - C4 runs only when the follow-up is 2xx. On patched code every follow-up was 403, so C4 never ran there and the
@@ -137,10 +139,10 @@ Replay not re-run on TR2. Each line names its jar.
 
 | | reports-api | vampi-seeded | pyLoad | artifact-keeper |
 |---|---|---|---|---|
-| 970 tests passing all four structural checks, jar TR2 | 14/14 | 6/6 | not parseable | 10/10 |
+| 970 tests passing all four structural checks, jar TR2 | 14/14 | 7/7 | not parseable | 10/10 |
 | Same check, earlier jars | 38/38 (LF); 19/19 (ND); 39/39 (AF2, P2f) | 7/7 (LF); 6/6 (ND); 20/20 (AF2, P2f) | not parseable | 10/10 (LF); 4/4 (ND); 5/5 (P2f) |
 | Replay of 970 tests from clean state, jar AF2 | 38/39 | 17/20 | 28/38 | not run |
-| Source | TR2: `tr2-wave1-20261121/audit970.out`; LF: `lf-wave1-20261118/audit970.out`; ND: `nd-wave1-20261113/audit970.out`; earlier: `af2-full-remeasure-20261003/audit970.out`, `replay.csv`; `p2f-full-20261015/audit970.out` | same | same | TR2: `tr2-wave1-20261121/audit970.out`; LF: `lf-wave2-20261118/audit970.out`; ND: `nd-wave2-20261113/audit970.out`; earlier: `artifactkeeper-machine-20261014/audit970-fixjar-vuln.out` |
+| Source | TR2: `tr2-final-20261126/audit970.out`; LF: `lf-wave1-20261118/audit970.out`; ND: `nd-wave1-20261113/audit970.out`; earlier: `af2-full-remeasure-20261003/audit970.out`, `replay.csv`; `p2f-full-20261015/audit970.out` | same | same | TR2: `tr2-final-20261126/audit970.out`; LF: `lf-wave2-20261118/audit970.out`; ND: `nd-wave2-20261113/audit970.out`; earlier: `artifactkeeper-machine-20261014/audit970-fixjar-vuln.out` |
 
 The AF2 and P2f sets include the reset arms of those jars.
 
@@ -177,7 +179,7 @@ The AF2 and P2f sets include the reset arms of those jars.
 - **VOID attempts:** 20, 10 per variant, each `200/401/200` on `/json/status`: the transition answered 401
   (INCONCLUSIVE), so the triple is VOID and raises nothing.
 - **Transition values.** Each 970 test sends `user=pyload&permission=1&role=1` (seeds 1–5,
-  `tr2-wave1-20261121/tests/t2b-vuln-seed*/`): the first value of the hand-written order `1, 0, 2` for both numeric
+  `tr2-final-20261126/tests/t2b-vuln-seed*/`): the first value of the hand-written order `1, 0, 2` for both numeric
   fields. pyLoad treats role `0` as admin and any other value as not, so the demotion lands; C4 confirmed it.
 - Restore ceiling: at least one privileged credential must survive. With every admin demoted, a fresh login
   cannot promote anyone (401).
@@ -196,26 +198,24 @@ The AF2 and P2f sets include the reset arms of those jars.
   no-duplication model offline (`m2-nodup-20261112/compare_targets_nodup.out`; rank 4 of 5 under M2); the offline count
   does not check for a victim field. Jar TR2 also drops `POST /api/v1/admin/sso/oidc` (no victim field), so the builder
   tries 3 candidates and `PATCH` is candidate 2 of 3 in all 10 runs (`transition chosen` in
-  `tr2-wave2-20261121/logs/ak-*.log`). Triples of jar TR2: §1.
+  `tr2-final-20261126/logs/ak-*.log`). Triples of jar TR2: §1.
 - No string of the app is in the builder, the oracle or the model (jar TR2), and its spec is excluded from
   the training corpus (`infra/analysis/corpus/sample_specs_field.py:8–9`).
 - Development target: three general builder fixes were found by running it. Vulnerable-commit detection by jar:
   ER 0/1, AF 1/4 (boolean admin flag recognized), AF2 5/5 (nullable `is_admin` sent present), P2e 0/2 (`null` sent
   again), P2f 5/5 (value set on the leaf gene), M2 5/5, ND 4/5, LF 5/5, CS2 3/3 (seeds 1–3 only), TR2 5/5
   (`artifactkeeper-machine-20261001/`, `artifactkeeper-machine-20261014/`, `m2-wave2-20261108/`, `nd-wave2-20261113/`,
-  `lf-wave2-20261118/`, `cs2-wave2-20261121/`, `tr2-wave2-20261121/`). Its numbers make no claim about recall on unseen apps.
+  `lf-wave2-20261118/`, `cs2-wave2-20261121/`, `tr2-final-20261126/`). Its numbers make no claim about recall on unseen apps.
 
 ## 6. Changing the model or the builder
 
 Rows are paired by target, arm and seed; 970 raised or not is compared on each pair (`tr2-details.out`).
 
-- CS2 to TR2 (code cleanup): 93 rows paired, 1 differs: vampi-seeded vulnerable seed 15, lost on TR2 (§1). McNemar
-  exact, 1 vs 0 discordant: p = 1.0. The CS2 artifact-keeper runs stopped after vulnerable seeds 1–3, so seeds 4–5 and
+- CS2 to TR2 (code cleanup): 93 rows paired, 0 differ. McNemar exact, 0 vs 0 discordant: p = 1.0. The CS2 artifact-keeper runs stopped after vulnerable seeds 1–3, so seeds 4–5 and
   the vendor-patch arm have no CS2 pair (`cs2-wave2-20261121/PROTOCOL.md`).
 - LF to CS2 (C4 change): 93 rows paired, 8 lost, none gained: reports-api vulnerable seeds 1, 3, 4, 7, 13, 14, 16, 19,
   each a run whose attempts C4 discarded. McNemar exact, 8 vs 0: p = 0.008. 0 false positives on both jars.
-- LF to TR2: 89 of 98 rows equal; the 8 reports-api rows and vampi-seeded seed 15 lost, none gained. McNemar exact,
-  9 vs 0: p = 0.004.
+- LF to TR2: 90 of 98 rows equal; the 8 reports-api rows lost, none gained. McNemar exact, 8 vs 0: p = 0.008.
 - ND to LF (logic fix, same model): 95 of 98 rows equal in 970. Three rows gained, none lost: reports-api vulnerable
   seed 17, vampi-seeded vulnerable seed 15, artifact-keeper vulnerable seed 3, each a run with no performed triple on
   ND. McNemar exact, 3 vs 0 discordant: p = 0.25. 0 false positives on both jars. Paths: §0.
@@ -289,9 +289,9 @@ Rows are paired by target, arm and seed; 970 raised or not is compared on each p
 | reproducible failing test | replayable from clean state in 55/59 (jar AF2) |
 | vampi-seeded shows transition inference generalizes | vampi-seeded's transition name is ours |
 | a benchmark the community lacks | two seeded apps, one CVE and one vendor-fixed bug |
-| vampi-seeded recall 30% | 6/20 (jar TR2) |
+| vampi-seeded recall 35% | 7/20 (jar TR2) |
 | the logic fix raised detection | 3 rows gained, 0 lost, McNemar p = 0.25 (jars ND, LF) |
-| the code cleanup changed no result | 1 of 93 paired rows differs, McNemar p = 1.0 (jars CS2, TR2) |
+| the code cleanup changed no result | 0 of 93 paired rows differ, McNemar p = 1.0 (jars CS2, TR2) |
 | the C4 change removed false positives on reports-api | 24 attempts discarded on the vulnerable target, 8 runs lost, McNemar p = 0.008 (jars LF, CS2) |
 | the vendor patch gave 5 true negatives | the vendor patch gave no false alarm in 5 runs and no performed triple |
 | pyLoad and artifact-keeper used while the builder was developed | omit |

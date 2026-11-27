@@ -1,0 +1,259 @@
+* Initializing...
+* Loading configuration file from: /Users/minhnguyen/IdeaProjects/graduational-thesis/infra/em-config/reports-auth.yaml
+* WARNING: You are doing Black-Box testing, but you did not specify the 'problemType'. The system will default to RESTful API testing.
+* WARNING: You are modifying the value of some internal settings. In general, this is not recommended, especially if it is first time you use EvoMaster, unless you are an experienced user. Involved features: [bbSwaggerUrl, bbTargetUrl, extraPhaseBudgetPercentage, seed, useExperimentalOracles]. Especially for beginners, you should only modify the 'important' settings: [base, blackBox, configPath, dtoForRequestPayload, endpointExclude, endpointFocus, endpointPrefix, endpointTagFilter, fieldsToSkipInAssertions, header0, header1, header2, maxTestsPerTestSuite, maxTime, outputFilePrefix, outputFileSuffix, outputFolder, outputFormat, overlay, overlayFileSuffixes, overlayLenient, overrideOpenAPIUrl, prematureStop, ratePerMinute, schema, sutControllerHost, sutControllerPort, testTimeout]. For more information, see the documentation at: https://github.com/WebFuzzing/EvoMaster/blob/master/docs/opt
+* There are 9 usable RESTful API endpoints defined in the schema configuration
+=== CONFIG probOfSmartSampling=0.95 maxTestSize=10 seed=2
+same IdMapper in ff/archive: true/true
+=== ADHOC after customizeAdHocInitialIndividuals
+size=36 hasSpecialInitForSmartSampler=true idMapper.mapping.size=0
+  [0] SMART NoAuth PUT /users/aLkeFIXpua62/role
+  [1] SMART NoAuth GET /reports/642
+  [2] SMART NoAuth PUT /reports/1753571106
+  [3] SMART NoAuth DELETE /reports/758
+  [4] SMART NoAuth POST /reset
+  [5] SMART NoAuth GET /reports
+  [6] SMART NoAuth POST /reports
+  [7] SMART NoAuth POST /auth/login
+  [8] SMART NoAuth GET /users/me
+  [9] SMART alice PUT /users/wjRto/role
+  [10] SMART alice GET /reports/147
+  [11] SMART alice PUT /reports/692554057
+  [12] SMART alice DELETE /reports/581
+  [13] SMART alice POST /reset
+  [14] SMART alice GET /reports
+  [15] SMART alice POST /reports
+  [16] SMART alice POST /auth/login
+  [17] SMART alice GET /users/me
+  [18] SMART superadmin PUT /users/GAuyZ4w/role
+  [19] SMART superadmin GET /reports/778
+  [20] SMART superadmin PUT /reports/130
+  [21] SMART superadmin DELETE /reports/110
+  [22] SMART superadmin POST /reset
+  [23] SMART superadmin GET /reports
+  [24] SMART superadmin POST /reports
+  [25] SMART superadmin POST /auth/login
+  [26] SMART superadmin GET /users/me
+  [27] SMART bob PUT /users/ISTm/role
+  [28] SMART bob GET /reports/244
+  [29] SMART bob PUT /reports/582
+  [30] SMART bob DELETE /reports/189
+  [31] SMART bob POST /reset
+  [32] SMART bob GET /reports
+  [33] SMART bob POST /reports
+  [34] SMART bob POST /auth/login
+  [35] SMART bob GET /users/me
+=== LOOP sample -> calculateCoverage -> addIfNeeded
+#001 t=  0.0s special=true adHoc 36->35 adHoc[35]    SMART                      | bob GET /users/me ->200 | fv=5 | added=true covered=4 reached=5 | new=[-2=200:GET:/users/me, -3=RESPONSE_BODY_PAYLOAD_GET/users/me_application/json, -4=HTTP_SUCCESS:GET:/users/me, -5=HTTP_FAULT:GET:/users/me, -6=Auth:bob:GET:/users/me:2xx]
+  FV of first test step#1 | bob GET /users/me ->200 | size=1.0
+    targets[-2] score=1.0 actionIndex=0 "200:GET:/users/me"
+    targets[-3] score=1.0 actionIndex=-1 "RESPONSE_BODY_PAYLOAD_GET/users/me_application/json"
+    targets[-4] score=1.0 actionIndex=0 "HTTP_SUCCESS:GET:/users/me"
+    targets[-5] score=0.5 actionIndex=0 "HTTP_FAULT:GET:/users/me"
+    targets[-6] score=1.0 actionIndex=0 "Auth:bob:GET:/users/me:2xx"
+22:01:14.351 [main] WARN  o.e.c.s.s.time.SearchTimeController - The SUT sent a 'Connection: close' HTTP header. This should be avoided, if possible
+#002 t=  0.6s special=true adHoc 35->34 adHoc[34]    SMART                      | bob POST /auth/login ->400 | fv=5 | added=true covered=7 reached=10 | new=[-7=400:POST:/auth/login, -8=INPUT_POST/auth/login_BodyParam_body_CONTENT_TYPE_application/json, -9=RESPONSE_BODY_PAYLOAD_POST/auth/login_application/json, -10=HTTP_SUCCESS:POST:/auth/login, -11=HTTP_FAULT:POST:/auth/login]
+#003 t=  1.1s special=true adHoc 34->33 adHoc[33]    SMART                      | bob POST /reports ->403 | fv=6 | added=true covered=11 reached=16 | new=[-12=403:POST:/reports, -13=INPUT_POST/reports_BodyParam_body_CONTENT_TYPE_application/json, -14=RESPONSE_BODY_PAYLOAD_POST/reports_application/json, -15=HTTP_SUCCESS:POST:/reports, -16=HTTP_FAULT:POST:/reports, -17=Auth:bob:POST:/reports:403]
+#004 t=  1.6s special=true adHoc 33->32 adHoc[32]    SMART                      | bob GET /reports ->200 | fv=5 | added=true covered=15 reached=21 | new=[-18=200:GET:/reports, -19=RESPONSE_BODY_PAYLOAD_GET/reports_application/json, -20=HTTP_SUCCESS:GET:/reports, -21=HTTP_FAULT:GET:/reports, -22=Auth:bob:GET:/reports:2xx]
+#005 t=  2.1s special=true adHoc 32->31 adHoc[31]    SMART                      | bob POST /reset ->200 | fv=5 | added=true covered=19 reached=26 | new=[-23=200:POST:/reset, -24=RESPONSE_BODY_PAYLOAD_POST/reset_application/json, -25=HTTP_SUCCESS:POST:/reset, -26=HTTP_FAULT:POST:/reset, -27=Auth:bob:POST:/reset:2xx]
+#006 t=  2.6s special=true adHoc 31->30 adHoc[30]    SMART                      | bob DELETE /reports/189 ->403 | fv=6 | added=true covered=23 reached=32 | new=[-28=403:DELETE:/reports/{id}, -29=INPUT_DELETE/reports/{id}_PathParam_id_id_positive, -30=RESPONSE_BODY_PAYLOAD_DELETE/reports/{id}_application/json, -31=HTTP_SUCCESS:DELETE:/reports/{id}, -32=HTTP_FAULT:DELETE:/reports/{id}, -33=Auth:bob:DELETE:/reports/{id}:403]
+#007 t=  3.1s special=true adHoc 30->29 adHoc[29]    SMART                      | bob PUT /reports/582 ->400 | fv=6 | added=true covered=27 reached=38 | new=[-34=400:PUT:/reports/{id}, -35=INPUT_PUT/reports/{id}_PathParam_id_id_positive, -36=INPUT_PUT/reports/{id}_BodyParam_body_CONTENT_TYPE_application/json, -37=RESPONSE_BODY_PAYLOAD_PUT/reports/{id}_application/json, -38=HTTP_SUCCESS:PUT:/reports/{id}, -39=HTTP_FAULT:PUT:/reports/{id}]
+#008 t=  3.6s special=true adHoc 29->28 adHoc[28]    SMART                      | bob GET /reports/244 ->404 | fv=5 | added=true covered=30 reached=43 | new=[-40=404:GET:/reports/{id}, -41=INPUT_GET/reports/{id}_PathParam_id_id_positive, -42=RESPONSE_BODY_PAYLOAD_GET/reports/{id}_application/json, -43=HTTP_SUCCESS:GET:/reports/{id}, -44=HTTP_FAULT:GET:/reports/{id}]
+#009 t=  4.1s special=true adHoc 28->27 adHoc[27]    SMART                      | bob PUT /users/ISTm/role ->403 | fv=6 | added=true covered=34 reached=49 | new=[-45=403:PUT:/users/{username}/role, -46=INPUT_PUT/users/{username}/role_BodyParam_body_CONTENT_TYPE_application/json, -47=RESPONSE_BODY_PAYLOAD_PUT/users/{username}/role_application/json, -48=HTTP_SUCCESS:PUT:/users/{username}/role, -49=HTTP_FAULT:PUT:/users/{username}/role, -50=Auth:bob:PUT:/users/{username}/role:403]
+#010 t=  4.6s special=true adHoc 27->26 adHoc[26]    SMART                      | superadmin GET /users/me ->200 | fv=5 | added=true covered=35 reached=50 | new=[-51=Auth:superadmin:GET:/users/me:2xx]
+#011 t=  5.1s special=true adHoc 26->25 adHoc[25]    SMART                      | superadmin POST /auth/login ->401 | fv=6 | added=true covered=37 reached=52 | new=[-52=401:POST:/auth/login, -53=Auth:superadmin:POST:/auth/login:401]
+#012 t=  6.1s special=true adHoc 25->24 adHoc[24]    SMART                      | superadmin POST /reports ->201 | fv=7 | added=true covered=41 reached=55 | new=[-54=201:POST:/reports, -55=INPUT_POST/reports_BodyParam_body_CONTENT_TYPE_SUCCESS_application/json, -56=Auth:superadmin:POST:/reports:2xx]
+#013 t=  6.7s special=true adHoc 24->23 adHoc[23]    SMART                      | superadmin GET /reports ->200 | fv=5 | added=true covered=42 reached=56 | new=[-57=Auth:superadmin:GET:/reports:2xx]
+#014 t=  7.2s special=true adHoc 23->22 adHoc[22]    SMART                      | superadmin POST /reset ->200 | fv=5 | added=true covered=43 reached=57 | new=[-58=Auth:superadmin:POST:/reset:2xx]
+#015 t=  7.7s special=true adHoc 22->21 adHoc[21]    SMART                      | superadmin DELETE /reports/110 ->404 | fv=5 | added=true covered=44 reached=58 | new=[-59=404:DELETE:/reports/{id}]
+#016 t=  8.2s special=true adHoc 21->20 adHoc[20]    SMART                      | superadmin PUT /reports/130 ->404 | fv=6 | added=true covered=45 reached=59 | new=[-60=404:PUT:/reports/{id}]
+#017 t=  8.7s special=true adHoc 20->19 adHoc[19]    SMART                      | superadmin GET /reports/778 ->404 | fv=5 | added=true covered=45 reached=59 | new=[]
+#018 t=  9.2s special=true adHoc 19->18 adHoc[18]    SMART                      | superadmin PUT /users/GAuyZ4w/role ->400 | fv=5 | added=true covered=46 reached=60 | new=[-61=400:PUT:/users/{username}/role]
+#019 t=  9.7s special=true adHoc 18->17 adHoc[17]    SMART                      | alice GET /users/me ->200 | fv=5 | added=true covered=47 reached=61 | new=[-62=Auth:alice:GET:/users/me:2xx]
+#020 t= 10.2s special=true adHoc 17->16 adHoc[16]    SMART                      | alice POST /auth/login ->401 | fv=6 | added=true covered=48 reached=62 | new=[-63=Auth:alice:POST:/auth/login:401]
+#021 t= 10.7s special=true adHoc 16->15 adHoc[15]    SMART                      | alice POST /reports ->400 | fv=5 | added=true covered=49 reached=63 | new=[-64=400:POST:/reports]
+#022 t= 11.2s special=true adHoc 15->14 adHoc[14]    SMART                      | alice GET /reports ->200 | fv=5 | added=true covered=50 reached=64 | new=[-65=Auth:alice:GET:/reports:2xx]
+#023 t= 11.7s special=true adHoc 14->13 adHoc[13]    SMART                      | alice POST /reset ->200 | fv=5 | added=true covered=51 reached=65 | new=[-66=Auth:alice:POST:/reset:2xx]
+#024 t= 12.2s special=true adHoc 13->12 adHoc[12]    SMART                      | alice DELETE /reports/581 ->404 | fv=5 | added=true covered=51 reached=65 | new=[]
+#025 t= 12.8s special=true adHoc 12->11 adHoc[11]    SMART                      | alice PUT /reports/692554057 ->404 | fv=6 | added=true covered=51 reached=65 | new=[]
+#026 t= 13.3s special=true adHoc 11->10 adHoc[10]    SMART                      | alice GET /reports/147 ->404 | fv=5 | added=true covered=51 reached=65 | new=[]
+#027 t= 13.8s special=true adHoc 10->9 adHoc[9]     SMART                      | alice PUT /users/wjRto/role ->404 | fv=5 | added=true covered=52 reached=66 | new=[-67=404:PUT:/users/{username}/role]
+#028 t= 14.3s special=true adHoc 9->8 adHoc[8]     SMART                      | NoAuth GET /users/me ->401 | fv=5 | added=true covered=55 reached=69 | new=[-68=401:GET:/users/me, -69=RESPONSE_BODY_PAYLOAD_GET/users/me_application/json;charset=ISO-8859-1, -70=Auth:NoAuth:GET:/users/me:401]
+#029 t= 14.8s special=true adHoc 8->7 adHoc[7]     SMART                      | NoAuth POST /auth/login ->401 | fv=6 | added=true covered=56 reached=70 | new=[-71=Auth:NoAuth:POST:/auth/login:401]
+#030 t= 15.3s special=true adHoc 7->6 adHoc[6]     SMART                      | NoAuth POST /reports ->401 | fv=6 | added=true covered=59 reached=73 | new=[-72=401:POST:/reports, -73=RESPONSE_BODY_PAYLOAD_POST/reports_application/json;charset=ISO-8859-1, -74=Auth:NoAuth:POST:/reports:401]
+#031 t= 15.8s special=true adHoc 6->5 adHoc[5]     SMART                      | NoAuth GET /reports ->401 | fv=5 | added=true covered=62 reached=76 | new=[-75=401:GET:/reports, -76=RESPONSE_BODY_PAYLOAD_GET/reports_application/json;charset=ISO-8859-1, -77=Auth:NoAuth:GET:/reports:401]
+#032 t= 16.3s special=true adHoc 5->4 adHoc[4]     SMART                      | NoAuth POST /reset ->200 | fv=5 | added=true covered=63 reached=77 | new=[-78=Auth:NoAuth:POST:/reset:2xx]
+#033 t= 16.8s special=true adHoc 4->3 adHoc[3]     SMART                      | NoAuth DELETE /reports/758 ->401 | fv=6 | added=true covered=66 reached=80 | new=[-79=401:DELETE:/reports/{id}, -80=RESPONSE_BODY_PAYLOAD_DELETE/reports/{id}_application/json;charset=ISO-8859-1, -81=Auth:NoAuth:DELETE:/reports/{id}:401]
+#034 t= 17.3s special=true adHoc 3->2 adHoc[2]     SMART                      | NoAuth PUT /reports/1753571106 ->401 | fv=7 | added=true covered=69 reached=83 | new=[-82=401:PUT:/reports/{id}, -83=RESPONSE_BODY_PAYLOAD_PUT/reports/{id}_application/json;charset=ISO-8859-1, -84=Auth:NoAuth:PUT:/reports/{id}:401]
+#035 t= 17.8s special=true adHoc 2->1 adHoc[1]     SMART                      | NoAuth GET /reports/642 ->401 | fv=6 | added=true covered=72 reached=86 | new=[-85=401:GET:/reports/{id}, -86=RESPONSE_BODY_PAYLOAD_GET/reports/{id}_application/json;charset=ISO-8859-1, -87=Auth:NoAuth:GET:/reports/{id}:401]
+#036 t= 18.3s special=true adHoc 1->0 adHoc[0]     SMART                      | NoAuth PUT /users/aLkeFIXpua62/role ->401 | fv=6 | added=true covered=75 reached=89 | new=[-88=401:PUT:/users/{username}/role, -89=RESPONSE_BODY_PAYLOAD_PUT/users/{username}/role_application/json;charset=ISO-8859-1, -90=Auth:NoAuth:PUT:/users/{username}/role:401]
+#037 t= 19.3s special=false adHoc 0->0 smart:GET    SMART                      | bob PUT /reports/800 ->403 ; bob GET /reports/800 ->404 | fv=12 | added=true covered=77 reached=91 | new=[-91=403:PUT:/reports/{id}, -92=Auth:bob:PUT:/reports/{id}:403]
+#038 t= 19.9s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /reset ->200 | fv=5 | added=true covered=77 reached=91 | new=[]
+#039 t= 23.4s special=false adHoc 0->0 random       RANDOM                     | superadmin POST /auth/login ->401 ; alice POST /auth/login ->401 ; superadmin PUT /reports/167 ->400 ; bob DELETE /reports/935 ->403 ; alice GET /users/me ->200 ; bob GET /reports ->200 ; alice GET /users/me ->200 | fv=29 | added=true covered=77 reached=91 | new=[]
+#040 t= 23.9s special=false adHoc 0->0 smart:DELETE SMART                      | bob POST /reports ->403 ; bob DELETE /reports/{id}[loc] ->null | fv=6 | added=true covered=77 reached=91 | new=[]
+#041 t= 24.4s special=false adHoc 0->0 smart:POST   SMART                      | alice POST /reset ->200 | fv=5 | added=true covered=77 reached=91 | new=[]
+#042 t= 26.0s special=false adHoc 0->0 smart:GET    SMART                      | alice POST /reports ->201 ; alice GET /reports/{id}[loc] ->200 | fv=14 | added=true covered=82 reached=95 | new=[-93=Auth:alice:POST:/reports:2xx, -94=200:GET:/reports/{id}, -95=INPUT_GET/reports/{id}_PathParam_id_id_SUCCESS_positive, -96=Auth:alice:GET:/reports/{id}:2xx]
+#043 t= 26.5s special=false adHoc 0->0 smart:DELETE SMART                      | bob POST /reports ->400 ; bob DELETE /reports/{id}[loc] ->null | fv=5 | added=true covered=82 reached=95 | new=[]
+#044 t= 27.0s special=false adHoc 0->0 smart:PUT    SMART                      | bob PUT /users/bob/role ->403 | fv=6 | added=true covered=82 reached=95 | new=[]
+#045 t= 27.5s special=false adHoc 0->0 smart:POST   SMART                      | alice POST /reset ->200 | fv=5 | added=true covered=82 reached=95 | new=[]
+#046 t= 29.0s special=false adHoc 0->0 smart:GET    SMART                      | superadmin POST /reports ->201 ; superadmin GET /reports/{id}[loc] ->200 | fv=14 | added=true covered=83 reached=96 | new=[-97=Auth:superadmin:GET:/reports/{id}:2xx]
+#047 t= 34.1s special=false adHoc 0->0 random       RANDOM                     | bob PUT /users/bob/role ->403 ; alice POST /reset ->200 ; alice PUT /reports/4 ->200 ; superadmin POST /reset ->200 ; bob POST /reset ->200 ; bob PUT /reports/88 ->403 ; superadmin POST /reports ->400 ; bob POST /reset ->200 ; alice GET /reports/812 ->404 | fv=34 | added=true covered=88 reached=100 | new=[-98=200:PUT:/reports/{id}, -99=INPUT_PUT/reports/{id}_PathParam_id_id_SUCCESS_positive, -100=INPUT_PUT/reports/{id}_BodyParam_body_CONTENT_TYPE_SUCCESS_application/json, -101=Auth:alice:PUT:/reports/{id}:2xx]
+#048 t= 37.6s special=false adHoc 0->0 smart:GET    REST_SMART_GET_COLLECTION  | superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin GET /reports ->200 | fv=12 | added=true covered=88 reached=100 | new=[]
+#049 t= 38.2s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /auth/login ->401 | fv=6 | added=true covered=89 reached=101 | new=[-102=Auth:bob:POST:/auth/login:401]
+#050 t= 39.2s special=false adHoc 0->0 smart:GET    SMART                      | superadmin PUT /reports/277 ->404 ; superadmin GET /reports/277 ->404 | fv=11 | added=true covered=89 reached=101 | new=[]
+#051 t= 41.7s special=false adHoc 0->0 smart:GET    REST_SMART_GET_COLLECTION  | bob POST /reports ->400 ; bob POST /reports ->403 ; bob POST /reports ->403 ; bob POST /reports ->403 ; bob GET /reports ->200 | fv=12 | added=true covered=89 reached=101 | new=[]
+#052 t= 43.7s special=false adHoc 0->0 random       RANDOM                     | alice GET /users/me ->200 ; alice GET /users/me ->200 ; superadmin GET /users/me ->200 ; superadmin PUT /users/alice/role ->200 | fv=13 | added=true covered=93 reached=104 | new=[-103=200:PUT:/users/{username}/role, -104=INPUT_PUT/users/{username}/role_BodyParam_body_CONTENT_TYPE_SUCCESS_application/json, -105=Auth:superadmin:PUT:/users/{username}/role:2xx]
+#053 t= 44.2s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /auth/login ->401 | fv=6 | added=true covered=93 reached=104 | new=[]
+#054 t= 44.7s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /auth/login ->401 | fv=6 | added=true covered=93 reached=104 | new=[]
+#055 t= 46.3s special=false adHoc 0->0 smart:GET    SMART                      | superadmin POST /reports ->201 ; superadmin GET /reports/{id}[loc] ->200 | fv=14 | added=true covered=95 reached=106 | new=[-106=INPUT_GET/reports/{id}_PathParam_id_id_negative, -107=INPUT_GET/reports/{id}_PathParam_id_id_SUCCESS_negative]
+#056 t= 46.8s special=false adHoc 0->0 smart:POST   SMART                      | alice POST /reports ->400 | fv=5 | added=true covered=95 reached=106 | new=[]
+#057 t= 49.3s special=false adHoc 0->0 random       RANDOM                     | superadmin GET /reports/6334003917640881295 ->404 ; bob GET /users/me ->200 ; alice POST /reset ->200 ; bob POST /reports ->400 ; alice GET /users/me ->200 | fv=21 | added=true covered=95 reached=106 | new=[]
+#058 t= 49.8s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /auth/login ->401 | fv=6 | added=true covered=95 reached=106 | new=[]
+#059 t= 51.4s special=false adHoc 0->0 smart:GET    SMART                      | superadmin POST /reports ->201 ; superadmin GET /reports/{id}[loc] ->200 | fv=14 | added=true covered=95 reached=106 | new=[]
+#060 t= 52.4s special=false adHoc 0->0 smart:DELETE SMART                      | superadmin POST /reports ->201 ; superadmin DELETE /reports/{id}[loc] ->204 | fv=14 | added=true covered=100 reached=110 | new=[-108=204:DELETE:/reports/{id}, -109=INPUT_DELETE/reports/{id}_PathParam_id_id_SUCCESS_positive, -110=RESPONSE_BODY_PAYLOAD_DELETE/reports/{id}_null, -111=Auth:superadmin:DELETE:/reports/{id}:2xx]
+#061 t= 55.4s special=false adHoc 0->0 smart:GET    REST_SMART_GET_COLLECTION  | bob POST /reports ->403 ; bob POST /reports ->403 ; bob POST /reports ->403 ; bob POST /reports ->403 ; bob POST /reports ->400 ; bob GET /reports ->200 | fv=12 | added=true covered=100 reached=110 | new=[]
+#062 t= 60.5s special=false adHoc 0->0 smart:GET    REST_SMART_GET_COLLECTION  | superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->400 ; superadmin GET /reports ->200 | fv=13 | added=false covered=100 reached=110 | new=[]
+#063 t= 64.1s special=false adHoc 0->0 smart:GET    REST_SMART_GET_COLLECTION  | bob POST /reports ->400 ; bob POST /reports ->400 ; bob POST /reports ->400 ; bob POST /reports ->403 ; bob POST /reports ->400 ; bob POST /reports ->403 ; bob GET /reports ->200 | fv=12 | added=false covered=100 reached=110 | new=[]
+#064 t= 64.6s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /auth/login ->401 | fv=6 | added=true covered=100 reached=110 | new=[]
+#065 t= 65.1s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /reset ->200 | fv=5 | added=true covered=100 reached=110 | new=[]
+#066 t= 65.6s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /reset ->200 | fv=5 | added=true covered=100 reached=110 | new=[]
+#067 t= 66.6s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /reports ->201 | fv=7 | added=true covered=100 reached=110 | new=[]
+#068 t= 67.1s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /reports ->403 | fv=6 | added=false covered=100 reached=110 | new=[]
+#069 t= 67.6s special=false adHoc 0->0 smart:GET    SMART                      | bob POST /reports ->403 ; bob GET /reports/{id}[loc] ->null | fv=6 | added=false covered=100 reached=110 | new=[]
+#070 t= 68.1s special=false adHoc 0->0 smart:GET    SMART                      | alice GET /users/me ->200 | fv=5 | added=true covered=100 reached=110 | new=[]
+#071 t= 68.6s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /reset ->200 | fv=5 | added=true covered=100 reached=110 | new=[]
+#072 t= 71.2s special=false adHoc 0->0 random       RANDOM                     | alice DELETE /reports/66 ->404 ; bob POST /auth/login ->401 ; superadmin POST /auth/login ->401 ; superadmin PUT /users/superadmin/role ->400 ; alice GET /reports ->200 | fv=22 | added=true covered=100 reached=110 | new=[]
+#073 t= 74.7s special=false adHoc 0->0 random       RANDOM                     | bob POST /reset ->200 ; bob PUT /reports/113 ->400 ; bob DELETE /reports/818 ->403 ; bob GET /reports ->200 ; superadmin GET /reports/556 ->404 ; alice POST /auth/login ->401 ; alice GET /reports/118 ->404 | fv=33 | added=false covered=100 reached=110 | new=[]
+#074 t= 75.2s special=false adHoc 0->0 smart:GET    SMART                      | alice GET /users/me ->200 | fv=5 | added=true covered=100 reached=110 | new=[]
+#075 t= 76.8s special=false adHoc 0->0 smart:GET    SMART                      | alice POST /reports ->201 ; alice GET /reports/{id}[loc] ->200 | fv=14 | added=true covered=100 reached=110 | new=[]
+#076 t= 81.3s special=false adHoc 0->0 smart:GET    REST_SMART_GET_COLLECTION  | superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->400 ; superadmin POST /reports ->400 ; superadmin GET /reports ->200 | fv=13 | added=false covered=100 reached=110 | new=[]
+#077 t= 81.8s special=false adHoc 0->0 smart:GET    SMART                      | alice GET /users/me ->200 | fv=5 | added=true covered=100 reached=110 | new=[]
+#078 t= 82.9s special=false adHoc 0->0 smart:POST   SMART                      | alice POST /reports ->201 | fv=7 | added=true covered=100 reached=110 | new=[]
+#079 t= 83.4s special=false adHoc 0->0 smart:GET    SMART                      | superadmin GET /users/me ->200 | fv=5 | added=true covered=100 reached=110 | new=[]
+#080 t= 85.4s special=false adHoc 0->0 smart:GET    REST_SMART_GET_COLLECTION  | bob POST /reports ->403 ; bob POST /reports ->403 ; bob POST /reports ->403 ; bob GET /reports ->200 | fv=11 | added=true covered=100 reached=110 | new=[]
+#081 t= 85.9s special=false adHoc 0->0 smart:GET    SMART                      | alice POST /reports ->400 ; alice GET /reports/{id}[loc] ->null | fv=5 | added=false covered=100 reached=110 | new=[]
+#082 t= 87.4s special=false adHoc 0->0 smart:GET    SMART                      | superadmin POST /reports ->201 ; superadmin GET /reports/{id}[loc] ->200 | fv=14 | added=true covered=100 reached=110 | new=[]
+#083 t= 87.9s special=false adHoc 0->0 smart:GET    SMART                      | alice GET /users/me ->200 | fv=5 | added=true covered=100 reached=110 | new=[]
+#084 t= 88.5s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /reports ->400 | fv=5 | added=false covered=100 reached=110 | new=[]
+#085 t= 88.9s special=false adHoc 0->0 smart:PUT    SMART                      | bob PUT /users/superadmin/role ->403 | fv=6 | added=true covered=100 reached=110 | new=[]
+#086 t= 89.5s special=false adHoc 0->0 smart:POST   SMART                      | alice POST /reports ->400 | fv=5 | added=false covered=100 reached=110 | new=[]
+#087 t= 90.0s special=false adHoc 0->0 smart:PUT    SMART                      | bob POST /reports ->403 ; bob PUT /reports/{id}[loc] ->null | fv=6 | added=false covered=100 reached=110 | new=[]
+#088 t= 91.5s special=false adHoc 0->0 smart:GET    REST_SMART_GET_COLLECTION  | alice POST /reports ->400 ; alice POST /reports ->400 ; alice GET /reports ->200 | fv=10 | added=false covered=100 reached=110 | new=[]
+#089 t= 92.0s special=false adHoc 0->0 smart:PUT    SMART                      | superadmin PUT /users/bob/role ->200 | fv=7 | added=true covered=100 reached=110 | new=[]
+#090 t= 93.0s special=false adHoc 0->0 smart:DELETE SMART                      | alice POST /reports ->201 ; alice DELETE /reports/{id}[loc] ->204 | fv=14 | added=true covered=101 reached=111 | new=[-112=Auth:alice:DELETE:/reports/{id}:2xx]
+#091 t=100.6s special=false adHoc 0->0 smart:GET    REST_SMART_GET_COLLECTION  | superadmin POST /reports ->201 ; superadmin POST /reports ->400 ; superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->400 ; superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin GET /reports ->200 | fv=13 | added=false covered=101 reached=111 | new=[]
+#092 t=101.1s special=false adHoc 0->0 smart:PUT    SMART                      | alice PUT /users/bob/role ->400 | fv=5 | added=false covered=101 reached=111 | new=[]
+#093 t=105.2s special=false adHoc 0->0 smart:GET    REST_SMART_GET_COLLECTION  | superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->400 ; superadmin GET /reports ->200 | fv=13 | added=false covered=101 reached=111 | new=[]
+#094 t=113.8s special=false adHoc 0->0 smart:GET    REST_SMART_GET_COLLECTION  | superadmin POST /reports ->400 ; superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin POST /reports ->400 ; superadmin POST /reports ->201 ; superadmin POST /reports ->201 ; superadmin GET /reports ->200 | fv=13 | added=false covered=101 reached=111 | new=[]
+#095 t=114.8s special=false adHoc 0->0 smart:DELETE SMART                      | superadmin PUT /reports/145 ->404 ; superadmin DELETE /reports/145 ->404 | fv=11 | added=false covered=101 reached=111 | new=[]
+#096 t=115.8s special=false adHoc 0->0 smart:GET    SMART                      | superadmin PUT /reports/677 ->404 ; superadmin GET /reports/677 ->404 | fv=11 | added=false covered=101 reached=111 | new=[]
+#097 t=116.3s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /auth/login ->401 | fv=6 | added=true covered=101 reached=111 | new=[]
+#098 t=117.9s special=false adHoc 0->0 smart:GET    SMART                      | alice POST /reports ->201 ; alice GET /reports/{id}[loc] ->200 | fv=14 | added=true covered=101 reached=111 | new=[]
+#099 t=118.9s special=false adHoc 0->0 smart:DELETE SMART                      | superadmin PUT /reports/815 ->404 ; superadmin DELETE /reports/815 ->404 | fv=11 | added=false covered=101 reached=111 | new=[]
+#100 t=119.4s special=false adHoc 0->0 smart:PUT    SMART                      | superadmin PUT /users/superadmin/role ->200 | fv=7 | added=true covered=101 reached=111 | new=[]
+#101 t=119.9s special=false adHoc 0->0 smart:PUT    SMART                      | bob PUT /users/dS0Z/role ->403 | fv=6 | added=false covered=101 reached=111 | new=[]
+#102 t=120.4s special=false adHoc 0->0 smart:PUT    SMART                      | bob PUT /reports/359 ->403 | fv=7 | added=true covered=101 reached=111 | new=[]
+#103 t=120.9s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /auth/login ->400 | fv=5 | added=true covered=101 reached=111 | new=[]
+#104 t=121.4s special=false adHoc 0->0 smart:GET    SMART                      | alice GET /users/me ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#105 t=121.9s special=false adHoc 0->0 smart:POST   SMART                      | alice POST /reset ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#106 t=122.4s special=false adHoc 0->0 smart:DELETE SMART                      | alice POST /reports ->400 ; alice DELETE /reports/{id}[loc] ->null | fv=5 | added=false covered=101 reached=111 | new=[]
+#107 t=124.0s special=false adHoc 0->0 smart:PUT    SMART                      | superadmin POST /reports ->201 ; superadmin PUT /reports/{id}[loc] ->400 | fv=13 | added=false covered=101 reached=111 | new=[]
+#108 t=124.5s special=false adHoc 0->0 smart:PUT    SMART                      | bob PUT /reports/838 ->403 | fv=7 | added=false covered=101 reached=111 | new=[]
+#109 t=125.0s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /auth/login ->401 | fv=6 | added=true covered=101 reached=111 | new=[]
+#110 t=125.5s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /auth/login ->401 | fv=6 | added=true covered=101 reached=111 | new=[]
+#111 t=126.5s special=false adHoc 0->0 smart:DELETE SMART                      | alice POST /reports ->201 ; alice DELETE /reports/{id}[loc] ->204 | fv=14 | added=true covered=101 reached=111 | new=[]
+#112 t=128.0s special=false adHoc 0->0 smart:GET    REST_SMART_GET_COLLECTION  | superadmin POST /reports ->400 ; superadmin POST /reports ->400 ; superadmin GET /reports ->200 | fv=10 | added=false covered=101 reached=111 | new=[]
+#113 t=128.5s special=false adHoc 0->0 smart:DELETE SMART                      | bob POST /reports ->403 ; bob DELETE /reports/{id}[loc] ->null | fv=6 | added=false covered=101 reached=111 | new=[]
+#114 t=129.0s special=false adHoc 0->0 smart:PUT    SMART                      | alice PUT /users/superadmin/role ->400 | fv=5 | added=false covered=101 reached=111 | new=[]
+#115 t=129.5s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /reset ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#116 t=130.0s special=false adHoc 0->0 smart:GET    SMART                      | superadmin GET /users/me ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#117 t=130.5s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /auth/login ->401 | fv=6 | added=true covered=101 reached=111 | new=[]
+#118 t=131.1s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /reports ->403 | fv=6 | added=false covered=101 reached=111 | new=[]
+#119 t=131.6s special=false adHoc 0->0 smart:PUT    SMART                      | superadmin PUT /users/superadmin/role ->400 | fv=5 | added=false covered=101 reached=111 | new=[]
+#120 t=132.1s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /reset ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#121 t=132.6s special=false adHoc 0->0 smart:GET    SMART                      | bob GET /users/me ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#122 t=134.1s special=false adHoc 0->0 smart:PUT    SMART                      | superadmin POST /reports ->201 ; superadmin PUT /reports/{id}[loc] ->400 | fv=13 | added=false covered=101 reached=111 | new=[]
+#123 t=134.6s special=false adHoc 0->0 smart:GET    SMART                      | bob POST /reports ->403 ; bob GET /reports/{id}[loc] ->null | fv=6 | added=false covered=101 reached=111 | new=[]
+#124 t=135.1s special=false adHoc 0->0 smart:GET    SMART                      | bob GET /users/me ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#125 t=135.6s special=false adHoc 0->0 smart:GET    SMART                      | bob POST /reports ->400 ; bob GET /reports/{id}[loc] ->null | fv=5 | added=false covered=101 reached=111 | new=[]
+#126 t=136.1s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /auth/login ->401 | fv=6 | added=true covered=101 reached=111 | new=[]
+#127 t=136.6s special=false adHoc 0->0 smart:POST   SMART                      | alice POST /auth/login ->401 | fv=6 | added=true covered=101 reached=111 | new=[]
+#128 t=137.1s special=false adHoc 0->0 smart:GET    SMART                      | bob GET /users/me ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#129 t=137.7s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /reset ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#130 t=138.2s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /reset ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#131 t=138.7s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /reset ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#132 t=139.2s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /reports ->403 | fv=6 | added=false covered=101 reached=111 | new=[]
+#133 t=139.7s special=false adHoc 0->0 smart:GET    SMART                      | alice GET /users/me ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#134 t=140.2s special=false adHoc 0->0 smart:PUT    SMART                      | bob PUT /users/bob/role ->403 | fv=6 | added=false covered=101 reached=111 | new=[]
+#135 t=140.7s special=false adHoc 0->0 smart:GET    SMART                      | superadmin GET /users/me ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#136 t=141.2s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /auth/login ->401 | fv=6 | added=true covered=101 reached=111 | new=[]
+#137 t=141.7s special=false adHoc 0->0 smart:PUT    SMART                      | superadmin PUT /users/superadmin/role ->400 | fv=5 | added=false covered=101 reached=111 | new=[]
+#138 t=142.2s special=false adHoc 0->0 smart:POST   SMART                      | alice POST /reset ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#139 t=142.7s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /auth/login ->400 | fv=5 | added=true covered=101 reached=111 | new=[]
+#140 t=143.2s special=false adHoc 0->0 smart:DELETE SMART                      | bob POST /reports ->403 ; bob DELETE /reports/{id}[loc] ->null | fv=6 | added=false covered=101 reached=111 | new=[]
+#141 t=143.7s special=false adHoc 0->0 smart:PUT    SMART                      | superadmin PUT /users/alice/role ->400 | fv=5 | added=false covered=101 reached=111 | new=[]
+#142 t=144.2s special=false adHoc 0->0 smart:GET    SMART                      | alice GET /users/me ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#143 t=144.8s special=false adHoc 0->0 smart:PUT    SMART                      | superadmin POST /reports ->400 ; superadmin PUT /reports/{id}[loc] ->null | fv=5 | added=false covered=101 reached=111 | new=[]
+#144 t=145.8s special=false adHoc 0->0 smart:POST   SMART                      | alice POST /reports ->201 | fv=7 | added=true covered=101 reached=111 | new=[]
+#145 t=146.3s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /reports ->400 | fv=5 | added=false covered=101 reached=111 | new=[]
+#146 t=148.3s special=false adHoc 0->0 random       RANDOM                     | NoAuth POST /reset ->200 ; alice POST /reports ->201 ; bob PUT /reports/431 ->403 | fv=19 | added=false covered=101 reached=111 | new=[]
+#147 t=148.8s special=false adHoc 0->0 smart:POST   SMART                      | bob POST /reset ->200 | fv=5 | added=true covered=101 reached=111 | new=[]
+#148 t=149.3s special=false adHoc 0->0 smart:POST   SMART                      | superadmin POST /reports ->400 | fv=5 | added=false covered=101 reached=111 | new=[]
+#149 t=149.8s special=false adHoc 0->0 smart:PUT    SMART                      | bob PUT /reports/1895489527128866328 ->400 | fv=6 | added=false covered=101 reached=111 | new=[]
+#150 t=151.4s special=false adHoc 0->0 smart:GET    SMART                      | alice POST /reports ->201 ; alice GET /reports/{id}[loc] ->200 | fv=14 | added=true covered=101 reached=111 | new=[]
+=== SUMMARY
+elapsed=151.354s evaluatedIndividuals=150 evaluatedActions=268 sumMainActions=268
+byBranch={adHoc=36, random=7, smart:DELETE=10, smart:GET=40, smart:POST=39, smart:PUT=18}
+archive covered=101 reached=111 populations.size=111
+idMapper.mapping.size=111 localCounter=-112
+extractSolution().individuals.size=42
+=== KEY TARGETS
+  -101 "Auth:alice:PUT:/reports/{id}:2xx" firstReachedAt=#47 covered=true popSize=1
+      holder step#47 h=1.0 | bob PUT /users/bob/role ->403 ; alice POST /reset ->200 ; alice PUT /reports/4 ->200 ; superadmin POST /reset ->200 ; bob POST /reset ->200 ; bob PUT /reports/88 ->403 ; superadmin POST /reports ->400 ; bob POST /reset ->200 ; alice GET /reports/812 ->404
+  -98 "200:PUT:/reports/{id}" firstReachedAt=#47 covered=true popSize=1
+      holder step#47 h=1.0 | bob PUT /users/bob/role ->403 ; alice POST /reset ->200 ; alice PUT /reports/4 ->200 ; superadmin POST /reset ->200 ; bob POST /reset ->200 ; bob PUT /reports/88 ->403 ; superadmin POST /reports ->400 ; bob POST /reset ->200 ; alice GET /reports/812 ->404
+  -91 "403:PUT:/reports/{id}" firstReachedAt=#37 covered=true popSize=1
+      holder step#102 h=1.0 | bob PUT /reports/359 ->403
+  -92 "Auth:bob:PUT:/reports/{id}:403" firstReachedAt=#37 covered=true popSize=1
+      holder step#102 h=1.0 | bob PUT /reports/359 ->403
+  -105 "Auth:superadmin:PUT:/users/{username}/role:2xx" firstReachedAt=#52 covered=true popSize=1
+      holder step#89 h=1.0 | superadmin PUT /users/bob/role ->200
+  -103 "200:PUT:/users/{username}/role" firstReachedAt=#52 covered=true popSize=1
+      holder step#89 h=1.0 | superadmin PUT /users/bob/role ->200
+  -39 "HTTP_FAULT:PUT:/reports/{id}" firstReachedAt=#7 covered=false popSize=1
+      holder step#47 h=0.5 | bob PUT /users/bob/role ->403 ; alice POST /reset ->200 ; alice PUT /reports/4 ->200 ; superadmin POST /reset ->200 ; bob POST /reset ->200 ; bob PUT /reports/88 ->403 ; superadmin POST /reports ->400 ; bob POST /reset ->200 ; alice GET /reports/812 ->404
+  FV of holder of Auth:alice:PUT:/reports/{id}:2xx step#47 | bob PUT /users/bob/role ->403 ; alice POST /reset ->200 ; alice PUT /reports/4 ->200 ; superadmin POST /reset ->200 ; bob POST /reset ->200 ; bob PUT /reports/88 ->403 ; superadmin POST /reports ->400 ; bob POST /reset ->200 ; alice GET /reports/812 ->404 | size=9.0
+    targets[-13] score=1.0 actionIndex=-1 "INPUT_POST/reports_BodyParam_body_CONTENT_TYPE_application/json"
+    targets[-14] score=1.0 actionIndex=-1 "RESPONSE_BODY_PAYLOAD_POST/reports_application/json"
+    targets[-15] score=0.1 actionIndex=6 "HTTP_SUCCESS:POST:/reports"
+    targets[-16] score=0.1 actionIndex=6 "HTTP_FAULT:POST:/reports"
+    targets[-23] score=1.0 actionIndex=1 "200:POST:/reset"
+    targets[-24] score=1.0 actionIndex=-1 "RESPONSE_BODY_PAYLOAD_POST/reset_application/json"
+    targets[-25] score=1.0 actionIndex=1 "HTTP_SUCCESS:POST:/reset"
+    targets[-26] score=0.5 actionIndex=1 "HTTP_FAULT:POST:/reset"
+    targets[-27] score=1.0 actionIndex=4 "Auth:bob:POST:/reset:2xx"
+    targets[-35] score=1.0 actionIndex=-1 "INPUT_PUT/reports/{id}_PathParam_id_id_positive"
+    targets[-36] score=1.0 actionIndex=-1 "INPUT_PUT/reports/{id}_BodyParam_body_CONTENT_TYPE_application/json"
+    targets[-37] score=1.0 actionIndex=-1 "RESPONSE_BODY_PAYLOAD_PUT/reports/{id}_application/json"
+    targets[-38] score=1.0 actionIndex=2 "HTTP_SUCCESS:PUT:/reports/{id}"
+    targets[-39] score=0.5 actionIndex=2 "HTTP_FAULT:PUT:/reports/{id}"
+    targets[-40] score=1.0 actionIndex=8 "404:GET:/reports/{id}"
+    targets[-41] score=1.0 actionIndex=-1 "INPUT_GET/reports/{id}_PathParam_id_id_positive"
+    targets[-42] score=1.0 actionIndex=-1 "RESPONSE_BODY_PAYLOAD_GET/reports/{id}_application/json"
+    targets[-43] score=0.1 actionIndex=8 "HTTP_SUCCESS:GET:/reports/{id}"
+    targets[-44] score=0.1 actionIndex=8 "HTTP_FAULT:GET:/reports/{id}"
+    targets[-45] score=1.0 actionIndex=0 "403:PUT:/users/{username}/role"
+    targets[-46] score=1.0 actionIndex=-1 "INPUT_PUT/users/{username}/role_BodyParam_body_CONTENT_TYPE_application/json"
+    targets[-47] score=1.0 actionIndex=-1 "RESPONSE_BODY_PAYLOAD_PUT/users/{username}/role_application/json"
+    targets[-48] score=0.1 actionIndex=0 "HTTP_SUCCESS:PUT:/users/{username}/role"
+    targets[-49] score=0.1 actionIndex=0 "HTTP_FAULT:PUT:/users/{username}/role"
+    targets[-50] score=1.0 actionIndex=0 "Auth:bob:PUT:/users/{username}/role:403"
+    targets[-58] score=1.0 actionIndex=3 "Auth:superadmin:POST:/reset:2xx"
+    targets[-64] score=1.0 actionIndex=6 "400:POST:/reports"
+    targets[-66] score=1.0 actionIndex=1 "Auth:alice:POST:/reset:2xx"
+    targets[-91] score=1.0 actionIndex=5 "403:PUT:/reports/{id}"
+    targets[-92] score=1.0 actionIndex=5 "Auth:bob:PUT:/reports/{id}:403"
+    targets[-98] score=1.0 actionIndex=2 "200:PUT:/reports/{id}"
+    targets[-99] score=1.0 actionIndex=-1 "INPUT_PUT/reports/{id}_PathParam_id_id_SUCCESS_positive"
+    targets[-100] score=1.0 actionIndex=-1 "INPUT_PUT/reports/{id}_BodyParam_body_CONTENT_TYPE_SUCCESS_application/json"
+    targets[-101] score=1.0 actionIndex=2 "Auth:alice:PUT:/reports/{id}:2xx"

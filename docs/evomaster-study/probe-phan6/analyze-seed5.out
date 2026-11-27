@@ -1,0 +1,40 @@
+requests 971 logins 351
+MARK SEARCH t=2.1
+MARK MINIMIZATION t=153.1
+MARK SECURITY t=209.0
+MARK HTTP_ORACLE t=303.0
+MARK ADDITIONAL_ORACLES t=303.0
+MARK WRITE_OUTPUT t=317.7
+phase SEARCH               {'requests': 448, 'logins': 151, 'anon': 15, 'stale': 2, 'stale_2xx': 2, 'reset_200': 21, 'role_200': 5, 'demote_200': 3}
+phase MINIMIZATION         {'requests': 176, 'logins': 67, 'anon': 13, 'stale': 2, 'stale_2xx': 2, 'reset_200': 10, 'role_200': 2, 'demote_200': 2}
+phase SECURITY             {'requests': 306, 'logins': 121, 'anon': 40, 'stale': 1, 'stale_2xx': 1, 'reset_200': 0, 'role_200': 6, 'demote_200': 6}
+phase ADDITIONAL_ORACLES   {'requests': 41, 'logins': 12, 'anon': 6, 'stale': 0, 'stale_2xx': 0, 'reset_200': 0}
+
+resets with 200: 00011:SEA 00030:SEA 00048:SEA 00061:SEA 00073:SEA 00075:SEA 00202:SEA 00208:SEA 00230:SEA 00232:SEA 00234:SEA 00262:SEA 00280:SEA 00289:SEA 00295:SEA 00391:SEA 00399:SEA 00410:SEA 00414:SEA 00415:SEA 00426:SEA 00463:MIN 00496:MIN 00512:MIN 00519:MIN 00559:MIN 00563:MIN 00564:MIN 00614:MIN 00621:MIN 00623:MIN
+
+role changes with 200 (seq phase operator[claim] path body -> stored after)
+  00077 SEARCH       superadmin[ADMIN] /users/bob/role {"role":"VIEWER"} -> alice=ADMIN,bob=VIEWER,superadmin=ADMIN
+  00141 SEARCH       superadmin[ADMIN] /users/bob/role {"role":"ADMIN"} -> alice=ADMIN,bob=ADMIN,superadmin=ADMIN
+  00293 SEARCH       superadmin[ADMIN] /users/bob/role {"role":"ADMIN"} -> alice=ADMIN,bob=ADMIN,superadmin=ADMIN
+  00352 SEARCH       alice[ADMIN] /users/superadmin/role {"role":"VIEWER"} -> alice=ADMIN,bob=VIEWER,superadmin=VIEWER
+  00404 SEARCH       alice[ADMIN] /users/superadmin/role {"role":"VIEWER"} -> alice=ADMIN,bob=VIEWER,superadmin=VIEWER
+  00488 MINIMIZATION superadmin[ADMIN] /users/bob/role {"role":"VIEWER"} -> alice=ADMIN,bob=VIEWER,superadmin=ADMIN
+  00549 MINIMIZATION alice[ADMIN] /users/superadmin/role {"role":"VIEWER"} -> alice=ADMIN,bob=VIEWER,superadmin=VIEWER
+  00686 SECURITY     superadmin[ADMIN] /users/bob/role {"role":"VIEWER"} -> alice=ADMIN,bob=VIEWER,superadmin=ADMIN
+  00687 SECURITY     alice[ADMIN] /users/bob/role {"role":"VIEWER"} -> alice=ADMIN,bob=VIEWER,superadmin=ADMIN
+  00691 SECURITY     superadmin[ADMIN] /users/bob/role {"role":"VIEWER"} -> alice=ADMIN,bob=VIEWER,superadmin=ADMIN
+  00696 SECURITY     alice[ADMIN] /users/superadmin/role {"role":"VIEWER"} -> alice=ADMIN,bob=VIEWER,superadmin=VIEWER
+  00697 SECURITY     superadmin[ADMIN] /users/superadmin/role {"role":"VIEWER"} -> alice=ADMIN,bob=VIEWER,superadmin=VIEWER
+  00701 SECURITY     alice[ADMIN] /users/superadmin/role {"role":"VIEWER"} -> alice=ADMIN,bob=VIEWER,superadmin=VIEWER
+
+stale-token calls (claim differs from stored role at send time)
+  00414 SEARCH       POST   /reset                 superadmin token[VIEWER] stored[ADMIN] -> 200 {"status":"reset"}
+  00415 SEARCH       POST   /reset                 superadmin token[VIEWER] stored[ADMIN] -> 200 {"status":"reset"}
+  00563 MINIMIZATION POST   /reset                 superadmin token[VIEWER] stored[ADMIN] -> 200 {"status":"reset"}
+  00564 MINIMIZATION POST   /reset                 superadmin token[VIEWER] stored[ADMIN] -> 200 {"status":"reset"}
+  00697 SECURITY     PUT    /users/superadmin/role superadmin token[ADMIN] stored[VIEWER] -> 200 {"username":"superadmin","role":"VIEWER"}
+
+last stored roles {'alice': 'ADMIN', 'superadmin': 'VIEWER', 'bob': 'VIEWER'}
+
+A1-direction stale calls (token ADMIN, stored VIEWER): 1 with 2xx: 1
+  00697 SECURITY     PUT    /users/superadmin/role superadmin ..ykg-Ic -> 200

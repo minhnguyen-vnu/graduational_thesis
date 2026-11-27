@@ -6,7 +6,7 @@
 | 2 | No. Added code carries no comments; the guard hook refuses it | `CLAUDE.md` §2; `.claude/hooks/guard.py` |
 | 3 | `evomaster-TR2-3beccb00.jar`, built from `9e779c15dd` plus `wip/trim-restore-20261121-tree.patch` (the LF code plus the C4 change and the code cleanup; no-duplication model); the same code without the `THESIS` comments is HEAD `a44d91f478`; runs 2026-11-21 in `tr2-wave1-20261121/`, `tr2-wave2-20261121/` | `CLAUDE.md` §5; `docs/results.md` §0 |
 | 4 | reports-api, vampi-seeded, pyLoad, artifact-keeper; pyLoad (CVE-2026-41133) and artifact-keeper (vendor bug #1821, vendor patch as control) | `CLAUDE.md` §1, §4 |
-| 5 | 0 FP in 50 fixed-target runs, over 49 triples performed on patched code. The vendor patch gives 0 TN: the old token gets 401 (INCONCLUSIVE), so no triple is performed | `CLAUDE.md` §4; `docs/results.md` §1 |
+| 5 | 0 FP in 50 fixed-target runs, over 50 triples performed on patched code. The vendor patch gives 0 TN: the old token gets 401 (INCONCLUSIVE), so no triple is performed | `CLAUDE.md` §4; `docs/results.md` §1 |
 | 6 | INCONCLUSIVE, never a verdict | `CLAUDE.md` §3 |
 | 7 | No | `CLAUDE.md` §3 |
 | 8 | Source not 2xx, transition not 2xx, or follow-up with no status or 401 | `CLAUDE.md` §3 |

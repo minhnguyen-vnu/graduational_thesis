@@ -1,0 +1,33 @@
+=== cay cua PUT:/users/{username}/role sau doInitialize
+RestCallAction
+    PathParam name=username
+        CustomMutationRateGene name=username
+            StringGene name=username raw=sgTqPBwBBSF_
+    BodyParam name=body
+        ObjectGene name=body
+            EnumGene name=role values=[ADMIN, EVOMASTER, VIEWER] index=0 raw=ADMIN
+        EnumGene name=CONTENT_TYPE values=[application/json] index=0 raw=application/json
+        CustomMutationRateGene name=sendUnquoteJsonStringWrapper
+            BooleanGene name=sendUnquoteJsonString raw=false
+=== schemaFields
+path:username                gene=CustomMutationRateGene   value=StringGene   kind=str    leaf=username       role= -4.947 victim=  5.189
+body:role                    gene=EnumGene                 value=EnumGene     kind=enum   leaf=role           role=  8.621 victim= -2.565
+features path:username = [k:str, l:path, n:username, w:username]
+features body:role = [e:admin, e:evomaster, e:viewer, k:enum, l:body, n:role, w:role]
+transitionScore=5.628 looksLikePermissionReducingTransition=true
+roleField=body:role victimField=path:username
+reducedRoleValues=[VIEWER]
+=== truoc setField
+probe tat 0 SelectableWrapperGene tren duong len cua truong vai tro
+chain: EnumGene(role) <- ObjectGene(body) <- BodyParam
+body:  {"role":"ADMIN"}
+=== setField(body:role, VIEWER) -> true
+chain: EnumGene(role) <- ObjectGene(body) <- BodyParam
+body:  {"role":"VIEWER"}
+value raw=VIEWER
+=== truong nan nhan truoc setField
+chain: StringGene(username) <- CustomMutationRateGene(username) <- PathParam
+resolvedPath: /users/sgTqPBwBBSF_/role
+=== setField(path:username, alice) -> true
+chain: StringGene(username) <- CustomMutationRateGene(username) <- PathParam
+resolvedPath: /users/alice/role

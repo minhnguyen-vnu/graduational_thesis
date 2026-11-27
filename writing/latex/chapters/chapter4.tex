@@ -6,12 +6,12 @@ Chương này trình bày cách cài đặt Oracle 970 trong EvoMaster, bốn �
 \section{Tích hợp Oracle 970 vào mã nguồn EvoMaster}
 \label{sec:impl_evomaster}
 
-Phần mở rộng của Oracle 970 được viết bằng Kotlin (ngôn ngữ của phần core EvoMaster), ngay trong mã nguồn EvoMaster 6.1.1 \cite{evomaster611}. EvoMaster chạy ở chế độ hộp đen, với pha tìm kiếm dùng SMARTS, thuật toán mặc định của chế độ này (Mục~\ref{sec:bg_sbst}).
+Phần mở rộng của Oracle 970 được viết bằng Kotlin, ngay trong mã nguồn của EvoMaster~6.1.1 \cite{evomaster611}. EvoMaster chạy ở chế độ hộp đen, với pha tìm kiếm dùng SMARTS, thuật toán mặc định của chế độ này (Mục~\ref{sec:bg_sbst}).
 
 \subsection{Các điểm tích hợp vào EvoMaster}
 \label{subsec:impl_hooks}
 
-Phần mở rộng chạy ở pha kiểm thử bảo mật, sau pha tìm kiếm và pha rút gọn (Mục~\ref{sec:bg_sbst}). Phần mở rộng tích hợp vào EvoMaster ở 4 điểm, đánh số theo Hình~\ref{fig:evomaster_integration}:
+Phần mở rộng chạy ở pha kiểm thử bảo mật, sau pha tìm kiếm và pha rút gọn. Phần mở rộng tích hợp vào EvoMaster ở 4 điểm, đánh số theo Hình~\ref{fig:evomaster_integration}:
 \begin{enumerate}
   \item Pha kiểm thử bảo mật gọi bộ dựng kịch bản MR-A1 ngay sau bước sinh phản hồi 403.
   \item Oracle bảo mật gọi bộ phán quyết sau các kiểm tra có sẵn.
@@ -144,7 +144,7 @@ Hình~\ref{fig:test970} trích hàm đó, tức ca kiểm thử mà công cụ s
 \subsection{Trình tự một lần thử}
 \label{subsec:impl_sequence}
 
-Bộ ba dựa vào cơ chế xác thực có sẵn của EvoMaster (Mục~\ref{sec:bg_sbst}). Khi cả bộ ba nằm trong một ca, follow-up vẫn mang token cấp trước lần hạ quyền, còn ở bước đăng nhập lại, bộ dựng đặt chuỗi lời gọi của nạn nhân vào một ca mới để EvoMaster cấp token mới.
+Bộ ba dựa vào cơ chế xác thực có sẵn của EvoMaster. Khi cả bộ ba nằm trong một ca, follow-up vẫn mang token cấp trước lần hạ quyền, còn ở bước đăng nhập lại, bộ dựng đặt chuỗi lời gọi của nạn nhân vào một ca mới để EvoMaster cấp token mới.
 
 \begin{figure}[htbp]
   \centering
@@ -153,7 +153,7 @@ Bộ ba dựa vào cơ chế xác thực có sẵn của EvoMaster (Mục~\ref{s
   \label{fig:attempt_sequence}
 \end{figure}
 
-Hình~\ref{fig:attempt_sequence} minh họa lần thử đầu tiên dựng được bộ ba trên biến thể có lỗ hổng của artifact-keeper, ở lượt chạy seed 1. Nạn nhân là tài khoản \texttt{victim}, tài khoản quản trị là \texttt{operator} (tên đăng nhập \texttt{admin}). Source và follow-up là \texttt{POST} \path{/api/v1/admin/analytics/snapshot}, còn thao tác chuyển trạng thái là \texttt{PATCH /api/v1/users/\{id\}}, với \texttt{id} của nạn nhân. Lần thử gồm ba ca kiểm thử:
+Hình~\ref{fig:attempt_sequence} minh họa lần thử đầu tiên dựng được bộ ba trên biến thể có lỗ hổng của artifact-keeper, ở lượt chạy seed 1. Nạn nhân là tài khoản \texttt{victim}, tài khoản quản trị là \texttt{operator} (tên đăng nhập \texttt{admin}). Source và follow-up là \texttt{POST} \path{/api/v1/admin/analytics/snapshot}, còn transition là \texttt{PATCH /api/v1/users/\{id\}}, với \texttt{id} của nạn nhân. Lần thử gồm ba ca kiểm thử:
 \begin{itemize}
   \item Ca 1 chứa bộ ba: source và follow-up dùng token T1 của nạn nhân, thao tác chuyển trạng thái dùng token T2 của tài khoản quản trị. Cả ba lời gọi nhận 200, và bộ phán quyết gắn lỗi 970 vào follow-up.
   \item Ca 2 là ca đăng nhập lại: source được gửi với token mới T3 của nạn nhân và nhận 403.
@@ -194,14 +194,14 @@ Mỗi ứng dụng có một biến thể có lỗ hổng để đo khả năng 
 
 Ứng dụng REST reports-api được viết riêng cho thực nghiệm bằng Spring Boot 3 và Java 17. Trên ứng dụng reports-api, kết quả mong đợi của Oracle 970 ở mỗi biến thể đã biết trước. Máy chủ cấp token JWT khi đăng nhập, và các thao tác ghi trên báo cáo yêu cầu vai trò quản trị. Thao tác hạ quyền \texttt{PUT /users/\{username\}/role} cũng yêu cầu vai trò quản trị.
 
-Ở biến thể có lỗ hổng, máy chủ đọc vai trò từ claim (trường thông tin mang trong JWT) thay vì tra vai trò hiện tại trong cơ sở dữ liệu, nên với token cấp trước khi đổi vai trò, tài khoản đã bị hạ quyền vẫn ghi được dữ liệu. Hai biến thể chạy từ cùng một bản đóng gói và khác nhau ở giá trị cấu hình chọn nguồn đọc vai trò.
+Ở biến thể có lỗ hổng, máy chủ đọc vai trò từ claim của JWT thay vì tra vai trò hiện tại trong cơ sở dữ liệu. Với token cấp trước khi đổi vai trò, tài khoản đã bị hạ quyền vẫn ghi được dữ liệu. Hai biến thể chạy từ cùng một bản đóng gói và khác nhau ở giá trị cấu hình chọn nguồn đọc vai trò.
 
 Kịch bản dựng lỗi trên reports-api là chuỗi lời gọi ở Bảng~\ref{tab:triple_example}, lấy từ ca kiểm thử 970 do công cụ sinh ở seed 2 (Hình~\ref{fig:test970}). Sau khi \texttt{alice} bị hạ xuống \texttt{VIEWER}, lời gọi sửa báo cáo gửi lại bằng token cũ nhận 200 trên biến thể có lỗ hổng và 403 trên biến thể đã vá.
 
 \subsection{Ứng dụng vampi-seeded}
 \label{subsec:impl_vampi}
 
-Bản fork (bản sao tách nhánh) vampi-seeded của dự án mã nguồn mở VAmPI dùng để thử Oracle 970 trên mã nguồn của bên thứ ba, và bản fork cũng dùng để thử công cụ với quy ước đặt đường dẫn của dự án. Vì VAmPI gốc không có chức năng đổi vai trò, bản fork thêm hai endpoint đặt tên theo quy ước đường dẫn của VAmPI. Endpoint thứ nhất là \texttt{PUT /users/v1/\{username\}/role} để hạ quyền, còn endpoint thứ hai là một thao tác ghi cập nhật dữ liệu sách dành cho quản trị viên. Lúc đăng nhập, ứng dụng ghi cờ quản trị vào claim của token, và một giá trị cấu hình chọn giữa hai biến thể.
+Bản fork vampi-seeded của dự án mã nguồn mở VAmPI dùng để thử Oracle 970 trên mã nguồn của bên thứ ba và để thử công cụ với quy ước đặt đường dẫn của dự án. Vì VAmPI gốc không có chức năng đổi vai trò, bản fork thêm hai endpoint đặt tên theo quy ước đường dẫn của VAmPI. Endpoint thứ nhất là \texttt{PUT /users/v1/\{username\}/role} để hạ quyền, còn endpoint thứ hai là một thao tác ghi cập nhật dữ liệu sách dành cho quản trị viên. Lúc đăng nhập, ứng dụng ghi cờ quản trị vào claim của token, và một giá trị cấu hình chọn giữa hai biến thể.
 
 Bảng~\ref{tab:scenario_vampi} là kịch bản dựng lỗi trên vampi-seeded, lấy từ ca kiểm thử do công cụ sinh ở seed 1 trên hai biến thể. Nạn nhân là \texttt{superadmin}, tài khoản quản trị là \texttt{admin}, và cả hai đăng nhập qua \texttt{POST /users/v1/login} ở đầu ca để nhận token JWT.
 
@@ -225,7 +225,7 @@ Bảng~\ref{tab:scenario_vampi} là kịch bản dựng lỗi trên vampi-seeded
 
 Trình quản lý tải pyLoad dùng Python/Flask và có lỗ hổng \mbox{CVE-2026-41133} do bên thứ ba công bố độc lập \cite{cve202641133}. Bản ghi CVE xếp lỗ hổng vào CWE-613, mục mà MITRE đã ngừng dùng từ CWE 5.0 \cite{cwe613}. Trong các mục MITRE gợi ý thay thế, CWE-1464 khớp với lỗi của pyLoad \cite{cwe1464}. Ứng dụng ghi vai trò vào phiên lúc đăng nhập và giữ nguyên phiên đã cấp khi vai trò thay đổi, trong khi vai trò mới được ghi vào cơ sở dữ liệu sau lần thay đổi quyền.
 
-Thực nghiệm dùng pyLoad bản dev97, bản cuối cùng mà bản ghi CVE xếp vào diện bị ảnh hưởng. Bản vá của nhà phát triển xóa mọi phiên của một người dùng khi quyền của người đó đổi qua endpoint \texttt{/json/update\_users}, khi đổi mật khẩu hoặc khi xóa tài khoản. Bản vá này thu hồi phiên thay vì từ chối thao tác bằng mã 403, nên khóa luận không dùng bản vá đó làm biến thể đã vá. Biến thể đã vá của khóa luận tra lại vai trò hiện tại từ cơ sở dữ liệu thay vì đọc từ phiên. Thay đổi nằm ở phần kiểm tra quyền của nhóm endpoint \texttt{/json/*} và của nhóm \texttt{/api/*}, hai chỗ pyLoad đọc vai trò từ phiên.
+Thực nghiệm dùng pyLoad bản dev97, một bản nằm trong diện bị ảnh hưởng theo bản ghi CVE. Biến thể đã vá đọc vai trò hiện tại từ cơ sở dữ liệu ở mỗi lần kiểm tra quyền. Cách đọc này có sẵn trong pyLoad: khi người dùng xác thực bằng khóa API qua header \texttt{X-API-Key}, ứng dụng lấy vai trò và quyền từ cơ sở dữ liệu ở mỗi yêu cầu. Biến thể đã vá dùng cùng cách đọc đó cho xác thực bằng phiên, ở phần kiểm tra quyền của nhóm endpoint \texttt{/json/*} và nhóm \texttt{/api/*}.
 
 Bảng~\ref{tab:scenario_pyload} trình bày kịch bản dựng lỗi trên pyLoad, lấy từ ca kiểm thử do công cụ sinh ở seed 1 trên hai biến thể. Nạn nhân là \texttt{pyload}, tài khoản quản trị là \texttt{alice}, và hai tài khoản đăng nhập qua \texttt{POST /login} để nhận cookie phiên. Trước bộ ba, \texttt{pyload} nâng quyền \texttt{alice} trở lại bằng bước khôi phục quyền (Mục~\ref{subsec:method_void}).
 
@@ -247,11 +247,11 @@ Bảng~\ref{tab:scenario_pyload} trình bày kịch bản dựng lỗi trên pyL
 \subsection{Ứng dụng artifact-keeper}
 \label{subsec:impl_artifactkeeper}
 
-Máy chủ lưu trữ gói phần mềm (artifact registry) artifact-keeper là dự án mã nguồn mở viết bằng Rust \cite{artifactkeeper1821}. Ở phiên bản có lỗi, máy chủ ghi cờ quản trị vào claim của JWT lúc đăng nhập và đọc lại cờ đó từ claim mà không tra cơ sở dữ liệu. Do đó, quản trị viên đã bị hạ quyền vẫn giữ quyền quản trị tới khi token hết hạn sau 30 phút. Bản vá của nhà phát triển cho issue \#1821 từ chối bằng mã 401 các token cấp trước lần thay đổi quyền. Thao tác hạ quyền là \texttt{PATCH /api/v1/users/\{id\}}, với trường \texttt{is\_admin} trong thân yêu cầu. Phiên bản có lỗi và phiên bản đã vá đều được kiểm tra thủ công qua HTTP trước khi chạy công cụ.
+Máy chủ lưu trữ gói phần mềm artifact-keeper là dự án mã nguồn mở viết bằng Rust \cite{artifactkeeper1821}. Ở phiên bản có lỗi, máy chủ ghi cờ quản trị vào claim của JWT lúc đăng nhập và đọc lại cờ đó từ claim mà không tra cơ sở dữ liệu. Do đó, quản trị viên đã bị hạ quyền vẫn giữ quyền quản trị tới khi token hết hạn sau 30 phút. Bản vá của nhà phát triển cho issue \#1821 từ chối bằng mã 401 các token cấp trước lần thay đổi quyền. Thao tác hạ quyền là \texttt{PATCH /api/v1/users/\{id\}}, với trường \texttt{is\_admin} trong thân yêu cầu. Phiên bản có lỗi và phiên bản đã vá đều được kiểm tra thủ công qua HTTP trước khi chạy công cụ.
 
-Trên artifact-keeper, phần thay đổi gồm cấu hình dựng container và việc bỏ endpoint \texttt{DELETE /users/\{id\}} khỏi đặc tả OpenAPI. Việc bỏ endpoint nhằm tránh để công cụ xóa các tài khoản kiểm thử. Mã ứng dụng, lỗi, bản vá và phần còn lại của đặc tả giữ nguyên bản của nhà phát triển. Mã nguồn của bộ dựng, bộ phán quyết và mô hình Naive Bayes không chứa chuỗi nào riêng của ứng dụng này, và đặc tả của artifact-keeper nằm ngoài tập ngữ liệu huấn luyện.
+Khóa luận bỏ endpoint \texttt{DELETE /users/\{id\}} khỏi đặc tả OpenAPI của artifact-keeper để công cụ không xóa các tài khoản kiểm thử. Mã ứng dụng, lỗi, bản vá và phần còn lại của đặc tả giữ nguyên bản của nhà phát triển. Mã nguồn của bộ dựng, bộ phán quyết và mô hình Naive Bayes không chứa chuỗi nào riêng của ứng dụng này, và đặc tả của artifact-keeper nằm ngoài tập ngữ liệu huấn luyện.
 
-Bảng~\ref{tab:scenario_ak} là kịch bản dựng lỗi trên artifact-keeper ở seed 1, cùng chuỗi lời gọi với Hình~\ref{fig:attempt_sequence}. Nạn nhân là \texttt{victim}, tài khoản quản trị là \texttt{operator} (tên đăng nhập \texttt{admin}), và hai tài khoản đăng nhập qua \texttt{POST /api/v1/auth/login} để nhận token JWT. Trên bản vá, token cũ nhận mã 401 ở follow-up nên bộ ba bị hủy (Mục~\ref{subsec:method_void}).
+Bảng~\ref{tab:scenario_ak} là kịch bản dựng lỗi trên artifact-keeper ở seed 1, cùng chuỗi lời gọi với Hình~\ref{fig:attempt_sequence}. Nạn nhân là \texttt{victim}, tài khoản quản trị là \texttt{operator}, và hai tài khoản đăng nhập qua \texttt{POST /api/v1/auth/login} để nhận token JWT. Trên bản vá, token cũ nhận mã 401 ở follow-up nên bộ ba bị hủy (Mục~\ref{subsec:method_void}).
 
 \begin{table}[H]
   \centering
@@ -277,9 +277,9 @@ Mọi lượt chạy đánh giá đều bật nhóm oracle thử nghiệm của 
   \centering
   \caption{Thiết lập chạy theo ứng dụng}
   \label{tab:run_setup}
-  \begin{tabularx}{\textwidth}{@{}l c c c >{\raggedright\arraybackslash}X@{}}
+  \begin{tabularx}{\textwidth}{@{}l c c c >{\centering\arraybackslash}X@{}}
     \toprule
-    \textbf{Ứng dụng} & \makecell[b]{\textbf{Thời gian}\\\textbf{tìm kiếm}} & \makecell[b]{\textbf{Yêu cầu}\\\textbf{mỗi phút}} & \makecell[b]{\textbf{Quỹ thời gian}\\\textbf{mỗi pha sau}\\\textbf{tìm kiếm}} & \makecell[b]{\textbf{Seed mỗi}\\\textbf{biến thể}} \\
+    \textbf{Ứng dụng} & \makecell[b]{\textbf{Thời gian}\\\textbf{tìm kiếm}} & \textbf{RPM} &\makecell[b]{\textbf{Quỹ thời gian}\\\textbf{mỗi pha sau}\\\textbf{tìm kiếm}} & \makecell[b]{\textbf{Seed mỗi}\\\textbf{biến thể}} \\
     \midrule
     reports-api     & 150 giây & 120 & 60\%  & 20 \\
     vampi-seeded    & 150 giây & 120 & 60\%  & 20 \\

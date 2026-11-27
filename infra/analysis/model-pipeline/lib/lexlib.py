@@ -1,0 +1,1 @@
+../../lexicon-rules/lexicon-r4-20261007/lexlib.py

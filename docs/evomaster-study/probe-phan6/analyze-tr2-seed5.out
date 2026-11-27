@@ -1,0 +1,36 @@
+requests 883 logins 330
+MARK SEARCH t=5.0
+MARK MINIMIZATION t=155.6
+MARK SECURITY t=191.4
+MARK END t=284.1
+phase SEARCH               {'requests': 445, 'logins': 146, 'anon': 9, 'stale': 0, 'stale_2xx': 0, 'reset_200': 18, 'role_200': 1, 'demote_200': 1}
+phase MINIMIZATION         {'requests': 114, 'logins': 44, 'anon': 9, 'stale': 0, 'stale_2xx': 0, 'reset_200': 4, 'role_200': 1, 'demote_200': 1}
+phase SECURITY             {'requests': 324, 'logins': 140, 'anon': 31, 'stale': 6, 'stale_2xx': 5, 'reset_200': 0, 'role_200': 4, 'demote_200': 3}
+
+resets with 200: 00011:SEA 00030:SEA 00048:SEA 00061:SEA 00082:SEA 00096:SEA 00123:SEA 00132:SEA 00133:SEA 00242:SEA 00248:SEA 00252:SEA 00282:SEA 00324:SEA 00329:SEA 00341:SEA 00379:SEA 00446:SEA 00460:MIN 00492:MIN 00508:MIN 00515:MIN
+
+role changes with 200 (seq phase operator[claim] path body -> stored after)
+  00229 SEARCH       superadmin[ADMIN] /users/bob/role {"role":"VIEWER"} -> alice=ADMIN,bob=VIEWER,superadmin=ADMIN
+  00484 MINIMIZATION superadmin[ADMIN] /users/bob/role {"role":"VIEWER"} -> alice=ADMIN,bob=VIEWER,superadmin=ADMIN
+  00611 SECURITY     superadmin[ADMIN] /users/alice/role {"role":"VIEWER"} -> alice=VIEWER,bob=VIEWER,superadmin=ADMIN
+  00626 SECURITY     superadmin[ADMIN] /users/bob/role {"role":"ADMIN"} -> alice=VIEWER,bob=ADMIN,superadmin=ADMIN
+  00631 SECURITY     bob[ADMIN] /users/superadmin/role {"role":"VIEWER"} -> alice=VIEWER,bob=ADMIN,superadmin=VIEWER
+  00658 SECURITY     bob[ADMIN] /users/bob/role {"role":"VIEWER"} -> alice=VIEWER,bob=VIEWER,superadmin=VIEWER
+
+stale-token calls (claim differs from stored role at send time)
+  00612 SECURITY     PUT    /reports/18            alice token[ADMIN] stored[VIEWER] -> 200 {"id":18,"title":"Report 2","owner":"alice","classification"
+  00613 SECURITY     DELETE /reports/18            alice token[ADMIN] stored[VIEWER] -> 204 
+  00614 SECURITY     DELETE /reports/18            alice token[ADMIN] stored[VIEWER] -> 404 {"error":"report not found"}
+  00632 SECURITY     POST   /reports               superadmin token[ADMIN] stored[VIEWER] -> 201 {"id":23,"title":"8nI4Cb1ZO","owner":"superadmin","classific
+  00633 SECURITY     DELETE /reports/22            superadmin token[ADMIN] stored[VIEWER] -> 204 
+  00634 SECURITY     DELETE /reports/23            superadmin token[ADMIN] stored[VIEWER] -> 204 
+
+last stored roles {'alice': 'VIEWER', 'superadmin': 'VIEWER', 'bob': 'VIEWER'}
+
+A1-direction stale calls (token ADMIN, stored VIEWER): 6 with 2xx: 5
+  00612 SECURITY     PUT    /reports/18            alice ..qh8ODM -> 200
+  00613 SECURITY     DELETE /reports/18            alice ..qh8ODM -> 204
+  00614 SECURITY     DELETE /reports/18            alice ..qh8ODM -> 404
+  00632 SECURITY     POST   /reports               superadmin ..Wpti1M -> 201
+  00633 SECURITY     DELETE /reports/22            superadmin ..Wpti1M -> 204
+  00634 SECURITY     DELETE /reports/23            superadmin ..Wpti1M -> 204

@@ -11,7 +11,7 @@ Mỗi sự kiện nằm ở một file: file này giữ luật và trỏ tới p
 
 - Oracle **970 `SECURITY_STATEFUL_AUTHORIZATION`**: một tài khoản vẫn vào được sau khi bị thu hẹp quyền, phát hiện bằng
   cách dùng lại thông tin đăng nhập cấp trước lúc đó.
-- Giai đoạn: viết luận văn. Số đo cuối: jar TR2, chạy lại mọi target ngày 2026-11-21 (§4). Hạn: **cuối tháng 11 năm
+- Giai đoạn: viết luận văn. Số đo cuối: jar TR2, bộ `infra/em-results/tr2-final-20261126/` (§4). Hạn: **cuối tháng 11 năm
   2026**. Bản nháp: `writing/KLTN_NguyenLeMinh.pdf`.
 - Luận văn viết bằng **tiếng Việt**. Trả lời theo ngôn ngữ của user.
 - Tác giả: kỹ sư phần mềm, ~2 năm fintech, Java/Spring Boot. Đọc được Kotlin, viết Kotlin chưa thoải mái.
@@ -138,23 +138,24 @@ Mỗi loại nội dung nằm đúng một chỗ; phần còn lại theo bảng 
 - Phạm vi: A1, hạ vai trò. A2 (chuyển quyền sở hữu) và A3 (hết hạn quyền) đã định nghĩa, chưa chứng minh.
   Lỗi chéo tài khoản (BOLA/BFLA) thuộc về baseline, Şahin et al. arXiv:2604.00702 (`docs/related-work.md`).
 
-## 4. Số hiện tại — jar TR2, chạy 2026-11-21; chi tiết, nguồn và dè dặt trong `docs/results.md`
+## 4. Số hiện tại — jar TR2, bộ `tr2-final-20261126/`; chi tiết, nguồn và dè dặt trong `docs/results.md`
 
 | Target | Lỗi | 970 nổ, bản lỗi | FP, bản vá |
 |---|---|---|---|
 | `reports-api` | gieo | 12/20 | 0/20 |
-| `vampi-seeded` | gieo | 6/20 | 0/20 |
+| `vampi-seeded` | gieo | 7/20 | 0/20 |
 | pyLoad | CVE-2026-41133 | 5/5 | 0/5 |
 | artifact-keeper | lỗi vendor #1821 | 5/5 | 0/5, bản vá của vendor |
 
-- 100 hàng, một jar: `tr2-wave1-20261121/runs.csv` (90 hàng) và `tr2-wave2-20261121/` (10 hàng artifact-keeper); đếm
-  bằng `tr2-wave1-20261121/tr2_counts.py` (`tr2-counts.out`), chi tiết từng seed `tr2_details.py` (`tr2-details.out`).
-- 0 FP trong 50 lượt bản đã vá, trên 49 bộ ba dựng được trên mã đã vá (31 lượt). TP 28, FN 22, FP 0, TN 31; mọi FN là
-  lượt không dựng được bộ ba: 8 ở reports-api (C4 bỏ mọi lần thử), 14 ở vampi-seeded (`docs/results.md` §1a).
+- 100 hàng, một jar, log debug của builder ở mọi lượt: `tr2-final-20261126/` (`runs.csv` 90 hàng, `runs-ak-*.csv` 10
+  hàng artifact-keeper); đếm bằng `tr2_counts.py` (`tr2-counts.out`), chi tiết từng seed `tr2_details.py`
+  (`tr2-details.out`). File nào chép từ thư mục nào: `PROTOCOL.md` của thư mục đó.
+- 0 FP trong 50 lượt bản đã vá, trên 50 bộ ba dựng được trên mã đã vá (32 lượt). TP 29, FN 21, FP 0, TN 32; mọi FN là
+  lượt không dựng được bộ ba: 8 ở reports-api (C4 bỏ mọi lần thử), 13 ở vampi-seeded (`docs/results.md` §1a).
 - C4 chỉ chạy khi follow-up 2xx, nên không bao giờ chạy trên mã đã vá: số 0 FP không dựa vào C4.
-- So với jar LF: mất 9 hàng, thêm 0, McNemar p = 0,004. 8 hàng là reports-api, mất ngay ở thay đổi C4 (LF sang CS2:
-  mất đúng 8 hàng đó, p = 0,008). So với CS2: 1 trong 93 hàng ghép khác (vampi-seeded seed 15), p = 1,0; hai lượt đã
-  lệch từ pha search, trước builder (`tr2-wave1-20261121/CORRECTION-vampi-seed15.md`; cơ chế ghi trong
+- So với jar LF: mất 8 hàng, thêm 0, McNemar p = 0,008; cả 8 là reports-api, mất ngay ở thay đổi C4 (LF sang CS2:
+  mất đúng 8 hàng đó, p = 0,008). So với CS2: 0 trong 93 hàng ghép khác. vampi-seeded seed 15 lệch giữa hai lượt của
+  cùng một jar vì ngân sách tính theo đồng hồ (`tr2-wave1-20261121/CORRECTION-vampi-seed15.md`; cơ chế ghi trong
   `tr2-analysis.out` sai). Không viết rằng đợt gỡ mã không đổi kết quả.
 - Bản vá của artifact-keeper trả 401 cho token cũ, mà 401 là INCONCLUSIVE: 5 lượt không báo nhầm và cũng không dựng
   được bộ ba nào, nên không có TN.

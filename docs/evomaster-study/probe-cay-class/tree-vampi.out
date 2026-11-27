@@ -1,0 +1,36 @@
+=== cay cua PUT:/users/v1/{username}/role sau doInitialize
+RestCallAction
+    PathParam name=username
+        CustomMutationRateGene name=username
+            ChoiceGene name=username activeGeneIndex=1
+                EnumGene name=SCHEMA_EXAMPLES values=[name1] index=0 raw=name1
+                StringGene name=username raw=TqPBwBBSF_7
+    BodyParam name=body
+        ObjectGene name=body
+            EnumGene name=role values=[EVOMASTER, admin, user] index=2 raw=user
+        EnumGene name=CONTENT_TYPE values=[application/json] index=0 raw=application/json
+        CustomMutationRateGene name=sendUnquoteJsonStringWrapper
+            BooleanGene name=sendUnquoteJsonString raw=true
+=== schemaFields
+path:username                gene=CustomMutationRateGene   value=StringGene   kind=str    leaf=username       role= -4.947 victim=  5.189
+body:role                    gene=EnumGene                 value=EnumGene     kind=enum   leaf=role           role=  8.621 victim= -2.565
+features path:username = [k:str, l:path, n:username, w:username]
+features body:role = [e:admin, e:evomaster, e:user, k:enum, l:body, n:role, w:role]
+transitionScore=5.628 looksLikePermissionReducingTransition=true
+roleField=body:role victimField=path:username
+reducedRoleValues=[user]
+=== truoc setField
+probe tat 0 SelectableWrapperGene tren duong len cua truong vai tro
+chain: EnumGene(role) <- ObjectGene(body) <- BodyParam
+body:  {"role":"user"}
+=== setField(body:role, user) -> true
+chain: EnumGene(role) <- ObjectGene(body) <- BodyParam
+body:  {"role":"user"}
+value raw=user
+=== truong nan nhan truoc setField
+probe chon nhanh 0 cua ChoiceGene(username)
+chain: StringGene(username) <- ChoiceGene(username)[activeGeneIndex=0] <- CustomMutationRateGene(username) <- PathParam
+resolvedPath: /users/v1/name1/role
+=== setField(path:username, superadmin) -> true
+chain: StringGene(username) <- ChoiceGene(username)[activeGeneIndex=1] <- CustomMutationRateGene(username) <- PathParam
+resolvedPath: /users/v1/superadmin/role
