@@ -84,11 +84,18 @@ Limits of this check:
 | **peerigon/access-control-testing** | OpenAPI access-control tests | self-described *"stateless, immediate authorization model"* |
 | **BacAlarm** — arXiv:2512.19997 | runtime ML anomaly detector | IDS-style, not a testing oracle |
 | **WuppieFuzz** — arXiv:2512.15554 (HTML) | coverage-guided stateful REST fuzzer | no authorization oracle |
-| **RESTler** — microsoft/restler-fuzzer | stateful REST fuzzing with checkers | see §4 |
+| **RESTler** — Atlidakis et al., ICSE 2019, doi:10.1109/ICSE.2019.00083; checkers: ICST 2020, doi:10.1109/ICST46399.2020.00046 | stateful REST fuzzing; ICST 2020 adds checkers for four security rules | use-after-free tracks the resource; user-namespace is cross-user; no transition. Cited in thesis §2.4 |
 | Commercial: StackHawk, Invicti, Equixly, BOLABuster | BOLA/BFLA/privilege matrices | differential, one instant |
 | Mao, Bianculli, Briand et al., SMRL (2020–2022) | metamorphic security testing, web | methodological ancestor; not REST fuzzing, not temporal authz |
 
 Verbatim quotes kept for the write-up:
+- RESTler ICSE 2019: *"RESTler reports each bug, currently defined as a 500 HTTP status code"*. The paper has no
+  checkers.
+- RESTler ICST 2020: *"We introduce four security rules"*; use-after-free: *"A resource that has been deleted must no
+  longer be accessible."*; user-namespace: *"A resource created in a user namespace must not be accessible from another
+  user namespace."*
+- BACScan §1: *"We design a novel feedback-driven oracle for MBAC vulnerabilities where the direct HTTP response cannot
+  reflect the modification status."* MBAC means modification-based; the paper's RBAC means read-based.
 - GraphQLer §1: *"EvoMaster [9]—the only published GraphQL fuzzer we reproduce for comparison—applies
   evolutionary search over payloads but does not synthesize cross-user or post-delete chains."*
 - GraphQLer §1: *"Black-box scanners (ZAP [35], BurpSuite [38]) vary parameters of individual operations and
@@ -103,11 +110,6 @@ competition, SSRF) contain no stateful authorization oracle. arXiv:2607.04325 (O
 
 ## 4. Open items
 
-- **RESTler — not yet written into related work.** The mentor originally pointed at RESTler. Its checker list has
-  `UseAfterFreeChecker` (a deleted resource is still accessible: temporal, REST) and `NameSpaceRuleChecker`
-  (an unauthorized user accesses resources: cross-user). No checker tests access after a permission reduction.
-  Source `docs/user-guide/Checkers.md` read through a web-fetch summary: **not verbatim-verified**; the checker
-  paper is not opened.
 - **Spec2SeqFuzz** — He, Shang, Guo, Zhou, *Electronics* 15(11):2309. MDPI returns 403; abstract only, label as such.
   Offline LLM use to normalise PoCs and classify endpoints; no authorization oracle mentioned.
 - **arXiv:2604.01759** (Volkswagen industrial experience with EvoMaster): open-problems list unread beyond the abstract.

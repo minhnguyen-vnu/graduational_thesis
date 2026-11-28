@@ -503,9 +503,12 @@ checker nào xét quyền sau khi bị hạ.
 
 ### BACScan
 
-BACScan (CCS 2025) quét lỗ hổng kiểm soát truy cập trong ứng dụng web ở chế độ hộp đen. Oracle của nó dựa vào phản hồi để
-xác định một người dùng đã đọc hoặc sửa được dữ liệu trái phép hay chưa. Đây là kiểu so chéo tài khoản, không có bước đổi
-quyền.
+BACScan (CCS 2025) quét lỗ hổng kiểm soát truy cập trong ứng dụng web ở chế độ hộp đen. Với lỗi đọc trái phép, phản hồi
+của chính yêu cầu đã cho biết kẻ tấn công có đọc được dữ liệu hay không. Với lỗi sửa trái phép, phản hồi không cho biết
+dữ liệu có bị đổi hay không. BACScan gửi lại yêu cầu sửa bằng phiên của kẻ tấn công, rồi mở các trang hiển thị dữ liệu đó
+để xem dữ liệu đã bị sửa chưa. Bài báo gọi lỗi đọc là RBAC (read-based) và lỗi sửa là MBAC (modification-based). Chữ RBAC
+trong bài này khác RBAC theo vai trò mà khóa luận dùng ở mục 2.3. Các phiên của kẻ tấn công và nạn nhân cố định từ đầu,
+không có bước đổi quyền, nên đây là kiểu so chéo tài khoản.
 
 *Tham khảo:* Liu và cộng sự, CCS 2025, https://doi.org/10.1145/3719027.3744825
 
